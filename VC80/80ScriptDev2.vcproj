@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="ScriptDev2"
-	ProjectGUID="{4205C8A9-79B7-4354-8064-F05FB9CA0C96}"
+	ProjectGUID="{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	RootNamespace="ScriptDev2"
 	Keyword="Win32Proj"
 	>
