@@ -1,0 +1,12 @@
+--- TO DO ---
+
+-Remove Honor vendors since they are useless
+-Add OnReciveEmote function to core and to scriptdev2
+-Find a way to allow scripts to acess the dbc stores
+
+--- Priority Scripting ---
+1) Finish writing generic scripts (caster, melee)
+2) Boss AI scripts
+3) Specific NPC scripts
+4) Event scripts
+5) Spell and Item scripts

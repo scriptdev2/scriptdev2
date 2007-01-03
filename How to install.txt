@@ -1,0 +1,7 @@
+--- How to install ScriptDev2 ---
+
+1) Create a new folder under "src\bindings\" called "ScriptDev2"
+2) Checkout the ScriptDev2 trunk from "scriptdev2.svn.sourceforge.net\svnroot\scriptdev\"
+3) Compile ScriptDev2 using the VC71 or VC80 project within the ScriptDev2 folder
+4) Execute the included "scripts.sql"
+5) Run mangosd from your output directory
