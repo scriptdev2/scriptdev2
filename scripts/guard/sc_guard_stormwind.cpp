@@ -45,48 +45,48 @@ bool GossipHello_guard_stormwind(Player *player, Creature *_Creature)
 
 void SendDefaultMenu_guard_stormwind(Player *player, Creature *_Creature, uint32 action)
 {
-	if (action == GOSSIP_ACTION_INFO_DEF + 1)//Auction House
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Auction House
     {
-		player->SEND_POI(-8811.46, 667.46, 6, 6, 0, "Stormwind Auction House");
+        player->SEND_POI(-8811.46, 667.46, 6, 6, 0, "Stormwind Auction House");
         player->SEND_GOSSIP_MENU(3834,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)//Bank
     {
-		player->SEND_POI(-8916.87, 622.87, 6, 6, 0, "Stormwind Bank");
+        player->SEND_POI(-8916.87, 622.87, 6, 6, 0, "Stormwind Bank");
         player->SEND_GOSSIP_MENU(764,_Creature->GetGUID());
     }
 
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Deeprun tram
     {
-		player->SEND_POI(-8378.88, 554.23, 6, 6, 0, "The Deeprun Tram");
+        player->SEND_POI(-8378.88, 554.23, 6, 6, 0, "The Deeprun Tram");
       player->SEND_GOSSIP_MENU(3813,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 4)//Inn
+    if (action == GOSSIP_ACTION_INFO_DEF + 4)//Inn
     {
         player->SEND_POI(-8869.0, 675.4, 6, 6, 0, "The Gilded Rose");
         player->SEND_GOSSIP_MENU(3860,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 5)//Gryphon Master
+    if (action == GOSSIP_ACTION_INFO_DEF + 5)//Gryphon Master
     {
-		player->SEND_POI(-8837.0, 493.5, 6, 6, 0, "Stormwind Gryphon Master");
+        player->SEND_POI(-8837.0, 493.5, 6, 6, 0, "Stormwind Gryphon Master");
         player->SEND_GOSSIP_MENU(879,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 6)//Guild Master
     {
-		player->SEND_POI(-8894.0, 611.2, 6, 6, 0, "Stormwind Vistor`s Center");
+        player->SEND_POI(-8894.0, 611.2, 6, 6, 0, "Stormwind Vistor`s Center");
         player->SEND_GOSSIP_MENU(882,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 7)//Mailbox
+    if (action == GOSSIP_ACTION_INFO_DEF + 7)//Mailbox
     {
         player->SEND_POI(-8876.48, 649.18, 6, 6, 0, "Stormwind Mailbox");
         player->SEND_GOSSIP_MENU(3518,_Creature->GetGUID());
-	}
+    }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Stable Master
     {
@@ -99,29 +99,29 @@ void SendDefaultMenu_guard_stormwind(Player *player, Creature *_Creature, uint32
     {
         player->SEND_POI(-8797.0, 612.8, 6, 6, 0, "Woo Ping");
         player->SEND_GOSSIP_MENU(4516,_Creature->GetGUID());
-	}
+    }
 
 
     if (action == GOSSIP_ACTION_INFO_DEF + 10)//Officers Lounge
     {
         player->SEND_POI(-8759.92, 399.69, 6, 6, 0, "Champions` Hall");
         player->SEND_GOSSIP_MENU(7047,_Creature->GetGUID());
-	}
+    }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 11)//Battlemasters
+    if (action == GOSSIP_ACTION_INFO_DEF + 11)//Battlemasters
     {
-		player->ADD_GOSSIP_ITEM( 8, "Alterac Valley"   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM( 8, "Alterac Valley"   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
         player->ADD_GOSSIP_ITEM( 8, "Arathi Basin"     , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
         player->ADD_GOSSIP_ITEM( 8, "Warsong Gulch"    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
 
         player->SEND_GOSSIP_MENU(7499,_Creature->GetGUID());
-	}
+    }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 12)//Class trainers
     {
-		player->ADD_GOSSIP_ITEM( 3, "Mage"                 , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 1);
-		player->ADD_GOSSIP_ITEM( 3, "Rogue"                , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 2);
-		player->ADD_GOSSIP_ITEM( 3, "Warrior"              , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM( 3, "Mage"                 , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM( 3, "Rogue"                , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM( 3, "Warrior"              , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 3);
         player->ADD_GOSSIP_ITEM( 3, "Druid"                , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 4);
         player->ADD_GOSSIP_ITEM( 3, "Priest"               , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 5);
         player->ADD_GOSSIP_ITEM( 3, "Paladin"              , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 6);
@@ -194,7 +194,7 @@ void SendClassTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, u
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Druid
     {
-		player->SEND_POI(-8751.0, 1124.5, 6, 6, 0, "The Park");
+        player->SEND_POI(-8751.0, 1124.5, 6, 6, 0, "The Park");
         player->SEND_GOSSIP_MENU(902,_Creature->GetGUID());
     }
 
@@ -212,7 +212,7 @@ void SendClassTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, u
 
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Hunter
     {
-		player->SEND_POI(-8413.0, 541.5, 6, 6, 0, "Hunter Lodge");
+        player->SEND_POI(-8413.0, 541.5, 6, 6, 0, "Hunter Lodge");
         player->SEND_GOSSIP_MENU(905,_Creature->GetGUID());
     }
 
@@ -245,13 +245,13 @@ void SendProfTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, ui
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Enchanting
     {
-		player->SEND_POI(-8858.0, 803.7, 6, 6, 0, "Lucan Cordell");
+        player->SEND_POI(-8858.0, 803.7, 6, 6, 0, "Lucan Cordell");
         player->SEND_GOSSIP_MENU(941,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 5)//Engineering
     {
-		player->SEND_POI(-8347.0, 644.1, 6, 6, 0, "Lilliam Sparkspindle");
+        player->SEND_POI(-8347.0, 644.1, 6, 6, 0, "Lilliam Sparkspindle");
         player->SEND_GOSSIP_MENU(922,_Creature->GetGUID());
     }
 
@@ -321,9 +321,9 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
 
 void AddSC_guard_stormwind()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_stormwind";
     newscript->pGossipHello          = &GossipHello_guard_stormwind;
     newscript->pGossipSelect         = &GossipSelect_guard_stormwind;

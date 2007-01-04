@@ -50,9 +50,9 @@ uint32 NPCDialogStatus_guildmaster(Player *player, Creature *_Creature )
 
 void AddSC_guildmaster()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guildmaster";
     newscript->pGossipHello          = &GossipHello_guildmaster;
     newscript->pGossipSelect         = &GossipSelect_guildmaster;

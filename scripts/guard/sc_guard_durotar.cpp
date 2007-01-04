@@ -212,9 +212,9 @@ bool GossipSelect_guard_durotar(Player *player, Creature *_Creature, uint32 send
 
 void AddSC_guard_durotar()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_durotar";
     newscript->pGossipHello          = &GossipHello_guard_durotar;
     newscript->pGossipSelect         = &GossipSelect_guard_durotar;

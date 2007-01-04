@@ -19,10 +19,10 @@
 
 bool GossipHello_silas_darkmoon(Player *player, Creature *_Creature)
 {
-	player->ADD_GOSSIP_ITEM( 0, "Silas, why is most everything here at the fair free? How do you make a profit?", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
+    player->ADD_GOSSIP_ITEM( 0, "Silas, why is most everything here at the fair free? How do you make a profit?", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
 //	player->SEND_GOSSIP_MENU(MUST BE SNIFFED!,_Creature->GetGUID()); //His message must be sniffed. If you have some information, please, contact me via PM.
 
-	return true;
+    return true;
 }
 
 bool GossipSelect_silas_darkmoon(Player *player, Creature *_Creature, uint32 sender, uint32 action )
@@ -33,7 +33,7 @@ bool GossipSelect_silas_darkmoon(Player *player, Creature *_Creature, uint32 sen
 
     return true;
 
-	return true;
+    return true;
 }
 
 uint32 NPCDialogStatus_silas_darkmoon(Player *player, Creature *_Creature )
@@ -43,12 +43,12 @@ uint32 NPCDialogStatus_silas_darkmoon(Player *player, Creature *_Creature )
 
 void AddSC_silas_darkmoon()
 {
-	UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
-	newscript->Name="silas_darkmoon";
+    newscript = new Script;
+    newscript->Name="silas_darkmoon";
     newscript->pGossipHello          = &GossipHello_silas_darkmoon;
     newscript->pGossipSelect         = &GossipSelect_silas_darkmoon;
-	newscript->pNPCDialogStatus      = &NPCDialogStatus_silas_darkmoon;
-	m_scripts[nrscripts++] = newscript;
+    newscript->pNPCDialogStatus      = &NPCDialogStatus_silas_darkmoon;
+    m_scripts[nrscripts++] = newscript;
 }

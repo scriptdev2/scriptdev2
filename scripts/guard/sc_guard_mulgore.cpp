@@ -196,9 +196,9 @@ bool GossipSelect_guard_mulgore(Player *player, Creature *_Creature, uint32 send
 
 void AddSC_guard_mulgore()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_mulgore";
     newscript->pGossipHello          = &GossipHello_guard_mulgore;
     newscript->pGossipSelect         = &GossipSelect_guard_mulgore;

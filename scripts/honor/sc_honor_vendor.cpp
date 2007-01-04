@@ -21,7 +21,7 @@ bool GossipHello_Honor_Vendor(Player *player, Creature *_Creature)
 {
     player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
    
-	return true;
+    return true;
 }
 
 bool GossipSelect_Honor_Vendor(Player *player, Creature *_Creature, uint32 sender, uint32 action )
@@ -46,9 +46,9 @@ uint32 NPCDialogStatus_Honor_Vendor(Player *player, Creature *_Creature )
 
 void AddSC_Honor_Vendor()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="honor_vendor";
     newscript->pGossipHello          = &GossipHello_Honor_Vendor;
     newscript->pGossipSelect         = &GossipSelect_Honor_Vendor;

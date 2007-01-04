@@ -1,0 +1,27 @@
+--- Script Layout ---
+A quick explination of the layout I hope everyone will follow for scriptdev2.
+
+--- Folders ---
+Area - Contains scripts used solely by area triggers
+
+Boss - Boss scripts
+
+Creature - Individual and Generic Creature scripts
+
+Custom - Intentionally empty folder from SVN. If you make a custom script please put it here.
+
+GO - Contains scripts used solely by Game Objects (GOs)
+
+Guard - Scripts for Guard NPCs
+
+Honor - Honor npcs (currently a blank script as these npcs do nothing special)
+
+Item - Item scripts
+
+NPC - Scripts for individual NPCs such as Marshal Mcbride
+
+Servers - Generic NPC servers script for things such as flightmasters and guildmasters.
+
+--- Naming Conventions ---
+
+Please keep file names to "sc_objectname.cpp" where objectname is replaced by the name of the object, creature, item, or area that this script will be used by.

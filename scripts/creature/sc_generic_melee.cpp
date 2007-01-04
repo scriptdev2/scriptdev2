@@ -19,9 +19,9 @@
 
 // **** This script is still under Developement ****
 
-struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
+struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
 {
-    generic_casterAI(Creature *c) : ScriptedAI(c) {}
+    generic_meleeAI(Creature *c) : ScriptedAI(c) {}
 
     void AttackStart(Unit *who)
     {
@@ -30,10 +30,8 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack())
         {
-            //Begin melee attack if we are within range
-            if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
+            //Begin attack
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -49,10 +47,8 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin melee attack if we are within range
-                if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                    DoStartMeleeAttack(who);
-                else DoStartRangedAttack(who);
+                //Begin attack
+                DoStartMeleeAttack(who);
             }
         }
     }
@@ -62,7 +58,7 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawn point
+            //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawnpoint
             if (needToStop() || CheckTether())
             {
                 DoStopAttack();
@@ -73,6 +69,8 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
             {
+                //Melee spells to be casted should go in here
+
                 if( m_creature->isAttackReady() )
                 {
                     Unit* newtarget = m_creature->SelectHostilTarget();
@@ -83,37 +81,7 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
                     m_creature->resetAttackTimer();
                 }
             }
-            else 
-            {
-                //See if we can cast a spell
-                SpellEntry const *info = m_creature->reachWithSpellAttack(m_creature->getVictim());
-                
-                //Found a spell, now cast it!
-                if (info)
-                {
-                    //If we are currently moving stop us and set the movement generator
-                    if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
-                    {
-                        (*m_creature)->Clear();
-                        (*m_creature)->Idle();
-                    }
 
-                    //Face target
-                    DoFaceTarget(m_creature->getVictim());
-
-                    //Cast spell if we arn't already casting
-                    if (!m_creature->m_currentSpell)
-                        DoCastSpell(m_creature->getVictim(),info);
-
-                }//If no spells available and we arn't moving run to target
-                else if ((*m_creature)->top()->GetMovementGeneratorType()==IDLE_MOTION_TYPE)
-                {
-                    //Cancel our current spell and then mutate new movement generator
-                    m_creature->InterruptSpell();
-                    (*m_creature)->Clear();
-                    (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
-                }
-            }
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
@@ -123,17 +91,17 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
         }
     }
 }; 
-CreatureAI* GetAI_generic_caster(Creature *_Creature)
+CreatureAI* GetAI_generic_melee(Creature *_Creature)
 {
-    return new generic_casterAI (_Creature);
+    return new generic_meleeAI (_Creature);
 }
 
 
-void AddSC_generic_caster()
+void AddSC_generic_melee()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="generic_caster";
-    newscript->GetAI = GetAI_generic_caster;
+    newscript->Name="generic_melee";
+    newscript->GetAI = GetAI_generic_melee;
     m_scripts[nrscripts++] = newscript;
 }

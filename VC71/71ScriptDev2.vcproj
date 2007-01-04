@@ -136,15 +136,11 @@
 				Name="creature"
 				>
 				<File
-					RelativePath="..\scripts\creature\sc_default.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\creature\sc_default_caster.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\creature\sc_generic_caster.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\sc_generic_melee.cpp"
 					>
 				</File>
 				<File
@@ -224,11 +220,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\npc\sc_point_stormwind.cpp"
+					RelativePath="..\scripts\npc\sc_silas_darkmoon.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\npc\sc_silas_darkmoon.cpp"
+					RelativePath="..\scripts\npc\sc_silva_filnaveth.cpp"
 					>
 				</File>
 				<File
@@ -255,7 +251,18 @@
 			<Filter
 				Name="custom"
 				>
-				
+			</Filter>
+			<Filter
+				Name="area"
+				>
+			</Filter>
+			<Filter
+				Name="go"
+				>
+			</Filter>
+			<Filter
+				Name="item"
+				>
 			</Filter>
 		</Filter>
 		<File

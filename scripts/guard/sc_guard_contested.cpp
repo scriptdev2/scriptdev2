@@ -19,54 +19,54 @@
 
 struct MANGOS_DLL_DECL guard_contested : public ScriptedAI
 {
-	guard_contested(Creature *c) : ScriptedAI(c) {}
-	void MoveInLineOfSight(Unit *who)
-	{
-		if (who->isInCombatWithPlayer() && who->isAttacking() )
-		{
-			if(who->GetTypeId() == TYPEID_PLAYER)
-			{
-				if(!m_creature->isInCombat())
-				{
-					if (m_creature->GetEntry() == 15184)//Cenarion Hold Infantry
-					{
-						srand (time(NULL));
-						if (rand()%100 <= 30)
-						{
-							DoSay("Taste blade, mongrel!", LANG_UNIVERSAL);
-						}
-						else if (rand()%100 > 30 && rand()%100 < 50)
-						{
-							DoSay("Please tell me that you didn`t just do what I think you just did. Please tell me that I`m not going to have to hurt you...", LANG_UNIVERSAL);
-						}
-						else if (rand()%100 >= 50)
-						{
-							DoSay("As if we don`t have enough problems, you go and create more!", LANG_UNIVERSAL);
-						}
-					}
-					else 
-					{
-						SpellEntry const *spell = m_creature->reachWithSpellAttack(who);
-						DoCastSpell(who, spell);
-					}
-				}
-			}
-		DoStartAttack(who);
-		}
-		
-	}
+    guard_contested(Creature *c) : ScriptedAI(c) {}
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (who->isInCombatWithPlayer() && who->isAttacking() )
+        {
+            if(who->GetTypeId() == TYPEID_PLAYER)
+            {
+                if(!m_creature->isInCombat())
+                {
+                    if (m_creature->GetEntry() == 15184)//Cenarion Hold Infantry
+                    {
+                        srand (time(NULL));
+                        if (rand()%100 <= 30)
+                        {
+                            DoSay("Taste blade, mongrel!", LANG_UNIVERSAL);
+                        }
+                        else if (rand()%100 > 30 && rand()%100 < 50)
+                        {
+                            DoSay("Please tell me that you didn`t just do what I think you just did. Please tell me that I`m not going to have to hurt you...", LANG_UNIVERSAL);
+                        }
+                        else if (rand()%100 >= 50)
+                        {
+                            DoSay("As if we don`t have enough problems, you go and create more!", LANG_UNIVERSAL);
+                        }
+                    }
+                    else 
+                    {
+                        SpellEntry const *spell = m_creature->reachWithSpellAttack(who);
+                        DoCastSpell(who, spell);
+                    }
+                }
+            }
+        DoStartMeleeAttack(who);
+        }
+        
+    }
 }; 
 CreatureAI* GetAI_guard_contested(Creature *_Creature)
 {
-	return new guard_contested (_Creature);
+    return new guard_contested (_Creature);
 }
 
 
 void AddSC_guard_contested()
 {
-	UnitScript *newscript;
-	newscript = new UnitScript;
-	newscript->Name="guard_contested";
-	newscript->GetAI = GetAI_guard_contested;
-	m_scripts[nrscripts++] = newscript;
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="guard_contested";
+    newscript->GetAI = GetAI_guard_contested;
+    m_scripts[nrscripts++] = newscript;
 }

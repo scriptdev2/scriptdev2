@@ -47,9 +47,9 @@ uint32 NPCDialogStatus_battlemaster(Player *player, Creature *_Creature )
 
 void AddSC_battlemaster()                                   // Please write comments for under functions.
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="battlemaster";
     newscript->pGossipHello          = &GossipHello_battlemaster;
     newscript->pGossipSelect         = &GossipSelect_battlemaster;

@@ -109,7 +109,7 @@ void SendDefaultMenu_guard_ironforge(Player *player, Creature *_Creature, uint32
         player->ADD_GOSSIP_ITEM( 3, "Hunter"           , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 1);
         player->ADD_GOSSIP_ITEM( 3, "Mage"             , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 2);
         player->ADD_GOSSIP_ITEM( 3, "Paladin"          , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 3);
-		player->ADD_GOSSIP_ITEM( 3, "Priest"           , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM( 3, "Priest"           , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 4);
         player->ADD_GOSSIP_ITEM( 3, "Rogue"            , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 5);
         player->ADD_GOSSIP_ITEM( 3, "Warlock"          , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 6);
         player->ADD_GOSSIP_ITEM( 3, "Warrior"          , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 7);
@@ -176,7 +176,7 @@ void SendClassTrainerMenu_guard_ironforge(Player *player, Creature *_Creature, u
         player->SEND_GOSSIP_MENU(2773, _Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 4)//Priest
+    if (action == GOSSIP_ACTION_INFO_DEF + 4)//Priest
     {
         player->SEND_POI(-4627, -926.45, 6, 6, 0, "Hall of Mysteries");
         player->SEND_GOSSIP_MENU(2772, _Creature->GetGUID());
@@ -288,7 +288,7 @@ bool GossipSelect_guard_ironforge(Player *player, Creature *_Creature, uint32 se
 
     if (sender == GOSSIP_SENDER_SEC_PROFTRAIN)
         SendProfTrainerMenu_guard_ironforge(player, _Creature, action);
-	
+    
     if (sender == GOSSIP_SENDER_SEC_BATTLEINFO)
         SendBattleMasterMenu_guard_ironforge(player, _Creature, action);
 
@@ -301,9 +301,9 @@ bool GossipSelect_guard_ironforge(Player *player, Creature *_Creature, uint32 se
 
 void AddSC_guard_ironforge()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_ironforge";
     newscript->pGossipHello          = &GossipHello_guard_ironforge;
     newscript->pGossipSelect         = &GossipSelect_guard_ironforge;

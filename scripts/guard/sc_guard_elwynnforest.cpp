@@ -39,7 +39,7 @@ bool GossipHello_guard_elwynnforest(Player *player, Creature *_Creature)
 void SendDefaultMenu_guard_elwynnforest(Player *player, Creature *_Creature, uint32 action)
 {
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
     {
         player->SEND_GOSSIP_MENU(4260,_Creature->GetGUID());
     }
@@ -241,9 +241,9 @@ bool GossipSelect_guard_elwynnforest(Player *player, Creature *_Creature, uint32
 
 void AddSC_guard_elwynnforest()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_elwynnforest";
     newscript->pGossipHello          = &GossipHello_guard_elwynnforest;
     newscript->pGossipSelect         = &GossipSelect_guard_elwynnforest;

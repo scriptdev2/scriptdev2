@@ -39,7 +39,7 @@ bool GossipHello_guard_dunmorogh(Player *player, Creature *_Creature)
 void SendDefaultMenu_guard_dunmorogh(Player *player, Creature *_Creature, uint32 action)
 {
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
     {
         player->SEND_GOSSIP_MENU(4288,_Creature->GetGUID());
     }
@@ -233,12 +233,12 @@ bool GossipSelect_guard_dunmorogh(Player *player, Creature *_Creature, uint32 se
  *******************************************************/
 void AddSC_guard_dunmorogh()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_dunmorogh";
     newscript->pGossipHello          = &GossipHello_guard_dunmorogh;
     newscript->pGossipSelect         = &GossipSelect_guard_dunmorogh;
 
-	m_scripts[nrscripts++] = newscript;
+    m_scripts[nrscripts++] = newscript;
 }

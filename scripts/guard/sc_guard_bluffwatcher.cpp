@@ -140,7 +140,7 @@ void SendBattleMasterMenu_guard_bluffwatcher(Player *player, Creature *_Creature
         player->SEND_GOSSIP_MENU(7648,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 3)//WSG
+    if (action == GOSSIP_ACTION_INFO_DEF + 3)//WSG
     {
         player->SEND_POI(-1384.94, -75.91, 6, 6, 0, "Kergul Bloodaxe");
         player->SEND_GOSSIP_MENU(7523,_Creature->GetGUID());
@@ -231,7 +231,7 @@ void SendProfTrainerMenu_guard_bluffwatcher(Player *player, Creature *_Creature,
         player->SEND_GOSSIP_MENU(1338,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 8)//Leatherworking
+    if (action == GOSSIP_ACTION_INFO_DEF + 8)//Leatherworking
     {
         player->SEND_POI(-1156.22, 66.86, 6, 6, 0, "Thunder Bluff Armorers");
         player->SEND_GOSSIP_MENU(1339,_Creature->GetGUID());
@@ -279,9 +279,9 @@ bool GossipSelect_guard_bluffwatcher(Player *player, Creature *_Creature, uint32
 
 void AddSC_guard_bluffwatcher()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_bluffwatcher";
     newscript->pGossipHello          = &GossipHello_guard_bluffwatcher;
     newscript->pGossipSelect         = &GossipSelect_guard_bluffwatcher;

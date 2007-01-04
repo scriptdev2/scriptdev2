@@ -13,41 +13,16 @@ UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` IN 
 UPDATE `creature_template` SET`ScriptName` = 'guard_undercity' WHERE `entry` = 5624;
 UPDATE `creature_template` SET`ScriptName` = 'guard_bluffwatcher' WHERE `entry` = 3084;
 UPDATE `creature_template` SET`ScriptName` = 'guard_razorhill' WHERE `entry` = 5953;
-UPDATE `creature_template` SET`ScriptName` = 'guard_mulgore' WHERE `entry` IN (3209,3210,3211,3212,3213,3214,3215,3217,3218,3219,3220,3221,3222,3223,3224);UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` = 727 OR `entry` = 13076;
+UPDATE `creature_template` SET`ScriptName` = 'guard_mulgore' WHERE `entry` IN (3209,3210,3211,3212,3213,3214,3215,3217,3218,3219,3220,3221,3222,3223,3224);
+UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` = 727 OR `entry` = 13076;
 UPDATE `creature_template` SET`ScriptName` = 'guard_tirisfal' WHERE `entry` IN (1735,1738,2210,1736,1739,1737,1744,1745,5725,1743,2209,1746,1742);
 
 --
 -- Honor data.
 --
 
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40100;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40101;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40102;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40103;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40104;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40105;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40106;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40107;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40108;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40109;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40110;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40111;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40112;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40113;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40200;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40201;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40202;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40203;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40204;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40205;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40206;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40207;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40208;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40209;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40210;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40211;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40212;
-UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` = 40213;
+UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` IN (40100,40101,40102,40103,40104,40105,40106,40107,40108,40109,40110,40111,40112,40113);
+UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` IN (40200,40201,40202,40203,40204,40205,40206,40207,40208,40209,40210,40211,40212,40213);
 
 --
 -- others data.
@@ -58,13 +33,14 @@ UPDATE `creature_template` SET`ScriptName` = 'guildmaster' WHERE `entry` IN (497
 UPDATE `creature_template` SET`ScriptName` = 'travelmaster' WHERE `entry` IN (9564,12136,3149,12137,9566,3150,9559,9558);
 
 --
--- custom data.
+-- creature data
 --
 
 UPDATE `creature_template` SET`ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
+UPDATE `creature_template` SET`ScriptName` = 'silva_filnaveth' WHERE `entry` = 11800;
 UPDATE `creature_template` SET`ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 UPDATE `creature_template` SET`ScriptName` = 'kobold' WHERE `entry` = 257;
-UPDATE `creature_template` SET`ScriptName` = 'default_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038);
+UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038);
 UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
 
 

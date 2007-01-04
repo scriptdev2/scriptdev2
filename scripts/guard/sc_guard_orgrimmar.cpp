@@ -310,9 +310,9 @@ bool GossipSelect_guard_orgrimmar(Player *player, Creature *_Creature, uint32 se
 
 void AddSC_guard_orgrimmar()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_orgrimmar";
     newscript->pGossipHello          = &GossipHello_guard_orgrimmar;
     newscript->pGossipSelect         = &GossipSelect_guard_orgrimmar;

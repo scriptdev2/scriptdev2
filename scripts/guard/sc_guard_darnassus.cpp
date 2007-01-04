@@ -95,7 +95,7 @@ void SendDefaultMenu_guard_darnassus(Player *player, Creature *_Creature, uint32
         player->ADD_GOSSIP_ITEM( 8, "Arathi Basin"     , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
         player->ADD_GOSSIP_ITEM( 8, "Warsong Gulch"    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
         
-		player->SEND_GOSSIP_MENU(7519, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(7519, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 10)//Class trainer
@@ -264,9 +264,9 @@ bool GossipSelect_guard_darnassus(Player *player, Creature *_Creature, uint32 se
 
 void AddSC_guard_darnassus()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_darnassus";
     newscript->pGossipHello          = &GossipHello_guard_darnassus;
     newscript->pGossipSelect         = &GossipSelect_guard_darnassus;

@@ -19,37 +19,37 @@
 
 struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
 {
-	KoboldAI(Creature *c) : ScriptedAI(c) {}
-	void AttackStart(Unit *who)
-	{
-	int hp_max = m_creature->GetMaxHealth();
+    KoboldAI(Creature *c) : ScriptedAI(c) {}
+    void AttackStart(Unit *who)
+    {
+    int hp_max = m_creature->GetMaxHealth();
 
-		if( m_creature->getVictim() == NULL )
-		{        
-			srand ( time(NULL) );
-			int chance = rand()%100;
-			if (chance < 30)
-			{
-				DoSay("You no take candle!",LANG_UNIVERSAL);
-				debug_log("Kobold is saying his text");
-			}
-			else
-			{
-				if (chance > 20 && m_creature->GetHealth() < (hp_max/5))
-				{
-					DoSay("Me run from you!",LANG_UNIVERSAL);
-					AttackStop(who);
-					debug_log("Kobold flee");
-				}
-				else
-				{		
-					DoSay("Yip, me kill!",LANG_UNIVERSAL);
-					debug_log("Kobold is saying his text");
-				}
-			}
-		}
-		DoStartAttack(who);
-	}
+        if( m_creature->getVictim() == NULL )
+        {        
+            srand ( time(NULL) );
+            int chance = rand()%100;
+            if (chance < 30)
+            {
+                DoSay("You no take candle!",LANG_UNIVERSAL);
+                debug_log("Kobold is saying his text");
+            }
+            else
+            {
+                if (chance > 20 && m_creature->GetHealth() < (hp_max/5))
+                {
+                    DoSay("Me run from you!",LANG_UNIVERSAL);
+                    AttackStop(who);
+                    debug_log("Kobold flee");
+                }
+                else
+                {		
+                    DoSay("Yip, me kill!",LANG_UNIVERSAL);
+                    debug_log("Kobold is saying his text");
+                }
+            }
+        }
+        DoStartMeleeAttack(who);
+    }
 
     void DamageInflict(Unit *who, uint32 amount_damaged)
     {
@@ -66,19 +66,19 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
         {
             DoCast(m_creature, 2050);
         }
-	}
+    }
 }; // end of class KoboldAI 
 CreatureAI* GetAI_Kobold(Creature *_Creature)
 {
-	return new KoboldAI (_Creature);
+    return new KoboldAI (_Creature);
 }
 
 
 void AddSC_kobold()
 {
-	UnitScript *newscript;
-	newscript = new UnitScript;
-	newscript->Name="kobold";
-	newscript->GetAI = GetAI_Kobold;
-	m_scripts[nrscripts++] = newscript;
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="kobold";
+    newscript->GetAI = GetAI_Kobold;
+    m_scripts[nrscripts++] = newscript;
 }

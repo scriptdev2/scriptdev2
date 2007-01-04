@@ -37,7 +37,7 @@ bool GossipHello_guard_tirisfal(Player *player, Creature *_Creature)
 void SendDefaultMenu_guard_tirisfal(Player *player, Creature *_Creature, uint32 action)
 {
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Bank
     {
         player->SEND_GOSSIP_MENU(4074,_Creature->GetGUID());
     }
@@ -127,7 +127,7 @@ void SendProfTrainerMenu_guard_tirisfal(Player *player, Creature *_Creature, uin
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Alchemy
     {
-		player->SEND_POI(2263.25, 344.23, 6, 6, 0, "Carolai Anise");
+        player->SEND_POI(2263.25, 344.23, 6, 6, 0, "Carolai Anise");
         player->SEND_GOSSIP_MENU(4082,_Creature->GetGUID());
     }
 
@@ -166,13 +166,13 @@ void SendProfTrainerMenu_guard_tirisfal(Player *player, Creature *_Creature, uin
 
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Herbalism
     {
-		player->SEND_POI(2268.21, 331.69, 6, 6, 0, "Faruza");
+        player->SEND_POI(2268.21, 331.69, 6, 6, 0, "Faruza");
         player->SEND_GOSSIP_MENU(4089,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 9)//Leatherworking
     {
-		player->SEND_POI(2027, 78.72, 6, 6, 0, "Shelene Rhobart");
+        player->SEND_POI(2027, 78.72, 6, 6, 0, "Shelene Rhobart");
         player->SEND_GOSSIP_MENU(4090,_Creature->GetGUID());
     }
 
@@ -183,13 +183,13 @@ void SendProfTrainerMenu_guard_tirisfal(Player *player, Creature *_Creature, uin
 
     if (action == GOSSIP_ACTION_INFO_DEF + 11)//Skinning
     {
-		player->SEND_POI(2027, 78.72, 6, 6, 0, "Rand Rhobart");
+        player->SEND_POI(2027, 78.72, 6, 6, 0, "Rand Rhobart");
         player->SEND_GOSSIP_MENU(4092,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 12)//Tailoring
     {
-		player->SEND_POI(2160.45, 659.93, 6, 6, 0, "Bowen Brisboise");
+        player->SEND_POI(2160.45, 659.93, 6, 6, 0, "Bowen Brisboise");
         player->SEND_GOSSIP_MENU(4093,_Creature->GetGUID());
     }
 }
@@ -215,9 +215,9 @@ bool GossipSelect_guard_tirisfal(Player *player, Creature *_Creature, uint32 sen
 
 void AddSC_guard_tirisfal()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_tirisfal";
     newscript->pGossipHello          = &GossipHello_guard_tirisfal;
     newscript->pGossipSelect         = &GossipSelect_guard_tirisfal;

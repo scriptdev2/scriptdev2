@@ -73,9 +73,9 @@ void SendDefaultMenu_guard_undercity(Player *player, Creature *_Creature, uint32
         player->SEND_GOSSIP_MENU(3518,_Creature->GetGUID());
     }
 
-	if (action == GOSSIP_ACTION_INFO_DEF + 6)//Auction House
+    if (action == GOSSIP_ACTION_INFO_DEF + 6)//Auction House
     {
-		player->SEND_POI(1647.9, 258.49, 6, 6, 0, "Undercity Auction House");
+        player->SEND_POI(1647.9, 258.49, 6, 6, 0, "Undercity Auction House");
         player->SEND_GOSSIP_MENU(3520,_Creature->GetGUID());
     }
 
@@ -291,9 +291,9 @@ bool GossipSelect_guard_undercity(Player *player, Creature *_Creature, uint32 se
 
 void AddSC_guard_undercity()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_undercity";
     newscript->pGossipHello          = &GossipHello_guard_undercity;
     newscript->pGossipSelect         = &GossipSelect_guard_undercity;

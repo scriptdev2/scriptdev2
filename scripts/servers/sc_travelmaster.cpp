@@ -20,49 +20,49 @@
 bool GossipHello_travelmaster(Player *player, Creature *_Creature)
 {
     // Info message
-	switch (_Creature->GetEntry())
-	{
+    switch (_Creature->GetEntry())
+    {
 //Zeppelins
-	//Durotar
-		case 9564: //Frezza to Tirisfal
-			player->SEND_GOSSIP_MENU(2642,_Creature->GetGUID());
-			break;
+    //Durotar
+        case 9564: //Frezza to Tirisfal
+            player->SEND_GOSSIP_MENU(2642,_Creature->GetGUID());
+            break;
 
-		case 12136: //Snurk to Grom`gol
-			player->SEND_GOSSIP_MENU(4693,_Creature->GetGUID());
-			break;
-	//Grom`gol
-		case 3149: //Nez`raz to Durotar
-			player->SEND_GOSSIP_MENU(3133,_Creature->GetGUID());
-			break;
+        case 12136: //Snurk to Grom`gol
+            player->SEND_GOSSIP_MENU(4693,_Creature->GetGUID());
+            break;
+    //Grom`gol
+        case 3149: //Nez`raz to Durotar
+            player->SEND_GOSSIP_MENU(3133,_Creature->GetGUID());
+            break;
 
-		case 12137: //Squibby Overspeck to Tirisfal
-			player->SEND_GOSSIP_MENU(4694,_Creature->GetGUID());
-			break;
+        case 12137: //Squibby Overspeck to Tirisfal
+            player->SEND_GOSSIP_MENU(4694,_Creature->GetGUID());
+            break;
 
-	//Tirisfal
-		case 9566: //Zapetta to Durotar
-			player->SEND_GOSSIP_MENU(2644,_Creature->GetGUID());
-			break;
+    //Tirisfal
+        case 9566: //Zapetta to Durotar
+            player->SEND_GOSSIP_MENU(2644,_Creature->GetGUID());
+            break;
 
-		case 3150: //Hin Denburg to Grom`gol
-			player->SEND_GOSSIP_MENU(2753,_Creature->GetGUID());
-			break;
+        case 3150: //Hin Denburg to Grom`gol
+            player->SEND_GOSSIP_MENU(2753,_Creature->GetGUID());
+            break;
 //Ships
-		case 9559: //Booty Bay
-			player->SEND_GOSSIP_MENU(2641,_Creature->GetGUID());
-			break;
+        case 9559: //Booty Bay
+            player->SEND_GOSSIP_MENU(2641,_Creature->GetGUID());
+            break;
 
-		case 9558: //Ratchet
-			player->SEND_GOSSIP_MENU(2640,_Creature->GetGUID());
-			break;
+        case 9558: //Ratchet
+            player->SEND_GOSSIP_MENU(2640,_Creature->GetGUID());
+            break;
 
 //not defined
-		default :
-			player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE,_Creature->GetGUID());
-			break;
-	}
-	return true;
+        default :
+            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE,_Creature->GetGUID());
+            break;
+    }
+    return true;
 }
 
 uint32 NPCDialogStatus_travelmaster(Player *player, Creature *_Creature )
@@ -72,9 +72,9 @@ uint32 NPCDialogStatus_travelmaster(Player *player, Creature *_Creature )
 
 void AddSC_travelmaster()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="travelmaster";
     newscript->pGossipHello          = &GossipHello_travelmaster;
     newscript->pNPCDialogStatus      = &NPCDialogStatus_travelmaster;

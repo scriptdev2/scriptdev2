@@ -30,9 +30,9 @@
 
 #define MAX_SCRIPTS 1000
 
-struct UnitScript
+struct Script
 {
-    UnitScript() :
+    Script() :
     pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pChooseReward(NULL),
         pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
@@ -63,7 +63,7 @@ struct UnitScript
 };
 
 extern int nrscripts;
-extern UnitScript *m_scripts[MAX_SCRIPTS];
+extern Script *m_scripts[MAX_SCRIPTS];
 
 #define VISIBLE_RANGE (26.46f)
 
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void MoveInLineOfSight(Unit *) {}
 
     // Called at each attack of m_creature by any victim
-    void AttackStart(Unit *) {}
+    void AttackStart(Unit *);
 
     // Called at stoping attack by any attacker
     void AttackStop(Unit *);
@@ -102,11 +102,14 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     virtual bool needToStop() const;
 
     //*************
-	//AI Helper Functions
-	//*************
+    //AI Helper Functions
+    //*************
 
     // Start attack of victim and go to him
-    void DoStartAttack(Unit* victim);
+    void DoStartMeleeAttack(Unit* victim);
+
+    // Start attack of victim but stay in position
+    void DoStartRangedAttack(Unit* victim);
 
     // Stop attack of current victim
     void DoStopAttack();
@@ -117,22 +120,29 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         m_creature->CastSpell(victim, spelId, false);
     }
 
-	// Cast spell by spell info
-	void DoCastSpell(Unit* who,SpellEntry const *spellInfo)
-	{
-		m_creature->StopMoving();
-		m_creature->CastSpell(who, spellInfo, false);
-	}
+    // Cast spell by spell info
+    void DoCastSpell(Unit* who,SpellEntry const *spellInfo)
+    {
+        m_creature->StopMoving();
+        m_creature->CastSpell(who, spellInfo, false);
+    }
 
-	// Creature say
+    // Creature say
     void DoSay(char const* text, uint32 language)
     {
         m_creature->MonsterSay(text, language, m_creature->GetGUID());
     }
 
-	//Go back to spawn point
+    //Go back to spawn point
     void DoGoHome();
 
-	void DoPlaySoundToSet(Unit* unit, uint32 sound);
+    //Plays a sound to all nearby players
+    void DoPlaySoundToSet(Unit* unit, uint32 sound);
+
+    //Faces target
+    void DoFaceTarget(Unit* unit);
+
+    //Returns true if you are out of tether(spawnpoint) range
+    bool CheckTether();
 };
 #endif

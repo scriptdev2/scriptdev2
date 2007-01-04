@@ -75,9 +75,9 @@ bool ChooseReward_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Q
 
 void AddSC_marshal_mcbride()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="marshal_mcbride";
     newscript->pGossipHello          = &GossipHello_marshal_mcbride;
     newscript->pGossipSelect         = &GossipSelect_marshal_mcbride;

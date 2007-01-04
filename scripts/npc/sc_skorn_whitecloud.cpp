@@ -46,9 +46,9 @@ uint32 NPCDialogStatus_skorn_whitecloud(Player *player, Creature *_Creature )
 
 void AddSC_skorn_whitecloud()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="skorn_whitecloud";
     newscript->pGossipHello          = &GossipHello_skorn_whitecloud;
     newscript->pGossipSelect         = &GossipSelect_skorn_whitecloud;

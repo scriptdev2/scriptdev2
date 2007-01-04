@@ -194,12 +194,12 @@ bool GossipSelect_guard_teldrassil(Player *player, Creature *_Creature, uint32 s
 
 void AddSC_guard_teldrassil()
 {
-    UnitScript *newscript;
+    Script *newscript;
 
-    newscript = new UnitScript;
+    newscript = new Script;
     newscript->Name="guard_teldrassil";
     newscript->pGossipHello          = &GossipHello_guard_teldrassil;
     newscript->pGossipSelect         = &GossipSelect_guard_teldrassil;
 
-	m_scripts[nrscripts++] = newscript;
+    m_scripts[nrscripts++] = newscript;
 }
