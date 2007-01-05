@@ -31,6 +31,10 @@
 #define SPELL_SUMMONWHELP  17646
 #define SPELL_SUMMON_MULTI_WHELPS 20171
 
+#define SAY_AGGRO "How fortuitous. Usually, I must leave my lair to feed."
+#define SAY_PHASE_2_TRANS "I'll incinerate you from above!"
+#define SAY_PHASE_3_TRANS "Learn your place mortal!"
+
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
     boss_onyxiaAI(Creature *c) : ScriptedAI(c) {}
@@ -72,7 +76,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             DoStartMeleeAttack(who);
 
             //Initial aggro speach
-            DoSay("How fortuitous. Usually, I must leave my lair to feed.",LANG_UNIVERSAL);
+            DoSay(SAY_AGGRO,LANG_UNIVERSAL);
             ResetTimers();
             pTarget = who;
         }
@@ -98,7 +102,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 DoStartMeleeAttack(who);
 
                 //Initial aggro speach
-                DoSay("How fortuitous. Usually, I must leave my lair to feed.",LANG_UNIVERSAL);
+                DoSay(SAY_AGGRO,LANG_UNIVERSAL);
                 ResetTimers();
                 pTarget = who;
             }
@@ -251,7 +255,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 m_creature->SetHover(true);
                 (*m_creature)->Clear();
                 (*m_creature)->Idle();
-                DoSay("I'll incinerate you from above!",LANG_UNIVERSAL);
+                DoSay(SAY_PHASE_2_TRANS,LANG_UNIVERSAL);
             }
 
             //Phase 2 to Phase 3 transition at 40%
@@ -264,7 +268,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 m_creature->SetHover(false);
                 (*m_creature)->Clear();
                 (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
-                DoSay("Learn your place mortal!",LANG_UNIVERSAL);
+                DoSay(SAY_PHASE_3_TRANS,LANG_UNIVERSAL);
             }
 
             //If we are within range melee the target and not in phase 2

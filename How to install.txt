@@ -4,9 +4,22 @@
 2) Checkout the ScriptDev2 trunk from "http://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2/"
 3) Compile MaNGOS!
 
-4a) On Win32: Compile ScriptDev2 using the VC71 or VC80 project within the ScriptDev2 folder (this will overwrite the Mangoscript dll in the output directory)
+4a) On Win32: 
+ - Compile ScriptDev2 using the VC71 or VC80 project within the ScriptDev2 folder (this will overwrite the Mangoscript dll in the output directory)
 
-4b) On Linux: You will need to use the makefile.am provided with ScriptDev2 and figure out the rest on your own. Hopefully we'll get better support for linux as we go.
+4b) On Linux: 
+- copy ScriptDev2 sources to mangos/src/bindings/ScriptDev2
+- edit mangos/configure.ac, and copy/paste line "src/bindings/universal/Makefile" on next row, and then change to src/bindings/ScriptDev2/Makefile
+- DO NOT DELETE IT! JUST COPY THAT LINE, AND MODIFY COPIED ONE, NOT ORIGINAL!!!
+- close and save file
+- run from command line:
+-> ./reconf
+-> autoconf
+-> automake src/bindings/ScriptDev2/Makefile
+- now configure and make, make install as usuall
+- cd to src/bindings/ScriptDev2 and run commands:
+-> make
+-> make install
 
 5) Execute the included "scripts.sql"
 6) Run mangosd from your output directory

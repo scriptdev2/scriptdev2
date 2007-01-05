@@ -70,7 +70,8 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libMaNGOSScript_la_DEPENDENCIES =
-am_libMaNGOSScript_la_OBJECTS = sc_generic_caster.lo \
+am_libMaNGOSScript_la_OBJECTS = system.lo ScriptMgr.lo \
+	sc_boss_onyxia.lo sc_custom_example.lo sc_generic_caster.lo \
 	sc_generic_melee.lo sc_kobold.lo sc_guard_bluffwatcher.lo \
 	sc_guard_contested.lo sc_guard_darnassus.lo \
 	sc_guard_dunmorogh.lo sc_guard_durotar.lo \
@@ -81,7 +82,7 @@ am_libMaNGOSScript_la_OBJECTS = sc_generic_caster.lo \
 	sc_marshal_mcbride.lo sc_silas_darkmoon.lo \
 	sc_silva_filnaveth.lo sc_skorn_whitecloud.lo \
 	sc_battlemaster.lo sc_guildmaster.lo sc_travelmaster.lo \
-	sc_default.lo sc_defines.lo ScriptMgr.lo system.lo
+	sc_default.lo sc_defines.lo
 libMaNGOSScript_la_OBJECTS = $(am_libMaNGOSScript_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -251,6 +252,12 @@ libMaNGOSScript_la_LDFLAGS = \
 
 LIBADD =  -L/usr/lib/mysql -L/usr/local/lib/mysql  
 libMaNGOSScript_la_SOURCES = \
+    system.cpp \
+    config.h \
+    ScriptMgr.h \
+    ScriptMgr.cpp \
+    scripts/boss/sc_boss_onyxia.cpp \
+    scripts/custom/sc_custom_example.cpp \
     scripts/creature/sc_generic_caster.cpp \
     scripts/creature/sc_generic_melee.cpp \
     scripts/creature/sc_kobold.cpp \
@@ -277,11 +284,7 @@ libMaNGOSScript_la_SOURCES = \
     scripts/servers/sc_travelmaster.cpp \
     scripts/sc_default.cpp \
     scripts/sc_defines.cpp \
-    scripts/sc_defines.h \
-    ScriptMgr.cpp \
-    ScriptMgr.h \
-    config.h \
-    system.cpp
+    scripts/sc_defines.h
 
 all: all-am
 
@@ -354,6 +357,8 @@ distclean-compile:
 
 include ./$(DEPDIR)/ScriptMgr.Plo
 include ./$(DEPDIR)/sc_battlemaster.Plo
+include ./$(DEPDIR)/sc_boss_onyxia.Plo
+include ./$(DEPDIR)/sc_custom_example.Plo
 include ./$(DEPDIR)/sc_default.Plo
 include ./$(DEPDIR)/sc_defines.Plo
 include ./$(DEPDIR)/sc_generic_caster.Plo
@@ -401,6 +406,20 @@ include ./$(DEPDIR)/system.Plo
 #	source='$<' object='$@' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(LTCXXCOMPILE) -c -o $@ $<
+
+sc_boss_onyxia.lo: scripts/boss/sc_boss_onyxia.cpp
+	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_onyxia.lo -MD -MP -MF "$(DEPDIR)/sc_boss_onyxia.Tpo" -c -o sc_boss_onyxia.lo `test -f 'scripts/boss/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/boss/sc_boss_onyxia.cpp; \
+	then mv -f "$(DEPDIR)/sc_boss_onyxia.Tpo" "$(DEPDIR)/sc_boss_onyxia.Plo"; else rm -f "$(DEPDIR)/sc_boss_onyxia.Tpo"; exit 1; fi
+#	source='scripts/boss/sc_boss_onyxia.cpp' object='sc_boss_onyxia.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_onyxia.lo `test -f 'scripts/boss/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/boss/sc_boss_onyxia.cpp
+
+sc_custom_example.lo: scripts/custom/sc_custom_example.cpp
+	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_custom_example.lo -MD -MP -MF "$(DEPDIR)/sc_custom_example.Tpo" -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp; \
+	then mv -f "$(DEPDIR)/sc_custom_example.Tpo" "$(DEPDIR)/sc_custom_example.Plo"; else rm -f "$(DEPDIR)/sc_custom_example.Tpo"; exit 1; fi
+#	source='scripts/custom/sc_custom_example.cpp' object='sc_custom_example.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp
 
 sc_generic_caster.lo: scripts/creature/sc_generic_caster.cpp
 	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_generic_caster.lo -MD -MP -MF "$(DEPDIR)/sc_generic_caster.Tpo" -c -o sc_generic_caster.lo `test -f 'scripts/creature/sc_generic_caster.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_caster.cpp; \

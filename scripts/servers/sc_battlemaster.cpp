@@ -50,7 +50,7 @@ void AddSC_battlemaster()                                   // Please write comm
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="battlemaster";
+    newscript->Name=GOSSIP_TEXT_BATTLEMASTER;
     newscript->pGossipHello          = &GossipHello_battlemaster;
     newscript->pGossipSelect         = &GossipSelect_battlemaster;
     newscript->pNPCDialogStatus      = &NPCDialogStatus_battlemaster;

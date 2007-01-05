@@ -20,6 +20,58 @@
 
 #include "../ScriptMgr.h"
 
+// Gossip Text
+#define GOSSIP_TEXT_BANK                "The Bank"
+#define GOSSIP_TEXT_WINDRIDER           "Wind rider master"
+#define GOSSIP_TEXT_GRYPHON             "Gryphon Master"
+#define GOSSIP_TEXT_BATHANDLER          "Bat Handler"
+#define GOSSIP_TEXT_HIPPOGRYPH          "Hippogryph Master"
+#define GOSSIP_TEXT_AUCTIONHOUSE        "Auction House"
+#define GOSSIP_TEXT_GUILDMASTER         "Guild Master"
+#define GOSSIP_TEXT_INN                 "The Inn"
+#define GOSSIP_TEXT_MAILBOX             "Mailbox"
+#define GOSSIP_TEXT_STABLEMASTER        "Stable Master"
+#define GOSSIP_TEXT_WEAPONMASTER        "Weapons Trainer"
+#define GOSSIP_TEXT_BATTLEMASTER        "Battlemaster"
+#define GOSSIP_TEXT_CLASSTRAINER        "Class Trainer"
+#define GOSSIP_TEXT_PROFTRAINER         "Profession Trainer"
+#define GOSSIP_TEXT_OFFICERS            "The officers` lounge"
+
+#define GOSSIP_TEXT_ALTERACVALLEY       "Alterac Valley"
+#define GOSSIP_TEXT_ARATHIBASIN         "Arathi Basin" 
+#define GOSSIP_TEXT_WARSONGULCH         "Warsong Gulch"
+
+#define GOSSIP_TEXT_DRUID               "Druid" 
+#define GOSSIP_TEXT_HUNTER              "Hunter"
+#define GOSSIP_TEXT_PRIEST              "Priest"
+#define GOSSIP_TEXT_ROGUE               "Rogue"
+#define GOSSIP_TEXT_WARRIOR             "Warrior"
+#define GOSSIP_TEXT_PALADIN             "Paladin"
+#define GOSSIP_TEXT_SHAMAN              "Shaman"
+#define GOSSIP_TEXT_MAGE                "Mage"
+#define GOSSIP_TEXT_WARLOCK             "Warlock"
+
+
+#define GOSSIP_TEXT_ALCHEMY             "Alchemy"
+#define GOSSIP_TEXT_BLACKSMITHING       "Blacksmithing"
+#define GOSSIP_TEXT_COOKING             "Cooking"
+#define GOSSIP_TEXT_ENCHANTING          "Enchanting"
+#define GOSSIP_TEXT_ENGINEERING         "Engineering"
+#define GOSSIP_TEXT_FIRSTAID            "First Aid"
+#define GOSSIP_TEXT_HERBALISM           "Herbalism"
+#define GOSSIP_TEXT_LEATHERWORKING      "Leatherworking"
+#define GOSSIP_TEXT_POISONS             "Poisons"
+#define GOSSIP_TEXT_TAILORING           "Tailoring"
+#define GOSSIP_TEXT_MINING              "Mining"
+#define GOSSIP_TEXT_FISHING             "Fishing"
+#define GOSSIP_TEXT_SKINNING            "Skinning"
+
+#define GOSSIP_TEXT_IRONFORGE_BANK      "Bank of Ironforge"
+#define GOSSIP_TEXT_STORMWIND_BANK      "Bank of Stormwind"
+#define GOSSIP_TEXT_DEEPRUNTRAM         "Deeprun Tram"
+#define GOSSIP_TEXT_ZEPPLINMASTER       "Zeppelin master"
+#define GOSSIP_TEXT_FERRY               "Rut'theran Ferry"
+
 // Skill defines
 
 #define TRADESKILL_ALCHEMY                  1
