@@ -58,9 +58,18 @@ struct Script
     bool (*pGOChooseReward      )(Player *player, GameObject *_GO, Quest *_Quest, uint32 opt );
 
     CreatureAI* (*GetAI)(Creature *_Creature);
+
+#ifdef SCRIPT_EXTENDED
+    bool (*pReciveEmote         )(Player *player, Creature *_Creature, uint32 emote);
+#endif
     // -----------------------------------------
 
 };
+
+#ifdef SCRIPT_EXTENDED
+extern DBCStorage <SpellRangeEntry> *pSpellRangeStore;
+extern DBCStorage <SpellEntry> *pSpellStore;
+#endif
 
 extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
@@ -90,6 +99,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     // Is unit visibale for MoveInLineOfSight
     bool IsVisible(Unit *who) const
     {
+        if (!who)
+            return false;
+
         return !who->HasStealthAura() && m_creature->GetDistanceSq(who) <= VISIBLE_RANGE;
     }
 
@@ -141,6 +153,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Faces target
     void DoFaceTarget(Unit* unit);
+
+    //Selects a random spell from creature spell list to use
+    SpellEntry const* SelectSpell(Unit* target);
 
     //Returns true if you are out of tether(spawnpoint) range
     bool CheckTether();

@@ -131,6 +131,10 @@
 			<Filter
 				Name="boss"
 				>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_onyxia.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="creature"
@@ -251,6 +255,10 @@
 			<Filter
 				Name="custom"
 				>
+				<File
+					RelativePath="..\scripts\custom\sc_custom_example.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="area"

@@ -23,17 +23,24 @@ uint8 loglevel = 0;
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
+#ifdef SCRIPT_EXTENDED
+DBCStorage <SpellRangeEntry> *pSpellRangeStore;
+DBCStorage <SpellEntry> *pSpellStore;
+#endif
+
 // -- Scripts to be added --
 
 //Area
 
 //Boss
+extern void AddSC_boss_onyxiaAI();
 
 // Creature
 extern void AddSC_kobold();
 extern void AddSC_generic_caster();
 
 //Custom
+extern void AddSC_custom_example();
 
 //GO
 
@@ -89,12 +96,14 @@ void ScriptsInit()
     //Area
 
     //Boss
+    AddSC_boss_onyxiaAI();
 
     // Creature
     AddSC_kobold();
     AddSC_generic_caster();
 
     //Custom
+    AddSC_custom_example();
 
     //GO
 
@@ -132,6 +141,14 @@ void ScriptsInit()
     // ----------------------------------------
 
 }
+#ifdef SCRIPT_EXTENDED
+MANGOS_DLL_EXPORT
+void DBCPointers(DBCStorage <SpellRangeEntry> *sSpellRangeStore, DBCStorage <SpellEntry> *sSpellStore)
+{
+    pSpellRangeStore = sSpellRangeStore;
+    pSpellStore = sSpellStore;
+}
+#endif
 
 Script* GetScriptByName(std::string Name)
 {
@@ -323,6 +340,19 @@ CreatureAI* GetAI(Creature *_Creature)
     return tmpscript->GetAI(_Creature);
 }
 
+#ifdef SCRIPT_EXTENDED
+MANGOS_DLL_EXPORT
+bool ReciveEmote( Player *player, Creature *_Creature, uint32 emote )
+{
+    Script *tmpscript = NULL;
+
+    tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
+    if(!tmpscript || !tmpscript->pReciveEmote) return false;
+
+    return tmpscript->pReciveEmote(player, _Creature, emote);
+}
+#endif
+
 void ScriptedAI::AttackStart(Unit* who)
 {
     if (!who)
@@ -379,6 +409,9 @@ void ScriptedAI::AttackStop(Unit *)
 
 void ScriptedAI::DoStartMeleeAttack(Unit* victim)
 {
+    if (!victim)
+        return;
+
     if ( m_creature->Attack(victim) )
     {
         (*m_creature)->Mutate(new TargetedMovementGenerator(*victim));
@@ -387,6 +420,9 @@ void ScriptedAI::DoStartMeleeAttack(Unit* victim)
 
 void ScriptedAI::DoStartRangedAttack(Unit* victim)
 {
+    if (!victim)
+        return;
+
     m_creature->Attack(victim);
 }
 
@@ -409,11 +445,17 @@ void ScriptedAI::DoGoHome()
 
 bool ScriptedAI::needToStop() const
 {
-    return ( !m_creature->getVictim()->isTargetableForAttack() || !m_creature->isAlive() );
+    if (!m_creature->getVictim() || !m_creature->isAlive())
+        return true;
+
+    return ( !m_creature->getVictim()->isTargetableForAttack());
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)
 {
+    if (!unit)
+        return;
+
     WorldPacket data(4);
     data.SetOpcode(SMSG_PLAY_SOUND);
     data << uint32(sound);
@@ -422,6 +464,9 @@ void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)
 
 void ScriptedAI::DoFaceTarget(Unit *unit)
 {
+    if (!unit)
+        return;
+
     //Face target
     m_creature->SetInFront(unit);
                         
@@ -437,4 +482,67 @@ bool ScriptedAI::CheckTether()
     float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
 
     return (spawndist > 2500.0f);
+}
+
+SpellEntry const* ScriptedAI::SelectSpell(Unit* target)
+{
+    //No target so return null
+    if (!target)
+        return NULL;
+
+    //Silenced so we can't cast
+    if (m_creature->m_silenced)
+        return NULL;
+
+#ifdef SCRIPT_EXTENDED
+    //Using the extended script system we first create a list of viable spells
+    SpellEntry const* Spell[4];
+    Spell[0] = 0;
+    Spell[1] = 0;
+    Spell[2] = 0;
+    Spell[3] = 0;
+
+    uint32 SpellCount = 0;
+
+    SpellEntry const* TempSpell;
+    SpellRangeEntry const* TempRange;
+
+    //Check if each spell is viable(set it to null if not)
+    for (uint32 i = 0; i < 4; i++)
+    {
+        TempSpell = pSpellStore->LookupEntry(m_creature->m_spells[i]);
+
+        if (!TempSpell)
+            continue;
+
+        //We don't have enough mana/rage/energy to do this spell
+        if (m_creature->GetPower((Powers)TempSpell->powerType) < TempSpell->manaCost)
+            continue;
+
+        TempRange = pSpellRangeStore->LookupEntry(TempSpell->rangeIndex);
+
+        //Spell has invalid range store so we can't use it
+        if (!TempRange)
+            continue;
+
+        //Unit is out of range of this spell
+        if (m_creature->GetDistanceSq(target) > TempRange->maxRange*TempRange->maxRange || m_creature->GetDistanceSq(target) < TempRange->minRange*TempRange->minRange)
+            continue;
+
+        //All good so lets add it to the spell list
+        Spell[SpellCount] = TempSpell;
+        SpellCount++;
+    }
+
+    //We got our usable spells so now lets randomly pick one
+    if (!SpellCount)
+        return NULL;
+
+    return Spell[rand()%SpellCount];
+
+#else
+
+    //Return whatever mangos core thinks is the best spell
+    return m_creature->reachWithSpellAttack(target);
+#endif
 }

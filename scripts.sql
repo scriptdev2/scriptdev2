@@ -1,5 +1,31 @@
 --
--- guards data.
+-- area data
+--
+
+--
+-- boss data
+--
+
+UPDATE `creature_template` SET`ScriptName` = 'boss_onyxia' WHERE `entry` = 10184;
+
+--
+-- creature data
+--
+
+UPDATE `creature_template` SET`ScriptName` = 'kobold' WHERE `entry` = 257;
+UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038);
+UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
+
+--
+-- custom data
+--
+
+--
+-- go data
+--
+
+--
+-- guard data
 --
 
 UPDATE `creature_template` SET`ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -24,24 +50,26 @@ UPDATE `creature_template` SET`ScriptName` = 'guard_tirisfal' WHERE `entry` IN (
 UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` IN (40100,40101,40102,40103,40104,40105,40106,40107,40108,40109,40110,40111,40112,40113);
 UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` IN (40200,40201,40202,40203,40204,40205,40206,40207,40208,40209,40210,40211,40212,40213);
 
---
--- others data.
---
-
-UPDATE `creature_template` SET`ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);
-UPDATE `creature_template` SET`ScriptName` = 'guildmaster' WHERE `entry` IN (4974,5054,4613);
-UPDATE `creature_template` SET`ScriptName` = 'travelmaster' WHERE `entry` IN (9564,12136,3149,12137,9566,3150,9559,9558);
 
 --
--- creature data
+-- item data
+--
+
+--
+-- npc data
 --
 
 UPDATE `creature_template` SET`ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
 UPDATE `creature_template` SET`ScriptName` = 'silva_filnaveth' WHERE `entry` = 11800;
 UPDATE `creature_template` SET`ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
-UPDATE `creature_template` SET`ScriptName` = 'kobold' WHERE `entry` = 257;
-UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038);
-UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
+
+--
+-- servers data
+--
+
+UPDATE `creature_template` SET`ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);
+UPDATE `creature_template` SET`ScriptName` = 'guildmaster' WHERE `entry` IN (4974,5054,4613);
+UPDATE `creature_template` SET`ScriptName` = 'travelmaster' WHERE `entry` IN (9564,12136,3149,12137,9566,3150,9559,9558);
 
 
 --

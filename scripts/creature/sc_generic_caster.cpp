@@ -23,17 +23,21 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
 {
     generic_casterAI(Creature *c) : ScriptedAI(c) {}
 
+    Unit *pTarget;
+
     void AttackStart(Unit *who)
     {
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack())
+        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
                 DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
+
+            pTarget = who;
         }
     }
 
@@ -53,18 +57,31 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
                 if (m_creature->IsWithinDist(who, ATTACK_DIST))
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
+
+                pTarget = who;
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
+        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //But we still need to reset
+        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        {
+            pTarget = NULL;
+            DoStopAttack();
+            DoGoHome();
+            return;
+        }
+
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawn point
             if (needToStop() || CheckTether())
             {
+                pTarget = NULL;
                 DoStopAttack();
                 DoGoHome();
                 return;
@@ -86,7 +103,7 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
             else 
             {
                 //See if we can cast a spell
-                SpellEntry const *info = m_creature->reachWithSpellAttack(m_creature->getVictim());
+                SpellEntry const *info = SelectSpell(m_creature->getVictim());
                 
                 //Found a spell, now cast it!
                 if (info)
@@ -117,6 +134,7 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
+                pTarget = NULL;
                 DoStopAttack();
                 DoGoHome();
             }

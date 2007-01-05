@@ -1,0 +1,17 @@
+--- Extended Script ---
+Extended script is a patch for the mangos core which allows scripts to react to emotes and to get detailed spell data.
+
+It is NOT required and is NOT installed by default. You can use scriptdev2 without the need for Extended Script. All it does is provide extra features.
+
+--- Install ---
+
+1) Patch your Mangos core with "ExtendedScript.patch"
+2) Recomple Mangos
+3) Recompile ScriptDev2
+
+--- After install ---
+If you decide you no longer want to use ExtendedScript you can avoid having to revert your files by simply removing the line
+
+#define SCRIPT_EXTENDED
+
+in Common.h

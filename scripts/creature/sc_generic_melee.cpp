@@ -23,15 +23,18 @@ struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
 {
     generic_meleeAI(Creature *c) : ScriptedAI(c) {}
 
+    Unit* pTarget;
+
     void AttackStart(Unit *who)
     {
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack())
+        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who != m_creature)
         {
             //Begin attack
             DoStartMeleeAttack(who);
+            pTarget = who;
         }
     }
 
@@ -49,18 +52,30 @@ struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
 
                 //Begin attack
                 DoStartMeleeAttack(who);
+                pTarget = who;
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
+        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //But we still need to reset
+        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        {
+            pTarget = NULL;
+            DoStopAttack();
+            DoGoHome();
+            return;
+        }
+
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawnpoint
             if (needToStop() || CheckTether())
             {
+                pTarget = NULL;
                 DoStopAttack();
                 DoGoHome();
                 return;
@@ -85,6 +100,7 @@ struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
+                pTarget = NULL;
                 DoStopAttack();
                 DoGoHome();
             }
