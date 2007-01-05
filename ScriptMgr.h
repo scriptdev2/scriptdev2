@@ -37,6 +37,9 @@ struct Script
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pChooseReward(NULL),
         pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
         pGOChooseReward(NULL), GetAI(NULL)
+#ifdef SCRIPT_EXTENDED
+        ,pReciveEmote(NULL)
+#endif
         {}
 
     std::string Name;
@@ -81,22 +84,22 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     ScriptedAI(Creature* creature) : m_creature(creature) {}
     ~ScriptedAI() {}
 
-    // Called if IsVisible(Unit *who) is true at each *who move
+    //Called if IsVisible(Unit *who) is true at each *who move
     void MoveInLineOfSight(Unit *) {}
 
-    // Called at each attack of m_creature by any victim
+    //Called at each attack of m_creature by any victim
     void AttackStart(Unit *);
 
-    // Called at stoping attack by any attacker
+    //Called at stoping attack by any attacker
     void AttackStop(Unit *);
 
-    // Called at any heal cast/item used (call non implemented in mangos)
+    //Called at any heal cast/item used (call non implemented in mangos)
     void HealBy(Unit *healer, uint32 amount_healed) {}
 
-    // Called at any Damage from any attacker
+    //Called at any Damage from any attacker
     void DamageInflict(Unit *healer, uint32 amount_healed) {}
 
-    // Is unit visibale for MoveInLineOfSight
+    //Is unit visibale for MoveInLineOfSight
     bool IsVisible(Unit *who) const
     {
         if (!who)
@@ -105,45 +108,48 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         return !who->HasStealthAura() && m_creature->GetDistanceSq(who) <= VISIBLE_RANGE;
     }
 
-    // Called at World update tick
+    //Called at World update tick
     void UpdateAI(const uint32);
 
     Creature* m_creature;
 
-    // Check condition for attack stop
+    //Check condition for attack stop
     virtual bool needToStop() const;
 
     //*************
     //AI Helper Functions
     //*************
 
-    // Start attack of victim and go to him
+    //Start attack of victim and go to him
     void DoStartMeleeAttack(Unit* victim);
 
-    // Start attack of victim but stay in position
+    //Start attack of victim but stay in position
     void DoStartRangedAttack(Unit* victim);
 
-    // Stop attack of current victim
+    //Stop attack of current victim
     void DoStopAttack();
 
-    // Cast spell by Id
+    //Cast spell by Id
     void DoCast(Unit* victim, uint32 spelId)
     {
         m_creature->CastSpell(victim, spelId, false);
     }
 
-    // Cast spell by spell info
+    //Cast spell by spell info
     void DoCastSpell(Unit* who,SpellEntry const *spellInfo)
     {
         m_creature->StopMoving();
         m_creature->CastSpell(who, spellInfo, false);
     }
 
-    // Creature say
-    void DoSay(char const* text, uint32 language)
-    {
-        m_creature->MonsterSay(text, language, m_creature->GetGUID());
-    }
+    //Creature say
+    void DoSay(char const* text, uint32 language);
+
+    //Creature Yell
+    void DoYell(char const* text, uint32 language);
+
+    //Creature Text emote
+    void DoTextEmote(char const* text);
 
     //Go back to spawn point
     void DoGoHome();

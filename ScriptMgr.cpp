@@ -435,6 +435,11 @@ void ScriptedAI::DoStopAttack()
     }
 }
 
+void ScriptedAI::DoSay(const char *text, uint32 language)
+{
+    m_creature->MonsterSay(text, language, m_creature->GetGUID());
+}
+
 void ScriptedAI::DoGoHome()
 {
     if( !m_creature->getVictim() && m_creature->isAlive() )
