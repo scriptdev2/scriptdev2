@@ -79,6 +79,17 @@ extern Script *m_scripts[MAX_SCRIPTS];
 
 #define VISIBLE_RANGE (26.46f)
 
+//Spell type flags
+#define SPELLTYPE_DAMAGE        0x01
+#define SPELLTYPE_HEALING       0x02
+#define SPELLTYPE_APPLYBUFF     0x04
+#define SPELLTYPE_APPLYDEBUFF   0x08
+
+//Chat defines
+#define CHAT_MSG_MONSTER_SAY    0x0B
+#define CHAT_MSG_MONSTER_YELL   0x0C
+#define CHAT_MSG_MONSTER_EMOTE  0x0D
+
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
     ScriptedAI(Creature* creature) : m_creature(creature) {}
@@ -143,13 +154,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     }
 
     //Creature say
-    void DoSay(char const* text, uint32 language);
+    void DoSay(char const* text, uint32 language, Unit* target);
 
     //Creature Yell
-    void DoYell(char const* text, uint32 language);
+    void DoYell(char const* text, uint32 language, Unit* target);
 
     //Creature Text emote
-    void DoTextEmote(char const* text);
+    void DoTextEmote(char const* text, Unit* target);
 
     //Go back to spawn point
     void DoGoHome();
@@ -162,6 +173,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Selects a random spell from creature spell list to use
     SpellEntry const* SelectSpell(Unit* target);
+    SpellEntry const* SelectSpell(Unit* target, float RangeMin, float RangeMax);
+    SpellEntry const* SelectSpell(Unit* target, uint32 SpellType);
+    SpellEntry const* SelectSpell(Unit* target, float RangeMin, float RangeMax, uint32 SpellType);
 
     //Returns true if you are out of tether(spawnpoint) range
     bool CheckTether();

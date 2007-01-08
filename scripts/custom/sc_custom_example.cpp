@@ -43,7 +43,7 @@
 #define SAY_RANDOM_2    "These mortal infedels my lord, they have invaded your sanctum and seek to steal your secrets."
 #define SAY_RANDOM_3    "You are already dead."
 #define SAY_RANDOM_4    "Where to go? What to do? So many choices that all end in pain, end in death."
-#define SAY_BESERK      "I sentance you to death!"
+#define SAY_BESERK      "$N, I sentance you to death!"
 #define SAY_PHASE       "The suffering has just begun!"
 
 #define GOSSIP_ITEM     "I'm looking for a fight"
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
             pTarget = who;
 
             //Say some stuff
-            DoSay(SAY_AGGRO,LANG_UNIVERSAL);
+            DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,8280);
         }
     }
@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 pTarget = who;
 
                 //Say some stuff
-                DoSay(SAY_AGGRO,LANG_UNIVERSAL);
+                DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,8280);
             }
         }
@@ -160,27 +160,27 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 switch (rand()%5)
                 {
                 case 0:
-                    DoSay(SAY_RANDOM_0,LANG_UNIVERSAL);
+                    DoYell(SAY_RANDOM_0,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,8831); //8831 is the index of the sound we are playing. You find these numbers in SoundEntries.dbc
                     break;
                     
                 case 1:
-                    DoSay(SAY_RANDOM_1,LANG_UNIVERSAL);
+                    DoYell(SAY_RANDOM_1,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,8818); 
                     break;
 
                 case 2:
-                    DoSay(SAY_RANDOM_2,LANG_UNIVERSAL);
+                    DoYell(SAY_RANDOM_2,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,8041); 
                     break;
 
                 case 3:
-                    DoSay(SAY_RANDOM_3,LANG_UNIVERSAL);
+                    DoYell(SAY_RANDOM_3,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,8581);
                     break;
 
                 case 4:
-                    DoSay(SAY_RANDOM_4,LANG_UNIVERSAL);
+                    DoYell(SAY_RANDOM_4,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,8791); 
                     break;
                 }
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 {
                     //Say our line then cast uber death spell
                     DoPlaySoundToSet(m_creature,8588);
-                    DoSay(SAY_BESERK,LANG_UNIVERSAL);
+                    DoYell(SAY_BESERK,LANG_UNIVERSAL,m_creature->getVictim());
                     DoCast(m_creature->getVictim(),SPELL_BESERK);
 
                     //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 {
                     //Go to next phase
                     Phase++;
-                    DoSay(SAY_PHASE,LANG_UNIVERSAL);
+                    DoYell(SAY_PHASE,LANG_UNIVERSAL,NULL);
                     DoCast(m_creature,SPELL_ENRAGE);
                 }else Phase_Timer -= diff;
 
@@ -338,10 +338,10 @@ bool ReciveEmote_custom_example(Player *player, Creature *_Creature, uint32 emot
     _Creature->HandleEmoteCommand(emote);
 
     if (emote == EMOTE_STATE_DANCE)
-        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_DANCE,LANG_UNIVERSAL);
+        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
 
     if (emote == EMOTE_ONESHOT_SALUTE)
-        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_SALUTE,LANG_UNIVERSAL);
+        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
 
     return true;
 }

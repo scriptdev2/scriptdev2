@@ -1,0 +1,29 @@
+--- TO DO ---
+Simple list of things we need to do.
+
+--- ScriptDev2 Framework ---
+
+- Write a "OnDeath" function and get it patched into mangos core
+- New function to spawn mobs from within scriptdev
+- Fix item scripts
+- Remove Honor vendor scripts since they are useless
+- Get the OnReciveEmote and DBCPointer functions patched into MaNGOS core
+
+--- Scripting with Priorities ---
+1) Finish writing generic scripts (caster, melee)
+2) Boss AI scripts
+3) Specific NPC scripts
+4) Event scripts
+5) Spell and Item scripts
+
+--- Core Problems ---
+
+- No "OnDeath" function
+- No "OnReciveEmote" function (Extended_Script allows this but through a core patch)
+- No ability to acess the DBC stores (Extended_Script allows this but through a core patch)
+- Unable to spawn from within scriptdev (possible fix in Mangoscript but needs to be applied to core)
+- Unable to create new movement generators (you shouldn't need to though)
+- Item scripts arn't implemented in the core
+- Spell scripts arn't implemented in the core
+- Events/EventScripts don't even truely exist in the core yet
+- Target Facing is incorrect (issues with correct orentation)

@@ -33,15 +33,15 @@ struct MANGOS_DLL_DECL guard_contested : public ScriptedAI
                         srand (time(NULL));
                         if (rand()%100 <= 30)
                         {
-                            DoSay("Taste blade, mongrel!", LANG_UNIVERSAL);
+                            DoSay("Taste blade, mongrel!", LANG_UNIVERSAL,NULL);
                         }
                         else if (rand()%100 > 30 && rand()%100 < 50)
                         {
-                            DoSay("Please tell me that you didn`t just do what I think you just did. Please tell me that I`m not going to have to hurt you...", LANG_UNIVERSAL);
+                            DoSay("Please tell me that you didn`t just do what I think you just did. Please tell me that I`m not going to have to hurt you...", LANG_UNIVERSAL,NULL);
                         }
                         else if (rand()%100 >= 50)
                         {
-                            DoSay("As if we don`t have enough problems, you go and create more!", LANG_UNIVERSAL);
+                            DoSay("As if we don`t have enough problems, you go and create more!", LANG_UNIVERSAL,NULL);
                         }
                     }
                     else 

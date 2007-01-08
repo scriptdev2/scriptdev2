@@ -31,13 +31,14 @@
 #define SPELL_SUMMONWHELP  17646
 #define SPELL_SUMMON_MULTI_WHELPS 20171
 
-#define SAY_AGGRO "How fortuitous. Usually, I must leave my lair to feed."
-#define SAY_PHASE_2_TRANS "I'll incinerate you from above!"
-#define SAY_PHASE_3_TRANS "Learn your place mortal!"
+#define SAY_AGGRO           "How fortuitous. Usually, I must leave my lair to feed."
+#define SAY_KILL            "Learn your place mortal!"
+#define SAY_PHASE_2_TRANS   "I'll incinerate you from above!"
+#define SAY_PHASE_3_TRANS   "It seems you'll need another lesson"
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {}
+    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {pTarget = NULL;c->CastSpell(c,17743,false); }//Peon sleeping, currently best we can do
 
     uint32 swingcounter;
     uint32 flamebreath_timer;
@@ -47,13 +48,15 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 fireball_timer;
     uint32 whelpspawn_timer;
     uint32 bellowingroar_timer;
+    uint32 reset_timer;
     uint32 phase;
 
     Unit* pTarget;
 
     void ResetTimers()
     {
-        DoCast(m_creature,28237);
+        m_creature->clearUnitState(UNIT_STAT_ROOT | UNIT_STAT_STUNDED);
+        m_creature->RemoveAllAuras();
         swingcounter = 0;
         flamebreath_timer = 20000;
         cleave_timer = 15000;
@@ -76,7 +79,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             DoStartMeleeAttack(who);
 
             //Initial aggro speach
-            DoSay(SAY_AGGRO,LANG_UNIVERSAL);
+            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             ResetTimers();
             pTarget = who;
         }
@@ -102,7 +105,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 DoStartMeleeAttack(who);
 
                 //Initial aggro speach
-                DoSay(SAY_AGGRO,LANG_UNIVERSAL);
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 ResetTimers();
                 pTarget = who;
             }
@@ -113,6 +116,11 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
         {
+            m_creature->RemoveAllAuras();
+            m_creature->InterruptSpell();
+            //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
+            m_creature->SetHover(false);
+            (*m_creature)->Clear();
             pTarget = NULL;
             DoStopAttack();
             DoGoHome();
@@ -125,8 +133,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //Check if we should stop attacking because our victim is no longer attackable
             if (needToStop())
             {
+                m_creature->RemoveAllAuras();
                 m_creature->InterruptSpell();
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
+                //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->SetHover(false);
                 (*m_creature)->Clear();
                 pTarget = NULL;
@@ -169,51 +178,62 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //Phase 2 only spells
             if (phase == 2)
             {
+                //Replay the take off animation if we arn't hovering
+                if (!m_creature->isHover())
+                {
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
+                    m_creature->SetHover(true);
+                }
+
                 //Random movement every 10 seconds
                 if (movement_timer < diff)
                 {
                     //Inturrupt whatever we are casting then move to random position
                     m_creature->InterruptSpell();
-                    uint32 position = rand()%8;
+                    uint32 position = rand()%9;
 
                     switch (position)
                     {
                         case 0:
-                            m_creature->SendMonsterMove(-65.8444,-213.809,-84.2985,false,false,5000);
+                            SpecialMove(-65.8444,-213.809,-84.2985,5000);
                             m_creature->Relocate(-65,-213,-84,0);
                             break;
                         case 1:
-                            m_creature->SendMonsterMove(22.8739,-217.152,-85.0548,false,false,5000);
+                            SpecialMove(22.8739,-217.152,-85.0548,5000);
                             m_creature->Relocate(22,-217,-85,0);
                             break;
                         case 2:
-                            m_creature->SendMonsterMove(-33.5561,-182.682,-88.9457,false,false,5000);
+                            SpecialMove(-33.5561,-182.682,-88.9457,5000);
                             m_creature->Relocate(-33,-182,-88,0);
                             break;
                         case 3:
-                            m_creature->SendMonsterMove(-31.4963,-250.123,-89.1278,false,false,5000);
+                            SpecialMove(-31.4963,-250.123,-89.1278,5000);
                             m_creature->Relocate(-31,-250,-89,0);
                             break;
                         case 4:
-                            m_creature->SendMonsterMove(-2.78999,-181.431,-86.8962,false,false,5000);
+                            SpecialMove(-2.78999,-181.431,-86.8962,5000);
                             m_creature->Relocate(-2,-181,-86,0);
                             break;
                         case 5:
-                            m_creature->SendMonsterMove(-54.9415,-232.242,-85.5555,false,false,5000);
+                            SpecialMove(-54.9415,-232.242,-85.5555,5000);
                             m_creature->Relocate(-54,-232,-85,0);
                             break;
                         case 6:
-                            m_creature->SendMonsterMove(-65.2653,-194.879,-84.6718,false,false,5000);
+                            SpecialMove(-65.2653,-194.879,-84.6718,5000);
                             m_creature->Relocate(-65,-194,-84,0);
                             break;
                         case 7:
-                            m_creature->SendMonsterMove(10.5665,-241.478,-85.9426,false,false,5000);    
+                            SpecialMove(10.5665,-241.478,-85.9426,5000);    
                             m_creature->Relocate(10,-241,-85,0);
+                            break;
+                        case 8:
+                            //1 in 9 chance that we cast deepbreath instead of moving
+                            DoTextEmote("takes a deep breath...",NULL);
+                            DoYell("Deep Breath would go here!", LANG_UNIVERSAL,NULL);
                             break;
                     }
 
-                    //Random chance to cast deep breath after we arrive will go here later
-
+                    DoCast(m_creature,11010);//hover?
                     movement_timer = 10000;
                 }else movement_timer -= diff;
 
@@ -229,7 +249,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 if (whelpspawn_timer < diff)
                 {
                     //No core support yet so just say some text
-                    DoSay("Spawning whelps!",LANG_UNIVERSAL);
+                    DoYell("Spawning whelps!",LANG_UNIVERSAL,NULL);
                     whelpspawn_timer = 450000;
                 }else whelpspawn_timer -= diff;
             }
@@ -252,10 +272,12 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 phase = 2;
                 m_creature->InterruptSpell();
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                m_creature->SetHover(true);
                 (*m_creature)->Clear();
                 (*m_creature)->Idle();
-                DoSay(SAY_PHASE_2_TRANS,LANG_UNIVERSAL);
+                DoCast(m_creature,18430);//Dragon hover?
+                DoCast(m_creature,11010);//hover?
+                m_creature->SetHover(true);
+                DoYell(SAY_PHASE_2_TRANS,LANG_UNIVERSAL,NULL);
             }
 
             //Phase 2 to Phase 3 transition at 40%
@@ -263,12 +285,12 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 phase = 3;
                 m_creature->InterruptSpell();
+                //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->SetHover(false);
                 (*m_creature)->Clear();
                 (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
-                DoSay(SAY_PHASE_3_TRANS,LANG_UNIVERSAL);
+                DoYell(SAY_PHASE_3_TRANS,LANG_UNIVERSAL,NULL);
             }
 
             //If we are within range melee the target and not in phase 2
@@ -283,8 +305,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
 
-                    //Do a wing buffet once every 5 attacks in phase 1 and 3
-                    if (swingcounter > 5 && m_creature->getVictim())
+                    //Do a wing buffet once every 12 attacks in phase 1 and 3
+                    if (swingcounter > 12 && m_creature->getVictim())
                     {
                         DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
                         swingcounter = 0;
@@ -295,8 +317,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
+                m_creature->RemoveAllAuras();
                 m_creature->InterruptSpell();
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
+                //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->SetHover(false);
                 (*m_creature)->Clear();
                 pTarget = NULL;
@@ -304,6 +327,28 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 DoGoHome();
             }
         }
+    }
+
+    void SpecialMove(float X, float Y, float Z, uint32 Time)
+    {
+        WorldPacket data( SMSG_MONSTER_MOVE, (41+m_creature->GetPackGUID().size()) );
+        data.append(m_creature->GetPackGUID());
+
+        data << m_creature->GetPositionX() << m_creature->GetPositionY() << m_creature->GetPositionZ();
+        // unknown field - unrelated to orientation
+        // seems to increment about 1000 for every 1.7 seconds
+        // for now, we'll just use mstime
+        data << getMSTime();
+
+        data << uint8(0);                                // walkback when walking from A to B
+        data << uint32(0x0200);          // flags
+        /* Flags:
+        512: Floating, moving without walking/running
+        */
+        data << Time;                                           // Time in between points
+        data << uint32(1);                                      // 1 single waypoint
+        data << X << Y << Z;                  // the single waypoint Point B
+        m_creature->SendMessageToSet( &data, true );
     }
 }; 
 CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)

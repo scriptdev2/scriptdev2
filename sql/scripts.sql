@@ -11,10 +11,17 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_onyxia' WHERE `entry` = 10184
 --
 -- creature data
 --
-
-UPDATE `creature_template` SET`ScriptName` = 'kobold' WHERE `entry` = 257;
-UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038);
 UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
+
+-- Generic Casters
+UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038); -- Base
+UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (2953, 3232, 2952, 2954, 1732, 1726, 619, 634, 1725, 4418, 474, 910, 95, 589); -- Revision 9
+
+-- Generic Melee
+UPDATE `creature_template` SET`ScriptName` = 'generic_melee' WHERE `entry` IN (3232, 2952, 2954, 1707, 1711, 1708, 1715, 1706, 1729, 657, 4417, 598, 4416, 594, 6866, 215, 909, 116, 504, 94, 122, 449, 121, 590); -- Revision 9
+
+-- Creature specific
+UPDATE `creature_template` SET`ScriptName` = '' WHERE `entry` = 257;
 
 --
 -- custom data
@@ -39,7 +46,7 @@ UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` IN 
 UPDATE `creature_template` SET`ScriptName` = 'guard_undercity' WHERE `entry` = 5624;
 UPDATE `creature_template` SET`ScriptName` = 'guard_bluffwatcher' WHERE `entry` = 3084;
 UPDATE `creature_template` SET`ScriptName` = 'guard_razorhill' WHERE `entry` = 5953;
-UPDATE `creature_template` SET`ScriptName` = 'guard_mulgore' WHERE `entry` IN (3209,3210,3211,3212,3213,3214,3215,3217,3218,3219,3220,3221,3222,3223,3224);
+UPDATE `creature_template` SET`ScriptName` = 'guard_mulgore' WHERE `entry` IN (3210,3211,3212,3213,3214,3215,3217,3218,3219,3220,3221,3222,3223,3224);
 UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` = 727 OR `entry` = 13076;
 UPDATE `creature_template` SET`ScriptName` = 'guard_tirisfal' WHERE `entry` IN (1735,1738,2210,1736,1739,1737,1744,1745,5725,1743,2209,1746,1742);
 
@@ -122,10 +129,6 @@ UPDATE `creature_template` SET `spell1` = 403 WHERE `entry` = 1397;
 UPDATE `creature_template` SET `spell1` = 770 WHERE `entry` = 1397;
 UPDATE `creature_template` SET `spell1` = 2136 WHERE `entry` = 1174;
 UPDATE `creature_template` SET `spell1` = 143 WHERE `entry` = 2018;
-UPDATE `creature_template` SET `spell1` = 116 WHERE `entry` = 474;
-UPDATE `creature_template` SET `spell1` = 3140 WHERE `entry` = 910;
-UPDATE `creature_template` SET `spell1` = 133 WHERE `entry` = 589;
-UPDATE `creature_template` SET `spell1` = 143 WHERE `entry` = 589;
 UPDATE `creature_template` SET `spell1` =  915 WHERE `entry` =  1399;
 UPDATE `creature_template` SET `spell2` =  2606 WHERE `entry` =  1399;
 UPDATE `creature_template` SET `spell1` =  915 WHERE `entry` =  3783;
@@ -142,3 +145,65 @@ UPDATE `creature_template` SET `spell1` =  11659 WHERE `entry` =  7028;
 UPDATE `creature_template` SET `spell1` =  8402 WHERE `entry` =  7048;
 UPDATE `creature_template` SET `spell1` =  7918 WHERE `entry` =  7038;
 UPDATE `creature_template` SET `spell2` =  6685 WHERE `entry` =  7038;
+
+-- added revision 9
+UPDATE `creature_template` SET `spell1` = 12166 WHERE `entry` = 3232;
+UPDATE `creature_template` SET `spell1` = 403 WHERE `entry` = 2953;#Lightning Bolt
+UPDATE `creature_template` SET `spell1` = 3385 WHERE `entry` = 2954;#Boar Charge
+UPDATE `creature_template` SET `spell1` = 15657 WHERE `entry` = 1707;#Backstab
+UPDATE `creature_template` SET `spell2` = 17230 WHERE `entry` = 1707;#Infected Wound
+UPDATE `creature_template` SET `spell4` = 16509 WHERE `entry` = 1707;#Rend
+UPDATE `creature_template` SET `spell1` = 6253 WHERE `entry` = 1711; #Backhand
+UPDATE `creature_template` SET `spell2` = 16244 WHERE `entry` = 1711; #Demoralizing Shout
+UPDATE `creature_template` SET `spell3` = 8242 WHERE `entry` = 1711; #Shield Slam
+UPDATE `creature_template` SET `spell4` = 16509 WHERE `entry` = 1711; #Rend
+UPDATE `creature_template` SET `spell1` = 6547 WHERE `entry` = 1708; #Rend R3
+UPDATE `creature_template` SET `spell2` = 2590 WHERE `entry` = 1708; #Backstab R3
+UPDATE `creature_template` SET `spell3` = 6253 WHERE `entry` = 1708; #Backhand
+UPDATE `creature_template` SET `spell1` = 11554 WHERE `entry` = 1715; #Demoralizing Shout R3
+UPDATE `creature_template` SET `spell2` = 8242 WHERE `entry` = 1715; #Shield Slam
+UPDATE `creature_template` SET `spell3` = 6253 WHERE `entry` = 1715; #Backhand
+UPDATE `creature_template` SET `spell1` = 1768 WHERE `entry` = 1706; #Kick R3
+UPDATE `creature_template` SET `spell2` = 17230 WHERE `entry` = 1706; #Infected Wound
+UPDATE `creature_template` SET `spell3` = 16509 WHERE `entry` = 1706; #Rend
+UPDATE `creature_template` SET `spell1` = 5115 WHERE `entry` = 1729; #Battle Command
+UPDATE `creature_template` SET `spell1` = 9915 WHERE `entry` = 1732; #Frost Nove R3
+UPDATE `creature_template` SET `spell1` = 143 WHERE `entry` = 1726; #Fireball R2
+-- UPDATE `creature_template` SET `spell2` = 5110 WHERE `entry` = 1726; #Summon: Living Flame (NYI)
+UPDATE `creature_template` SET `spell1` = 143 WHERE `entry` = 619; #Fireball R2
+-- UPDATE `creature_template` SET `spell2` = 5172 WHERE `entry` = 619; #Bloodsail Companion (NYI)
+UPDATE `creature_template` SET `spell1` = 6660 WHERE `entry` = 657; #Shoot
+-- UPDATE `creature_template` SET `spell2` = 5172 WHERE `entry` = 657; #Bloodsail Companion (NYI)
+UPDATE `creature_template` SET `spell1` = 6660 WHERE `entry` = 4417; #Shoot
+UPDATE `creature_template` SET `spell2` = 6685 WHERE `entry` = 4417; #Piercing Shot
+UPDATE `creature_template` SET `spell1` = 6685 WHERE `entry` = 598; #Piercing Shot
+UPDATE `creature_template` SET `spell1` = 6016 WHERE `entry` = 4416; #Pierce Armor
+UPDATE `creature_template` SET `spell1` = 5115 WHERE `entry` = 594; #Battle Command
+UPDATE `creature_template` SET `spell2` = 6435 WHERE `entry` = 594; #Smite Slam
+UPDATE `creature_template` SET `spell1` = 9915 WHERE `entry` = 634; #Frost Nove R3
+UPDATE `creature_template` SET `spell1` = 143 WHERE `entry` = 1725; #Fireball R2
+UPDATE `creature_template` SET `spell1` = 205 WHERE `entry` = 1725; #Frostbolt R2
+UPDATE `creature_template` SET `spell1` = 133 WHERE `entry` = 4418; #Fireball
+UPDATE `creature_template` SET `spell2` = 205 WHERE `entry` = 4418; #Frostbolt R2
+UPDATE `creature_template` SET `spell3` = 113 WHERE `entry` = 4418; #Chains of Ice
+UPDATE `creature_template` SET `spell1` = 6136 WHERE `entry` = 474; #Chilled
+UPDATE `creature_template` SET `spell2` = 116 WHERE `entry` = 474; #Frostbolt
+UPDATE `creature_template` SET `spell2` = 676 WHERE `entry` = 6866; #Disarm
+UPDATE `creature_template` SET `spell3` = 53 WHERE `entry` = 6866; #Backstab
+UPDATE `creature_template` SET `spell1` = 3140 WHERE `entry` = 910; #Fireball R4
+UPDATE `creature_template` SET `spell2` = 12486 WHERE `entry` = 910; #Chilled R3
+UPDATE `creature_template` SET `spell3` = 3443 WHERE `entry` = 910; #Enchanted Quickeness
+UPDATE `creature_template` SET `spell1` = 744 WHERE `entry` = 909; #Poison
+UPDATE `creature_template` SET `spell2` = 7992 WHERE `entry` = 909; #Slowing Poison
+UPDATE `creature_template` SET `spell3` = 2590 WHERE `entry` = 909; #Backstab R3
+UPDATE `creature_template` SET `spell1` = 8646 WHERE `entry` = 116; #Snap Kick
+UPDATE `creature_template` SET `spell1` = 53 WHERE `entry` = 504; #Backstab
+UPDATE `creature_template` SET `spell1` = 2764 WHERE `entry` = 95; #Throw
+UPDATE `creature_template` SET `spell1` = 53 WHERE `entry` = 94; #Backstab
+UPDATE `creature_template` SET `spell2` = 133 WHERE `entry` = 589; #Fireball
+UPDATE `creature_template` SET `spell1` = 168 WHERE `entry` = 589; #Frost Armor
+UPDATE `creature_template` SET `spell2` = 53 WHERE `entry` = 122; #Backstab
+UPDATE `creature_template` SET `spell2` = 1671 WHERE `entry` = 449; #Shield Bash R2
+UPDATE `creature_template` SET `spell1` = 71 WHERE `entry` = 449; #Defensive Stance
+UPDATE `creature_template` SET `spell2` = 6554 WHERE `entry` = 121; #Pummel R2
+UPDATE `creature_template` SET `spell2` = 53 WHERE `entry` = 590; #Backstab

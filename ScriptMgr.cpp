@@ -38,6 +38,7 @@ extern void AddSC_boss_onyxiaAI();
 // Creature
 extern void AddSC_kobold();
 extern void AddSC_generic_caster();
+extern void AddSC_generic_melee();
 
 //Custom
 extern void AddSC_custom_example();
@@ -101,6 +102,7 @@ void ScriptsInit()
     // Creature
     AddSC_kobold();
     AddSC_generic_caster();
+    AddSC_generic_melee();
 
     //Custom
     AddSC_custom_example();
@@ -435,9 +437,51 @@ void ScriptedAI::DoStopAttack()
     }
 }
 
-void ScriptedAI::DoSay(const char *text, uint32 language)
+void ScriptedAI::DoSay(const char *text, uint32 language, Unit* target)
 {
-    m_creature->MonsterSay(text, language, m_creature->GetGUID());
+    WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
+    data.SetOpcode(SMSG_MESSAGECHAT);
+    data << (uint8)CHAT_MSG_MONSTER_SAY;
+    data << language;
+
+    data << (uint64)m_creature->GetGUID();
+    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
+    data << m_creature->GetCreatureInfo()->Name;
+    
+    if (target)data << uint64(target->GetGUID());
+    else data << uint64(m_creature->GetGUID());
+
+    data << uint32(strlen(text)+1);
+    data << text;
+    data << uint8(0);
+
+    m_creature->SendMessageToSet(&data,false);
+}
+
+void ScriptedAI::DoYell(const char *text, uint32 language, Unit* target)
+{
+    WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
+    data.SetOpcode(SMSG_MESSAGECHAT);
+    data << (uint8)CHAT_MSG_MONSTER_YELL;
+    data << language;
+
+    data << (uint64)m_creature->GetGUID();
+    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
+    data << m_creature->GetCreatureInfo()->Name;
+    
+    if (target)data << uint64(target->GetGUID());
+    else data << uint64(m_creature->GetGUID());
+
+    data << uint32(strlen(text)+1);
+    data << text;
+    data << uint8(0);
+
+    m_creature->SendMessageToSet(&data,false);
+}
+
+void ScriptedAI::DoTextEmote(const char *text, Unit* target)
+{
+    //Need to get information on this packet
 }
 
 void ScriptedAI::DoGoHome()
@@ -491,6 +535,21 @@ bool ScriptedAI::CheckTether()
 
 SpellEntry const* ScriptedAI::SelectSpell(Unit* target)
 {
+    return SelectSpell(target, NULL, NULL, NULL);
+}
+
+SpellEntry const* ScriptedAI::SelectSpell(Unit* target, float RangeMin, float RangeMax)
+{
+    return SelectSpell(target, RangeMin, RangeMax, NULL);
+}
+
+SpellEntry const* ScriptedAI::SelectSpell(Unit* target, uint32 SpellType)
+{
+    return SelectSpell(target, NULL, NULL, SpellType);
+}
+
+SpellEntry const* ScriptedAI::SelectSpell(Unit* target, float RangeMin, float RangeMax, uint32 SpellType)
+{
     //No target so return null
     if (!target)
         return NULL;
@@ -524,11 +583,48 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* target)
         if (m_creature->GetPower((Powers)TempSpell->powerType) < TempSpell->manaCost)
             continue;
 
+        //Check the type of spell if we are looking for a specific spell type
+        if (SpellType)
+        {
+            bool bSkipThisSpell = true;
+
+            //Make sure that this spell includes a damage effect
+            if (SpellType == SPELLTYPE_DAMAGE)
+                for (uint32 j = 0; j < 3; j++)
+                    if (TempSpell->Effect[j] == SPELL_EFFECT_SCHOOL_DAMAGE || 
+                        TempSpell->Effect[j] == SPELL_EFFECT_INSTAKILL || 
+                        TempSpell->Effect[j] == SPELL_EFFECT_ENVIRONMENTAL_DAMAGE || 
+                        TempSpell->Effect[j] == SPELL_EFFECT_HEALTH_LEECH)
+                        bSkipThisSpell = false;
+
+            //Make sure that this spell includes a healing effect
+            if (SpellType == SPELLTYPE_HEALING)
+                for (uint32 j = 0; j < 3; j++)
+                    if (TempSpell->Effect[j] == SPELL_EFFECT_HEAL || 
+                        TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MAX_HEALTH || 
+                        TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MECHANICAL)
+                        bSkipThisSpell = false;
+
+            //Make sure this spell is a self buff (for now just checks if it applies any aura)
+            if (SpellType == SPELLTYPE_APPLYBUFF)
+                for (uint32 j = 0; j < 3; j++)
+                    if (TempSpell->Effect[j] == SPELL_EFFECT_APPLY_AURA)
+                        bSkipThisSpell = false;
+            
+            if (bSkipThisSpell)
+                continue;
+        }
+
         TempRange = pSpellRangeStore->LookupEntry(TempSpell->rangeIndex);
 
         //Spell has invalid range store so we can't use it
         if (!TempRange)
             continue;
+
+        //Check if the spell meets our range requirements
+        if (RangeMax)
+            if (TempRange->maxRange > RangeMax || TempRange->minRange < RangeMin)
+                continue;
 
         //Unit is out of range of this spell
         if (m_creature->GetDistanceSq(target) > TempRange->maxRange*TempRange->maxRange || m_creature->GetDistanceSq(target) < TempRange->minRange*TempRange->minRange)

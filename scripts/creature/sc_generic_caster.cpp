@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL generic_casterAI : public ScriptedAI
             else 
             {
                 //See if we can cast a spell
-                SpellEntry const *info = SelectSpell(m_creature->getVictim());
+                SpellEntry const *info = SelectSpell(m_creature->getVictim(), SPELLTYPE_DAMAGE);
                 
                 //Found a spell, now cast it!
                 if (info)

@@ -30,20 +30,20 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             int chance = rand()%100;
             if (chance < 30)
             {
-                DoSay("You no take candle!",LANG_UNIVERSAL);
+                DoSay("You no take candle!",LANG_UNIVERSAL,NULL);
                 debug_log("Kobold is saying his text");
             }
             else
             {
                 if (chance > 20 && m_creature->GetHealth() < (hp_max/5))
                 {
-                    DoSay("Me run from you!",LANG_UNIVERSAL);
+                    DoSay("Me run from you!",LANG_UNIVERSAL,NULL);
                     AttackStop(who);
                     debug_log("Kobold flee");
                 }
                 else
                 {		
-                    DoSay("Yip, me kill!",LANG_UNIVERSAL);
+                    DoSay("Yip, me kill!",LANG_UNIVERSAL,NULL);
                     debug_log("Kobold is saying his text");
                 }
             }

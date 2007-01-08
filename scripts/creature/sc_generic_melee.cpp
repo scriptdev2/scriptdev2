@@ -84,15 +84,23 @@ struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
             {
-                //Melee spells to be casted should go in here
-
                 if( m_creature->isAttackReady() )
                 {
                     Unit* newtarget = m_creature->SelectHostilTarget();
                     if(newtarget)
                         AttackStart(newtarget);
 
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
+                    //Check if we have any melee spells avialable (warning this only works with Extended script)
+                    SpellEntry const *info = SelectSpell(m_creature->getVictim());
+
+                    //30% chance to replace our white hit with a melee special
+                    if (info)
+                    {
+                        DoCastSpell(m_creature->getVictim(), info);
+                    }
+                    else
+                        m_creature->AttackerStateUpdate(m_creature->getVictim());
+
                     m_creature->resetAttackTimer();
                 }
             }
