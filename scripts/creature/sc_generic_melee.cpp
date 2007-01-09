@@ -93,8 +93,8 @@ struct MANGOS_DLL_DECL generic_meleeAI : public ScriptedAI
                     //Check if we have any melee spells avialable (warning this only works with Extended script)
                     SpellEntry const *info = SelectSpell(m_creature->getVictim());
 
-                    //30% chance to replace our white hit with a melee special
-                    if (info)
+                    //25% chance to replace our white hit with a melee special
+                    if (info && rand() % 4 == 0)
                     {
                         DoCastSpell(m_creature->getVictim(), info);
                     }
