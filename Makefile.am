@@ -35,9 +35,8 @@ libMaNGOSScript_la_SOURCES = \
     ScriptMgr.cpp \
     scripts/boss/sc_boss_onyxia.cpp \
     scripts/custom/sc_custom_example.cpp \
-    scripts/creature/sc_generic_caster.cpp \
-    scripts/creature/sc_generic_melee.cpp \
-    scripts/creature/sc_kobold.cpp \
+    scripts/creature/sc_generic_creature.cpp \
+        scripts/creature/sc_kobold.cpp \
     scripts/guard/sc_guard_bluffwatcher.cpp \
     scripts/guard/sc_guard_contested.cpp \
     scripts/guard/sc_guard_darnassus.cpp \
@@ -53,7 +52,8 @@ libMaNGOSScript_la_SOURCES = \
     scripts/guard/sc_guard_undercity.cpp \
     scripts/honor/sc_honor_vendor.cpp \
     scripts/npc/sc_marshal_mcbride.cpp \
-    scripts/npc/sc_silas_darkmoon.cpp \
+    
+scripts/item/sc_item_test.cpp \ scripts/npc/sc_bunthen_plainswind.cpp \scripts/npc/sc_silas_darkmoon.cpp \
     scripts/npc/sc_silva_filnaveth.cpp \
     scripts/npc/sc_skorn_whitecloud.cpp \
     scripts/servers/sc_battlemaster.cpp \

@@ -759,7 +759,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
 #else
 
     //Return whatever mangos core thinks is the best spell
-    return m_creature->reachWithSpellAttack(target);
+    return m_creature->reachWithSpellAttack(Target);
 #endif
 }
 
