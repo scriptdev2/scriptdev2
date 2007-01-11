@@ -39,6 +39,7 @@ struct Script
         pGOChooseReward(NULL), GetAI(NULL)
 #ifdef SCRIPT_EXTENDED
         ,pReciveEmote(NULL)
+        ,pItemUse(NULL)
 #endif
         {}
 
@@ -64,6 +65,7 @@ struct Script
 
 #ifdef SCRIPT_EXTENDED
     bool (*pReciveEmote         )(Player *player, Creature *_Creature, uint32 emote);
+    bool (*pItemUse             )(Player *player, Item* _Item);
 #endif
     // -----------------------------------------
 
@@ -79,11 +81,61 @@ extern Script *m_scripts[MAX_SCRIPTS];
 
 #define VISIBLE_RANGE (26.46f)
 
-//Spell type flags
-#define SPELLTYPE_DAMAGE        0x01
-#define SPELLTYPE_HEALING       0x02
-#define SPELLTYPE_APPLYBUFF     0x04
-#define SPELLTYPE_APPLYDEBUFF   0x08
+//Spell Targets (used in Select Spell)
+enum Targets
+{
+    TARGET_SELF                        = 1,
+    TARGET_PET                         = 5,
+    TARGET_SINGLE_ENEMY                = 6,
+    TARGET_ALL_ENEMY_IN_AREA           = 15,
+    TARGET_ALL_ENEMY_IN_AREA_INSTANT   = 16,
+    TARGET_ALL_PARTY_AROUND_CASTER     = 20,
+    TARGET_SINGLE_FRIEND               = 21,
+    TARGET_ALL_ENEMIES_AROUND_CASTER   = 22,
+    TARGET_GAMEOBJECT                  = 23,
+    TARGET_IN_FRONT_OF_CASTER          = 24,
+    TARGET_DUELVSPLAYER                = 25,
+    TARGET_GAMEOBJECT_ITEM             = 26,
+    TARGET_ALL_ENEMY_IN_AREA_CHANNELED = 28,
+    TARGET_MINION                      = 32,
+    TARGET_SINGLE_PARTY                = 35,
+    TARGET_AREAEFFECT_PARTY            = 37,
+    TARGET_SELF_FISHING                = 39,
+    TARGET_TOTEM_EARTH                 = 41,
+    TARGET_TOTEM_WATER                 = 42,
+    TARGET_TOTEM_AIR                   = 43,
+    TARGET_TOTEM_FIRE                  = 44,
+    TARGET_CHAIN                       = 45,
+    TARGET_DYNAMIC_OBJECT              = 47,
+    TARGET_CURRENT_SELECTED_ENEMY      = 53,
+    TARGET_SINGLE_FRIEND_2             = 57,
+    TARGET_AREAEFFECT_PARTY_AND_CLASS  = 61,
+};
+
+//Spell targets used by SelectSpell
+enum SelectTarget
+{
+    SELECT_TARGET_DONTCARE = 0,         //All target types allowed
+    
+    SELECT_TARGET_SELF,                 //Only Self casting
+
+    SELECT_TARGET_SINGLE_ENEMY,         //Only Single Enemy
+    SELECT_TARGET_AOE_ENEMY,            //Only AoE Enemy
+    SELECT_TARGET_ANY_ENEMY,            //AoE or Single Enemy
+
+    SELECT_TARGET_SINGLE_FRIEND,        //Only Single Friend
+    SELECT_TARGET_AOE_FRIEND,           //Only AoE Friend
+    SELECT_TARGET_ANY_FRIEND,           //AoE or Single Friend
+};
+
+//Spell Effects used by SelectSpell
+enum SelectEffect
+{
+    SELECT_EFFECT_DONTCARE = 0,         //All spell effects allowed
+    SELECT_EFFECT_DAMAGE,               //Spell does damage
+    SELECT_EFFECT_HEALING,              //Spell does healing
+    SELECT_EFFECT_AURA,                 //Spell applies an aura
+};
 
 //Chat defines
 #define CHAT_MSG_MONSTER_SAY    0x0B
@@ -170,12 +222,12 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Faces target
     void DoFaceTarget(Unit* unit);
+    
+    //Returns spells that meet the specified criteria from the creatures spell list
+    SpellEntry const* SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);
 
-    //Selects a random spell from creature spell list to use
-    SpellEntry const* SelectSpell(Unit* target);
-    SpellEntry const* SelectSpell(Unit* target, float RangeMin, float RangeMax);
-    SpellEntry const* SelectSpell(Unit* target, uint32 SpellType);
-    SpellEntry const* SelectSpell(Unit* target, float RangeMin, float RangeMax, uint32 SpellType);
+    //Checks if you can cast the specified spell
+    bool CanCast(Unit* Target, SpellEntry const *Spell);
 
     //Returns true if you are out of tether(spawnpoint) range
     bool CheckTether();

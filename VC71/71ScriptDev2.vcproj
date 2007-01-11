@@ -140,11 +140,11 @@
 				Name="creature"
 				>
 				<File
-					RelativePath="..\scripts\creature\sc_generic_caster.cpp"
+					RelativePath="..\scripts\creature\sc_defias.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_generic_melee.cpp"
+					RelativePath="..\scripts\creature\sc_generic_creature.cpp"
 					>
 				</File>
 				<File
@@ -220,6 +220,14 @@
 				Name="npc"
 				>
 				<File
+					RelativePath="..\scripts\npc\sc_bunthen_plainswind.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\npc\sc_henze_faulk.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\npc\sc_marshal_mcbride.cpp"
 					>
 				</File>
@@ -271,6 +279,10 @@
 			<Filter
 				Name="item"
 				>
+				<File
+					RelativePath="..\scripts\item\sc_item_test.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

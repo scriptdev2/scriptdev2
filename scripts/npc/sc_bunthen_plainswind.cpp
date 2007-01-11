@@ -16,14 +16,14 @@
 
 #include "../sc_defines.h"
 
-bool GossipHello_silva_filnaveth(Player *player, Creature *_Creature)
+bool GossipHello_bunthen_plainswind(Player *player, Creature *_Creature)
 {
-    if (player->getClass() != CLASS_DRUID || player->GetTeam() != ALLIANCE)
+    if (player->getClass() != CLASS_DRUID || player->GetTeam() != HORDE)
         return false;
 
-    player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Rut'theran Village.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Thunder Bluff.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    player->SEND_GOSSIP_MENU(4914,_Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(4918,_Creature->GetGUID());
 
     return true;
 }
@@ -32,23 +32,23 @@ bool GossipHello_silva_filnaveth(Player *player, Creature *_Creature)
  *				Start of GOSSIP_MENU
  *******************************************************/
 
-void SendDefaultMenu_silva_filnaveth(Player *player, Creature *_Creature, uint32 action)
+void SendDefaultMenu_bunthen_plainswind(Player *player, Creature *_Creature, uint32 action)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1 && player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1 && player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
     {
         std::vector<uint32> nodes;
 
         nodes.resize(2);
-        nodes[0] = 62; // Nighthaven, Moonglade
-        nodes[1] = 27; // Rut'theran Village, Teldrassil
+        nodes[0] = 63; // Nighthaven, Moonglade
+        nodes[1] = 22; // Thunder Bluff, Mulgore
         player->ActivateTaxiPathTo(nodes);
     }
 }
 
-bool GossipSelect_silva_filnaveth(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_bunthen_plainswind(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_silva_filnaveth(player, _Creature, action);
+        SendDefaultMenu_bunthen_plainswind(player, _Creature, action);
 
     return true;
 }
@@ -57,14 +57,14 @@ bool GossipSelect_silva_filnaveth(Player *player, Creature *_Creature, uint32 se
  *				End of GOSSIP_MENU
  *******************************************************/
 
-void AddSC_silva_filnaveth()
+void AddSC_bunthen_plainswind()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="silva_filnaveth";
-    newscript->pGossipHello          = &GossipHello_silva_filnaveth;
-    newscript->pGossipSelect         = &GossipSelect_silva_filnaveth;
+    newscript->Name="bunthen_plainswind";
+    newscript->pGossipHello          = &GossipHello_bunthen_plainswind;
+    newscript->pGossipSelect         = &GossipSelect_bunthen_plainswind;
 
     m_scripts[nrscripts++] = newscript;
 }

@@ -13,12 +13,24 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_onyxia' WHERE `entry` = 10184
 --
 UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
 
--- Generic Casters
-UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038); -- Base
-UPDATE `creature_template` SET`ScriptName` = 'generic_caster' WHERE `entry` IN (2953, 3232, 2952, 2954, 1732, 1726, 619, 634, 1725, 4418, 474, 910, 95, 589); -- Revision 9
+-- Generic Scripts
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038); -- Base
 
--- Generic Melee
-UPDATE `creature_template` SET`ScriptName` = 'generic_melee' WHERE `entry` IN (3232, 2952, 2954, 1707, 1711, 1708, 1715, 1706, 1729, 657, 4417, 598, 4416, 594, 6866, 215, 909, 116, 504, 94, 122, 449, 121, 590); -- Revision 9
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 1732, 1726, 619, 634, 1725, 4418, 474, 910, 95, 589); -- Revision 9
+
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (3232, 2952, 2954, 1707, 1711, 1708, 1715, 1706, 1729, 657, 4417, 598, 4416, 594, 6866, 215, 909, 116, 504, 94, 122, 449, 121, 590); -- Revision 9
+
+-- Revision 11
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (4820, 1026, 517, 458, 548);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (4819, 4818, 4359, 1024, 1028, 1418, 1027, 1029, 747, 171, 544, 545, 578, 127, 126, 732, 46, 1083, 422);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (1009, 1013, 429, 1773);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (1011, 1008, 1007, 434, 433, 432, 568, 579, 448, 500, 123, 124, 501, 1674, 1772, 1939, 1940, 1942, 1944);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (3112, 3113, 3269, 3458, 3271, 3265);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (3111, 3114, 3459, 3267);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (430, 424, 1162, 1166, 1165);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (712, 446, 1115, 1117, 1116, 1118, 1163, 1164, 1197, 1167);
+
+
 
 -- Creature specific
 UPDATE `creature_template` SET`ScriptName` = '' WHERE `entry` = 257;
@@ -69,6 +81,7 @@ UPDATE `creature_template` SET`ScriptName` = 'honor_vendor' WHERE `entry` IN (40
 UPDATE `creature_template` SET`ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
 UPDATE `creature_template` SET`ScriptName` = 'silva_filnaveth' WHERE `entry` = 11800;
 UPDATE `creature_template` SET`ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
+UPDATE `creature_template` SET `npcflag` = 1, `ScriptName` = 'bunthen_plainswind' WHERE `entry` = 11798;
 
 --
 -- servers data
@@ -207,3 +220,129 @@ UPDATE `creature_template` SET `spell2` = 1671 WHERE `entry` = 449; #Shield Bash
 UPDATE `creature_template` SET `spell1` = 71 WHERE `entry` = 449; #Defensive Stance
 UPDATE `creature_template` SET `spell2` = 6554 WHERE `entry` = 121; #Pummel R2
 UPDATE `creature_template` SET `spell2` = 53 WHERE `entry` = 590; #Backstab
+
+-- Added revision 11
+UPDATE `creature_template` SET `spell1` = 8382 WHERE `entry` = 4819; #Leech Poison
+-- UPDATE `creature_template` SET `spell3` = 1604 WHERE `entry` = 4819; #Dazed (NYI)
+UPDATE `creature_template` SET `spell2` = 8733 WHERE `entry` = 4819; #Blessing of Blackfathom
+UPDATE `creature_template` SET `spell1` = 6145 WHERE `entry` = 4818; #Eagle Eye
+UPDATE `creature_template` SET `spell2` = 71 WHERE `entry` = 4818; #Defensive Stance
+-- UPDATE `creature_template` SET `spell4` = 1604 WHERE `entry` = 4818; #Dazed (NYI)
+UPDATE `creature_template` SET `spell3` = 22691 WHERE `entry` = 4818; #Disarm
+UPDATE `creature_template` SET `spell1` = 14109 WHERE `entry` = 4820; #Lightning Bolt
+UPDATE `creature_template` SET `spell2` = 3358 WHERE `entry` = 4820; #Leech Poison
+UPDATE `creature_template` SET `spell3` = 8733 WHERE `entry` = 4820; #Blessing of Blackfathom
+UPDATE `creature_template` SET `spell4` = 12024 WHERE `entry` = 4820; #Net
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 4359; #Poisonous Stab
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 1024; #Poisonous Stab
+UPDATE `creature_template` SET `spell1` = 1777 WHERE `entry` = 1028; #Gouge R2
+UPDATE `creature_template` SET `spell2` = 6533 WHERE `entry` = 1028; #Net
+UPDATE `creature_template` SET `spell1` = 10177 WHERE `entry` = 1418; #Frost Ward R4
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 1418; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 744 WHERE `entry` = 1026; #Poison
+UPDATE `creature_template` SET `spell2` = 1707 WHERE `entry` = 1026; #Mind Bomb
+UPDATE `creature_template` SET `spell1` = 7372 WHERE `entry` = 1027; #Hamstring R2
+UPDATE `creature_template` SET `spell2` = 2457 WHERE `entry` = 1027; #Battle Stance
+UPDATE `creature_template` SET `spell1` = 15869 WHERE `entry` = 1029; #Superior Healing Ward
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 747; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 747; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 171; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 171; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 544; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 544; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 545; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 545; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 578; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 578; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 744 WHERE `entry` = 127; #Poison
+UPDATE `creature_template` SET `spell2` = 865 WHERE `entry` = 127; #Frost Nova R2
+UPDATE `creature_template` SET `spell1` = 13519 WHERE `entry` = 517; #Holy Smite
+UPDATE `creature_template` SET `spell2` = 6074 WHERE `entry` = 517; #Renew R2
+UPDATE `creature_template` SET `spell1` = 10277 WHERE `entry` = 458; #Throw
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 458; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 7357 WHERE `entry` = 126; #Poisonous Stab
+-- UPDATE `creature_template` SET `spell2` = 15656 WHERE `entry` = 126; #Teleport to Player (NYI)
+UPDATE `creature_template` SET `spell1` = 205 WHERE `entry` = 548; #Frostbolt R2
+UPDATE `creature_template` SET `spell2` = 331 WHERE `entry` = 548; #Healing Wave
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 732; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 2589 WHERE `entry` = 732; #Backstab R2
+UPDATE `creature_template` SET `spell1` = 3368 WHERE `entry` = 46; #Drink Minor Potion
+UPDATE `creature_template` SET `spell1` = 6268 WHERE `entry` = 1083; #Rushing Charge
+UPDATE `creature_template` SET `spell1` = 3393 WHERE `entry` = 422; #Consume Flesh
+UPDATE `creature_template` SET `spell1` = 3288 WHERE `entry` = 1011; #Moss Hide
+UPDATE `creature_template` SET `spell1` = 8016 WHERE `entry` = 1008; #Spirit Decay
+UPDATE `creature_template` SET `spell1` = 8016 WHERE `entry` = 1007; #Spirit Decay
+UPDATE `creature_template` SET `spell1` = 205 WHERE `entry` = 1009; #Frosbolt R2
+UPDATE `creature_template` SET `spell1` = 547 WHERE `entry` = 1013; #Healing Wave R3
+UPDATE `creature_template` SET `spell2` = 548 WHERE `entry` = 1013; #Lightning Bolt R3
+UPDATE `creature_template` SET `spell1` = 744 WHERE `entry` = 434; #Poison
+UPDATE `creature_template` SET `spell1` = 3150 WHERE `entry` = 433; #Rabies
+UPDATE `creature_template` SET `spell1` = 6205 WHERE `entry` = 432; #Curse of Weakness
+UPDATE `creature_template` SET `spell1` = 705 WHERE `entry` = 429; #Shadow Bolt R3
+UPDATE `creature_template` SET `spell1` = 71 WHERE `entry` = 568; #Defensive Stance
+UPDATE `creature_template` SET `spell2` = 8380 WHERE `entry` = 568; #Sunder Armor R3
+UPDATE `creature_template` SET `spell3` = 8629 WHERE `entry` = 568; #Gouge R3
+UPDATE `creature_template` SET `spell1` = 744 WHERE `entry` = 579; #Poison
+UPDATE `creature_template` SET `spell1` = 6730 WHERE `entry` = 448; #Head Butt
+UPDATE `creature_template` SET `spell2` = 6016 WHERE `entry` = 448; #Pierce Armor
+UPDATE `creature_template` SET `spell1` = 6730 WHERE `entry` = 500; #Head Butt
+UPDATE `creature_template` SET `spell2` = 6016 WHERE `entry` = 500; #Pierce Armor
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 123; #Dazed (NYI)
+UPDATE `creature_template` SET `spell2` = 8016 WHERE `entry` = 123; #Spirit Decay
+UPDATE `creature_template` SET `spell1` = 1160 WHERE `entry` = 124; #Demoralizing Shout
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 501; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 3368 WHERE `entry` = 501; #Drink Minor Potion
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1674; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1772; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1773; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 695 WHERE `entry` = 1773; #Shadow Bolt R2
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1939; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1940; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1942; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 3237 WHERE `entry` = 1944; #Curse of Thule
+UPDATE `creature_template` SET `spell1` = 2480 WHERE `entry` = 3112; #Shoot Bow
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 3112; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 5280 WHERE `entry` = 3111; #Razor Mane
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 3114; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 3248 WHERE `entry` = 3114; #Improved Blocking
+UPDATE `creature_template` SET `spell1` = 6950 WHERE `entry` = 3113; #Faerie Fire
+UPDATE `creature_template` SET `spell2` = 774 WHERE `entry` = 3113; #Rejuvenation
+UPDATE `creature_template` SET `spell1` = 548 WHERE `entry` = 3269; #Lightning Bolt R3
+UPDATE `creature_template` SET `spell2` = 8045 WHERE `entry` = 3269; #Earth Shock R3
+UPDATE `creature_template` SET `spell3` = 8052 WHERE `entry` = 3269; #Flame Shock R2
+UPDATE `creature_template` SET `spell1` = 594 WHERE `entry` = 3458; #Shadow Word: Pain R2
+UPDATE `creature_template` SET `spell2` = 8092 WHERE `entry` = 3458; #Mind Blast
+UPDATE `creature_template` SET `spell3` = 2052 WHERE `entry` = 3458; #Lesser Heal R2
+UPDATE `creature_template` SET `spell1` = 594 WHERE `entry` = 3271; #Shadow Word: Pain R2
+UPDATE `creature_template` SET `spell2` = 598 WHERE `entry` = 3271; #Smite R3
+UPDATE `creature_template` SET `spell3` = 8102 WHERE `entry` = 3271; #Mind Blast R2
+UPDATE `creature_template` SET `spell4` = 6074 WHERE `entry` = 3271; #Renew R2
+UPDATE `creature_template` SET `spell1` = 1978 WHERE `entry` = 3265; #Serpent Sting
+UPDATE `creature_template` SET `spell2` = 3044 WHERE `entry` = 3265; #Arcane Shot
+UPDATE `creature_template` SET `spell1` = 13446 WHERE `entry` = 3459; #Strike
+UPDATE `creature_template` SET `spell2` = 12323 WHERE `entry` = 3459; #Piercing Howl
+UPDATE `creature_template` SET `spell3` = 13443 WHERE `entry` = 3459; #Rend
+UPDATE `creature_template` SET `spell1` = 22356 WHERE `entry` = 3267; #Slow
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 3267; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 3427 WHERE `entry` = 712; #Infected Wound
+UPDATE `creature_template` SET `spell1` = 5164 WHERE `entry` = 446; #Knockdown
+UPDATE `creature_template` SET `spell1` = 331 WHERE `entry` = 430; #Healing Wave
+UPDATE `creature_template` SET `spell2` = 548 WHERE `entry` = 430; #Lightning Bolt R3
+UPDATE `creature_template` SET `spell1` = 7919 WHERE `entry` = 424; #Shoot Crossbow
+UPDATE `creature_template` SET `spell1` = 3148 WHERE `entry` = 1115; #Head Crack
+UPDATE `creature_template` SET `spell1` = 5164 WHERE `entry` = 1117; #Knockdown
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 1116; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 53 WHERE `entry` = 1116; #Backstab
+-- UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 1118; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 5164 WHERE `entry` = 1118; #Knockdown
+UPDATE `creature_template` SET `spell1` = 10277 WHERE `entry` = 1162; #Throw
+UPDATE `creature_template` SET `spell1` = 529 WHERE `entry` = 1166; #Lightning Bolt R2
+UPDATE `creature_template` SET `spell1` = 1776 WHERE `entry` = 1163; #Gouge
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 1163; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 11976 WHERE `entry` = 1164; #Strike
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 1164; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 331 WHERE `entry` = 1197; #Healing Wave
+-- UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 1197; #Dazed (NYI)
+UPDATE `creature_template` SET `spell1` = 2121 WHERE `entry` = 1165; #Flamestrike R2
+UPDATE `creature_template` SET `spell1` = 7405 WHERE `entry` = 1167; #Sunder Armor R2
+UPDATE `creature_template` SET `spell2` = 71 WHERE `entry` = 1167; #Defensive Stance

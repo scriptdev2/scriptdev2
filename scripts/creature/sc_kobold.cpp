@@ -17,57 +17,114 @@
 
 #include "../sc_defines.h"
 
+#define KOBOLD_AGGRO_SAY    "You no take candle"
+
 struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
 {
-    KoboldAI(Creature *c) : ScriptedAI(c) {}
+    KoboldAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    Unit* pTarget;
+
+    void Reset()
+    {
+        pTarget = NULL;
+
+        if (m_creature)
+        {
+            DoStopAttack();
+            DoGoHome();
+        }
+    }
+
     void AttackStart(Unit *who)
     {
-    int hp_max = m_creature->GetMaxHealth();
+        if (!who)
+            return;
 
-        if( m_creature->getVictim() == NULL )
-        {        
-            srand ( time(NULL) );
-            int chance = rand()%100;
-            if (chance < 30)
-            {
-                DoSay("You no take candle!",LANG_UNIVERSAL,NULL);
-                debug_log("Kobold is saying his text");
-            }
-            else
-            {
-                if (chance > 20 && m_creature->GetHealth() < (hp_max/5))
-                {
-                    DoSay("Me run from you!",LANG_UNIVERSAL,NULL);
-                    AttackStop(who);
-                    debug_log("Kobold flee");
-                }
-                else
-                {		
-                    DoSay("Yip, me kill!",LANG_UNIVERSAL,NULL);
-                    debug_log("Kobold is saying his text");
-                }
-            }
+        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who != m_creature)
+        {
+            //Begin attack
+            if (rand() % 10 == 0)DoSay(KOBOLD_AGGRO_SAY,LANG_UNIVERSAL,NULL);
+            DoStartMeleeAttack(who);
+            pTarget = who;
         }
-        DoStartMeleeAttack(who);
     }
 
-    void DamageInflict(Unit *who, uint32 amount_damaged)
+    void MoveInLineOfSight(Unit *who)
     {
-        srand ( time(NULL) );
-        int chance = rand()%100, hp_max = m_creature->GetMaxHealth();
+        if (!who)
+            return;
 
-        if (chance <= 20)
+        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            SpellEntry const *spellinfo_attack = m_creature->reachWithSpellAttack(who);
-            DoCastSpell(who,spellinfo_attack);
+            if ( m_creature->getVictim() == NULL)
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-        }
-        else if (m_creature->GetHealth() <= (hp_max/2) && chance < 5)
-        {
-            DoCast(m_creature, 2050);
+                //Begin attack
+                if (rand() % 10 == 0)DoSay(KOBOLD_AGGRO_SAY,LANG_UNIVERSAL,NULL);
+                DoStartMeleeAttack(who);
+                pTarget = who;
+            }
         }
     }
-}; // end of class KoboldAI 
+
+    void UpdateAI(const uint32 diff)
+    {
+        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //But we still need to reset
+        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        {
+            Reset();
+            return;
+        }
+
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+            //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawnpoint
+            if (needToStop() || CheckTether())
+            {
+                pTarget = NULL;
+                DoStopAttack();
+                DoGoHome();
+                return;
+            }
+            
+            //If we are within range melee the target
+            if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
+            {
+                if( m_creature->isAttackReady() )
+                {
+                    Unit* newtarget = m_creature->SelectHostilTarget();
+                    if(newtarget)
+                        AttackStart(newtarget);
+
+                    //Check if we have any melee spells avialable (warning this only works with Extended script)
+                    SpellEntry const *info = SelectSpell(m_creature->getVictim(), NULL, NULL, SELECT_TARGET_ANY_ENEMY, NULL, NULL, NULL, ATTACK_DIST, SELECT_EFFECT_DAMAGE);
+
+                    //25% chance to replace our white hit with a melee special
+                    if (info && rand() % 4 == 0)
+                    {
+                        DoCastSpell(m_creature->getVictim(), info);
+                    }
+                    else
+                        m_creature->AttackerStateUpdate(m_creature->getVictim());
+
+                    m_creature->resetAttackTimer();
+                }
+            }
+
+            //If we are still alive and we lose our victim it means we killed them
+            if(m_creature->isAlive() && !m_creature->getVictim())
+            {
+                Reset();
+            }
+        }
+    }
+}; 
+
 CreatureAI* GetAI_Kobold(Creature *_Creature)
 {
     return new KoboldAI (_Creature);

@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 {
     //*** HANDLED FUNCTION *** 
     //This is the constructor, called only once when the creature is first created
-    custom_exampleAI(Creature *c) : ScriptedAI(c) {Say_Timer = 30000;Rebuff_Timer = 0;pTarget = NULL;}
+    custom_exampleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     //*** CUSTOM VARIABLES ****
     //These variables are for use only by this individual script.
@@ -71,8 +71,8 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     Unit* pTarget;       //Pointer to our last target for combat loss check
 
     //*** CUSTOM FUNCTION ***
-    //This resets all of our combat timers to inital values
-    void ResetVariables()
+    //This resets the creature to before the fight began
+    void Reset()
     {
         Phase = 1;              //Start in phase 1
         Phase_Timer = 60000;     //60 seconds
@@ -80,6 +80,15 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         Spell_2_Timer = 37000;  //37 seconds
         Spell_3_Timer = 19000;  //19 seconds
         Beserk_Timer = 120000;  //2 minutes
+
+        pTarget = NULL;
+
+        //Return to home position
+        if (m_creature)
+        {
+            DoStopAttack();
+            DoGoHome();
+        }
     }
 
     //*** HANDLED FUNCTION *** 
@@ -94,9 +103,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         //Since AoEs casted by monsters hit themselves
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who != m_creature)
         {
-            //Reset our combat vars
-            ResetVariables();
-
             //Begin attack
             DoStartMeleeAttack(who);
             pTarget = who;
@@ -122,9 +128,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Reset our combat vars
-                ResetVariables();
-
                 //Begin attack
                 DoStartMeleeAttack(who);
                 pTarget = who;
@@ -144,9 +147,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         //But we still need to reset
         if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
         {
-            pTarget = NULL;
-            DoStopAttack();
-            DoGoHome();
+            Reset();
             return;
         }
 
@@ -202,9 +203,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
             //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawnpoint
             if (needToStop() || CheckTether())
             {
-                pTarget = NULL;
-                DoStopAttack();
-                DoGoHome();
+                Reset();
                 return;
             }
 
@@ -287,9 +286,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them in that last swing
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
-                pTarget = NULL;
-                DoStopAttack();
-                DoGoHome();
+                Reset();
             }
         }
     }

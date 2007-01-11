@@ -38,7 +38,7 @@
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {pTarget = NULL;c->CastSpell(c,17743,false); }//Peon sleeping, currently best we can do
+    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 swingcounter;
     uint32 flamebreath_timer;
@@ -53,10 +53,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     Unit* pTarget;
 
-    void ResetTimers()
+    void Reset()
     {
-        m_creature->clearUnitState(UNIT_STAT_ROOT | UNIT_STAT_STUNDED);
-        m_creature->RemoveAllAuras();
         swingcounter = 0;
         flamebreath_timer = 20000;
         cleave_timer = 15000;
@@ -66,6 +64,17 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         whelpspawn_timer = 45000;
         bellowingroar_timer = 0;
         phase = 1;
+        pTarget = NULL;
+        
+        if (m_creature)
+        {
+            m_creature->RemoveAllAuras();
+            m_creature->InterruptSpell();
+            m_creature->SetHover(false);
+            (*m_creature)->Clear();
+            DoStopAttack();
+            DoGoHome();
+        }
     }
 
     void AttackStart(Unit *who)
@@ -80,7 +89,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             //Initial aggro speach
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            ResetTimers();
             pTarget = who;
         }
     }
@@ -106,7 +114,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 //Initial aggro speach
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                ResetTimers();
                 pTarget = who;
             }
         }
@@ -116,14 +123,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
         {
-            m_creature->RemoveAllAuras();
-            m_creature->InterruptSpell();
-            //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
-            m_creature->SetHover(false);
-            (*m_creature)->Clear();
-            pTarget = NULL;
-            DoStopAttack();
-            DoGoHome();
+            Reset();
             return;
         }
 
@@ -133,14 +133,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //Check if we should stop attacking because our victim is no longer attackable
             if (needToStop())
             {
-                m_creature->RemoveAllAuras();
-                m_creature->InterruptSpell();
-                //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
-                m_creature->SetHover(false);
-                (*m_creature)->Clear();
-                pTarget = NULL;
-                DoStopAttack();
-                DoGoHome();
+                Reset();
                 return;
             }
             
@@ -274,9 +267,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                 (*m_creature)->Clear();
                 (*m_creature)->Idle();
-                DoCast(m_creature,18430);//Dragon hover?
                 DoCast(m_creature,11010);//hover?
                 m_creature->SetHover(true);
+                DoCast(m_creature,18430);//Dragon hover?
                 DoYell(SAY_PHASE_2_TRANS,LANG_UNIVERSAL,NULL);
             }
 
@@ -317,14 +310,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
-                m_creature->RemoveAllAuras();
-                m_creature->InterruptSpell();
-                //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
-                m_creature->SetHover(false);
-                (*m_creature)->Clear();
-                pTarget = NULL;
-                DoStopAttack();
-                DoGoHome();
+                Reset();
             }
         }
     }
