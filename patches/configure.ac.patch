@@ -1,0 +1,10 @@
+--- configure.ac	2007-01-11 15:31:22.000000000 +0100
++++ configure.ac	2007-01-11 15:31:24.000000000 +0100
+@@ -389,6 +389,7 @@
+    src/bindings/Makefile
+    src/bindings/python/Makefile
+    src/bindings/universal/Makefile
++   src/bindings/ScriptDev2/Makefile
+    src/mangosd/Makefile
+    src/mangosd/mangosd.conf
+    dep/Makefile

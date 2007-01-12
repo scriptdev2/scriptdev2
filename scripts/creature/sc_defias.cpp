@@ -53,29 +53,6 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
         }
     }
 
-    void SayRandom()
-    {
-        //Random switch between 4 outcomes
-        switch (rand()%4)
-        {
-        case 0:
-            DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
-            break;
-                    
-        case 1:
-            DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
-            break;
-
-        case 2:
-            DoSay(SAY_RANDOM_2,LANG_UNIVERSAL,pTarget);
-            break;
-
-        case 3:
-            DoSay(SAY_RANDOM_3,LANG_UNIVERSAL,pTarget);
-            break;
-        }
-    }
-
     void AttackStart(Unit *who)
     {
         if (!who)
@@ -89,7 +66,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
             else DoStartRangedAttack(who);
 
             //Play Aggro sound
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            if (rand()%3 == 0)DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
             pTarget = who;
         }
@@ -113,7 +90,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 else DoStartRangedAttack(who);
 
                 //Play Aggro sound
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                if (rand()%3 == 0)DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
                 pTarget = who;
             }

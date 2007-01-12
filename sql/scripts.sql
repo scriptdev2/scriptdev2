@@ -16,9 +16,9 @@ UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default
 -- Generic Scripts
 UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038); -- Base
 
-UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 1732, 1726, 619, 634, 1725, 4418, 474, 910, 95, 589); -- Revision 9
-
-UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (3232, 2952, 2954, 1707, 1711, 1708, 1715, 1706, 1729, 657, 4417, 598, 4416, 594, 6866, 215, 909, 116, 504, 94, 122, 449, 121, 590); -- Revision 9
+-- Revision 9
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 1732, 1726, 619, 634, 1725, 4418, 474, 910, 95, 589);
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (3232, 2952, 2954, 1707, 1711, 1708, 1715, 1706, 1729, 657, 4417, 598, 4416, 594, 6866, 215, 909, 116, 504, 94, 122, 449, 121, 590);
 
 -- Revision 11
 UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (4820, 1026, 517, 458, 548);
@@ -30,6 +30,8 @@ UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN
 UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (430, 424, 1162, 1166, 1165);
 UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (712, 446, 1115, 1117, 1116, 1118, 1163, 1164, 1197, 1167);
 
+-- Revision 13
+UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (1789, 4473, 10391, 531, 1783, 7341, 10390, 787, 203, 1110, 7340, 1784, 7342, 785, 48);
 
 
 -- Creature specific
@@ -346,3 +348,35 @@ UPDATE `creature_template` SET `spell1` = 331 WHERE `entry` = 1197; #Healing Wav
 UPDATE `creature_template` SET `spell1` = 2121 WHERE `entry` = 1165; #Flamestrike R2
 UPDATE `creature_template` SET `spell1` = 7405 WHERE `entry` = 1167; #Sunder Armor R2
 UPDATE `creature_template` SET `spell2` = 71 WHERE `entry` = 1167; #Defensive Stance
+
+-- Added revision 13
+UPDATE `creature_template` SET `spell1` = 11660 WHERE `entry` = 1789; #Shadow Bolt R8
+UPDATE `creature_template` SET `spell2` = 17926 WHERE `entry` = 1789; #Death Coil R3
+UPDATE `creature_template` SET `spell3` = 6215 WHERE `entry` = 1789; #Curse of Agony R6
+UPDATE `creature_template` SET `spell4` = 11672 WHERE `entry` = 1789; #Corruption R6
+UPDATE `creature_template` SET `spell1` = 348 WHERE `entry` = 4473; #Immolate
+UPDATE `creature_template` SET `spell2` = 686 WHERE `entry` = 4473; #Shadow Bolt
+UPDATE `creature_template` SET `spell1` = 15580 WHERE `entry` = 10391; #Strike R5
+UPDATE `creature_template` SET `spell2` = 15613 WHERE `entry` = 10391; #Cleave R3
+UPDATE `creature_template` SET `spell3` = 23600 WHERE `entry` = 10391; #Piercing Howl
+UPDATE `creature_template` SET `spell4` = 16406 WHERE `entry` = 10391; #Rend R6
+UPDATE `creature_template` SET `spell1` = 3416 WHERE `entry` = 531; #Fiend Fury
+UPDATE `creature_template` SET `spell1` = 7369 WHERE `entry` = 1783; #Cleave R2
+UPDATE `creature_template` SET `spell1` = 838 WHERE `entry` = 7341; #Frostbolt R3
+UPDATE `creature_template` SET `spell1` = 15580 WHERE `entry` = 10390; #Strike R5
+UPDATE `creature_template` SET `spell2` = 15613 WHERE `entry` = 10390; #Cleave R3
+UPDATE `creature_template` SET `spell3` = 16406 WHERE `entry` = 10390; #Rend R6
+UPDATE `creature_template` SET `spell1` = 9734 WHERE `entry` = 787; #Holy Smite
+UPDATE `creature_template` SET `spell2` = 6074 WHERE `entry` = 787; #Renew R2
+UPDATE `creature_template` SET `spell1` = 7322 WHERE `entry` = 203; #Frostbolt R4
+UPDATE `creature_template` SET `spell2` = 12486 WHERE `entry` = 203; #Chilled R3
+UPDATE `creature_template` SET `spell1` = 7992 WHERE `entry` = 1110; #Slowing Poison
+UPDATE `creature_template` SET `spell1` = 17312 WHERE `entry` = 7340; #Mind Flay R3
+UPDATE `creature_template` SET `spell2` = 992 WHERE `entry` = 7340; #Shadow Word: Pain R4
+UPDATE `creature_template` SET `spell3` = 984 WHERE `entry` = 7340; #Mind Blast R3
+UPDATE `creature_template` SET `spell1` = 568 WHERE `entry` = 1784; #Arcane Burst
+UPDATE `creature_template` SET `spell2` = 1411 WHERE `entry` = 1784; #Firebolt 5
+UPDATE `creature_template` SET `spell1` = 705 WHERE `entry` = 7342; #Shadow Bolt R3
+UPDATE `creature_template` SET `spell2` = 1014 WHERE `entry` = 7342; #Curse of Agony R2
+UPDATE `creature_template` SET `spell1` = 8699 WHERE `entry` = 785; #Unholy Frenzy
+UPDATE `creature_template` SET `spell1` = 7373 WHERE `entry` = 48; #Hamstring R3

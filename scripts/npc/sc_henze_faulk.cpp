@@ -18,22 +18,7 @@
 
 uint32 NPCDialogStatus_henze_faulk(Player *player, Creature *_Creature )
 {
-    //Appear dead
-    _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_DEAD);
-    _Creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-    
-    if( _Creature->isAlive() == true )
-    {
-        player->CastSpell( player, 8593, true);
-        _Creature->RemoveFlag (UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-        _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
-
-        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
-    }
-    else
-    {
-        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_NONE);
-    }
+    return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
 }
 
 void AddSC_henze_faulk()
