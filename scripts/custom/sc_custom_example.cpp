@@ -357,8 +357,7 @@ void AddSC_custom_example()
     newscript->GetAI = GetAI_custom_example;
     newscript->pGossipHello = &GossipHello_custom_example;
     newscript->pGossipSelect = &GossipSelect_custom_example;
-#ifdef SCRIPT_EXTENDED
-    newscript->pReciveEmote = &ReciveEmote_custom_example;
-#endif
+    newscript->pReceiveEmote = &ReciveEmote_custom_example;
+
     m_scripts[nrscripts++] = newscript;
 }

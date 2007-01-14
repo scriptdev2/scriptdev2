@@ -17,60 +17,18 @@
 
 #include "../sc_defines.h"
 
-////////////////////////////////////
-//      SCRIPT IS FOR TESTING     //
-////////////////////////////////////
-
-bool GossipHello_marshal_mcbride(Player *player, Creature *_Creature)
-{
-    return false;
-}
-
-bool GossipSelect_marshal_mcbride(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-
-    return false;
-}
-
-bool GossipSelectWithCode_marshal_mcbride( Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode )
-{
-
-    return false;
-}
+#define MCBRIDE_SAY_QUESTACCEPT "You are Dismissed, $N!"
 
 bool QuestAccept_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Quest )
-{
-
-    return false;
-}
-
-bool QuestSelect_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Quest )
-{
-
-    return false;
-}
-
-bool QuestComplete_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Quest )
-{
-
-    return false;
-}
-
-uint32 NPCDialogStatus_marshal_mcbride(Player *player, Creature *_Creature )
-{
-    return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
-}
-
-bool ChooseReward_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Quest, uint32 opt )
-{
-    /*if questid == 21: # Skirmish at Echo Ridge
-        self.Emote   (co.EMOTE_ONESHOT_SALUTE)
-        player.Emote (co.EMOTE_ONESHOT_SALUTE)
-        self.Say     (player, "You are dismissed.", co.LANG_UNIVERSAL)
-
-    GiveFollowUpAndClose(self, player, questid)	*/
-
-    return false;
+{ 
+    if (_Quest->GetQuestId() == 54)
+    {
+        _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+        player->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+        ((ScriptedAI&)_Creature->AI()).DoSay(MCBRIDE_SAY_QUESTACCEPT,LANG_UNIVERSAL,player);
+     }
+    
+    return true;
 }
 
 void AddSC_marshal_mcbride()
@@ -79,14 +37,6 @@ void AddSC_marshal_mcbride()
 
     newscript = new Script;
     newscript->Name="marshal_mcbride";
-    newscript->pGossipHello          = &GossipHello_marshal_mcbride;
-    newscript->pGossipSelect         = &GossipSelect_marshal_mcbride;
-    newscript->pGossipSelectWithCode = &GossipSelectWithCode_marshal_mcbride;
-
     newscript->pQuestAccept          = &QuestAccept_marshal_mcbride;
-    newscript->pQuestSelect          = &QuestSelect_marshal_mcbride;
-    newscript->pQuestComplete        = &QuestComplete_marshal_mcbride;
-    newscript->pNPCDialogStatus      = &NPCDialogStatus_marshal_mcbride;
-    newscript->pChooseReward         = &ChooseReward_marshal_mcbride;
     m_scripts[nrscripts++] = newscript;
 }

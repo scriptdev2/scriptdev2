@@ -36,15 +36,13 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
     Unit *pTarget;
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
-    uint32 SayTimer;            //Timer for our random chat
-
+    
     void Reset()
     {
         pTarget = NULL;
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
-        SayTimer = 30000;       //30 seconds
-
+        
         if (m_creature)
         {
             m_creature->RemoveAllAuras();
@@ -65,8 +63,31 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
 
-            //Play Aggro sound
-            if (rand()%3 == 0)DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            //30% chance to Play Aggro sound if the attacker is a player
+            if (who->GetTypeId() == TYPEID_PLAYER && rand()%3 == 0)
+            {
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+
+                //Switch between 4 different chats
+                switch (rand()%4)
+                    {
+                    case 0:
+                        DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
+                        break;
+                    
+                    case 1:
+                        DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
+                        break;
+
+                    case 2:
+                        DoSay(SAY_RANDOM_2,LANG_UNIVERSAL,pTarget);
+                        break;
+
+                    case 3:
+                        DoSay(SAY_RANDOM_3,LANG_UNIVERSAL,pTarget);
+                        break;
+                    }
+            }
 
             pTarget = who;
         }
@@ -89,8 +110,31 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
 
-                //Play Aggro sound
-                if (rand()%3 == 0)DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                //30% chance to Play Aggro sound if the attacker is a player
+                if (who->GetTypeId() == TYPEID_PLAYER && rand()%3 == 0)
+                {
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+
+                    //Switch between 4 different chats
+                    switch (rand()%4)
+                        {
+                        case 0:
+                            DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
+                            break;
+                    
+                        case 1:
+                            DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
+                            break;
+
+                        case 2:
+                            DoSay(SAY_RANDOM_2,LANG_UNIVERSAL,pTarget);
+                            break;
+
+                        case 3:
+                            DoSay(SAY_RANDOM_3,LANG_UNIVERSAL,pTarget);
+                            break;
+                        }
+                }
 
                 pTarget = who;
             }
@@ -137,33 +181,6 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //25% chance to say a random line every 30 seconds
-            if (SayTimer < diff)
-            {
-                //Random switch between 4 outcomes
-                if (rand() % 4 == 0)
-                    switch (rand()%4)
-                    {
-                    case 0:
-                        DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
-                        break;
-                    
-                    case 1:
-                        DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
-                        break;
-
-                    case 2:
-                        DoSay(SAY_RANDOM_2,LANG_UNIVERSAL,pTarget);
-                        break;
-
-                    case 3:
-                        DoSay(SAY_RANDOM_3,LANG_UNIVERSAL,pTarget);
-                        break;
-                    }
-
-                SayTimer = 30000;
-            }else SayTimer -= diff;
-
             //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawn point
             if (needToStop() || CheckTether())
             {
@@ -193,7 +210,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                         else info = SelectSpell(m_creature->getVictim(), NULL, NULL, SELECT_TARGET_ANY_ENEMY, NULL, NULL, NULL, NULL, SELECT_EFFECT_DONTCARE);
 
                     //20% chance to replace our white hit with a spell
-                    if (info && rand() % 5 == 0 && !GlobalCooldown)
+                    if (info && rand() % 5  == 0 && !GlobalCooldown)
                     {
                         //Cast the spell
                         if (Healing)DoCastSpell(m_creature, info);

@@ -27,6 +27,7 @@
 #include "../../game/CreatureAI.h"
 #include "../../game/TargetedMovementGenerator.h"
 #include "../../shared/WorldPacket.h"
+#include "../../shared/Database/DBCStores.h"
 
 #define MAX_SCRIPTS 1000
 
@@ -36,11 +37,7 @@ struct Script
     pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pChooseReward(NULL),
         pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
-        pGOChooseReward(NULL), GetAI(NULL)
-#ifdef SCRIPT_EXTENDED
-        ,pReciveEmote(NULL)
-        ,pItemUse(NULL)
-#endif
+        pGOChooseReward(NULL),pReceiveEmote(NULL),pItemUse(NULL), GetAI(NULL)
         {}
 
     std::string Name;
@@ -63,18 +60,11 @@ struct Script
 
     CreatureAI* (*GetAI)(Creature *_Creature);
 
-#ifdef SCRIPT_EXTENDED
-    bool (*pReciveEmote         )(Player *player, Creature *_Creature, uint32 emote);
+    bool (*pReceiveEmote         )(Player *player, Creature *_Creature, uint32 emote);
     bool (*pItemUse             )(Player *player, Item* _Item);
-#endif
     // -----------------------------------------
 
 };
-
-#ifdef SCRIPT_EXTENDED
-extern DBCStorage <SpellRangeEntry> *pSpellRangeStore;
-extern DBCStorage <SpellEntry> *pSpellStore;
-#endif
 
 extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
@@ -108,7 +98,7 @@ enum Targets
     TARGET_CHAIN                       = 45,
     TARGET_DYNAMIC_OBJECT              = 47,
     TARGET_CURRENT_SELECTED_ENEMY      = 53,
-    TARGET_SINGLE_FRIEND_2             = 57,
+    TARGET_SINGLE_FRIEND_2             = 57,        //This is incorrectly labled, this should say SINGLE_ENEMY_2. Needs to be examined
     TARGET_AREAEFFECT_PARTY_AND_CLASS  = 61,
 };
 
@@ -162,13 +152,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at any Damage from any attacker
     void DamageInflict(Unit *healer, uint32 amount_healed) {}
 
-    //Is unit visibale for MoveInLineOfSight
+    //Is unit visible for MoveInLineOfSight
     bool IsVisible(Unit *who) const
     {
         if (!who)
             return false;
 
-        return !who->HasStealthAura() && m_creature->GetDistanceSq(who) <= VISIBLE_RANGE;
+        return m_creature->GetDistanceSq(who) <= VISIBLE_RANGE && who->isVisibleFor(m_creature,true);
     }
 
     //Called at World update tick
@@ -230,6 +220,16 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     bool CanCast(Unit* Target, SpellEntry const *Spell);
 
     //Returns true if you are out of tether(spawnpoint) range
-    bool CheckTether();
+    bool CheckTether()
+    {
+        float rx,ry,rz;
+        m_creature->GetRespawnCoord(rx, ry, rz);
+        float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
+        float length = m_creature->GetDistanceSq(m_creature->getVictim());
+        float hostillen = m_creature->GetHostilityDistance( m_creature->getVictim()->GetGUID() );
+        return (( length > (10.0f + hostillen) * (10.0f + hostillen) && spawndist > 6400.0f )
+            || ( length > (20.0f + hostillen) * (20.0f + hostillen) && spawndist > 2500.0f )
+            || ( length > (30.0f + hostillen) * (30.0f + hostillen) ));
+    }
 };
 #endif

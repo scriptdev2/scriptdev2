@@ -16,9 +16,20 @@
 
 #include "../sc_defines.h"
 
-uint32 NPCDialogStatus_henze_faulk(Player *player, Creature *_Creature )
+uint32 NPCDialogStatus_henze_faulk(Player *player, Creature *creature )
 {
-    return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
+    if (player->CanCompleteQuest(1786) == true)
+    {
+    creature->RemoveFlag (UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
+    creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
+    return 6;
+    }
+    else
+    {
+        creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_DEAD);
+        creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS,UNIT_DYNFLAG_DEAD);
+        return 0;
+    }
 }
 
 void AddSC_henze_faulk()

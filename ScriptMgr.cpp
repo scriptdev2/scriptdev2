@@ -23,11 +23,6 @@ uint8 loglevel = 0;
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
-#ifdef SCRIPT_EXTENDED
-DBCStorage <SpellRangeEntry> *pSpellRangeStore;
-DBCStorage <SpellEntry> *pSpellStore;
-#endif
-
 // -- Scripts to be added --
 
 //Area
@@ -38,6 +33,7 @@ extern void AddSC_boss_onyxiaAI();
 // Creature
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
+extern void AddSC_defiasAI();
 
 //Custom
 extern void AddSC_custom_example();
@@ -70,6 +66,7 @@ extern void AddSC_marshal_mcbride();
 extern void AddSC_skorn_whitecloud();
 extern void AddSC_silva_filnaveth();
 extern void AddSC_bunthen_plainswind();
+extern void AddSC_henze_faulk();
 
 //Servers
 extern void AddSC_battlemaster();
@@ -103,6 +100,7 @@ void ScriptsInit()
     // Creature
     AddSC_kobold();
     AddSC_generic_creature();
+    AddSC_defiasAI();
 
     //Custom
     AddSC_custom_example();
@@ -135,6 +133,7 @@ void ScriptsInit()
     AddSC_skorn_whitecloud();
     AddSC_silva_filnaveth();
     AddSC_bunthen_plainswind();
+    AddSC_henze_faulk();
 
     //Servers
     AddSC_battlemaster();
@@ -341,15 +340,6 @@ CreatureAI* GetAI(Creature *_Creature)
     return tmpscript->GetAI(_Creature);
 }
 
-#ifdef SCRIPT_EXTENDED
-
-MANGOS_DLL_EXPORT
-void DBCPointers(DBCStorage <SpellRangeEntry> *sSpellRangeStore, DBCStorage <SpellEntry> *sSpellStore)
-{
-    pSpellRangeStore = sSpellRangeStore;
-    pSpellStore = sSpellStore;
-}
-
 MANGOS_DLL_EXPORT
 bool ItemUse( Player *player, Item* _Item)
 {
@@ -362,16 +352,15 @@ bool ItemUse( Player *player, Item* _Item)
 }
 
 MANGOS_DLL_EXPORT
-bool ReciveEmote( Player *player, Creature *_Creature, uint32 emote )
+bool ReceiveEmote( Player *player, Creature *_Creature, uint32 emote )
 {
     Script *tmpscript = NULL;
 
     tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
-    if(!tmpscript || !tmpscript->pReciveEmote) return false;
+    if(!tmpscript || !tmpscript->pReceiveEmote) return false;
 
-    return tmpscript->pReciveEmote(player, _Creature, emote);
+    return tmpscript->pReceiveEmote(player, _Creature, emote);
 }
-#endif
 
 void ScriptedAI::AttackStart(Unit* who)
 {
@@ -542,15 +531,6 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
         m_creature->SendUpdateToPlayer((Player*)unit);
 }
 
-bool ScriptedAI::CheckTether()
-{
-    float rx,ry,rz;
-    m_creature->GetRespawnCoord(rx, ry, rz);
-    float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
-
-    return (spawndist > 2500.0f);
-}
-
 SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)
 {
     //No target so we can't cast
@@ -561,7 +541,6 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
     if (m_creature->m_silenced)
         return false;
 
-#ifdef SCRIPT_EXTENDED
     //Using the extended script system we first create a list of viable spells
     SpellEntry const* Spell[4];
     Spell[0] = 0;
@@ -577,7 +556,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
     //Check if each spell is viable(set it to null if not)
     for (uint32 i = 0; i < 4; i++)
     {
-        TempSpell = pSpellStore->LookupEntry(m_creature->m_spells[i]);
+        TempSpell = GetSpellStore()->LookupEntry(m_creature->m_spells[i]);
 
         //This spell doesn't exist
         if (!TempSpell)
@@ -641,8 +620,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
                     for (uint32 i = 0; i < 3; i++)
                         if (TempSpell->EffectImplicitTargetA[i] == TARGET_SELF ||
                             TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_PARTY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND_2)
+                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_PARTY)
                             bSkipThisSpell = false;
                 break;
 
@@ -660,7 +638,6 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
                         if (TempSpell->EffectImplicitTargetA[i] == TARGET_SELF ||
                             TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND ||
                             TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_PARTY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND_2 ||
                             TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_PARTY_AROUND_CASTER ||
                             TempSpell->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_PARTY)
                             bSkipThisSpell = false;
@@ -685,7 +662,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
             continue;
 
         //Get the Range
-        TempRange = pSpellRangeStore->LookupEntry(TempSpell->rangeIndex);
+        TempRange = GetSpellRangeStore()->LookupEntry(TempSpell->rangeIndex);
 
         //Spell has invalid range store so we can't use it
         if (!TempRange)
@@ -755,12 +732,6 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
         return NULL;
 
     return Spell[rand()%SpellCount];
-
-#else
-
-    //Return whatever mangos core thinks is the best spell
-    return m_creature->reachWithSpellAttack(Target);
-#endif
 }
 
 bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
@@ -777,11 +748,9 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
     if (m_creature->GetPower((Powers)Spell->powerType) < Spell->manaCost)
         return false;
 
-#ifdef SCRIPT_EXTENDED
-    //Using extended script check if we are within range
     SpellRangeEntry const *TempRange = NULL;
 
-    TempRange = pSpellRangeStore->LookupEntry(Spell->rangeIndex);
+    TempRange = GetSpellRangeStore()->LookupEntry(Spell->rangeIndex);
 
     //Spell has invalid range store so we can't use it
     if (!TempRange)
@@ -790,7 +759,6 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
     //Unit is out of range of this spell
     if (m_creature->GetDistanceSq(Target) > TempRange->maxRange*TempRange->maxRange || m_creature->GetDistanceSq(Target) < TempRange->minRange*TempRange->minRange)
         return false;
-#endif
 
     return true;
 }

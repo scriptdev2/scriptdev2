@@ -58,7 +58,6 @@ bool ItemUse_item_test(Player *player, Item* _Item)
 
 void AddSC_item_test()
 {
-#ifdef SCRIPT_EXTENDED
     Script *newscript;
 
     newscript = new Script;
@@ -66,5 +65,4 @@ void AddSC_item_test()
     newscript->pItemUse = ItemUse_item_test;
 
     m_scripts[nrscripts++] = newscript;
-#endif
 }
