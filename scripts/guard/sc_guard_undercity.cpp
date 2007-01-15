@@ -76,13 +76,13 @@ void SendDefaultMenu_guard_undercity(Player *player, Creature *_Creature, uint32
     if (action == GOSSIP_ACTION_INFO_DEF + 6)//Auction House
     {
         player->SEND_POI(1647.9, 258.49, 6, 6, 0, "Undercity Auction House");
-        player->SEND_GOSSIP_MENU(3520,_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3519,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Zeppelin
     {
         player->SEND_POI(2059, 274.86, 6, 6, 0, "Undercity Zeppelin");
-        player->SEND_GOSSIP_MENU(3519,_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3520,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Weapon Master
@@ -176,7 +176,7 @@ void SendClassTrainerMenu_guard_undercity(Player *player, Creature *_Creature, u
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Rogue
     {
         player->SEND_POI(1418.56, 65, 6, 6, 0, "Undercity Rogue Trainers");
-        player->SEND_GOSSIP_MENU(3526,_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3524,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Warlock
