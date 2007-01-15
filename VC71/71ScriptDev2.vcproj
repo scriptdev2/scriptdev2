@@ -132,7 +132,47 @@
 				Name="boss"
 				>
 				<File
+					RelativePath="..\scripts\boss\sc_boss_baron_geddon.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_garr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_gehennas.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_golemagg.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_lucifron.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_magmadar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_majordomo_executus.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\boss\sc_boss_onyxia.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_ragnaros.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_shazzrah.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_sulfuron_harbinger.cpp"
 					>
 				</File>
 			</Filter>

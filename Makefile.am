@@ -32,7 +32,17 @@ libMaNGOSScript_la_SOURCES = \
 ScriptMgr.cpp \
 ScriptMgr.h \
 config.h \
+scripts/boss/sc_boss_baron_geddon.cpp \
+scripts/boss/sc_boss_garr.cpp \
+scripts/boss/sc_boss_gehennas.cpp \
+scripts/boss/sc_boss_golemagg.cpp \
+scripts/boss/sc_boss_lucifron.cpp \
+scripts/boss/sc_boss_magmadar.cpp \
+scripts/boss/sc_boss_majordomo_executus.cpp \
 scripts/boss/sc_boss_onyxia.cpp \
+scripts/boss/sc_boss_ragnaros.cpp \
+scripts/boss/sc_boss_shazzrah.cpp \
+scripts/boss/sc_boss_sulfuron_harbinger.cpp \
 scripts/creature/sc_defias.cpp \
 scripts/creature/sc_generic_creature.cpp \
 scripts/creature/sc_kobold.cpp \

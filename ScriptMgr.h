@@ -185,12 +185,17 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Cast spell by Id
     void DoCast(Unit* victim, uint32 spelId)
     {
+        if (m_creature->m_currentSpell)
+            return;
         m_creature->CastSpell(victim, spelId, false);
     }
 
     //Cast spell by spell info
     void DoCastSpell(Unit* who,SpellEntry const *spellInfo)
     {
+        if (m_creature->m_currentSpell)
+            return;
+
         m_creature->StopMoving();
         m_creature->CastSpell(who, spellInfo, false);
     }

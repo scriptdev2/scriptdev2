@@ -25,22 +25,37 @@ Script *m_scripts[MAX_SCRIPTS];
 
 // -- Scripts to be added --
 
-//Area
+// -- Area --
 
-//Boss
+// -- Boss --
+
+//Onyxia
 extern void AddSC_boss_onyxiaAI();
 
-// Creature
+//MC bosses
+extern void AddSC_boss_lucifron();
+extern void AddSC_boss_magmadar();
+extern void AddSC_boss_gehennas();
+extern void AddSC_boss_garr();
+extern void AddSC_boss_baron_geddon();
+extern void AddSC_boss_shazzrah();
+extern void AddSC_boss_golemagg();
+extern void AddSC_boss_sulfuron();
+extern void AddSC_boss_majordomo();
+extern void AddSC_boss_ragnaros();
+
+
+// -- Creature --
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
 extern void AddSC_defiasAI();
 
-//Custom
+// -- Custom --
 extern void AddSC_custom_example();
 
-//GO
+// -- GO --
 
-//Guard
+// -- Guard --
 extern void AddSC_guard_bluffwatcher();
 extern void AddSC_guard_contested();
 extern void AddSC_guard_darnassus();
@@ -55,20 +70,20 @@ extern void AddSC_guard_teldrassil();
 extern void AddSC_guard_tirisfal();
 extern void AddSC_guard_undercity();
 
-//Honor
+// -- Honor --
 extern void AddSC_Honor_Vendor();
 
-//Item
+// -- Item --
 extern void AddSC_item_test();
 
-//NPC
+// -- NPC --
 extern void AddSC_marshal_mcbride();
 extern void AddSC_skorn_whitecloud();
 extern void AddSC_silva_filnaveth();
 extern void AddSC_bunthen_plainswind();
 extern void AddSC_henze_faulk();
 
-//Servers
+// -- Servers --
 extern void AddSC_battlemaster();
 extern void AddSC_guildmaster();
 extern void AddSC_travelmaster();
@@ -92,22 +107,37 @@ void ScriptsInit()
 
     // -- Inicialize the Scripts to be Added --
 
-    //Area
+    // -- Area --
 
-    //Boss
+    // -- Boss --
+
+    //Onyxia
     AddSC_boss_onyxiaAI();
 
-    // Creature
+    //MC bosses
+    AddSC_boss_lucifron();
+    AddSC_boss_magmadar();
+    AddSC_boss_gehennas();
+    AddSC_boss_garr();
+    AddSC_boss_baron_geddon();
+    AddSC_boss_shazzrah();
+    AddSC_boss_golemagg();
+    AddSC_boss_sulfuron();
+    AddSC_boss_majordomo();
+    AddSC_boss_ragnaros();
+
+
+    // -- Creature --
     AddSC_kobold();
     AddSC_generic_creature();
     AddSC_defiasAI();
 
-    //Custom
+    // -- Custom --
     AddSC_custom_example();
 
-    //GO
+    // -- GO --
 
-    //Guard
+    // -- Guard --
     AddSC_guard_bluffwatcher();
     AddSC_guard_contested();
     AddSC_guard_darnassus();
@@ -122,24 +152,23 @@ void ScriptsInit()
     AddSC_guard_tirisfal();
     AddSC_guard_undercity();
 
-    //Honor
+    // -- Honor --
     AddSC_Honor_Vendor();
 
-    //Item
+    // -- Item --
     AddSC_item_test();
 
-    //NPC
+    // -- NPC --
     AddSC_marshal_mcbride();
     AddSC_skorn_whitecloud();
     AddSC_silva_filnaveth();
     AddSC_bunthen_plainswind();
     AddSC_henze_faulk();
 
-    //Servers
+    // -- Servers --
     AddSC_battlemaster();
     AddSC_guildmaster();
     AddSC_travelmaster();
-
 
     // ----------------------------------------
 }
@@ -525,10 +554,6 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
 
     //Face target
     m_creature->SetInFront(unit);
-                        
-    //Send the update to the player
-    if ( unit->GetTypeId() == TYPEID_PLAYER)
-        m_creature->SendUpdateToPlayer((Player*)unit);
 }
 
 SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)
