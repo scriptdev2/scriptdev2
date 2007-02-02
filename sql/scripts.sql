@@ -23,6 +23,8 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_ragnaros' WHERE `entry` = 115
 -- creature data
 --
 UPDATE `creature_template` SET`ScriptName` = '' WHERE `ScriptName` = 'sc_default';
+UPDATE `creature_template` SET`ScriptName` = 'lumberjack' WHERE `entry` IN (11328,11260);
+UPDATE `creature_template` SET`ScriptName` = 'miner' WHERE `entry` IN (80,1236,3578,40,1358,1360,5996,1426,1094,674);
 
 -- Generic Scripts
 UPDATE `creature_template` SET`ScriptName` = 'generic_creature' WHERE `entry` IN (946, 4063, 1867, 1867, 1915, 1914, 1889, 314, 2570, 2567, 697, 1653, 1562, 1564, 3218, 2591, 2255, 1539, 4299, 4296, 4300, 533, 203 , 2577 , 3273 , 1183 , 436 , 7235 , 2012, 1397 , 1174 , 2018 , 474 , 910 , 589 , 1399 , 3783 , 3732 , 3725 , 3728 , 3662 , 2207 , 7026 , 7028 , 7048 , 7038); -- Base

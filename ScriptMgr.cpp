@@ -49,6 +49,8 @@ extern void AddSC_boss_ragnaros();
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
 extern void AddSC_defiasAI();
+extern void AddSC_lumberjack();
+extern void AddSC_miner();
 
 // -- Custom --
 extern void AddSC_custom_example();
@@ -131,6 +133,8 @@ void ScriptsInit()
     AddSC_kobold();
     AddSC_generic_creature();
     AddSC_defiasAI();
+	AddSC_lumberjack();
+	AddSC_miner();
 
     // -- Custom --
     AddSC_custom_example();
