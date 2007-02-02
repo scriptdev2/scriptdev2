@@ -1,0 +1,226 @@
+/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#include "../../sc_defines.h"
+
+// **** This script is still under Developement ****
+
+#define SPELL_SLEEP2		        1090
+#define SPELL_CURSEOFBLOOD          16098
+#define SPELL_SMITE			        6060
+#define SPELL_SHADOWWORDPAIN	    2767
+#define SPELL_FLASHHEAL4            9474
+#define SPELL_RENEW6			    6078
+#define SPELL_DEVOURINGPLAGUE3      19277
+#define SPELL_MINDBLAST5	        8105
+
+struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
+{
+    boss_high_inquisitor_fairbanksAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    Unit *pTarget;
+	uint32 Healing_Timer;
+    uint32 Sleep2_Timer;
+    uint32 Smite_Timer;
+	uint32 ShadowWordPain_Timer;
+	uint32 CurseOfBlood_Timer;
+	uint32 DevouringPlague3_Timer;
+	uint32 MindBlast5_Timer;
+
+    void Reset()
+    {
+        pTarget = NULL;
+		Healing_Timer = 80000;
+        Sleep2_Timer = 450000;
+        Smite_Timer = 30000;
+		ShadowWordPain_Timer = 30000;
+		CurseOfBlood_Timer = 45000;
+		DevouringPlague3_Timer = 200000;
+		MindBlast5_Timer = 20000;
+
+        if (m_creature)
+        {
+            m_creature->RemoveAllAuras();
+            DoStopAttack();
+            DoGoHome();
+        }
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        {
+			DoStartMeleeAttack(who);
+            pTarget = who;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+		
+		m_creature->HandleEmoteCommand(EMOTE_STATE_SLEEP);
+		
+		if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            if ( m_creature->getVictim() == NULL)
+            {
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+
+                pTarget = who;
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //If we had a target and it wasn't cleared then it means the player died from some unknown source
+        //But we still need to reset
+        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        {
+            Reset();
+            return;
+        }
+
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+            //Check if we should stop attacking because our victim is no longer attackable
+            if (needToStop())
+            {
+                Reset();
+                return;
+            }
+
+            //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpell)
+            {
+				//Healing_Timer
+				if (Healing_Timer < diff)
+				{
+
+					DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
+					return;
+	
+	                //80 seconds until we should cast this agian
+	                Healing_Timer = 80000;
+	            }else Healing_Timer -= diff;            
+            }
+
+            //Sleep2_Timer
+            if (Sleep2_Timer < diff)
+            {
+                //Cast
+				DoCast(m_creature->getVictim(),SPELL_SLEEP2);
+
+                //450 seconds until we should cast this agian
+                Sleep2_Timer = 450000;
+            }else Sleep2_Timer -= diff;
+
+            //Smite_Timer
+            if (Smite_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_SMITE);
+
+                //30 seconds until we should cast this agian
+                Smite_Timer = 30000;
+            }else Smite_Timer -= diff;
+
+            //ShadowWordPain_Timer
+            if (ShadowWordPain_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+
+                //30 seconds until we should cast this agian
+                ShadowWordPain_Timer = 30000;
+            }else ShadowWordPain_Timer -= diff;
+
+            //CurseOfBlood_Timer
+            if (CurseOfBlood_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+
+                //45 seconds until we should cast this agian
+                CurseOfBlood_Timer = 45000;
+            }else CurseOfBlood_Timer -= diff;
+
+            //DevouringPlague3_Timer
+            if (DevouringPlague3_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_DEVOURINGPLAGUE3);
+
+                //200 seconds until we should cast this agian
+                DevouringPlague3_Timer = 200000;
+            }else DevouringPlague3_Timer -= diff;
+
+            //MindBlast5_Timer
+            if (MindBlast5_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_MINDBLAST5);
+
+                //200 seconds until we should cast this agian
+                MindBlast5_Timer = 200000;
+            }else MindBlast5_Timer -= diff;
+
+            //If we are within range melee the target
+            if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
+            {
+                //Make sure our attack is ready and we arn't currently casting
+                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
+                {
+                    Unit* newtarget = m_creature->SelectHostilTarget();
+                    if(newtarget)
+                        AttackStart(newtarget);
+
+                    m_creature->AttackerStateUpdate(m_creature->getVictim());
+                    m_creature->resetAttackTimer();
+                }
+            }
+
+            //If we are still alive and we lose our victim it means we killed them
+            if(m_creature->isAlive() && !m_creature->getVictim())
+            {
+                Reset();
+            }
+        }
+    }
+};
+
+CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature *_Creature)
+{
+    return new boss_high_inquisitor_fairbanksAI (_Creature);
+}
+
+
+void AddSC_boss_high_inquisitor_fairbanks()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="boss_high_inquisitor_fairbanks";
+    newscript->GetAI = GetAI_boss_high_inquisitor_fairbanks;
+    m_scripts[nrscripts++] = newscript;
+}

@@ -29,26 +29,10 @@ Script *m_scripts[MAX_SCRIPTS];
 
 // -- Boss --
 
-//Onyxia
-extern void AddSC_boss_onyxiaAI();
-
-//MC bosses
-extern void AddSC_boss_lucifron();
-extern void AddSC_boss_magmadar();
-extern void AddSC_boss_gehennas();
-extern void AddSC_boss_garr();
-extern void AddSC_boss_baron_geddon();
-extern void AddSC_boss_shazzrah();
-extern void AddSC_boss_golemagg();
-extern void AddSC_boss_sulfuron();
-extern void AddSC_boss_majordomo();
-extern void AddSC_boss_ragnaros();
-
-
 // -- Creature --
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
-extern void AddSC_defiasAI();
+extern void AddSC_defias();
 extern void AddSC_lumberjack();
 extern void AddSC_miner();
 
@@ -79,17 +63,111 @@ extern void AddSC_Honor_Vendor();
 extern void AddSC_item_test();
 
 // -- NPC --
-extern void AddSC_marshal_mcbride();
-extern void AddSC_skorn_whitecloud();
-extern void AddSC_silva_filnaveth();
-extern void AddSC_bunthen_plainswind();
-extern void AddSC_henze_faulk();
 
 // -- Servers --
 extern void AddSC_battlemaster();
 extern void AddSC_guildmaster();
 extern void AddSC_travelmaster();
 
+//--------------------
+//------ ZONE --------
+
+//Alterac Mountains
+//Arathi Highlands
+//Ashenvale Forest
+//Azshara
+//Badlands
+//Barrens
+//Blackfathom Depths
+//Blackwing lair
+//Blasted lands
+//Burning steppes
+//Darkshore
+//Deadmines
+//Deadwind pass
+//Desolace
+//Dire Maul
+//Dun Morogh
+//Durotar
+//Duskwood
+//Duskwallow marsh
+//Eastern Plaguelands
+//Elwynn Forest
+extern void AddSC_marshal_mcbride();
+extern void AddSC_henze_faulk();
+
+//Felwood
+//Feralas
+//Gnomeregan
+//Hillsbrad Foothills
+//Hinterlands
+//Loch Modan
+//Lower Blackrock Spire
+//Maradon
+//Molten core
+extern void AddSC_boss_lucifron();
+extern void AddSC_boss_magmadar();
+extern void AddSC_boss_gehennas();
+extern void AddSC_boss_garr();
+extern void AddSC_boss_baron_geddon();
+extern void AddSC_boss_shazzrah();
+extern void AddSC_boss_golemagg();
+extern void AddSC_boss_sulfuron();
+extern void AddSC_boss_majordomo();
+extern void AddSC_boss_ragnaros();
+
+//Moonglade
+extern void AddSC_silva_filnaveth();
+extern void AddSC_bunthen_plainswind();
+
+//Mulgore
+extern void AddSC_skorn_whitecloud();
+
+//Naxxramas
+//Onyxia's Lair
+extern void AddSC_boss_onyxia();
+
+//Ragefire Chasm
+//Razorfen Downs
+//Redridge Mountains
+//Ruins of Ahn'Qiraj
+//Scarlet Monastery
+extern void AddSC_boss_arcanist_doan();
+extern void AddSC_boss_azshir_the_sleepless();
+extern void AddSC_boss_bloodmage_thalnos();
+extern void AddSC_boss_herod();
+extern void AddSC_boss_high_inquisitor_fairbanks();
+extern void AddSC_boss_high_inquisitor_whitemane();
+extern void AddSC_boss_houndmaster_loksey();
+extern void AddSC_boss_interrogator_vishas();
+extern void AddSC_boss_scarlet_commander_mograine();
+extern void AddSC_boss_scorn();
+extern void AddSC_scarlet_torturer();
+
+//Scholomance
+//Searing gorge
+//Shadowfang keep
+//Silithus
+//Silverpine forest
+//Stockade
+//Stonetalon mountains
+//Stratholme
+//Sunken Temple
+//Tanaris
+//Teldrassil
+//Temple of ahn'qiraj
+//Thousand Needles
+//Tirisfal Glades
+//Uldaman
+//Un'Goro Crater
+//Upper blackrock spire
+//Wailing caverns
+//Western plaguelands
+//Westfall
+//Wetlands
+//Winterspring
+//Zul'Farrak
+//Zul'Gurub
 
 // -------------------
 
@@ -107,32 +185,16 @@ void ScriptsInit()
     for(int i=0;i<MAX_SCRIPTS;i++)
         m_scripts[i]=NULL;
 
-    // -- Inicialize the Scripts to be Added --
+    // -- Scripts to be added --
 
     // -- Area --
 
     // -- Boss --
 
-    //Onyxia
-    AddSC_boss_onyxiaAI();
-
-    //MC bosses
-    AddSC_boss_lucifron();
-    AddSC_boss_magmadar();
-    AddSC_boss_gehennas();
-    AddSC_boss_garr();
-    AddSC_boss_baron_geddon();
-    AddSC_boss_shazzrah();
-    AddSC_boss_golemagg();
-    AddSC_boss_sulfuron();
-    AddSC_boss_majordomo();
-    AddSC_boss_ragnaros();
-
-
     // -- Creature --
     AddSC_kobold();
     AddSC_generic_creature();
-    AddSC_defiasAI();
+    AddSC_defias();
 	AddSC_lumberjack();
 	AddSC_miner();
 
@@ -163,16 +225,111 @@ void ScriptsInit()
     AddSC_item_test();
 
     // -- NPC --
-    AddSC_marshal_mcbride();
-    AddSC_skorn_whitecloud();
-    AddSC_silva_filnaveth();
-    AddSC_bunthen_plainswind();
-    AddSC_henze_faulk();
 
     // -- Servers --
     AddSC_battlemaster();
     AddSC_guildmaster();
     AddSC_travelmaster();
+
+    //--------------------
+    //------ ZONE --------
+
+    //Alterac Mountains
+    //Arathi Highlands
+    //Ashenvale Forest
+    //Azshara
+    //Badlands
+    //Barrens
+    //Blackfathom Depths
+    //Blackwing lair
+    //Blasted lands
+    //Burning steppes
+    //Darkshore
+    //Deadmines
+    //Deadwind pass
+    //Desolace
+    //Dire Maul
+    //Dun Morogh
+    //Durotar
+    //Duskwood
+    //Duskwallow marsh
+    //Eastern Plaguelands
+    //Elwynn Forest
+    AddSC_marshal_mcbride();
+    AddSC_henze_faulk();
+
+    //Felwood
+    //Feralas
+    //Gnomeregan
+    //Hillsbrad Foothills
+    //Hinterlands
+    //Loch Modan
+    //Lower Blackrock Spire
+    //Maradon
+    //Molten core
+    AddSC_boss_lucifron();
+    AddSC_boss_magmadar();
+    AddSC_boss_gehennas();
+    AddSC_boss_garr();
+    AddSC_boss_baron_geddon();
+    AddSC_boss_shazzrah();
+    AddSC_boss_golemagg();
+    AddSC_boss_sulfuron();
+    AddSC_boss_majordomo();
+    AddSC_boss_ragnaros();
+
+    //Moonglade
+    AddSC_silva_filnaveth();
+    AddSC_bunthen_plainswind();
+
+    //Mulgore
+    AddSC_skorn_whitecloud();
+
+    //Naxxramas
+    //Onyxia's Lair
+    AddSC_boss_onyxia();
+
+    //Ragefire Chasm
+    //Razorfen Downs
+    //Redridge Mountains
+    //Ruins of Ahn'Qiraj
+    //Scarlet Monastery
+    AddSC_boss_arcanist_doan();
+    AddSC_boss_azshir_the_sleepless();
+    AddSC_boss_bloodmage_thalnos();
+    AddSC_boss_herod();
+    AddSC_boss_high_inquisitor_fairbanks();
+    AddSC_boss_high_inquisitor_whitemane();
+    AddSC_boss_houndmaster_loksey();
+    AddSC_boss_interrogator_vishas();
+    AddSC_boss_scarlet_commander_mograine();
+    AddSC_boss_scorn();
+    AddSC_scarlet_torturer();
+
+    //Scholomance
+    //Searing gorge
+    //Shadowfang keep
+    //Silithus
+    //Silverpine forest
+    //Stockade
+    //Stonetalon mountains
+    //Stratholme
+    //Sunken Temple
+    //Tanaris
+    //Teldrassil
+    //Temple of ahn'qiraj
+    //Thousand Needles
+    //Tirisfal Glades
+    //Uldaman
+    //Un'Goro Crater
+    //Upper blackrock spire
+    //Wailing caverns
+    //Western plaguelands
+    //Westfall
+    //Wetlands
+    //Winterspring
+    //Zul'Farrak
+    //Zul'Gurub
 
     // ----------------------------------------
 }

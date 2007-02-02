@@ -15,7 +15,7 @@
 */
 
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
 
@@ -343,7 +343,7 @@ CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)
 }
 
 
-void AddSC_boss_onyxiaAI()
+void AddSC_boss_onyxia()
 {
     Script *newscript;
     newscript = new Script;

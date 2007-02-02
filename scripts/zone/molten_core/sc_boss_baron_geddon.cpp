@@ -14,34 +14,30 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-// Adds NYI
 
-#define SPELL_MAGICREFLECTION       20619
-#define SPELL_DAMAGEREFLECTION      21075
-#define SPELL_BLASTWAVE             20229
-#define SPELL_AEGIS                 20620       //This is self casted whenever we are below 50%
+#define SPELL_INFERNO               19695
+#define SPELL_IGNITEMANA            19659
+#define SPELL_LIVINGBOMB            20475
+#define SPELL_ARMAGEDDOM            20479
 
-#define SAY_AGGRO       "Reckless mortals, none may challenge the sons of the living flame!"
-#define SOUND_AGGRO     8035
-
-struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
 {
-    boss_majordomoAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_baron_geddonAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 MagicReflection_Timer;
-    uint32 DamageReflection_Timer;
-    uint32 Blastwave_Timer;
+    uint32 Inferno_Timer;
+    uint32 IgniteMana_Timer;
+    uint32 LivingBomb_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-        MagicReflection_Timer = 60000;      //Damage reflection first so we alternate
-        DamageReflection_Timer = 30000;
-        Blastwave_Timer = 10000;
+        Inferno_Timer = 45000;      //These times are probably wrong
+        IgniteMana_Timer = 30000;
+        LivingBomb_Timer = 35000;
 
         if (m_creature)
         {
@@ -61,10 +57,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
 
-            //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-
             pTarget = who;
         }
     }
@@ -83,10 +75,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
                 pTarget = who;
             }
@@ -113,41 +101,43 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                 return;
             }
 
-            //Cast Ageis if less than 50% hp
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
+            //If we are <2% hp cast Armageddom
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->m_currentSpell)
             {
-                DoCast(m_creature,SPELL_AEGIS);
+                DoCast(m_creature,SPELL_ARMAGEDDOM);
+                DoTextEmote("performs one last service for Ragnaros.",NULL);
+                return;
             }
             
-            //MagicReflection_Timer
-            if (MagicReflection_Timer < diff)
+            //Inferno_Timer
+            if (Inferno_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature,SPELL_MAGICREFLECTION);
+                DoCast(m_creature,SPELL_INFERNO);
 
-                //60 seconds until we should cast this agian
-                MagicReflection_Timer = 60000;
-            }else MagicReflection_Timer -= diff;
+                //7 seconds until we should cast this agian
+                Inferno_Timer = 45000;
+            }else Inferno_Timer -= diff;
 
-            //DamageReflection_Timer
-            if (DamageReflection_Timer < diff)
+            //IgniteMana_Timer
+            if (IgniteMana_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature,SPELL_DAMAGEREFLECTION);
+                DoCast(m_creature->getVictim(),SPELL_IGNITEMANA);
 
-                //60 seconds until we should cast this agian
-                DamageReflection_Timer = 60000;
-            }else DamageReflection_Timer -= diff;
+                //35 seconds until we should cast this agian
+                IgniteMana_Timer = 30000;
+            }else IgniteMana_Timer -= diff;
 
-            //Blastwave_Timer
-            if (Blastwave_Timer < diff)
+            //LivingBomb_Timer
+            if (LivingBomb_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+                DoCast(m_creature->getVictim(),SPELL_LIVINGBOMB);
 
-                //10 seconds until we should cast this agian
-                Blastwave_Timer = 10000;
-            }else Blastwave_Timer -= diff;
+                //30 seconds until we should cast this agian
+                LivingBomb_Timer = 35000;
+            }else LivingBomb_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
@@ -172,17 +162,17 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         }
     }
 }; 
-CreatureAI* GetAI_boss_majordomo(Creature *_Creature)
+CreatureAI* GetAI_boss_baron_geddon(Creature *_Creature)
 {
-    return new boss_majordomoAI (_Creature);
+    return new boss_baron_geddonAI (_Creature);
 }
 
 
-void AddSC_boss_majordomo()
+void AddSC_boss_baron_geddon()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_majordomo";
-    newscript->GetAI = GetAI_boss_majordomo;
+    newscript->Name="boss_baron_geddon";
+    newscript->GetAI = GetAI_boss_baron_geddon;
     m_scripts[nrscripts++] = newscript;
 }

@@ -15,40 +15,43 @@
 */
 
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
-bool GossipHello_silas_darkmoon(Player *player, Creature *_Creature)
+bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
 {
-    player->ADD_GOSSIP_ITEM( 0, "Silas, why is most everything here at the fair free? How do you make a profit?", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
-//	player->SEND_GOSSIP_MENU(MUST BE SNIFFED!,_Creature->GetGUID()); //His message must be sniffed. If you have some information, please, contact me via PM.
+    uint64 guid = _Creature->GetGUID();
+    if (_Creature->isQuestGiver())
+    player->PrepareQuestMenu( guid );
+    player->SendPreparedQuest( guid );
+
+    player->ADD_GOSSIP_ITEM( 0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
+    player->SEND_GOSSIP_MENU(522,_Creature->GetGUID());     // Skorn Whitecloud message
 
     return true;
 }
 
-bool GossipSelect_silas_darkmoon(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_skorn_whitecloud(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
 
     if (action == GOSSIP_SENDER_INFO)
-//        player->SEND_GOSSIP_MENU(MUST BE SNIFFED!,_Creature->GetGUID());//His message must be sniffed. If you have some information, please, contact me via PM.
-
-    return true;
+        player->SEND_GOSSIP_MENU(523,_Creature->GetGUID());
 
     return true;
 }
 
-uint32 NPCDialogStatus_silas_darkmoon(Player *player, Creature *_Creature )
+uint32 NPCDialogStatus_skorn_whitecloud(Player *player, Creature *_Creature )
 {
     return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
 }
 
-void AddSC_silas_darkmoon()
+void AddSC_skorn_whitecloud()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="silas_darkmoon";
-    newscript->pGossipHello          = &GossipHello_silas_darkmoon;
-    newscript->pGossipSelect         = &GossipSelect_silas_darkmoon;
-    newscript->pNPCDialogStatus      = &NPCDialogStatus_silas_darkmoon;
+    newscript->Name="skorn_whitecloud";
+    newscript->pGossipHello          = &GossipHello_skorn_whitecloud;
+    newscript->pGossipSelect         = &GossipSelect_skorn_whitecloud;
+    newscript->pNPCDialogStatus      = &NPCDialogStatus_skorn_whitecloud;
     m_scripts[nrscripts++] = newscript;
 }

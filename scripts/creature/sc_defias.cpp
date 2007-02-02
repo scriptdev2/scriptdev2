@@ -287,7 +287,7 @@ CreatureAI* GetAI_defias(Creature *_Creature)
 }
 
 
-void AddSC_defiasAI()
+void AddSC_defias()
 {
     Script *newscript;
     newscript = new Script;

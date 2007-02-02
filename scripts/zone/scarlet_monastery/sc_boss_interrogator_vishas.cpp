@@ -14,25 +14,35 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-// Adds NYI
 
-#define SPELL_MAGMASPLASH               13879       //NYI in core
-#define SPELL_PYROBLAST                 20228
+#define SPELL_POWERWORDSHIELD		6065
 
-struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
+#define SAY_AGGRO			"Tell me... tell me everything!"
+#define SAY_HEALTH1			"Naughty secrets"
+#define SAY_HEALTH2			"I'll rip the secrets from your flesh!"
+#define SAY_DEATH		    "Purged by pain!"
+
+#define SOUND_AGGRO			5847
+#define SOUND_HEALTH1		5849
+#define SOUND_HEALTH2		5850
+#define SOUND_DEATH			5848
+
+struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 {
-    boss_golemaggAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 Pyroblast_Timer;
+	uint32 Yell_Timer;
+	uint32 PowerWordShield_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-        Pyroblast_Timer = 7000;      //These times are probably wrong
+		Yell_Timer = 6000000;
+		PowerWordShield_Timer = 60000;
 
         if (m_creature)
         {
@@ -49,10 +59,13 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
+			DoStartMeleeAttack(who);
+			
+			//Say our dialog
+			DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+			DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-            pTarget = who;
+			pTarget = who;
         }
     }
 
@@ -65,9 +78,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         {
             if ( m_creature->getVictim() == NULL)
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
@@ -78,7 +88,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //If we had a target and it wasn't cleared then it means the player died from some unknown source
         //But we still need to reset
         if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
         {
@@ -95,16 +105,47 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
                 Reset();
                 return;
             }
+
+            //If we are low on hp Do sayings
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->m_currentSpell)
+            {
+				//Yell_Timer
+				if (Yell_Timer < diff)
+				{
+
+					DoYell(SAY_HEALTH1,LANG_UNIVERSAL,NULL);
+					DoPlaySoundToSet(m_creature,SOUND_HEALTH1);
+					return;
+
+				    //60 seconds until we should cast this agian
+				    Yell_Timer = 60000;
+				}else Yell_Timer -= diff;
+            }
+			
+			if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
+			{
+				//Yell_Timer
+				if (Yell_Timer < diff)
+				{
+
+					DoYell(SAY_HEALTH2,LANG_UNIVERSAL,NULL);
+					DoPlaySoundToSet(m_creature,SOUND_HEALTH2);
+					return;
+
+				    //60 seconds until we should cast this agian
+				    Yell_Timer = 6000000;
+				}else Yell_Timer -= diff;
+			}
             
-            //Pyroblast_Timer
-            if (Pyroblast_Timer < diff)
+            //PowerWordShield_Timer
+            if (PowerWordShield_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
+				DoCast(m_creature->getVictim(),SPELL_POWERWORDSHIELD);
 
-                //7 seconds until we should cast this agian
-                Pyroblast_Timer = 7000;
-            }else Pyroblast_Timer -= diff;
+                //60 seconds until we should cast this agian
+                PowerWordShield_Timer = 60000;
+            }else PowerWordShield_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
@@ -124,22 +165,26 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             //If we are still alive and we lose our victim it means we killed them
             if(m_creature->isAlive() && !m_creature->getVictim())
             {
+				DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+				DoPlaySoundToSet(m_creature,SOUND_DEATH);
+				return;
+
                 Reset();
             }
         }
     }
 }; 
-CreatureAI* GetAI_boss_golemagg(Creature *_Creature)
+CreatureAI* GetAI_boss_interrogator_vishas(Creature *_Creature)
 {
-    return new boss_golemaggAI (_Creature);
+    return new boss_interrogator_vishasAI (_Creature);
 }
 
 
-void AddSC_boss_golemagg()
+void AddSC_boss_interrogator_vishas()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_golemagg";
-    newscript->GetAI = GetAI_boss_golemagg;
+    newscript->Name="boss_interrogator_vishas";
+    newscript->GetAI = GetAI_boss_interrogator_vishas;
     m_scripts[nrscripts++] = newscript;
 }

@@ -14,39 +14,33 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
 
-#define SPELL_FRENZY                28371
-#define SPELL_MAGMASPIT             19449       //This is actually a buff he gives himself
-#define SPELL_LAVABREATH            19272
-#define SPELL_PANIC                 19408
-#define SPELL_LAVABOMB              19411       //This calls a dummy server side effect that isn't implemented yet
-#define SPELL_LAVABOMB_ALT          19428       //This is the spell that the lava bomb casts
+#define SPELL_IMPENDINGDOOM 19702
+#define SPELL_LUCIFRONCURSE 19703
+#define SPELL_SHADOWSHOCK   17399
 
-struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 {
-    boss_magmadarAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_lucifronAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 Frenzy_Timer;
-    uint32 LavaBreath_Timer;
-    uint32 Panic_Timer;
-    uint32 Lavabomb_Timer;
+    uint32 ImpendingDoom_Timer;
+    uint32 LucifronCurse_Timer;
+    uint32 ShadowShock_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-        Frenzy_Timer = 45000;       //Just a guess, been to long since I've killed Magmadar
-        LavaBreath_Timer = 7000;
-        Panic_Timer = 30000;
-        Lavabomb_Timer = 12000;
+        ImpendingDoom_Timer = 10000;        //Initial cast after 10 seconds so the debuffs alternate
+        LucifronCurse_Timer = 20000;        //Initial cast after 20 seconds
+        ShadowShock_Timer = 6000;           //6 seconds
 
         if (m_creature)
         {
             m_creature->RemoveAllAuras();
-            m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
             DoStopAttack();
             DoGoHome();
         }
@@ -106,46 +100,35 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
                 return;
             }
             
-            //Frenzy_Timer
-            if (Frenzy_Timer < diff)
+            //Impending doom timer
+            if (ImpendingDoom_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote("goes into a killing frenzy!",NULL);
+                //Cast impending doom
+                DoCast(m_creature->getVictim(),SPELL_IMPENDINGDOOM);
 
-                //45 seconds
-                Frenzy_Timer = 45000;
-            }else Frenzy_Timer -= diff;
+                //20 seconds until we should cast this agian
+                ImpendingDoom_Timer = 20000;
+            }else ImpendingDoom_Timer -= diff;
 
-            //LavaBreath_Timer
-            if (LavaBreath_Timer < diff)
+            //Lucifron's curse timer
+            if (LucifronCurse_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_LAVABREATH);
+                //Cast Lucifron's curse
+                DoCast(m_creature->getVictim(),SPELL_LUCIFRONCURSE);
 
-                //7 seconds until we should cast this agian
-                LavaBreath_Timer = 7000;
-            }else LavaBreath_Timer -= diff;
+                //20 seconds until we should cast this agian
+                LucifronCurse_Timer = 20000;
+            }else LucifronCurse_Timer -= diff;
 
-            //Panic_Timer
-            if (Panic_Timer < diff)
+            //Shadowshock
+            if (ShadowShock_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PANIC);
+                //Cast shadow shock
+                DoCast(m_creature->getVictim(),SPELL_SHADOWSHOCK);
 
-                //30 seconds until we should cast this agian
-                Panic_Timer = 30000;
-            }else Panic_Timer -= diff;
-
-            //Lavabomb_Timer
-            if (Lavabomb_Timer < diff)
-            {
-                //Cast (normally this would be on a random player but since we don't have an aggro system we can't really do that)
-                DoCast(m_creature->getVictim(),SPELL_LAVABOMB_ALT);//Casting Alt lava bomb since normal one isn't supported
-
-                //12 seconds until we should cast this agian
-                Lavabomb_Timer = 12000;
-            }else Lavabomb_Timer -= diff;
+                //6 seconds until we should cast this agian
+                ShadowShock_Timer = 6000;
+            }else ShadowShock_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
@@ -170,17 +153,17 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         }
     }
 }; 
-CreatureAI* GetAI_boss_magmadar(Creature *_Creature)
+CreatureAI* GetAI_boss_lucifron(Creature *_Creature)
 {
-    return new boss_magmadarAI (_Creature);
+    return new boss_lucifronAI (_Creature);
 }
 
 
-void AddSC_boss_magmadar()
+void AddSC_boss_lucifron()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_magmadar";
-    newscript->GetAI = GetAI_boss_magmadar;
+    newscript->Name="boss_lucifron";
+    newscript->GetAI = GetAI_boss_lucifron;
     m_scripts[nrscripts++] = newscript;
 }

@@ -14,33 +14,35 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+//*** NEEDS ADDITIOINAL REVIEW ***
 
-// **** This script is still under Developement ****
-// Adds NYI
+//Razorgore Phase 2 Script
+//Phase 1 script with adds NYI
 
-#define SPELL_DEMORALIZINGSHOUT     19778
-#define SPELL_INSPIRE               19779
-#define SPELL_KNOCKDOWN             19780
-#define SPELL_FLAMESPEAR            19781       //Might be NYI in core
+#include "../../sc_defines.h"
 
-struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
+#define SPELL_CLEAVE                20691
+#define SPELL_WARSTOMP              27758       //Warstomp causes 1k dmg but doesn't knockback
+#define SPELL_FIREBALLVOLLEY        29958       //Our fireball doesn't leave a dot
+#define SPELL_CONFLAGRATION         16805
+
+struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
-    boss_sulfuronAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_razorgoreAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 DemoralizingShout_Timer;
-    uint32 Inspire_Timer;
-    uint32 Knockdown_Timer;
-    uint32 Flamespear_Timer;
+    uint32 Cleave_Timer;
+    uint32 WarStomp_Timer;
+    uint32 FireballVolley_Timer;
+    uint32 Conflagration_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-        DemoralizingShout_Timer = 25000;      //These times are probably wrong
-        Inspire_Timer = 30000;
-        Knockdown_Timer = 20000;
-        Flamespear_Timer = 15000;
+        Cleave_Timer = 15000;      //These times are probably wrong
+        WarStomp_Timer = 35000;
+        FireballVolley_Timer = 20000;
+        Conflagration_Timer = 30000;
 
         if (m_creature)
         {
@@ -104,45 +106,45 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
                 return;
             }
             
-            //DemoralizingShout_Timer
-            if (DemoralizingShout_Timer < diff)
+            //Cleave_Timer
+            if (Cleave_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
-
-                //25 seconds until we should cast this agian
-                DemoralizingShout_Timer = 25000;
-            }else DemoralizingShout_Timer -= diff;
-
-            //Inspire_Timer
-            if (Inspire_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_INSPIRE);
-
-                //30 seconds until we should cast this agian
-                Inspire_Timer = 30000;
-            }else Inspire_Timer -= diff;
-
-            //Knockdown_Timer
-            if (Knockdown_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
-
-                //20 seconds until we should cast this agian
-                Knockdown_Timer = 20000;
-            }else Knockdown_Timer -= diff;
-
-            //Flamespear_Timer
-            if (Flamespear_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMESPEAR);
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
                 //15 seconds until we should cast this agian
-                Flamespear_Timer = 15000;
-            }else Flamespear_Timer -= diff;
+                Cleave_Timer = 15000;
+            }else Cleave_Timer -= diff;
+
+            //WarStomp_Timer
+            if (WarStomp_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+
+                //35 seconds until we should cast this agian
+                WarStomp_Timer = 35000;
+            }else WarStomp_Timer -= diff;
+            
+            //FireballVolley_Timer
+            if (FireballVolley_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
+
+                //20 seconds until we should cast this agian
+                FireballVolley_Timer = 20000;
+            }else FireballVolley_Timer -= diff;
+            
+                        //Conflagration_Timer
+            if (Conflagration_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
+
+                //30 seconds until we should cast this agian
+                Conflagration_Timer = 30000;
+            }else Conflagration_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
@@ -166,18 +168,18 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             }
         }
     }
-}; 
-CreatureAI* GetAI_boss_sulfuron(Creature *_Creature)
+};
+CreatureAI* GetAI_boss_razorgore(Creature *_Creature)
 {
-    return new boss_sulfuronAI (_Creature);
+    return new boss_razorgoreAI (_Creature);
 }
 
 
-void AddSC_boss_sulfuron()
+void AddSC_boss_razorgore()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_sulfuron";
-    newscript->GetAI = GetAI_boss_sulfuron;
+    newscript->Name="boss_razorgore";
+    newscript->GetAI = GetAI_boss_razorgore;
     m_scripts[nrscripts++] = newscript;
 }

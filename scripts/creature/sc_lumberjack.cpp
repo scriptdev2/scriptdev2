@@ -24,7 +24,9 @@ struct MANGOS_DLL_DECL LumberjackAI : public ScriptedAI
     
     void MoveInLineOfSight(Unit *who)
     {
-        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 234);
+        //If a player walks into LOS we should begin our chopping animation
+        if (who->GetTypeId() == TYPEID_PLAYER)
+            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 234);
     }
 };
 

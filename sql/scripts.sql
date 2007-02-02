@@ -19,6 +19,15 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_sulfuron' WHERE `entry` = 120
 UPDATE `creature_template` SET`ScriptName` = 'boss_majordomo' WHERE `entry` = 12018;
 UPDATE `creature_template` SET`ScriptName` = 'boss_ragnaros' WHERE `entry` = 11502;
 
+-- Instances
+
+-- Scarlet Monastery
+-- 2953 - Fallen Champion
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6488);
+UPDATE `creature_template` SET `spell1` = 19644  WHERE `entry` = 6488;
+UPDATE `creature_template` SET `spell2` = 21949 WHERE `entry` = 6488;
+UPDATE `creature_template` SET `spell3` = 19642 WHERE `entry` = 6488;
+
 --
 -- creature data
 --
@@ -393,3 +402,1156 @@ UPDATE `creature_template` SET `spell1` = 705 WHERE `entry` = 7342; #Shadow Bolt
 UPDATE `creature_template` SET `spell2` = 1014 WHERE `entry` = 7342; #Curse of Agony R2
 UPDATE `creature_template` SET `spell1` = 8699 WHERE `entry` = 785; #Unholy Frenzy
 UPDATE `creature_template` SET `spell1` = 7373 WHERE `entry` = 48; #Hamstring R3
+
+-- Updates past revison 16
+
+-- Instances
+
+-- Scarlet Monastery
+-- 2953 - Fallen Champion
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6488);
+UPDATE `creature_template` SET `spell1` = 19644  WHERE `entry` = 6488;
+UPDATE `creature_template` SET `spell2` = 21949 WHERE `entry` = 6488;
+UPDATE `creature_template` SET `spell3` = 19642 WHERE `entry` = 6488;
+
+-- Creature scripts
+UPDATE `creature_template` SET `ScriptName` = 'scarlet_torturer' WHERE `entry` IN (4306);
+
+-- Boss Scripts
+UPDATE `creature_template` SET `ScriptName` = 'boss_arcanist_doan' WHERE `entry` IN (6487);
+UPDATE `creature_template` SET `ScriptName` = 'boss_azshir_the_sleepless' WHERE `entry` IN (6490);
+UPDATE `creature_template` SET `ScriptName` = 'boss_bloodmage_thalnos' WHERE `entry` IN (4543);
+UPDATE `creature_template` SET `ScriptName` = 'boss_herod' WHERE `entry` IN (3975);
+UPDATE `creature_template` SET `ScriptName` = 'boss_high_inquisitor_fairbanks' WHERE `entry` IN (4542);
+UPDATE `creature_template` SET `ScriptName` = 'boss_high_inquisitor_whitemane' WHERE `entry` IN (3977);
+UPDATE `creature_template` SET `ScriptName` = 'boss_houndmaster_loksey' WHERE `entry` IN (3974);
+UPDATE `creature_template` SET `ScriptName` = 'boss_interrogator_vishas' WHERE `entry` IN (3983);
+UPDATE `creature_template` SET `ScriptName` = 'boss_scarlet_commander_mograine' WHERE `entry` IN (3976);
+UPDATE `creature_template` SET `ScriptName` = 'boss_scorn' WHERE `entry` IN (14693);
+
+-- Instances
+
+-- Razorfen Downs by NuRRi
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7358, 7357, 7356, 7355, 7354, 8567);
+
+-- 7358 - Amnennar the Coldbringer
+-- spell_list "10179 22645 13009 12556"
+-- Frostbolt, Frost Nova, Amnennar's Wrath, Frost Armor
+UPDATE `creature_template` SET `spell1` = 10179 WHERE `entry` = 7358;
+UPDATE `creature_template` SET `spell2` = 22645 WHERE `entry` = 7358;
+UPDATE `creature_template` SET `spell3` = 13009 WHERE `entry` = 7358;
+UPDATE `creature_template` SET `spell4` = 12556 WHERE `entry` = 7358;
+
+-- 7357 - Mordresh Fire Eye
+-- spell_list "10148 12470"
+-- Fireball, Firenova
+UPDATE `creature_template` SET `spell1` = 10148 WHERE `entry` = 7357;
+UPDATE `creature_template` SET `spell2` = 12470 WHERE `entry` = 7357;
+
+-- 7356 - Plaguemaw The Rotting
+-- spell_list "12947 12946"
+-- Withered Touch, Putrid Stench
+UPDATE `creature_template` SET `spell1` = 12947 WHERE `entry` = 7356;
+UPDATE `creature_template` SET `spell2` = 12946 WHERE `entry` = 7356;
+
+-- 7355 - TutenKash
+-- spell_list "12255 12252 12254"
+-- Curse of Tuten'kash, Web Spray, Virulent Poison Proc
+UPDATE `creature_template` SET `spell1` = 12255 WHERE `entry` = 7355;
+UPDATE `creature_template` SET `spell2` = 12252 WHERE `entry` = 7355;
+UPDATE `creature_template` SET `spell3` = 12254 WHERE `entry` = 7355;
+
+
+-- 7354 - Ragglesnout
+-- spell_list "10892 11659"
+-- Shadow Word: Pain, Shadow Bolt
+UPDATE `creature_template` SET `spell1` = 10892 WHERE `entry` = 7354;
+UPDATE `creature_template` SET `spell2` = 11659 WHERE `entry` = 7354;
+
+-- 8567 - Glutton
+-- spell_list "16345"
+-- Disease Cloud
+UPDATE `creature_template` SET `spell1` = 16345 WHERE `entry` = 8567;
+
+-- Instances
+
+-- Maraudon by NuRRi
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (12225, 12236, 12237, 12201, 12258, 13601, 13282);
+
+-- 12225 - Celebras the Cursed
+-- spell_list "21667 21331 21793"
+-- Wrath, Entangling Roots, Twisted Tranquility
+UPDATE `creature_template` SET `spell1` = 21667 WHERE `entry` = 12225;
+UPDATE `creature_template` SET `spell2` = 21331 WHERE `entry` = 12225;
+UPDATE `creature_template` SET `spell3` = 21793 WHERE `entry` = 12225;
+
+-- 12236 - Lord Vyletongue
+-- spell_list "21080 8817"
+-- Putrid Breath, Smoke Bomb
+UPDATE `creature_template` SET `spell1` = 21080 WHERE `entry` = 12236;
+UPDATE `creature_template` SET `spell2` = 8817 WHERE `entry` = 12236;
+
+-- 12237 - Meshlok The Harvester
+-- spell_list "24375 15580"
+-- War Stomp, Strike
+UPDATE `creature_template` SET `spell1` = 24375 WHERE `entry` = 12237;
+UPDATE `creature_template` SET `spell2` = 15580 WHERE `entry` = 12237;
+
+-- 12201 - PrincessTheradras
+-- spell_list "21909 21832 19128 21869"
+-- Dust Field, Boulder, Knockdown, Repulsive Gaze
+UPDATE `creature_template` SET `spell1` = 21909 WHERE `entry` = 12201;
+UPDATE `creature_template` SET `spell2` = 21832 WHERE `entry` = 12201;
+UPDATE `creature_template` SET `spell3` = 19128 WHERE `entry` = 12201;
+UPDATE `creature_template` SET `spell4` = 21869 WHERE `entry` = 12201;
+
+-- 12258 - Razorlash
+-- spell_list "21911 15584 21749"
+-- Puncture, Cleave, Thorn Volley
+UPDATE `creature_template` SET `spell1` = 21911 WHERE `entry` = 12258;
+UPDATE `creature_template` SET `spell2` = 15584 WHERE `entry` = 12258;
+UPDATE `creature_template` SET `spell3` = 21749 WHERE `entry` = 12258;
+
+-- 13601 - Tinkerer Gizlock
+-- spell_list "21833 22334"
+-- Goblin Dragon Gun, Bomb
+UPDATE `creature_template` SET `spell1` = 21833 WHERE `entry` = 13601;
+UPDATE `creature_template` SET `spell2` = 22334 WHERE `entry` = 13601;
+
+-- 13282 - Noxxion
+-- spell_list "21687 21547 21707"
+-- Toxic Volley, Spore Cloud, Summon Spawn of Noxxion
+UPDATE `creature_template` SET `spell1` = 21687 WHERE `entry` = 13282;
+UPDATE `creature_template` SET `spell2` = 21547 WHERE `entry` = 13282;
+UPDATE `creature_template` SET `spell3` = 21707 WHERE `entry` = 13282;
+
+-- Instances
+
+-- Gnomeregan
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6206, 6208, 6209, 6215, 6219, 6229, 6228, 6235, 7361, 6407, 6220, 6218, 7603, 6223, 6222, 6234, 6233, 6226, 6227, 6225, 6230, 7079);
+
+-- 6206 - Caverndeep Burrower
+-- spell_list "9770 16145 1604 9776"
+-- Radiation(9770), Sunder Armor(16145), Dazed(1604), Irradiated(9776)
+UPDATE `creature_template` SET `spell1` = 9770 WHERE `entry` = 6206;
+UPDATE `creature_template` SET `spell2` = 16145 WHERE `entry` = 6206;
+UPDATE `creature_template` SET `spell3` = 1604 WHERE `entry` = 6206;
+UPDATE `creature_template` SET `spell4` = 9776 WHERE `entry` = 6206;
+
+-- 6208 - Caverndeep Invader
+-- spell_list "9770 1604 12540"
+-- Radiation(9770), Dazed(1604), Gouge(12540)
+UPDATE `creature_template` SET `spell1` = 9770 WHERE `entry` = 6208;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6208;
+UPDATE `creature_template` SET `spell3` = 12540 WHERE `entry` = 6208;
+
+-- 6209 - Caverndeep Looter
+-- spell_list "10851"
+-- Grab Weapon
+UPDATE `creature_template` SET `spell1` = 10851 WHERE `entry` = 6209;
+
+-- 6215 - Chomper
+-- spell_list "1604 6409 3420"
+-- Dazed(1604), Cheap Shot(6409), Crippling Poison(3420)
+-- Aura/Buff: Kirtonos Gargoyle Passive(18116)->Will be scripted
+UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 6215;
+UPDATE `creature_template` SET `spell2` = 6409 WHERE `entry` = 6215;
+UPDATE `creature_template` SET `spell3` = 3420 WHERE `entry` = 6215;
+
+
+-- 6219 - Corrosive Lurker
+-- spell_list "9459 1604 10341 11638"
+-- Corrosive Ooze(9459), Dazed(1604), Radiation Cloud(10341), Radiation Poisoning(11638)
+UPDATE `creature_template` SET `spell1` = 9459 WHERE `entry` = 6219;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6219;
+UPDATE `creature_template` SET `spell3` = 10341 WHERE `entry` = 6219;
+UPDATE `creature_template` SET `spell4` = 11638 WHERE `entry` = 6219;
+
+-- 6229 - Crowd Pummeler 9-60
+-- spell_list "16169 5568 10887"
+-- Arcing Smash(16169), Trample(5568), Crowd Pummel(10887)
+-- Aura/Buff: Kirtonos Gargoyle Passive(18116)
+UPDATE `creature_template` SET `spell1` = 16169 WHERE `entry` = 6229;
+UPDATE `creature_template` SET `spell2` = 5568 WHERE `entry` = 6229;
+UPDATE `creature_template` SET `spell3` = 10887 WHERE `entry` = 6229;
+
+-- 6228 - Dark Iron Ambassador
+-- spell_list "3053 16412"
+-- FireShield Effect II(3052), Fireball(16412)
+UPDATE `creature_template` SET `spell1` = 3053 WHERE `entry` = 6228;
+UPDATE `creature_template` SET `spell2` = 16412 WHERE `entry` = 6228;
+
+-- 6235 - Electrocutioner 6000
+-- spell_list "11082 11085 11084"
+-- Megavolt(11082), Chain Bolt(11085), Shock(11084)
+-- Aura/Buff: Kirtonos Gargoyle Passive(18116) Will be scripted
+UPDATE `creature_template` SET `spell1` = 11082 WHERE `entry` = 6235;
+UPDATE `creature_template` SET `spell2` = 11085 WHERE `entry` = 6235;
+UPDATE `creature_template` SET `spell3` = 11084 WHERE `entry` = 6235;
+
+-- 7361 - Grubbis
+-- spell_list "1604"
+-- Dazed
+UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 7361;
+
+-- 6407 - Holdout Technician
+-- spell_list "6660 8858"
+-- Shoot(6660), Bomb(8858)
+UPDATE `creature_template` SET `spell1` = 6660 WHERE `entry` = 6407;
+UPDATE `creature_template` SET `spell2` = 8858 WHERE `entry` = 6407;
+
+-- 6220 - Irradiated Horror
+-- spell_list "8211 10341 1604 9459"
+-- Chain Burn Rank 1(8211), Radiation Cloud(10341), Dazed(1604), Corrosive Ooze(9459)
+UPDATE `creature_template` SET `spell1` = 8211 WHERE `entry` = 6220;
+UPDATE `creature_template` SET `spell2` = 10341 WHERE `entry` = 6220;
+UPDATE `creature_template` SET `spell3` = 1604 WHERE `entry` = 6220;
+UPDATE `creature_template` SET `spell4` = 9459 WHERE `entry` = 6220;
+
+-- 6218 - Irradiated Slime
+-- spell_list "10341 1604 9459"
+-- Radiation Cloud(10341), Dazed(1604), Corrosive Ooze(9459)
+UPDATE `creature_template` SET `spell1` = 10341 WHERE `entry` = 6218;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6218;
+UPDATE `creature_template` SET `spell3` = 9459 WHERE `entry` = 6218;
+
+-- 7603 - Leprous Assistant
+-- spell_list "1604 11264 12024"
+-- Dazed(1604), Ice Blast(11264), Net(12024)
+UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 7603;
+UPDATE `creature_template` SET `spell2` = 11264 WHERE `entry` = 7603;
+UPDATE `creature_template` SET `spell3` = 12024 WHERE `entry` = 7603;
+
+-- 6223 - Leprous Defender
+-- spell_list "6660 2643 5116"
+-- Shoot(6660), Multi-Shot Rank 1(2643), Concussive Shot (5116)
+UPDATE `creature_template` SET `spell1` = 6660 WHERE `entry` = 6223;
+UPDATE `creature_template` SET `spell2` = 2643 WHERE `entry` = 6223;
+UPDATE `creature_template` SET `spell3` = 5116 WHERE `entry` = 6223;
+
+-- 6222 - Leprous Technician
+-- spell_list "13398 1604 12024"
+-- Throw Wrench(13398), Dazed(1604), Net(12024)
+UPDATE `creature_template` SET `spell1` = 13398 WHERE `entry` = 6222;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6222;
+UPDATE `creature_template` SET `spell3` = 12024 WHERE `entry` = 6222;
+
+-- 6234 - Mechanized Guardian
+-- spell_list "11820 1604"
+-- Electrified Net(11820), Dazed(1604)
+UPDATE `creature_template` SET `spell1` = 11820 WHERE `entry` = 6234;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6234;
+
+-- 6233 - Mechanized Sentry
+-- spell_list "1604"
+-- Dazed(1604)
+UPDATE `creature_template` SET `spell1` = 1604 WHERE `entry` = 6233;
+
+-- 6226 - Mechano Flamewalker
+-- spell_list "11306 10733"
+-- Fire Nova Rank 4(11306), Flame Spray(10733)
+UPDATE `creature_template` SET `spell1` = 11306 WHERE `entry` = 6226;
+UPDATE `creature_template` SET `spell2` = 10733 WHERE `entry` = 6226;
+
+-- 6227 - Mechano Flamewalker
+-- spell_list "22519 11264"
+-- Ice Nova(22519), Ice Blast(11264)
+UPDATE `creature_template` SET `spell1` = 22519 WHERE `entry` = 6227;
+UPDATE `creature_template` SET `spell2` = 11264 WHERE `entry` = 6227;
+
+-- 6225 - Mechano Tank
+-- spell_list "10346 1604 17174"
+-- Machine Gun(10346), Dazed(1604), Concussive Shot(17174)
+UPDATE `creature_template` SET `spell1` = 10346 WHERE `entry` = 6225;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6225;
+UPDATE `creature_template` SET `spell3` = 17174 WHERE `entry` = 6225;
+
+-- 6230 - Peacekeeper Security Suit
+-- spell_list "6533 1604 11820 11084"
+-- Net(6533), Dazed(1604), Electrified Net(11820), Shock(11084)
+UPDATE `creature_template` SET `spell1` = 6533 WHERE `entry` = 6230;
+UPDATE `creature_template` SET `spell2` = 1604 WHERE `entry` = 6230;
+UPDATE `creature_template` SET `spell3` = 11820 WHERE `entry` = 6230;
+UPDATE `creature_template` SET `spell4` = 11084 WHERE `entry` = 6230;
+
+-- 7079 - Viscous Fallout
+-- spell_list "10341 1604"
+-- Radiation Cloud(10341), Dazed(1604)
+UPDATE `creature_template` SET `spell1` = 10341 WHERE `entry` = 7079;
+UPDATE `creature_template` SET `spell2` = 9459 WHERE `entry` = 7079;
+
+-- Instances
+
+-- Dire Maul
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11492, 14325, 14324, 14321, 14326, 14323, 13280, 14122, 11488, 11496, 14396, 11501, 14327, 14506, 11487, 11486, 14354, 11498, 11489, 11490, 11444, 11450, 11441, 11457, 13197);
+
+-- 11492 - Alzzin The Wildshaper 
+-- Spell list - 22689(Mangle), 22662(Wither), 19319(Vicious Bite)
+UPDATE `creature_template` SET `spell1` = 22689 WHERE `entry` = 11492;
+UPDATE `creature_template` SET `spell2` = 22662 WHERE `entry` = 11492;
+UPDATE `creature_template` SET `spell3` = 19319 WHERE `entry` = 11492;
+
+-- 14325 - Captain Kromcrush
+-- Spell list - 15708(Mortal Strike), 23511(Demoralizing Shout)
+UPDATE `creature_template` SET `spell1` = 15708 WHERE `entry` = 14325;
+UPDATE `creature_template` SET `spell2` = 23511 WHERE `entry` = 14325;
+
+-- 14324 - Cho Rush The Observer
+-- Spell list - 10947(Mind Blast), 10151(Fireball)
+UPDATE `creature_template` SET `spell1` = 10947 WHERE `entry` = 14324;
+UPDATE `creature_template` SET `spell2` = 10151 WHERE `entry` = 14324;
+
+-- 14321 - Guard Fengus
+-- Spell list - 15580(Strike), 15655(Shield Bash), 22572(Bruising Blow), 20691(Cleave)
+UPDATE `creature_template` SET `spell1` = 15580 WHERE `entry` = 14321;
+UPDATE `creature_template` SET `spell2` = 15655 WHERE `entry` = 14321;
+UPDATE `creature_template` SET `spell3` = 22572 WHERE `entry` = 14321;
+UPDATE `creature_template` SET `spell4` = 20691 WHERE `entry` = 14321;
+
+-- 14326 - Guard Mol Dar
+-- Spell list - 15580(Strike), 15655(Shield Bash), 20691(Cleave)
+UPDATE `creature_template` SET `spell1` = 15580 WHERE `entry` = 14326;
+UPDATE `creature_template` SET `spell2` = 15655 WHERE `entry` = 14326;
+UPDATE `creature_template` SET `spell3` = 20691 WHERE `entry` = 14326;
+
+-- 14323 - Guard Slip Kik
+-- Spell list - 15580(Strike), 17307(Knockout), 20691(Cleave)
+UPDATE `creature_template` SET `spell1` = 15580 WHERE `entry` = 14323;
+UPDATE `creature_template` SET `spell2` = 17307 WHERE `entry` = 14323;
+UPDATE `creature_template` SET `spell3` = 20691 WHERE `entry` = 14323;
+
+-- 13280 - Hydrospawn
+-- Spell list - 22419(Riptide), 22420(Submersion), 22421(Massive Geyser)
+UPDATE `creature_template` SET `spell1` = 22419 WHERE `entry` = 13280;
+UPDATE `creature_template` SET `spell2` = 22420 WHERE `entry` = 13280;
+UPDATE `creature_template` SET `spell3` = 22421 WHERE `entry` = 13280;
+
+-- 14122 - Massive Geyser
+-- Spell list - 22422(Water)
+UPDATE `creature_template` SET `spell1` = 22422 WHERE `entry` = 14122;
+
+-- 11488 - Illyanna Ravenoak
+-- Spell list - 5116(Concussive Shot), 20904(Aimed Shot [Rank 6]), 14290(Multi Shot [Rank 4]), 14295(Volley)
+-- Note: Give her bounding radius >10 x <30 so she can shoot
+UPDATE `creature_template` SET `spell1` = 5116 WHERE `entry` = 11488;
+UPDATE `creature_template` SET `spell2` = 20904 WHERE `entry` = 11488;
+UPDATE `creature_template` SET `spell3` = 14290 WHERE `entry` = 11488;
+UPDATE `creature_template` SET `spell4` = 14295 WHERE `entry` = 11488;
+
+-- 11496 - Immolthar
+-- Spell list - 16128(Infected Bite), 15550(Trample), 22899(Eye of Immolthar)
+UPDATE `creature_template` SET `spell1` = 16128 WHERE `entry` = 11496;
+UPDATE `creature_template` SET `spell2` = 15550 WHERE `entry` = 11496;
+UPDATE `creature_template` SET `spell3` = 22899 WHERE `entry` = 11496;
+
+-- 14396 - Eye of Immolthar
+-- Spell list - 22909(Eye of Immolthar[Debuff])
+UPDATE `creature_template` SET `spell1` = 22909 WHERE `entry` = 14396;
+
+-- 11501 - King Gordok
+-- Spell list - 15708(War Stomp), 24375(Mortal Strike)
+UPDATE `creature_template` SET `spell1` = 15708 WHERE `entry` = 11501;
+UPDATE `creature_template` SET `spell2` = 24375 WHERE `entry` = 11501;
+
+-- 14327 - Lethtendris
+-- Spell list - 11668(Immolate), 14887(Shadow Bolt Volley)
+UPDATE `creature_template` SET `spell1` = 11668 WHERE `entry` = 14327;
+UPDATE `creature_template` SET `spell2` = 14887 WHERE `entry` = 14327;
+
+-- 14506 - Lord Hel Nurath
+-- Spell list - 10984(Shadow Word: Pain)
+UPDATE `creature_template` SET `spell1` = 10984 WHERE `entry` = 14506;
+
+-- 11487 - Magister Kalendris
+--  spell_list "10894 10947 18807"
+--  Shadow Word: Pain, Mind Blast, Mind Flay
+UPDATE `creature_template` SET `spell1` = 10894 WHERE `entry` = 11487;
+UPDATE `creature_template` SET `spell2` = 10947 WHERE `entry` = 11487;
+UPDATE `creature_template` SET `spell3` = 18807 WHERE `entry` = 11487;
+
+-- 11486 - Prince Tortheldrin
+-- spell_list "20691 22920"
+-- Cleave, Arcane Blast
+UPDATE `creature_template` SET `spell1` = 20691 WHERE `entry` = 11486;
+UPDATE `creature_template` SET `spell2` = 22920 WHERE `entry` = 11486;
+
+-- 14354 - Pusillin
+-- spell_list "22424 10151 16144"
+-- Blast Wave, Fireball, Fire Blast
+UPDATE `creature_template` SET `spell1` = 22424 WHERE `entry` = 14354;
+UPDATE `creature_template` SET `spell2` = 10151 WHERE `entry` = 14354;
+UPDATE `creature_template` SET `spell3` = 16144 WHERE `entry` = 14354;
+
+-- 11498 - Skarr The Unbreakable
+-- spell_list "20691 24375"
+-- Cleave, Mortal Strike
+UPDATE `creature_template` SET `spell1` = 20691 WHERE `entry` = 11498;
+UPDATE `creature_template` SET `spell2` = 24375 WHERE `entry` = 11498;
+
+-- 11489 - Tendris Warpwood
+-- spell_list "15550 22924 22994"
+-- Trample, Grasping Vines, Entangle
+UPDATE `creature_template` SET `spell1` = 15550 WHERE `entry` = 11489;
+UPDATE `creature_template` SET `spell2` = 22924 WHERE `entry` = 11489;
+UPDATE `creature_template` SET `spell3` = 22994 WHERE `entry` = 11489;
+
+-- 11490 - Zevrim Thornhoof
+-- spell_list "22478 22651"
+-- Intense Pain, Sacrifice
+UPDATE `creature_template` SET `spell1` = 22478 WHERE `entry` = 11490;
+UPDATE `creature_template` SET `spell2` = 22651 WHERE `entry` = 11490;
+
+-- 11444 - Gordok Mage Lord
+-- spell_list "20832 16102 15530 16170"
+-- Fire Blast, Flamestrike, Frostbolt, Bloodlust
+UPDATE `creature_template` SET `spell1` = 20832 WHERE `entry` = 11444;
+UPDATE `creature_template` SET `spell2` = 16102 WHERE `entry` = 11444;
+UPDATE `creature_template` SET `spell3` = 15530 WHERE `entry` = 11444;
+UPDATE `creature_template` SET `spell4` = 16170 WHERE `entry` = 11444;
+
+-- 11450 - Gordok Reaver
+-- spell_list "22572 22916"
+-- Bruising Blow, Uppercut
+UPDATE `creature_template` SET `spell1` = 22572 WHERE `entry` = 11450;
+UPDATE `creature_template` SET `spell2` = 22916 WHERE `entry` = 11450;
+
+-- 11441 - Gordok Brute
+-- spell_list "13737 20677 24317"
+-- Mortal Strike, Cleave, Sunder Armor
+UPDATE `creature_template` SET `spell1` = 13737 WHERE `entry` = 11441;
+UPDATE `creature_template` SET `spell2` = 20677 WHERE `entry` = 11441;
+UPDATE `creature_template` SET `spell3` = 24317 WHERE `entry` = 11441;
+
+-- 11457 - Wildspawn Hellcaller
+-- spell_list "19474" 
+-- Rain of Fire
+UPDATE `creature_template` SET `spell1` = 19474 WHERE `entry` = 11457;
+
+-- 13197 - Fel Lash
+-- spell_list "22460 22272"
+-- Arcane Explosion, Arcane Missiles
+UPDATE `creature_template` SET `spell1` = 22460 WHERE `entry` = 13197;
+UPDATE `creature_template` SET `spell2` = 22272 WHERE `entry` = 13197;
+
+--
+-- Scholomance
+--
+
+-- Ash\'ari Crystal (id 10415) spells
+
+UPDATE `creature_template` SET `spell1`=512, `spell2`=1010, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10415 ;
+
+
+-- Aurius (id 10917) spells
+
+UPDATE `creature_template` SET `spell1`=1096, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10917 ;
+
+
+-- Balnazzar (id 10813) spells
+
+UPDATE `creature_template` SET `spell1`=20603, `spell2`=15398, `spell3`=9256, `spell4`=20741, `scriptname`='generic_creature' WHERE `entry`=10813 ;
+
+
+-- Baroness Anastari (id 10436) spells
+
+UPDATE `creature_template` SET `spell1`=16565, `spell2`=16867, `spell3`=18327, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10436 ;
+
+
+-- Bile Slime (id 10697) spells
+
+UPDATE `creature_template` SET `spell1`=16866, `spell2`=1604, `spell3`=0, `spell4`=0,  `scriptname`='generic_creature' WHERE `entry`=10697 ;
+
+
+-- Bile Spewer (id 10416) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=16866, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10416 ;
+
+
+-- Black Guard Sentry (id 10394) spells
+
+UPDATE `creature_template` SET `spell1`=17439, `spell2`=15584, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10394 ;
+
+
+-- Black Guard Swordsmith (id 11121) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=5884, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11121 ;
+
+
+-- Broken Cadaver (id 10383) spells
+
+UPDATE `creature_template` SET `spell1`=16140, `spell2`=1604, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10383 ;
+-
+
+- Cannibal Ghoul (id 8530) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=3589, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=8530 ;
+
+
+-- Cannon Master Willey (id 10997) spells
+
+UPDATE `creature_template` SET `spell1`=23382, `spell2`=15615, `spell3`=16496, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10997 ;
+
+
+-- Crimson Battle Mage (id 10425) spells
+
+UPDATE `creature_template` SET `spell1`=13020, `spell2`=23413, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10425 ;
+
+
+-- Archivist Galford (id 10811) spells
+
+UPDATE `creature_template` SET `spell1`=17293, `spell2`=23462, `spell3`=17274, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10811 ;
+
+
+-- Crimson Bodyguard (id 13118) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=15749, `spell3`=11972, `spell4`=13534,  `scriptname`='generic_creature' WHERE `entry`=13118 ;
+
+
+-- Crimson Conjuror (id 10419) spells
+
+UPDATE `creature_template` SET `spell1`=11831, `spell2`=23412, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10419 ;
+
+
+-- Crimson Courier (id 12337) spells
+
+UPDATE `creature_template` SET `spell1`=5101, `spell2`=17143, `spell3`=13005, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12337 ;
+
+
+-- Crimson Defender (id 10421) spells
+
+UPDATE `creature_template` SET `spell1`=13005, `spell2`=1604, `spell3`=20005, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10421 ;
+
+
+-- Crimson Gallant (id 10424) spells
+
+UPDATE `creature_template` SET `spell1`=36647, `spell2`=17143, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10424 ;
+
+
+-- Crimson Guardsman (id 10418) spells
+
+UPDATE `creature_template` SET `spell1`=15749, `spell2`=33871, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10418 ;
+
+
+-- Crimson Hammersmith (id 11120) spells
+
+UPDATE `creature_template` SET `spell1`=17445, `spell2`=1604, `spell3`=39077, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11120 ;
+
+
+-- Crimson Initiate (id 10420) spells
+
+UPDATE `creature_template` SET `spell1`=17287, `spell2`=1604, `spell3`=22645, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10420 ;
+
+
+-- Crimson Inquisitor (id 10426) spells
+
+UPDATE `creature_template` SET `spell1`=22645, `spell2`=17165, `spell3`=22947, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10426 ;
+
+-- Crimson Monk (id 11043) spells
+
+UPDATE `creature_template` SET `spell1`=36033, `spell2`=17145, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11043 ;
+
+
+-- Crimson Priest (id 10423) spells
+
+UPDATE `creature_template` SET `spell1`=36176, `spell2`=36947, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10423 ;
+
+
+-- Crimson Rifleman (id 11054) spells
+
+UPDATE `creature_template` SET `spell1`=38094, `spell2`=1604, `spell3`=6788, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11054 ;
+
+
+-- Crimson Sorcerer (id 10422) spells
+
+UPDATE `creature_template` SET `spell1`=15451, `spell2`=16927, `spell3`=16144, `spell4`=15534, `scriptname`='generic_creature' WHERE `entry`=10422 ;
+
+
+-- Crypt Beast (id 10413) spells
+
+UPDATE `creature_template` SET `spell1`=22412, `spell2`=4962, `spell3`=1604, `spell4`=3589, `scriptname`='generic_creature' WHERE `entry`=10413 ;
+
+
+-- Crypt Crawler (id 10412) spells
+
+UPDATE `creature_template` SET `spell1`=15471, `spell2`=1604, `spell3`=3589, `spell4`=16430, `scriptname`='generic_creature' WHERE `entry`=10412 ;
+
+
+-- Crypt Walker (id 8556) spells
+
+UPDATE `creature_template` SET `spell1`=16401, `spell2`=12023, `spell3`=1604, `spell4`=20812, `scriptname`='generic_creature' WHERE `entry`=8556 ;
+
+
+-- Doomguard (id 11859) spells
+
+UPDATE `creature_template` SET `spell1`=4629, `spell2`=20549, `spell3`=20812, `spell4`=21949, `scriptname`='generic_creature' WHERE `entry`=11859 ;
+
+
+-- Elder Farwhisper (id 15607) spells
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=15530, `spell3`=15531, `spell4`=16458, `scriptname`='generic_creature' WHERE `entry`=15607 ;
+
+
+-- Flametongue Totem IV (id 10557) spells
+
+UPDATE `creature_template` SET `spell1`=16388, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10557 ;
+
+
+-- Fleshflayer Ghoul (id 10407) spells
+
+UPDATE `creature_template` SET `spell1`=18200, `spell2`=1604, `spell3`=9791, `spell4`=16458, `scriptname`='generic_creature' WHERE `entry`=10407 ;
+
+
+-- Fras Siabi (id 11058) spells
+
+UPDATE `creature_template` SET `spell1`=7964, `spell2`=20712, `spell3`=1604, `spell4`=23511, `scriptname`='generic_creature' WHERE `entry`=11058 ;
+
+
+-- Freed Soul (id 11136) spells
+
+UPDATE `creature_template` SET `spell1`=16249, `spell2`=16143, `spell3`=16449, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11136 ;
+
+
+-- Ghostly Citizen (id 10385) spells
+
+UPDATE `creature_template` SET `spell1`=22687, `spell2`=1604, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10385 ;
+
+
+-- Ghoul Ravener (id 10406) spells
+
+UPDATE `creature_template` SET `spell1`=12538, `spell2`=15608, `spell3`=16172, `spell4`=1604, `scriptname`='generic_creature' WHERE `entry`=10406 ;
+
+
+-- Grand Crusader Dathrohan (id 10812) spells
+
+UPDATE `creature_template` SET `spell1`=17286, `spell2`=1604, `spell3`=20830, `spell4`=0, `scriptname`='' WHERE `entry`=10812 ;
+
+
+-- Hate Shrieker (id 8541) spells
+UPDATE `creature_template` SET `spell1`=3589, `spell2`=16867, `spell3`=1604, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=8541 ;
+
+
+-- Jarien (id 16101) spells
+
+UPDATE `creature_template` SET `spell1`=17685, `spell2`=18663, `spell3`=19643, `spell4`=20812, `scriptname`='generic_creature' WHERE `entry`=16101 ;
+
+
+-- Magistrate Barthilas (id 10435) spells
+
+UPDATE `creature_template` SET `spell1`=16793, `spell2`=10887, `spell3`=14099, `spell4`=1604, `scriptname`='generic_creature' WHERE `entry`=10435 ;
+
+
+-- Maleki the Pallid (id 10438) spells
+
+UPDATE `creature_template` SET `spell1`=15850, `spell2`=16249, `spell3`=20743, `spell4`=16869, `scriptname`='generic_creature' WHERE `entry`=10438 ;
+
+
+-- Malor the Zealous (id 11032) spells
+
+UPDATE `creature_template` SET `spell1`=12734, `spell2`=16172, `spell3`=1604, `spell4`=6788, `scriptname`='generic_creature' WHERE `entry`=11032 ;
+
+
+-- Mangled Cadaver (id 10382) spells
+
+UPDATE `creature_template` SET `spell1`=16143, `spell2`=1604, `spell3`=15043, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10382 ;
+
+
+-- Mindless Skeleton (id 11197) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=6788, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11197 ;
+
+
+-- Mindless Undead (id 11030) spells
+
+UPDATE `creature_template` SET `spell1`=1604, `spell2`=6788, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11030 ;
+
+
+-- Ramstein the Gorger (id 10439) spells
+
+UPDATE `creature_template` SET `spell1`=5568, `spell2`=17307, `spell3`=1604, `spell4`=6788, `scriptname`='generic_creature' WHERE `entry`=10439 ;
+
+--
+-- Molten Core
+--
+
+-- Molten Giant (id 11658) spells
+
+UPDATE `creature_template` SET `spell1`=19813, `spell2`=4283, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11658 ;
+
+
+-- Firelord (id 11668) spells
+
+UPDATE `creature_template` SET `spell1`=19393, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11668 ;
+
+
+-- Lava Surger (id 12101) spells
+
+UPDATE `creature_template` SET `spell1`=25787, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12101 ;
+
+
+-- Ancient Core Hound (id 11673) spells
+
+UPDATE `creature_template` SET `spell1`=19364, `spell2`=19365, `spell3`=19369, `spell4`=19367, `scriptname`='generic_creature' WHERE `entry`=11673 ;
+
+
+-- Molten Destroyer (id 11659) spells
+
+UPDATE `creature_template` SET `spell1`=4283, `spell2`=19813, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11659 ;
+
+
+-- Son of Flame (id 12143) spells
+
+UPDATE `creature_template` SET `spell1`=20228, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12143 ;
+
+
+-- Flame Imp (id 11669) spells
+
+UPDATE `creature_template` SET `spell1`=20203, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11669 ;
+
+
+-- Flamewaker Healer (id 11663) spells
+
+UPDATE `creature_template` SET `spell1`=24668, `spell2`=23952, `spell3`=10960, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11663 ;
+
+
+-- Flamewaker Priest (id 11662) spells
+
+UPDATE `creature_template` SET `spell1`=23952, `spell2`=20294, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11662 ;
+
+
+-- Flamewaker Protector (id 12119) spells
+
+UPDATE `creature_template` SET `spell1`=20677, `spell2`=20740, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12119 ;
+
+
+-- Flamewaker Elite (id 11664) spells
+
+UPDATE `creature_template` SET `spell1`=20623, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11664 ;
+
+
+-- Core Hound (id 11671) spells
+UPDATE `creature_template` SET `spell1`=19778, `spell2`=19771, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11671 ;
+
+
+-- Flamewaker (id 11661) spells
+
+UPDATE `creature_template` SET `spell1`=21081, `spell2`=19730, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11661 ;
+
+
+-- Flameguard (id 11667) spells
+
+UPDATE `creature_template` SET `spell1`=19626, `spell2`=19630, `spell3`=19631, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11667 ;
+
+
+-- Magmakin (id 12806) spells
+
+UPDATE `creature_template` SET `spell1`=19798, `spell2`=19496, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12806 ;
+
+
+-- Firewalker (id 11666) spells
+
+UPDATE `creature_template` SET `spell1`=19635, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11666 ;
+
+
+-- Lava Reaver (id 12100) spells
+
+UPDATE `creature_template` SET `spell1`=19642, `spell2`=19644, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12100 ;
+
+
+-- Lava Elemental (id 12076) spells
+
+UPDATE `creature_template` SET `spell1`=19641, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12076 ;
+
+
+-- Firesworn (id 12099) spells
+
+UPDATE `creature_template` SET `spell1`=20294, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12099 ;
+
+
+-- Lava Spawn (id 12265) spells
+
+UPDATE `creature_template` SET `spell1`=18108, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=12265 ;
+
+
+-- Core Rager (id 11672) spells
+
+UPDATE `creature_template` SET `spell1`=22689, `spell2`=19319, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11672 ;
+
+--
+-- UBRS
+--
+
+
+-- Blackhand Incarcerator (id 10316) spells
+
+UPDATE `creature_template` SET `spell1`=0, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='' WHERE `entry`=10316 ;
+
+
+-- Jed Runewatcher (id 10509) spells
+
+UPDATE `creature_template` SET `spell1`=35178, `spell2`=15749, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10509 ;
+
+
+-- Blackhand Veteran (id 9819) spells
+
+UPDATE `creature_template` SET `spell1`=35178, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=9819 ;
+
+
+-- Blackhand Iron Guard (id 10319) spells
+
+UPDATE `creature_template` SET `spell1`=30688, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10319 ;
+
+
+-- Blackhand Dreadweaver (id 9817) spells
+
+UPDATE `creature_template` SET `spell1`=20816, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=9817 ;
+
+
+-- Blackhand Summoner (id 9818) spells
+
+UPDATE `creature_template` SET `spell1`=32192, `spell2`=18108, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=9818 ;
+
+-- Pyroguard Emberseer (id 9816) spells
+
+UPDATE `creature_template` SET `spell1`=23462, `spell2`=23341, `spell3`=17274, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=9816 ;
+
+
+-- Rookery Guardian (id 10258) spells
+
+UPDATE `creature_template` SET `spell1`=24317, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10258 ;
+
+
+-- Rookery Whelp (id 10161) spells
+
+UPDATE `creature_template` SET `spell1`=145, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10161 ;
+
+
+-- Rookery Hatcher (id 10683) spells
+
+UPDATE `creature_template` SET `spell1`=0, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='' WHERE `entry`=10683 ;
+
+
+-- Solakar Flamewreath (id 10264) spells
+
+UPDATE `creature_template` SET `spell1`=28725, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10264 ;
+
+
+-- Goraluk Anvilcrack (id 10899) spells
+
+UPDATE `creature_template` SET `spell1`=12461, `spell2`=22591, `spell3`=16172, `spell4`=24317, `scriptname`='generic_creature' WHERE `entry`=10899 ;
+
+
+-- Blackhand Elite (id 10317) spells
+
+UPDATE `creature_template` SET `spell1`=12461, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10317 ;
+
+
+-- Blackhand Thug (id 10762) spells
+
+UPDATE `creature_template` SET `spell1`=0, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='' WHERE `entry`=10762 ;
+
+
+-- Blackhand Dragon Handler (id 10742) spells
+
+UPDATE `creature_template` SET `spell1`=0, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='' WHERE `entry`=10742 ;
+
+
+-- Chromatic Dragonspawn (id 10447) spells
+
+UPDATE `creature_template` SET `spell1`=30014, `spell2`=32370, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10447 ;
+
+
+-- Chromatic Whelp (id 10442) spells
+
+UPDATE `creature_template` SET `spell1`=22414, `spell2`=23512, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10442 ;
+
+
+-- Warchief Rend Blackhand (id 10429) spells
+
+UPDATE `creature_template` SET `spell1`=20691, `spell2`=15589, `spell3`=23931, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10429 ;
+
+
+-- Gyth (id 10339) spells
+
+UPDATE `creature_template` SET `spell1`=20667, `spell2`=20712, `spell3`=18763, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10339 ;
+
+
+-- Blackhand Assassin (id 10318) spells
+
+UPDATE `creature_template` SET `spell1`=11286, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10318 ;
+
+
+-- Rage Talon Fire Tongue (id 10372) spells
+
+UPDATE `creature_template` SET `spell1`=23462, `spell2`=25668, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10372 ;
+
+
+-- Rage Talon Captain (id 10371) spells
+
+UPDATE `creature_template` SET `spell1`=28168, `spell2`=27580, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10371 ;
+
+
+-- Rage Talon Flamescale (id 10083) spells
+
+UPDATE `creature_template` SET `spell1`=23462, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10083 ;
+
+
+-- Lord Victor Nefarius (id 10162) spells
+
+UPDATE `creature_template` SET `spell1`=20741, `spell2`=24668, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10162 ;
+
+
+-- The Beast (id 10430) spells
+
+UPDATE `creature_template` SET `spell1`=17883, `spell2`=16785, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10430 ;
+
+
+-- General Drakkisath (id 10363) spells
+
+UPDATE `creature_template` SET `spell1`=23462, `spell2`=20691, `spell3`=23023, `spell4`=23931, `scriptname`='generic_creature' WHERE `entry`=10363 ;
+
+
+-- Chromatic Elite Guard (id 10814) spells
+
+UPDATE `creature_template` SET `spell1`=20276, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10814 ;
+
+
+--
+-- Scholomance
+--
+
+
+-- Risen Guardian (id 11598) spells
+
+UPDATE `creature_template` SET `spell1`=13496, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11598 ;
+
+
+-- Risen Protector (id 10487) spells
+
+UPDATE `creature_template` SET `spell1`=27559, `spell2`=20691, `spell3`=12020, `spell4`=30138, `scriptname`='generic_creature' WHERE `entry`=10487 ;
+
+
+-- Risen Bonewarder (id 10491) spells
+
+UPDATE `creature_template` SET `spell1`=17715, `spell2`=27559, `spell3`=20276, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10491 ;
+
+
+-- Scholomance Neophyte (id 10470) spells
+
+UPDATE `creature_template` SET `spell1`=11660, `spell2`=18807, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10470 ;
+
+
+-- Reanimated Corpse (id 10481) spells
+
+UPDATE `creature_template` SET `spell1`=18270, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10481 ;
+
+
+-- Marduk Blackpool (id 10433) spells
+
+UPDATE `creature_template` SET `spell1`=18116, `spell2`=17695, `spell3`=20741, `spell4`=15584, `scriptname`='generic_creature' WHERE `entry`=10433 ;
+
+
+-- Risen Lackey (id 10482) spells
+
+UPDATE `creature_template` SET `spell1`=17472, `spell2`=15584, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10482 ;
+
+
+-- Doctor Theolen Krastinov (id 11261) spells
+
+UPDATE `creature_template` SET `spell1`=18106, `spell2`=18116, `spell3`=15584, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11261 ;
+-
+
+- Kirtonos the Herald (id 10506) spells
+
+UPDATE `creature_template` SET `spell1`=18116, `spell2`=20741, `spell3`=18144, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10506 ;
+
+
+-- Instructor Malicia (id 10505) spells
+
+UPDATE `creature_template` SET `spell1`=11672, `spell2`=12020, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10505 ;
+
+
+-- Lorekeeper Polkelt (id 10901) spells
+
+UPDATE `creature_template` SET `spell1`=16359, `spell2`=3584, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10901 ;
+
+
+-- Rattlegore (id 11622) spells
+
+UPDATE `creature_template` SET `spell1`=24375, `spell2`=18813, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11622 ;
+
+
+-- The Ravenian (id 10507) spells
+
+UPDATE `creature_template` SET `spell1`=15550, `spell2`=20691, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10507 ;
+
+
+-- Lord Alexei Barov (id 10504) spells
+
+UPDATE `creature_template` SET `spell1`=11668, `spell2`=11700, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10504 ;
+
+
+-- Jandice Barov (id 10503) spells
+
+UPDATE `creature_template` SET `spell1`=24673, `spell2`=18270, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10503 ;
+
+
+-- Illusion of Jandice Barov (id 11439) spells
+
+UPDATE `creature_template` SET `spell1`=15584, `spell2`=17472, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11439 ;
+
+
+-- Lady Illucia Barov (id 10502) spells
+
+UPDATE `creature_template` SET `spell1`=18116, `spell2`=19460, `spell3`=6215, `spell4`=15487, `scriptname`='generic_creature' WHERE `entry`=10502 ;
+
+
+-- Darkmaster Gandling (id 1853) spells
+
+UPDATE `creature_template` SET `spell1`=18702, `spell2`=10212, `spell3`=18116, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=1853 ;
+
+
+-- Ras Frostwhisper (id 10508) spells
+
+UPDATE `creature_template` SET `spell1`=16350, `spell2`=21369, `spell3`=8398, `spell4`=18033, `scriptname`='generic_creature' WHERE `entry`=10508 ;
+
+
+-- Blood Steward of Kirtonos (id 14861) spells
+UPDATE `creature_template` SET `spell1`=27224, `spell2`=30900, `spell3`=3609, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14861 ;
+
+
+-- Spectral Tutor (id 10498) spells
+
+UPDATE `creature_template` SET `spell1`=18278, `spell2`=29405, `spell3`=12020, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10498 ;
+
+
+-- Diseased Ghoul (id 10495) spells
+
+UPDATE `creature_template` SET `spell1`=24063, `spell2`=18270, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10495 ;
+
+
+-- Spectral Projection (id 11263) spells
+
+UPDATE `creature_template` SET `spell1`=12020, `spell2`=18278, `spell3`=25304, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11263 ;
+
+
+-- Necrofiend (id 11551) spells
+
+UPDATE `creature_template` SET `spell1`=16469, `spell2`=25349, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11551 ;
+
+
+-- Scholomance Necromancer (id 10477) spells
+
+UPDATE `creature_template` SET `spell1`=25304, `spell2`=11660, `spell3`=12020, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10477 ;
+
+
+-- Scholomance Occultist (id 10472) spells
+
+UPDATE `creature_template` SET `spell1`=25304, `spell2`=12020, `spell3`=10161, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10472 ;
+
+
+-- Scholomance Student (id 10475) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10475 ;
+
+
+-- Scholomance Adept (id 10469) spells
+
+UPDATE `creature_template` SET `spell1`=25304, `spell2`=10161, `spell3`=10473, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10469 ;
+
+
+-- Dark Shade (id 11284) spells
+
+UPDATE `creature_template` SET `spell1`=11660, `spell2`=15571, `spell3`=10161, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11284 ;
+
+
+-- Unstable Corpse (id 10480) spells
+
+UPDATE `creature_template` SET `spell1`=17689, `spell2`=15571, `spell3`=18270, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10480 ;
+
+
+-- Ragged Ghoul (id 10497) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=30138, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10497 ;
+
+
+-- Skulking Corpse (id 10479) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=30138, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10479 ;
+
+
+-- Malicious Spirit (id 14513) spells
+
+UPDATE `creature_template` SET `spell1`=17504, `spell2`=12867, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14513 ;
+
+
+-- Aspect of Malice (id 14520) spells
+
+UPDATE `creature_template` SET `spell1`=17504, `spell2`=12867, `spell3`=24673, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14520 ;
+
+
+-- Aspect of Shadow (id 14521) spells
+
+UPDATE `creature_template` SET `spell1`=30138, `spell2`=11660, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14521 ;
+
+
+-- Aspect of Banality (id 14518) spells
+
+UPDATE `creature_template` SET `spell1`=11556, `spell2`=8140, `spell3`=23262, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14518 ;
+
+-- Aspect of Corruption (id 14519) spells
+
+UPDATE `creature_template` SET `spell1`=10894, `spell2`=23244, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14519 ;
+
+
+-- Banal Spirit (id 14514) spells
+
+UPDATE `creature_template` SET `spell1`=11556, `spell2`=8140, `spell3`=15571, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14514 ;
+
+
+-- Corrupted Spirit (id 14512) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=23244, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=14512 ;
+
+
+-- Risen Construct (id 10488) spells
+
+UPDATE `creature_template` SET `spell1`=12292, `spell2`=15571, `spell3`=28168, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10488 ;
+
+
+-- Risen Aberration (id 10485) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=24063, `spell3`=18270, `spell4`=12021, `scriptname`='generic_creature' WHERE `entry`=10485 ;
+
+
+-- Scholomance Handler (id 11257) spells
+
+UPDATE `creature_template` SET `spell1`=10161, `spell2`=13021, `spell3`=20883, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11257 ;
+
+
+-- Splintered Skeleton (id 10478) spells
+
+UPDATE `creature_template` SET `spell1`=15571, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10478 ;
+
+
+-- Risen Warrior (id 10486) spells
+
+UPDATE `creature_template` SET `spell1`=17504, `spell2`=26554, `spell3`=35011, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10486 ;
+
+
+-- Vectus (id 10432) spells
+
+UPDATE `creature_template` SET `spell1`=19627, `spell2`=18816, `spell3`=13021, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10432 ;
+
+
+-- Scholomance Acolyte (id 10471) spells
+
+UPDATE `creature_template` SET `spell1`=18807, `spell2`=10876, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10471 ;
+
+
+-- Spectral Teacher (id 10500) spells
+
+UPDATE `creature_template` SET `spell1`=10876, `spell2`=25304, `spell3`=18647, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10500 ;
+
+
+-- Risen Guard (id 10489) spells
+
+UPDATE `creature_template` SET `spell1`=29684, `spell2`=25051, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10489 ;

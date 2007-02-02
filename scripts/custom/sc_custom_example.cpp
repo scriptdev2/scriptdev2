@@ -330,7 +330,6 @@ bool GossipHello_custom_example(Player *player, Creature *_Creature)
 }
 
 //Our Recive emote function
-// NOTE: This function will only be called if you have patched with the ExtendedScript.patch
 bool ReciveEmote_custom_example(Player *player, Creature *_Creature, uint32 emote)
 {
     _Creature->HandleEmoteCommand(emote);

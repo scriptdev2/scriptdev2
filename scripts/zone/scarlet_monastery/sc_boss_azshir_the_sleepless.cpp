@@ -14,30 +14,30 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
 
-#define SPELL_INFERNO               19695
-#define SPELL_IGNITEMANA            19659
-#define SPELL_LIVINGBOMB            20475
-#define SPELL_ARMAGEDDOM            20479
+#define SPELL_CALLOFTHEGRAVE        17831
+#define SPELL_TERRIFY			    7399
+#define SPELL_DAZED					1604
+#define SPELL_SOULSIPHON		    7290
 
-struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 {
-    boss_baron_geddonAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 Inferno_Timer;
-    uint32 IgniteMana_Timer;
-    uint32 LivingBomb_Timer;
+	uint32 SoulSiphon_Timer;
+    uint32 CallOftheGrave_Timer;
+    uint32 Terrify_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-        Inferno_Timer = 45000;      //These times are probably wrong
-        IgniteMana_Timer = 30000;
-        LivingBomb_Timer = 35000;
+		SoulSiphon_Timer = 80000;
+        CallOftheGrave_Timer = 70000;
+        Terrify_Timer = 45000;
 
         if (m_creature)
         {
@@ -55,9 +55,11 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
+            if (m_creature->IsWithinDist(who, ATTACK_DIST))
+				DoStartMeleeAttack(who);
+            else DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-            pTarget = who;
+			pTarget = who;
         }
     }
 
@@ -70,9 +72,6 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         {
             if ( m_creature->getVictim() == NULL)
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
@@ -83,7 +82,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //If we had a target and it wasn't cleared then it means the player died from some unknown source
         //But we still need to reset
         if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
         {
@@ -101,43 +100,40 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
                 return;
             }
 
-            //If we are <2% hp cast Armageddom
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->m_currentSpell)
+            //If we are <50% hp cast Soul Siphon rank 1
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpell)
             {
-                DoCast(m_creature,SPELL_ARMAGEDDOM);
-                DoTextEmote("performs one last service for Ragnaros.",NULL);
-                return;
+				//SoulSiphon_Timer
+				if (SoulSiphon_Timer < diff)
+				{
+
+					DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
+					return;
+	
+	                //180 seconds until we should cast this agian
+	                SoulSiphon_Timer = 80000;
+	            }else SoulSiphon_Timer -= diff;
             }
-            
-            //Inferno_Timer
-            if (Inferno_Timer < diff)
+
+            //CallOfTheGrave_Timer
+            if (CallOftheGrave_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature,SPELL_INFERNO);
+                DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
 
-                //7 seconds until we should cast this agian
-                Inferno_Timer = 45000;
-            }else Inferno_Timer -= diff;
+                //70 seconds until we should cast this agian
+                CallOftheGrave_Timer = 70000;
+            }else CallOftheGrave_Timer -= diff;
 
-            //IgniteMana_Timer
-            if (IgniteMana_Timer < diff)
+            //Terrify_Timer
+            if (Terrify_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_IGNITEMANA);
+                DoCast(m_creature->getVictim(),SPELL_TERRIFY);
 
-                //35 seconds until we should cast this agian
-                IgniteMana_Timer = 30000;
-            }else IgniteMana_Timer -= diff;
-
-            //LivingBomb_Timer
-            if (LivingBomb_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_LIVINGBOMB);
-
-                //30 seconds until we should cast this agian
-                LivingBomb_Timer = 35000;
-            }else LivingBomb_Timer -= diff;
+                //45 seconds until we should cast this agian
+                Terrify_Timer = 45000;
+            }else Terrify_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
@@ -161,18 +157,18 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
             }
         }
     }
-}; 
-CreatureAI* GetAI_boss_baron_geddon(Creature *_Creature)
+};
+
+CreatureAI* GetAI_boss_azshir_the_sleepless(Creature *_Creature)
 {
-    return new boss_baron_geddonAI (_Creature);
+    return new boss_azshir_the_sleeplessAI (_Creature);
 }
 
-
-void AddSC_boss_baron_geddon()
+void AddSC_boss_azshir_the_sleepless()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_baron_geddon";
-    newscript->GetAI = GetAI_boss_baron_geddon;
+    newscript->Name="boss_azshir_the_sleepless";
+    newscript->GetAI = GetAI_boss_azshir_the_sleepless;
     m_scripts[nrscripts++] = newscript;
 }

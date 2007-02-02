@@ -195,50 +195,6 @@
 			<Filter
 				Name="boss"
 				>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_baron_geddon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_garr.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_gehennas.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_golemagg.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_lucifron.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_magmadar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_majordomo_executus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_onyxia.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_ragnaros.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_shazzrah.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\boss\sc_boss_sulfuron_harbinger.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="creature"
@@ -255,14 +211,14 @@
 					RelativePath="..\scripts\creature\sc_kobold.cpp"
 					>
 				</File>
-                        <File
-                              RelativePath="..\scripts\creature\sc_lumberjack.cpp"
-                              >
-                        </File>
-                        <File
-                              RelativePath="..\scripts\creature\sc_miner.cpp"
-                              >
-                        </File>
+                        			<File
+                              				RelativePath="..\scripts\creature\sc_lumberjack.cpp"
+                              				>
+                       			 </File>
+                       			 <File
+                              				RelativePath="..\scripts\creature\sc_miner.cpp"
+                              				>
+                        			</File>
 			</Filter>
 			<Filter
 				Name="guard"
@@ -331,30 +287,6 @@
 			<Filter
 				Name="npc"
 				>
-				<File
-					RelativePath="..\scripts\npc\sc_bunthen_plainswind.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\sc_henze_faulk.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\sc_marshal_mcbride.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\sc_silas_darkmoon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\sc_silva_filnaveth.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\sc_skorn_whitecloud.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="servers"
@@ -395,6 +327,418 @@
 					RelativePath="..\scripts\item\sc_item_test.cpp"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="zone"
+				>
+				<Filter
+					Name="Alterac Mountains"
+					>
+				</Filter>
+				<Filter
+					Name="Ashenvale Forest"
+					>
+				</Filter>
+				<Filter
+					Name="Azshara"
+					>
+				</Filter>
+				<Filter
+					Name="Badlands"
+					>
+				</Filter>
+				<Filter
+					Name="Barrens"
+					>
+				</Filter>
+				<Filter
+					Name="Blackfathom Depths"
+					>
+				</Filter>
+				<Filter
+					Name="Arathi Highlands"
+					>
+				</Filter>
+				<Filter
+					Name="Blackrock Depths"
+					>
+				</Filter>
+				<Filter
+					Name="Deadmines"
+					>
+				</Filter>
+				<Filter
+					Name="Deadwind Pass"
+					>
+				</Filter>
+				<Filter
+					Name="Desolace"
+					>
+				</Filter>
+				<Filter
+					Name="Dire Maul"
+					>
+				</Filter>
+				<Filter
+					Name="Dun Morogh"
+					>
+				</Filter>
+				<Filter
+					Name="Durotar"
+					>
+				</Filter>
+				<Filter
+					Name="Duskwood"
+					>
+				</Filter>
+				<Filter
+					Name="Dustwallow Marsh"
+					>
+				</Filter>
+				<Filter
+					Name="Blackwing Lair"
+					>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_broodlord_lashlayer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_chromaggus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_ebenroc.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_firemaw.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_flamegor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_nefarian.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_razorgore.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_vaelastrasz.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Blasted Lands"
+					>
+				</Filter>
+				<Filter
+					Name="Burning Steppes"
+					>
+				</Filter>
+				<Filter
+					Name="Darkshore"
+					>
+				</Filter>
+				<Filter
+					Name="Eastern Plaguelands"
+					>
+				</Filter>
+				<Filter
+					Name="Moonglade"
+					>
+					<File
+						RelativePath="..\scripts\zone\moonglade\sc_bunthen_plainswind.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\moonglade\sc_silva_filnaveth.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Razorfen Kraul"
+					>
+				</Filter>
+				<Filter
+					Name="Redridge Mountains"
+					>
+				</Filter>
+				<Filter
+					Name="Ruins of Ahn&apos;Qiraj"
+					>
+				</Filter>
+				<Filter
+					Name="Swamp of Sorrows"
+					>
+				</Filter>
+				<Filter
+					Name="Scarlet Monastery"
+					>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_arcanist_doan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_azshir_the_sleepless.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_bloodmage_thalnos.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_herod.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_high_inquisitor_fairbanks.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_high_inquisitor_whitemane.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_houndmaster_loksey.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_interrogator_vishas.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_scarlet_commander_mograine.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_scorn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\sc_scarlet_torturer.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Scholomance"
+					>
+				</Filter>
+				<Filter
+					Name="Searing Gorge"
+					>
+				</Filter>
+				<Filter
+					Name="Elwynn Forest"
+					>
+					<File
+						RelativePath="..\scripts\zone\elwynn_forest\sc_henze_faulk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\elwynn_forest\sc_marshal_mcbride.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Felwood"
+					>
+				</Filter>
+				<Filter
+					Name="Feralas"
+					>
+				</Filter>
+				<Filter
+					Name="Gnomeregan"
+					>
+				</Filter>
+				<Filter
+					Name="Hillsbrad Foothills"
+					>
+				</Filter>
+				<Filter
+					Name="Hinterlands"
+					>
+				</Filter>
+				<Filter
+					Name="Loch Modan"
+					>
+				</Filter>
+				<Filter
+					Name="Lower Blackrock Spire"
+					>
+				</Filter>
+				<Filter
+					Name="Maradon"
+					>
+				</Filter>
+				<Filter
+					Name="Molten Core"
+					>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_baron_geddon.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_garr.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_gehennas.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_golemagg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_lucifron.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_magmadar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_majordomo_executus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_ragnaros.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_shazzrah.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_boss_sulfuron_harbinger.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Mulgore"
+					>
+					<File
+						RelativePath="..\scripts\zone\mulgore\sc_skorn_whitecloud.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Naxxramas"
+					>
+				</Filter>
+				<Filter
+					Name="Onyxia&apos;s Lair"
+					>
+					<File
+						RelativePath="..\scripts\zone\onyxia&apos;s_lair\sc_boss_onyxia.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Ragefire Chasm"
+					>
+				</Filter>
+				<Filter
+					Name="Razorfen Downs"
+					>
+				</Filter>
+				<Filter
+					Name="Shadowfang Keep"
+					>
+				</Filter>
+				<Filter
+					Name="Stonetalon Mountains"
+					>
+				</Filter>
+				<Filter
+					Name="Stranglethorn Vale"
+					>
+				</Filter>
+				<Filter
+					Name="Stratholme"
+					>
+				</Filter>
+				<Filter
+					Name="Sunken Temple"
+					>
+				</Filter>
+				<Filter
+					Name="Tanaris"
+					>
+				</Filter>
+				<Filter
+					Name="Teldrassil"
+					>
+				</Filter>
+				<Filter
+					Name="Temple of Ahn&apos;Qiraj"
+					>
+				</Filter>
+				<Filter
+					Name="Thousand Needles"
+					>
+				</Filter>
+				<Filter
+					Name="Silithus"
+					>
+				</Filter>
+				<Filter
+					Name="Silverpine Forest"
+					>
+				</Filter>
+				<Filter
+					Name="Stockade"
+					>
+				</Filter>
+				<Filter
+					Name="Tirisfal Glades"
+					>
+				</Filter>
+				<Filter
+					Name="Wailing Caverns"
+					>
+				</Filter>
+				<Filter
+					Name="Western Plaguelands"
+					>
+				</Filter>
+				<Filter
+					Name="Westfall"
+					>
+				</Filter>
+				<Filter
+					Name="Wetlands"
+					>
+				</Filter>
+				<Filter
+					Name="Winterspring"
+					>
+				</Filter>
+				<Filter
+					Name="Zul&apos;Farrak"
+					>
+				</Filter>
+				<Filter
+					Name="Zul&apos;Gurub"
+					>
+				</Filter>
+				<Filter
+					Name="Uldaman"
+					>
+				</Filter>
+				<Filter
+					Name="Un&apos;Goro Crater"
+					>
+				</Filter>
+				<Filter
+					Name="Upper Blackrock Spire"
+					>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

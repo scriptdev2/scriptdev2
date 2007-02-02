@@ -14,7 +14,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+#include "../../sc_defines.h"
 
 bool GossipHello_bunthen_plainswind(Player *player, Creature *_Creature)
 {

@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
         if (!who)
             return false;
 
-        return m_creature->GetDistanceSq(who) <= VISIBLE_RANGE && who->isVisibleFor(m_creature,true);
+        return m_creature->IsWithinDist(who, VISIBLE_RANGE) && who->isVisibleFor(m_creature,true);
     }
 
     //Called at World update tick

@@ -14,29 +14,34 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include "../../sc_defines.h"
 
-#include "../sc_defines.h"
-
-#define MCBRIDE_SAY_QUESTACCEPT "You are Dismissed, $N!"
-
-bool QuestAccept_marshal_mcbride(Player *player, Creature *_Creature, Quest *_Quest )
-{ 
-    if (_Quest->GetQuestId() == 54)
-    {
-        _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-        player->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-        ((ScriptedAI&)_Creature->AI()).DoSay(MCBRIDE_SAY_QUESTACCEPT,LANG_UNIVERSAL,player);
-     }
+uint32 NPCDialogStatus_henze_faulk(Player *player, Creature *_Creature )
+{
+    //Appear dead
+    _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_DEAD);
+    _Creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
     
-    return true;
+    if( _Creature->isAlive() == true )
+    {
+        player->CastSpell( player, 8593, true);
+        _Creature->RemoveFlag (UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
+        _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
+
+        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
+    }
+    else
+    {
+        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_NONE);
+    }
 }
 
-void AddSC_marshal_mcbride()
+void AddSC_henze_faulk()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="marshal_mcbride";
-    newscript->pQuestAccept          = &QuestAccept_marshal_mcbride;
+    newscript->Name="henze_faulk";
+    newscript->pNPCDialogStatus      = &NPCDialogStatus_henze_faulk;
     m_scripts[nrscripts++] = newscript;
 }

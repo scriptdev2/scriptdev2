@@ -14,29 +14,31 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../sc_defines.h"
+//*** NEEDS ADDITIOINAL REVIEW ***
 
-// **** This script is still under Developement ****
+#include "../../sc_defines.h"
 
-#define SPELL_SHADOWBOLT            19729
-#define SPELL_RAINOFFIRE            19717
-#define SPELL_GEHENNASCURSE         19716
+#define SPELL_SHADOWFLAME        22539
+#define SPELL_WINGBUFFET         23339
+#define SPELL_FLAMEBUFFET         23341
 
-struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 {
-    boss_gehennasAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_firemawAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-    uint32 ShadowBolt_Timer;
-    uint32 RainOfFire_Timer;
-    uint32 GehennasCurse_Timer;
+    uint32 ShadowFlame_Timer;
+    uint32 WingBuffet_Timer;
+    uint32 FlameBuffet_Timer;
+    
 
     void Reset()
     {
         pTarget = NULL;
-        ShadowBolt_Timer = 7000;
-        RainOfFire_Timer = 35000;
-        GehennasCurse_Timer = 30000;
+        ShadowFlame_Timer = 45000;      //These times are probably wrong
+        WingBuffet_Timer = 25000;
+        FlameBuffet_Timer = 5000;
+        
 
         if (m_creature)
         {
@@ -100,36 +102,37 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
                 return;
             }
             
-            //ShadowBolt_Timer
-            if (ShadowBolt_Timer < diff)
+            //ShadowFlame_Timer
+            if (ShadowFlame_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
+                DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
-                //7 seconds until we should cast this agian
-                ShadowBolt_Timer = 7000;
-            }else ShadowBolt_Timer -= diff;
+                //45 seconds till recast
+                ShadowFlame_Timer = 45000;
+            }else ShadowFlame_Timer -= diff;
 
-            //RainOfFire_Timer
-            if (RainOfFire_Timer < diff)
+            //WingBuffet_Timer
+            if (WingBuffet_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_RAINOFFIRE);
+                DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
 
-                //35 seconds until we should cast this agian
-                RainOfFire_Timer = 35000;
-            }else RainOfFire_Timer -= diff;
-
-            //GehennasCurse_Timer
-            if (GehennasCurse_Timer < diff)
+                //25 seconds till recast
+                WingBuffet_Timer = 25000;
+            }else WingBuffet_Timer -= diff;
+            
+            //FlameBuffet_Timer
+            if (FlameBuffet_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
+                DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
 
-                //30 seconds until we should cast this agian
-                GehennasCurse_Timer = 30000;
-            }else GehennasCurse_Timer -= diff;
-
+                //cast this every 5 seconds
+                FlameBuffet_Timer = 5000;
+            }else FlameBuffet_Timer -= diff;
+            
+            
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
             {
@@ -152,18 +155,18 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
             }
         }
     }
-}; 
-CreatureAI* GetAI_boss_gehennas(Creature *_Creature)
+};
+CreatureAI* GetAI_boss_firemaw(Creature *_Creature)
 {
-    return new boss_gehennasAI (_Creature);
+    return new boss_firemawAI (_Creature);
 }
 
 
-void AddSC_boss_gehennas()
+void AddSC_boss_firemaw()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_gehennas";
-    newscript->GetAI = GetAI_boss_gehennas;
+    newscript->Name="boss_firemaw";
+    newscript->GetAI = GetAI_boss_firemaw;
     m_scripts[nrscripts++] = newscript;
 }
