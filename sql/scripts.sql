@@ -880,9 +880,9 @@ UPDATE `creature_template` SET `spell1`=1604, `spell2`=5884, `spell3`=0, `spell4
 -- Broken Cadaver (id 10383) spells
 
 UPDATE `creature_template` SET `spell1`=16140, `spell2`=1604, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10383 ;
--
 
-- Cannibal Ghoul (id 8530) spells
+
+-- Cannibal Ghoul (id 8530) spells
 
 UPDATE `creature_template` SET `spell1`=1604, `spell2`=3589, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=8530 ;
 
@@ -1357,9 +1357,9 @@ UPDATE `creature_template` SET `spell1`=17472, `spell2`=15584, `spell3`=0, `spel
 -- Doctor Theolen Krastinov (id 11261) spells
 
 UPDATE `creature_template` SET `spell1`=18106, `spell2`=18116, `spell3`=15584, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11261 ;
--
 
-- Kirtonos the Herald (id 10506) spells
+
+-- Kirtonos the Herald (id 10506) spells
 
 UPDATE `creature_template` SET `spell1`=18116, `spell2`=20741, `spell3`=18144, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10506 ;
 
