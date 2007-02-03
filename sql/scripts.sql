@@ -396,7 +396,7 @@ UPDATE `creature_template` SET `spell1` = 7992 WHERE `entry` = 1110; #Slowing Po
 UPDATE `creature_template` SET `spell1` = 17312 WHERE `entry` = 7340; #Mind Flay R3
 UPDATE `creature_template` SET `spell2` = 992 WHERE `entry` = 7340; #Shadow Word: Pain R4
 UPDATE `creature_template` SET `spell3` = 984 WHERE `entry` = 7340; #Mind Blast R3
-UPDATE `creature_template` SET `spell1` = 568 WHERE `entry` = 1784; #Arcane Burst
+UPDATE `creature_template` SET `spell1` = 22940 WHERE `entry` = 1784; #Arcane Blast
 UPDATE `creature_template` SET `spell2` = 1411 WHERE `entry` = 1784; #Firebolt 5
 UPDATE `creature_template` SET `spell1` = 705 WHERE `entry` = 7342; #Shadow Bolt R3
 UPDATE `creature_template` SET `spell2` = 1014 WHERE `entry` = 7342; #Curse of Agony R2

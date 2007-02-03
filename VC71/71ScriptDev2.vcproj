@@ -147,14 +147,14 @@
 					RelativePath="..\scripts\creature\sc_kobold.cpp"
 					>
 				</File>
-                        			<File
-                              				RelativePath="..\scripts\creature\sc_lumberjack.cpp"
-                              				>
-                       			 </File>
-                       			 <File
-                              				RelativePath="..\scripts\creature\sc_miner.cpp"
-                              				>
-                        			</File>
+				<File
+					RelativePath="..\scripts\creature\sc_lumberjack.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\sc_miner.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="guard"
@@ -571,7 +571,7 @@
 					Name="Onyxia&apos;s Lair"
 					>
 					<File
-						RelativePath="..\scripts\zone\onyxia&apos;s_lair\sc_boss_onyxia.cpp"
+						RelativePath="..\scripts\zone\onyxias_lair\sc_boss_onyxia.cpp"
 						>
 					</File>
 				</Filter>

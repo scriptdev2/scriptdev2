@@ -81,7 +81,7 @@ scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp \
 scripts/zone/moonglade/sc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/sc_silva_filnaveth.cpp \
 scripts/zone/mulgore/sc_skorn_whitecloud.cpp \
-scripts/zone/onyxia&apos;s_lair/sc_boss_onyxia.cpp \
+scripts/zone/onyxias_lair/sc_boss_onyxia.cpp \
 scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp \
 scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp \
 scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp \
