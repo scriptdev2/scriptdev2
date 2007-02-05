@@ -68,12 +68,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         
         if (m_creature)
         {
-            m_creature->RemoveAllAuras();
             m_creature->InterruptSpell();
             m_creature->SetHover(false);
             (*m_creature)->Clear();
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
         }
     }
 
@@ -95,16 +93,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
-        //Predefined aggro radius
-        if (m_creature->GetDistanceSq(who) > 1600.0f)
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -121,7 +116,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
+        //But we still need to reset
+        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
         {
             Reset();
             return;
@@ -291,10 +288,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 if( m_creature->isAttackReady() )
                 {
-                    Unit* newtarget = m_creature->SelectHostilTarget();
-                    if(newtarget)
-                        AttackStart(newtarget);
-
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
 
@@ -305,12 +298,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                         swingcounter = 0;
                     }else swingcounter++;
                 }
-            }
-
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                Reset();
             }
         }
     }

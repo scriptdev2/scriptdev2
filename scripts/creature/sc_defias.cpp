@@ -45,62 +45,19 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
         
         if (m_creature)
         {
-            m_creature->RemoveAllAuras();
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
         }
     }
 
-    void AttackStart(Unit *who)
+   void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
-
-            //30% chance to Play Aggro sound if the attacker is a player
-            if (who->GetTypeId() == TYPEID_PLAYER && rand()%3 == 0)
-            {
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-
-                //Switch between 4 different chats
-                switch (rand()%4)
-                    {
-                    case 0:
-                        DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
-                        break;
-                    
-                    case 1:
-                        DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
-                        break;
-
-                    case 2:
-                        DoSay(SAY_RANDOM_2,LANG_UNIVERSAL,pTarget);
-                        break;
-
-                    case 3:
-                        DoSay(SAY_RANDOM_3,LANG_UNIVERSAL,pTarget);
-                        break;
-                    }
-            }
-
-            pTarget = who;
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -121,7 +78,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                         case 0:
                             DoSay(SAY_RANDOM_0,LANG_UNIVERSAL,pTarget);
                             break;
-                    
+                        
                         case 1:
                             DoSay(SAY_RANDOM_1,LANG_UNIVERSAL,pTarget);
                             break;
@@ -148,9 +105,9 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
             GlobalCooldown -= diff;
         else GlobalCooldown = 0;
 
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
         {
             Reset();
             return;
@@ -194,10 +151,6 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
                 {
-                    Unit* newtarget = m_creature->SelectHostilTarget();
-                    if(newtarget)
-                        AttackStart(newtarget);
-
                     bool Healing = false;
                     SpellEntry const *info = NULL;
 
@@ -270,11 +223,6 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                         (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                     }
                 }
-            }
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                Reset();
             }
         }
     }

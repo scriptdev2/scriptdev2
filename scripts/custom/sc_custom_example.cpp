@@ -86,8 +86,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         //Return to home position
         if (m_creature)
         {
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
         }
     }
 
@@ -117,19 +116,22 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     //Move in line of sight is called whenever any unit moves within our sight radius (something like 50 yards)
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
-        //Don't attack back if we already have a victim, the unit is invisable to us, they are unreachable, or they arn't hostile to us
         if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL && who->GetTypeId() == TYPEID_PLAYER)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin attack
-                DoStartMeleeAttack(who);
+                //Begin melee attack if we are within range
+                if (m_creature->IsWithinDist(who, ATTACK_DIST))
+                    DoStartMeleeAttack(who);
+                else DoStartRangedAttack(who);
+
                 pTarget = who;
 
                 //Say some stuff
@@ -143,9 +145,9 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     //Update AI is called Every single map update (roughly once every 100ms if a player is within the grid)
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
+        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
         {
             Reset();
             return;
@@ -273,20 +275,11 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                     //This here causes us to flip between targets.
                     //It doesn't do very much right now but it is a decent placeholder
                     //for when we get an aggro system in place
-                    Unit* newtarget = m_creature->SelectHostilTarget();
-                    if(newtarget)
-                        AttackStart(newtarget);
 
                     //Send our melee swing and then reset our attack timer
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-
-            //If we are still alive and we lose our victim it means we killed them in that last swing
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                Reset();
             }
         }
     }

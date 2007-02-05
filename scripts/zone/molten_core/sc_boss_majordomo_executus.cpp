@@ -45,9 +45,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
         if (m_creature)
         {
-            m_creature->RemoveAllAuras();
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
         }
     }
 
@@ -71,22 +69,18 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
                 pTarget = who;
             }
@@ -122,8 +116,8 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             //MagicReflection_Timer
             if (MagicReflection_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature,SPELL_MAGICREFLECTION);
+                //Cast NYI in core
+                //DoCast(m_creature,SPELL_MAGICREFLECTION);
 
                 //60 seconds until we should cast this agian
                 MagicReflection_Timer = 60000;
@@ -132,8 +126,8 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             //DamageReflection_Timer
             if (DamageReflection_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature,SPELL_DAMAGEREFLECTION);
+                //Cast NYI in core
+                //DoCast(m_creature,SPELL_DAMAGEREFLECTION);
 
                 //60 seconds until we should cast this agian
                 DamageReflection_Timer = 60000;
@@ -155,10 +149,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
                 {
-                    Unit* newtarget = m_creature->SelectHostilTarget();
-                    if(newtarget)
-                        AttackStart(newtarget);
-
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }

@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void AttackStart(Unit *);
 
     //Called at stoping attack by any attacker
-    void AttackStop(Unit *);
+    void EnterEvadeMode();
 
     //Called at any heal cast/item used (call non implemented in mangos)
     void HealBy(Unit *healer, uint32 amount_healed) {}
@@ -183,22 +183,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoStopAttack();
 
     //Cast spell by Id
-    void DoCast(Unit* victim, uint32 spelId)
-    {
-        if (m_creature->m_currentSpell)
-            return;
-        m_creature->CastSpell(victim, spelId, false);
-    }
+    void DoCast(Unit* victim, uint32 spelId);
 
     //Cast spell by spell info
-    void DoCastSpell(Unit* who,SpellEntry const *spellInfo)
-    {
-        if (m_creature->m_currentSpell)
-            return;
-
-        m_creature->StopMoving();
-        m_creature->CastSpell(who, spellInfo, false);
-    }
+    void DoCastSpell(Unit* who,SpellEntry const *spellInfo);
 
     //Creature say
     void DoSay(char const* text, uint32 language, Unit* target);
@@ -225,16 +213,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     bool CanCast(Unit* Target, SpellEntry const *Spell);
 
     //Returns true if you are out of tether(spawnpoint) range
-    bool CheckTether()
-    {
-        float rx,ry,rz;
-        m_creature->GetRespawnCoord(rx, ry, rz);
-        float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
-        float length = m_creature->GetDistanceSq(m_creature->getVictim());
-        float hostillen = m_creature->GetHostilityDistance( m_creature->getVictim()->GetGUID() );
-        return (( length > (10.0f + hostillen) * (10.0f + hostillen) && spawndist > 6400.0f )
-            || ( length > (20.0f + hostillen) * (20.0f + hostillen) && spawndist > 2500.0f )
-            || ( length > (30.0f + hostillen) * (30.0f + hostillen) ));
-    }
+    bool CheckTether();
 };
 #endif

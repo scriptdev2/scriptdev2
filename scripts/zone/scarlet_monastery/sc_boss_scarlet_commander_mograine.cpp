@@ -62,9 +62,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
         if (m_creature)
         {
-            m_creature->RemoveAllAuras();
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
         }
     }
 
@@ -88,13 +86,17 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
@@ -105,9 +107,9 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown source
+        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
         {
             Reset();
             return;
@@ -216,23 +218,9 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
                 {
-                    Unit* newtarget = m_creature->SelectHostilTarget();
-                    if(newtarget)
-                        AttackStart(newtarget);
-
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-            
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-				DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
-				DoPlaySoundToSet(m_creature,SOUND_DEATH);
-				return;
-
-                Reset();
             }
         }
     }

@@ -567,13 +567,12 @@ void ScriptedAI::AttackStart(Unit* who)
 void ScriptedAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a current target
-    if( m_creature->getVictim() && m_creature->isAlive())
+    if( m_creature->isAlive() && (m_creature->SelectHostilTarget() || m_creature->getVictim()))
     {
         //Check if we should stop attacking because our victim is no longer attackable
         if (needToStop() || CheckTether())
         {
-            DoStopAttack();
-            DoGoHome();
+            EnterEvadeMode();
             return;
         }
             
@@ -582,28 +581,19 @@ void ScriptedAI::UpdateAI(const uint32 diff)
         {
             if( m_creature->isAttackReady() )
             {
-                Unit* newtarget = m_creature->SelectHostilTarget();
-                if(newtarget)
-                    AttackStart(newtarget);
-
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
             }
         }
-
-        //If we are still alive and we lose our victim it means we killed them
-        if(!m_creature->getVictim() && m_creature->isAlive())
-        {
-            DoStopAttack();
-            DoGoHome();
-        }
     }
 }
 
-void ScriptedAI::AttackStop(Unit *)
+void ScriptedAI::EnterEvadeMode()
 {
-    if( m_creature->isAlive() )
-        DoGoHome();
+    m_creature->RemoveAllAuras();
+    m_creature->DeleteThreatList();
+    m_creature->CombatStop();
+    DoGoHome();
 }
 
 void ScriptedAI::DoStartMeleeAttack(Unit* victim)
@@ -614,6 +604,7 @@ void ScriptedAI::DoStartMeleeAttack(Unit* victim)
     if ( m_creature->Attack(victim) )
     {
         (*m_creature)->Mutate(new TargetedMovementGenerator(*victim));
+        m_creature->AddThreat(victim, 0.0f);
     }
 }
 
@@ -622,7 +613,8 @@ void ScriptedAI::DoStartRangedAttack(Unit* victim)
     if (!victim)
         return;
 
-    m_creature->Attack(victim);
+    if (m_creature->Attack(victim))
+        m_creature->AddThreat(victim, 0.0f);
 }
 
 
@@ -632,6 +624,22 @@ void ScriptedAI::DoStopAttack()
     {
         m_creature->AttackStop();
     }
+}
+
+void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
+{
+    if (m_creature->m_currentSpell)
+        return;
+    m_creature->CastSpell(victim, spelId, false);
+}
+
+void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
+{
+    if (m_creature->m_currentSpell)
+        return;
+
+    m_creature->StopMoving();
+    m_creature->CastSpell(who, spellInfo, false);
 }
 
 void ScriptedAI::DoSay(const char *text, uint32 language, Unit* target)
@@ -947,4 +955,13 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
         return false;
 
     return true;
+}
+
+bool ScriptedAI::CheckTether()
+{
+    float rx,ry,rz;
+    m_creature->GetRespawnCoord(rx, ry, rz);
+    float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
+    float length = m_creature->GetDistanceSq(m_creature->getVictim());
+    return ( length > CREATURE_THREAT_RADIUS );
 }
