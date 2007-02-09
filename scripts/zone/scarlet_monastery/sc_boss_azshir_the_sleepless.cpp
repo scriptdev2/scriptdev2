@@ -28,16 +28,16 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 SoulSiphon_Timer;
+    uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
     uint32 Terrify_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		SoulSiphon_Timer = 80000;
-        CallOftheGrave_Timer = 70000;
-        Terrify_Timer = 45000;
+        SoulSiphon_Timer = 1;
+        CallOftheGrave_Timer = 30000;
+        Terrify_Timer = 20000;
 
         if (m_creature)
         {
@@ -54,10 +54,10 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-			pTarget = who;
+            pTarget = who;
         }
     }
 
@@ -105,16 +105,16 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
             //If we are <50% hp cast Soul Siphon rank 1
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpell)
             {
-				//SoulSiphon_Timer
-				if (SoulSiphon_Timer < diff)
-				{
+                //SoulSiphon_Timer
+                if (SoulSiphon_Timer < diff)
+                {
 
-					DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
-					return;
-	
-	                //180 seconds until we should cast this agian
-	                SoulSiphon_Timer = 80000;
-	            }else SoulSiphon_Timer -= diff;
+                    DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
+                    return;
+    
+                    //180 seconds until we should cast this agian
+                    SoulSiphon_Timer = 20000;
+                }else SoulSiphon_Timer -= diff;
             }
 
             //CallOfTheGrave_Timer
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
 
                 //70 seconds until we should cast this agian
-                CallOftheGrave_Timer = 70000;
+                CallOftheGrave_Timer = 30000;
             }else CallOftheGrave_Timer -= diff;
 
             //Terrify_Timer
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_TERRIFY);
 
                 //45 seconds until we should cast this agian
-                Terrify_Timer = 45000;
+                Terrify_Timer = 20000;
             }else Terrify_Timer -= diff;
 
             //If we are within range melee the target

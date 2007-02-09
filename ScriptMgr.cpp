@@ -23,6 +23,14 @@ uint8 loglevel = 0;
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
+// Spell summary for ScriptedAI::SelectSpell
+struct TSpellSummary {
+    uint8 Targets;    // set of enum SelectTarget
+    uint8 Effects;    // set of enum SelectEffect 
+} *SpellSummary;
+
+void FillSpellSummary();
+
 // -- Scripts to be added --
 
 // -- Area --
@@ -173,7 +181,11 @@ extern void AddSC_scarlet_torturer();
 
 MANGOS_DLL_EXPORT
 void ScriptsFree()
-{                                                           // Free resources before library unload
+{   
+    // Free Spell Summary
+    delete []SpellSummary;
+
+    // Free resources before library unload
     for(int i=0;i<nrscripts;i++)
         delete m_scripts[i];
 }
@@ -185,6 +197,7 @@ void ScriptsInit()
     for(int i=0;i<MAX_SCRIPTS;i++)
         m_scripts[i]=NULL;
 
+    FillSpellSummary();
     // -- Scripts to be added --
 
     // -- Area --
@@ -195,8 +208,8 @@ void ScriptsInit()
     AddSC_kobold();
     AddSC_generic_creature();
     AddSC_defias();
-	AddSC_lumberjack();
-	AddSC_miner();
+    AddSC_lumberjack();
+    AddSC_miner();
 
     // -- Custom --
     AddSC_custom_example();
@@ -756,6 +769,15 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
         if (!TempSpell)
             continue;
 
+        // Targets and Effects checked first as most used restrictions
+        //Check the spell targets if specified
+        if ( Targets && !(SpellSummary[m_creature->m_spells[i]].Targets & (1 << (Targets-1))) )
+            continue;
+
+        //Check the type of spell if we are looking for a specific spell type
+        if ( Effects && !(SpellSummary[m_creature->m_spells[i]].Effects & (1 << (Effects-1))) )
+            continue;
+
         //Check for school if specified
         if (School && TempSpell->School != School)
             continue;
@@ -764,92 +786,12 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
         if (Mechanic && TempSpell->Mechanic != Mechanic)
             continue;
 
-        //Check the spell targets if specified
-        if (Targets)
-        {
-            bool bSkipThisSpell = true;
-
-            switch (Targets)
-            {
-                //Spell targets self
-                case SELECT_TARGET_SELF:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_SELF)
-                            bSkipThisSpell = false;
-                break;
-
-                //Spell targets a single enemy
-                case SELECT_TARGET_SINGLE_ENEMY:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_ENEMY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_CURRENT_SELECTED_ENEMY)
-                            bSkipThisSpell = false;
-                break;
-
-
-                //Spell targets AoE at enemy
-                case SELECT_TARGET_AOE_ENEMY:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED)
-                            bSkipThisSpell = false;
-                break;
-
-                //Spell targets an enemy
-                case SELECT_TARGET_ANY_ENEMY:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_ENEMY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_CURRENT_SELECTED_ENEMY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED)
-                            bSkipThisSpell = false;
-                break;
-
-                //Spell targets a single friend(or self)
-                case SELECT_TARGET_SINGLE_FRIEND:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_SELF ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_PARTY)
-                            bSkipThisSpell = false;
-                break;
-
-                //Spell targets aoe friends
-                case SELECT_TARGET_AOE_FRIEND:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_PARTY_AROUND_CASTER ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_PARTY)
-                            bSkipThisSpell = false;
-                break;
-
-                //Spell targets any friend(or self)
-                case SELECT_TARGET_ANY_FRIEND:
-                    for (uint32 i = 0; i < 3; i++)
-                        if (TempSpell->EffectImplicitTargetA[i] == TARGET_SELF ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_FRIEND ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_SINGLE_PARTY ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_ALL_PARTY_AROUND_CASTER ||
-                            TempSpell->EffectImplicitTargetA[i] == TARGET_AREAEFFECT_PARTY)
-                            bSkipThisSpell = false;
-                break;
-            }
-
-            if (bSkipThisSpell)
-                continue;
-        }
-
         //Make sure that the spell uses the requested amount of power
-        if (PowerCostMin)
-            if (TempSpell->manaCost < PowerCostMin)
-                continue;
+        if (PowerCostMin &&  TempSpell->manaCost < PowerCostMin)
+            continue;
 
-        if (PowerCostMax)
-            if (TempSpell->manaCost > PowerCostMax)
-                continue;
+        if (PowerCostMax && TempSpell->manaCost > PowerCostMax)
+            continue;
 
         //Continue if we don't have the mana to actually cast this spell
         if (TempSpell->manaCost > m_creature->GetPower((Powers)TempSpell->powerType))
@@ -863,58 +805,14 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
             continue;
 
         //Check if the spell meets our range requirements
-        if (RangeMin)
-            if (TempRange->maxRange < RangeMin)
-                continue;
-        if (RangeMax)
-            if (TempRange->maxRange > RangeMax)
-                continue;
-
-        //Check if our target is in range
-        if (m_creature->GetDistanceSq(Target) < TempRange->minRange * TempRange->minRange || m_creature->GetDistanceSq(Target) > TempRange->maxRange * TempRange->maxRange)
+        if (RangeMin && TempRange->maxRange < RangeMin)
+            continue;
+        if (RangeMax && TempRange->maxRange > RangeMax)
             continue;
 
-        //Check the type of spell if we are looking for a specific spell type
-        if (Effects)
-        {
-            bool bSkipThisSpell = true;
-
-            switch (Effects)
-            {
-                //Make sure that this spell includes a damage effect
-                case SELECT_EFFECT_DAMAGE:
-                for (uint32 j = 0; j < 3; j++)
-                    if (TempSpell->Effect[j] == SPELL_EFFECT_SCHOOL_DAMAGE || 
-                        TempSpell->Effect[j] == SPELL_EFFECT_INSTAKILL || 
-                        TempSpell->Effect[j] == SPELL_EFFECT_ENVIRONMENTAL_DAMAGE || 
-                        TempSpell->Effect[j] == SPELL_EFFECT_HEALTH_LEECH)
-                        bSkipThisSpell = false;
-                break;
-
-                //Make sure that this spell includes a healing effect
-                case SELECT_EFFECT_HEALING:
-                for (uint32 j = 0; j < 3; j++)
-                    if (TempSpell->Effect[j] == SPELL_EFFECT_HEAL || 
-                        TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MAX_HEALTH || 
-                        TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MECHANICAL)
-                        bSkipThisSpell = false;
-                break;
-
-                //Make sure that this spell applies an aura
-                case SELECT_EFFECT_AURA:
-                for (uint32 j = 0; j < 3; j++)
-                    if (TempSpell->Effect[j] == SPELL_EFFECT_APPLY_AURA)
-                        bSkipThisSpell = false;
-                break;
-
-                default:
-                bSkipThisSpell = false;
-                break;
-            }
-
-            if (bSkipThisSpell)
-                continue;
-        }
+        //Check if our target is in range
+        if (m_creature->IsWithinDist(Target, TempRange->minRange) || !m_creature->IsWithinDist(Target, TempRange->maxRange))
+            continue;
 
         //All good so lets add it to the spell list
         Spell[SpellCount] = TempSpell;
@@ -962,6 +860,88 @@ bool ScriptedAI::CheckTether()
     float rx,ry,rz;
     m_creature->GetRespawnCoord(rx, ry, rz);
     float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
-    float length = m_creature->GetDistanceSq(m_creature->getVictim());
-    return ( length > CREATURE_THREAT_RADIUS );
+    //float length = m_creature->GetDistanceSq(m_creature->getVictim());
+    return ( spawndist > CREATURE_THREAT_RADIUS );
+}
+
+void FillSpellSummary()
+{
+    SpellSummary = new TSpellSummary[GetSpellStore()->GetNumRows()];
+
+    SpellEntry const* TempSpell;
+
+    for (int i=0; i < GetSpellStore()->GetNumRows(); i++ )
+    {
+        SpellSummary[i].Effects = 0;
+        SpellSummary[i].Targets = 0;
+
+        TempSpell = GetSpellStore()->LookupEntry(i);
+        //This spell doesn't exist
+        if (!TempSpell)
+            continue;
+
+        for (int j=0; j<4; j++)
+        {
+            //Spell targets self
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SELF )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_SELF-1);
+
+            //Spell targets a single enemy
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_ENEMY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_CURRENT_SELECTED_ENEMY )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_SINGLE_ENEMY-1);
+
+            //Spell targets AoE at enemy
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_AOE_ENEMY-1);
+
+            //Spell targets an enemy
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_ENEMY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_CURRENT_SELECTED_ENEMY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_ANY_ENEMY-1);
+
+            //Spell targets a single friend(or self)
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SELF ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_FRIEND ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_PARTY )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_SINGLE_FRIEND-1);
+
+            //Spell targets aoe friends
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_PARTY_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_AOE_FRIEND-1);
+
+            //Spell targets any friend(or self)
+            if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SELF ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_FRIEND ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_PARTY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_PARTY_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY )
+                SpellSummary[i].Targets |= 1 << (SELECT_TARGET_ANY_FRIEND-1);
+
+            //Make sure that this spell includes a damage effect
+            if ( TempSpell->Effect[j] == SPELL_EFFECT_SCHOOL_DAMAGE || 
+                 TempSpell->Effect[j] == SPELL_EFFECT_INSTAKILL || 
+                 TempSpell->Effect[j] == SPELL_EFFECT_ENVIRONMENTAL_DAMAGE || 
+                 TempSpell->Effect[j] == SPELL_EFFECT_HEALTH_LEECH )
+                SpellSummary[i].Effects |= 1 << (SELECT_EFFECT_DAMAGE-1);
+
+            //Make sure that this spell includes a healing effect
+            if ( TempSpell->Effect[j] == SPELL_EFFECT_HEAL || 
+                 TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MAX_HEALTH || 
+                 TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MECHANICAL )
+                SpellSummary[i].Effects |= 1 << (SELECT_EFFECT_HEALING-1);
+
+            //Make sure that this spell applies an aura
+            if ( TempSpell->Effect[j] == SPELL_EFFECT_APPLY_AURA )
+                SpellSummary[i].Effects |= 1 << (SELECT_EFFECT_AURA-1);
+       }
+    }
 }

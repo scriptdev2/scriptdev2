@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_bluffwatcher(Player *player, Creature *_Creature)
 {
@@ -277,6 +278,11 @@ bool GossipSelect_guard_bluffwatcher(Player *player, Creature *_Creature, uint32
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_bluffwatcher(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_bluffwatcher()
 {
     Script *newscript;
@@ -285,6 +291,7 @@ void AddSC_guard_bluffwatcher()
     newscript->Name="guard_bluffwatcher";
     newscript->pGossipHello          = &GossipHello_guard_bluffwatcher;
     newscript->pGossipSelect         = &GossipSelect_guard_bluffwatcher;
+    newscript->GetAI = GetAI_guard_bluffwatcher;
 
     m_scripts[nrscripts++] = newscript;
 }

@@ -83,6 +83,22 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+            
+                //Switch between 3 different aggro saying
+                switch (rand()%3)
+                {
+                    case 0:
+                        DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                        break;
+
+                    case 1:
+                        DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                        break;
+
+                    case 2:
+                        DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                        break;
+                }
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);

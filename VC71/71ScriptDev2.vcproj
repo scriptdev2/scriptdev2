@@ -160,6 +160,10 @@
 				Name="guard"
 				>
 				<File
+					RelativePath="..\scripts\guard\sc_guard_ai.h"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\guard\sc_guard_bluffwatcher.cpp"
 					>
 				</File>

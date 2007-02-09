@@ -40,19 +40,19 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
     uint32 FrostNova2_Timer;
     uint32 FlameShock3_Timer;
     uint32 ShadowBolt5_Timer;
-	uint32 FlameSpike_Timer;
-	uint32 FireNova_Timer;
-	uint32 Yell_Timer;
+    uint32 FlameSpike_Timer;
+    uint32 FireNova_Timer;
+    uint32 Yell_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		Yell_Timer = 6000000;
-        FrostNova2_Timer = 30000;
-        FlameShock3_Timer = 30000;
-        ShadowBolt5_Timer = 45000;
-		FlameSpike_Timer = 45000;
-		FireNova_Timer = 30000;
+        Yell_Timer = 1;
+        FrostNova2_Timer = 10000;
+        FlameShock3_Timer = 15000;
+        ShadowBolt5_Timer = 20000;
+        FlameSpike_Timer = 20000;
+        FireNova_Timer = 10000;
 
         if (m_creature)
         {
@@ -69,10 +69,10 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-			
-			//Say our dialog
+            
+            //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
@@ -93,6 +93,10 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
+                //Say our dialog
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
@@ -103,7 +107,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-		//If we had a target and it wasn't cleared then it means the target died from some unknown soruce
+        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
         if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
         {
@@ -122,31 +126,26 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
             }
 
             //If we are <35% hp
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 35 )
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 35)
             {
+                Yell_Timer -= diff;
 
-				//Yell_Timer
-				if (Yell_Timer < diff)
-				{
-
-					DoYell(SAY_HEALTH,LANG_UNIVERSAL,NULL);
-					DoPlaySoundToSet(m_creature,SOUND_HEALTH);
-					return;
-
-				    //6000 seconds until we should cast this agian
-				    Yell_Timer = 6000000;
-				}else Yell_Timer -= diff;
-
+                if (Yell_Timer < diff)
+                {
+                    DoYell(SAY_HEALTH,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_HEALTH);
+                    Yell_Timer = 900000;
+                }
             }
 
             //FrostNova2_Timer
             if (FrostNova2_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_FROSTNOVA2);
+                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA2);
 
                 //30 seconds until we should cast this agian
-                FrostNova2_Timer = 30000;
+                FrostNova2_Timer = 10000;
             }else FrostNova2_Timer -= diff;
 
             //FlameShock3_Timer
@@ -156,7 +155,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK3);
 
                 //30 seconds until we should cast this agian
-                FlameShock3_Timer = 30000;
+                FlameShock3_Timer = 15000;
             }else FlameShock3_Timer -= diff;
 
             //ShadowBolt5_Timer
@@ -166,7 +165,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT5);
 
                 //45 seconds until we should cast this agian
-                ShadowBolt5_Timer = 35000;
+                ShadowBolt5_Timer = 20000;
             }else ShadowBolt5_Timer -= diff;
 
             //FlameSpike_Timer
@@ -176,7 +175,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FLAMESPIKE);
 
                 //45 seconds until we should cast this agian
-                FlameSpike_Timer = 45000;
+                FlameSpike_Timer = 30000;
             }else FlameSpike_Timer -= diff;
 
             //FireNova_Timer
@@ -186,7 +185,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
                 //30 seconds until we should cast this agian
-                FireNova_Timer = 30000;
+                FireNova_Timer = 20000;
             }else FireNova_Timer -= diff;
 
             //If we are within range melee the target

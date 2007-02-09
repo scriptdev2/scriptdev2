@@ -38,6 +38,7 @@ scripts/creature/sc_kobold.cpp \
 scripts/creature/sc_lumberjack.cpp \
 scripts/creature/sc_miner.cpp \
 scripts/custom/sc_custom_example.cpp \
+scripts/guard/sc_guard_ai.h \
 scripts/guard/sc_guard_bluffwatcher.cpp \
 scripts/guard/sc_guard_contested.cpp \
 scripts/guard/sc_guard_darnassus.cpp \

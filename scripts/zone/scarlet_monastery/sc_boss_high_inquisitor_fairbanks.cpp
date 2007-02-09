@@ -32,24 +32,24 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
     boss_high_inquisitor_fairbanksAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 Healing_Timer;
+    uint32 Healing_Timer;
     uint32 Sleep2_Timer;
     uint32 Smite_Timer;
-	uint32 ShadowWordPain_Timer;
-	uint32 CurseOfBlood_Timer;
-	uint32 DevouringPlague3_Timer;
-	uint32 MindBlast5_Timer;
+    uint32 ShadowWordPain_Timer;
+    uint32 CurseOfBlood_Timer;
+    uint32 DevouringPlague3_Timer;
+    uint32 MindBlast5_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		Healing_Timer = 80000;
-        Sleep2_Timer = 450000;
+        Healing_Timer = 300;
+        Sleep2_Timer = 45000;
         Smite_Timer = 30000;
-		ShadowWordPain_Timer = 30000;
-		CurseOfBlood_Timer = 45000;
-		DevouringPlague3_Timer = 200000;
-		MindBlast5_Timer = 20000;
+        ShadowWordPain_Timer = 30000;
+        CurseOfBlood_Timer = 45000;
+        DevouringPlague3_Timer = 60000;
+        MindBlast5_Timer = 20000;
 
         if (m_creature)
         {
@@ -64,12 +64,12 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			DoStartMeleeAttack(who);
+            DoStartMeleeAttack(who);
             pTarget = who;
         }
     }
 
-	void MoveInLineOfSight(Unit *who)
+    void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
             return;
@@ -113,28 +113,23 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
             }
 
             //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpell)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpell && Healing_Timer < diff)
             {
-				//Healing_Timer
-				if (Healing_Timer < diff)
-				{
+                DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
+                
+                //30 seconds until we should cast this agian
+                Healing_Timer = 30000;
 
-					DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
-					return;
-	
-	                //80 seconds until we should cast this agian
-	                Healing_Timer = 80000;
-	            }else Healing_Timer -= diff;            
-            }
+            }else Healing_Timer -= diff;
 
             //Sleep2_Timer
             if (Sleep2_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_SLEEP2);
+                DoCast(m_creature->getVictim(),SPELL_SLEEP2);
 
-                //450 seconds until we should cast this agian
-                Sleep2_Timer = 450000;
+                //45 seconds until we should cast this agian
+                Sleep2_Timer = 45000;
             }else Sleep2_Timer -= diff;
 
             //Smite_Timer
@@ -144,7 +139,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_SMITE);
 
                 //30 seconds until we should cast this agian
-                Smite_Timer = 30000;
+                Smite_Timer = 20000;
             }else Smite_Timer -= diff;
 
             //ShadowWordPain_Timer
@@ -164,7 +159,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
 
                 //45 seconds until we should cast this agian
-                CurseOfBlood_Timer = 45000;
+                CurseOfBlood_Timer = 25000;
             }else CurseOfBlood_Timer -= diff;
 
             //DevouringPlague3_Timer
@@ -173,8 +168,8 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_DEVOURINGPLAGUE3);
 
-                //200 seconds until we should cast this agian
-                DevouringPlague3_Timer = 200000;
+                //35 seconds until we should cast this agian
+                DevouringPlague3_Timer = 35000;
             }else DevouringPlague3_Timer -= diff;
 
             //MindBlast5_Timer
@@ -184,7 +179,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_MINDBLAST5);
 
                 //200 seconds until we should cast this agian
-                MindBlast5_Timer = 200000;
+                MindBlast5_Timer = 30000;
             }else MindBlast5_Timer -= diff;
 
             //If we are within range melee the target

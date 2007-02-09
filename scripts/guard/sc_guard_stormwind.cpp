@@ -14,8 +14,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_stormwind(Player *player, Creature *_Creature)
 {
@@ -319,6 +319,11 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_stormwind(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_stormwind()
 {
     Script *newscript;
@@ -327,6 +332,7 @@ void AddSC_guard_stormwind()
     newscript->Name="guard_stormwind";
     newscript->pGossipHello          = &GossipHello_guard_stormwind;
     newscript->pGossipSelect         = &GossipSelect_guard_stormwind;
+    newscript->GetAI = GetAI_guard_stormwind;
 
     m_scripts[nrscripts++] = newscript;
 }

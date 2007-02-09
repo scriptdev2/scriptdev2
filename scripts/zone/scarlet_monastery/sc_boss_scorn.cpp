@@ -28,18 +28,18 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     boss_scornAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 LichSlap_Timer;
-	uint32 FrostboltVolley_Timer;
-	uint32 MindFlay_Timer;
-	uint32 FrostNova_Timer;
+    uint32 LichSlap_Timer;
+    uint32 FrostboltVolley_Timer;
+    uint32 MindFlay_Timer;
+    uint32 FrostNova_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		LichSlap_Timer = 45000;
-		FrostboltVolley_Timer = 30000;
-		MindFlay_Timer = 30000;
-		FrostNova_Timer = 30000;
+        LichSlap_Timer = 45000;
+        FrostboltVolley_Timer = 30000;
+        MindFlay_Timer = 30000;
+        FrostNova_Timer = 30000;
 
         if (m_creature)
         {
@@ -54,9 +54,9 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			DoStartMeleeAttack(who);
+            DoStartMeleeAttack(who);
 
-			pTarget = who;
+            pTarget = who;
         }
     }
 
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
             if (LichSlap_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_LICHSLAP);
+                DoCast(m_creature->getVictim(),SPELL_LICHSLAP);
 
                 //45 seconds until we should cast this agian
                 LichSlap_Timer = 45000;
@@ -115,30 +115,30 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
             if (FrostboltVolley_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_FROSTBOLTVOLLEY);
+                DoCast(m_creature->getVictim(),SPELL_FROSTBOLTVOLLEY);
 
                 //30 seconds until we should cast this agian
-                FrostboltVolley_Timer = 30000;
+                FrostboltVolley_Timer = 20000;
             }else FrostboltVolley_Timer -= diff;
 
             //MindFlay_Timer
             if (MindFlay_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
+                DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
 
                 //30 seconds until we should cast this agian
-                MindFlay_Timer = 30000;
+                MindFlay_Timer = 20000;
             }else MindFlay_Timer -= diff;
 
             //FrostNova_Timer
             if (FrostNova_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
 
                 //30 seconds until we should cast this agian
-                FrostNova_Timer = 30000;
+                FrostNova_Timer = 15000;
             }else FrostNova_Timer -= diff;
 
             //If we are within range melee the target

@@ -14,8 +14,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_orgrimmar(Player *player, Creature *_Creature)
 {
@@ -308,6 +308,11 @@ bool GossipSelect_guard_orgrimmar(Player *player, Creature *_Creature, uint32 se
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_orgrimmar(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_orgrimmar()
 {
     Script *newscript;
@@ -316,6 +321,7 @@ void AddSC_guard_orgrimmar()
     newscript->Name="guard_orgrimmar";
     newscript->pGossipHello          = &GossipHello_guard_orgrimmar;
     newscript->pGossipSelect         = &GossipSelect_guard_orgrimmar;
+    newscript->GetAI = GetAI_guard_orgrimmar;
 
     m_scripts[nrscripts++] = newscript;
 }

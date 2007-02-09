@@ -35,14 +35,14 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
     boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 Yell_Timer;
-	uint32 PowerWordShield_Timer;
+    uint32 Yell_Timer;
+    uint32 PowerWordShield_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		Yell_Timer = 6000000;
-		PowerWordShield_Timer = 60000;
+        Yell_Timer = 6000000;
+        PowerWordShield_Timer = 60000;
 
         if (m_creature)
         {
@@ -57,13 +57,13 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			DoStartMeleeAttack(who);
-			
-			//Say our dialog
-			DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            DoStartMeleeAttack(who);
+            
+            //Say our dialog
+            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-			pTarget = who;
+            pTarget = who;
         }
     }
 
@@ -111,39 +111,39 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             //If we are low on hp Do sayings
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->m_currentSpell)
             {
-				//Yell_Timer
-				if (Yell_Timer < diff)
-				{
+                //Yell_Timer
+                if (Yell_Timer < diff)
+                {
 
-					DoYell(SAY_HEALTH1,LANG_UNIVERSAL,NULL);
-					DoPlaySoundToSet(m_creature,SOUND_HEALTH1);
-					return;
+                    DoYell(SAY_HEALTH1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_HEALTH1);
+                    return;
 
-				    //60 seconds until we should cast this agian
-				    Yell_Timer = 60000;
-				}else Yell_Timer -= diff;
+                    //60 seconds until we should cast this agian
+                    Yell_Timer = 60000;
+                }else Yell_Timer -= diff;
             }
-			
-			if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
-			{
-				//Yell_Timer
-				if (Yell_Timer < diff)
-				{
+            
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
+            {
+                //Yell_Timer
+                if (Yell_Timer < diff)
+                {
 
-					DoYell(SAY_HEALTH2,LANG_UNIVERSAL,NULL);
-					DoPlaySoundToSet(m_creature,SOUND_HEALTH2);
-					return;
+                    DoYell(SAY_HEALTH2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_HEALTH2);
+                    return;
 
-				    //60 seconds until we should cast this agian
-				    Yell_Timer = 6000000;
-				}else Yell_Timer -= diff;
-			}
+                    //60 seconds until we should cast this agian
+                    Yell_Timer = 6000000;
+                }else Yell_Timer -= diff;
+            }
             
             //PowerWordShield_Timer
             if (PowerWordShield_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_POWERWORDSHIELD);
+                DoCast(m_creature->getVictim(),SPELL_POWERWORDSHIELD);
 
                 //60 seconds until we should cast this agian
                 PowerWordShield_Timer = 60000;

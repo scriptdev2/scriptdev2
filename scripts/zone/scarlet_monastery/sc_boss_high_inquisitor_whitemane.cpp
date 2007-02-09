@@ -47,24 +47,24 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 Healing_Timer;
-	uint32 PowerWordShield_Timer;
+    uint32 Healing_Timer;
+    uint32 PowerWordShield_Timer;
     uint32 CrusaderStrike_Timer;
     uint32 HammerOfJustice_Timer;
-	uint32 HolySmite6_Timer;
-	uint32 HolyFire5_Timer;
-	uint32 MindBlast6_Timer;
+    uint32 HolySmite6_Timer;
+    uint32 HolyFire5_Timer;
+    uint32 MindBlast6_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		Healing_Timer = 80000;
-		PowerWordShield_Timer = 60000;
+        Healing_Timer = 80000;
+        PowerWordShield_Timer = 20000;
         CrusaderStrike_Timer = 40000;
         HammerOfJustice_Timer = 30000;
-		HolySmite6_Timer = 10000;
-		HolyFire5_Timer = 45000;
-		MindBlast6_Timer = 35000;
+        HolySmite6_Timer = 10000;
+        HolyFire5_Timer = 45000;
+        MindBlast6_Timer = 35000;
 
         if (m_creature)
         {
@@ -79,12 +79,12 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			DoStartMeleeAttack(who);
-			
-			//Say our dialog
+            DoStartMeleeAttack(who);
+            
+            //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
 
-			pTarget = who;
+            pTarget = who;
         }
     }
 
@@ -100,6 +100,9 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Say our dialog
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
@@ -119,6 +122,19 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             return;
         }
 
+        /*
+        //This is going to be a routine to make the resurrection event...
+        if (m_creature->isAlive && m_creature->isAlive)
+        {
+            m_creature->Relocate(1163.113370,1398.856812,32.527786,3.171014);
+
+            DoYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SPAWN);
+            DoCast(m_creature->getVictim(),SPELL_DEEPSLEEP);
+            DoCast(m-creature->GetGUID(51117),SPELL_SCARLETRESURRECTION)
+        }
+        */
+
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
@@ -132,31 +148,31 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             //If we are <75% hp cast healing spells at self and Mograine
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->m_currentSpell)
             {
-				
-				//Healing_Timer
-				if (Healing_Timer < diff)
-				{
+                
+                //Healing_Timer
+                if (Healing_Timer < diff)
+                {
 
-					DoCast(m_creature,SPELL_FLASHHEAL6);
-					return;
-	
-	                //80 seconds until we should cast this agian
-	                Healing_Timer = 80000;
-	            }else Healing_Timer -= diff;      
-				
-				if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
-				{
+                    DoCast(m_creature,SPELL_FLASHHEAL6);
+                    return;
+    
+                    //80 seconds until we should cast this agian
+                    Healing_Timer = 80000;
+                }else Healing_Timer -= diff;      
+                
+                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
+                {
 
-					if (Healing_Timer < diff)
-					{
-	
-						DoCast(m_creature,SPELL_RENEW);
-						return;
-	
-		                //80 seconds until we should cast this agian
-		                Healing_Timer = 40000;
-		            }else Healing_Timer -= diff;      
-				}
+                    if (Healing_Timer < diff)
+                    {
+    
+                        DoCast(m_creature,SPELL_RENEW);
+                        return;
+    
+                        //80 seconds until we should cast this agian
+                        Healing_Timer = 40000;
+                    }else Healing_Timer -= diff;      
+                }
                 return;
             }
             
@@ -164,7 +180,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             if (PowerWordShield_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_POWERWORDSHIELD);
+                DoCast(m_creature->getVictim(),SPELL_POWERWORDSHIELD);
 
                 //60 seconds until we should cast this agian
                 PowerWordShield_Timer = 60000;
@@ -174,7 +190,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             if (CrusaderStrike_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
+                DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
 
                 //40 seconds until we should cast this agian
                 CrusaderStrike_Timer = 40000;

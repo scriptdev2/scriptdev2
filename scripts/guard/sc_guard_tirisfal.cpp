@@ -15,6 +15,7 @@
 */
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_tirisfal(Player *player, Creature *_Creature)
 {
@@ -213,6 +214,11 @@ bool GossipSelect_guard_tirisfal(Player *player, Creature *_Creature, uint32 sen
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_tirisfal(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_tirisfal()
 {
     Script *newscript;
@@ -221,6 +227,7 @@ void AddSC_guard_tirisfal()
     newscript->Name="guard_tirisfal";
     newscript->pGossipHello          = &GossipHello_guard_tirisfal;
     newscript->pGossipSelect         = &GossipSelect_guard_tirisfal;
+    newscript->GetAI = GetAI_guard_tirisfal;
 
     m_scripts[nrscripts++] = newscript;
 }

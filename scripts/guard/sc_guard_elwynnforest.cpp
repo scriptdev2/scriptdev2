@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_elwynnforest(Player *player, Creature *_Creature)
 {
@@ -239,6 +240,11 @@ bool GossipSelect_guard_elwynnforest(Player *player, Creature *_Creature, uint32
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_elwynnforest(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_elwynnforest()
 {
     Script *newscript;
@@ -247,6 +253,7 @@ void AddSC_guard_elwynnforest()
     newscript->Name="guard_elwynnforest";
     newscript->pGossipHello          = &GossipHello_guard_elwynnforest;
     newscript->pGossipSelect         = &GossipSelect_guard_elwynnforest;
+    newscript->GetAI = GetAI_guard_elwynnforest;
 
     m_scripts[nrscripts++] = newscript;
 }

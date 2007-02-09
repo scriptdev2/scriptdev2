@@ -14,8 +14,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_undercity(Player *player, Creature *_Creature)
 {
@@ -289,6 +289,11 @@ bool GossipSelect_guard_undercity(Player *player, Creature *_Creature, uint32 se
  *				End of GOSSIP_MENU section
  *******************************************************/
 
+CreatureAI* GetAI_guard_undercity(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_undercity()
 {
     Script *newscript;
@@ -297,6 +302,7 @@ void AddSC_guard_undercity()
     newscript->Name="guard_undercity";
     newscript->pGossipHello          = &GossipHello_guard_undercity;
     newscript->pGossipSelect         = &GossipSelect_guard_undercity;
+    newscript->GetAI = GetAI_guard_undercity;
 
     m_scripts[nrscripts++] = newscript;
 }

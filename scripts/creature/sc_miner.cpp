@@ -20,26 +20,26 @@
 
 struct MANGOS_DLL_DECL MinerAI : public ScriptedAI
 {
-	MinerAI(Creature *c) : ScriptedAI(c) {}
-	
-	void MoveInLineOfSight(Unit *who)
-	{
+    MinerAI(Creature *c) : ScriptedAI(c) {}
+    
+    void MoveInLineOfSight(Unit *who)
+    {
         //If a player walks into LOS we should begin our mining animation
         if (who->GetTypeId() == TYPEID_PLAYER)
             m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 233);
-	}
+    }
 };
 
 CreatureAI* GetAI_Miner(Creature *_Creature)
 {
-	return new MinerAI (_Creature);
+    return new MinerAI (_Creature);
 }
 
 void AddSC_miner()
 {
-	Script *newscript;
-	newscript = new Script;
-	newscript->Name="miner";
-	newscript->GetAI = GetAI_Miner;
-	m_scripts[nrscripts++] = newscript;
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="miner";
+    newscript->GetAI = GetAI_Miner;
+    m_scripts[nrscripts++] = newscript;
 }

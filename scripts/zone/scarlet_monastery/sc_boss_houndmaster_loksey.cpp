@@ -36,7 +36,7 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
     void Reset()
     {
         pTarget = NULL;
-		Enrage_Timer = 6000000;
+        Enrage_Timer = 6000000;
 
         if (m_creature)
         {
@@ -51,16 +51,16 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			DoStartMeleeAttack(who);
-			
-			//Say our dialog
-			DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            DoStartMeleeAttack(who);
+            
+            //Say our dialog
+            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-			//Cast
-			DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
+            //Cast
+            DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
 
-			pTarget = who;
+            pTarget = who;
         }
     }
 
@@ -76,6 +76,10 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Say our dialog
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
@@ -106,20 +110,14 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
             }
 
             //If we are <10% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpell)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpell && Enrage_Timer < diff)
             {
-				//Enrage_Timer
-				if (Enrage_Timer < diff)
-				{
+                DoCast(m_creature,SPELL_ENRAGE);
 
-					DoCast(m_creature,SPELL_ENRAGE);
-				    return;
+                //shouldn't cast this agian
+                Enrage_Timer = 900000;
 
-				    //6000 seconds until we should cast this agian
-				    Enrage_Timer = 6000000;
-				}else Enrage_Timer -= diff;
-				
-            }
+            }else Enrage_Timer -= diff;
             
             //If we are within range melee the target
             if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))

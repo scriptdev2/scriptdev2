@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_durotar(Player *player, Creature *_Creature)
 {
@@ -210,6 +211,11 @@ bool GossipSelect_guard_durotar(Player *player, Creature *_Creature, uint32 send
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_durotar(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_durotar()
 {
     Script *newscript;
@@ -218,6 +224,7 @@ void AddSC_guard_durotar()
     newscript->Name="guard_durotar";
     newscript->pGossipHello          = &GossipHello_guard_durotar;
     newscript->pGossipSelect         = &GossipSelect_guard_durotar;
+    newscript->GetAI = GetAI_guard_durotar;
 
     m_scripts[nrscripts++] = newscript;
 }

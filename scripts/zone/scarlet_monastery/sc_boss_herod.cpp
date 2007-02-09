@@ -47,28 +47,30 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     boss_herodAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
-	uint32 Enrage_Timer;
+    uint32 Yell_Timer;
+    uint32 Enrage_Timer;
     uint32 Cleave_Timer;
-	uint32 Whirlwind_Timer;
+    uint32 Whirlwind_Timer;
     uint32 SunderArmor_Timer;
     uint32 Rend_Timer;
-	uint32 ThunderClap_Timer;
-	uint32 Slam_Timer;
-	uint32 Fireball11_Timer;
-	uint32 ConeOfCold5_Timer;
+    uint32 ThunderClap_Timer;
+    uint32 Slam_Timer;
+    uint32 Fireball11_Timer;
+    uint32 ConeOfCold5_Timer;
 
     void Reset()
     {
         pTarget = NULL;
-		Enrage_Timer = 6000000;
-        Cleave_Timer = 30000;
-		Whirlwind_Timer = 160000;
+        Yell_Timer = 58000;
+        Whirlwind_Timer = 60000;
+        Enrage_Timer = 0;
+        Cleave_Timer = 15000;
         SunderArmor_Timer = 40000;
-        Rend_Timer = 45000;
-		ThunderClap_Timer = 45000;
-		Slam_Timer = 30000;
-		Fireball11_Timer = 180000;
-		ConeOfCold5_Timer = 190000;
+        Rend_Timer = 25000;
+        ThunderClap_Timer = 25000;
+        Slam_Timer = 20000;
+        Fireball11_Timer = 30000;
+        ConeOfCold5_Timer = 40000;
 
         if (m_creature)
         {
@@ -83,12 +85,12 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
-			//Say our dialog
+            //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-			//Activate Berserker Stance
-			DoCast(m_creature,SPELL_BERSERKERSTANCE);
+            //Activate Berserker Stance
+            DoCast(m_creature,SPELL_BERSERKERSTANCE);
 
             //Switch between 2 different charge methods
             switch (rand()%2)
@@ -103,7 +105,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 }
 
             DoStartMeleeAttack(who);
-			
+            
             pTarget = who;
         }
     }
@@ -120,6 +122,18 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Switch between 2 different charge methods
+                switch (rand()%2)
+                    {
+                    case 0:
+                        DoCast(m_creature,SPELL_RUSHINGCHARGE);
+                        break;
+                
+                    case 1:
+                        DoCast(m_creature,SPELL_RUSHINGCHARGE1);
+                        break;
+                    }
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
@@ -149,46 +163,41 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 return;
             }
 
-            //If we are <5% hp goes Enraged
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 5 && !m_creature->m_currentSpell)
+            //If we are <10% hp goes Enraged
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpell && Enrage_Timer < diff)
             {
+                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_ENRAGE);
 
-				//Enrage_Timer
-				if (Enrage_Timer < diff)
-				{
+                DoCast(m_creature,SPELL_ENRAGE);
 
-					DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-					DoPlaySoundToSet(m_creature,SOUND_ENRAGE);
-					DoCast(m_creature,SPELL_ENRAGE);
-					return;
-
-				    //6000 seconds until we should cast this agian
-				    Enrage_Timer = 6000000;
-				}else Enrage_Timer -= diff;
-
+                //Shouldn't cast this agian
+                Enrage_Timer = diff;
             }
             
             //Cleave_Timer
             if (Cleave_Timer < diff)
             {
                 //Cast
-				DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
                 //30 seconds until we should cast this agian
-                Cleave_Timer = 30000;
+                Cleave_Timer = 15000;
             }else Cleave_Timer -= diff;
 
-            //Whirlwind_Timer
+            //Yelling and Whirlwind casting
+            if (Yell_Timer < diff)
+            {
+                //Say Whirlwind monologe
+                DoYell(SAY_WHIRLWIND,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_WHIRLWIND);
+                Yell_Timer = 30000;
+            }else Yell_Timer -= diff;
+
             if (Whirlwind_Timer < diff)
             {
-				//Say Whirlwind monologe
-				DoYell(SAY_WHIRLWIND,LANG_UNIVERSAL,NULL);
-				DoPlaySoundToSet(m_creature,SOUND_WHIRLWIND);
-
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
-
-                //160 seconds until we should cast this agian
                 Whirlwind_Timer = 30000;
             }else Whirlwind_Timer -= diff;
 
@@ -209,7 +218,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_REND);
 
                 //45 seconds until we should cast this agian
-                Rend_Timer = 45000;
+                Rend_Timer = 25000;
             }else Rend_Timer -= diff;
 
             //ThunderClap_Timer
@@ -219,7 +228,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
 
                 //45 seconds until we should cast this agian
-                ThunderClap_Timer = 45000;
+                ThunderClap_Timer = 20000;
             }else ThunderClap_Timer -= diff;
 
             //Slam_Timer
@@ -229,7 +238,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_SLAM);
 
                 //30 seconds until we should cast this agian
-                Slam_Timer = 30000;
+                Slam_Timer = 20000;
             }else Slam_Timer -= diff;
 
             //Fireball11_Timer
@@ -238,8 +247,8 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_FIREBALL11);
 
-                //180 seconds until we should cast this agian
-                Fireball11_Timer = 180000;
+                //30 seconds until we should cast this agian
+                Fireball11_Timer = 30000;
             }else Fireball11_Timer -= diff;
 
             //ConeOfCold5_Timer
@@ -249,7 +258,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CONEOFCOLD5);
 
                 //190 seconds until we should cast this agian
-                ConeOfCold5_Timer = 190000;
+                ConeOfCold5_Timer = 40000;
             }else ConeOfCold5_Timer -= diff;
 
             //If we are within range melee the target

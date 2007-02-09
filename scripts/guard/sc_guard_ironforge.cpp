@@ -15,6 +15,7 @@
 */
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
 bool GossipHello_guard_ironforge(Player *player, Creature *_Creature)
 {
@@ -299,6 +300,11 @@ bool GossipSelect_guard_ironforge(Player *player, Creature *_Creature, uint32 se
  *				End of GOSSIP_MENU
  *******************************************************/
 
+CreatureAI* GetAI_guard_ironforge(Creature *_Creature)
+{
+    return new guardAI (_Creature);
+}
+
 void AddSC_guard_ironforge()
 {
     Script *newscript;
@@ -307,6 +313,7 @@ void AddSC_guard_ironforge()
     newscript->Name="guard_ironforge";
     newscript->pGossipHello          = &GossipHello_guard_ironforge;
     newscript->pGossipSelect         = &GossipSelect_guard_ironforge;
+    newscript->GetAI = GetAI_guard_ironforge;
 
     m_scripts[nrscripts++] = newscript;
 }
