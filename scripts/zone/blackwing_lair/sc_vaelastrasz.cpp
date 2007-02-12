@@ -48,7 +48,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
     boss_vaelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     Unit *PlayerHolder;
     uint32 SpeachTimer;
     uint32 SpeachNum;
@@ -59,10 +58,11 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     uint32 BurningAdrenalineTank_Timer;
     uint32 TailSwipe_Timer;
     bool HasYelled;
+    bool DoingSpeach;
+    bool InCombat;
 
     void Reset()
     {
-        pTarget = NULL;
         PlayerHolder = NULL;
         SpeachTimer = NULL;
         SpeachNum = 0;
@@ -73,13 +73,11 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         FireNova_Timer = 5000;
         TailSwipe_Timer = 20000;
         HasYelled = false;
+        DoingSpeach = false;
+        InCombat = false;
 
         if (m_creature)
-        {
-            m_creature->RemoveAllAuras();
-            DoStopAttack();
-            DoGoHome();
-        }
+            EnterEvadeMode();
     }
 
     void BeginSpeach(Unit* target)
@@ -91,6 +89,16 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         DoYell(SAY_LINE1,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_LINE1);
         SpeachTimer = 8000;
+        DoingSpeach = true;
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        if (rand()%5)
+            return;
+
+        DoYell(SAY_KILLTARGET,LANG_UNIVERSAL,victim);
+        DoPlaySoundToSet(m_creature,SOUND_KILLTARGET);
     }
 
     void AttackStart(Unit *who)
@@ -101,12 +109,15 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {    
             //Cast Essence of the Red when the fight begins.
-            DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED);          
+            if (!InCombat)
+            {
+                DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED); 
+                InCombat = true;
+            }
             
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
 
-            pTarget = who;
         }
     }
 
@@ -115,7 +126,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         if (!who)
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             if ( m_creature->getVictim() == NULL)
             {
@@ -123,12 +134,15 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Cast Essence of the Red when the fight begins.
-                DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED);  
+                if (!InCombat)
+                {
+                    DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED); 
+                    InCombat = true;
+                } 
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
-                pTarget = who;
             }
         }
     }
@@ -137,14 +151,14 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if (m_creature->isAlive() && !m_creature->getVictim())
         {
             Reset();
             return;
         }
 
         //Speach
-        if (SpeachTimer)
+        if (DoingSpeach)
             if (SpeachTimer < diff)
             {
                 switch (SpeachNum)
@@ -166,6 +180,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                 case 2:
                 default:
                     m_creature->setFaction(24);
+                    m_creature->ModifyHealth(int(m_creature->GetMaxHealth()*.3));
                     if (PlayerHolder)
                     {
                         DoStartMeleeAttack(PlayerHolder);
@@ -173,6 +188,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     }
 
                     SpeachTimer = 0;
+                    DoingSpeach = false;
                     break;
                 }
             }else SpeachTimer -= diff;
@@ -181,12 +197,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
             
             // Yell if hp lower than 15%
             if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15 && !HasYelled)
@@ -269,15 +279,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-            
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                //Say our dialog
-                DoYell(SAY_KILLTARGET,LANG_UNIVERSAL,pTarget);
-                DoPlaySoundToSet(m_creature,SOUND_KILLTARGET);
-                Reset();
             }
         }
     }

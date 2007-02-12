@@ -29,7 +29,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 {
     boss_magmadarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 Frenzy_Timer;
     uint32 LavaBreath_Timer;
     uint32 Panic_Timer;
@@ -37,7 +36,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 
     void Reset()
     {
-        pTarget = NULL;
         Frenzy_Timer = 45000;       //Just a guess, been to long since I've killed Magmadar
         LavaBreath_Timer = 7000;
         Panic_Timer = 30000;
@@ -59,8 +57,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-
-            pTarget = who;
         }
     }
 
@@ -69,7 +65,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -79,7 +75,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
 
-                pTarget = who;
             }
         }
     }
@@ -88,7 +83,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -97,12 +92,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
             
             //Frenzy_Timer
             if (Frenzy_Timer < diff)

@@ -31,7 +31,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 {
     boss_high_inquisitor_fairbanksAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 Healing_Timer;
     uint32 Sleep2_Timer;
     uint32 Smite_Timer;
@@ -42,7 +41,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 
     void Reset()
     {
-        pTarget = NULL;
         Healing_Timer = 300;
         Sleep2_Timer = 45000;
         Smite_Timer = 30000;
@@ -52,9 +50,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         MindBlast5_Timer = 20000;
 
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
     }
 
     void AttackStart(Unit *who)
@@ -65,7 +61,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-            pTarget = who;
         }
     }
 
@@ -76,7 +71,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 
         m_creature->HandleEmoteCommand(EMOTE_STATE_SLEEP);
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -86,8 +81,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                pTarget = who;
             }
         }
     }
@@ -96,7 +89,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -105,13 +98,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
-
             //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpell && Healing_Timer < diff)
             {

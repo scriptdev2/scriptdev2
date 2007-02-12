@@ -164,6 +164,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at World update tick
     void UpdateAI(const uint32);
 
+    void JustDied(Unit*){}
+
+    void KilledUnit(Unit*){}
+
     Creature* m_creature;
 
     //Check condition for attack stop

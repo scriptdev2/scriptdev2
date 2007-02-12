@@ -68,7 +68,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     uint32 Beserk_Timer; //Timer until we go into Beserk (enraged) mode
     uint32 Phase;        //The current battle phase we are in
     uint32 Phase_Timer;   //Timer until phase transition
-    Unit* pTarget;       //Pointer to our last target for combat loss check
 
     //*** CUSTOM FUNCTION ***
     //This resets the creature to before the fight began
@@ -81,13 +80,9 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         Spell_3_Timer = 19000;  //19 seconds
         Beserk_Timer = 120000;  //2 minutes
 
-        pTarget = NULL;
-
         //Return to home position
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
     }
 
     //*** HANDLED FUNCTION *** 
@@ -104,7 +99,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         {
             //Begin attack
             DoStartMeleeAttack(who);
-            pTarget = who;
 
             //Say some stuff
             DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
@@ -119,7 +113,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -131,8 +125,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 if (m_creature->IsWithinDist(who, ATTACK_DIST))
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
-
-                pTarget = who;
 
                 //Say some stuff
                 DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
@@ -147,7 +139,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -202,8 +194,8 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawnpoint
-            if (needToStop() || CheckTether())
+            //Check if we should stop attacking because our victim is no longer in range or we are to far from spawnpoint
+            if (CheckTether())
             {
                 Reset();
                 return;

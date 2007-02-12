@@ -27,22 +27,18 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
 {
     boss_baron_geddonAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 Inferno_Timer;
     uint32 IgniteMana_Timer;
     uint32 LivingBomb_Timer;
 
     void Reset()
     {
-        pTarget = NULL;
         Inferno_Timer = 45000;      //These times are probably wrong
         IgniteMana_Timer = 30000;
         LivingBomb_Timer = 35000;
 
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
     }
 
     void AttackStart(Unit *who)
@@ -55,7 +51,6 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
 
-            pTarget = who;
         }
     }
 
@@ -64,7 +59,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -73,8 +68,6 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-
-                pTarget = who;
             }
         }
     }
@@ -83,7 +76,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -92,12 +85,6 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
 
             //If we are <2% hp cast Armageddom
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->m_currentSpell)

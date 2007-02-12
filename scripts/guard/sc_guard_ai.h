@@ -25,20 +25,16 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 {
     guardAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
 
     void Reset()
     {
-        pTarget = NULL;
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
 
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
     }
 
     void AttackStart(Unit *who)
@@ -52,8 +48,6 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
                 DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-
-            pTarget = who;
         }
     }
 
@@ -62,7 +56,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && (m_creature->IsHostileTo(who) || who->IsHostileToPlayer()))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -74,8 +68,6 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
                 if (m_creature->IsWithinDist(who, ATTACK_DIST))
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
-
-                pTarget = who;
             }
         }
     }
@@ -89,7 +81,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -120,8 +112,8 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable or we are to far from spawn point
-            if (needToStop() || CheckTether())
+            //Check if we should stop attacking because our victim is no longer in range or we are to far from spawn point
+            if (CheckTether())
             {
                 Reset();
                 return;
@@ -181,7 +173,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
                         //If we are currently moving stop us and set the movement generator
                         if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
                         {
-                            (*m_creature)->Clear();
+                            (*m_creature)->Clear(false);
                             (*m_creature)->Idle();
                         }
 
@@ -201,7 +193,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
                     {
                         //Cancel our current spell and then mutate new movement generator
                         m_creature->InterruptSpell();
-                        (*m_creature)->Clear();
+                        (*m_creature)->Clear(false);
                         (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                     }
                 }

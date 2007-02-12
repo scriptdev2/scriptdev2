@@ -580,10 +580,10 @@ void ScriptedAI::AttackStart(Unit* who)
 void ScriptedAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a current target
-    if( m_creature->isAlive() && (m_creature->SelectHostilTarget() || m_creature->getVictim()))
+    if( m_creature->isAlive() && m_creature->SelectHostilTarget())
     {
-        //Check if we should stop attacking because our victim is no longer attackable
-        if (needToStop() || CheckTether())
+        //Check if we should stop attacking because our victim is no longer in range
+        if (CheckTether())
         {
             EnterEvadeMode();
             return;
@@ -715,7 +715,7 @@ bool ScriptedAI::needToStop() const
     if (!m_creature->getVictim() || !m_creature->isAlive())
         return true;
 
-    return ( !m_creature->getVictim()->isTargetableForAttack());
+    return false;
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)

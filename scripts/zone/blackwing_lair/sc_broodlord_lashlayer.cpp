@@ -27,7 +27,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 {
     boss_broodlordAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 Cleave_Timer;
     uint32 BlastWave_Timer;
     uint32 MortalStrike_Timer;
@@ -35,18 +34,13 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
     void Reset()
     {
-        pTarget = NULL;
         Cleave_Timer = 25000;      //These times are probably wrong
         BlastWave_Timer = 35000;
         MortalStrike_Timer = 15000;
         KnockBack_Timer = 25000;
 
         if (m_creature)
-        {
-            m_creature->RemoveAllAuras();
-            DoStopAttack();
-            DoGoHome();
-        }
+            EnterEvadeMode();
     }
 
     void AttackStart(Unit *who)
@@ -58,8 +52,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-
-            pTarget = who;
         }
     }
 
@@ -68,7 +60,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         if (!who)
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             if ( m_creature->getVictim() == NULL)
             {
@@ -77,8 +69,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                pTarget = who;
             }
         }
     }
@@ -87,7 +77,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -95,14 +85,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
-            
+        {            
             //Cleave_Timer
             if (Cleave_Timer < diff)
             {

@@ -51,8 +51,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 reset_timer;
     uint32 phase;
 
-    Unit* pTarget;
-
     void Reset()
     {
         swingcounter = 0;
@@ -64,15 +62,22 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         whelpspawn_timer = 45000;
         bellowingroar_timer = 0;
         phase = 1;
-        pTarget = NULL;
         
         if (m_creature)
         {
             m_creature->InterruptSpell();
             m_creature->SetHover(false);
-            (*m_creature)->Clear();
+            (*m_creature)->Clear(false);
             EnterEvadeMode();
         }
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        if (rand()%5)
+            return;
+
+        DoYell(SAY_KILL,LANG_UNIVERSAL,NULL);
     }
 
     void AttackStart(Unit *who)
@@ -87,7 +92,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
             //Initial aggro speach
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            pTarget = who;
         }
     }
 
@@ -96,7 +100,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -109,7 +113,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 //Initial aggro speach
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                pTarget = who;
             }
         }
     }
@@ -118,7 +121,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -126,14 +129,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
-            
+        {          
             //Cast phase 1 spells in phase 1 and phase 3
             if (phase == 1 || phase == 3)
             {
@@ -262,7 +258,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 phase = 2;
                 m_creature->InterruptSpell();
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                (*m_creature)->Clear();
+                (*m_creature)->Clear(false);
                 (*m_creature)->Idle();
                 DoCast(m_creature,11010);//hover?
                 m_creature->SetHover(true);
@@ -278,7 +274,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                 m_creature->SetHover(false);
-                (*m_creature)->Clear();
+                (*m_creature)->Clear(false);
                 (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                 DoYell(SAY_PHASE_3_TRANS,LANG_UNIVERSAL,NULL);
             }

@@ -28,7 +28,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 {
     boss_sulfuronAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 DemoralizingShout_Timer;
     uint32 Inspire_Timer;
     uint32 Knockdown_Timer;
@@ -36,16 +35,13 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 
     void Reset()
     {
-        pTarget = NULL;
         DemoralizingShout_Timer = 25000;      //These times are probably wrong
         Inspire_Timer = 30000;
         Knockdown_Timer = 20000;
         Flamespear_Timer = 15000;
 
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
     }
 
     void AttackStart(Unit *who)
@@ -57,8 +53,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-
-            pTarget = who;
         }
     }
 
@@ -67,7 +61,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -76,8 +70,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-
-                pTarget = who;
             }
         }
     }
@@ -86,7 +78,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if ((!m_creature->SelectHostilTarget() || !m_creature->getVictim()) && pTarget)
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -95,13 +87,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
-            
             //DemoralizingShout_Timer
             if (DemoralizingShout_Timer < diff)
             {

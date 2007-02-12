@@ -27,26 +27,51 @@
 #define SAY_AGGRO       "Reckless mortals, none may challenge the sons of the living flame!"
 #define SOUND_AGGRO     8035
 
+#define SAY_SPAWN       "The runes of warding have been destroyed! Hunt down the infedels my bretheren."
+#define SOUND_SPAWN     8039
+
+#define SAY_DEFEAT      "Impossible! Stay your attack mortals! I submitt! I submitt! Brashly you have come to rest the secrets of the living flame. You will soon regret the recklessness of your quest. I go now to summon the lord whos house this is. Should you seek an audiance with him your paltry lives will surly be forfit. Nevertheless seek out his lair if you dare!"
+#define SOUND_DEFEAT    8038
+
+#define SAY_KILL        "Ashes to Ashes!"
+#define SOUND_KILL      8037
+
+#define SAY_SPECIAL     "Burn mortals! Burn for this transgression!"
+#define SOUND_SPECIAL   8036
+
+#define SAY_SUMMON      "Behold Ragnaros, the Firelord! He who was ancient when this world was young! Bow before him, mortals! Bow before your ending!"
+#define SOUND_SUMMON    8040
+
+#define SAY_ARRIVAL1    "These mortal infidels, my lord! They have invaded your sanctum, and seek to steal your secrets!"
+#define SOUND_ARRIVAL1  8041
+
 struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 {
     boss_majordomoAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit *pTarget;
     uint32 MagicReflection_Timer;
     uint32 DamageReflection_Timer;
     uint32 Blastwave_Timer;
+    bool InCombat;
 
     void Reset()
     {
-        pTarget = NULL;
         MagicReflection_Timer = 60000;      //Damage reflection first so we alternate
         DamageReflection_Timer = 30000;
         Blastwave_Timer = 10000;
+        InCombat = false;
 
         if (m_creature)
-        {
             EnterEvadeMode();
-        }
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        if (rand()%5)
+            return;
+
+        DoYell(SAY_KILL,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_KILL);
     }
 
     void AttackStart(Unit *who)
@@ -60,10 +85,12 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
             DoStartMeleeAttack(who);
 
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-
-            pTarget = who;
+            if (!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 
@@ -72,7 +99,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -80,9 +107,14 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                if (!InCombat)
+                {
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                    InCombat = true;
+                }
 
-                pTarget = who;
+                DoStartMeleeAttack(who);
             }
         }
     }
@@ -91,7 +123,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (m_creature->isAlive() && pTarget && !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -100,12 +132,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                Reset();
-                return;
-            }
 
             //Cast Ageis if less than 50% hp
             if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
@@ -152,12 +178,6 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-            
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                Reset();
             }
         }
     }
