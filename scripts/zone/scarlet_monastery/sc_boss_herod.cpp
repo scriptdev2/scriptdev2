@@ -56,6 +56,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     uint32 Slam_Timer;
     uint32 Fireball11_Timer;
     uint32 ConeOfCold5_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -69,6 +70,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         Slam_Timer = 20000;
         Fireball11_Timer = 30000;
         ConeOfCold5_Timer = 40000;
+        InCombat = false;
 
        if (m_creature)
             EnterEvadeMode();
@@ -101,6 +103,8 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 }
 
             DoStartMeleeAttack(who);
+
+            InCombat = true;
         }
     }
 
@@ -131,6 +135,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -139,7 +144,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

@@ -18,7 +18,7 @@
 
 // **** This script is still under Developement ****
 
-#define SPELL_POLYMORPH	            12829
+#define SPELL_POLYMORPH	            12826
 #define SPELL_AOESILENCE            8988
 #define SPELL_ARCANEEXPLOSION3      8438
 #define SPELL_ARCANEEXPLOSION4      8439
@@ -48,6 +48,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     uint32 Blink_Timer;
     uint32 Fireball_Timer;
     uint32 ManaShield4_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -61,6 +62,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         Blink_Timer = 40000;
         Fireball_Timer = 6000;
         ManaShield4_Timer = 70000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -81,6 +83,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            InCombat = true;
 
         }
     }
@@ -104,6 +107,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -112,7 +116,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

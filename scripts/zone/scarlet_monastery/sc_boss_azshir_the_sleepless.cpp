@@ -20,7 +20,6 @@
 
 #define SPELL_CALLOFTHEGRAVE        17831
 #define SPELL_TERRIFY			    7399
-#define SPELL_DAZED					1604
 #define SPELL_SOULSIPHON		    7290
 
 struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
@@ -30,12 +29,14 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
     uint32 Terrify_Timer;
+    bool InCombat;
 
     void Reset()
     {
         SoulSiphon_Timer = 1;
         CallOftheGrave_Timer = 30000;
         Terrify_Timer = 20000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -49,9 +50,8 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                DoStartMeleeAttack(who);
-            else DoCast(m_creature->getVictim(),SPELL_DAZED);
+            DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -70,6 +70,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -78,7 +79,7 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

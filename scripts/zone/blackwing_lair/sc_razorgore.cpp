@@ -21,6 +21,11 @@
 
 #include "../../sc_defines.h"
 
+#define SAY_NPC_DEATH "If I fall into the abyss I'll take all of you mortals with me..."
+#define SOUND_NPC_DEATH 8278
+#define SAY_EGGS_BREAK3 "No! Not another one! I'll have your heads for this atrocity. "
+#define SOUND_EGGS_BREAK3 8277
+
 #define SPELL_CLEAVE                20691
 #define SPELL_WARSTOMP              27758       //Warstomp causes 1k dmg but doesn't knockback
 #define SPELL_FIREBALLVOLLEY        29958       //Our fireball doesn't leave a dot
@@ -34,6 +39,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     uint32 WarStomp_Timer;
     uint32 FireballVolley_Timer;
     uint32 Conflagration_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -41,6 +47,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         WarStomp_Timer = 35000;
         FireballVolley_Timer = 20000;
         Conflagration_Timer = 30000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -55,6 +62,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -72,6 +80,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -80,7 +89,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

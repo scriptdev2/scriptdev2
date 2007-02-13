@@ -19,7 +19,8 @@
 
 // **** This script is still under Developement ****
 
-#define GENERIC_CREATURE_COOLDOWN 5000
+#define GENERIC_CREATURE_COOLDOWN   5000
+#define GENERIC_CREATURE_ROOTSELF   23973
 
 struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 {
@@ -27,11 +28,13 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
+    bool InCombat;
 
     void Reset()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -48,6 +51,8 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
                 DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
+
+            InCombat = true;
         }
     }
 
@@ -69,6 +74,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
 
+                InCombat = true;
             }
         }
     }
@@ -82,14 +88,14 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;
         }
 
         //Buff timer (only buff when we are alive and not in combat
-        if (m_creature->isAlive() && !m_creature->getVictim())
+        if (!InCombat && m_creature->isAlive())
             if (BuffTimer < diff )
             {
                 //Find a spell that targets friendly and applies an aura (these are generally buffs)
@@ -175,7 +181,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
                         {
                             (*m_creature)->Clear(false);
-                            (*m_creature)->MovementExpired();
+                            //(*m_creature)->MovementExpired();
                             (*m_creature)->Idle();
                         }
 
@@ -196,7 +202,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         //Cancel our current spell and then mutate new movement generator
                         m_creature->InterruptSpell();
                         (*m_creature)->Clear(false);
-                        (*m_creature)->MovementExpired();
+                        //(*m_creature)->MovementExpired();
                         (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                     }
                 }

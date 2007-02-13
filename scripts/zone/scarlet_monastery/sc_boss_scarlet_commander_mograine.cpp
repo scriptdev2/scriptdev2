@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     uint32 Consecration3_Timer;
     uint32 BlessingOfWisdom_Timer;
     uint32 BlessingOfProtection3_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -57,6 +58,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         Consecration3_Timer = 30000;
         BlessingOfWisdom_Timer = 45000;
         BlessingOfProtection3_Timer = 45000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -75,6 +77,8 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+
+            InCombat = true;
         }
     }
 
@@ -93,6 +97,8 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+
+                InCombat = true;
             }
         }
     }
@@ -101,7 +107,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

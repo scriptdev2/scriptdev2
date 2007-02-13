@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

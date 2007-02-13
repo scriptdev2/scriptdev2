@@ -31,10 +31,12 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
     boss_houndmaster_lokseyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Enrage_Timer;
+    bool InCombat;
 
     void Reset()
     {
         Enrage_Timer = 6000000;
+        InCombat = true;
 
         if (m_creature)
             EnterEvadeMode();
@@ -55,6 +57,8 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
             //Cast
             DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
+
+            InCombat = true;
         }
     }
 
@@ -77,6 +81,8 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+
+                InCombat = true;
             }
         }
     }
@@ -85,7 +91,7 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

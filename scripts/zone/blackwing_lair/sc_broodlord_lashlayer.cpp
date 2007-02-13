@@ -18,10 +18,15 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_CLEAVE        20691
+#define SPELL_CLEAVE            20691
 #define SPELL_BLASTWAVE         11130
-#define SPELL_MORTALSTRIKE         24573
+#define SPELL_MORTALSTRIKE      24573
 #define SPELL_KNOCKBACK         25778
+
+#define SAY_AGGRO               "None of your kind should be here! You've doomed only yourselves!"
+#define SAY_LEASH               "Clever Mortals but I am not so easily lured away from my sanctum!"
+#define SOUND_AGGRO             8286
+#define SOUND_LEASH             8287
 
 struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 {
@@ -31,6 +36,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     uint32 BlastWave_Timer;
     uint32 MortalStrike_Timer;
     uint32 KnockBack_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -38,6 +44,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         BlastWave_Timer = 35000;
         MortalStrike_Timer = 15000;
         KnockBack_Timer = 25000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -52,6 +59,13 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+
+            if (!InCombat)
+            {
+                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 
@@ -69,6 +83,13 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+
+                if (!InCombat)
+                {
+                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                    InCombat = true;
+                }
             }
         }
     }
@@ -77,7 +98,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;
@@ -86,6 +107,16 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {            
+
+            //If they try to kite us we evade back
+            if (CheckTether())
+            {
+                DoYell(SAY_LEASH,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_LEASH);
+                Reset();
+                return;
+            }
+
             //Cleave_Timer
             if (Cleave_Timer < diff)
             {
@@ -131,17 +162,10 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    
+                { 
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-            
-            //If we are still alive and we lose our victim it means we killed them
-            if(m_creature->isAlive() && !m_creature->getVictim())
-            {
-                Reset();
             }
         }
     }

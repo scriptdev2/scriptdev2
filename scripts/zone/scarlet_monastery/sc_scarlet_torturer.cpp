@@ -29,10 +29,12 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
     scarlet_torturerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Immolate_Timer;
+    bool InCombat;
 
     void Reset()
     {
         Immolate_Timer = 45000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -46,6 +48,7 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
+            InCombat = true;
             
             //Switch between 3 different aggro saying
             switch (rand()%3)
@@ -96,6 +99,8 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+
+                InCombat = true;
             }
         }
     }
@@ -104,7 +109,7 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

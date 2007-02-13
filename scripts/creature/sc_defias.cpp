@@ -35,11 +35,13 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
+    bool InCombat;
     
     void Reset()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
+        InCombat = false;
         
         if (m_creature)
             EnterEvadeMode();
@@ -62,6 +64,8 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 if (m_creature->IsWithinDist(who, ATTACK_DIST))
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
+
+                InCombat = true;
 
                 //30% chance to Play Aggro sound if the attacker is a player
                 if (who->GetTypeId() == TYPEID_PLAYER && rand()%3 == 0)
@@ -101,14 +105,14 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
 
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;
         }
 
         //Buff timer (only buff when we are alive and not in combat
-        if (m_creature->isAlive() && !m_creature->getVictim())
+        if (m_creature->isAlive() && !InCombat)
             if (BuffTimer < diff )
             {
                 //Find a spell that targets friendly and applies an aura (these are generally buffs)

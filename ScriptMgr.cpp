@@ -88,6 +88,13 @@ extern void AddSC_travelmaster();
 //Barrens
 //Blackfathom Depths
 //Blackwing lair
+extern void AddSC_boss_razorgore();
+extern void AddSC_boss_vael();
+extern void AddSC_boss_broodlord();
+extern void AddSC_boss_firemaw();
+extern void AddSC_boss_ebonroc();
+extern void AddSC_boss_flamegor();
+
 //Blasted lands
 //Burning steppes
 //Darkshore
@@ -255,6 +262,13 @@ void ScriptsInit()
     //Barrens
     //Blackfathom Depths
     //Blackwing lair
+    AddSC_boss_razorgore();
+    AddSC_boss_vael();
+    AddSC_boss_broodlord();
+    AddSC_boss_firemaw();
+    AddSC_boss_ebonroc();
+    AddSC_boss_flamegor();
+
     //Blasted lands
     //Burning steppes
     //Darkshore

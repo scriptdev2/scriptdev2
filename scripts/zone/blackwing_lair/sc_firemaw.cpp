@@ -29,12 +29,14 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 FlameBuffet_Timer;
+    bool InCombat;
     
     void Reset()
     {
         ShadowFlame_Timer = 45000;      //These times are probably wrong
         WingBuffet_Timer = 25000;
         FlameBuffet_Timer = 5000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -49,6 +51,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -66,6 +69,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -74,7 +78,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

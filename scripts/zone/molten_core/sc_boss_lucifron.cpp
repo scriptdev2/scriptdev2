@@ -29,12 +29,14 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     uint32 ImpendingDoom_Timer;
     uint32 LucifronCurse_Timer;
     uint32 ShadowShock_Timer;
+    bool InCombat;
 
     void Reset()
     {
         ImpendingDoom_Timer = 10000;        //Initial cast after 10 seconds so the debuffs alternate
         LucifronCurse_Timer = 20000;        //Initial cast after 20 seconds
         ShadowShock_Timer = 6000;           //6 seconds
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -49,6 +51,7 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -66,6 +69,7 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -74,7 +78,7 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

@@ -36,11 +36,13 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
     uint32 Yell_Timer;
     uint32 PowerWordShield_Timer;
+    bool InCombat;
 
     void Reset()
     {
         Yell_Timer = 6000000;
         PowerWordShield_Timer = 60000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -58,6 +60,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            InCombat = true;
         }
     }
 
@@ -76,6 +79,8 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+
+                InCombat = true;
             }
         }
     }
@@ -84,7 +89,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

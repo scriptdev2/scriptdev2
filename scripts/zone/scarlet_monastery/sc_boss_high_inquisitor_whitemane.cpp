@@ -53,6 +53,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     uint32 HolySmite6_Timer;
     uint32 HolyFire5_Timer;
     uint32 MindBlast6_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -63,6 +64,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         HolySmite6_Timer = 10000;
         HolyFire5_Timer = 45000;
         MindBlast6_Timer = 35000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -79,6 +81,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             
             //Say our dialog
             DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+            InCombat = true;
         }
     }
 
@@ -100,6 +103,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -108,7 +112,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

@@ -32,6 +32,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     uint32 Inspire_Timer;
     uint32 Knockdown_Timer;
     uint32 Flamespear_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -39,6 +40,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         Inspire_Timer = 30000;
         Knockdown_Timer = 20000;
         Flamespear_Timer = 15000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -53,6 +55,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -70,6 +73,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -78,7 +82,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

@@ -30,12 +30,14 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     uint32 Inferno_Timer;
     uint32 IgniteMana_Timer;
     uint32 LivingBomb_Timer;
+    bool InCombat;
 
     void Reset()
     {
         Inferno_Timer = 45000;      //These times are probably wrong
         IgniteMana_Timer = 30000;
         LivingBomb_Timer = 35000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -50,7 +52,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-
+            InCombat = true;
         }
     }
 
@@ -68,6 +70,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -76,7 +79,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

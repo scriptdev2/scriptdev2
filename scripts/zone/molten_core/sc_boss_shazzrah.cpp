@@ -32,6 +32,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     uint32 ShazzrahCurse_Timer;
     uint32 DeadenMagic_Timer;
     uint32 Countspell_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -39,6 +40,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         ShazzrahCurse_Timer = 30000;
         DeadenMagic_Timer = 45000;
         Countspell_Timer = 20000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -53,6 +55,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -70,6 +73,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -78,7 +82,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

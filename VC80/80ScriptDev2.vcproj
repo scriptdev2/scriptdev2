@@ -411,7 +411,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_ebenroc.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\sc_ebonroc.cpp"
 						>
 					</File>
 					<File
@@ -474,6 +474,30 @@
 				<Filter
 					Name="Ruins of Ahn&apos;Qiraj"
 					>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_ayamiss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_buru.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_kurinnaxx.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_moam.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_ossirian.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_rajaxx.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Swamp of Sorrows"
@@ -634,6 +658,86 @@
 				<Filter
 					Name="Naxxramas"
 					>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_anubrekhan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_faelina.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_feugen.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_gluth.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_gothik.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_grobbulus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_heigan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_highlord_mograine.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_kelthuzad.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_lady_blaumeux.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_loatheb.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_maexxna.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_noth.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_patchwerk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_razuvious.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_sapphiron.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_sir_zeliek.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_stalagg.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_thaddius.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\sc_thane_korthazz.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Onyxia&apos;s Lair"
@@ -682,6 +786,54 @@
 				<Filter
 					Name="Temple of Ahn&apos;Qiraj"
 					>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_cthun.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_fankriss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_huhuran.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_kri.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_ouro.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_sartura.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_skeram.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_veklor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_veknilash.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_vem.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_viscidus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_yauj.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Thousand Needles"
@@ -730,6 +882,58 @@
 				<Filter
 					Name="Zul&apos;Gurub"
 					>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_arlokk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_gahzranka.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_grilek.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_hakkar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_hazzarah.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_jeklik.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_jindo.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_mandokir.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_marli.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_renataki.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_thekal.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_venoxis.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\sc_wushoolay.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Uldaman"

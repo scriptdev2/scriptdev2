@@ -103,60 +103,49 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who && who != m_creature)
             return;
 
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
-        {    
-            //Cast Essence of the Red when the fight begins.
-            if (!InCombat)
-            {
-                DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED); 
-                InCombat = true;
-            }
-            
+        {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
 
+            //Say our dialog
+            if (!InCombat)
+            {
+                DoCast(m_creature,SPELL_ESSENCEOFTHERED);
+                InCombat = true;
+            }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Cast Essence of the Red when the fight begins.
                 if (!InCombat)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_ESSENCEOFTHERED); 
+                    DoCast(m_creature,SPELL_ESSENCEOFTHERED);
                     InCombat = true;
-                } 
+                }
 
-                //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
-        //But we still need to reset
-        if (m_creature->isAlive() && !m_creature->getVictim())
-        {
-            Reset();
-            return;
-        }
-
         //Speach
         if (DoingSpeach)
             if (SpeachTimer < diff)
@@ -194,6 +183,12 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             }else SpeachTimer -= diff;
 
         
+        if (InCombat && !m_creature->SelectHostilTarget())
+        {
+            Reset();
+            return;
+        }
+
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
@@ -261,10 +256,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             if (TailSwipe_Timer < diff)
             {
                 //Only cast if we are behind
-                if (!m_creature->HasInArc( M_PI, m_creature->getVictim()))
+                /*if (!m_creature->HasInArc( M_PI, m_creature->getVictim()))
                 {
                     DoCast(m_creature->getVictim(),SPELL_TAILSWIPE);
-                }
+                }*/
 
                 //20 seconds until we should cast this again
                 TailSwipe_Timer = 20000;
@@ -318,7 +313,7 @@ void AddSC_boss_vael()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_vael";
+    newscript->Name="boss_vaelastrasz";
     newscript->GetAI = GetAI_boss_vael;
     newscript->pGossipHello = &GossipHello_boss_vael;
     newscript->pGossipSelect = &GossipSelect_boss_vael;

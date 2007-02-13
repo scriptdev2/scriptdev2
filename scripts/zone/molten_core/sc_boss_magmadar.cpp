@@ -33,6 +33,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     uint32 LavaBreath_Timer;
     uint32 Panic_Timer;
     uint32 Lavabomb_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -40,6 +41,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         LavaBreath_Timer = 7000;
         Panic_Timer = 30000;
         Lavabomb_Timer = 12000;
+        InCombat = false;
 
         if (m_creature)
         {
@@ -57,6 +59,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -74,6 +77,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
 
             }
         }
@@ -83,7 +87,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

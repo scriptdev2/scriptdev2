@@ -28,12 +28,14 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
     uint32 ShadowBolt_Timer;
     uint32 RainOfFire_Timer;
     uint32 GehennasCurse_Timer;
+    bool InCombat;
 
     void Reset()
     {
         ShadowBolt_Timer = 7000;
         RainOfFire_Timer = 35000;
         GehennasCurse_Timer = 30000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -48,6 +50,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -65,6 +68,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -73,7 +77,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

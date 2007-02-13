@@ -27,10 +27,12 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     boss_golemaggAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Pyroblast_Timer;
+    bool InCombat;
 
     void Reset()
     {
         Pyroblast_Timer = 7000;      //These times are probably wrong
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -45,6 +47,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -62,6 +65,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -70,7 +74,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;

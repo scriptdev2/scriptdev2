@@ -31,6 +31,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     uint32 FrostboltVolley_Timer;
     uint32 MindFlay_Timer;
     uint32 FrostNova_Timer;
+    bool InCombat;
 
     void Reset()
     {
@@ -38,6 +39,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         FrostboltVolley_Timer = 30000;
         MindFlay_Timer = 30000;
         FrostNova_Timer = 30000;
+        InCombat = false;
 
         if (m_creature)
             EnterEvadeMode();
@@ -51,6 +53,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
@@ -69,6 +72,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
+                InCombat = true;
             }
         }
     }
@@ -77,7 +81,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     {
         //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
         //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
+        if (InCombat && !m_creature->SelectHostilTarget())
         {
             Reset();
             return;
