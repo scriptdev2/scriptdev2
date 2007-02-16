@@ -94,6 +94,8 @@ extern void AddSC_boss_broodlord();
 extern void AddSC_boss_firemaw();
 extern void AddSC_boss_ebonroc();
 extern void AddSC_boss_flamegor();
+extern void AddSC_boss_chromaggus();
+extern void AddSC_boss_nefarian();
 
 //Blasted lands
 //Burning steppes
@@ -139,6 +141,8 @@ extern void AddSC_bunthen_plainswind();
 extern void AddSC_skorn_whitecloud();
 
 //Naxxramas
+extern void AddSC_boss_patchwerk();
+
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
 
@@ -268,6 +272,8 @@ void ScriptsInit()
     AddSC_boss_firemaw();
     AddSC_boss_ebonroc();
     AddSC_boss_flamegor();
+    AddSC_boss_chromaggus();
+    AddSC_boss_nefarian();
 
     //Blasted lands
     //Burning steppes
@@ -313,6 +319,8 @@ void ScriptsInit()
     AddSC_skorn_whitecloud();
 
     //Naxxramas
+    AddSC_boss_patchwerk();
+
     //Onyxia's Lair
     AddSC_boss_onyxia();
 
@@ -655,16 +663,11 @@ void ScriptedAI::DoStopAttack()
 
 void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
-    if (m_creature->m_currentSpell)
-        return;
     m_creature->CastSpell(victim, spelId, false);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 {
-    if (m_creature->m_currentSpell)
-        return;
-
     m_creature->StopMoving();
     m_creature->CastSpell(who, spellInfo, false);
 }

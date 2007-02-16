@@ -14,13 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-//*** NEEDS ADDITIOINAL REVIEW ***
-
 #include "../../sc_defines.h"
 
-#define SPELL_SHADOWFLAME       22539
-#define SPELL_WINGBUFFET         18500
-#define SPELL_SHADOWOFEBONROC         23340
+#define SPELL_SHADOWFLAME           22539
+#define SPELL_WINGBUFFET            18500
+#define SPELL_SHADOWOFEBONROC       23340
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {

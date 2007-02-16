@@ -14,13 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-//*** NEEDS ADDITIOINAL REVIEW ***
-
 #include "../../sc_defines.h"
 
-#define SPELL_SHADOWFLAME        22539
-#define SPELL_WINGBUFFET         23339
-#define SPELL_FLAMEBUFFET         23341
+#define SPELL_SHADOWFLAME       22539
+#define SPELL_WINGBUFFET        23339
+#define SPELL_FLAMEBUFFET       23341
 
 struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 {

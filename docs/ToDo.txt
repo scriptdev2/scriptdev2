@@ -3,7 +3,6 @@ Simple list of things we need to do.
 
 --- ScriptDev2 Framework ---
 
-- Write a "OnDeath" function and get it patched into mangos core
 - New function to spawn mobs from within scriptdev
 - Fix item scripts
 - Remove Honor vendor scripts since they are useless
@@ -16,7 +15,6 @@ Simple list of things we need to do.
 
 --- Core Problems ---
 
-- No "OnDeath" function
 - Unable to spawn from within scriptdev (possible fix in Mangoscript but needs to be applied to core)
 - Unable to create new movement generators (you shouldn't need to though)
 - Item scripts arn't implemented in the core

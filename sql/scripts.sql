@@ -1555,3 +1555,30 @@ UPDATE `creature_template` SET `spell1`=10876, `spell2`=25304, `spell3`=18647, `
 -- Risen Guard (id 10489) spells
 
 UPDATE `creature_template` SET `spell1`=29684, `spell2`=25051, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=10489 ;
+
+-- 
+-- BLACK WING LAIR
+--
+-- Razorgore the Untamed 12435
+UPDATE `creature_template` SET`ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
+
+-- Vaelastrasz the corrupt 13020
+UPDATE `creature_template` SET`ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
+
+-- Broodlord 12017
+UPDATE `creature_template` SET`ScriptName` = 'boss_broodlord' WHERE `entry` = 12017;
+
+-- Firemaw 11983
+UPDATE `creature_template` SET`ScriptName` = 'boss_firemaw' WHERE `entry` = 11983;
+
+-- Ebonroc 14601
+UPDATE `creature_template` SET`ScriptName` = 'boss_ebonroc' WHERE `entry` = 14601;
+
+-- Flamegor 11981
+UPDATE `creature_template` SET`ScriptName` = 'boss_flamegor' WHERE `entry` = 11981;
+
+-- Chromaggus 14020
+UPDATE `creature_template` SET`ScriptName` = 'boss_chromaggus' WHERE `entry` = 14020;
+
+-- Nefarian 11583
+UPDATE `creature_template` SET`ScriptName` = 'boss_nefarian' WHERE `entry` = 11583;

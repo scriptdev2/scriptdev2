@@ -83,7 +83,7 @@ scripts/zone/moonglade/sc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/sc_silva_filnaveth.cpp \
 scripts/zone/mulgore/sc_skorn_whitecloud.cpp \
 scripts/zone/naxxramas/sc_anubrekhan.cpp \
-scripts/zone/naxxramas/sc_faelina.cpp \
+scripts/zone/naxxramas/sc_faerlina.cpp \
 scripts/zone/naxxramas/sc_feugen.cpp \
 scripts/zone/naxxramas/sc_gluth.cpp \
 scripts/zone/naxxramas/sc_gothik.cpp \

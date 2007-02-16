@@ -224,6 +224,7 @@ CreatureAI* GetAI_Kobold(Creature *_Creature)
 
 void AddSC_kobold()
 {
+    return;
     Script *newscript;
     newscript = new Script;
     newscript->Name="kobold";

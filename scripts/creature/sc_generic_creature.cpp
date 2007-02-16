@@ -28,12 +28,14 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
+    bool IsSelfRooted;
     bool InCombat;
 
     void Reset()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
+        IsSelfRooted = false;
         InCombat = false;
 
         if (m_creature)
@@ -48,9 +50,14 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
         if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
+            DoStartMeleeAttack(who);
+            if (!m_creature->IsWithinDist(who, ATTACK_DIST))
+            {
+                DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                IsSelfRooted = true;
+            }
+                //DoStartMeleeAttack(who);
+            //else DoStartRangedAttack(who);
 
             InCombat = true;
         }
@@ -70,9 +77,15 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                    DoStartMeleeAttack(who);
-                else DoStartRangedAttack(who);
+                DoStartMeleeAttack(who);
+                if (!m_creature->IsWithinDist(who, ATTACK_DIST))
+                {
+                    DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                    IsSelfRooted = true;
+                }
+                //if (m_creature->IsWithinDist(who, ATTACK_DIST))
+                //    DoStartMeleeAttack(who);
+                //else DoStartRangedAttack(who);
 
                 InCombat = true;
             }
@@ -178,11 +191,10 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                     if (info && !GlobalCooldown)
                     {
                         //If we are currently moving stop us and set the movement generator
-                        if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
+                        if (!IsSelfRooted)
                         {
-                            (*m_creature)->Clear(false);
-                            //(*m_creature)->MovementExpired();
-                            (*m_creature)->Idle();
+                            DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                            IsSelfRooted = true;
                         }
 
                         //Face target
@@ -197,13 +209,12 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         
 
                     }//If no spells available and we arn't moving run to target
-                    else if ((*m_creature)->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
+                    else if (IsSelfRooted)
                     {
-                        //Cancel our current spell and then mutate new movement generator
+                        //Cancel our current spell and then allow movement agian
                         m_creature->InterruptSpell();
-                        (*m_creature)->Clear(false);
-                        //(*m_creature)->MovementExpired();
-                        (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
+                        m_creature->RemoveAurasDueToSpell(GENERIC_CREATURE_ROOTSELF);
+                        IsSelfRooted = false;
                     }
                 }
             }

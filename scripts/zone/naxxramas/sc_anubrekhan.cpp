@@ -8,3 +8,6 @@
 //8792 taunt3 - Which one shall I eat first? So difficult to choose... the all smell so delicious.
 //8793 taunt4 - Closer now... tasty morsels. I've been too long without food. Without blood to drink.
 //8789 slay - Shh... it will all be over soon.
+
+#define SPELL_IMPALE        28783   //May be wrong spell id. Causes more dmg than I expect
+#define SPELL_LOCUSTSWARM   28785   //This is a self buff that triggers the dmg debuff

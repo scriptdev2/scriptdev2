@@ -14,13 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-//*** NEEDS ADDITIOINAL REVIEW ***
-
 #include "../../sc_defines.h"
 
 #define SPELL_SHADOWFLAME        22539
 #define SPELL_WINGBUFFET         23339
-#define SPELL_FLAMEBUFFET         23341
+#define SPELL_FRENZY             23342      //This spell periodically triggers fire nova
 
 struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 {
@@ -28,14 +26,14 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
-    uint32 FlameBuffet_Timer;
+    uint32 Frenzy_Timer;
     bool InCombat;
     
     void Reset()
     {
         ShadowFlame_Timer = 45000;      //These times are probably wrong
         WingBuffet_Timer = 25000;
-        FlameBuffet_Timer = 5000;
+        Frenzy_Timer = 10000;
         InCombat = false;
 
         if (m_creature)
@@ -107,15 +105,15 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
                 WingBuffet_Timer = 25000;
             }else WingBuffet_Timer -= diff;
             
-            //FlameBuffet_Timer
-            if (FlameBuffet_Timer < diff)
+            //Frenzy_Timer
+            if (Frenzy_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
+                DoCast(m_creature,SPELL_FRENZY);
 
-                //cast this every 5 seconds
-                FlameBuffet_Timer = 5000;
-            }else FlameBuffet_Timer -= diff;
+                //cast this every 10-15 seconds
+                Frenzy_Timer = 10000 + (rand()%5000);
+            }else Frenzy_Timer -= diff;
             
             
             //If we are within range melee the target

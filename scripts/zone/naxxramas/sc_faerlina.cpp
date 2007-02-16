@@ -8,3 +8,7 @@
 //8801 slay2 - Pathetic wretch!
 //8798 death - The master... will avenge me!
 //8955 - Random Aggro ? - ?
+
+#define SPELL_POSIONBOLT_VOLLEY     28796
+#define SPELL_RAINOFFIRE            28794   //Not sure if targeted AoEs work if casted directly upon a player
+#define SPELL_ENRAGE                26527
