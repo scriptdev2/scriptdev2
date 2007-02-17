@@ -219,12 +219,13 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if ( m_creature->getVictim() == NULL)
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDist(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
