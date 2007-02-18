@@ -141,7 +141,10 @@ extern void AddSC_bunthen_plainswind();
 extern void AddSC_skorn_whitecloud();
 
 //Naxxramas
+extern void AddSC_boss_anubrekhan();
+extern void AddSC_boss_maexxna();
 extern void AddSC_boss_patchwerk();
+extern void AddSC_boss_razuvious();
 
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
@@ -319,7 +322,10 @@ void ScriptsInit()
     AddSC_skorn_whitecloud();
 
     //Naxxramas
+    AddSC_boss_anubrekhan();
+    AddSC_boss_maexxna();
     AddSC_boss_patchwerk();
+    AddSC_boss_razuvious();
 
     //Onyxia's Lair
     AddSC_boss_onyxia();
@@ -723,7 +729,8 @@ void ScriptedAI::DoGoHome()
 {
     if( !m_creature->getVictim() && m_creature->isAlive() )
     {
-        (*m_creature)->TargetedHome();
+        if( (*m_creature)->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE )
+            (*m_creature)->TargetedHome();
     }
 }
 

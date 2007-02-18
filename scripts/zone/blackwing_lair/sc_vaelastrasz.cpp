@@ -85,10 +85,11 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         //Stand up and begin speach
         PlayerHolder = target;
 
-        //8 seconds
+        //10 seconds
         DoYell(SAY_LINE1,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_LINE1);
-        SpeachTimer = 8000;
+        SpeachTimer = 10000;
+        SpeachNum = 0;
         DoingSpeach = true;
     }
 
@@ -153,10 +154,11 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                 switch (SpeachNum)
                 {
                 case 0:
-                    //12 seconds till next line
+                    //16 seconds till next line
                     DoYell(SAY_LINE2,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_LINE2);
-                    SpeachTimer = 12000;
+                    SpeachTimer = 16000;
+                    SpeachNum++;
                     break;
 
                 case 1:
@@ -164,6 +166,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     DoYell(SAY_LINE3,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_LINE3);
                     SpeachTimer = 10000;
+                    SpeachNum++;
                     break;
 
                 case 2:
@@ -173,7 +176,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     if (PlayerHolder)
                     {
                         DoStartMeleeAttack(PlayerHolder);
-                        DoCast(PlayerHolder,SPELL_ESSENCEOFTHERED);
+                        DoCast(m_creature,SPELL_ESSENCEOFTHERED);
                     }
 
                     SpeachTimer = 0;
