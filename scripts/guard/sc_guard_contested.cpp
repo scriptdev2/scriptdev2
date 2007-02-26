@@ -16,10 +16,11 @@
 
 
 #include "../sc_defines.h"
+#include "sc_guard_ai.h"
 
-struct MANGOS_DLL_DECL guard_contested : public ScriptedAI
+struct MANGOS_DLL_DECL guard_contested : public guardAI
 {
-    guard_contested(Creature *c) : ScriptedAI(c) {}
+    guard_contested(Creature *c) : guardAI(c) {}
     void MoveInLineOfSight(Unit *who)
     {
         if (who->isInCombatWithPlayer() && who->isAttacking() )
@@ -50,8 +51,8 @@ struct MANGOS_DLL_DECL guard_contested : public ScriptedAI
                         DoCastSpell(who, spell);
                     }
                 }
+                DoStartMeleeAttack(who);
             }
-        DoStartMeleeAttack(who);
         }
         
     }

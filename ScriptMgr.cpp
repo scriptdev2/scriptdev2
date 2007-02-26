@@ -722,7 +722,23 @@ void ScriptedAI::DoYell(const char *text, uint32 language, Unit* target)
 
 void ScriptedAI::DoTextEmote(const char *text, Unit* target)
 {
-    //Need to get information on this packet
+    WorldPacket data(9 + strlen(m_creature->GetCreatureInfo()->Name) + 13 + strlen(text) + 2);
+
+    data.SetOpcode(SMSG_MESSAGECHAT);
+    data << uint8(CHAT_MSG_MONSTER_EMOTE);
+    data << uint32(0); //Language (doesn't apply to creature emotes)
+
+    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
+    data << m_creature->GetCreatureInfo()->Name;
+    
+    if (target)data << uint64(target->GetGUID());
+    else data << uint64(m_creature->GetGUID());
+
+    data << uint32(strlen(text)+1);
+    data << text;
+    data << uint8(0);
+
+    m_creature->SendMessageToSet(&data, false);
 }
 
 void ScriptedAI::DoGoHome()

@@ -56,8 +56,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                 DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
                 IsSelfRooted = true;
             }
-                //DoStartMeleeAttack(who);
-            //else DoStartRangedAttack(who);
 
             InCombat = true;
         }
@@ -83,9 +81,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                     DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
                     IsSelfRooted = true;
                 }
-                //if (m_creature->IsWithinDist(who, ATTACK_DIST))
-                //    DoStartMeleeAttack(who);
-                //else DoStartRangedAttack(who);
 
                 InCombat = true;
             }
@@ -156,8 +151,8 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                     if (info) Healing = true;
                         else info = SelectSpell(m_creature->getVictim(), NULL, NULL, SELECT_TARGET_ANY_ENEMY, NULL, NULL, NULL, NULL, SELECT_EFFECT_DONTCARE);
 
-                    //20% chance to replace our white hit with a spell
-                    if (info && rand() % 5 == 0 && !GlobalCooldown)
+                    //50% chance if elite or higher, 20% chance if not, to replace our white hit with a spell
+                    if (info && (rand() % (m_creature->GetCreatureInfo()->rank > 1 ? 2 : 5) == 0) && !GlobalCooldown)
                     {
                         //Cast the spell
                         if (Healing)DoCastSpell(m_creature, info);

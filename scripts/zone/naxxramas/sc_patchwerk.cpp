@@ -26,6 +26,9 @@
 #define SOUND_SLAY      8912
 #define SOUND_DEATH     8911
 
+#define EMOTE_BERSERK   "Patchwerk goes into a berserker rage!"
+#define EMOTE_ENRAGE    "Patchwerk becomes enraged!"
+
 #define SPELL_HATEFULSTRIKE     28308
 #define SPELL_ENRAGE            29691
 #define SPELL_BERSERK           27680
@@ -44,8 +47,8 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     void Reset()
     {
         HatefullStrike_Timer = 1200;        //1.2 seconds
-        Enrage_Timer = 60000;               //7 minutes 420,000
-        Slimebolt_Timer = 90000;            //7.5 minutes 450,000
+        Enrage_Timer = 420000;              //7 minutes 420,000
+        Slimebolt_Timer = 450000;           //7.5 minutes 450,000
         Enraged = false;
         InCombat = false;
 
@@ -160,6 +163,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             {
                 //Cast Berserker Rage
                 DoCast(m_creature, SPELL_BERSERK);
+                DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
 
                 //5 minutes until we should cast this agian
                 Enrage_Timer = 300000;
@@ -179,6 +183,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
             {
                 DoCast(m_creature,SPELL_ENRAGE);
+                DoTextEmote(EMOTE_ENRAGE,NULL);
                 Enraged = true;
             }
 

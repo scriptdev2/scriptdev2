@@ -1564,6 +1564,8 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_razorgore' WHERE `entry` = 12
 
 -- Vaelastrasz the corrupt 13020
 UPDATE `creature_template` SET`ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
+UPDATE creature_template SET faction=32 WHERE entry=13020;
+UPDATE creature_template SET npcflag=65 WHERE entry=13020;
 
 -- Broodlord 12017
 UPDATE `creature_template` SET`ScriptName` = 'boss_broodlord' WHERE `entry` = 12017;

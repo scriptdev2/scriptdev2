@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 
                 case 2:
                 default:
-                    m_creature->setFaction(24);
+                    m_creature->setFaction(103);
                     m_creature->ModifyHealth(int(m_creature->GetMaxHealth()*.3));
                     if (PlayerHolder)
                     {
