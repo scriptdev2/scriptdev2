@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                 case 2:
                 default:
                     m_creature->setFaction(103);
-                    m_creature->ModifyHealth(int(m_creature->GetMaxHealth()*.3));
+                    m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
                     if (PlayerHolder)
                     {
                         DoStartMeleeAttack(PlayerHolder);
