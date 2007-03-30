@@ -598,7 +598,7 @@ void ScriptedAI::AttackStart(Unit* who)
     if (!who)
         return;
 
-    if (m_creature->getVictim() == NULL && who->isTargetableForAttack())
+    if (who->isTargetableForAttack())
     {
         //Begin attack
         DoStartMeleeAttack(who);
@@ -646,6 +646,10 @@ void ScriptedAI::DoStartMeleeAttack(Unit* victim)
     {
         (*m_creature)->Mutate(new TargetedMovementGenerator(*victim));
         m_creature->AddThreat(victim, 0.0f);
+        m_creature->resetAttackTimer();
+
+        if (victim->GetTypeId() == TYPEID_PLAYER)
+            m_creature->SetLootRecipient((Player*)victim);
     }
 }
 
@@ -655,7 +659,13 @@ void ScriptedAI::DoStartRangedAttack(Unit* victim)
         return;
 
     if (m_creature->Attack(victim))
+    {
         m_creature->AddThreat(victim, 0.0f);
+        m_creature->resetAttackTimer();
+
+        if (victim->GetTypeId() == TYPEID_PLAYER)
+            m_creature->SetLootRecipient((Player*)victim);
+    }
 }
 
 

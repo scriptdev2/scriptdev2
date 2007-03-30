@@ -22,22 +22,24 @@
 
 struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 {
-    boss_firemawAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_firemawAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 FlameBuffet_Timer;
     bool InCombat;
     
-    void Reset()
+    void EnterEvadeMode()
     {
         ShadowFlame_Timer = 45000;      //These times are probably wrong
         WingBuffet_Timer = 25000;
         FlameBuffet_Timer = 5000;
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -45,7 +47,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
@@ -75,13 +77,9 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())

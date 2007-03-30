@@ -44,7 +44,7 @@
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
-    boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Healing_Timer;
     uint32 PowerWordShield_Timer;
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     uint32 MindBlast6_Timer;
     bool InCombat;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         Healing_Timer = 80000;
         PowerWordShield_Timer = 20000;
@@ -66,8 +66,10 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         MindBlast6_Timer = 35000;
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -75,7 +77,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
             
@@ -110,13 +112,9 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         /*
         //This is going to be a routine to make the resurrection event...

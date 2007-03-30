@@ -46,7 +46,7 @@
 
 struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
-    boss_vaelAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_vaelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     Unit *PlayerHolder;
     uint32 SpeachTimer;
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     bool DoingSpeach;
     bool InCombat;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         PlayerHolder = NULL;
         SpeachTimer = NULL;
@@ -76,8 +76,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         DoingSpeach = false;
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void BeginSpeach(Unit* target)
@@ -107,7 +109,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         if (!who && who != m_creature)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
@@ -186,11 +188,9 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             }else SpeachTimer -= diff;
 
         
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())

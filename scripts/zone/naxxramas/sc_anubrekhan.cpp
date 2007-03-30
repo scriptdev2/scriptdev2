@@ -45,7 +45,7 @@
 
 struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 {
-    boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {Reset();HasTaunted = false;}
+    boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();HasTaunted = false;}
 
     uint32 Impale_Timer;
     uint32 LocustSwarm_Timer;
@@ -53,15 +53,17 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     bool InCombat;
     bool HasTaunted;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         Impale_Timer = 15000;                       //15 seconds
         LocustSwarm_Timer = 80000 + (rand()%40000); //Random time between 80 seconds and 2 minutes for initial cast      
         Summon_Timer = LocustSwarm_Timer + 45000;   //45 seconds after initial locust swarm
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)
@@ -81,7 +83,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
@@ -193,13 +195,9 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())

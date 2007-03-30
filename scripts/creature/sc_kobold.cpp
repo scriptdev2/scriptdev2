@@ -24,20 +24,22 @@
 
 struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
 {
-    KoboldAI(Creature *c) : ScriptedAI(c) {Reset();}
+    KoboldAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
     bool InCombat;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -45,7 +47,7 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDist(who, ATTACK_DIST))
@@ -93,14 +95,6 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             GlobalCooldown -= diff;
         else GlobalCooldown = 0;
 
-        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
-            return;
-        }
-
         //Buff timer (only buff when we are alive and not in combat
         if (m_creature->isAlive() && !InCombat)
             if (BuffTimer < diff )
@@ -122,6 +116,9 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
                 else BuffTimer = 30000;
             }else BuffTimer -= diff;
 
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
@@ -129,7 +126,7 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             //Check if we should stop attacking because our victim is no longer in range or we are to far from spawn point
             if (CheckTether())
             {
-                Reset();
+                EnterEvadeMode();
                 return;
             }
             

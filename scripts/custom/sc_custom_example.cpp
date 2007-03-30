@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 {
     //*** HANDLED FUNCTION *** 
     //This is the constructor, called only once when the creature is first created
-    custom_exampleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    custom_exampleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     //*** CUSTOM VARIABLES ****
     //These variables are for use only by this individual script.
@@ -69,9 +69,9 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     uint32 Phase;        //The current battle phase we are in
     uint32 Phase_Timer;   //Timer until phase transition
 
-    //*** CUSTOM FUNCTION ***
-    //This resets the creature to before the fight began
-    void Reset()
+    //*** HANDLED FUNCTION *** 
+    //This is called whenever the core decides we need to evade
+    void EnterEvadeMode()
     {
         Phase = 1;              //Start in phase 1
         Phase_Timer = 60000;     //60 seconds
@@ -81,8 +81,10 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         Beserk_Timer = 120000;  //2 minutes
 
         //Return to home position
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     //*** HANDLED FUNCTION *** 
@@ -92,10 +94,9 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         if (!who)
             return;
 
-        //Don't attack back if we already have a victim or of the person who hit us is untargettable
         //We have to say who!= m_creature because currently AoE that apply dots will trigger the creature into attack itself
         //Since AoEs casted by monsters hit themselves
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who != m_creature)
+        if (who->isTargetableForAttack() && who != m_creature)
         {
             //Begin attack
             DoStartMeleeAttack(who);
@@ -137,14 +138,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
     //Update AI is called Every single map update (roughly once every 100ms if a player is within the grid)
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
-        //But we still need to reset
-        if (!m_creature->SelectHostilTarget())
-        {
-            Reset();
-            return;
-        }
-
         //Out of combat timers
         if (!m_creature->getVictim())
         {
@@ -191,13 +184,17 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
             }else Rebuff_Timer -= diff;
         }
 
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
+
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //Check if we should stop attacking because our victim is no longer in range or we are to far from spawnpoint
             if (CheckTether())
             {
-                Reset();
+                EnterEvadeMode();
                 return;
             }
 

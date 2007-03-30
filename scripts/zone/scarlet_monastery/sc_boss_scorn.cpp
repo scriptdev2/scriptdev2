@@ -25,7 +25,7 @@
 
 struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 {
-    boss_scornAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_scornAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 LichSlap_Timer;
     uint32 FrostboltVolley_Timer;
@@ -33,7 +33,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     uint32 FrostNova_Timer;
     bool InCombat;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         LichSlap_Timer = 45000;
         FrostboltVolley_Timer = 30000;
@@ -41,8 +41,10 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         FrostNova_Timer = 30000;
         InCombat = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -50,7 +52,7 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
             InCombat = true;
@@ -79,13 +81,9 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())

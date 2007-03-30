@@ -25,7 +25,7 @@
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 {
-    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 WebTrap_Timer;
     uint32 WebSpray_Timer;
@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         WebTrap_Timer = 20000;          //20 sec init, 40 sec normal
         WebSpray_Timer = 40000;         //40 seconds
@@ -45,8 +45,10 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         InCombat = false;
         Enraged = false;
 
-        if (m_creature)
-            EnterEvadeMode();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -54,7 +56,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
@@ -86,13 +88,9 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the player died from some unknown soruce
-        //But we still need to reset
-        if (InCombat && !m_creature->SelectHostilTarget())
-        {
-            Reset();
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())

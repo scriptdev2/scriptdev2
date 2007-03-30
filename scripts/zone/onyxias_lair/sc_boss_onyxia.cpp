@@ -38,7 +38,7 @@
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 swingcounter;
     uint32 flamebreath_timer;
@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 reset_timer;
     uint32 phase;
 
-    void Reset()
+    void EnterEvadeMode()
     {
         swingcounter = 0;
         flamebreath_timer = 20000;
@@ -63,13 +63,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         bellowingroar_timer = 0;
         phase = 1;
         
-        if (m_creature)
-        {
-            m_creature->InterruptSpell();
-            m_creature->SetHover(false);
-            (*m_creature)->Clear(false);
-            EnterEvadeMode();
-        }
+        m_creature->InterruptSpell();
+        m_creature->SetHover(false);
+        (*m_creature)->Clear(false);
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void KilledUnit(Unit* victim)
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if (!who)
             return;
 
-        if (m_creature->getVictim() == NULL && who->isTargetableForAttack() && who != m_creature)
+        if (who->isTargetableForAttack() && who != m_creature)
         {
             //Begin attack
             DoStartMeleeAttack(who);
@@ -119,13 +119,9 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //If we had a target and it wasn't cleared then it means the target died from some unknown soruce
-        //But we still need to reset
+        //Return since we have no target
         if (!m_creature->SelectHostilTarget())
-        {
-            Reset();
             return;
-        }
 
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
