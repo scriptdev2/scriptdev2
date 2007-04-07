@@ -618,7 +618,7 @@ void ScriptedAI::UpdateAI(const uint32 diff)
         }
             
         //If we are within range melee the target
-        if( m_creature->IsWithinDist(m_creature->getVictim(), ATTACK_DIST))
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
         {
             if( m_creature->isAttackReady() )
             {
@@ -861,7 +861,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
             continue;
 
         //Check if our target is in range
-        if (m_creature->IsWithinDist(Target, TempRange->minRange) || !m_creature->IsWithinDist(Target, TempRange->maxRange))
+        if (m_creature->IsWithinDistInMap(Target, TempRange->minRange) || !m_creature->IsWithinDistInMap(Target, TempRange->maxRange))
             continue;
 
         //All good so lets add it to the spell list
