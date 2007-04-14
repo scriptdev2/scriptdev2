@@ -436,7 +436,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Blasted Lands"
+					Name="Gruul&apos;s Lair"
 					>
 				</Filter>
 				<Filter
@@ -945,6 +945,66 @@
 				</Filter>
 				<Filter
 					Name="Upper Blackrock Spire"
+					>
+				</Filter>
+				<Filter
+					Name="Aunchindoun"
+					>
+				</Filter>
+				<Filter
+					Name="Azuremyst Isle"
+					>
+				</Filter>
+				<Filter
+					Name="Black Temple"
+					>
+				</Filter>
+				<Filter
+					Name="Eversong Woods"
+					>
+				</Filter>
+				<Filter
+					Name="Ghostlands"
+					>
+				</Filter>
+				<Filter
+					Name="Blasted Lands"
+					>
+				</Filter>
+				<Filter
+					Name="Hellfire Citadel"
+					>
+				</Filter>
+				<Filter
+					Name="Hellfire Peninsula"
+					>
+				</Filter>
+				<Filter
+					Name="Karazhan"
+					>
+				</Filter>
+				<Filter
+					Name="Nagrand"
+					>
+				</Filter>
+				<Filter
+					Name="Netherstorm"
+					>
+				</Filter>
+				<Filter
+					Name="Shadowmoon Valley"
+					>
+				</Filter>
+				<Filter
+					Name="Tempest Keep"
+					>
+				</Filter>
+				<Filter
+					Name="Terokkar Forest"
+					>
+				</Filter>
+				<Filter
+					Name="Zangramarsh"
 					>
 				</Filter>
 			</Filter>

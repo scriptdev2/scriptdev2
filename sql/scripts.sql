@@ -13,7 +13,7 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_magmadar' WHERE `entry` = 119
 UPDATE `creature_template` SET`ScriptName` = 'boss_gehennas' WHERE `entry` = 12259;
 UPDATE `creature_template` SET`ScriptName` = 'boss_garr' WHERE `entry` = 12057;
 UPDATE `creature_template` SET`ScriptName` = 'boss_baron_geddon' WHERE `entry` = 12056;
-UPDATE `creature_template` SET`ScriptName` = 'boss_shazzra' WHERE `entry` = 12264;
+UPDATE `creature_template` SET`ScriptName` = 'boss_shazzrah' WHERE `entry` = 12264;
 UPDATE `creature_template` SET`ScriptName` = 'boss_golemagg' WHERE `entry` = 11988;
 UPDATE `creature_template` SET`ScriptName` = 'boss_sulfuron' WHERE `entry` = 12098;
 UPDATE `creature_template` SET`ScriptName` = 'boss_majordomo' WHERE `entry` = 12018;

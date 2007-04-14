@@ -209,6 +209,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Faces target
     void DoFaceTarget(Unit* unit);
+
+    //Spawns a creature relative to m_creature
+    Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime);
     
     //Returns spells that meet the specified criteria from the creatures spell list
     SpellEntry const* SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);

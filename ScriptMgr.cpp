@@ -788,6 +788,11 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
     m_creature->SetInFront(unit);
 }
 
+Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime)
+{
+    return m_creature->SummonCreature(id,m_creature->GetMapId(),m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle,t,despawntime);
+}
+
 SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)
 {
     //No target so we can't cast

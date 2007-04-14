@@ -23,10 +23,14 @@ struct MANGOS_DLL_DECL guard_contested : public guardAI
     guard_contested(Creature *c) : guardAI(c) {}
     void MoveInLineOfSight(Unit *who)
     {
-        if (who->isInCombatWithPlayer() && who->isAttacking() )
+        if ( who->isAttackingPlayer() )
         {
-            if(who->GetTypeId() == TYPEID_PLAYER)
+            if(who->GetTypeId() == TYPEID_PLAYER || who->GetOwnerGUID() && GUID_HIPART(who->GetOwnerGUID())==HIGHGUID_PLAYER)
             {
+                m_creature->AddThreat(who, 0.0f);
+                if(Unit* owner = who->GetOwner())
+                    m_creature->AddThreat(owner, 0.0f);
+
                 if(!m_creature->isInCombat())
                 {
                     if (m_creature->GetEntry() == 15184)//Cenarion Hold Infantry
