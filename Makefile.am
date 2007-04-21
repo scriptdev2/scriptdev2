@@ -17,6 +17,7 @@
 ## Process this file with automake to produce Makefile.in
 
 ## Sub-directories to parse
+SUBDIRS = sql
 
 ## CPP flags for includes, defines, etc.
 AM_CPPFLAGS = $(MYSQL_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/
@@ -41,9 +42,11 @@ libmangosscript_la_SOURCES = \
 	scripts/guard/sc_guard_dunmorogh.cpp \
 	scripts/guard/sc_guard_durotar.cpp \
 	scripts/guard/sc_guard_elwynnforest.cpp \
+	scripts/guard/sc_guard_exodar.cpp \
 	scripts/guard/sc_guard_ironforge.cpp \
 	scripts/guard/sc_guard_mulgore.cpp \
 	scripts/guard/sc_guard_orgrimmar.cpp \
+	scripts/guard/sc_guard_silvermoon.cpp \
 	scripts/guard/sc_guard_stormwind.cpp \
 	scripts/guard/sc_guard_teldrassil.cpp \
 	scripts/guard/sc_guard_tirisfal.cpp \

@@ -46,6 +46,7 @@ extern void AddSC_miner();
 
 // -- Custom --
 extern void AddSC_custom_example();
+extern void AddSC_test();
 
 // -- GO --
 
@@ -56,13 +57,16 @@ extern void AddSC_guard_darnassus();
 extern void AddSC_guard_dunmorogh();
 extern void AddSC_guard_durotar();
 extern void AddSC_guard_elwynnforest();
+extern void AddSC_guard_exodar();
 extern void AddSC_guard_ironforge();
 extern void AddSC_guard_mulgore();
 extern void AddSC_guard_orgrimmar();
+extern void AddSC_guard_silvermoon();
 extern void AddSC_guard_stormwind();
 extern void AddSC_guard_teldrassil();
 extern void AddSC_guard_tirisfal();
 extern void AddSC_guard_undercity();
+
 
 // -- Honor --
 extern void AddSC_Honor_Vendor();
@@ -145,6 +149,7 @@ extern void AddSC_boss_anubrekhan();
 extern void AddSC_boss_maexxna();
 extern void AddSC_boss_patchwerk();
 extern void AddSC_boss_razuvious();
+extern void AddSC_boss_kelthuzad();
 
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
@@ -227,6 +232,7 @@ void ScriptsInit()
 
     // -- Custom --
     AddSC_custom_example();
+    AddSC_test();
 
     // -- GO --
 
@@ -237,9 +243,11 @@ void ScriptsInit()
     AddSC_guard_dunmorogh();
     AddSC_guard_durotar();
     AddSC_guard_elwynnforest();
+    AddSC_guard_exodar();
     AddSC_guard_ironforge();
     AddSC_guard_mulgore();
     AddSC_guard_orgrimmar();
+    AddSC_guard_silvermoon();
     AddSC_guard_stormwind();
     AddSC_guard_teldrassil();
     AddSC_guard_tirisfal();
@@ -326,6 +334,7 @@ void ScriptsInit()
     AddSC_boss_maexxna();
     AddSC_boss_patchwerk();
     AddSC_boss_razuvious();
+    AddSC_boss_kelthuzad();
 
     //Onyxia's Lair
     AddSC_boss_onyxia();
@@ -690,6 +699,9 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 
 void ScriptedAI::DoSay(const char *text, uint32 language, Unit* target)
 {
+    /*
+    m_creature->Say(text, language, target);
+
     WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
     data.SetOpcode(SMSG_MESSAGECHAT);
     data << (uint8)CHAT_MSG_MONSTER_SAY;
@@ -706,11 +718,14 @@ void ScriptedAI::DoSay(const char *text, uint32 language, Unit* target)
     data << text;
     data << uint8(0);
 
-    m_creature->SendMessageToSet(&data,false);
+    m_creature->SendMessageToSet(&data,false);*/
 }
 
 void ScriptedAI::DoYell(const char *text, uint32 language, Unit* target)
 {
+    /*
+    m_creature->Yell(text, language, target);
+
     WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
     data.SetOpcode(SMSG_MESSAGECHAT);
     data << (uint8)CHAT_MSG_MONSTER_YELL;
@@ -727,11 +742,14 @@ void ScriptedAI::DoYell(const char *text, uint32 language, Unit* target)
     data << text;
     data << uint8(0);
 
-    m_creature->SendMessageToSet(&data,false);
+    m_creature->SendMessageToSet(&data,false);*/
 }
 
 void ScriptedAI::DoTextEmote(const char *text, Unit* target)
 {
+    /*
+    m_creature->TextEmote(text, target);
+
     WorldPacket data(9 + strlen(m_creature->GetCreatureInfo()->Name) + 13 + strlen(text) + 2);
 
     data.SetOpcode(SMSG_MESSAGECHAT);
@@ -748,7 +766,7 @@ void ScriptedAI::DoTextEmote(const char *text, Unit* target)
     data << text;
     data << uint8(0);
 
-    m_creature->SendMessageToSet(&data, false);
+    m_creature->SendMessageToSet(&data, false);*/
 }
 
 void ScriptedAI::DoGoHome()
@@ -791,6 +809,37 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
 Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime)
 {
     return m_creature->SummonCreature(id,m_creature->GetMapId(),m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle,t,despawntime);
+}
+
+Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
+{
+    Unit::AttackerSet m_attackers;
+    m_attackers = m_creature->getAttackers();
+
+    Unit::AttackerSet::iterator  i = m_attackers.begin();
+
+    if (position > m_attackers.size() || !m_attackers.size())
+        return NULL;
+
+    switch (target)
+    {
+        case SELECT_TARGET_RANDOM:
+            advance ( i , rand()%m_attackers.size());
+            return (*i);
+        break;
+
+        case SELECT_TARGET_TOPAGGRO:
+            advance ( i , position);
+            return (*i);
+        break;
+
+        case SELECT_TARGET_BOTTOMAGGRO:
+            advance ( i , position);
+            return (*i);
+        break;
+    }
+
+    return NULL;
 }
 
 SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)

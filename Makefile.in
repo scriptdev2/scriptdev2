@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# Copyright (C) 2005 MaNGOS <http://www.mangosproject.org/>
+# Copyright © 2005,2006,2007 MaNGOS <http://www.mangosproject.org/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
 top_builddir = ../../..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
@@ -57,7 +58,7 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -69,21 +70,49 @@ am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libMaNGOSScript_la_DEPENDENCIES =
-am_libMaNGOSScript_la_OBJECTS = system.lo ScriptMgr.lo \
-	sc_boss_onyxia.lo sc_custom_example.lo sc_generic_caster.lo \
-	sc_generic_melee.lo sc_kobold.lo sc_guard_bluffwatcher.lo \
+am__DEPENDENCIES_1 =
+libmangosscript_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am_libmangosscript_la_OBJECTS = ScriptMgr.lo sc_defias.lo \
+	sc_generic_creature.lo sc_kobold.lo sc_lumberjack.lo \
+	sc_miner.lo sc_custom_example.lo sc_guard_bluffwatcher.lo \
 	sc_guard_contested.lo sc_guard_darnassus.lo \
 	sc_guard_dunmorogh.lo sc_guard_durotar.lo \
 	sc_guard_elwynnforest.lo sc_guard_ironforge.lo \
 	sc_guard_mulgore.lo sc_guard_orgrimmar.lo \
 	sc_guard_stormwind.lo sc_guard_teldrassil.lo \
 	sc_guard_tirisfal.lo sc_guard_undercity.lo sc_honor_vendor.lo \
-	sc_marshal_mcbride.lo sc_silas_darkmoon.lo \
-	sc_silva_filnaveth.lo sc_skorn_whitecloud.lo \
-	sc_battlemaster.lo sc_guildmaster.lo sc_travelmaster.lo \
-	sc_default.lo sc_defines.lo
-libMaNGOSScript_la_OBJECTS = $(am_libMaNGOSScript_la_OBJECTS)
+	sc_item_test.lo sc_defines.lo sc_battlemaster.lo \
+	sc_guildmaster.lo sc_travelmaster.lo sc_broodlord_lashlayer.lo \
+	sc_chromaggus.lo sc_ebonroc.lo sc_firemaw.lo sc_flamegor.lo \
+	sc_nefarian.lo sc_razorgore.lo sc_vaelastrasz.lo \
+	sc_henze_faulk.lo sc_marshal_mcbride.lo \
+	sc_boss_baron_geddon.lo sc_boss_garr.lo sc_boss_gehennas.lo \
+	sc_boss_golemagg.lo sc_boss_lucifron.lo sc_boss_magmadar.lo \
+	sc_boss_majordomo_executus.lo sc_boss_ragnaros.lo \
+	sc_boss_shazzrah.lo sc_boss_sulfuron_harbinger.lo \
+	sc_bunthen_plainswind.lo sc_silva_filnaveth.lo \
+	sc_skorn_whitecloud.lo sc_anubrekhan.lo sc_faerlina.lo \
+	sc_feugen.lo sc_gluth.lo sc_gothik.lo sc_grobbulus.lo \
+	sc_heigan.lo sc_highlord_mograine.lo sc_kelthuzad.lo \
+	sc_lady_blaumeux.lo sc_loatheb.lo sc_maexxna.lo sc_noth.lo \
+	sc_patchwerk.lo sc_razuvious.lo sc_sapphiron.lo \
+	sc_sir_zeliek.lo sc_stalagg.lo sc_thaddius.lo \
+	sc_thane_korthazz.lo sc_boss_onyxia.lo sc_ayamiss.lo \
+	sc_buru.lo sc_kurinnaxx.lo sc_moam.lo sc_ossirian.lo \
+	sc_rajaxx.lo sc_boss_arcanist_doan.lo \
+	sc_boss_azshir_the_sleepless.lo sc_boss_bloodmage_thalnos.lo \
+	sc_boss_herod.lo sc_boss_high_inquisitor_fairbanks.lo \
+	sc_boss_high_inquisitor_whitemane.lo \
+	sc_boss_houndmaster_loksey.lo sc_boss_interrogator_vishas.lo \
+	sc_boss_scarlet_commander_mograine.lo sc_boss_scorn.lo \
+	sc_scarlet_torturer.lo sc_cthun.lo sc_fankriss.lo \
+	sc_huhuran.lo sc_kri.lo sc_ouro.lo sc_sartura.lo sc_skeram.lo \
+	sc_veklor.lo sc_veknilash.lo sc_vem.lo sc_viscidus.lo \
+	sc_yauj.lo sc_arlokk.lo sc_gahzranka.lo sc_grilek.lo \
+	sc_hakkar.lo sc_hazzarah.lo sc_jeklik.lo sc_jindo.lo \
+	sc_mandokir.lo sc_marli.lo sc_renataki.lo sc_thekal.lo \
+	sc_venoxis.lo sc_wushoolay.lo system.lo
+libmangosscript_la_OBJECTS = $(am_libmangosscript_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -103,14 +132,19 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libMaNGOSScript_la_SOURCES)
-DIST_SOURCES = $(libMaNGOSScript_la_SOURCES)
+SOURCES = $(libmangosscript_la_SOURCES)
+DIST_SOURCES = $(libmangosscript_la_SOURCES)
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-exec-recursive install-info-recursive \
+	install-recursive installcheck-recursive installdirs-recursive \
+	pdf-recursive ps-recursive uninstall-info-recursive \
+	uninstall-recursive
 ETAGS = etags
 CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-pkglibdir = $(libdir)
 ACLOCAL = @ACLOCAL@
-ALLOCA = @ALLOCA@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
@@ -122,7 +156,7 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COMPILER_OPTIONS = @COMPILER_OPTIONS@
+COMPATLIB = @COMPATLIB@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -132,19 +166,16 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DOXYGENPATH = @DOXYGENPATH@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-EXTRA_COMPILER_OPTIONS = @EXTRA_COMPILER_OPTIONS@
-EXTRA_LINKER_OPTIONS = @EXTRA_LINKER_OPTIONS@
 F77 = @F77@
 FFLAGS = @FFLAGS@
-INCLUDES = @INCLUDES@ -I$(srcdir) -I$(srcdir)/../../../dep/include \
-	-I$(srcdir)/../../shared -I$(srcdir)/../../framework \
-	-I$(srcdir)/../../bindings/ScriptDev2/scripts
+GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -153,31 +184,19 @@ LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
-LINKER_OPTIONS = @LINKER_OPTIONS@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
-LTMS_AGE = @LTMS_AGE@
-LTMS_CURRENT = @LTMS_CURRENT@
-LTMS_RELEASE = @LTMS_RELEASE@
-LTMS_REVISION = @LTMS_REVISION@
-LT_AGE = @LT_AGE@
-LT_CURRENT = @LT_CURRENT@
-LT_RELEASE = @LT_RELEASE@
-LT_REVISION = @LT_REVISION@
 MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
-MANGOSD_CONFIG = @MANGOSD_CONFIG@
-MANGOSD_CONFIGDIR = @MANGOSD_CONFIGDIR@
-MANGOSD_DATA = @MANGOSD_DATA@
+MANGOSD_DEBUG_INFO = @MANGOSD_DEBUG_INFO@
 MANGOSD_ENABLE_CLI = @MANGOSD_ENABLE_CLI@
 MANGOSD_ENABLE_RA = @MANGOSD_ENABLE_RA@
+MYSQL_CONFIG = @MYSQL_CONFIG@
 MYSQL_INCLUDES = @MYSQL_INCLUDES@
-MYSQL_LDFLAGS = @MYSQL_LDFLAGS@
+MYSQL_LIBS = @MYSQL_LIBS@
 OBJEXT = @OBJEXT@
-OPENSSL_INCLUDES = @OPENSSL_INCLUDES@
-OPENSSL_LDFLAGS = @OPENSSL_LDFLAGS@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -186,26 +205,17 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 RANLIB = @RANLIB@
-REALMD_CONFIG = @REALMD_CONFIG@
-REALMD_CONFIGDIR = @REALMD_CONFIGDIR@
-SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SSLLIB = @SSLLIB@
 STRIP = @STRIP@
+USE_DOXYGEN_FALSE = @USE_DOXYGEN_FALSE@
+USE_DOXYGEN_TRUE = @USE_DOXYGEN_TRUE@
 VERSION = @VERSION@
-WITH_APIDOCS = @WITH_APIDOCS@
-WITH_APIDOCS_TARGET = @WITH_APIDOCS_TARGET@
-WITH_PYTHON_SUBDIR = @WITH_PYTHON_SUBDIR@
-WITH_PYTHON_SUBPACKAGE = @WITH_PYTHON_SUBPACKAGE@
-WITH_PYTHON_VERSION = @WITH_PYTHON_VERSION@
-__DOXYGEN = @__DOXYGEN@
-__PYTHON = @__PYTHON@
-ac_ct_AR = @ac_ct_AR@
+ZLIB = @ZLIB@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_F77 = @ac_ct_F77@
-ac_ct_RANLIB = @ac_ct_RANLIB@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -222,71 +232,181 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-AM_CXXFLAGS = @COMPILER_OPTIONS@ @EXTRA_COMPILER_OPTIONS@
-lib_LTLIBRARIES = libMaNGOSScript.la
-libMaNGOSScript_la_LIBADD = @LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@
-libMaNGOSScript_la_LDFLAGS = \
-    -release $(LTMS_RELEASE)\
-    -version-info $(LTMS_CURRENT):$(LTMS_REVISION):$(LTMS_AGE)
+SUBDIRS = sql
+AM_CPPFLAGS = $(MYSQL_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/
 
-LIBADD = @LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@
-libMaNGOSScript_la_SOURCES = \
-    system.cpp \
-    config.h \
-    ScriptMgr.h \
-    ScriptMgr.cpp \
-    scripts/boss/sc_boss_onyxia.cpp \
-    scripts/custom/sc_custom_example.cpp \
-    scripts/creature/sc_generic_caster.cpp \
-    scripts/creature/sc_generic_melee.cpp \
-    scripts/creature/sc_kobold.cpp \
-    scripts/guard/sc_guard_bluffwatcher.cpp \
-    scripts/guard/sc_guard_contested.cpp \
-    scripts/guard/sc_guard_darnassus.cpp \
-    scripts/guard/sc_guard_dunmorogh.cpp \
-    scripts/guard/sc_guard_durotar.cpp \
-    scripts/guard/sc_guard_elwynnforest.cpp \
-    scripts/guard/sc_guard_ironforge.cpp \
-    scripts/guard/sc_guard_mulgore.cpp \
-    scripts/guard/sc_guard_orgrimmar.cpp \
-    scripts/guard/sc_guard_stormwind.cpp \
-    scripts/guard/sc_guard_teldrassil.cpp \
-    scripts/guard/sc_guard_tirisfal.cpp \
-    scripts/guard/sc_guard_undercity.cpp \
-    scripts/honor/sc_honor_vendor.cpp \
-    scripts/npc/sc_marshal_mcbride.cpp \
-    scripts/npc/sc_silas_darkmoon.cpp \
-    scripts/npc/sc_silva_filnaveth.cpp \
-    scripts/npc/sc_skorn_whitecloud.cpp \
-    scripts/servers/sc_battlemaster.cpp \
-    scripts/servers/sc_guildmaster.cpp \
-    scripts/servers/sc_travelmaster.cpp \
-    scripts/sc_default.cpp \
-    scripts/sc_defines.cpp \
-    scripts/sc_defines.h
+# libmangosscript shared library will later be reused by world server daemon.
+lib_LTLIBRARIES = libmangosscript.la
+libmangosscript_la_SOURCES = \
+	ScriptMgr.cpp \
+	ScriptMgr.h \
+	config.h \
+	scripts/creature/sc_defias.cpp \
+	scripts/creature/sc_generic_creature.cpp \
+	scripts/creature/sc_kobold.cpp \
+	scripts/creature/sc_lumberjack.cpp \
+	scripts/creature/sc_miner.cpp \
+	scripts/custom/sc_custom_example.cpp \
+	scripts/guard/sc_guard_ai.h \
+	scripts/guard/sc_guard_bluffwatcher.cpp \
+	scripts/guard/sc_guard_contested.cpp \
+	scripts/guard/sc_guard_darnassus.cpp \
+	scripts/guard/sc_guard_dunmorogh.cpp \
+	scripts/guard/sc_guard_durotar.cpp \
+	scripts/guard/sc_guard_elwynnforest.cpp \
+	scripts/guard/sc_guard_ironforge.cpp \
+	scripts/guard/sc_guard_mulgore.cpp \
+	scripts/guard/sc_guard_orgrimmar.cpp \
+	scripts/guard/sc_guard_stormwind.cpp \
+	scripts/guard/sc_guard_teldrassil.cpp \
+	scripts/guard/sc_guard_tirisfal.cpp \
+	scripts/guard/sc_guard_undercity.cpp \
+	scripts/honor/sc_honor_vendor.cpp \
+	scripts/item/sc_item_test.cpp \
+	scripts/sc_defines.cpp \
+	scripts/sc_defines.h \
+	scripts/servers/sc_battlemaster.cpp \
+	scripts/servers/sc_guildmaster.cpp \
+	scripts/servers/sc_travelmaster.cpp \
+	scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp \
+	scripts/zone/blackwing_lair/sc_chromaggus.cpp \
+	scripts/zone/blackwing_lair/sc_ebonroc.cpp \
+	scripts/zone/blackwing_lair/sc_firemaw.cpp \
+	scripts/zone/blackwing_lair/sc_flamegor.cpp \
+	scripts/zone/blackwing_lair/sc_nefarian.cpp \
+	scripts/zone/blackwing_lair/sc_razorgore.cpp \
+	scripts/zone/blackwing_lair/sc_vaelastrasz.cpp \
+	scripts/zone/elwynn_forest/sc_henze_faulk.cpp \
+	scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp \
+	scripts/zone/molten_core/sc_boss_baron_geddon.cpp \
+	scripts/zone/molten_core/sc_boss_garr.cpp \
+	scripts/zone/molten_core/sc_boss_gehennas.cpp \
+	scripts/zone/molten_core/sc_boss_golemagg.cpp \
+	scripts/zone/molten_core/sc_boss_lucifron.cpp \
+	scripts/zone/molten_core/sc_boss_magmadar.cpp \
+	scripts/zone/molten_core/sc_boss_majordomo_executus.cpp \
+	scripts/zone/molten_core/sc_boss_ragnaros.cpp \
+	scripts/zone/molten_core/sc_boss_shazzrah.cpp \
+	scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp \
+	scripts/zone/moonglade/sc_bunthen_plainswind.cpp \
+	scripts/zone/moonglade/sc_silva_filnaveth.cpp \
+	scripts/zone/mulgore/sc_skorn_whitecloud.cpp \
+	scripts/zone/naxxramas/sc_anubrekhan.cpp \
+	scripts/zone/naxxramas/sc_faerlina.cpp \
+	scripts/zone/naxxramas/sc_feugen.cpp \
+	scripts/zone/naxxramas/sc_gluth.cpp \
+	scripts/zone/naxxramas/sc_gothik.cpp \
+	scripts/zone/naxxramas/sc_grobbulus.cpp \
+	scripts/zone/naxxramas/sc_heigan.cpp \
+	scripts/zone/naxxramas/sc_highlord_mograine.cpp \
+	scripts/zone/naxxramas/sc_kelthuzad.cpp \
+	scripts/zone/naxxramas/sc_lady_blaumeux.cpp \
+	scripts/zone/naxxramas/sc_loatheb.cpp \
+	scripts/zone/naxxramas/sc_maexxna.cpp \
+	scripts/zone/naxxramas/sc_noth.cpp \
+	scripts/zone/naxxramas/sc_patchwerk.cpp \
+	scripts/zone/naxxramas/sc_razuvious.cpp \
+	scripts/zone/naxxramas/sc_sapphiron.cpp \
+	scripts/zone/naxxramas/sc_sir_zeliek.cpp \
+	scripts/zone/naxxramas/sc_stalagg.cpp \
+	scripts/zone/naxxramas/sc_thaddius.cpp \
+	scripts/zone/naxxramas/sc_thane_korthazz.cpp \
+	scripts/zone/onyxias_lair/sc_boss_onyxia.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp \
+	scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_herod.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp \
+	scripts/zone/scarlet_monastery/sc_boss_scorn.cpp \
+	scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_kri.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_vem.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp \
+	scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp \
+	scripts/zone/zulgurub/sc_arlokk.cpp \
+	scripts/zone/zulgurub/sc_gahzranka.cpp \
+	scripts/zone/zulgurub/sc_grilek.cpp \
+	scripts/zone/zulgurub/sc_hakkar.cpp \
+	scripts/zone/zulgurub/sc_hazzarah.cpp \
+	scripts/zone/zulgurub/sc_jeklik.cpp \
+	scripts/zone/zulgurub/sc_jindo.cpp \
+	scripts/zone/zulgurub/sc_mandokir.cpp \
+	scripts/zone/zulgurub/sc_marli.cpp \
+	scripts/zone/zulgurub/sc_renataki.cpp \
+	scripts/zone/zulgurub/sc_thekal.cpp \
+	scripts/zone/zulgurub/sc_venoxis.cpp \
+	scripts/zone/zulgurub/sc_wushoolay.cpp \
+	system.cpp
 
-all: all-am
+
+# API versioning
+# Link against dependencies
+# How to increase version info:
+# - only bug fixes implemented:
+# bump the version to LTMANGOS_CURRENT:LTMANGOS_REVISION+1:LTMANGOS_AGE
+# - augmented the interface:
+# bump the version to LTMANGOS_CURRENT+1:0:LTMANGOS_AGE+1
+# - broken old interface:
+# bump the version to LTMANGOS_CURRENT+1:0:0
+LTMANGOS_CURRENT = 0
+LTMANGOS_REVISION = 0
+LTMANGOS_AGE = 0
+libmangosscript_la_LIBADD = $(MYSQL_LIBS)
+libmangosscript_la_LIBFLAGS = -version-info $(LTMANGOS_CURRENT):$(LTMANGOS_REVISION):$(LTMANGOS_AGE)
+
+# Scripts defaults.
+EXTRA_DIST = \
+	Scripts/sc_default.cpp \
+	Scripts/sc_defines.cpp \
+	Scripts/sc_defines.h
+
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .cpp .lo .o .obj
@@ -346,8 +466,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libMaNGOSScript.la: $(libMaNGOSScript_la_OBJECTS) $(libMaNGOSScript_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(libdir) $(libMaNGOSScript_la_LDFLAGS) $(libMaNGOSScript_la_OBJECTS) $(libMaNGOSScript_la_LIBADD) $(LIBS)
+libmangosscript.la: $(libmangosscript_la_OBJECTS) $(libmangosscript_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(libdir) $(libmangosscript_la_LDFLAGS) $(libmangosscript_la_OBJECTS) $(libmangosscript_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -356,13 +476,51 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ScriptMgr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_anubrekhan.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_arlokk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_ayamiss.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_battlemaster.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_arcanist_doan.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_azshir_the_sleepless.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_baron_geddon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_bloodmage_thalnos.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_garr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_gehennas.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_golemagg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_herod.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_high_inquisitor_fairbanks.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_high_inquisitor_whitemane.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_houndmaster_loksey.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_interrogator_vishas.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_lucifron.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_magmadar.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_majordomo_executus.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_onyxia.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_ragnaros.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_scarlet_commander_mograine.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_scorn.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_shazzrah.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_boss_sulfuron_harbinger.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_broodlord_lashlayer.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_bunthen_plainswind.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_buru.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_chromaggus.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_cthun.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_custom_example.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_default.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_defias.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_defines.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_generic_caster.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_generic_melee.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_ebonroc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_faerlina.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_fankriss.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_feugen.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_firemaw.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_flamegor.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_gahzranka.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_generic_creature.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_gluth.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_gothik.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_grilek.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_grobbulus.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guard_bluffwatcher.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guard_contested.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guard_darnassus.Plo@am__quote@
@@ -377,13 +535,58 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guard_tirisfal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guard_undercity.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_guildmaster.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_hakkar.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_hazzarah.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_heigan.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_henze_faulk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_highlord_mograine.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_honor_vendor.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_huhuran.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_item_test.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_jeklik.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_jindo.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_kelthuzad.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_kobold.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_kri.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_kurinnaxx.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_lady_blaumeux.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_loatheb.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_lumberjack.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_maexxna.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_mandokir.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_marli.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_marshal_mcbride.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_silas_darkmoon.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_miner.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_moam.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_nefarian.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_noth.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_ossirian.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_ouro.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_patchwerk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_rajaxx.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_razorgore.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_razuvious.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_renataki.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_sapphiron.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_sartura.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_scarlet_torturer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_silva_filnaveth.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_sir_zeliek.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_skeram.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_skorn_whitecloud.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_stalagg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_thaddius.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_thane_korthazz.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_thekal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_travelmaster.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_vaelastrasz.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_veklor.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_veknilash.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_vem.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_venoxis.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_viscidus.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_wushoolay.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sc_yauj.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system.Plo@am__quote@
 
 .cpp.o:
@@ -407,33 +610,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-sc_boss_onyxia.lo: scripts/boss/sc_boss_onyxia.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_onyxia.lo -MD -MP -MF "$(DEPDIR)/sc_boss_onyxia.Tpo" -c -o sc_boss_onyxia.lo `test -f 'scripts/boss/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/boss/sc_boss_onyxia.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_onyxia.Tpo" "$(DEPDIR)/sc_boss_onyxia.Plo"; else rm -f "$(DEPDIR)/sc_boss_onyxia.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/boss/sc_boss_onyxia.cpp' object='sc_boss_onyxia.lo' libtool=yes @AMDEPBACKSLASH@
+sc_defias.lo: scripts/creature/sc_defias.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_defias.lo -MD -MP -MF "$(DEPDIR)/sc_defias.Tpo" -c -o sc_defias.lo `test -f 'scripts/creature/sc_defias.cpp' || echo '$(srcdir)/'`scripts/creature/sc_defias.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_defias.Tpo" "$(DEPDIR)/sc_defias.Plo"; else rm -f "$(DEPDIR)/sc_defias.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_defias.cpp' object='sc_defias.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_onyxia.lo `test -f 'scripts/boss/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/boss/sc_boss_onyxia.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_defias.lo `test -f 'scripts/creature/sc_defias.cpp' || echo '$(srcdir)/'`scripts/creature/sc_defias.cpp
 
-sc_custom_example.lo: scripts/custom/sc_custom_example.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_custom_example.lo -MD -MP -MF "$(DEPDIR)/sc_custom_example.Tpo" -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_custom_example.Tpo" "$(DEPDIR)/sc_custom_example.Plo"; else rm -f "$(DEPDIR)/sc_custom_example.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/custom/sc_custom_example.cpp' object='sc_custom_example.lo' libtool=yes @AMDEPBACKSLASH@
+sc_generic_creature.lo: scripts/creature/sc_generic_creature.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_generic_creature.lo -MD -MP -MF "$(DEPDIR)/sc_generic_creature.Tpo" -c -o sc_generic_creature.lo `test -f 'scripts/creature/sc_generic_creature.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_creature.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_generic_creature.Tpo" "$(DEPDIR)/sc_generic_creature.Plo"; else rm -f "$(DEPDIR)/sc_generic_creature.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_generic_creature.cpp' object='sc_generic_creature.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp
-
-sc_generic_caster.lo: scripts/creature/sc_generic_caster.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_generic_caster.lo -MD -MP -MF "$(DEPDIR)/sc_generic_caster.Tpo" -c -o sc_generic_caster.lo `test -f 'scripts/creature/sc_generic_caster.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_caster.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_generic_caster.Tpo" "$(DEPDIR)/sc_generic_caster.Plo"; else rm -f "$(DEPDIR)/sc_generic_caster.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_generic_caster.cpp' object='sc_generic_caster.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_generic_caster.lo `test -f 'scripts/creature/sc_generic_caster.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_caster.cpp
-
-sc_generic_melee.lo: scripts/creature/sc_generic_melee.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_generic_melee.lo -MD -MP -MF "$(DEPDIR)/sc_generic_melee.Tpo" -c -o sc_generic_melee.lo `test -f 'scripts/creature/sc_generic_melee.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_melee.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_generic_melee.Tpo" "$(DEPDIR)/sc_generic_melee.Plo"; else rm -f "$(DEPDIR)/sc_generic_melee.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_generic_melee.cpp' object='sc_generic_melee.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_generic_melee.lo `test -f 'scripts/creature/sc_generic_melee.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_melee.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_generic_creature.lo `test -f 'scripts/creature/sc_generic_creature.cpp' || echo '$(srcdir)/'`scripts/creature/sc_generic_creature.cpp
 
 sc_kobold.lo: scripts/creature/sc_kobold.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_kobold.lo -MD -MP -MF "$(DEPDIR)/sc_kobold.Tpo" -c -o sc_kobold.lo `test -f 'scripts/creature/sc_kobold.cpp' || echo '$(srcdir)/'`scripts/creature/sc_kobold.cpp; \
@@ -441,6 +630,27 @@ sc_kobold.lo: scripts/creature/sc_kobold.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_kobold.cpp' object='sc_kobold.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_kobold.lo `test -f 'scripts/creature/sc_kobold.cpp' || echo '$(srcdir)/'`scripts/creature/sc_kobold.cpp
+
+sc_lumberjack.lo: scripts/creature/sc_lumberjack.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_lumberjack.lo -MD -MP -MF "$(DEPDIR)/sc_lumberjack.Tpo" -c -o sc_lumberjack.lo `test -f 'scripts/creature/sc_lumberjack.cpp' || echo '$(srcdir)/'`scripts/creature/sc_lumberjack.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_lumberjack.Tpo" "$(DEPDIR)/sc_lumberjack.Plo"; else rm -f "$(DEPDIR)/sc_lumberjack.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_lumberjack.cpp' object='sc_lumberjack.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_lumberjack.lo `test -f 'scripts/creature/sc_lumberjack.cpp' || echo '$(srcdir)/'`scripts/creature/sc_lumberjack.cpp
+
+sc_miner.lo: scripts/creature/sc_miner.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_miner.lo -MD -MP -MF "$(DEPDIR)/sc_miner.Tpo" -c -o sc_miner.lo `test -f 'scripts/creature/sc_miner.cpp' || echo '$(srcdir)/'`scripts/creature/sc_miner.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_miner.Tpo" "$(DEPDIR)/sc_miner.Plo"; else rm -f "$(DEPDIR)/sc_miner.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/creature/sc_miner.cpp' object='sc_miner.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_miner.lo `test -f 'scripts/creature/sc_miner.cpp' || echo '$(srcdir)/'`scripts/creature/sc_miner.cpp
+
+sc_custom_example.lo: scripts/custom/sc_custom_example.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_custom_example.lo -MD -MP -MF "$(DEPDIR)/sc_custom_example.Tpo" -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_custom_example.Tpo" "$(DEPDIR)/sc_custom_example.Plo"; else rm -f "$(DEPDIR)/sc_custom_example.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/custom/sc_custom_example.cpp' object='sc_custom_example.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_custom_example.lo `test -f 'scripts/custom/sc_custom_example.cpp' || echo '$(srcdir)/'`scripts/custom/sc_custom_example.cpp
 
 sc_guard_bluffwatcher.lo: scripts/guard/sc_guard_bluffwatcher.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_guard_bluffwatcher.lo -MD -MP -MF "$(DEPDIR)/sc_guard_bluffwatcher.Tpo" -c -o sc_guard_bluffwatcher.lo `test -f 'scripts/guard/sc_guard_bluffwatcher.cpp' || echo '$(srcdir)/'`scripts/guard/sc_guard_bluffwatcher.cpp; \
@@ -540,33 +750,19 @@ sc_honor_vendor.lo: scripts/honor/sc_honor_vendor.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_honor_vendor.lo `test -f 'scripts/honor/sc_honor_vendor.cpp' || echo '$(srcdir)/'`scripts/honor/sc_honor_vendor.cpp
 
-sc_marshal_mcbride.lo: scripts/npc/sc_marshal_mcbride.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_marshal_mcbride.lo -MD -MP -MF "$(DEPDIR)/sc_marshal_mcbride.Tpo" -c -o sc_marshal_mcbride.lo `test -f 'scripts/npc/sc_marshal_mcbride.cpp' || echo '$(srcdir)/'`scripts/npc/sc_marshal_mcbride.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_marshal_mcbride.Tpo" "$(DEPDIR)/sc_marshal_mcbride.Plo"; else rm -f "$(DEPDIR)/sc_marshal_mcbride.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/npc/sc_marshal_mcbride.cpp' object='sc_marshal_mcbride.lo' libtool=yes @AMDEPBACKSLASH@
+sc_item_test.lo: scripts/item/sc_item_test.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_item_test.lo -MD -MP -MF "$(DEPDIR)/sc_item_test.Tpo" -c -o sc_item_test.lo `test -f 'scripts/item/sc_item_test.cpp' || echo '$(srcdir)/'`scripts/item/sc_item_test.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_item_test.Tpo" "$(DEPDIR)/sc_item_test.Plo"; else rm -f "$(DEPDIR)/sc_item_test.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/item/sc_item_test.cpp' object='sc_item_test.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_marshal_mcbride.lo `test -f 'scripts/npc/sc_marshal_mcbride.cpp' || echo '$(srcdir)/'`scripts/npc/sc_marshal_mcbride.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_item_test.lo `test -f 'scripts/item/sc_item_test.cpp' || echo '$(srcdir)/'`scripts/item/sc_item_test.cpp
 
-sc_silas_darkmoon.lo: scripts/npc/sc_silas_darkmoon.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_silas_darkmoon.lo -MD -MP -MF "$(DEPDIR)/sc_silas_darkmoon.Tpo" -c -o sc_silas_darkmoon.lo `test -f 'scripts/npc/sc_silas_darkmoon.cpp' || echo '$(srcdir)/'`scripts/npc/sc_silas_darkmoon.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_silas_darkmoon.Tpo" "$(DEPDIR)/sc_silas_darkmoon.Plo"; else rm -f "$(DEPDIR)/sc_silas_darkmoon.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/npc/sc_silas_darkmoon.cpp' object='sc_silas_darkmoon.lo' libtool=yes @AMDEPBACKSLASH@
+sc_defines.lo: scripts/sc_defines.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_defines.lo -MD -MP -MF "$(DEPDIR)/sc_defines.Tpo" -c -o sc_defines.lo `test -f 'scripts/sc_defines.cpp' || echo '$(srcdir)/'`scripts/sc_defines.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_defines.Tpo" "$(DEPDIR)/sc_defines.Plo"; else rm -f "$(DEPDIR)/sc_defines.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/sc_defines.cpp' object='sc_defines.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_silas_darkmoon.lo `test -f 'scripts/npc/sc_silas_darkmoon.cpp' || echo '$(srcdir)/'`scripts/npc/sc_silas_darkmoon.cpp
-
-sc_silva_filnaveth.lo: scripts/npc/sc_silva_filnaveth.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_silva_filnaveth.lo -MD -MP -MF "$(DEPDIR)/sc_silva_filnaveth.Tpo" -c -o sc_silva_filnaveth.lo `test -f 'scripts/npc/sc_silva_filnaveth.cpp' || echo '$(srcdir)/'`scripts/npc/sc_silva_filnaveth.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_silva_filnaveth.Tpo" "$(DEPDIR)/sc_silva_filnaveth.Plo"; else rm -f "$(DEPDIR)/sc_silva_filnaveth.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/npc/sc_silva_filnaveth.cpp' object='sc_silva_filnaveth.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_silva_filnaveth.lo `test -f 'scripts/npc/sc_silva_filnaveth.cpp' || echo '$(srcdir)/'`scripts/npc/sc_silva_filnaveth.cpp
-
-sc_skorn_whitecloud.lo: scripts/npc/sc_skorn_whitecloud.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_skorn_whitecloud.lo -MD -MP -MF "$(DEPDIR)/sc_skorn_whitecloud.Tpo" -c -o sc_skorn_whitecloud.lo `test -f 'scripts/npc/sc_skorn_whitecloud.cpp' || echo '$(srcdir)/'`scripts/npc/sc_skorn_whitecloud.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_skorn_whitecloud.Tpo" "$(DEPDIR)/sc_skorn_whitecloud.Plo"; else rm -f "$(DEPDIR)/sc_skorn_whitecloud.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/npc/sc_skorn_whitecloud.cpp' object='sc_skorn_whitecloud.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_skorn_whitecloud.lo `test -f 'scripts/npc/sc_skorn_whitecloud.cpp' || echo '$(srcdir)/'`scripts/npc/sc_skorn_whitecloud.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_defines.lo `test -f 'scripts/sc_defines.cpp' || echo '$(srcdir)/'`scripts/sc_defines.cpp
 
 sc_battlemaster.lo: scripts/servers/sc_battlemaster.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_battlemaster.lo -MD -MP -MF "$(DEPDIR)/sc_battlemaster.Tpo" -c -o sc_battlemaster.lo `test -f 'scripts/servers/sc_battlemaster.cpp' || echo '$(srcdir)/'`scripts/servers/sc_battlemaster.cpp; \
@@ -589,19 +785,607 @@ sc_travelmaster.lo: scripts/servers/sc_travelmaster.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_travelmaster.lo `test -f 'scripts/servers/sc_travelmaster.cpp' || echo '$(srcdir)/'`scripts/servers/sc_travelmaster.cpp
 
-sc_default.lo: scripts/sc_default.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_default.lo -MD -MP -MF "$(DEPDIR)/sc_default.Tpo" -c -o sc_default.lo `test -f 'scripts/sc_default.cpp' || echo '$(srcdir)/'`scripts/sc_default.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_default.Tpo" "$(DEPDIR)/sc_default.Plo"; else rm -f "$(DEPDIR)/sc_default.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/sc_default.cpp' object='sc_default.lo' libtool=yes @AMDEPBACKSLASH@
+sc_broodlord_lashlayer.lo: scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_broodlord_lashlayer.lo -MD -MP -MF "$(DEPDIR)/sc_broodlord_lashlayer.Tpo" -c -o sc_broodlord_lashlayer.lo `test -f 'scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_broodlord_lashlayer.Tpo" "$(DEPDIR)/sc_broodlord_lashlayer.Plo"; else rm -f "$(DEPDIR)/sc_broodlord_lashlayer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp' object='sc_broodlord_lashlayer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_default.lo `test -f 'scripts/sc_default.cpp' || echo '$(srcdir)/'`scripts/sc_default.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_broodlord_lashlayer.lo `test -f 'scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp
 
-sc_defines.lo: scripts/sc_defines.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_defines.lo -MD -MP -MF "$(DEPDIR)/sc_defines.Tpo" -c -o sc_defines.lo `test -f 'scripts/sc_defines.cpp' || echo '$(srcdir)/'`scripts/sc_defines.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_defines.Tpo" "$(DEPDIR)/sc_defines.Plo"; else rm -f "$(DEPDIR)/sc_defines.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/sc_defines.cpp' object='sc_defines.lo' libtool=yes @AMDEPBACKSLASH@
+sc_chromaggus.lo: scripts/zone/blackwing_lair/sc_chromaggus.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_chromaggus.lo -MD -MP -MF "$(DEPDIR)/sc_chromaggus.Tpo" -c -o sc_chromaggus.lo `test -f 'scripts/zone/blackwing_lair/sc_chromaggus.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_chromaggus.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_chromaggus.Tpo" "$(DEPDIR)/sc_chromaggus.Plo"; else rm -f "$(DEPDIR)/sc_chromaggus.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_chromaggus.cpp' object='sc_chromaggus.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_defines.lo `test -f 'scripts/sc_defines.cpp' || echo '$(srcdir)/'`scripts/sc_defines.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_chromaggus.lo `test -f 'scripts/zone/blackwing_lair/sc_chromaggus.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_chromaggus.cpp
+
+sc_ebonroc.lo: scripts/zone/blackwing_lair/sc_ebonroc.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_ebonroc.lo -MD -MP -MF "$(DEPDIR)/sc_ebonroc.Tpo" -c -o sc_ebonroc.lo `test -f 'scripts/zone/blackwing_lair/sc_ebonroc.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_ebonroc.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_ebonroc.Tpo" "$(DEPDIR)/sc_ebonroc.Plo"; else rm -f "$(DEPDIR)/sc_ebonroc.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_ebonroc.cpp' object='sc_ebonroc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_ebonroc.lo `test -f 'scripts/zone/blackwing_lair/sc_ebonroc.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_ebonroc.cpp
+
+sc_firemaw.lo: scripts/zone/blackwing_lair/sc_firemaw.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_firemaw.lo -MD -MP -MF "$(DEPDIR)/sc_firemaw.Tpo" -c -o sc_firemaw.lo `test -f 'scripts/zone/blackwing_lair/sc_firemaw.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_firemaw.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_firemaw.Tpo" "$(DEPDIR)/sc_firemaw.Plo"; else rm -f "$(DEPDIR)/sc_firemaw.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_firemaw.cpp' object='sc_firemaw.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_firemaw.lo `test -f 'scripts/zone/blackwing_lair/sc_firemaw.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_firemaw.cpp
+
+sc_flamegor.lo: scripts/zone/blackwing_lair/sc_flamegor.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_flamegor.lo -MD -MP -MF "$(DEPDIR)/sc_flamegor.Tpo" -c -o sc_flamegor.lo `test -f 'scripts/zone/blackwing_lair/sc_flamegor.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_flamegor.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_flamegor.Tpo" "$(DEPDIR)/sc_flamegor.Plo"; else rm -f "$(DEPDIR)/sc_flamegor.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_flamegor.cpp' object='sc_flamegor.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_flamegor.lo `test -f 'scripts/zone/blackwing_lair/sc_flamegor.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_flamegor.cpp
+
+sc_nefarian.lo: scripts/zone/blackwing_lair/sc_nefarian.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_nefarian.lo -MD -MP -MF "$(DEPDIR)/sc_nefarian.Tpo" -c -o sc_nefarian.lo `test -f 'scripts/zone/blackwing_lair/sc_nefarian.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_nefarian.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_nefarian.Tpo" "$(DEPDIR)/sc_nefarian.Plo"; else rm -f "$(DEPDIR)/sc_nefarian.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_nefarian.cpp' object='sc_nefarian.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_nefarian.lo `test -f 'scripts/zone/blackwing_lair/sc_nefarian.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_nefarian.cpp
+
+sc_razorgore.lo: scripts/zone/blackwing_lair/sc_razorgore.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_razorgore.lo -MD -MP -MF "$(DEPDIR)/sc_razorgore.Tpo" -c -o sc_razorgore.lo `test -f 'scripts/zone/blackwing_lair/sc_razorgore.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_razorgore.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_razorgore.Tpo" "$(DEPDIR)/sc_razorgore.Plo"; else rm -f "$(DEPDIR)/sc_razorgore.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_razorgore.cpp' object='sc_razorgore.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_razorgore.lo `test -f 'scripts/zone/blackwing_lair/sc_razorgore.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_razorgore.cpp
+
+sc_vaelastrasz.lo: scripts/zone/blackwing_lair/sc_vaelastrasz.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_vaelastrasz.lo -MD -MP -MF "$(DEPDIR)/sc_vaelastrasz.Tpo" -c -o sc_vaelastrasz.lo `test -f 'scripts/zone/blackwing_lair/sc_vaelastrasz.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_vaelastrasz.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_vaelastrasz.Tpo" "$(DEPDIR)/sc_vaelastrasz.Plo"; else rm -f "$(DEPDIR)/sc_vaelastrasz.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/blackwing_lair/sc_vaelastrasz.cpp' object='sc_vaelastrasz.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_vaelastrasz.lo `test -f 'scripts/zone/blackwing_lair/sc_vaelastrasz.cpp' || echo '$(srcdir)/'`scripts/zone/blackwing_lair/sc_vaelastrasz.cpp
+
+sc_henze_faulk.lo: scripts/zone/elwynn_forest/sc_henze_faulk.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_henze_faulk.lo -MD -MP -MF "$(DEPDIR)/sc_henze_faulk.Tpo" -c -o sc_henze_faulk.lo `test -f 'scripts/zone/elwynn_forest/sc_henze_faulk.cpp' || echo '$(srcdir)/'`scripts/zone/elwynn_forest/sc_henze_faulk.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_henze_faulk.Tpo" "$(DEPDIR)/sc_henze_faulk.Plo"; else rm -f "$(DEPDIR)/sc_henze_faulk.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/elwynn_forest/sc_henze_faulk.cpp' object='sc_henze_faulk.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_henze_faulk.lo `test -f 'scripts/zone/elwynn_forest/sc_henze_faulk.cpp' || echo '$(srcdir)/'`scripts/zone/elwynn_forest/sc_henze_faulk.cpp
+
+sc_marshal_mcbride.lo: scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_marshal_mcbride.lo -MD -MP -MF "$(DEPDIR)/sc_marshal_mcbride.Tpo" -c -o sc_marshal_mcbride.lo `test -f 'scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp' || echo '$(srcdir)/'`scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_marshal_mcbride.Tpo" "$(DEPDIR)/sc_marshal_mcbride.Plo"; else rm -f "$(DEPDIR)/sc_marshal_mcbride.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp' object='sc_marshal_mcbride.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_marshal_mcbride.lo `test -f 'scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp' || echo '$(srcdir)/'`scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp
+
+sc_boss_baron_geddon.lo: scripts/zone/molten_core/sc_boss_baron_geddon.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_baron_geddon.lo -MD -MP -MF "$(DEPDIR)/sc_boss_baron_geddon.Tpo" -c -o sc_boss_baron_geddon.lo `test -f 'scripts/zone/molten_core/sc_boss_baron_geddon.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_baron_geddon.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_baron_geddon.Tpo" "$(DEPDIR)/sc_boss_baron_geddon.Plo"; else rm -f "$(DEPDIR)/sc_boss_baron_geddon.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_baron_geddon.cpp' object='sc_boss_baron_geddon.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_baron_geddon.lo `test -f 'scripts/zone/molten_core/sc_boss_baron_geddon.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_baron_geddon.cpp
+
+sc_boss_garr.lo: scripts/zone/molten_core/sc_boss_garr.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_garr.lo -MD -MP -MF "$(DEPDIR)/sc_boss_garr.Tpo" -c -o sc_boss_garr.lo `test -f 'scripts/zone/molten_core/sc_boss_garr.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_garr.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_garr.Tpo" "$(DEPDIR)/sc_boss_garr.Plo"; else rm -f "$(DEPDIR)/sc_boss_garr.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_garr.cpp' object='sc_boss_garr.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_garr.lo `test -f 'scripts/zone/molten_core/sc_boss_garr.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_garr.cpp
+
+sc_boss_gehennas.lo: scripts/zone/molten_core/sc_boss_gehennas.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_gehennas.lo -MD -MP -MF "$(DEPDIR)/sc_boss_gehennas.Tpo" -c -o sc_boss_gehennas.lo `test -f 'scripts/zone/molten_core/sc_boss_gehennas.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_gehennas.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_gehennas.Tpo" "$(DEPDIR)/sc_boss_gehennas.Plo"; else rm -f "$(DEPDIR)/sc_boss_gehennas.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_gehennas.cpp' object='sc_boss_gehennas.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_gehennas.lo `test -f 'scripts/zone/molten_core/sc_boss_gehennas.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_gehennas.cpp
+
+sc_boss_golemagg.lo: scripts/zone/molten_core/sc_boss_golemagg.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_golemagg.lo -MD -MP -MF "$(DEPDIR)/sc_boss_golemagg.Tpo" -c -o sc_boss_golemagg.lo `test -f 'scripts/zone/molten_core/sc_boss_golemagg.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_golemagg.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_golemagg.Tpo" "$(DEPDIR)/sc_boss_golemagg.Plo"; else rm -f "$(DEPDIR)/sc_boss_golemagg.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_golemagg.cpp' object='sc_boss_golemagg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_golemagg.lo `test -f 'scripts/zone/molten_core/sc_boss_golemagg.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_golemagg.cpp
+
+sc_boss_lucifron.lo: scripts/zone/molten_core/sc_boss_lucifron.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_lucifron.lo -MD -MP -MF "$(DEPDIR)/sc_boss_lucifron.Tpo" -c -o sc_boss_lucifron.lo `test -f 'scripts/zone/molten_core/sc_boss_lucifron.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_lucifron.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_lucifron.Tpo" "$(DEPDIR)/sc_boss_lucifron.Plo"; else rm -f "$(DEPDIR)/sc_boss_lucifron.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_lucifron.cpp' object='sc_boss_lucifron.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_lucifron.lo `test -f 'scripts/zone/molten_core/sc_boss_lucifron.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_lucifron.cpp
+
+sc_boss_magmadar.lo: scripts/zone/molten_core/sc_boss_magmadar.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_magmadar.lo -MD -MP -MF "$(DEPDIR)/sc_boss_magmadar.Tpo" -c -o sc_boss_magmadar.lo `test -f 'scripts/zone/molten_core/sc_boss_magmadar.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_magmadar.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_magmadar.Tpo" "$(DEPDIR)/sc_boss_magmadar.Plo"; else rm -f "$(DEPDIR)/sc_boss_magmadar.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_magmadar.cpp' object='sc_boss_magmadar.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_magmadar.lo `test -f 'scripts/zone/molten_core/sc_boss_magmadar.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_magmadar.cpp
+
+sc_boss_majordomo_executus.lo: scripts/zone/molten_core/sc_boss_majordomo_executus.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_majordomo_executus.lo -MD -MP -MF "$(DEPDIR)/sc_boss_majordomo_executus.Tpo" -c -o sc_boss_majordomo_executus.lo `test -f 'scripts/zone/molten_core/sc_boss_majordomo_executus.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_majordomo_executus.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_majordomo_executus.Tpo" "$(DEPDIR)/sc_boss_majordomo_executus.Plo"; else rm -f "$(DEPDIR)/sc_boss_majordomo_executus.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_majordomo_executus.cpp' object='sc_boss_majordomo_executus.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_majordomo_executus.lo `test -f 'scripts/zone/molten_core/sc_boss_majordomo_executus.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_majordomo_executus.cpp
+
+sc_boss_ragnaros.lo: scripts/zone/molten_core/sc_boss_ragnaros.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_ragnaros.lo -MD -MP -MF "$(DEPDIR)/sc_boss_ragnaros.Tpo" -c -o sc_boss_ragnaros.lo `test -f 'scripts/zone/molten_core/sc_boss_ragnaros.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_ragnaros.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_ragnaros.Tpo" "$(DEPDIR)/sc_boss_ragnaros.Plo"; else rm -f "$(DEPDIR)/sc_boss_ragnaros.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_ragnaros.cpp' object='sc_boss_ragnaros.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_ragnaros.lo `test -f 'scripts/zone/molten_core/sc_boss_ragnaros.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_ragnaros.cpp
+
+sc_boss_shazzrah.lo: scripts/zone/molten_core/sc_boss_shazzrah.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_shazzrah.lo -MD -MP -MF "$(DEPDIR)/sc_boss_shazzrah.Tpo" -c -o sc_boss_shazzrah.lo `test -f 'scripts/zone/molten_core/sc_boss_shazzrah.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_shazzrah.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_shazzrah.Tpo" "$(DEPDIR)/sc_boss_shazzrah.Plo"; else rm -f "$(DEPDIR)/sc_boss_shazzrah.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_shazzrah.cpp' object='sc_boss_shazzrah.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_shazzrah.lo `test -f 'scripts/zone/molten_core/sc_boss_shazzrah.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_shazzrah.cpp
+
+sc_boss_sulfuron_harbinger.lo: scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_sulfuron_harbinger.lo -MD -MP -MF "$(DEPDIR)/sc_boss_sulfuron_harbinger.Tpo" -c -o sc_boss_sulfuron_harbinger.lo `test -f 'scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_sulfuron_harbinger.Tpo" "$(DEPDIR)/sc_boss_sulfuron_harbinger.Plo"; else rm -f "$(DEPDIR)/sc_boss_sulfuron_harbinger.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp' object='sc_boss_sulfuron_harbinger.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_sulfuron_harbinger.lo `test -f 'scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp' || echo '$(srcdir)/'`scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp
+
+sc_bunthen_plainswind.lo: scripts/zone/moonglade/sc_bunthen_plainswind.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_bunthen_plainswind.lo -MD -MP -MF "$(DEPDIR)/sc_bunthen_plainswind.Tpo" -c -o sc_bunthen_plainswind.lo `test -f 'scripts/zone/moonglade/sc_bunthen_plainswind.cpp' || echo '$(srcdir)/'`scripts/zone/moonglade/sc_bunthen_plainswind.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_bunthen_plainswind.Tpo" "$(DEPDIR)/sc_bunthen_plainswind.Plo"; else rm -f "$(DEPDIR)/sc_bunthen_plainswind.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/moonglade/sc_bunthen_plainswind.cpp' object='sc_bunthen_plainswind.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_bunthen_plainswind.lo `test -f 'scripts/zone/moonglade/sc_bunthen_plainswind.cpp' || echo '$(srcdir)/'`scripts/zone/moonglade/sc_bunthen_plainswind.cpp
+
+sc_silva_filnaveth.lo: scripts/zone/moonglade/sc_silva_filnaveth.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_silva_filnaveth.lo -MD -MP -MF "$(DEPDIR)/sc_silva_filnaveth.Tpo" -c -o sc_silva_filnaveth.lo `test -f 'scripts/zone/moonglade/sc_silva_filnaveth.cpp' || echo '$(srcdir)/'`scripts/zone/moonglade/sc_silva_filnaveth.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_silva_filnaveth.Tpo" "$(DEPDIR)/sc_silva_filnaveth.Plo"; else rm -f "$(DEPDIR)/sc_silva_filnaveth.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/moonglade/sc_silva_filnaveth.cpp' object='sc_silva_filnaveth.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_silva_filnaveth.lo `test -f 'scripts/zone/moonglade/sc_silva_filnaveth.cpp' || echo '$(srcdir)/'`scripts/zone/moonglade/sc_silva_filnaveth.cpp
+
+sc_skorn_whitecloud.lo: scripts/zone/mulgore/sc_skorn_whitecloud.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_skorn_whitecloud.lo -MD -MP -MF "$(DEPDIR)/sc_skorn_whitecloud.Tpo" -c -o sc_skorn_whitecloud.lo `test -f 'scripts/zone/mulgore/sc_skorn_whitecloud.cpp' || echo '$(srcdir)/'`scripts/zone/mulgore/sc_skorn_whitecloud.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_skorn_whitecloud.Tpo" "$(DEPDIR)/sc_skorn_whitecloud.Plo"; else rm -f "$(DEPDIR)/sc_skorn_whitecloud.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/mulgore/sc_skorn_whitecloud.cpp' object='sc_skorn_whitecloud.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_skorn_whitecloud.lo `test -f 'scripts/zone/mulgore/sc_skorn_whitecloud.cpp' || echo '$(srcdir)/'`scripts/zone/mulgore/sc_skorn_whitecloud.cpp
+
+sc_anubrekhan.lo: scripts/zone/naxxramas/sc_anubrekhan.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_anubrekhan.lo -MD -MP -MF "$(DEPDIR)/sc_anubrekhan.Tpo" -c -o sc_anubrekhan.lo `test -f 'scripts/zone/naxxramas/sc_anubrekhan.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_anubrekhan.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_anubrekhan.Tpo" "$(DEPDIR)/sc_anubrekhan.Plo"; else rm -f "$(DEPDIR)/sc_anubrekhan.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_anubrekhan.cpp' object='sc_anubrekhan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_anubrekhan.lo `test -f 'scripts/zone/naxxramas/sc_anubrekhan.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_anubrekhan.cpp
+
+sc_faerlina.lo: scripts/zone/naxxramas/sc_faerlina.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_faerlina.lo -MD -MP -MF "$(DEPDIR)/sc_faerlina.Tpo" -c -o sc_faerlina.lo `test -f 'scripts/zone/naxxramas/sc_faerlina.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_faerlina.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_faerlina.Tpo" "$(DEPDIR)/sc_faerlina.Plo"; else rm -f "$(DEPDIR)/sc_faerlina.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_faerlina.cpp' object='sc_faerlina.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_faerlina.lo `test -f 'scripts/zone/naxxramas/sc_faerlina.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_faerlina.cpp
+
+sc_feugen.lo: scripts/zone/naxxramas/sc_feugen.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_feugen.lo -MD -MP -MF "$(DEPDIR)/sc_feugen.Tpo" -c -o sc_feugen.lo `test -f 'scripts/zone/naxxramas/sc_feugen.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_feugen.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_feugen.Tpo" "$(DEPDIR)/sc_feugen.Plo"; else rm -f "$(DEPDIR)/sc_feugen.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_feugen.cpp' object='sc_feugen.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_feugen.lo `test -f 'scripts/zone/naxxramas/sc_feugen.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_feugen.cpp
+
+sc_gluth.lo: scripts/zone/naxxramas/sc_gluth.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_gluth.lo -MD -MP -MF "$(DEPDIR)/sc_gluth.Tpo" -c -o sc_gluth.lo `test -f 'scripts/zone/naxxramas/sc_gluth.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_gluth.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_gluth.Tpo" "$(DEPDIR)/sc_gluth.Plo"; else rm -f "$(DEPDIR)/sc_gluth.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_gluth.cpp' object='sc_gluth.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_gluth.lo `test -f 'scripts/zone/naxxramas/sc_gluth.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_gluth.cpp
+
+sc_gothik.lo: scripts/zone/naxxramas/sc_gothik.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_gothik.lo -MD -MP -MF "$(DEPDIR)/sc_gothik.Tpo" -c -o sc_gothik.lo `test -f 'scripts/zone/naxxramas/sc_gothik.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_gothik.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_gothik.Tpo" "$(DEPDIR)/sc_gothik.Plo"; else rm -f "$(DEPDIR)/sc_gothik.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_gothik.cpp' object='sc_gothik.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_gothik.lo `test -f 'scripts/zone/naxxramas/sc_gothik.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_gothik.cpp
+
+sc_grobbulus.lo: scripts/zone/naxxramas/sc_grobbulus.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_grobbulus.lo -MD -MP -MF "$(DEPDIR)/sc_grobbulus.Tpo" -c -o sc_grobbulus.lo `test -f 'scripts/zone/naxxramas/sc_grobbulus.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_grobbulus.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_grobbulus.Tpo" "$(DEPDIR)/sc_grobbulus.Plo"; else rm -f "$(DEPDIR)/sc_grobbulus.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_grobbulus.cpp' object='sc_grobbulus.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_grobbulus.lo `test -f 'scripts/zone/naxxramas/sc_grobbulus.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_grobbulus.cpp
+
+sc_heigan.lo: scripts/zone/naxxramas/sc_heigan.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_heigan.lo -MD -MP -MF "$(DEPDIR)/sc_heigan.Tpo" -c -o sc_heigan.lo `test -f 'scripts/zone/naxxramas/sc_heigan.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_heigan.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_heigan.Tpo" "$(DEPDIR)/sc_heigan.Plo"; else rm -f "$(DEPDIR)/sc_heigan.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_heigan.cpp' object='sc_heigan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_heigan.lo `test -f 'scripts/zone/naxxramas/sc_heigan.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_heigan.cpp
+
+sc_highlord_mograine.lo: scripts/zone/naxxramas/sc_highlord_mograine.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_highlord_mograine.lo -MD -MP -MF "$(DEPDIR)/sc_highlord_mograine.Tpo" -c -o sc_highlord_mograine.lo `test -f 'scripts/zone/naxxramas/sc_highlord_mograine.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_highlord_mograine.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_highlord_mograine.Tpo" "$(DEPDIR)/sc_highlord_mograine.Plo"; else rm -f "$(DEPDIR)/sc_highlord_mograine.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_highlord_mograine.cpp' object='sc_highlord_mograine.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_highlord_mograine.lo `test -f 'scripts/zone/naxxramas/sc_highlord_mograine.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_highlord_mograine.cpp
+
+sc_kelthuzad.lo: scripts/zone/naxxramas/sc_kelthuzad.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_kelthuzad.lo -MD -MP -MF "$(DEPDIR)/sc_kelthuzad.Tpo" -c -o sc_kelthuzad.lo `test -f 'scripts/zone/naxxramas/sc_kelthuzad.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_kelthuzad.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_kelthuzad.Tpo" "$(DEPDIR)/sc_kelthuzad.Plo"; else rm -f "$(DEPDIR)/sc_kelthuzad.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_kelthuzad.cpp' object='sc_kelthuzad.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_kelthuzad.lo `test -f 'scripts/zone/naxxramas/sc_kelthuzad.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_kelthuzad.cpp
+
+sc_lady_blaumeux.lo: scripts/zone/naxxramas/sc_lady_blaumeux.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_lady_blaumeux.lo -MD -MP -MF "$(DEPDIR)/sc_lady_blaumeux.Tpo" -c -o sc_lady_blaumeux.lo `test -f 'scripts/zone/naxxramas/sc_lady_blaumeux.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_lady_blaumeux.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_lady_blaumeux.Tpo" "$(DEPDIR)/sc_lady_blaumeux.Plo"; else rm -f "$(DEPDIR)/sc_lady_blaumeux.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_lady_blaumeux.cpp' object='sc_lady_blaumeux.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_lady_blaumeux.lo `test -f 'scripts/zone/naxxramas/sc_lady_blaumeux.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_lady_blaumeux.cpp
+
+sc_loatheb.lo: scripts/zone/naxxramas/sc_loatheb.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_loatheb.lo -MD -MP -MF "$(DEPDIR)/sc_loatheb.Tpo" -c -o sc_loatheb.lo `test -f 'scripts/zone/naxxramas/sc_loatheb.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_loatheb.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_loatheb.Tpo" "$(DEPDIR)/sc_loatheb.Plo"; else rm -f "$(DEPDIR)/sc_loatheb.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_loatheb.cpp' object='sc_loatheb.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_loatheb.lo `test -f 'scripts/zone/naxxramas/sc_loatheb.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_loatheb.cpp
+
+sc_maexxna.lo: scripts/zone/naxxramas/sc_maexxna.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_maexxna.lo -MD -MP -MF "$(DEPDIR)/sc_maexxna.Tpo" -c -o sc_maexxna.lo `test -f 'scripts/zone/naxxramas/sc_maexxna.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_maexxna.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_maexxna.Tpo" "$(DEPDIR)/sc_maexxna.Plo"; else rm -f "$(DEPDIR)/sc_maexxna.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_maexxna.cpp' object='sc_maexxna.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_maexxna.lo `test -f 'scripts/zone/naxxramas/sc_maexxna.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_maexxna.cpp
+
+sc_noth.lo: scripts/zone/naxxramas/sc_noth.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_noth.lo -MD -MP -MF "$(DEPDIR)/sc_noth.Tpo" -c -o sc_noth.lo `test -f 'scripts/zone/naxxramas/sc_noth.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_noth.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_noth.Tpo" "$(DEPDIR)/sc_noth.Plo"; else rm -f "$(DEPDIR)/sc_noth.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_noth.cpp' object='sc_noth.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_noth.lo `test -f 'scripts/zone/naxxramas/sc_noth.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_noth.cpp
+
+sc_patchwerk.lo: scripts/zone/naxxramas/sc_patchwerk.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_patchwerk.lo -MD -MP -MF "$(DEPDIR)/sc_patchwerk.Tpo" -c -o sc_patchwerk.lo `test -f 'scripts/zone/naxxramas/sc_patchwerk.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_patchwerk.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_patchwerk.Tpo" "$(DEPDIR)/sc_patchwerk.Plo"; else rm -f "$(DEPDIR)/sc_patchwerk.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_patchwerk.cpp' object='sc_patchwerk.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_patchwerk.lo `test -f 'scripts/zone/naxxramas/sc_patchwerk.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_patchwerk.cpp
+
+sc_razuvious.lo: scripts/zone/naxxramas/sc_razuvious.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_razuvious.lo -MD -MP -MF "$(DEPDIR)/sc_razuvious.Tpo" -c -o sc_razuvious.lo `test -f 'scripts/zone/naxxramas/sc_razuvious.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_razuvious.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_razuvious.Tpo" "$(DEPDIR)/sc_razuvious.Plo"; else rm -f "$(DEPDIR)/sc_razuvious.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_razuvious.cpp' object='sc_razuvious.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_razuvious.lo `test -f 'scripts/zone/naxxramas/sc_razuvious.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_razuvious.cpp
+
+sc_sapphiron.lo: scripts/zone/naxxramas/sc_sapphiron.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_sapphiron.lo -MD -MP -MF "$(DEPDIR)/sc_sapphiron.Tpo" -c -o sc_sapphiron.lo `test -f 'scripts/zone/naxxramas/sc_sapphiron.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_sapphiron.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_sapphiron.Tpo" "$(DEPDIR)/sc_sapphiron.Plo"; else rm -f "$(DEPDIR)/sc_sapphiron.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_sapphiron.cpp' object='sc_sapphiron.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_sapphiron.lo `test -f 'scripts/zone/naxxramas/sc_sapphiron.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_sapphiron.cpp
+
+sc_sir_zeliek.lo: scripts/zone/naxxramas/sc_sir_zeliek.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_sir_zeliek.lo -MD -MP -MF "$(DEPDIR)/sc_sir_zeliek.Tpo" -c -o sc_sir_zeliek.lo `test -f 'scripts/zone/naxxramas/sc_sir_zeliek.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_sir_zeliek.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_sir_zeliek.Tpo" "$(DEPDIR)/sc_sir_zeliek.Plo"; else rm -f "$(DEPDIR)/sc_sir_zeliek.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_sir_zeliek.cpp' object='sc_sir_zeliek.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_sir_zeliek.lo `test -f 'scripts/zone/naxxramas/sc_sir_zeliek.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_sir_zeliek.cpp
+
+sc_stalagg.lo: scripts/zone/naxxramas/sc_stalagg.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_stalagg.lo -MD -MP -MF "$(DEPDIR)/sc_stalagg.Tpo" -c -o sc_stalagg.lo `test -f 'scripts/zone/naxxramas/sc_stalagg.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_stalagg.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_stalagg.Tpo" "$(DEPDIR)/sc_stalagg.Plo"; else rm -f "$(DEPDIR)/sc_stalagg.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_stalagg.cpp' object='sc_stalagg.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_stalagg.lo `test -f 'scripts/zone/naxxramas/sc_stalagg.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_stalagg.cpp
+
+sc_thaddius.lo: scripts/zone/naxxramas/sc_thaddius.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_thaddius.lo -MD -MP -MF "$(DEPDIR)/sc_thaddius.Tpo" -c -o sc_thaddius.lo `test -f 'scripts/zone/naxxramas/sc_thaddius.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_thaddius.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_thaddius.Tpo" "$(DEPDIR)/sc_thaddius.Plo"; else rm -f "$(DEPDIR)/sc_thaddius.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_thaddius.cpp' object='sc_thaddius.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_thaddius.lo `test -f 'scripts/zone/naxxramas/sc_thaddius.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_thaddius.cpp
+
+sc_thane_korthazz.lo: scripts/zone/naxxramas/sc_thane_korthazz.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_thane_korthazz.lo -MD -MP -MF "$(DEPDIR)/sc_thane_korthazz.Tpo" -c -o sc_thane_korthazz.lo `test -f 'scripts/zone/naxxramas/sc_thane_korthazz.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_thane_korthazz.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_thane_korthazz.Tpo" "$(DEPDIR)/sc_thane_korthazz.Plo"; else rm -f "$(DEPDIR)/sc_thane_korthazz.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/naxxramas/sc_thane_korthazz.cpp' object='sc_thane_korthazz.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_thane_korthazz.lo `test -f 'scripts/zone/naxxramas/sc_thane_korthazz.cpp' || echo '$(srcdir)/'`scripts/zone/naxxramas/sc_thane_korthazz.cpp
+
+sc_boss_onyxia.lo: scripts/zone/onyxias_lair/sc_boss_onyxia.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_onyxia.lo -MD -MP -MF "$(DEPDIR)/sc_boss_onyxia.Tpo" -c -o sc_boss_onyxia.lo `test -f 'scripts/zone/onyxias_lair/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/zone/onyxias_lair/sc_boss_onyxia.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_onyxia.Tpo" "$(DEPDIR)/sc_boss_onyxia.Plo"; else rm -f "$(DEPDIR)/sc_boss_onyxia.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/onyxias_lair/sc_boss_onyxia.cpp' object='sc_boss_onyxia.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_onyxia.lo `test -f 'scripts/zone/onyxias_lair/sc_boss_onyxia.cpp' || echo '$(srcdir)/'`scripts/zone/onyxias_lair/sc_boss_onyxia.cpp
+
+sc_ayamiss.lo: scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_ayamiss.lo -MD -MP -MF "$(DEPDIR)/sc_ayamiss.Tpo" -c -o sc_ayamiss.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_ayamiss.Tpo" "$(DEPDIR)/sc_ayamiss.Plo"; else rm -f "$(DEPDIR)/sc_ayamiss.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp' object='sc_ayamiss.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_ayamiss.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_ayamiss.cpp
+
+sc_buru.lo: scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_buru.lo -MD -MP -MF "$(DEPDIR)/sc_buru.Tpo" -c -o sc_buru.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_buru.Tpo" "$(DEPDIR)/sc_buru.Plo"; else rm -f "$(DEPDIR)/sc_buru.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp' object='sc_buru.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_buru.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_buru.cpp
+
+sc_kurinnaxx.lo: scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_kurinnaxx.lo -MD -MP -MF "$(DEPDIR)/sc_kurinnaxx.Tpo" -c -o sc_kurinnaxx.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_kurinnaxx.Tpo" "$(DEPDIR)/sc_kurinnaxx.Plo"; else rm -f "$(DEPDIR)/sc_kurinnaxx.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp' object='sc_kurinnaxx.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_kurinnaxx.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_kurinnaxx.cpp
+
+sc_moam.lo: scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_moam.lo -MD -MP -MF "$(DEPDIR)/sc_moam.Tpo" -c -o sc_moam.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_moam.Tpo" "$(DEPDIR)/sc_moam.Plo"; else rm -f "$(DEPDIR)/sc_moam.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp' object='sc_moam.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_moam.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_moam.cpp
+
+sc_ossirian.lo: scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_ossirian.lo -MD -MP -MF "$(DEPDIR)/sc_ossirian.Tpo" -c -o sc_ossirian.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_ossirian.Tpo" "$(DEPDIR)/sc_ossirian.Plo"; else rm -f "$(DEPDIR)/sc_ossirian.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp' object='sc_ossirian.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_ossirian.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_ossirian.cpp
+
+sc_rajaxx.lo: scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_rajaxx.lo -MD -MP -MF "$(DEPDIR)/sc_rajaxx.Tpo" -c -o sc_rajaxx.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_rajaxx.Tpo" "$(DEPDIR)/sc_rajaxx.Plo"; else rm -f "$(DEPDIR)/sc_rajaxx.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp' object='sc_rajaxx.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_rajaxx.lo `test -f 'scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp' || echo '$(srcdir)/'`scripts/zone/ruins_of_ahnqiraj/sc_rajaxx.cpp
+
+sc_boss_arcanist_doan.lo: scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_arcanist_doan.lo -MD -MP -MF "$(DEPDIR)/sc_boss_arcanist_doan.Tpo" -c -o sc_boss_arcanist_doan.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_arcanist_doan.Tpo" "$(DEPDIR)/sc_boss_arcanist_doan.Plo"; else rm -f "$(DEPDIR)/sc_boss_arcanist_doan.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp' object='sc_boss_arcanist_doan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_arcanist_doan.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_arcanist_doan.cpp
+
+sc_boss_azshir_the_sleepless.lo: scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_azshir_the_sleepless.lo -MD -MP -MF "$(DEPDIR)/sc_boss_azshir_the_sleepless.Tpo" -c -o sc_boss_azshir_the_sleepless.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_azshir_the_sleepless.Tpo" "$(DEPDIR)/sc_boss_azshir_the_sleepless.Plo"; else rm -f "$(DEPDIR)/sc_boss_azshir_the_sleepless.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp' object='sc_boss_azshir_the_sleepless.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_azshir_the_sleepless.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_azshir_the_sleepless.cpp
+
+sc_boss_bloodmage_thalnos.lo: scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_bloodmage_thalnos.lo -MD -MP -MF "$(DEPDIR)/sc_boss_bloodmage_thalnos.Tpo" -c -o sc_boss_bloodmage_thalnos.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_bloodmage_thalnos.Tpo" "$(DEPDIR)/sc_boss_bloodmage_thalnos.Plo"; else rm -f "$(DEPDIR)/sc_boss_bloodmage_thalnos.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp' object='sc_boss_bloodmage_thalnos.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_bloodmage_thalnos.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_bloodmage_thalnos.cpp
+
+sc_boss_herod.lo: scripts/zone/scarlet_monastery/sc_boss_herod.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_herod.lo -MD -MP -MF "$(DEPDIR)/sc_boss_herod.Tpo" -c -o sc_boss_herod.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_herod.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_herod.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_herod.Tpo" "$(DEPDIR)/sc_boss_herod.Plo"; else rm -f "$(DEPDIR)/sc_boss_herod.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_herod.cpp' object='sc_boss_herod.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_herod.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_herod.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_herod.cpp
+
+sc_boss_high_inquisitor_fairbanks.lo: scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_high_inquisitor_fairbanks.lo -MD -MP -MF "$(DEPDIR)/sc_boss_high_inquisitor_fairbanks.Tpo" -c -o sc_boss_high_inquisitor_fairbanks.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_high_inquisitor_fairbanks.Tpo" "$(DEPDIR)/sc_boss_high_inquisitor_fairbanks.Plo"; else rm -f "$(DEPDIR)/sc_boss_high_inquisitor_fairbanks.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp' object='sc_boss_high_inquisitor_fairbanks.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_high_inquisitor_fairbanks.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_fairbanks.cpp
+
+sc_boss_high_inquisitor_whitemane.lo: scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_high_inquisitor_whitemane.lo -MD -MP -MF "$(DEPDIR)/sc_boss_high_inquisitor_whitemane.Tpo" -c -o sc_boss_high_inquisitor_whitemane.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_high_inquisitor_whitemane.Tpo" "$(DEPDIR)/sc_boss_high_inquisitor_whitemane.Plo"; else rm -f "$(DEPDIR)/sc_boss_high_inquisitor_whitemane.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp' object='sc_boss_high_inquisitor_whitemane.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_high_inquisitor_whitemane.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_high_inquisitor_whitemane.cpp
+
+sc_boss_houndmaster_loksey.lo: scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_houndmaster_loksey.lo -MD -MP -MF "$(DEPDIR)/sc_boss_houndmaster_loksey.Tpo" -c -o sc_boss_houndmaster_loksey.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_houndmaster_loksey.Tpo" "$(DEPDIR)/sc_boss_houndmaster_loksey.Plo"; else rm -f "$(DEPDIR)/sc_boss_houndmaster_loksey.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp' object='sc_boss_houndmaster_loksey.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_houndmaster_loksey.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_houndmaster_loksey.cpp
+
+sc_boss_interrogator_vishas.lo: scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_interrogator_vishas.lo -MD -MP -MF "$(DEPDIR)/sc_boss_interrogator_vishas.Tpo" -c -o sc_boss_interrogator_vishas.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_interrogator_vishas.Tpo" "$(DEPDIR)/sc_boss_interrogator_vishas.Plo"; else rm -f "$(DEPDIR)/sc_boss_interrogator_vishas.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp' object='sc_boss_interrogator_vishas.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_interrogator_vishas.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_interrogator_vishas.cpp
+
+sc_boss_scarlet_commander_mograine.lo: scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_scarlet_commander_mograine.lo -MD -MP -MF "$(DEPDIR)/sc_boss_scarlet_commander_mograine.Tpo" -c -o sc_boss_scarlet_commander_mograine.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_scarlet_commander_mograine.Tpo" "$(DEPDIR)/sc_boss_scarlet_commander_mograine.Plo"; else rm -f "$(DEPDIR)/sc_boss_scarlet_commander_mograine.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp' object='sc_boss_scarlet_commander_mograine.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_scarlet_commander_mograine.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_scarlet_commander_mograine.cpp
+
+sc_boss_scorn.lo: scripts/zone/scarlet_monastery/sc_boss_scorn.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_boss_scorn.lo -MD -MP -MF "$(DEPDIR)/sc_boss_scorn.Tpo" -c -o sc_boss_scorn.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_scorn.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_scorn.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_boss_scorn.Tpo" "$(DEPDIR)/sc_boss_scorn.Plo"; else rm -f "$(DEPDIR)/sc_boss_scorn.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_boss_scorn.cpp' object='sc_boss_scorn.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_boss_scorn.lo `test -f 'scripts/zone/scarlet_monastery/sc_boss_scorn.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_boss_scorn.cpp
+
+sc_scarlet_torturer.lo: scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_scarlet_torturer.lo -MD -MP -MF "$(DEPDIR)/sc_scarlet_torturer.Tpo" -c -o sc_scarlet_torturer.lo `test -f 'scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_scarlet_torturer.Tpo" "$(DEPDIR)/sc_scarlet_torturer.Plo"; else rm -f "$(DEPDIR)/sc_scarlet_torturer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp' object='sc_scarlet_torturer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_scarlet_torturer.lo `test -f 'scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp' || echo '$(srcdir)/'`scripts/zone/scarlet_monastery/sc_scarlet_torturer.cpp
+
+sc_cthun.lo: scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_cthun.lo -MD -MP -MF "$(DEPDIR)/sc_cthun.Tpo" -c -o sc_cthun.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_cthun.Tpo" "$(DEPDIR)/sc_cthun.Plo"; else rm -f "$(DEPDIR)/sc_cthun.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp' object='sc_cthun.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_cthun.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_cthun.cpp
+
+sc_fankriss.lo: scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_fankriss.lo -MD -MP -MF "$(DEPDIR)/sc_fankriss.Tpo" -c -o sc_fankriss.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_fankriss.Tpo" "$(DEPDIR)/sc_fankriss.Plo"; else rm -f "$(DEPDIR)/sc_fankriss.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp' object='sc_fankriss.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_fankriss.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_fankriss.cpp
+
+sc_huhuran.lo: scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_huhuran.lo -MD -MP -MF "$(DEPDIR)/sc_huhuran.Tpo" -c -o sc_huhuran.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_huhuran.Tpo" "$(DEPDIR)/sc_huhuran.Plo"; else rm -f "$(DEPDIR)/sc_huhuran.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp' object='sc_huhuran.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_huhuran.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_huhuran.cpp
+
+sc_kri.lo: scripts/zone/temple_of_ahnqiraj/sc_kri.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_kri.lo -MD -MP -MF "$(DEPDIR)/sc_kri.Tpo" -c -o sc_kri.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_kri.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_kri.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_kri.Tpo" "$(DEPDIR)/sc_kri.Plo"; else rm -f "$(DEPDIR)/sc_kri.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_kri.cpp' object='sc_kri.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_kri.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_kri.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_kri.cpp
+
+sc_ouro.lo: scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_ouro.lo -MD -MP -MF "$(DEPDIR)/sc_ouro.Tpo" -c -o sc_ouro.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_ouro.Tpo" "$(DEPDIR)/sc_ouro.Plo"; else rm -f "$(DEPDIR)/sc_ouro.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp' object='sc_ouro.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_ouro.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_ouro.cpp
+
+sc_sartura.lo: scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_sartura.lo -MD -MP -MF "$(DEPDIR)/sc_sartura.Tpo" -c -o sc_sartura.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_sartura.Tpo" "$(DEPDIR)/sc_sartura.Plo"; else rm -f "$(DEPDIR)/sc_sartura.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp' object='sc_sartura.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_sartura.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_sartura.cpp
+
+sc_skeram.lo: scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_skeram.lo -MD -MP -MF "$(DEPDIR)/sc_skeram.Tpo" -c -o sc_skeram.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_skeram.Tpo" "$(DEPDIR)/sc_skeram.Plo"; else rm -f "$(DEPDIR)/sc_skeram.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp' object='sc_skeram.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_skeram.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_skeram.cpp
+
+sc_veklor.lo: scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_veklor.lo -MD -MP -MF "$(DEPDIR)/sc_veklor.Tpo" -c -o sc_veklor.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_veklor.Tpo" "$(DEPDIR)/sc_veklor.Plo"; else rm -f "$(DEPDIR)/sc_veklor.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp' object='sc_veklor.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_veklor.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_veklor.cpp
+
+sc_veknilash.lo: scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_veknilash.lo -MD -MP -MF "$(DEPDIR)/sc_veknilash.Tpo" -c -o sc_veknilash.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_veknilash.Tpo" "$(DEPDIR)/sc_veknilash.Plo"; else rm -f "$(DEPDIR)/sc_veknilash.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp' object='sc_veknilash.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_veknilash.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_veknilash.cpp
+
+sc_vem.lo: scripts/zone/temple_of_ahnqiraj/sc_vem.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_vem.lo -MD -MP -MF "$(DEPDIR)/sc_vem.Tpo" -c -o sc_vem.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_vem.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_vem.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_vem.Tpo" "$(DEPDIR)/sc_vem.Plo"; else rm -f "$(DEPDIR)/sc_vem.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_vem.cpp' object='sc_vem.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_vem.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_vem.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_vem.cpp
+
+sc_viscidus.lo: scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_viscidus.lo -MD -MP -MF "$(DEPDIR)/sc_viscidus.Tpo" -c -o sc_viscidus.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_viscidus.Tpo" "$(DEPDIR)/sc_viscidus.Plo"; else rm -f "$(DEPDIR)/sc_viscidus.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp' object='sc_viscidus.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_viscidus.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_viscidus.cpp
+
+sc_yauj.lo: scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_yauj.lo -MD -MP -MF "$(DEPDIR)/sc_yauj.Tpo" -c -o sc_yauj.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_yauj.Tpo" "$(DEPDIR)/sc_yauj.Plo"; else rm -f "$(DEPDIR)/sc_yauj.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp' object='sc_yauj.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_yauj.lo `test -f 'scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp' || echo '$(srcdir)/'`scripts/zone/temple_of_ahnqiraj/sc_yauj.cpp
+
+sc_arlokk.lo: scripts/zone/zulgurub/sc_arlokk.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_arlokk.lo -MD -MP -MF "$(DEPDIR)/sc_arlokk.Tpo" -c -o sc_arlokk.lo `test -f 'scripts/zone/zulgurub/sc_arlokk.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_arlokk.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_arlokk.Tpo" "$(DEPDIR)/sc_arlokk.Plo"; else rm -f "$(DEPDIR)/sc_arlokk.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_arlokk.cpp' object='sc_arlokk.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_arlokk.lo `test -f 'scripts/zone/zulgurub/sc_arlokk.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_arlokk.cpp
+
+sc_gahzranka.lo: scripts/zone/zulgurub/sc_gahzranka.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_gahzranka.lo -MD -MP -MF "$(DEPDIR)/sc_gahzranka.Tpo" -c -o sc_gahzranka.lo `test -f 'scripts/zone/zulgurub/sc_gahzranka.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_gahzranka.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_gahzranka.Tpo" "$(DEPDIR)/sc_gahzranka.Plo"; else rm -f "$(DEPDIR)/sc_gahzranka.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_gahzranka.cpp' object='sc_gahzranka.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_gahzranka.lo `test -f 'scripts/zone/zulgurub/sc_gahzranka.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_gahzranka.cpp
+
+sc_grilek.lo: scripts/zone/zulgurub/sc_grilek.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_grilek.lo -MD -MP -MF "$(DEPDIR)/sc_grilek.Tpo" -c -o sc_grilek.lo `test -f 'scripts/zone/zulgurub/sc_grilek.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_grilek.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_grilek.Tpo" "$(DEPDIR)/sc_grilek.Plo"; else rm -f "$(DEPDIR)/sc_grilek.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_grilek.cpp' object='sc_grilek.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_grilek.lo `test -f 'scripts/zone/zulgurub/sc_grilek.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_grilek.cpp
+
+sc_hakkar.lo: scripts/zone/zulgurub/sc_hakkar.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_hakkar.lo -MD -MP -MF "$(DEPDIR)/sc_hakkar.Tpo" -c -o sc_hakkar.lo `test -f 'scripts/zone/zulgurub/sc_hakkar.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_hakkar.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_hakkar.Tpo" "$(DEPDIR)/sc_hakkar.Plo"; else rm -f "$(DEPDIR)/sc_hakkar.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_hakkar.cpp' object='sc_hakkar.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_hakkar.lo `test -f 'scripts/zone/zulgurub/sc_hakkar.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_hakkar.cpp
+
+sc_hazzarah.lo: scripts/zone/zulgurub/sc_hazzarah.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_hazzarah.lo -MD -MP -MF "$(DEPDIR)/sc_hazzarah.Tpo" -c -o sc_hazzarah.lo `test -f 'scripts/zone/zulgurub/sc_hazzarah.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_hazzarah.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_hazzarah.Tpo" "$(DEPDIR)/sc_hazzarah.Plo"; else rm -f "$(DEPDIR)/sc_hazzarah.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_hazzarah.cpp' object='sc_hazzarah.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_hazzarah.lo `test -f 'scripts/zone/zulgurub/sc_hazzarah.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_hazzarah.cpp
+
+sc_jeklik.lo: scripts/zone/zulgurub/sc_jeklik.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_jeklik.lo -MD -MP -MF "$(DEPDIR)/sc_jeklik.Tpo" -c -o sc_jeklik.lo `test -f 'scripts/zone/zulgurub/sc_jeklik.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_jeklik.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_jeklik.Tpo" "$(DEPDIR)/sc_jeklik.Plo"; else rm -f "$(DEPDIR)/sc_jeklik.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_jeklik.cpp' object='sc_jeklik.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_jeklik.lo `test -f 'scripts/zone/zulgurub/sc_jeklik.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_jeklik.cpp
+
+sc_jindo.lo: scripts/zone/zulgurub/sc_jindo.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_jindo.lo -MD -MP -MF "$(DEPDIR)/sc_jindo.Tpo" -c -o sc_jindo.lo `test -f 'scripts/zone/zulgurub/sc_jindo.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_jindo.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_jindo.Tpo" "$(DEPDIR)/sc_jindo.Plo"; else rm -f "$(DEPDIR)/sc_jindo.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_jindo.cpp' object='sc_jindo.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_jindo.lo `test -f 'scripts/zone/zulgurub/sc_jindo.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_jindo.cpp
+
+sc_mandokir.lo: scripts/zone/zulgurub/sc_mandokir.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_mandokir.lo -MD -MP -MF "$(DEPDIR)/sc_mandokir.Tpo" -c -o sc_mandokir.lo `test -f 'scripts/zone/zulgurub/sc_mandokir.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_mandokir.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_mandokir.Tpo" "$(DEPDIR)/sc_mandokir.Plo"; else rm -f "$(DEPDIR)/sc_mandokir.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_mandokir.cpp' object='sc_mandokir.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_mandokir.lo `test -f 'scripts/zone/zulgurub/sc_mandokir.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_mandokir.cpp
+
+sc_marli.lo: scripts/zone/zulgurub/sc_marli.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_marli.lo -MD -MP -MF "$(DEPDIR)/sc_marli.Tpo" -c -o sc_marli.lo `test -f 'scripts/zone/zulgurub/sc_marli.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_marli.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_marli.Tpo" "$(DEPDIR)/sc_marli.Plo"; else rm -f "$(DEPDIR)/sc_marli.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_marli.cpp' object='sc_marli.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_marli.lo `test -f 'scripts/zone/zulgurub/sc_marli.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_marli.cpp
+
+sc_renataki.lo: scripts/zone/zulgurub/sc_renataki.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_renataki.lo -MD -MP -MF "$(DEPDIR)/sc_renataki.Tpo" -c -o sc_renataki.lo `test -f 'scripts/zone/zulgurub/sc_renataki.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_renataki.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_renataki.Tpo" "$(DEPDIR)/sc_renataki.Plo"; else rm -f "$(DEPDIR)/sc_renataki.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_renataki.cpp' object='sc_renataki.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_renataki.lo `test -f 'scripts/zone/zulgurub/sc_renataki.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_renataki.cpp
+
+sc_thekal.lo: scripts/zone/zulgurub/sc_thekal.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_thekal.lo -MD -MP -MF "$(DEPDIR)/sc_thekal.Tpo" -c -o sc_thekal.lo `test -f 'scripts/zone/zulgurub/sc_thekal.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_thekal.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_thekal.Tpo" "$(DEPDIR)/sc_thekal.Plo"; else rm -f "$(DEPDIR)/sc_thekal.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_thekal.cpp' object='sc_thekal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_thekal.lo `test -f 'scripts/zone/zulgurub/sc_thekal.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_thekal.cpp
+
+sc_venoxis.lo: scripts/zone/zulgurub/sc_venoxis.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_venoxis.lo -MD -MP -MF "$(DEPDIR)/sc_venoxis.Tpo" -c -o sc_venoxis.lo `test -f 'scripts/zone/zulgurub/sc_venoxis.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_venoxis.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_venoxis.Tpo" "$(DEPDIR)/sc_venoxis.Plo"; else rm -f "$(DEPDIR)/sc_venoxis.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_venoxis.cpp' object='sc_venoxis.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_venoxis.lo `test -f 'scripts/zone/zulgurub/sc_venoxis.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_venoxis.cpp
+
+sc_wushoolay.lo: scripts/zone/zulgurub/sc_wushoolay.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sc_wushoolay.lo -MD -MP -MF "$(DEPDIR)/sc_wushoolay.Tpo" -c -o sc_wushoolay.lo `test -f 'scripts/zone/zulgurub/sc_wushoolay.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_wushoolay.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sc_wushoolay.Tpo" "$(DEPDIR)/sc_wushoolay.Plo"; else rm -f "$(DEPDIR)/sc_wushoolay.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='scripts/zone/zulgurub/sc_wushoolay.cpp' object='sc_wushoolay.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sc_wushoolay.lo `test -f 'scripts/zone/zulgurub/sc_wushoolay.cpp' || echo '$(srcdir)/'`scripts/zone/zulgurub/sc_wushoolay.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -613,6 +1397,77 @@ distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+mostlyclean-recursive clean-recursive distclean-recursive \
+maintainer-clean-recursive:
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+	done
+
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -623,10 +1478,23 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      tags="$$tags $$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -639,7 +1507,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    $$tags $$unique; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
@@ -662,6 +1530,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
+	$(mkdir_p) $(distdir)/Scripts
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -688,22 +1557,38 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test -d "$(distdir)/$$subdir" \
+	    || $(mkdir_p) "$(distdir)/$$subdir" \
+	    || exit 1; \
+	    distdir=`$(am__cd) $(distdir) && pwd`; \
+	    top_distdir=`$(am__cd) $(top_distdir) && pwd`; \
+	    (cd $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$top_distdir" \
+	        distdir="$$distdir/$$subdir" \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 check-am: all-am
-check: check-am
+check: check-recursive
 all-am: Makefile $(LTLIBRARIES)
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
 	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
@@ -719,24 +1604,24 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 	mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-libtool distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
-info: info-am
+info: info-recursive
 
 info-am:
 
@@ -744,44 +1629,48 @@ install-data-am:
 
 install-exec-am: install-libLTLIBRARIES
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-man:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
 uninstall-am: uninstall-info-am uninstall-libLTLIBRARIES
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool ctags distclean \
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) CTAGS GTAGS all all-am check check-am \
+	clean clean-generic clean-libLTLIBRARIES clean-libtool \
+	clean-recursive ctags ctags-recursive distclean \
 	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-exec \
-	install-exec-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am \
-	uninstall-libLTLIBRARIES
+	distclean-recursive distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-data \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-libLTLIBRARIES install-man \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	maintainer-clean-recursive mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
+	pdf pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	uninstall-info-am uninstall-libLTLIBRARIES
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

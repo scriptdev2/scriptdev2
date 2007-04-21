@@ -127,6 +127,14 @@ enum SelectEffect
     SELECT_EFFECT_AURA,                 //Spell applies an aura
 };
 
+//Selection method used by SelectTarget
+enum SelectAggroTarget
+{
+    SELECT_TARGET_RANDOM = 0,           //Just selects a random target
+    SELECT_TARGET_TOPAGGRO,             //Selects targes from top aggro to bottom
+    SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
+};
+
 //Chat defines
 #define CHAT_MSG_MONSTER_SAY    0x0B
 #define CHAT_MSG_MONSTER_YELL   0x0C
@@ -213,6 +221,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Spawns a creature relative to m_creature
     Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime);
     
+    //Selects a unit from the creature's current aggro list
+    Unit* SelectUnit(SelectAggroTarget target, uint32 position);
+
     //Returns spells that meet the specified criteria from the creatures spell list
     SpellEntry const* SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);
 

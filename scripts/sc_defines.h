@@ -40,6 +40,8 @@
 #define GOSSIP_TEXT_ALTERACVALLEY       "Alterac Valley"
 #define GOSSIP_TEXT_ARATHIBASIN         "Arathi Basin" 
 #define GOSSIP_TEXT_WARSONGULCH         "Warsong Gulch"
+#define GOSSIP_TEXT_ARENA               "Arena"
+#define GOSSIP_TEXT_EYEOFTHESTORM       "Eye of The Storm"
 
 #define GOSSIP_TEXT_DRUID               "Druid" 
 #define GOSSIP_TEXT_HUNTER              "Hunter"
@@ -50,7 +52,6 @@
 #define GOSSIP_TEXT_SHAMAN              "Shaman"
 #define GOSSIP_TEXT_MAGE                "Mage"
 #define GOSSIP_TEXT_WARLOCK             "Warlock"
-
 
 #define GOSSIP_TEXT_ALCHEMY             "Alchemy"
 #define GOSSIP_TEXT_BLACKSMITHING       "Blacksmithing"
@@ -65,6 +66,7 @@
 #define GOSSIP_TEXT_MINING              "Mining"
 #define GOSSIP_TEXT_FISHING             "Fishing"
 #define GOSSIP_TEXT_SKINNING            "Skinning"
+#define GOSSIP_TEXT_JEWELCRAFTING       "Jewelcrafting"
 
 #define GOSSIP_TEXT_IRONFORGE_BANK      "Bank of Ironforge"
 #define GOSSIP_TEXT_STORMWIND_BANK      "Bank of Stormwind"
@@ -87,12 +89,14 @@
 #define TRADESKILL_MINING                   11
 #define TRADESKILL_FISHING                  12
 #define TRADESKILL_SKINNING                 13
+#define TRADESKILL_JEWLCRAFTING             14
 
 #define TRADESKILL_LEVEL_NONE               0
 #define TRADESKILL_LEVEL_APPRENTICE         1
 #define TRADESKILL_LEVEL_JOURNEYMAN         2
 #define TRADESKILL_LEVEL_EXPERT             3
 #define TRADESKILL_LEVEL_ARTISAN            4
+#define TRADESKILL_LEVEL_MASTER             5
 
 // Dialog defines
 

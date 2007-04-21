@@ -85,6 +85,8 @@ UPDATE `creature_template` SET`ScriptName` = 'guard_razorhill' WHERE `entry` = 5
 UPDATE `creature_template` SET`ScriptName` = 'guard_mulgore' WHERE `entry` IN (3210,3211,3212,3213,3214,3215,3217,3218,3219,3220,3221,3222,3223,3224);
 UPDATE `creature_template` SET`ScriptName` = 'guard_dunmorogh' WHERE `entry` = 727 OR `entry` = 13076;
 UPDATE `creature_template` SET`ScriptName` = 'guard_tirisfal' WHERE `entry` IN (1735,1738,2210,1736,1739,1737,1744,1745,5725,1743,2209,1746,1742);
+UPDATE `creature_template` SET `scriptName` = 'guard_silvermoon' WHERE `entry` = 16222;
+UPDATE `creature_template` SET `scriptName` = 'guard_exodar' WHERE `entry` = 16733;
 
 --
 -- Honor data.
@@ -1584,3 +1586,67 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_chromaggus' WHERE `entry` = 1
 
 -- Nefarian 11583
 UPDATE `creature_template` SET`ScriptName` = 'boss_nefarian' WHERE `entry` = 11583;
+
+--
+-- NAXX
+--
+
+-- Anubrekhan 15956
+UPDATE `creature_template` SET`ScriptName` = 'boss_anubrekhan' WHERE `entry` = 15956;
+
+-- Faerlina 15953
+UPDATE `creature_template` SET`ScriptName` = 'boss_faerlina' WHERE `entry` = 15953;
+
+-- Maexxna 15952
+UPDATE `creature_template` SET`ScriptName` = 'boss_maexxna' WHERE `entry` = 15952;
+
+-- Noth 15954
+UPDATE `creature_template` SET`ScriptName` = 'boss_noth' WHERE `entry` = 15954;
+
+-- Heigan 15936
+UPDATE `creature_template` SET`ScriptName` = 'boss_heigan' WHERE `entry` = 15936;
+
+-- Loatheb 16011
+UPDATE `creature_template` SET`ScriptName` = 'boss_loatheb' WHERE `entry` = 16011;
+
+-- Razuvios 16061
+UPDATE `creature_template` SET`ScriptName` = 'boss_razuvious' WHERE `entry` = 16061;
+
+-- Gothik 16060
+UPDATE `creature_template` SET`ScriptName` = 'boss_gothik' WHERE `entry` = 16060;
+
+-- Highlord Mograine 16062
+UPDATE `creature_template` SET`ScriptName` = 'boss_highlord_mograine' WHERE `entry` = 16062;
+
+-- Thane Korth'azz 16064
+UPDATE `creature_template` SET`ScriptName` = 'boss_thane_korthazz' WHERE `entry` = 16064;
+
+-- Sir Zeliek 16063
+UPDATE `creature_template` SET`ScriptName` = 'boss_sir_zeliek' WHERE `entry` = 16063;
+
+-- Lady Blaumeux 16065
+UPDATE `creature_template` SET`ScriptName` = 'boss_lady_blaumeux' WHERE `entry` = 16065;
+
+-- Patchwerk 16028
+UPDATE `creature_template` SET`ScriptName` = 'boss_patchwerk' WHERE `entry` = 16028;
+
+-- Grobbulus 15931
+UPDATE `creature_template` SET`ScriptName` = 'boss_grobbulus' WHERE `entry` = 15931;
+
+-- Gluth 15932
+UPDATE `creature_template` SET`ScriptName` = 'boss_gluth' WHERE `entry` = 15932;
+
+-- Thaddius 15928
+UPDATE `creature_template` SET`ScriptName` = 'boss_thaddius' WHERE `entry` = 15928;
+
+-- Stalagg 15929
+UPDATE `creature_template` SET`ScriptName` = 'boss_stalagg' WHERE `entry` = 15929;
+
+-- Fugen 15930
+UPDATE `creature_template` SET`ScriptName` = 'boss_fugen' WHERE `entry` = 15930;
+
+-- Sapphiron 15989
+UPDATE `creature_template` SET`ScriptName` = 'boss_sapphiron' WHERE `entry` = 15989;
+
+-- Kel'Thuzud 15990
+UPDATE `creature_template` SET`ScriptName` = 'boss_kelthuzad' WHERE `entry` = 15990;

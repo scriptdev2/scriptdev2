@@ -252,6 +252,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\guard\sc_guard_exodar.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\guard\sc_guard_ironforge.cpp"
 					>
 				</File>
@@ -261,6 +265,10 @@
 				</File>
 				<File
 					RelativePath="..\scripts\guard\sc_guard_orgrimmar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\guard\sc_guard_silvermoon.cpp"
 					>
 				</File>
 				<File
@@ -313,6 +321,10 @@
 				>
 				<File
 					RelativePath="..\scripts\custom\sc_custom_example.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\custom\sc_test.cpp"
 					>
 				</File>
 			</Filter>
