@@ -33,6 +33,8 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,65);
+        m_creature->setFaction(35);
     }
 
     void KilledUnit(Unit* Victim)
@@ -93,47 +95,7 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            
             Timer-=diff;
-
-            //
-            if (Timer > 80000 && m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_RANDOM,0));                
-            }
-
-            if (Timer < 80000 && Timer > 70000&& m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_TOPAGGRO,0));                
-            }
-
-            if (Timer < 70000 && Timer > 60000&& m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_TOPAGGRO,1));                
-            }
-
-            if (Timer < 60000 && Timer > 50000&& m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_BOTTOMAGGRO,0));                
-            }
-
-            if (Timer < 50000 && Timer > 40000&& m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_BOTTOMAGGRO,1));                
-            }
-
-            //
-            if (Timer < 40000 && m_creature->isAttackReady())
-            {
-                m_creature->resetAttackTimer();
-                m_creature->AttackerStateUpdate(SelectUnit(SELECT_TARGET_RANDOM,0));                
-            }
-
         }
     }
 };
@@ -142,12 +104,56 @@ CreatureAI* GetAI_test(Creature *_Creature)
     return new testAI (_Creature);
 }
 
+bool GossipHello_test(Player *player, Creature *_Creature)
+{
+    player->ADD_GOSSIP_ITEM(0, "Test Say Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->ADD_GOSSIP_ITEM(1, "Test Yell Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    player->ADD_GOSSIP_ITEM(2, "Test TextEmote Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+    player->ADD_GOSSIP_ITEM(3, "Test Wisper Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+    player->ADD_GOSSIP_ITEM(4, "???", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+    player->SEND_GOSSIP_MENU(3543,_Creature->GetGUID());
+    player->PlayerTalkClass->SendTalking("Test NPC", "Hello, I'm the test NPC for ScriptDev2. Please select an option.");
+
+    return true;
+}
+
+bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).m_creature->Say("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player->GetGUID());
+        ((testAI&)_Creature->AI()).DoSay("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player);
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 2)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).DoYell("Bla bla bla, yell command. $N, $C", LANG_UNIVERSAL, player);
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 3)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).DoTextEmote("Bla bla bla, emote command. $N, $C", player);
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 4)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).m_creature->Whisper(player->GetGUID(),"Bla bla bla, wisper command. $N, $C");
+    }
+
+    return true;
+}
 
 void AddSC_test()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name="test";
+    newscript->pGossipHello          = &GossipHello_test;
+    newscript->pGossipSelect         = &GossipSelect_test;
     newscript->GetAI = GetAI_test;
     m_scripts[nrscripts++] = newscript;
 }

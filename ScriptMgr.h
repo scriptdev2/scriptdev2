@@ -201,13 +201,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoCastSpell(Unit* who,SpellEntry const *spellInfo);
 
     //Creature say
-    void DoSay(char const* text, uint32 language, Unit* target);
+    void DoSay(const char* text, uint32 language, Unit* target);
 
     //Creature Yell
-    void DoYell(char const* text, uint32 language, Unit* target);
+    void DoYell(const char* text, uint32 language, Unit* target);
 
     //Creature Text emote
-    void DoTextEmote(char const* text, Unit* target);
+    void DoTextEmote(const char* text, Unit* target);
 
     //Go back to spawn point
     void DoGoHome();

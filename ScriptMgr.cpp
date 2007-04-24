@@ -697,76 +697,22 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
     m_creature->CastSpell(who, spellInfo, false);
 }
 
-void ScriptedAI::DoSay(const char *text, uint32 language, Unit* target)
+void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)
 {
-    /*
-    m_creature->Say(text, language, target);
-
-    WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
-    data.SetOpcode(SMSG_MESSAGECHAT);
-    data << (uint8)CHAT_MSG_MONSTER_SAY;
-    data << language;
-
-    data << (uint64)m_creature->GetGUID();
-    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
-    data << m_creature->GetCreatureInfo()->Name;
-    
-    if (target)data << uint64(target->GetGUID());
-    else data << uint64(m_creature->GetGUID());
-
-    data << uint32(strlen(text)+1);
-    data << text;
-    data << uint8(0);
-
-    m_creature->SendMessageToSet(&data,false);*/
+    if (target)m_creature->Say(text, language, target->GetGUID());
+    else m_creature->Say(text, language, 0);
 }
 
-void ScriptedAI::DoYell(const char *text, uint32 language, Unit* target)
+void ScriptedAI::DoYell(const char* text, uint32 language, Unit* target)
 {
-    /*
-    m_creature->Yell(text, language, target);
-
-    WorldPacket data(30 + strlen(text) + strlen(m_creature->GetCreatureInfo()->Name) + 2);//30 bytes + text size + name size + 2(nulls at end of string)
-    data.SetOpcode(SMSG_MESSAGECHAT);
-    data << (uint8)CHAT_MSG_MONSTER_YELL;
-    data << language;
-
-    data << (uint64)m_creature->GetGUID();
-    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
-    data << m_creature->GetCreatureInfo()->Name;
-    
-    if (target)data << uint64(target->GetGUID());
-    else data << uint64(m_creature->GetGUID());
-
-    data << uint32(strlen(text)+1);
-    data << text;
-    data << uint8(0);
-
-    m_creature->SendMessageToSet(&data,false);*/
+    if (target)m_creature->Yell(text, language, target->GetGUID());
+    else m_creature->Yell(text, language, 0);
 }
 
-void ScriptedAI::DoTextEmote(const char *text, Unit* target)
+void ScriptedAI::DoTextEmote(const char* text, Unit* target)
 {
-    /*
-    m_creature->TextEmote(text, target);
-
-    WorldPacket data(9 + strlen(m_creature->GetCreatureInfo()->Name) + 13 + strlen(text) + 2);
-
-    data.SetOpcode(SMSG_MESSAGECHAT);
-    data << uint8(CHAT_MSG_MONSTER_EMOTE);
-    data << uint32(0); //Language (doesn't apply to creature emotes)
-
-    data << (uint32)(strlen(m_creature->GetCreatureInfo()->Name) + 1);
-    data << m_creature->GetCreatureInfo()->Name;
-    
-    if (target)data << uint64(target->GetGUID());
-    else data << uint64(m_creature->GetGUID());
-
-    data << uint32(strlen(text)+1);
-    data << text;
-    data << uint8(0);
-
-    m_creature->SendMessageToSet(&data, false);*/
+    if (target)m_creature->TextEmote(text, target->GetGUID());
+    else m_creature->TextEmote(text, 0);
 }
 
 void ScriptedAI::DoGoHome()
