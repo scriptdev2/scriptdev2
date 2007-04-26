@@ -25,6 +25,7 @@
 #include "../../game/QuestDef.h"
 #include "../../game/WorldSession.h"
 #include "../../game/CreatureAI.h"
+#include "../../game/Spell.h"
 #include "../../game/TargetedMovementGenerator.h"
 #include "../../shared/WorldPacket.h"
 #include "../../shared/Database/DBCStores.h"
@@ -70,37 +71,6 @@ extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
 
 #define VISIBLE_RANGE (26.46f)
-
-//Spell Targets (used in Select Spell)
-enum Targets
-{
-    TARGET_SELF                        = 1,
-    TARGET_PET                         = 5,
-    TARGET_SINGLE_ENEMY                = 6,
-    TARGET_ALL_ENEMY_IN_AREA           = 15,
-    TARGET_ALL_ENEMY_IN_AREA_INSTANT   = 16,
-    TARGET_ALL_PARTY_AROUND_CASTER     = 20,
-    TARGET_SINGLE_FRIEND               = 21,
-    TARGET_ALL_ENEMIES_AROUND_CASTER   = 22,
-    TARGET_GAMEOBJECT                  = 23,
-    TARGET_IN_FRONT_OF_CASTER          = 24,
-    TARGET_DUELVSPLAYER                = 25,
-    TARGET_GAMEOBJECT_ITEM             = 26,
-    TARGET_ALL_ENEMY_IN_AREA_CHANNELED = 28,
-    TARGET_MINION                      = 32,
-    TARGET_SINGLE_PARTY                = 35,
-    TARGET_AREAEFFECT_PARTY            = 37,
-    TARGET_SELF_FISHING                = 39,
-    TARGET_TOTEM_EARTH                 = 41,
-    TARGET_TOTEM_WATER                 = 42,
-    TARGET_TOTEM_AIR                   = 43,
-    TARGET_TOTEM_FIRE                  = 44,
-    TARGET_CHAIN                       = 45,
-    TARGET_DYNAMIC_OBJECT              = 47,
-    TARGET_CURRENT_SELECTED_ENEMY      = 53,
-    TARGET_SINGLE_FRIEND_2             = 57,        //This is incorrectly labled, this should say SINGLE_ENEMY_2. Needs to be examined
-    TARGET_AREAEFFECT_PARTY_AND_CLASS  = 61,
-};
 
 //Spell targets used by SelectSpell
 enum SelectTarget

@@ -15,17 +15,22 @@
 */
 
 #include "../sc_defines.h"
+#include "../../../../game/ObjectAccessor.h"
 
 struct MANGOS_DLL_DECL testAI : public ScriptedAI
 {
     testAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Timer;
+    uint32 Timer2;
+    uint32 swap;
     bool InCombat;
 
     void EnterEvadeMode()
     {
-        Timer = 90000;
+        Timer = 10000;
+        Timer2 = 10000;
+        swap = 0;
 
         InCombat = false;
 
@@ -95,7 +100,46 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            Timer-=diff;
+            if (Timer < diff)
+            {
+                ThreatList tList;
+                tList = m_creature->GetThreatList();
+
+                if (tList.empty())
+                {
+                    DoSay("Threat list empty, ending combat.",0,NULL);
+                    EnterEvadeMode();
+                    return;
+                }
+
+                if (tList.size()==1)
+                {
+                    //m_creature->
+                    //MaNGOS::Singleton<ObjectAccessor>::Instance();
+                    //ObjectAccessor::Instance().GetUnit(*m_creature,0);
+
+                    DoSay("Beginning combat on 1 target: ",0,NULL);
+                }else if (tList.size()==2)
+                {
+                    DoSay("Beginning combat on 2 targets",0,NULL);
+                }else if (tList.size()>2)
+                {
+                    DoSay("Beginning combat on more than 2 targets",0,NULL);
+                }
+
+
+                Timer = 100000;
+            }else Timer-=diff;
+
+            if (Timer2 < diff)
+            {
+                //30423 - Netherbeam - Dominance
+                if (swap < 5)
+                    DoCast(m_creature->getVictim(),30423);
+                else DoCast(m_creature->getVictim(),39089);//100% dmg
+
+                Timer2 = 1000;
+            }else Timer2-=diff;
         }
     }
 };
@@ -110,7 +154,8 @@ bool GossipHello_test(Player *player, Creature *_Creature)
     player->ADD_GOSSIP_ITEM(1, "Test Yell Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
     player->ADD_GOSSIP_ITEM(2, "Test TextEmote Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     player->ADD_GOSSIP_ITEM(3, "Test Wisper Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(4, "???", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+    player->ADD_GOSSIP_ITEM(4, "Buff Me!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+    player->ADD_GOSSIP_ITEM(5, "Test Threat List", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
     player->SEND_GOSSIP_MENU(3543,_Creature->GetGUID());
     player->PlayerTalkClass->SendTalking("Test NPC", "Hello, I'm the test NPC for ScriptDev2. Please select an option.");
 
@@ -142,6 +187,20 @@ bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint3
     {
         player->CLOSE_GOSSIP_MENU();
         ((testAI&)_Creature->AI()).m_creature->Whisper(player->GetGUID(),"Bla bla bla, wisper command. $N, $C");
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 5)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        player->CastSpell(player,30468,true);
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 6)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).DoSay("Testing Threat list. Initial target = $N. 10 seconds until Testing Starts.", LANG_UNIVERSAL, player);
+        ((testAI&)_Creature->AI()).DoStartRangedAttack(player);
+        ((testAI&)_Creature->AI()).m_creature->setFaction(14);
     }
 
     return true;
