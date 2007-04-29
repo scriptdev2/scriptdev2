@@ -156,6 +156,11 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     boss_kelthuzadAI(Creature* c) : ScriptedAI(c) 
     {
         GuardiansOfIcecrown = new Creature*[5];
+        GuardiansOfIcecrown[0] = NULL;
+        GuardiansOfIcecrown[1] = NULL;
+        GuardiansOfIcecrown[2] = NULL;
+        GuardiansOfIcecrown[3] = NULL;
+        GuardiansOfIcecrown[4] = NULL;
         GuardiansOfIcecrown_Count = 0;
         EnterEvadeMode();
     }
@@ -185,9 +190,8 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         FrostBlast_Timer = (rand()%30+30)*1000;         //Random time between 30-60 seconds
         GuardiansOfIcecrown_Timer = 5000;               //5 seconds for summoning each Guardian of Icecrown in phase 3
         
-        if(Phase3)
-            for(int i=0; i<5; i++)
-                if(GuardiansOfIcecrown[i]!=NULL)
+        for(int i=0; i<5; i++)
+            if(GuardiansOfIcecrown[i]!=NULL)
                 {
                     //delete creature
                 }
@@ -407,7 +411,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             if(ManaDetonation_Timer < diff)
             {
                 //time to cast
-                DoCast(m_creature->getVictim(),SPELL_MANA_DETONATION);
+                //DoCast(m_creature->getVictim(),SPELL_MANA_DETONATION);
 
                 if(rand()%2 == 0)
                 {
@@ -439,7 +443,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             if(FrostBlast_Timer < diff)
             {
                 //time to cast
-                DoCast(m_creature->getVictim(),SPELL_FROST_BLAST);
+                //DoCast(m_creature->getVictim(),SPELL_FROST_BLAST);
 
                 if(rand()%2 == 0)
                 {

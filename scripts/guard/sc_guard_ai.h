@@ -46,6 +46,10 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
         if (!who)
             return;
 
+        //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
+        if (who->GetTypeId() == TYPEID_PLAYER)
+            m_creature->SendZoneUnderAttackMessage((Player*)who);
+
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range

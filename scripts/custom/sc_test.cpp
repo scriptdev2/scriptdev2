@@ -105,6 +105,7 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
                 ThreatList tList;
                 tList = m_creature->GetThreatList();
 
+               
                 if (tList.empty())
                 {
                     DoSay("Threat list empty, ending combat.",0,NULL);
@@ -114,10 +115,6 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
 
                 if (tList.size()==1)
                 {
-                    //m_creature->
-                    //MaNGOS::Singleton<ObjectAccessor>::Instance();
-                    //ObjectAccessor::Instance().GetUnit(*m_creature,0);
-
                     DoSay("Beginning combat on 1 target: ",0,NULL);
                 }else if (tList.size()==2)
                 {
@@ -133,10 +130,13 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
 
             if (Timer2 < diff)
             {
+                /*ThreatList tList;
+                tList = m_creature->GetThreatList();
+                tList[1].UnitGuid =1;
+
                 //30423 - Netherbeam - Dominance
-                if (swap < 5)
-                    DoCast(m_creature->getVictim(),30423);
-                else DoCast(m_creature->getVictim(),39089);//100% dmg
+                DoCast(m_creature->GetUnitByGUID(tList[rand()%tList.size()]->UnitGuid),30423);
+                */
 
                 Timer2 = 1000;
             }else Timer2-=diff;
