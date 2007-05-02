@@ -1081,7 +1081,7 @@ UPDATE `creature_template` SET `spell1`=19813, `spell2`=4283, `spell3`=0, `spell
 
 -- Firelord (id 11668) spells
 
-UPDATE `creature_template` SET `spell1`=19393, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='generic_creature' WHERE `entry`=11668 ;
+UPDATE `creature_template` SET `spell1`=19393, `spell2`=0, `spell3`=0, `spell4`=0, `scriptname`='mob_firelord' WHERE `entry`=11668 ;
 
 
 -- Lava Surger (id 12101) spells
@@ -1650,3 +1650,6 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_sapphiron' WHERE `entry` = 15
 
 -- Kel'Thuzud 15990
 UPDATE `creature_template` SET`ScriptName` = 'boss_kelthuzad' WHERE `entry` = 15990;
+
+-- Injured Draenei (Azuremyst isle)
+UPDATE `creature_template` set `ScriptName` = 'injured_draenei' where `entry` = 16971;

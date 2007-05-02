@@ -87,9 +87,13 @@ extern void AddSC_travelmaster();
 //Alterac Mountains
 //Arathi Highlands
 //Ashenvale Forest
+//Aunchindoun
 //Azshara
+//Azuremyst Isle
+extern void AddSC_injured_draenei();
 //Badlands
 //Barrens
+//Black Temple
 //Blackfathom Depths
 //Blackwing lair
 extern void AddSC_boss_razorgore();
@@ -119,9 +123,14 @@ extern void AddSC_henze_faulk();
 
 //Felwood
 //Feralas
+//Ghostlands
 //Gnomeregan
+//Gruul's Lair
+//Hellfire Citadel
+//Hellfire Peninsula
 //Hillsbrad Foothills
 //Hinterlands
+//Karazhan
 //Loch Modan
 //Lower Blackrock Spire
 //Maradon
@@ -136,6 +145,7 @@ extern void AddSC_boss_golemagg();
 extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
+extern void AddSC_mob_firelord();
 
 //Moonglade
 extern void AddSC_silva_filnaveth();
@@ -144,6 +154,7 @@ extern void AddSC_bunthen_plainswind();
 //Mulgore
 extern void AddSC_skorn_whitecloud();
 
+//Nagrand
 //Naxxramas
 extern void AddSC_boss_anubrekhan();
 extern void AddSC_boss_maexxna();
@@ -151,6 +162,7 @@ extern void AddSC_boss_patchwerk();
 extern void AddSC_boss_razuvious();
 extern void AddSC_boss_kelthuzad();
 
+//Netherstorm
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
 
@@ -182,6 +194,7 @@ extern void AddSC_scarlet_torturer();
 //Sunken Temple
 //Tanaris
 //Teldrassil
+//Tempest Keep
 //Temple of ahn'qiraj
 //Thousand Needles
 //Tirisfal Glades
@@ -193,6 +206,7 @@ extern void AddSC_scarlet_torturer();
 //Westfall
 //Wetlands
 //Winterspring
+//Zangramarsh
 //Zul'Farrak
 //Zul'Gurub
 
@@ -272,9 +286,13 @@ void ScriptsInit()
     //Alterac Mountains
     //Arathi Highlands
     //Ashenvale Forest
+    //Aunchindoun
     //Azshara
+    //Azuremyst Isle
+    AddSC_injured_draenei();
     //Badlands
     //Barrens
+    //Black Temple
     //Blackfathom Depths
     //Blackwing lair
     AddSC_boss_razorgore();
@@ -304,9 +322,14 @@ void ScriptsInit()
 
     //Felwood
     //Feralas
+    //Ghostlands
     //Gnomeregan
+    //Gruul's Lair
+    //Hellfire Citadel
+    //Hellfire Peninsula
     //Hillsbrad Foothills
     //Hinterlands
+    //Karazhan
     //Loch Modan
     //Lower Blackrock Spire
     //Maradon
@@ -321,6 +344,7 @@ void ScriptsInit()
     AddSC_boss_sulfuron();
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
+    AddSC_mob_firelord();
 
     //Moonglade
     AddSC_silva_filnaveth();
@@ -329,6 +353,7 @@ void ScriptsInit()
     //Mulgore
     AddSC_skorn_whitecloud();
 
+    //Nagrand
     //Naxxramas
     AddSC_boss_anubrekhan();
     AddSC_boss_maexxna();
@@ -336,6 +361,7 @@ void ScriptsInit()
     AddSC_boss_razuvious();
     AddSC_boss_kelthuzad();
 
+    //Netherstorm
     //Onyxia's Lair
     AddSC_boss_onyxia();
 
@@ -367,6 +393,7 @@ void ScriptsInit()
     //Sunken Temple
     //Tanaris
     //Teldrassil
+    //Tempest Keep
     //Temple of ahn'qiraj
     //Thousand Needles
     //Tirisfal Glades
@@ -378,6 +405,7 @@ void ScriptsInit()
     //Westfall
     //Wetlands
     //Winterspring
+    //Zangramarsh
     //Zul'Farrak
     //Zul'Gurub
 

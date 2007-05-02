@@ -74,6 +74,10 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
+                //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SendZoneUnderAttackMessage((Player*)who);
+
                 //Begin melee attack if we are within range
                 if (m_creature->IsWithinDistInMap(who, ATTACK_DIST))
                     DoStartMeleeAttack(who);

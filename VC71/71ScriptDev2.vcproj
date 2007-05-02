@@ -594,6 +594,10 @@
 						RelativePath="..\scripts\zone\molten_core\sc_boss_sulfuron_harbinger.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\sc_mob_firelord.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Mulgore"
@@ -902,6 +906,10 @@
 				<Filter
 					Name="Azuremyst Isle"
 					>
+					<File
+						RelativePath="..\scripts\zone\azuremyst_isle\sc_injured_draenei.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Black Temple"

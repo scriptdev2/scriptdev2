@@ -59,6 +59,7 @@ libmangosscript_la_SOURCES = \
 	scripts/servers/sc_battlemaster.cpp \
 	scripts/servers/sc_guildmaster.cpp \
 	scripts/servers/sc_travelmaster.cpp \
+	scripts/zone/azuremyst_isle/sc_injured_draenei.cpp \
 	scripts/zone/blackwing_lair/sc_broodlord_lashlayer.cpp \
 	scripts/zone/blackwing_lair/sc_chromaggus.cpp \
 	scripts/zone/blackwing_lair/sc_ebonroc.cpp \
@@ -79,6 +80,7 @@ libmangosscript_la_SOURCES = \
 	scripts/zone/molten_core/sc_boss_ragnaros.cpp \
 	scripts/zone/molten_core/sc_boss_shazzrah.cpp \
 	scripts/zone/molten_core/sc_boss_sulfuron_harbinger.cpp \
+	scripts/zone/molten_core/sc_mob_firelord.cpp \
 	scripts/zone/moonglade/sc_bunthen_plainswind.cpp \
 	scripts/zone/moonglade/sc_silva_filnaveth.cpp \
 	scripts/zone/mulgore/sc_skorn_whitecloud.cpp \
