@@ -70,6 +70,15 @@ libmangosscript_la_SOURCES = \
 	scripts/zone/blackwing_lair/sc_vaelastrasz.cpp \
 	scripts/zone/elwynn_forest/sc_henze_faulk.cpp \
 	scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp \
+	scripts/zone/karazhan/sc_curator.cpp \
+	scripts/zone/karazhan/sc_maiden_of_virtue.cpp \
+	scripts/zone/karazhan/sc_midnight.cpp \
+	scripts/zone/karazhan/sc_mores.cpp \
+	scripts/zone/karazhan/sc_netherspite.cpp \
+	scripts/zone/karazhan/sc_nightbane.cpp \
+	scripts/zone/karazhan/sc_prince_malchezaar.cpp \
+	scripts/zone/karazhan/sc_shade_of_aran.cpp \
+	scripts/zone/karazhan/sc_terestian_illhoof.cpp \
 	scripts/zone/molten_core/sc_boss_baron_geddon.cpp \
 	scripts/zone/molten_core/sc_boss_garr.cpp \
 	scripts/zone/molten_core/sc_boss_gehennas.cpp \

@@ -123,7 +123,10 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             if (Flamespear_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMESPEAR);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_FLAMESPEAR);
 
                 //15 seconds until we should cast this agian
                 Flamespear_Timer = 15000;

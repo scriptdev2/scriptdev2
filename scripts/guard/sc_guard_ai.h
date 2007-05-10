@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
             if (BuffTimer < diff )
             {
                 //Find a spell that targets friendly and applies an aura (these are generally buffs)
-                SpellEntry const *info = SelectSpell(m_creature, NULL, NULL, SELECT_TARGET_ANY_FRIEND, NULL, NULL, NULL, NULL, SELECT_EFFECT_AURA);
+                SpellEntry const *info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_AURA);
 
                 if (info && !GlobalCooldown)
                 {
@@ -141,11 +141,11 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
                     //Select a healing spell if less than 30% hp
                     if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
-                        info = SelectSpell(m_creature, NULL, NULL, SELECT_TARGET_ANY_FRIEND, NULL, NULL, NULL, NULL, SELECT_EFFECT_HEALING);
+                        info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                     //No healing spell available, select a hostile spell
                     if (info) Healing = true;
-                        else info = SelectSpell(m_creature->getVictim(), NULL, NULL, SELECT_TARGET_ANY_ENEMY, NULL, NULL, NULL, NULL, SELECT_EFFECT_DONTCARE);
+                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
 
                     //20% chance to replace our white hit with a spell
                     if (info && rand() % 5 == 0 && !GlobalCooldown)
@@ -172,11 +172,11 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
                     //Select a healing spell if less than 30% hp ONLY 33% of the time
                     if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && rand() % 3 == 0)
-                        info = SelectSpell(m_creature, NULL, NULL, SELECT_TARGET_ANY_FRIEND, NULL, NULL, NULL, NULL, SELECT_EFFECT_HEALING);
+                        info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                     //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DIST)
                     if (info) Healing = true;
-                        else info = SelectSpell(m_creature->getVictim(), NULL, NULL, SELECT_TARGET_ANY_ENEMY, NULL, NULL, ATTACK_DIST, NULL, SELECT_EFFECT_DONTCARE);
+                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, ATTACK_DIST, 0, SELECT_EFFECT_DONTCARE);
                
                     //Found a spell, check if we arn't on cooldown
                     if (info && !GlobalCooldown)

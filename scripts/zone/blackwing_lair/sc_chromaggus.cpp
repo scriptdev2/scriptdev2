@@ -25,6 +25,9 @@
 #define SPELL_NATURE_VURNALBILTY    22280
 #define SPELL_ARCANE_VURNALBILTY    22281
 
+#define EMOTE_FRENZY    "goes into a killing frenzy!"
+#define EMOTE_SHIMMER   "flinches as its skin shimmers"
+
 //Incinerate 23308,23309
 #define SPELL_INCINERATE    23308
 //Time lapse 23310, 23311(old threat mod that was removed in 2.01)
@@ -49,6 +52,9 @@
 #define SPELL_BROODAF_BRONZE    23170
 //Brood Affliction Green 23169
 #define SPELL_BROODAF_GREEN     23169
+
+//Spell cast on player if they get all 5 debuffs
+#define SPELL_CHROMATIC_MUT_1   23174
 
 //The frenzy spell may be wrong
 #define SPELL_FRENZY            19812
@@ -252,6 +258,9 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
             //Shimmer_Timer Timer
             if (Shimmer_Timer < diff)
             {
+                if (m_creature->m_currentSpell)
+                    return;
+
                 //Remove old vurlnability spell
                 if (CurrentVurln_Spell)
                     m_creature->RemoveAurasDueToSpell(CurrentVurln_Spell);
@@ -284,6 +293,8 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 DoCast(m_creature,spell);
                 CurrentVurln_Spell = spell;
 
+                DoTextEmote(EMOTE_SHIMMER, NULL);
+
                 //45 seconds until we should cast this agian
                 Shimmer_Timer = 45000;
             }else Shimmer_Timer -= diff;
@@ -311,10 +322,59 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
             //Affliction_Timer
             if (Affliction_Timer < diff)
             {
+                if (m_creature->m_currentSpell)
+                    return;
+
                 //Pick a random target then cast a random debuff
                 //Currently there is no ability to select a random target
                 //So we will just leave this code out
                 //DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+                if (target)
+                {
+                    switch (rand()%5)
+                    {
+                        case 0:
+                        DoCast(target,SPELL_BROODAF_BLUE);
+                        break;
+
+                        case 1:
+                        DoCast(target,SPELL_BROODAF_BLACK);
+                        break;
+
+                        case 2:
+                        DoCast(target,SPELL_BROODAF_RED);
+                        break;
+
+                        case 3:
+                        DoCast(target,SPELL_BROODAF_BRONZE);
+                        break;
+
+                        case 4:
+                        DoCast(target,SPELL_BROODAF_GREEN);
+                        break;
+                    }
+
+                    //Chromatic mutation if target is effected by all afflictions
+                    if (target->HasAura(SPELL_BROODAF_BLUE,0) 
+                        && target->HasAura(SPELL_BROODAF_BLACK,0) 
+                        && target->HasAura(SPELL_BROODAF_RED,0) 
+                        && target->HasAura(SPELL_BROODAF_BRONZE,0) 
+                        && target->HasAura(SPELL_BROODAF_GREEN,0))
+                    {
+                        target->RemoveAllAuras();
+
+                        //Chromatic mutation is causing issues
+                        //Assuming it is caused by a lack of core support for Charm
+                        //So instead we instant kill our target
+                        //DoCast(target,SPELL_CHROMATIC_MUT_1);
+                        DoCast(target,5);   //Spell 5 = death touch
+                    }
+
+                }
 
                 //10 seconds until we should cast this agian
                 Affliction_Timer = 10000;
@@ -325,6 +385,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
             {
                 //Cast Frenzy_
                 DoCast(m_creature,SPELL_FRENZY);
+                DoTextEmote(EMOTE_FRENZY,NULL);
 
                 //10-15 seconds until we should cast this agian
                 Frenzy_Timer = 10000 + (rand() % 5000);

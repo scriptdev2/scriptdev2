@@ -1002,6 +1002,42 @@
 				<Filter
 					Name="Karazhan"
 					>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_curator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_maiden_of_virtue.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_midnight.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_moroes.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_netherspite.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_nightbane.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_prince_malchezaar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_shade_of_aran.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_terestian_illhoof.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Nagrand"

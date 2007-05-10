@@ -86,7 +86,10 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             if (Pyroblast_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_PYROBLAST);
 
                 //7 seconds until we should cast this agian
                 Pyroblast_Timer = 7000;

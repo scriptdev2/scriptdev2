@@ -17,42 +17,10 @@
 
 #include "../sc_defines.h"
 
-void ForcePlayerSay(Player* player, char const *text)
-{
-    WorldPacket data(100);//just guess size
-    data.SetOpcode(SMSG_MESSAGECHAT);
-    data << (uint8)5; //CHAT_MSG_YELL;
-    data << uint32(LANG_UNIVERSAL);
-
-    data << uint64(player->GetGUID());
-
-    data << uint32(strlen(text)+1);
-    data << text;
-    data << uint8(0);
-
-    player->SendMessageToSet(&data,true);
-}
-
 bool ItemUse_item_test(Player *player, Item* _Item)
 {
-    switch (rand() % 3)
-    {
-    case 0:
-        ForcePlayerSay(player, "I cannot control myself...flee...flee before I begin dancing!!");
-        player->HandleEmoteCommand(EMOTE_STATE_DANCE);
-        break;
-
-    case 1:
-        ForcePlayerSay(player, "Portable Bank is a go!");
-        player->GetSession()->SendShowBank( player->GetGUID() );
-        break;
-
-    case 2:
-        ForcePlayerSay(player, "I am invincable!");
-        player->CastSpell(player,6724,true);
-        break;
-    }
-
+    player->CastSpell(player,20620,true);
+    player->GetSession()->SendShowBank( player->GetGUID() );
     return true;
 }
 
@@ -63,6 +31,5 @@ void AddSC_item_test()
     newscript = new Script;
     newscript->Name="item_test";
     newscript->pItemUse = ItemUse_item_test;
-
     m_scripts[nrscripts++] = newscript;
 }

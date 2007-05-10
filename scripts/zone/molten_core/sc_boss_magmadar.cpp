@@ -127,8 +127,13 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
             //Lavabomb_Timer
             if (Lavabomb_Timer < diff)
             {
-                //Cast (normally this would be on a random player but since we don't have an aggro system we can't really do that)
-                DoCast(m_creature->getVictim(),SPELL_LAVABOMB_ALT);//Casting Alt lava bomb since normal one isn't supported
+                //Cast on random target
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                
+                //Casting Alt lava bomb since normal one isn't supported
+                if (target)DoCast(target,SPELL_LAVABOMB_ALT);
 
                 //12 seconds until we should cast this agian
                 Lavabomb_Timer = 12000;

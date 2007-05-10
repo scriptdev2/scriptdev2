@@ -23,14 +23,17 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
 
     uint32 Timer;
     uint32 Timer2;
+    uint32 HealTimer;
     uint32 swap;
     bool InCombat;
+    Unit* HealTarget;
 
     void EnterEvadeMode()
     {
         Timer = 10000;
         Timer2 = 10000;
         swap = 0;
+        HealTarget = NULL;
 
         InCombat = false;
 
@@ -69,30 +72,12 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    InCombat = true;
-                }
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
     {
+        
+
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;
@@ -138,11 +123,23 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
                 DoCast(m_creature->GetUnitByGUID(tList[rand()%tList.size()]->UnitGuid),30423);
                 */
 
+
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,30423);
+
                 Timer2 = 1000;
             }else Timer2-=diff;
         }
     }
+
+    void SpellHit(Unit* caster, const SpellEntry* spell)
+    {
+        DoSay("spell hit!",0,NULL);
+    }
 };
+
+
 CreatureAI* GetAI_test(Creature *_Creature)
 {
     return new testAI (_Creature);
@@ -156,6 +153,7 @@ bool GossipHello_test(Player *player, Creature *_Creature)
     player->ADD_GOSSIP_ITEM(3, "Test Wisper Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
     player->ADD_GOSSIP_ITEM(4, "Buff Me!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
     player->ADD_GOSSIP_ITEM(5, "Test Threat List", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+    player->ADD_GOSSIP_ITEM(6, "Keep Me Healed!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
     player->SEND_GOSSIP_MENU(3543,_Creature->GetGUID());
     player->PlayerTalkClass->SendTalking("Test NPC", "Hello, I'm the test NPC for ScriptDev2. Please select an option.");
 
@@ -199,8 +197,16 @@ bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint3
     {
         player->CLOSE_GOSSIP_MENU();
         ((testAI&)_Creature->AI()).DoSay("Testing Threat list. Initial target = $N. 10 seconds until Testing Starts.", LANG_UNIVERSAL, player);
-        ((testAI&)_Creature->AI()).DoStartRangedAttack(player);
         ((testAI&)_Creature->AI()).m_creature->setFaction(14);
+        ((testAI&)_Creature->AI()).DoStartRangedAttack(player);
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 7)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((testAI&)_Creature->AI()).DoSay("Healing.", LANG_UNIVERSAL, player);
+        ((testAI&)_Creature->AI()).HealTarget = player;
+        ((testAI&)_Creature->AI()).HealTimer = 2000;
     }
 
     return true;

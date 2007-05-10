@@ -40,17 +40,17 @@
 #define SPELL_VEILOFSHADOW          7068
 #define SPELL_CLEAVE                20691
 #define SPELL_TAILLASH              23364
-#define SPELL_BONECONTRUST          23363 //23362, 23361
+#define SPELL_BONECONTRUST          23363       //23362, 23361
 
-#define SPELL_MAGE                  23410  //wild magic
-#define SPELL_WARRIOR               23397 //beserk
-#define SPELL_DRUID                 23398 // cat form
-#define SPELL_PRIEST                23401 // corrupted healing
-#define SPELL_PALADIN               23418 //syphon blessing
-#define SPELL_SHAMAN                23425  //totems
-#define SPELL_WARLOCK               23427 //infernals
-#define SPELL_HUNTER                23436 //bow broke
-#define SPELL_ROGUE                 23414 //Paralise
+#define SPELL_MAGE                  23410       //wild magic
+#define SPELL_WARRIOR               23397       //beserk
+#define SPELL_DRUID                 23398       // cat form
+#define SPELL_PRIEST                23401       // corrupted healing
+#define SPELL_PALADIN               23418       //syphon blessing
+#define SPELL_SHAMAN                23425       //totems
+#define SPELL_WARLOCK               23427       //infernals
+#define SPELL_HUNTER                23436       //bow broke
+#define SPELL_ROGUE                 23414       //Paralise
 
 #define SAY_MAGE        "Mages too? You should be more careful when you play with magic..."
 #define SAY_WARRIOR     "Warriors, I know you can hit harder than that! Let's see it!"
@@ -61,6 +61,13 @@
 #define SAY_WARLOCK     "Warlocks, you shouldn't be playing with magic you don't understand. See what happens?"
 #define SAY_HUNTER      "Hunters and your annoying pea-shooters!"
 #define SAY_ROGUE       "Rogues? Stop hiding and face me!"
+
+#define ADD_X1 -7591.151855
+#define ADD_X2 -7514.598633
+#define ADD_Y1 -1204.051880
+#define ADD_Y2 -1150.448853
+#define ADD_Z1 476.800476
+#define ADD_Z2 476.796570
 
 
 struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
@@ -73,17 +80,23 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     uint32 Cleave_Timer;
     uint32 TailLash_Timer;
     uint32 ClassCall_Timer;
+    uint32 SpawnedAdds;
+    uint32 AddSpawnTimer;
+    bool Phase2;
     bool Phase3;
     bool InCombat;
     
     void EnterEvadeMode()
     {
+        SpawnedAdds = 0;
+        AddSpawnTimer = 10000;
         ShadowFlame_Timer = 12000;       //These times are probably wrong
         BellowingRoar_Timer = 30000;
         VeilOfShadow_Timer = 15000;
         Cleave_Timer = 7000;
         TailLash_Timer = 10000;
         ClassCall_Timer = 35000;        //35-40 seconds
+        Phase2 = false;
         Phase3 = false;
         InCombat = false;
 
@@ -92,7 +105,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
     }
-
+    
     void KilledUnit(Unit* Victim)
     {
         if (rand()%5)
@@ -192,10 +205,29 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;
-
+        
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
-        {            
+        {
+            if((Phase2 == false) && (Phase3 == false))
+            {
+                if (AddSpawnTimer < diff)
+                {
+                    //Cast
+                    m_creature->SummonCreature(14262,469,ADD_X1,ADD_Y1,ADD_Z1,5.000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10);
+                    m_creature->SummonCreature(14264,469,ADD_X2,ADD_Y2,ADD_Z2,5.000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10);
+
+                    SpawnedAdds++;
+
+                    if (SpawnedAdds > 40)
+                        Phase2 = true;
+
+                    //10 seconds till recast
+                    AddSpawnTimer = 10000;
+                }else AddSpawnTimer -= diff;
+            return;
+            }
+
             //ShadowFlame_Timer
             if (ShadowFlame_Timer < diff)
             {

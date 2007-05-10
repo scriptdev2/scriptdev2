@@ -109,7 +109,11 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
             if (IgniteMana_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_IGNITEMANA);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+                if (target)DoCast(target,SPELL_IGNITEMANA);
 
                 //35 seconds until we should cast this agian
                 IgniteMana_Timer = 30000;
@@ -119,7 +123,10 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
             if (LivingBomb_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_LIVINGBOMB);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_LIVINGBOMB);
 
                 //30 seconds until we should cast this agian
                 LivingBomb_Timer = 35000;

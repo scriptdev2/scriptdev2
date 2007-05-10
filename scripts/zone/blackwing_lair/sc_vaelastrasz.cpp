@@ -25,7 +25,6 @@
 #define SPELL_BURNINGADRENALINE     18173
 #define SPELL_CLEAVE                20691       //Chain cleave is most likely named something different and contains a dummy effect
 
-//I beg you Mortals, flee! Flee before I lose all control. The Black Fire rages within my heart. I must release it! FLAME! DEATH! DESTRUCTION! COWER BEFORE THE WRATH OF LORD....NO! I MUST FIGHT THIS!
 #define SAY_LINE1           "Too late...friends. Nefarius' corruption has taken hold. I cannot...control myself. "
 #define SOUND_LINE1         8281
 
@@ -38,11 +37,10 @@
 #define SAY_HALFLIFE        "Nefarius' hate has made me stronger than ever before. You should have fled, while you could, mortals! The fury of Blackrock courses through my veins! "
 #define SOUND_HALFLIFE      8285
 
-//You can use $N or $C to specifiy the Name or Class of the target in DoYell("$N $C",LANG_UNIVERSAL, UnitTarget); 
 #define SAY_KILLTARGET      "Forgive me $N, your death only adds to my failure."
 #define SOUND_KILLTARGET    8284
 
-#define GOSSIP_ITEM         "<Needs Gossip Text>"
+#define GOSSIP_ITEM         "Start Event <Needs Gossip Text>"
 
 struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
@@ -230,6 +228,12 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             {
                 //Cast
                 //DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+                if (target)
+                    DoCast(target,SPELL_BURNINGADRENALINE);
 
                 //15 seconds until we should cast this agian
                 BurningAdrenalineCaster_Timer = 15000;

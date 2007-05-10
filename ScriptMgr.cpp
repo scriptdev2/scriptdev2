@@ -716,11 +716,15 @@ void ScriptedAI::DoStopAttack()
 
 void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
+    if (!victim)
+        return;
     m_creature->CastSpell(victim, spelId, false);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 {
+    if (!who)
+        return;
     m_creature->StopMoving();
     m_creature->CastSpell(who, spellInfo, false);
 }
@@ -787,36 +791,37 @@ Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, floa
 
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
 {
-    Unit::AttackerSet m_attackers;
-    m_attackers = m_creature->getAttackers();
+    ThreatList m_threatlist;
+    m_threatlist = m_creature->GetThreatList();
 
-    Unit::AttackerSet::iterator  i = m_attackers.begin();
+    ThreatList::iterator  i = m_threatlist.begin();
 
-    if (position > m_attackers.size() || !m_attackers.size())
+    if (position > m_threatlist.size() || !m_threatlist.size())
         return NULL;
 
     switch (target)
     {
         case SELECT_TARGET_RANDOM:
-            advance ( i , rand()%m_attackers.size());
-            return (*i);
+            advance ( i , rand()%m_threatlist.size());
+            return Unit::GetUnit((*m_creature), i->UnitGuid);
         break;
 
         case SELECT_TARGET_TOPAGGRO:
             advance ( i , position);
-            return (*i);
+            return Unit::GetUnit((*m_creature), i->UnitGuid);
         break;
 
         case SELECT_TARGET_BOTTOMAGGRO:
             advance ( i , position);
-            return (*i);
+            return Unit::GetUnit((*m_creature), i->UnitGuid);
         break;
     }
+
 
     return NULL;
 }
 
-SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)
+SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mechanic, SelectTarget Targets, uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effects)
 {
     //No target so we can't cast
     if (!Target)
@@ -857,11 +862,11 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, uint32 School, uint32 Me
             continue;
 
         //Check for school if specified
-        if (School && TempSpell->School != School)
+        if (School >= 0 && TempSpell->School != School)
             continue;
 
         //Check for spell mechanic if specified
-        if (Mechanic && TempSpell->Mechanic != Mechanic)
+        if (Mechanic >= 0 && TempSpell->Mechanic != Mechanic)
             continue;
 
         //Make sure that the spell uses the requested amount of power

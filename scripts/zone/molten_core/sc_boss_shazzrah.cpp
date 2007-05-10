@@ -104,7 +104,10 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             if (ShazzrahCurse_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHAZZRAHCURSE);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_SHAZZRAHCURSE);
 
                 //30 seconds until we should cast this agian
                 ShazzrahCurse_Timer = 30000;

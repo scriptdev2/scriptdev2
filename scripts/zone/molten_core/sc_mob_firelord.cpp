@@ -89,7 +89,10 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
                 //Cast
                 if (rand()%100 < 70) //70% chance to cast
                 {
-                DoCast(m_creature->getVictim(),SPELL_SOULBURN);
+                    Unit* target = NULL;
+
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)DoCast(target,SPELL_SOULBURN);
                 }
                 //20 seconds until we should cast this again
                 SoulBurn_Timer = 20000;

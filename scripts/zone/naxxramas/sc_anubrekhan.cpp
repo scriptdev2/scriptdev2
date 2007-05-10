@@ -209,7 +209,12 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                 //Cast Impale on a random target
                 //Do NOT cast it when we are afflicted by locust swarm
                 if (!m_creature->HasAura(SPELL_LOCUSTSWARM,1))
-                    DoCast(m_creature->getVictim(),SPELL_IMPALE);
+                {
+                    Unit* target = NULL;
+
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)DoCast(target,SPELL_IMPALE);
+                }
 
                 //15 seconds until we should cast this agian
                 Impale_Timer = 15000;

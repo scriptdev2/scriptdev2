@@ -99,7 +99,11 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
             if (RainOfFire_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_RAINOFFIRE);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)
+                DoCast(target,SPELL_RAINOFFIRE);
 
                 //35 seconds until we should cast this agian
                 RainOfFire_Timer = 35000;

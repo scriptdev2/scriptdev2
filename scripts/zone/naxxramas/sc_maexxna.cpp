@@ -100,8 +100,10 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
             if (WebTrap_Timer < diff)
             {
                 //Cast WebTrap on a Random target
-                //NYI since we can't select random target
-                //DoCast(m_creature->getVictim(),SPELL_WEBTRAP);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_WEBTRAP);
 
                 //40 seconds until we should cast this agian
                 WebTrap_Timer = 40000;
