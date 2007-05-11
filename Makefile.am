@@ -73,7 +73,7 @@ libmangosscript_la_SOURCES = \
 	scripts/zone/karazhan/sc_curator.cpp \
 	scripts/zone/karazhan/sc_maiden_of_virtue.cpp \
 	scripts/zone/karazhan/sc_midnight.cpp \
-	scripts/zone/karazhan/sc_mores.cpp \
+	scripts/zone/karazhan/sc_moroes.cpp \
 	scripts/zone/karazhan/sc_netherspite.cpp \
 	scripts/zone/karazhan/sc_nightbane.cpp \
 	scripts/zone/karazhan/sc_prince_malchezaar.cpp \
