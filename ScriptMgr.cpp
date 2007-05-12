@@ -131,6 +131,8 @@ extern void AddSC_henze_faulk();
 //Hillsbrad Foothills
 //Hinterlands
 //Karazhan
+extern void AddSC_boss_maiden_of_virtue();
+
 //Loch Modan
 //Lower Blackrock Spire
 //Maradon
@@ -330,6 +332,9 @@ void ScriptsInit()
     //Hillsbrad Foothills
     //Hinterlands
     //Karazhan
+    AddSC_boss_maiden_of_virtue();
+
+
     //Loch Modan
     //Lower Blackrock Spire
     //Maradon

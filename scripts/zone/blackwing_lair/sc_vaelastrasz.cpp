@@ -291,7 +291,7 @@ void SendDefaultMenu_boss_vael(Player *player, Creature *_Creature, uint32 actio
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Fight time
     {
         player->PlayerTalkClass->CloseGossip();
-        ((boss_vaelAI&)_Creature->AI()).BeginSpeach((Unit*)player);
+        ((boss_vaelAI*)_Creature->AI())->BeginSpeach((Unit*)player);
     }
 }
 

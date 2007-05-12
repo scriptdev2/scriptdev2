@@ -76,7 +76,15 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        
+        if (HealTarget)
+        {
+            if (HealTimer < diff)
+            {
+                DoCast(HealTarget,28306);
+                HealTimer = 3000;
+
+            }HealTimer -= diff;
+        }
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
@@ -90,7 +98,7 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
                 ThreatList tList;
                 tList = m_creature->GetThreatList();
 
-               
+
                 if (tList.empty())
                 {
                     DoSay("Threat list empty, ending combat.",0,NULL);
@@ -165,26 +173,26 @@ bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint3
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).m_creature->Say("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player->GetGUID());
-        ((testAI&)_Creature->AI()).DoSay("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player);
+        ((testAI*)_Creature->AI())->m_creature->Say("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player->GetGUID());
+        ((testAI*)_Creature->AI())->DoSay("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player);
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).DoYell("Bla bla bla, yell command. $N, $C", LANG_UNIVERSAL, player);
+        ((testAI*)_Creature->AI())->DoYell("Bla bla bla, yell command. $N, $C", LANG_UNIVERSAL, player);
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).DoTextEmote("Bla bla bla, emote command. $N, $C", player);
+        ((testAI*)_Creature->AI())->DoTextEmote("Bla bla bla, emote command. $N, $C", player);
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).m_creature->Whisper(player->GetGUID(),"Bla bla bla, wisper command. $N, $C");
+        ((testAI*)_Creature->AI())->m_creature->Whisper(player->GetGUID(),"Bla bla bla, wisper command. $N, $C");
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 5)
@@ -196,17 +204,17 @@ bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint3
     if (action == GOSSIP_ACTION_INFO_DEF + 6)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).DoSay("Testing Threat list. Initial target = $N. 10 seconds until Testing Starts.", LANG_UNIVERSAL, player);
-        ((testAI&)_Creature->AI()).m_creature->setFaction(14);
-        ((testAI&)_Creature->AI()).DoStartRangedAttack(player);
+        ((testAI*)_Creature->AI())->DoSay("Testing Threat list. Initial target = $N. 10 seconds until Testing Starts.", LANG_UNIVERSAL, player);
+        ((testAI*)_Creature->AI())->DoStartRangedAttack(player);
+        ((testAI*)_Creature->AI())->m_creature->setFaction(14);
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 7)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((testAI&)_Creature->AI()).DoSay("Healing.", LANG_UNIVERSAL, player);
-        ((testAI&)_Creature->AI()).HealTarget = player;
-        ((testAI&)_Creature->AI()).HealTimer = 2000;
+        ((testAI*)_Creature->AI())->DoSay("Healing.", LANG_UNIVERSAL, player);
+        ((testAI*)_Creature->AI())->HealTarget = player;
+        ((testAI*)_Creature->AI())->HealTimer = 2000;
     }
 
     return true;

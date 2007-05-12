@@ -317,10 +317,10 @@ bool ReciveEmote_custom_example(Player *player, Creature *_Creature, uint32 emot
     _Creature->HandleEmoteCommand(emote);
 
     if (emote == EMOTE_STATE_DANCE)
-        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
+        ((custom_exampleAI*)_Creature->AI())->DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
 
     if (emote == EMOTE_ONESHOT_SALUTE)
-        ((custom_exampleAI&)_Creature->AI()).DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
+        ((custom_exampleAI*)_Creature->AI())->DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
 
     return true;
 }
