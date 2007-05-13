@@ -6,3 +6,10 @@
 //8919 taunt3 - Do not continue! Turn back while there's still time!
 //8914 death - It is... as it should be.
 //8915 slay - Forgive me! 
+
+//All horsemen
+#define SPELL_SHIELDWALL    29061
+#define SPELL_BESERK        26662
+
+#define SPELL_MARK                  28835
+#define SPELL_HOLY_WRATH            28883

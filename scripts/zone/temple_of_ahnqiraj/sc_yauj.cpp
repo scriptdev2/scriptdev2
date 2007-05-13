@@ -1,0 +1,2 @@
+#define SPELL_HEAL      25807
+#define SPELL_AOE_FEAR  19408

@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 #define SPELL_CLEAVE            20691
-#define SPELL_BLASTWAVE         11130
+#define SPELL_BLASTWAVE         23331
 #define SPELL_MORTALSTRIKE      24573
 #define SPELL_KNOCKBACK         25778
 
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
                 Cleave_Timer = 25000;
             }else Cleave_Timer -= diff;
 
-            // BlastWave(fixed.thx Ntsc)
+            // BlastWave
             if (BlastWave_Timer < diff)
             {
                 //Cast
@@ -149,6 +149,9 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             {
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+
+                //Drop 50% aggro
+                m_creature->AddThreat(m_creature->getVictim(),-(m_creature->GetThreat(m_creature->getVictim()->GetGUID())/2));
 
                 //25 seconds until we should cast this agian
                 KnockBack_Timer = 25000;

@@ -17,12 +17,12 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
     boss_sarturaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     Unit *pTarget;
-	uint32 WHIRLWIND_Timer;
+    uint32 WHIRLWIND_Timer;
     
     void EnterEvadeMode()
     {
-	    pTarget = NULL;
-		WHIRLWIND_Timer = 30000;
+        pTarget = NULL;
+        WHIRLWIND_Timer = 30000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -39,10 +39,10 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DIST))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-			
-			pTarget = who;
+            
+            pTarget = who;
         }
     }
 
@@ -82,11 +82,10 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
                 return;
             }
 
-			//If he is 20% enrage
+            //If he is 20% enrage
             if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->m_currentSpell)
             {
-		DoCast(m_creature->getVictim(),SPELL_ENRAGE);
-				
+                DoCast(m_creature->getVictim(),SPELL_ENRAGE);     
             }
 
 
@@ -94,7 +93,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             //WHIRLWIND_Timer (only in phase2)
             if (WHIRLWIND_Timer < diff)
             {
-		DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
+                DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
                 WHIRLWIND_Timer = 30000;
             }else WHIRLWIND_Timer -= diff;
 

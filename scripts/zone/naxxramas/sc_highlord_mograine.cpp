@@ -9,3 +9,11 @@
 //8840 slay2 - The master's will is done. 
 //8841 special - Bow to the might of the Highlord!
 //8838 death - I... am... released! Perhaps it's not too late to - noo! I need... more time...
+
+//All horsemen
+#define SPELL_SHIELDWALL    29061
+#define SPELL_BESERK        26662
+
+//Spells
+#define SPELL_MARK                  28834
+#define SPELL_RIGHTEOUS_FIRE 28882

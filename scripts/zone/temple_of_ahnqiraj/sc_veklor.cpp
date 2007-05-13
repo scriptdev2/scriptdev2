@@ -8,3 +8,13 @@
 //8627 - to decorate
 //8628 - your brash
 //8629 - you will not
+
+#define SPELL_HEAL_BROTHER          7393
+#define SPELL_TWIN_TELEPORT         800     //Visual only
+
+#define SPELL_SHADOWBOLT            26006
+#define SPELL_BLIZZARD              26607
+#define SPELL_ARCANEBURST           568
+#define SPELL_EXPLODEBUG            804
+
+//Getting the health link to work will be pretty difficult

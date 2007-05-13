@@ -10,3 +10,15 @@
 //8871 elect - Now YOU feel pain!
 //8877 slay - You die now!
 //8870 die - Thank... you...
+
+#define SPELL_BALL_LIGHTNING                28299
+
+#define SPELL_CHARGE_POSITIVE_DMGBUFF       29659
+#define SPELL_CHARGE_POSITIVE_NEARDMG       28059
+
+#define SPELL_CHARGE_NEGATIVE_DMGBUFF       29660
+#define SPELL_CHARGE_NEGATIVE_NEARDMG       28084
+
+#define SPELL_CHAIN_LIGHTNING               28900
+
+#define SPELL_BESERK                        26662

@@ -9,3 +9,13 @@
 //8832 taunt3 - Soon... the world will tremble!
 //8833 taunt4 - The end is upon you. 
 //8834 taunt5 - Hungry worms will feast on your rotten flesh!
+
+//Spell used by floor peices to cause damage to players
+#define SPELL_ERUPTION      29371
+
+//Spells by boss
+#define SPELL_WILT          23772
+#define SPELL_FEAVER        29998
+
+//Spell by eye stalks
+#define SPELL_MIND_FLAY     26143

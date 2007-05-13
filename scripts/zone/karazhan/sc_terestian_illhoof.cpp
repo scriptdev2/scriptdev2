@@ -16,3 +16,9 @@
 
 9262 Death My life, is yours. Oh great one. 
 */
+
+#define SPELL_BROKEN_PACT           30065
+#define SPELL_SUMMON_DEMONCHAINS    30120
+
+//Pet spells
+#define SPELL_AMPLIFY_FLAMES        30053

@@ -24,3 +24,21 @@ AXETOSS2?
 
 9221 Malchezaar dies: "I refuse to concede defeat. I am a prince of the Eredar! I am..." 
 */
+
+//Enfeeble is supposed to reduce hp to 1 and then heal player back to full when it ends
+//Along with reducing healing and regen while enfeebled to 0%
+//This spell effect will only reduce healing
+#define SPELL_ENFEEBLE          30843
+
+#define SPELL_SHADOWNOVA        30852
+#define SPELL_SW_PAIN           30854
+#define SPELL_THRASH_PASSIVE    12787
+
+#define SPELL_SUNDER_ARMOR      25225
+#define SPELL_CLEAVE            15663
+
+//Axe's use this spell
+#define SPELL_AMPLIFY_DAMAGE    12738
+
+//Infernals cast this once every 3 seconds and they do not move
+#define SPELL_HELLFIRE          39132

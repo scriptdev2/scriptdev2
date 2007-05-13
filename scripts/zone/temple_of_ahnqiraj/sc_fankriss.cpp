@@ -1,0 +1,1 @@
+#define SPELL_MORTAL_WOUND 28467

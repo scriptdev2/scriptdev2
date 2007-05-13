@@ -6,3 +6,7 @@
 //8849 slay1- My task is done!
 //8850 slay2- Breathe no more!
 //8848 death - I will serve the master... in... death!
+
+#define SPELL_AOE_CURSE         28213
+#define SPELL_BLINK             29211       //May have to directly teleport npcs since blink is glitchy. 
+#define SPELL_CRIPPLE           29212

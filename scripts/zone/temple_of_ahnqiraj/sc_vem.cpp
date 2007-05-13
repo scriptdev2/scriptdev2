@@ -1,0 +1,1 @@
+#define SPELL_CHARGE 16636

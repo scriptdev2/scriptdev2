@@ -6,3 +6,10 @@
 //8895 special - Your life is mine!
 //8894 slay - Who's next?
 //8893 death - Tou... ché!
+
+//All horsemen
+#define SPELL_SHIELDWALL    29061
+#define SPELL_BESERK        26662
+
+#define SPELL_MARK 28833
+#define SPELL_VOIDZONE 28863 //Probably won't work. Uses template style spell

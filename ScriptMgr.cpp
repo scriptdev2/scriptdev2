@@ -721,15 +721,16 @@ void ScriptedAI::DoStopAttack()
 
 void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
-    if (!victim)
+    if (!victim || m_creature->m_currentSpell)
         return;
     m_creature->CastSpell(victim, spelId, false);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 {
-    if (!who)
+    if (!who || m_creature->m_currentSpell)
         return;
+
     m_creature->StopMoving();
     m_creature->CastSpell(who, spellInfo, false);
 }

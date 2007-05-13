@@ -8,3 +8,12 @@
 //8634 - shall be
 //8635 - your fate
 //8636 - feel
+
+#define SPELL_HEAL_BROTHER          7393
+#define SPELL_TWIN_TELEPORT         800     //Visual only
+
+#define SPELL_UPPERCUT              26007
+#define SPELL_UNBALANCING_STRIKE    26613
+#define SPELL_MUTILATE_BUG          802
+
+//Getting the health link to work will be pretty difficult

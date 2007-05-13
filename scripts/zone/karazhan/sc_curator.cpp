@@ -21,3 +21,16 @@ Player death
 Curator death 
 9184 This Curator is no longer op... er... ation... al. 
 */
+
+//Flare spell info
+#define SPELL_ASTRAL_FLARE_PASSIVE      30234
+#define SPELL_ASTRAL_FLARE_NE           30236
+#define SPELL_ASTRAL_FLARE_NW           30239
+#define SPELL_ASTRAL_FLARE_SE           30240
+#define SPELL_ASTRAL_FLARE_SW           30241
+
+//Curator spell info
+#define SPELL_HATEFUL_BOLT              30383
+#define SPELL_EVOCATION                 30254
+#define SPELL_ENRAGE                    19953
+#define SPELL_BERSERK                   26662

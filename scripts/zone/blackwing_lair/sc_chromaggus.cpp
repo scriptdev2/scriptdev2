@@ -258,9 +258,6 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
             //Shimmer_Timer Timer
             if (Shimmer_Timer < diff)
             {
-                if (m_creature->m_currentSpell)
-                    return;
-
                 //Remove old vurlnability spell
                 if (CurrentVurln_Spell)
                     m_creature->RemoveAurasDueToSpell(CurrentVurln_Spell);
@@ -306,7 +303,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),Breath1_Spell);
 
                 //30 seconds until we should cast this agian
-                Breath1_Timer = 30000;
+                Breath1_Timer = 60000;
             }else Breath1_Timer -= diff;
 
             //Breath2_Timer
@@ -316,15 +313,12 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),Breath2_Spell);
 
                 //30 seconds until we should cast this agian
-                Breath2_Timer = 30000;
+                Breath2_Timer = 60000;
             }else Breath2_Timer -= diff;
 
             //Affliction_Timer
             if (Affliction_Timer < diff)
             {
-                if (m_creature->m_currentSpell)
-                    return;
-
                 //Pick a random target then cast a random debuff
                 //Currently there is no ability to select a random target
                 //So we will just leave this code out
@@ -365,13 +359,13 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                         && target->HasAura(SPELL_BROODAF_BRONZE,0) 
                         && target->HasAura(SPELL_BROODAF_GREEN,0))
                     {
-                        target->RemoveAllAuras();
+                        //target->RemoveAllAuras();
 
                         //Chromatic mutation is causing issues
                         //Assuming it is caused by a lack of core support for Charm
                         //So instead we instant kill our target
                         //DoCast(target,SPELL_CHROMATIC_MUT_1);
-                        DoCast(target,5);   //Spell 5 = death touch
+                        //target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, 0, false);
                     }
 
                 }

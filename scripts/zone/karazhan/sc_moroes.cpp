@@ -13,3 +13,11 @@ Killing A Player
 
 Death 
 9213 How terribly clumsy of me... */
+
+#define SPELL_VANISH        31619
+#define SPELL_GARROTE       29433
+#define SPELL_BLIND         34694
+#define SPELL_GOUGE         36862
+#define SPELL_ENRAGE        19953       //to much dmg?
+
+//Add spells, not enough information

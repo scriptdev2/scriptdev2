@@ -7,3 +7,15 @@
 //8620 The screams of the dying will fill the air. A symphony of terror is about to begin!
 //8621 Tremble! The end is upon you.
 //8622 You only delay... the inevetable
+
+#define SPELL_TRUE_FULFILLMENT1     785
+#define SPELL_TRUE_FULFILLMENT2     2313
+#define SPELL_TRUE_FULFILLMENT3     26525
+#define SPELL_TRUE_FULFILLMENT4     26526
+
+#define SPELL_ARCANE_EXPLOSION      19712       //Wrong id but only spell with cast time and similar damage
+#define SPELL_EARTH_SHOCK           24685       //Unsure if this id is correct. Dmg is low but no others with higher
+
+//Splits can probably be done by spawning an add with a 
+//different template that uses the same AI that checks the ID
+//so the add doesn't spawn more adds. 
