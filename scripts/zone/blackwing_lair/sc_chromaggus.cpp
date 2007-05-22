@@ -68,7 +68,8 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Select the 2 breaths that we are going to use until despawned
         //5 possiblities for the first breath, 4 for the second, 20 total possiblites
         //This way we don't end up casting 2 of the same breath
-        //TL TL would be retard
+        //TL TL would be stupid
+        srand(time(NULL));
         switch (rand()%20)
         {
             //B1 - Incin

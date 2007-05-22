@@ -16,32 +16,110 @@
 
 #include "../../sc_defines.h"
 
-uint32 NPCDialogStatus_henze_faulk(Player *player, Creature *_Creature )
-{
-    //Appear dead
-    _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_DEAD);
-    _Creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-    
-    if( _Creature->isAlive() == true )
-    {
-        player->CastSpell( player, 8593, true);
-        _Creature->RemoveFlag (UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-        _Creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
 
-        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
-    }
-    else
+
+#define SAY_HEAL "Danke Junge. Echt Danke."
+
+struct MANGOS_DLL_DECL henze_faulkAI : public ScriptedAI
+{
+    uint32 ResetlifeTimer;
+    uint32 DoSayHealTimer;
+    bool DoSayHeal;
+
+    henze_faulkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    void EnterEvadeMode()
     {
-        return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_NONE);
+        ResetlifeTimer= 60000;
+        DoSayHealTimer = 5000;
+        DoSayHeal = false;
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        DoGoHome();
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+        m_creature->SetHealth(1);
+        m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, 32);
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // ley down
     }
+
+    void AttackStart(Unit *who)
+    {
+        return; //ignore all attackstart commands
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        return; //ignore everyone around them (won't aggro anything)
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+
+        if (m_creature->GetHealth() > 1)
+        {
+            if(ResetlifeTimer < diff)
+            {
+                m_creature->SetHealth(1);
+                ResetlifeTimer = 60000;
+                m_creature->RemoveAllAuras();
+            }
+            else ResetlifeTimer -= diff;
+        }
+
+        if(DoSayHeal)
+        {
+            if(DoSayHealTimer < diff)
+            {
+                DoSay(SAY_HEAL,LANG_COMMON,NULL);
+                DoSayHealTimer = 5000;
+                DoSayHeal = false;
+            }else DoSayHealTimer -= diff;
+        }
+
+        return;
+    }
+
+    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
+    {
+        if(Spellkind->Id == 2050)
+        {
+            DoCast(m_creature,32343);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
+            m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, 0);
+            m_creature->RemoveAllAuras();
+            DoSayHeal = true;
+        }
+        return;
+    }
+
+};
+CreatureAI* GetAI_henze_faulk(Creature *_Creature)
+{
+    return new henze_faulkAI (_Creature);
 }
+
+bool QuestAccept_henze_faulk(Player *player, Creature *creature, Quest *quest )
+{
+    if(quest->GetQuestId() == 1787)
+    {
+        creature->RemoveAllAuras();
+        creature->DeleteThreatList();
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+        creature->SetHealth(1);
+        creature->SetFlag(UNIT_DYNAMIC_FLAGS, 32);
+        creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // ley down
+        return true;
+    }
+    return false;
+}
+
 
 void AddSC_henze_faulk()
 {
     Script *newscript;
-
     newscript = new Script;
     newscript->Name="henze_faulk";
-    newscript->pNPCDialogStatus      = &NPCDialogStatus_henze_faulk;
+    newscript->GetAI = GetAI_henze_faulk;
+    newscript->pQuestAccept = &QuestAccept_henze_faulk;
     m_scripts[nrscripts++] = newscript;
 }

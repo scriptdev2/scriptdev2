@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_DIVINESHIELD2         1020
 #define SPELL_CRUSADERSTRIKE5       35395

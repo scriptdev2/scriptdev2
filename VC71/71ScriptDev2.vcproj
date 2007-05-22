@@ -131,6 +131,22 @@
 			<Filter
 				Name="boss"
 				>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_emeriss.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_lethon.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_taerar.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\boss\sc_boss_ysondre.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="creature"
@@ -153,6 +169,10 @@
 				</File>
 				<File
 					RelativePath="..\scripts\creature\sc_miner.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\sc_shade_of_taerar.cpp"
 					>
 				</File>
 			</Filter>
@@ -294,6 +314,10 @@
 				<Filter
 					Name="Azshara"
 					>
+					<File
+						RelativePath="..\scripts\zone\azshara\sc_boss_azuregos.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Badlands"
@@ -314,6 +338,22 @@
 				<Filter
 					Name="Blackrock Depths"
 					>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_baelgar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_emperor_dagran_thaurissan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_golem_lord_argelmach.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_moira_bronzebeard.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Deadmines"
@@ -382,10 +422,18 @@
 						RelativePath="..\scripts\zone\blackwing_lair\sc_vaelastrasz.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\blackwing_lair\sc_victor_nefarius.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Gruul&apos;s Lair"
 					>
+					<File
+						RelativePath="..\scripts\zone\gruuls_lair\sc_boss_gruul.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Burning Steppes"
@@ -502,6 +550,46 @@
 				<Filter
 					Name="Scholomance"
 					>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_doctor_theolen_krastinov.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_illucia_barov.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_instructor_malicia.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_jandice_barov.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_kormok.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_lord_alexei_barov.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_lorekeeper_polkelt.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_ras_frostwhisper.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_the_ravenian.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\sc_boss_vectus.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Searing Gorge"
@@ -544,12 +632,16 @@
 					>
 				</Filter>
 				<Filter
-					Name="Lower Blackrock Spire"
-					>
-				</Filter>
-				<Filter
 					Name="Maradon"
 					>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_princess_theradras.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_tinkerer_gizlock.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Molten Core"
@@ -706,6 +798,10 @@
 				<Filter
 					Name="Razorfen Downs"
 					>
+					<File
+						RelativePath="..\scripts\zone\razorfen_downs\sc_boss_amnennar_the_coldbringer.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Shadowfang Keep"
@@ -722,6 +818,254 @@
 				<Filter
 					Name="Stratholme"
 					>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_archivist_galford.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_baron_rivendare.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_baroness_anastari.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_black_guard_swordsmith.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_cannon_master_willey.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_crimson_hammersmith.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_dathrohan_balnazzar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_fras_siabi.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_hearthsinger_forresten.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_magistrate_barthilas.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_maleki_the_pallid.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_malor_the_zealous.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_nerubenkan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_postmaster_malown.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_ramstein_the_gorger.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_skul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_stonespine.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_the_unforgiven.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_boss_timmy_the_cruel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_bile_slime.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_bile_spewer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_black_guard_sentry.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_broken_cadaver.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_battle_mage.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_conjuror.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_defender.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_gallant.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_guardsman.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_initiate.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_inquisitor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_monk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_priest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_rifleman.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_sorcerer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crypt_beast.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_crypt_crawler.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_eye_of_naxxramas.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_fleshflayer_ghoul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_freed_soul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_ghostly_citizen.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_ghoul_ravener.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_mangled_cadaver.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_mindless_skeleton.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_patchwork_horror.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_plague_ghoul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_ravaged_cadaver.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_restless_soul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_rockwing_gargoyle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_rockwing_screecher.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_shrieking_banshee.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_skeletal_berserker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_skeletal_guardian.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_spectral_citizen.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_spiteful_phantom.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_acolyte.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_necromancer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_shadowcaster.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_undead_scarab.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_vengeful_phantom.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_venom_belcher.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_wailing_banshee.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\sc_mob_wrath_phantom.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Sunken Temple"
@@ -896,16 +1240,16 @@
 					>
 				</Filter>
 				<Filter
-					Name="Upper Blackrock Spire"
-					>
-				</Filter>
-				<Filter
 					Name="Aunchindoun"
 					>
 				</Filter>
 				<Filter
 					Name="Azuremyst Isle"
 					>
+					<File
+						RelativePath="..\scripts\zone\azuremyst_isle\sc_draenei_survivor.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\scripts\zone\azuremyst_isle\sc_injured_draenei.cpp"
 						>
@@ -926,6 +1270,14 @@
 				<Filter
 					Name="Blasted Lands"
 					>
+					<File
+						RelativePath="..\scripts\zone\blasted_lands\sc_boss_kruul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blasted_lands\sc_teremus_the_devourer.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Hellfire Citadel"
@@ -934,6 +1286,10 @@
 				<Filter
 					Name="Hellfire Peninsula"
 					>
+					<File
+						RelativePath="..\scripts\zone\hellfire_peninsula\sc_boss_doomlord_kazzak.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Karazhan"
@@ -998,6 +1354,46 @@
 				<Filter
 					Name="Zangramarsh"
 					>
+				</Filter>
+				<Filter
+					Name="Blackrock Spire"
+					>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_drakkisath.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_halycon.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_highlord_omokk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_mother_smolderweb.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_overlord_wyrmthalak.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_shadow_hunter_voshgajin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_the_beast.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_warmaster_voone.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\sc_quartermaster_zigris.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

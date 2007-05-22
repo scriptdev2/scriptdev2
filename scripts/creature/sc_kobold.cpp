@@ -17,7 +17,7 @@
 
 #include "../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define KOBOLD_AGGRO_SAY    "You no take candle"
 #define GENERIC_CREATURE_COOLDOWN 5000

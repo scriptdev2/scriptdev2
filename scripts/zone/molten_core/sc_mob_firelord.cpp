@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_SOULBURN              19393
 #define SPELL_SUMMONLAVASPAWN       19392

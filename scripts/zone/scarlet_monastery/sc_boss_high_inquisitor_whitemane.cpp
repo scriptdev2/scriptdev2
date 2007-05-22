@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_DEEPSLEEP				9256
 #define SPELL_SCARLETRESURRECTION	9232

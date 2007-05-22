@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_IMMOLATE		37668
 

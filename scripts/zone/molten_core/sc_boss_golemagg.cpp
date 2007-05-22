@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 // Adds NYI
 
 #define SPELL_MAGMASPLASH               13879       //NYI in core

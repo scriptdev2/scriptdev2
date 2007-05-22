@@ -5,7 +5,7 @@ Change to random attack for 5seconds
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_WHIRLWIND 37641
 #define SPELL_ENRAGE 28798

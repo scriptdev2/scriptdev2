@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_MORTALWOUND 25646
 #define SPELL_SANDTRAP 25656

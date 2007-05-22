@@ -17,7 +17,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 
 struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI

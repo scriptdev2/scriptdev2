@@ -25,7 +25,7 @@
 #define SAY_RANDOM_2    "Ah, an opportunity to test my freshly sharpened balde."
 #define SAY_RANDOM_3    "So these fools still have sent us one again..."
 
-// **** This script is still under Developement ****
+
 
 #define GENERIC_CREATURE_COOLDOWN 5000
 #define GENERIC_CREATURE_ROOTSELF   23973

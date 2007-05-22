@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_POLYMORPH	            12826
 #define SPELL_AOESILENCE            8988

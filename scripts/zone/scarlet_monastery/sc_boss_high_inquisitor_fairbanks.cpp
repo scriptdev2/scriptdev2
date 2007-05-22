@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_SLEEP2		        1090
 #define SPELL_CURSEOFBLOOD          16098

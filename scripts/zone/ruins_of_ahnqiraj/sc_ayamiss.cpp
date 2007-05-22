@@ -5,7 +5,7 @@ make him fly from 70-100%
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_STINGERSPRAY 25749
 #define SPELL_POISONSTINGER 25748 //only used in phase1

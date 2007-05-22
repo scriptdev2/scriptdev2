@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_SHADOWBOLT            19729
 #define SPELL_RAINOFFIRE            19717

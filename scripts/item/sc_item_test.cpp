@@ -19,8 +19,11 @@
 
 bool ItemUse_item_test(Player *player, Item* _Item)
 {
-    player->CastSpell(player,20620,true);
-    player->GetSession()->SendShowBank( player->GetGUID() );
+    SpellEntry i =(*GetSpellStore()->LookupEntry(32739));
+    i.EffectBasePoints[0] = 50000;
+    i.DurationIndex = 20;
+    player->CastSpell(player,&i ,true);
+    //player->GetSession()->SendShowBank( player->GetGUID() );
     return true;
 }
 

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_SUMMONSCARLETHOUND	16174
 #define SPELL_ENRAGE				28747

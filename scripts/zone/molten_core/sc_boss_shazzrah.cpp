@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 // Teleporting NYI
 
 #define SPELL_ARCANEEXPLOSION           19712

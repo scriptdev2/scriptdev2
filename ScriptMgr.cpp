@@ -36,6 +36,9 @@ void FillSpellSummary();
 // -- Area --
 
 // -- Boss --
+extern void AddSC_boss_emeriss();
+extern void AddSC_boss_taerar();
+extern void AddSC_boss_ysondre();
 
 // -- Creature --
 extern void AddSC_kobold();
@@ -43,6 +46,7 @@ extern void AddSC_generic_creature();
 extern void AddSC_defias();
 extern void AddSC_lumberjack();
 extern void AddSC_miner();
+extern void AddSC_boss_shadeoftaerar();
 
 // -- Custom --
 extern void AddSC_custom_example();
@@ -89,12 +93,33 @@ extern void AddSC_travelmaster();
 //Ashenvale Forest
 //Aunchindoun
 //Azshara
+extern void AddSC_boss_azuregos();
+
 //Azuremyst Isle
 extern void AddSC_injured_draenei();
+extern void AddSC_draenei_survivor();
+
 //Badlands
 //Barrens
 //Black Temple
 //Blackfathom Depths
+//Blackrock Depths
+extern void AddSC_boss_baelgar();
+extern void AddSC_boss_draganthaurissan();
+extern void AddSC_boss_golemlordargelmach();
+extern void AddSC_boss_moira_bronzebeard();
+
+//Blackrock Spire
+extern void AddSC_boss_drakkisath();
+extern void AddSC_boss_halycon();
+extern void AddSC_boss_highlordomokk();
+extern void AddSC_boss_mothersmolderweb();
+extern void AddSC_boss_overlordwyrmthalak();
+extern void AddSC_boss_shadowvosh();
+extern void AddSC_boss_thebeast();
+extern void AddSC_boss_warmastervoone();
+extern void AddSC_boss_quatermasterzigris();
+
 //Blackwing lair
 extern void AddSC_boss_razorgore();
 extern void AddSC_boss_vael();
@@ -104,8 +129,12 @@ extern void AddSC_boss_ebonroc();
 extern void AddSC_boss_flamegor();
 extern void AddSC_boss_chromaggus();
 extern void AddSC_boss_nefarian();
+extern void AddSC_boss_victor_nefarius();
 
 //Blasted lands
+extern void AddSC_boss_kruul();
+extern void AddSC_boss_teremusthedevourer();
+
 //Burning steppes
 //Darkshore
 //Deadmines
@@ -126,8 +155,12 @@ extern void AddSC_henze_faulk();
 //Ghostlands
 //Gnomeregan
 //Gruul's Lair
+extern void AddSC_boss_gruul();
+
 //Hellfire Citadel
 //Hellfire Peninsula
+extern void AddSC_boss_doomlordkazzak();
+
 //Hillsbrad Foothills
 //Hinterlands
 //Karazhan
@@ -136,6 +169,9 @@ extern void AddSC_boss_maiden_of_virtue();
 //Loch Modan
 //Lower Blackrock Spire
 //Maradon
+extern void AddSC_boss_ptheradras();
+extern void AddSC_boss_tinkerergizlock();
+
 //Molten core
 extern void AddSC_boss_lucifron();
 extern void AddSC_boss_magmadar();
@@ -170,6 +206,8 @@ extern void AddSC_boss_onyxia();
 
 //Ragefire Chasm
 //Razorfen Downs
+extern void AddSC_boss_amnennar_the_coldbringer();
+
 //Redridge Mountains
 //Ruins of Ahn'Qiraj
 //Scarlet Monastery
@@ -186,6 +224,17 @@ extern void AddSC_boss_scorn();
 extern void AddSC_scarlet_torturer();
 
 //Scholomance
+extern void AddSC_boss_theolenkrastinov();
+extern void AddSC_boss_illuciabarov();
+extern void AddSC_boss_instructormalicia();
+extern void AddSC_boss_jandicebarov();
+extern void AddSC_boss_kormok();
+extern void AddSC_boss_lordalexeibarov();
+extern void AddSC_boss_lorekeeperpolkelt();
+extern void AddSC_boss_rasfrost();
+extern void AddSC_boss_theravenian();
+extern void AddSC_boss_vectus();
+
 //Searing gorge
 //Shadowfang keep
 //Silithus
@@ -193,6 +242,68 @@ extern void AddSC_scarlet_torturer();
 //Stockade
 //Stonetalon mountains
 //Stratholme
+extern void AddSC_boss_fras_siabi();
+extern void AddSC_boss_hearthsinger_forresten();
+extern void AddSC_boss_magistrate_barthilas();
+extern void AddSC_boss_maleki_the_pallid();
+extern void AddSC_boss_skul();
+extern void AddSC_boss_nerubenkan();
+extern void AddSC_boss_the_unforgiven();
+extern void AddSC_boss_cannon_master_willey();
+extern void AddSC_boss_baroness_anastari();
+extern void AddSC_boss_archivist_galford();
+extern void AddSC_boss_crimson_hammersmith();
+extern void AddSC_boss_ramstein_the_gorger();
+extern void AddSC_boss_malor_the_zealous();
+extern void AddSC_boss_black_guard_swordsmith();
+extern void AddSC_boss_timmy_the_cruel();
+extern void AddSC_boss_stonespine();
+extern void AddSC_boss_postmaster_malown();
+extern void AddSC_boss_baron_rivendare();
+extern void AddSC_mob_crimson_battle_mage();
+extern void AddSC_mob_crimson_conjuror();
+extern void AddSC_mob_crimson_defender();
+extern void AddSC_mob_crimson_gallant();
+extern void AddSC_mob_crimson_guardsman();
+extern void AddSC_mob_crimson_initiate();
+extern void AddSC_mob_crimson_inquisitor();
+extern void AddSC_mob_crimson_monk();
+extern void AddSC_mob_crimson_priest();
+extern void AddSC_mob_crimson_rifleman();
+extern void AddSC_mob_crimson_sorcerer();
+extern void AddSC_mob_bile_spewer();
+extern void AddSC_mob_bile_slime();
+extern void AddSC_mob_black_guard_sentry();
+extern void AddSC_mob_fleshflayer_ghoul();
+extern void AddSC_mob_ghoul_ravener();
+extern void AddSC_mob_plague_ghoul();
+extern void AddSC_mob_eye_of_naxxramas();
+extern void AddSC_mob_rockwing_screecher();
+extern void AddSC_mob_rockwing_gargoyle();
+extern void AddSC_mob_venom_belcher();
+extern void AddSC_mob_patchwork_horror();
+extern void AddSC_mob_wailing_banshee();
+extern void AddSC_mob_shrieking_banshee();
+extern void AddSC_mob_vengeful_phantom();
+extern void AddSC_mob_wrath_phantom();
+extern void AddSC_mob_spiteful_phantom();
+extern void AddSC_mob_crypt_crawler();
+extern void AddSC_mob_crypt_beast();
+extern void AddSC_mob_undead_scarab();
+extern void AddSC_mob_skeletal_guardian();
+extern void AddSC_mob_skeletal_berserker();
+extern void AddSC_mob_mangled_cadaver();
+extern void AddSC_mob_ravaged_cadaver();
+extern void AddSC_mob_broken_cadaver();
+extern void AddSC_mob_mindless_skeleton();
+extern void AddSC_mob_thuzadin_acolyte();
+extern void AddSC_mob_thuzadin_necromancer();
+extern void AddSC_mob_thuzadin_shadowcaster();
+extern void AddSC_mob_spectral_citizen();
+extern void AddSC_mob_ghostly_citizen();
+extern void AddSC_mob_restless_soul();
+extern void AddSC_mob_freed_soul();
+
 //Sunken Temple
 //Tanaris
 //Teldrassil
@@ -233,11 +344,15 @@ void ScriptsInit()
         m_scripts[i]=NULL;
 
     FillSpellSummary();
+
     // -- Scripts to be added --
 
     // -- Area --
 
     // -- Boss --
+    AddSC_boss_emeriss();
+    AddSC_boss_taerar();
+    AddSC_boss_ysondre();
 
     // -- Creature --
     AddSC_kobold();
@@ -245,6 +360,7 @@ void ScriptsInit()
     AddSC_defias();
     AddSC_lumberjack();
     AddSC_miner();
+    AddSC_boss_shadeoftaerar();
 
     // -- Custom --
     AddSC_custom_example();
@@ -269,6 +385,7 @@ void ScriptsInit()
     AddSC_guard_tirisfal();
     AddSC_guard_undercity();
 
+
     // -- Honor --
     AddSC_Honor_Vendor();
 
@@ -290,12 +407,33 @@ void ScriptsInit()
     //Ashenvale Forest
     //Aunchindoun
     //Azshara
+    AddSC_boss_azuregos();
+
     //Azuremyst Isle
     AddSC_injured_draenei();
+    AddSC_draenei_survivor();
+
     //Badlands
     //Barrens
     //Black Temple
     //Blackfathom Depths
+    //Blackrock Depths
+    AddSC_boss_baelgar();
+    AddSC_boss_draganthaurissan();
+    AddSC_boss_golemlordargelmach();
+    AddSC_boss_moira_bronzebeard();
+
+    //Blackrock Spire
+    AddSC_boss_drakkisath();
+    AddSC_boss_halycon();
+    AddSC_boss_highlordomokk();
+    AddSC_boss_mothersmolderweb();
+    AddSC_boss_overlordwyrmthalak();
+    AddSC_boss_shadowvosh();
+    AddSC_boss_thebeast();
+    AddSC_boss_warmastervoone();
+    AddSC_boss_quatermasterzigris();
+
     //Blackwing lair
     AddSC_boss_razorgore();
     AddSC_boss_vael();
@@ -305,8 +443,12 @@ void ScriptsInit()
     AddSC_boss_flamegor();
     AddSC_boss_chromaggus();
     AddSC_boss_nefarian();
+    AddSC_boss_victor_nefarius();
 
     //Blasted lands
+    AddSC_boss_kruul();
+    AddSC_boss_teremusthedevourer();
+
     //Burning steppes
     //Darkshore
     //Deadmines
@@ -327,17 +469,23 @@ void ScriptsInit()
     //Ghostlands
     //Gnomeregan
     //Gruul's Lair
+    AddSC_boss_gruul();
+
     //Hellfire Citadel
     //Hellfire Peninsula
+    AddSC_boss_doomlordkazzak();
+
     //Hillsbrad Foothills
     //Hinterlands
     //Karazhan
     AddSC_boss_maiden_of_virtue();
 
-
     //Loch Modan
     //Lower Blackrock Spire
     //Maradon
+    AddSC_boss_ptheradras();
+    AddSC_boss_tinkerergizlock();
+
     //Molten core
     AddSC_boss_lucifron();
     AddSC_boss_magmadar();
@@ -372,6 +520,8 @@ void ScriptsInit()
 
     //Ragefire Chasm
     //Razorfen Downs
+    AddSC_boss_amnennar_the_coldbringer();
+
     //Redridge Mountains
     //Ruins of Ahn'Qiraj
     //Scarlet Monastery
@@ -388,6 +538,17 @@ void ScriptsInit()
     AddSC_scarlet_torturer();
 
     //Scholomance
+    AddSC_boss_theolenkrastinov();
+    AddSC_boss_illuciabarov();
+    AddSC_boss_instructormalicia();
+    AddSC_boss_jandicebarov();
+    AddSC_boss_kormok();
+    AddSC_boss_lordalexeibarov();
+    AddSC_boss_lorekeeperpolkelt();
+    AddSC_boss_rasfrost();
+    AddSC_boss_theravenian();
+    AddSC_boss_vectus();
+
     //Searing gorge
     //Shadowfang keep
     //Silithus
@@ -395,6 +556,68 @@ void ScriptsInit()
     //Stockade
     //Stonetalon mountains
     //Stratholme
+    AddSC_boss_fras_siabi();
+    AddSC_boss_hearthsinger_forresten();
+    AddSC_boss_magistrate_barthilas();
+    AddSC_boss_maleki_the_pallid();
+    AddSC_boss_skul();
+    AddSC_boss_nerubenkan();
+    AddSC_boss_the_unforgiven();
+    AddSC_boss_cannon_master_willey();
+    AddSC_boss_baroness_anastari();
+    AddSC_boss_archivist_galford();
+    AddSC_boss_crimson_hammersmith();
+    AddSC_boss_ramstein_the_gorger();
+    AddSC_boss_malor_the_zealous();
+    AddSC_boss_black_guard_swordsmith();
+    AddSC_boss_timmy_the_cruel();
+    AddSC_boss_stonespine();
+    AddSC_boss_postmaster_malown();
+    AddSC_boss_baron_rivendare();
+    AddSC_mob_crimson_battle_mage();
+    AddSC_mob_crimson_conjuror();
+    AddSC_mob_crimson_defender();
+    AddSC_mob_crimson_gallant();
+    AddSC_mob_crimson_guardsman();
+    AddSC_mob_crimson_initiate();
+    AddSC_mob_crimson_inquisitor();
+    AddSC_mob_crimson_monk();
+    AddSC_mob_crimson_priest();
+    AddSC_mob_crimson_rifleman();
+    AddSC_mob_crimson_sorcerer();
+    AddSC_mob_bile_spewer();
+    AddSC_mob_bile_slime();
+    AddSC_mob_black_guard_sentry();
+    AddSC_mob_fleshflayer_ghoul();
+    AddSC_mob_ghoul_ravener();
+    AddSC_mob_plague_ghoul();
+    AddSC_mob_eye_of_naxxramas();
+    AddSC_mob_rockwing_screecher();
+    AddSC_mob_rockwing_gargoyle();
+    AddSC_mob_venom_belcher();
+    AddSC_mob_patchwork_horror();
+    AddSC_mob_wailing_banshee();
+    AddSC_mob_shrieking_banshee();
+    AddSC_mob_vengeful_phantom();
+    AddSC_mob_wrath_phantom();
+    AddSC_mob_spiteful_phantom();
+    AddSC_mob_crypt_crawler();
+    AddSC_mob_crypt_beast();
+    AddSC_mob_undead_scarab();
+    AddSC_mob_skeletal_guardian();
+    AddSC_mob_skeletal_berserker();
+    AddSC_mob_mangled_cadaver();
+    AddSC_mob_ravaged_cadaver();
+    AddSC_mob_broken_cadaver();
+    AddSC_mob_mindless_skeleton();
+    AddSC_mob_thuzadin_acolyte();
+    AddSC_mob_thuzadin_necromancer();
+    AddSC_mob_thuzadin_shadowcaster();
+    AddSC_mob_spectral_citizen();
+    AddSC_mob_ghostly_citizen();
+    AddSC_mob_restless_soul();
+    AddSC_mob_freed_soul();
+
     //Sunken Temple
     //Tanaris
     //Teldrassil
@@ -414,7 +637,8 @@ void ScriptsInit()
     //Zul'Farrak
     //Zul'Gurub
 
-    // ----------------------------------------
+    // -------------------
+
 }
 
 //*********************************

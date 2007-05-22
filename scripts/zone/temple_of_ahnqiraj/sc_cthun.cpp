@@ -8,6 +8,8 @@
 //8586 You are weak
 //8587 Your heart will explode
 
+#include "../../sc_defines.h"
+
 //Eye Spells
 #define SPELL_GREEN_BEAM                26134
 #define SPELL_DARK_GLARE                26029
@@ -36,3 +38,69 @@
 //Stomach Spells
 #define SPELL_EXIT_STOMACH_KNOCKBACK     26230
 #define SPELL_DIGESTIVE_ACID             26476
+
+struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
+{
+    eye_of_cthunAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    
+    void EnterEvadeMode()
+    {
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+    
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        //We simply use this function to find players until we can use Map->GetPlayers()
+
+        if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who))
+        {
+            //Add them to our threat list
+            m_creature->AddThreat(who,0.0f);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
+        
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+
+
+        }
+    }
+};
+
+CreatureAI* GetAI_eye_of_cthun(Creature *_Creature)
+{
+    return new eye_of_cthunAI (_Creature);
+}
+
+void AddSC_boss_eye_of_cthun()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="boss_eye_of_cthun";
+    newscript->GetAI = GetAI_eye_of_cthun;
+    m_scripts[nrscripts++] = newscript;
+}

@@ -17,7 +17,7 @@
 
 #include "../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define GENERIC_CREATURE_COOLDOWN   5000
 #define GENERIC_CREATURE_ROOTSELF   23973

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 // Adds NYI and the intro dialog is NYI
 
 #define SPELL_HANDOFRAGNAROS        19780

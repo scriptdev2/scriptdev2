@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_FROSTNOVA2            865
 #define SPELL_FLAMESHOCK3           8053

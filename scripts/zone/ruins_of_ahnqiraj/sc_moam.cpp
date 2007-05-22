@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_TRAMPLE 15550
 #define SPELL_DRAINMANA 27256

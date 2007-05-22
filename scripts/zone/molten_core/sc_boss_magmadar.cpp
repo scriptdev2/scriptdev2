@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_FRENZY                28371
 #define SPELL_MAGMASPIT             19449       //This is actually a buff he gives himself

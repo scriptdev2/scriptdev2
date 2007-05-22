@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_CALLOFTHEGRAVE        17831
 #define SPELL_TERRIFY			    7399

@@ -17,7 +17,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_WINGBUFFET 18500
 #define SPELL_FLAMEBREATH 18435

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-// **** This script is still under Developement ****
+
 
 #define SPELL_INFERNO               19695
 #define SPELL_IGNITEMANA            19659
