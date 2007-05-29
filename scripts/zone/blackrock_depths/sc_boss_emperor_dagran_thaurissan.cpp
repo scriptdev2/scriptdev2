@@ -34,7 +34,7 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     {       
         HandOfThaurissan_Timer = 3000;
         Cleave_Timer = 12000;
-        MortalStrike_Timer = 180000;
+        MortalStrike_Timer = 18000;
         Counter= 0;
         InCombat = false;
 
@@ -89,21 +89,26 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 
             if (HandOfThaurissan_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HANDOFTHAURISSAN);
 
-                //5 Flashheals will be casted
-                if (Counter < 3)
-                {
+                 //Cast Hand of Thaurissan on a Random target
+                 Unit* target = NULL;
+ 
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_HANDOFTHAURISSAN);
+
+                               
+                  //3 Hands of Thaurissan will be casted
+                  if (Counter < 3)
+                  {
                     HandOfThaurissan_Timer = 1000;
                     Counter++;
-                }
-                else {
-
-                    //20 seconds until we should cast this again
-                    HandOfThaurissan_Timer = 20000;
-                    Counter=0;
-                }
+                  }
+                  else {
+                	
+			//20 seconds until we should cast this again
+                	HandOfThaurissan_Timer = 20000;
+			Counter=0;
+                  }
 
             }else HandOfThaurissan_Timer -= diff;
 

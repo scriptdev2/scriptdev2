@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
                 if (target)DoCast(target,SPELL_FROSTBOLT);
 
                 //18 seconds
-                Frostbolt_Timer = 18000;
+                Frostbolt_Timer = 8000;
             }else Frostbolt_Timer -= diff;
 
             //Freeze_Timer
@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FROSTVOLLEY);
 
                 //7 seconds until we should cast this agian
-                FrostVolley_Timer = 7000;
+                FrostVolley_Timer = 15000;
             }else FrostVolley_Timer -= diff;
 
             //If we are within range melee the target

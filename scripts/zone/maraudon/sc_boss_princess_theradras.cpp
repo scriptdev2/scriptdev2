@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         Dustfield_Timer = 12000;
         Boulder_Timer = 2000;
         Knockdown_Timer = 20000;
-        RepulsiveGaze_Timer = 30000;
+        RepulsiveGaze_Timer = 25000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -96,8 +96,8 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_DUSTFIELD);
 
-                //20 seconds
-                Dustfield_Timer = 20000;
+                //18 seconds
+                Dustfield_Timer = 18000;
             }else Dustfield_Timer -= diff;
 
             //Boulder_Timer
@@ -118,17 +118,20 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
 
                 //12 seconds until we should cast this agian
-                Knockdown_Timer = 14000;
+                Knockdown_Timer = 12000;
             }else Knockdown_Timer -= diff;
 
             //RepulsiveGaze_Timer
             if (RepulsiveGaze_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_REPULSIVEGAZE);
+                 //Cast Repulsive Gaze on a Random target
+                 Unit* target = NULL;
+ 
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_REPULSIVEGAZE);
 
-                //30 seconds until we should cast this agian
-                RepulsiveGaze_Timer = 30000;
+                //20 seconds until we should cast this agian
+                RepulsiveGaze_Timer = 20000;
             }else RepulsiveGaze_Timer -= diff;
 
             //If we are within range melee the target

@@ -104,10 +104,33 @@ extern void AddSC_draenei_survivor();
 //Black Temple
 //Blackfathom Depths
 //Blackrock Depths
+extern void AddSC_boss_ambassador_flamelash();
+extern void AddSC_boss_angerrel();
+extern void AddSC_boss_anubshiah();
 extern void AddSC_boss_baelgar();
+extern void AddSC_boss_doomrel();
+extern void AddSC_boss_doperel();
 extern void AddSC_boss_draganthaurissan();
+extern void AddSC_boss_fineous_darkvire();
+extern void AddSC_boss_general_angerforge();
+extern void AddSC_boss_gloomrel();
 extern void AddSC_boss_golemlordargelmach();
+extern void AddSC_boss_gorosh_the_dervish();
+extern void AddSC_boss_grizzle();
+extern void AddSC_boss_haterel();
+extern void AddSC_boss_high_interrogator_gerstahn();
+extern void AddSC_boss_lord_incendius();
+extern void AddSC_boss_lord_roccor();
+extern void AddSC_boss_magmus();
 extern void AddSC_boss_moira_bronzebeard();
+extern void AddSC_boss_pyromancer_loregrain();
+extern void AddSC_boss_seethrel();
+extern void AddSC_boss_verek();
+extern void AddSC_boss_vilerel();
+extern void AddSC_boss_warder_stilgiss();
+extern void AddSC_overmaster_pyron();
+extern void AddSC_phalanx();
+
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -169,8 +192,15 @@ extern void AddSC_boss_maiden_of_virtue();
 //Loch Modan
 //Lower Blackrock Spire
 //Maradon
+extern void AddSC_boss_landslide();
+extern void AddSC_boss_lord_vyletongue();
+extern void AddSC_boss_noxxion();
 extern void AddSC_boss_ptheradras();
+extern void AddSC_boss_rotgrip();
 extern void AddSC_boss_tinkerergizlock();
+extern void AddSC_celebras_the_cursed();
+extern void AddSC_meshlok_the_harvester();
+extern void AddSC_razorlash();
 
 //Molten core
 extern void AddSC_boss_lucifron();

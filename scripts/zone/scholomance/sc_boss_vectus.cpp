@@ -35,6 +35,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
     {       
         FireShield_Timer = 2000;
         BlastWave_Timer = 14000;
+	Frenzy_Timer = 0;
         InCombat = false;
 
         m_creature->RemoveAllAuras();

@@ -1652,7 +1652,7 @@ UPDATE `creature_template` SET`ScriptName` = 'boss_fugen' WHERE `entry` = 15930;
 -- Sapphiron 15989
 UPDATE `creature_template` SET`ScriptName` = 'boss_sapphiron' WHERE `entry` = 15989;
 
--- Kel'Thuzud 15990
+-- Kel'Thuzad 15990
 UPDATE `creature_template` SET`ScriptName` = 'boss_kelthuzad' WHERE `entry` = 15990;
 
 -- Injured Draenei (Azuremyst isle)
@@ -1663,6 +1663,28 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_emperor_dagran_thaurissan' W
 UPDATE `creature_template` SET `ScriptName` = 'boss_moira_bronzebeard' WHERE `entry` = 8929;
 UPDATE `creature_template` SET `ScriptName` = 'boss_golem_lord_argelmach' WHERE `entry` = 8983;
 UPDATE `creature_template` SET `ScriptName` = 'boss_baelgar' WHERE `entry` = 9016;
+UPDATE `creature_template` SET `ScriptName` = 'boss_ambassador_flamelash' WHERE `entry` = 9156;
+UPDATE `creature_template` SET `ScriptName` = 'boss_angerrel' WHERE `entry` = 9035;
+UPDATE `creature_template` SET `ScriptName` = 'boss_anubshiah' WHERE `entry` = 9031;
+UPDATE `creature_template` SET `ScriptName` = 'boss_doomrel' WHERE `entry` = 9039;
+UPDATE `creature_template` SET `ScriptName` = 'boss_doperel' WHERE `entry` = 9040;
+UPDATE `creature_template` SET `ScriptName` = 'boss_fineous_darkvire' WHERE `entry` = 9056;
+UPDATE `creature_template` SET `ScriptName` = 'boss_general_angerforge' WHERE `entry` = 9033;
+UPDATE `creature_template` SET `ScriptName` = 'boss_gloomrel' WHERE `entry` = 9037;
+UPDATE `creature_template` SET `ScriptName` = 'boss_gorosh_the_dervish' WHERE `entry` = 9027;
+UPDATE `creature_template` SET `ScriptName` = 'boss_grizzle' WHERE `entry` = 9028;
+UPDATE `creature_template` SET `ScriptName` = 'boss_haterel' WHERE `entry` = 9034;
+UPDATE `creature_template` SET `ScriptName` = 'boss_high_interrogator_gerstahn' WHERE `entry` = 9018;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lord_incendius' WHERE `entry` = 9017;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lord_roccor' WHERE `entry` = 9025;
+UPDATE `creature_template` SET `ScriptName` = 'boss_magmus' WHERE `entry` = 9938;
+UPDATE `creature_template` SET `ScriptName` = 'boss_pyromancer_loregrain' WHERE `entry` = 9024;
+UPDATE `creature_template` SET `ScriptName` = 'boss_seethrel' WHERE `entry` = 9038;
+UPDATE `creature_template` SET `ScriptName` = 'boss_verek' WHERE `entry` = 9042;
+UPDATE `creature_template` SET `ScriptName` = 'boss_vilerel' WHERE `entry` = 9036;
+UPDATE `creature_template` SET `ScriptName` = 'boss_warder_stilgiss' WHERE `entry` = 9041;
+UPDATE `creature_template` SET `ScriptName` = 'overmaster_pyron' WHERE `entry` = 9026;
+UPDATE `creature_template` SET `ScriptName` = 'phalanx' WHERE `entry` = 9502;
 
 -- Lower Blackrock Spire
 UPDATE `creature_template` SET `ScriptName` = 'boss_highlord_omokk' WHERE `entry` = 9196;
@@ -1690,8 +1712,15 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_lorekeeper_polkelt' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'boss_kormok' WHERE `entry` = 16118;
 
 -- Maraudon
+UPDATE `creature_template` SET `ScriptName` = 'boss_landslide' WHERE `entry` = 12203;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lord_vyletongue' WHERE `entry` = 12236;
+UPDATE `creature_template` SET `ScriptName` = 'boss_noxxion' WHERE `entry` = 13282;
 UPDATE `creature_template` SET `ScriptName` = 'boss_princess_theradras' WHERE `entry` = 12201;
+UPDATE `creature_template` SET `ScriptName` = 'boss_rotgrip' WHERE `entry` = 13596;
 UPDATE `creature_template` SET `ScriptName` = 'boss_tinkerer_gizlock' WHERE `entry` = 13601;
+UPDATE `creature_template` SET `ScriptName` = 'celebras_the_cursed' WHERE `entry` = 12225;
+UPDATE `creature_template` SET `ScriptName` = 'meshlok_the_harvester' WHERE `entry` = 12237;
+UPDATE `creature_template` SET `ScriptName` = 'razorlash' WHERE `entry` = 12258;
 
 -- Razorfen Downs
 UPDATE `creature_template` SET `ScriptName` = 'boss_amnennar_the_coldbringer' WHERE `entry` = 7358;

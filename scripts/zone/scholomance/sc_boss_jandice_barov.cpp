@@ -26,7 +26,9 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     uint32 CurseOfBlood_Timer;
     uint32 Illusion_Timer;
 //  uint32 Illusioncounter;
+    uint32 Invisible_Timer;
     bool InCombat;
+    bool Invisible;
     int Rand;
     int RandX;
     int RandY;
@@ -34,10 +36,11 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        CurseOfBlood_Timer = 45000;
+        CurseOfBlood_Timer = 15000;
         Illusion_Timer = 30000;
+        Invisible_Timer = 3000;            //Too much too low?
         InCombat = false;
-//        Illusioncounter = 0;
+        Invisible = false;
 
 
         m_creature->RemoveAllAuras();
@@ -81,14 +84,14 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
     void SummonIllusions(Unit* victim)
     {
-         Rand = rand()%5;
+         Rand = rand()%10;
          switch (rand()%2)
          {
                 case 0: RandX = 0 - Rand; break;
                 case 1: RandX = 0 + Rand; break;
          }
          Rand = 0;
-         Rand = rand()%5;
+         Rand = rand()%10;
          switch (rand()%2)
          {
                 case 0: RandY = 0 - Rand; break;
@@ -101,6 +104,20 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        if (Invisible && Invisible_Timer < diff)
+        {
+            //Become visible again 
+            m_creature->setFaction(14);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11073);     //Jandice Model
+            Invisible = false;
+        } else if (Invisible)
+               {
+                  Invisible_Timer -= diff;
+                  //Do nothing while invisible
+                  return;
+               }
+
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;
@@ -108,7 +125,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            
+
             //CurseOfBlood_Timer
             if (CurseOfBlood_Timer < diff)
             {
@@ -116,12 +133,20 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
 
                 //45 seconds
-               CurseOfBlood_Timer = 45000;
+               CurseOfBlood_Timer = 30000;
             }else CurseOfBlood_Timer -= diff;
 
             //Illusion_Timer
-            if (Illusion_Timer < diff)
+            if (!Invisible && Illusion_Timer < diff)
             {
+
+                //Inturrupt any spell casting
+                 m_creature->InterruptSpell();
+                //Root self
+                DoCast(m_creature,23973);
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                 //Cast
                 SummonIllusions(m_creature->getVictim());
 		SummonIllusions(m_creature->getVictim());
@@ -133,6 +158,8 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 		SummonIllusions(m_creature->getVictim());
 		SummonIllusions(m_creature->getVictim());
 		SummonIllusions(m_creature->getVictim());
+                Invisible = true;
+                Invisible_Timer = 3000;
 
                 //25 seconds until we should cast this agian
                 Illusion_Timer = 25000;

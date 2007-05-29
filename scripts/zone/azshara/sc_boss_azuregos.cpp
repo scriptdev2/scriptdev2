@@ -18,7 +18,7 @@
 
 #define SPELL_MARKOFFROST                23183            
 #define SPELL_MANASTORM            21097
-#define SPELL_REFLECT            21118               //Perhaps not right ID
+#define SPELL_REFLECT            315158               //To many reflect spells. Need right ID!
 #define SPELL_CLEAVE           8255                //Perhaps not right ID
 #define SPELL_ENRAGE             23537
 
@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             if (Reflect_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_REFLECT);
+                DoCast(m_creature,SPELL_REFLECT);
 
                 //45 seconds until we should cast this agian
                 Reflect_Timer = 45000;
