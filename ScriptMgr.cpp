@@ -452,6 +452,28 @@ void ScriptsInit()
     AddSC_boss_draganthaurissan();
     AddSC_boss_golemlordargelmach();
     AddSC_boss_moira_bronzebeard();
+    AddSC_boss_ambassador_flamelash();
+    AddSC_boss_angerrel();
+    AddSC_boss_anubshiah();
+    AddSC_boss_doomrel();
+    AddSC_boss_doperel();
+    AddSC_boss_fineous_darkvire();
+    AddSC_boss_general_angerforge();
+    AddSC_boss_gloomrel();
+    AddSC_boss_gorosh_the_dervish();
+    AddSC_boss_grizzle();
+    AddSC_boss_haterel();
+    AddSC_boss_high_interrogator_gerstahn();
+    AddSC_boss_lord_incendius();
+    AddSC_boss_lord_roccor();
+    AddSC_boss_magmus();
+    AddSC_boss_pyromancer_loregrain();
+    AddSC_boss_seethrel();
+    AddSC_boss_verek();
+    AddSC_boss_vilerel();
+    AddSC_boss_warder_stilgiss();
+    AddSC_overmaster_pyron();
+    AddSC_phalanx();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();
@@ -515,6 +537,13 @@ void ScriptsInit()
     //Maradon
     AddSC_boss_ptheradras();
     AddSC_boss_tinkerergizlock();
+    AddSC_boss_landslide();
+    AddSC_boss_lord_vyletongue();
+    AddSC_boss_noxxion();
+    AddSC_boss_rotgrip();
+    AddSC_celebras_the_cursed();
+    AddSC_meshlok_the_harvester();
+    AddSC_razorlash();
 
     //Molten core
     AddSC_boss_lucifron();

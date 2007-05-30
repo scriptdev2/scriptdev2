@@ -104,8 +104,8 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 	        {
                 DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
-                //10 seconds
-                WarStomp_Timer = 10000;
+                //8 seconds
+                WarStomp_Timer = 8000;
                 }else WarStomp_Timer -= diff;
             }
 

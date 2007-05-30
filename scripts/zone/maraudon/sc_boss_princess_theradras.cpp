@@ -34,10 +34,10 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        Dustfield_Timer = 12000;
+        Dustfield_Timer = 8000;
         Boulder_Timer = 2000;
-        Knockdown_Timer = 20000;
-        RepulsiveGaze_Timer = 25000;
+        Knockdown_Timer = 18000;
+        RepulsiveGaze_Timer = 23000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -96,8 +96,8 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_DUSTFIELD);
 
-                //18 seconds
-                Dustfield_Timer = 18000;
+                //14 seconds
+                Dustfield_Timer = 14000;
             }else Dustfield_Timer -= diff;
 
             //Boulder_Timer

@@ -18,7 +18,7 @@
 
 #define SPELL_MARKOFFROST                23183            
 #define SPELL_MANASTORM            21097
-#define SPELL_REFLECT            315158               //To many reflect spells. Need right ID!
+#define SPELL_REFLECT            30969               //Works fine but not for Dot Spells
 #define SPELL_CLEAVE           8255                //Perhaps not right ID
 #define SPELL_ENRAGE             23537
 
