@@ -339,7 +339,27 @@
 					Name="Blackrock Depths"
 					>
 					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_ambassador_flamelash.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_angerrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_anubshiah.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_baelgar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_doomrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_doperel.cpp"
 						>
 					</File>
 					<File
@@ -347,11 +367,79 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_fineous_darkvire.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_general_angerforge.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_gloomrel.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_golem_lord_argelmach.cpp"
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_gorosh_the_dervish.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_grizzle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_haterel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_high_interrogator_gerstahn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_lord_incendius.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_lord_roccor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_magmus.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_moira_bronzebeard.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_pyromancer_loregrain.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_seethrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_verek.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_vilerel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_warder_stilgiss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_overmaster_pyron.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\sc_phalanx.cpp"
 						>
 					</File>
 				</Filter>
@@ -632,14 +720,42 @@
 					>
 				</Filter>
 				<Filter
-					Name="Maradon"
+					Name="Maraudon"
 					>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_landslide.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_lord_vyletongue.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_noxxion.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\scripts\zone\maraudon\sc_boss_princess_theradras.cpp"
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\maraudon\sc_boss_rotgrip.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\maraudon\sc_boss_tinkerer_gizlock.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_celebras_the_cursed.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_meshlok_the_harvester.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\maraudon\sc_razorlash.cpp"
 						>
 					</File>
 				</Filter>
