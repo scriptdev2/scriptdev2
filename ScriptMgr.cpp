@@ -53,6 +53,7 @@ extern void AddSC_custom_example();
 extern void AddSC_test();
 
 // -- GO --
+extern void AddSC_go_teleporter();
 
 // -- Guard --
 extern void AddSC_guard_bluffwatcher();
@@ -159,6 +160,8 @@ extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
 
 //Burning steppes
+extern void AddSC_lothos_riftwaker();
+
 //Darkshore
 //Deadmines
 //Deadwind pass
@@ -397,6 +400,7 @@ void ScriptsInit()
     AddSC_test();
 
     // -- GO --
+    AddSC_go_teleporter();
 
     // -- Guard --
     AddSC_guard_bluffwatcher();
@@ -502,6 +506,8 @@ void ScriptsInit()
     AddSC_boss_teremusthedevourer();
 
     //Burning steppes
+    AddSC_lothos_riftwaker();
+
     //Darkshore
     //Deadmines
     //Deadwind pass

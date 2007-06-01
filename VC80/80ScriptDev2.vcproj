@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -355,6 +355,10 @@
 			<Filter
 				Name="go"
 				>
+				<File
+					RelativePath="..\scripts\go\sc_go_teleporter.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="item"
@@ -590,6 +594,10 @@
 				<Filter
 					Name="Burning Steppes"
 					>
+					<File
+						RelativePath="..\scripts\zone\burning_steppes\sc_lothos_riftwaker.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Darkshore"

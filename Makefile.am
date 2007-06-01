@@ -41,6 +41,7 @@ scripts/creature/sc_miner.cpp \
 scripts/creature/sc_shade_of_taerar.cpp \
 scripts/custom/sc_custom_example.cpp \
 scripts/custom/sc_test.cpp \
+scripts/go/sc_go_teleporter.cpp \
 scripts/guard/sc_guard_ai.h \
 scripts/guard/sc_guard_bluffwatcher.cpp \
 scripts/guard/sc_guard_contested.cpp \
@@ -67,10 +68,10 @@ scripts/servers/sc_travelmaster.cpp \
 scripts/zone/azshara/sc_boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/sc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/sc_injured_draenei.cpp \
-scripts/zone/blackrock_depths/sc_boss_baelgar.cpp \
 scripts/zone/blackrock_depths/sc_boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/sc_boss_angerrel.cpp \
 scripts/zone/blackrock_depths/sc_boss_anubshiah.cpp \
+scripts/zone/blackrock_depths/sc_boss_baelgar.cpp \
 scripts/zone/blackrock_depths/sc_boss_doomrel.cpp \
 scripts/zone/blackrock_depths/sc_boss_doperel.cpp \
 scripts/zone/blackrock_depths/sc_boss_emperor_dagran_thaurissan.cpp \
@@ -113,6 +114,7 @@ scripts/zone/blackwing_lair/sc_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/sc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/sc_boss_kruul.cpp \
 scripts/zone/blasted_lands/sc_teremus_the_devourer.cpp \
+scripts/zone/burning_steppes/sc_lothos_riftwaker.cpp \
 scripts/zone/elwynn_forest/sc_henze_faulk.cpp \
 scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp \
 scripts/zone/gruuls_lair/sc_boss_gruul.cpp \

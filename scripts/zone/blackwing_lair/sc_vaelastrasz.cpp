@@ -44,7 +44,13 @@
 
 struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
-    boss_vaelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_vaelAI(Creature *c) : ScriptedAI(c) 
+    {
+        c->SetUInt32Value(UNIT_NPC_FLAGS,65);
+        c->setFaction(35);
+        c->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        EnterEvadeMode();
+    }
 
     Unit *PlayerHolder;
     uint32 SpeachTimer;
