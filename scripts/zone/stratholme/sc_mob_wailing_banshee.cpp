@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL mob_wailing_bansheeAI : public ScriptedAI
             //SoulTap
             if (SoulTap_Timer < diff)
             {
-                if (rand()%100 < 20) //20% chance to cast
+                if (rand()%100 < 35) //35% chance to cast
                 {
                     //Cast
                     DoCast(m_creature->getVictim(),SPELL_SOULTAP);

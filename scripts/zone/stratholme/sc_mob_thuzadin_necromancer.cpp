@@ -18,10 +18,8 @@
 
 // **** This script is still under Developement ****
 
-//Status: Soul Tap disabled due to bug in core (channeled spell) Send to SVN
-
 #define SPELL_SUMMONSKELETON    17204
-//#define SPELL_SOULTAP    16430
+#define SPELL_SOULTAP    16430
 #define SPELL_BONEARMOR    11445
 
 struct MANGOS_DLL_DECL mob_thuzadin_necromancerAI : public ScriptedAI
@@ -29,14 +27,14 @@ struct MANGOS_DLL_DECL mob_thuzadin_necromancerAI : public ScriptedAI
     mob_thuzadin_necromancerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 SummonSkeleton_Timer;
-    //uint32 SoulTap_Timer;
+    uint32 SoulTap_Timer;
     uint32 BoneArmor_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
     {
         SummonSkeleton_Timer = 6000;
-        //SoulTap_Timer = 11000;
+        SoulTap_Timer = 11000;
         BoneArmor_Timer = 1000;
         InCombat = false;
 
@@ -93,20 +91,21 @@ struct MANGOS_DLL_DECL mob_thuzadin_necromancerAI : public ScriptedAI
             {
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_SUMMONSKELETON);
+                SummonSkeleton_Timer = 60000;
             }else SummonSkeleton_Timer -= diff;
 
             //SoulTap
-            /*            if (SoulTap_Timer < diff)
+            if (SoulTap_Timer < diff)
             {
-            //Cast
-            if (rand()%100 < 80) //80% chance to cast
-            {
-            DoCast(m_creature->getVictim(),SPELL_SOULTAP);
-            }
-            //12 seconds until we should try cast this again
-            SoulTap_Timer = 12000;
+                //Cast
+                if (rand()%100 < 80) //80% chance to cast
+                {
+                DoCast(m_creature->getVictim(),SPELL_SOULTAP);
+                }
+                //15 seconds until we should try cast this again
+                SoulTap_Timer = 15000;
             }else SoulTap_Timer -= diff;
-            */
+            
             //BoneArmor
             if (BoneArmor_Timer < diff)
             {

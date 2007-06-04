@@ -18,10 +18,8 @@
 
 // **** This script is still under Developement ****
 
-//Status: Mind Flay deactivated, channeled spell bugs out, ready for SVN
-
 #define SPELL_SHADOWWORDPAIN    19776
-//#define SPELL_MINDFLAY    22919
+#define SPELL_MINDFLAY    22919
 #define SPELL_MANABURN    22947
 
 struct MANGOS_DLL_DECL mob_crimson_inquisitorAI : public ScriptedAI
@@ -29,14 +27,14 @@ struct MANGOS_DLL_DECL mob_crimson_inquisitorAI : public ScriptedAI
     mob_crimson_inquisitorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 ShadowWordPain_Timer;
-    //uint32 MindFlay_Timer;
+    uint32 MindFlay_Timer;
     uint32 ManaBurn_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
     {
         ShadowWordPain_Timer = 4000;
-        //MindFlay_Timer = 11000;
+        MindFlay_Timer = 11000;
         ManaBurn_Timer = 16000;
         InCombat = false;
 
@@ -101,17 +99,17 @@ struct MANGOS_DLL_DECL mob_crimson_inquisitorAI : public ScriptedAI
             }else ShadowWordPain_Timer -= diff;
 
             //MindFlay
-            /*            if (MindFlay_Timer < diff)
+            if (MindFlay_Timer < diff)
             {
-            //Cast
-            if (rand()%100 < 85) //85% chance to cast
-            {
-            DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
-            }
-            //25 seconds until we should cast this again
-            MindFlay_Timer = 25000;
+                //Cast
+                if (rand()%100 < 85) //85% chance to cast
+                {
+                DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
+                }
+                //25 seconds until we should cast this again
+                MindFlay_Timer = 25000;
             }else MindFlay_Timer -= diff;
-            */
+
             //ManaBurn
             if (ManaBurn_Timer < diff)
             {

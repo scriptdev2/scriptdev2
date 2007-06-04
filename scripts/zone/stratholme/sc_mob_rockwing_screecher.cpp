@@ -18,13 +18,13 @@
 
 // **** This script is still under Developement ****
 
-//Status: remove sound if not wanted, consider to disable fear effect, ready for SVN
+//Status: fear effect disabled until proper support in core
 
 #define SOUND_FLYIN    6596
 #define SOUND_FLYAWAY    6526
 
 #define SPELL_GARGOYLESTRIKE    16564
-#define SPELL_TERRIFYINGHOWL    8715
+//#define SPELL_TERRIFYINGHOWL    8715
 #define SPELL_DAZED    1604
 #define SPELL_DEAFENINGSCREECH    3589
 
@@ -33,7 +33,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
     mob_rockwing_screecherAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 GargoyleStrike_Timer;
-    uint32 TerrifyingHowl_Timer;
+    //uint32 TerrifyingHowl_Timer;
     uint32 Dazed_Timer;
     uint32 DeafeningScreech_Timer;
     bool InCombat;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
     void EnterEvadeMode()
     {
         GargoyleStrike_Timer = 2000;
-        TerrifyingHowl_Timer = 15000;
+        //TerrifyingHowl_Timer = 15000;
         Dazed_Timer = 10000;
         DeafeningScreech_Timer = 8000;
         InCombat = false;
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
             }else GargoyleStrike_Timer -= diff;
 
             //TerrifyingHowl
-            if (TerrifyingHowl_Timer < diff)
+            /*if (TerrifyingHowl_Timer < diff)
             {
                 if (rand()%100 < 35) //35% chance to cast
                 {
@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
                 }
                 //21 seconds until we should try cast this again
                 TerrifyingHowl_Timer = 21000;
-            }else TerrifyingHowl_Timer -= diff;
+            }else TerrifyingHowl_Timer -= diff;*/
 
             //Dazed
             if (Dazed_Timer < diff)
