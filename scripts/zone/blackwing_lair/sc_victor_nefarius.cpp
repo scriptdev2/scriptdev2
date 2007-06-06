@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,65);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,1);
         m_creature->setFaction(35);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }

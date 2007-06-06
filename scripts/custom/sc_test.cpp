@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,65);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,1);
         m_creature->setFaction(35);
     }
 
