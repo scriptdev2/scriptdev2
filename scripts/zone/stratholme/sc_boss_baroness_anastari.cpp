@@ -32,7 +32,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     uint32 BansheeWail_Timer;
     uint32 BansheeCurse_Timer;
     uint32 Silence_Timer;
-    //    uint32 Possess_Timer;
+    //uint32 Possess_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         BansheeWail_Timer = 1000;
         BansheeCurse_Timer = 11000;
         Silence_Timer = 13000;
-        //        Possess_Timer = 35000;
+        //Possess_Timer = 35000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -94,12 +94,12 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
             if (BansheeWail_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 90) //90% chance to cast
+                if (rand()%100 < 95) //95% chance to cast
                 {
                     DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
                 }
-                //2.5 seconds until we should cast this again
-                BansheeWail_Timer = 2500;
+                //4 seconds until we should cast this again
+                BansheeWail_Timer = 4000;
             }else BansheeWail_Timer -= diff;
 
             //BansheeCurse

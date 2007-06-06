@@ -115,8 +115,11 @@ scripts/zone/blackwing_lair/sc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/sc_boss_kruul.cpp \
 scripts/zone/blasted_lands/sc_teremus_the_devourer.cpp \
 scripts/zone/burning_steppes/sc_lothos_riftwaker.cpp \
+scripts/zone/eastern_plaguelands/sc_mob_q5211.cpp \
+scripts/zone/eastern_plaguelands/sc_npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/sc_henze_faulk.cpp \
 scripts/zone/elwynn_forest/sc_marshal_mcbride.cpp \
+scripts/zone/eversong_woods/sc_mob_q8346.cpp \
 scripts/zone/gruuls_lair/sc_boss_gruul.cpp \
 scripts/zone/hellfire_peninsula/sc_boss_doomlord_kazzak.cpp \
 scripts/zone/karazhan/sc_curator.cpp \

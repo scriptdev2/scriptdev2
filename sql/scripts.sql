@@ -1738,145 +1738,71 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_doomlord_kazzak' WHERE `entr
 
 -- Stratholme
 UPDATE `creature_template` SET `ScriptName` = 'boss_fras_siabi' WHERE `entry` = 11058;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 11058;
 UPDATE `creature_template` SET `ScriptName` = 'boss_skul' WHERE `entry` = 10393;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10393;
-
 UPDATE `creature_template` SET `ScriptName` = 'boss_hearthsinger_forresten' WHERE `entry` = 10558;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10558;
-
 UPDATE `creature_template` SET `ScriptName` = 'boss_magistrate_barthilas' WHERE `entry` = 10435;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10435;
-UPDATE `creature_template` SET `size` = '1.50' WHERE `entry` = 10435;
-
 UPDATE `creature_template` SET `ScriptName` = 'boss_maleki_the_pallid' WHERE `entry` = 10438;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10438;
 UPDATE `creature_template` SET `ScriptName` = 'boss_nerubenkan' WHERE `entry` = 10437;
-UPDATE `creature_template` SET `speed` = '1.25' WHERE `entry` = 10437;
 UPDATE `creature_template` SET `ScriptName` = 'boss_cannon_master_willey' WHERE `entry` = 10997;
 UPDATE `creature_template` SET `ScriptName` = 'boss_the_unforgiven' WHERE `entry` = 10516;
-UPDATE `creature_template` SET `speed` = '1.20' WHERE `entry` = 10516;
 UPDATE `creature_template` SET `ScriptName` = 'boss_baroness_anastari' WHERE `entry` = 10436;
-UPDATE `creature_template` SET `speed` = '1.10' WHERE `entry` = 10436;
 UPDATE `creature_template` SET `ScriptName` = 'boss_archivist_galford' WHERE `entry` = 10811;
-UPDATE `creature_template` SET `speed` = '1.10' WHERE `entry` = 10811;
 UPDATE `creature_template` SET `ScriptName` = 'boss_crimson_hammersmith' WHERE `entry` = 11120;
-UPDATE `creature_template` SET `size` = '1.50' WHERE `entry` = 11120;
 UPDATE `creature_template` SET `ScriptName` = 'boss_ramstein_the_gorger' WHERE `entry` = 10439;
-UPDATE `creature_template` SET `speed` = '0.75' WHERE `entry` = 10439;
-UPDATE `creature_template` SET `size` = '1.85' WHERE `entry` = 10439;
 UPDATE `creature_template` SET `ScriptName` = 'boss_malor_the_zealous' WHERE `entry` = 11032;
-UPDATE `creature_template` SET `speed` = '1.10' WHERE `entry` = 11032;
 UPDATE `creature_template` SET `ScriptName` = 'boss_black_guard_swordsmith' WHERE `entry` = 11121;
-UPDATE `creature_template` SET `size` = '1.50' WHERE `entry` = 11121;
 UPDATE `creature_template` SET `ScriptName` = 'boss_timmy_the_cruel' WHERE `entry` = 10808;
 UPDATE `creature_template` SET `ScriptName` = 'boss_stonespine' WHERE `entry` = 10809;
-UPDATE `creature_template` SET `speed` = '0.90' WHERE `entry` = 10809;
 UPDATE `creature_template` SET `ScriptName` = 'boss_postmaster_malown' WHERE `entry` = 11143;
 UPDATE `creature_template` SET `ScriptName` = 'boss_baron_rivendare' WHERE `entry` = 10440;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_guardsman' WHERE `entry` = 10418;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10418;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 10418;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_conjuror' WHERE `entry` = 10419;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10419;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 10419;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_initiate' WHERE `entry` = 10420;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10420;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 10420;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_defender' WHERE `entry` = 10421;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10421;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 10421;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_sorcerer' WHERE `entry` = 10422;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10422;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 10422;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_priest' WHERE `entry` = 10423;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10423;
-UPDATE `creature_template` SET `size` = '1.00' WHERE `entry` = 10423;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_gallant' WHERE `entry` = 10424;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10424;
-UPDATE `creature_template` SET `size` = '1.00' WHERE `entry` = 10424;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_battle_mage' WHERE `entry` = 10425;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10425;
-UPDATE `creature_template` SET `size` = '1.20' WHERE `entry` = 10425;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_inquisitor' WHERE `entry` = 10426;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10426;
-UPDATE `creature_template` SET `size` = '1.15' WHERE `entry` = 10426;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_monk' WHERE `entry` = 11043;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 11043;
-
-UPDATE `creature_template` SET `size` = '0.90' WHERE `entry` = 11043;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_crimson_rifleman' WHERE `entry` = 11054;
-UPDATE `creature_template` SET `speed` = '1.00' WHERE `entry` = 11054;
-UPDATE `creature_template` SET `size` = '1.10' WHERE `entry` = 11054;
 
 UPDATE `creature_template` SET `ScriptName` = 'mob_bile_spewer' WHERE `entry` = 10416;
-UPDATE `creature_template` SET `speed` = '0.80' WHERE `entry` = 10416;
-UPDATE `creature_template` SET `size` = '1.55' WHERE `entry` = 10416;
 UPDATE `creature_template` SET `ScriptName` = 'mob_bile_slime' WHERE `entry` = 10697;
-UPDATE `creature_template` SET `speed` = '0.65' WHERE `entry` = 10697;
 UPDATE `creature_template` SET `ScriptName` = 'mob_black_guard_sentry' WHERE `entry` = 10394;
-UPDATE `creature_template` SET `speed` = '1.20' WHERE `entry` = 10394;
-UPDATE `creature_template` SET `size` = '1.40' WHERE `entry` = 10394;
 UPDATE `creature_template` SET `ScriptName` = 'mob_ghoul_ravener' WHERE `entry` = 10406;
-UPDATE `creature_template` SET `speed` = '1.20' WHERE `entry` = 10406;
 UPDATE `creature_template` SET `ScriptName` = 'mob_fleshflayer_ghoul' WHERE `entry` = 10407;
-UPDATE `creature_template` SET `speed` = '1.20' WHERE `entry` = 10407;
 UPDATE `creature_template` SET `ScriptName` = 'mob_plague_ghoul' WHERE `entry` = 10405;
-UPDATE `creature_template` SET `speed` = '1.20' WHERE `entry` = 10405;
 UPDATE `creature_template` SET `ScriptName` = 'mob_eye_of_naxxramas' WHERE `entry` = 10411;
-UPDATE `creature_template` SET `speed` = '0.80' WHERE `entry` = 10411;
 UPDATE `creature_template` SET `ScriptName` = 'mob_rockwing_screecher' WHERE `entry` = 10409;
-UPDATE `creature_template` SET `speed` = '0.90' WHERE `entry` = 10409;
 UPDATE `creature_template` SET `ScriptName` = 'mob_rockwing_gargoyle' WHERE `entry` = 10408;
-UPDATE `creature_template` SET `speed` = '0.90' WHERE `entry` = 10408;
 UPDATE `creature_template` SET `ScriptName` = 'mob_venom_belcher' WHERE `entry` = 10417;
-UPDATE `creature_template` SET `speed` = '0.80' WHERE `entry` = 10417;
-UPDATE `creature_template` SET `size` = '1.45' WHERE `entry` = 10417;
 UPDATE `creature_template` SET `ScriptName` = 'mob_patchwork_horror' WHERE `entry` = 10414;
-UPDATE `creature_template` SET `speed` = '0.80' WHERE `entry` = 10414;
 UPDATE `creature_template` SET `ScriptName` = 'mob_wailing_banshee' WHERE `entry` = 10464;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10464;
 UPDATE `creature_template` SET `ScriptName` = 'mob_shrieking_banshee' WHERE `entry` = 10463;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10463;
 UPDATE `creature_template` SET `ScriptName` = 'mob_vengeful_phantom' WHERE `entry` = 10387;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10387;
 UPDATE `creature_template` SET `ScriptName` = 'mob_wrath_phantom' WHERE `entry` = 10389;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10389;
 UPDATE `creature_template` SET `ScriptName` = 'mob_spiteful_phantom' WHERE `entry` = 10388;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10388;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crypt_beast' WHERE `entry` = 10413;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10413;
 UPDATE `creature_template` SET `ScriptName` = 'mob_crypt_crawler' WHERE `entry` = 10412;
-UPDATE `creature_template` SET `speed` = '1.15' WHERE `entry` = 10412;
 UPDATE `creature_template` SET `ScriptName` = 'mob_undead_scarab' WHERE `entry` = 10876;
-UPDATE `creature_template` SET `speed` = '0.50' WHERE `entry` = 10876;
-UPDATE `creature_template` SET `size` = '0.30' WHERE `entry` = 10876;
 UPDATE `creature_template` SET `ScriptName` = 'mob_skeletal_guardian' WHERE `entry` = 10390;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10390;
 UPDATE `creature_template` SET `ScriptName` = 'mob_skeletal_berserker' WHERE `entry` = 10391;
-UPDATE `creature_template` SET `speed` = '1.10' WHERE `entry` = 10391;
 UPDATE `creature_template` SET `ScriptName` = 'mob_mangled_cadaver' WHERE `entry` = 10382;
-UPDATE `creature_template` SET `speed` = '0.70' WHERE `entry` = 10382;
 UPDATE `creature_template` SET `ScriptName` = 'mob_ravaged_cadaver' WHERE `entry` = 10381;
-UPDATE `creature_template` SET `speed` = '0.70' WHERE `entry` = 10381;
 UPDATE `creature_template` SET `ScriptName` = 'mob_broken_cadaver' WHERE `entry` = 10383;
-UPDATE `creature_template` SET `speed` = '0.70' WHERE `entry` = 10383;
 UPDATE `creature_template` SET `ScriptName` = 'mob_mindless_skeleton' WHERE `entry` = 11197;
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_acolyte' WHERE `entry` = 10399;
-UPDATE `creature_template` SET `speed` = '1.00' WHERE `entry` = 10399;
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_necromancer' WHERE `entry` = 10400;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10400;
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_shadowcaster' WHERE `entry` = 10398;
-UPDATE `creature_template` SET `speed` = '1.05' WHERE `entry` = 10398;
 UPDATE `creature_template` SET `ScriptName` = 'mob_spectral_citizen' WHERE `entry` = 10384;
-UPDATE `creature_template` SET `speed` = '1.00' WHERE `entry` = 10384;
 UPDATE `creature_template` SET `ScriptName` = 'mob_ghostly_citizen' WHERE `entry` = 10385;
-UPDATE `creature_template` SET `speed` = '1.00' WHERE `entry` = 10385;
 UPDATE `creature_template` SET `ScriptName` = 'mob_restless_soul' WHERE `entry` = 11122;
-UPDATE `creature_template` SET `speed` = '1.25' WHERE `entry` = 11122;
 UPDATE `creature_template` SET `ScriptName` = 'mob_freed_soul' WHERE `entry` = 11136;
-UPDATE `creature_template` SET `speed` = '0.55' WHERE `entry` = 11136;
+
+/* eastern plaguelands */
+UPDATE `creature_template` SET `ScriptName` = 'mob_q5211' WHERE `entry` IN (8530,8531,8532);
+UPDATE `creature_template` SET `ScriptName` = 'npc_darrowshire_spirit' WHERE `entry` = 11064;
+
+/* Eversong woods */
+UPDATE `creature_template` SET `ScriptName` = 'mob_q8346' WHERE `entry` IN (15273,15274,15294,15298,15367);

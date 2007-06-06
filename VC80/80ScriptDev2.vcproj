@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -606,6 +606,14 @@
 				<Filter
 					Name="Eastern Plaguelands"
 					>
+					<File
+						RelativePath="..\scripts\zone\eastern_plaguelands\sc_mob_q5211.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\eastern_plaguelands\sc_npc_darrowshire_spirit.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Moonglade"
@@ -1450,6 +1458,10 @@
 				<Filter
 					Name="Eversong Woods"
 					>
+					<File
+						RelativePath="..\scripts\zone\eversong_woods\sc_mob_q8346.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Ghostlands"

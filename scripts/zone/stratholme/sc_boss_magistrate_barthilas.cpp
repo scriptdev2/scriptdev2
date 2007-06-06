@@ -38,8 +38,8 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
     void EnterEvadeMode()
     {
         DrainingBlow_Timer = 4000;
-        CrowdPummel_Timer = 9000;
-        MightyBlow_Timer = 18000;
+        CrowdPummel_Timer = 13000;
+        MightyBlow_Timer = 11000;
         Dazed_Timer = 7000;
         InCombat = false;
 
@@ -96,8 +96,8 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_DRAININGBLOW);
 
-                //11 seconds until we should cast this again
-                DrainingBlow_Timer = 11000;
+                //4 seconds until we should cast this again
+                DrainingBlow_Timer = 4000;
             }else DrainingBlow_Timer -= diff;
 
             //CrowdPummel
@@ -106,8 +106,8 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
 
-                //14 seconds until we should cast this agian
-                CrowdPummel_Timer = 14000;
+                //13 seconds until we should cast this agian
+                CrowdPummel_Timer = 13000;
             }else CrowdPummel_Timer -= diff;
 
             //MightyBlow
@@ -116,8 +116,8 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
 
-                //25 seconds until we should cast this again
-                MightyBlow_Timer = 25000;
+                //11 seconds until we should cast this again
+                MightyBlow_Timer = 11000;
             }else MightyBlow_Timer -= diff;
 
             //Dazed

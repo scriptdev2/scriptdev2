@@ -18,8 +18,6 @@
 
 // **** This script is still under Developement ****
 
-
-
 #define SPELL_BANSHEEWAIL    16868
 #define SPELL_DAZED    1604
 #define SPELL_DEAFENINGSCREECH    3589
@@ -93,8 +91,8 @@ struct MANGOS_DLL_DECL mob_shrieking_bansheeAI : public ScriptedAI
             {
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
-                //2.5 seconds until we should cast this again
-                BansheeWail_Timer = 2500;
+                //3.5 seconds until we should cast this again
+                BansheeWail_Timer = 3500;
             }else BansheeWail_Timer -= diff;
 
 
@@ -118,8 +116,8 @@ struct MANGOS_DLL_DECL mob_shrieking_bansheeAI : public ScriptedAI
                     //Cast
                     DoCast(m_creature->getVictim(),SPELL_DEAFENINGSCREECH);
                 }
-                //33 seconds until we should try cast this again
-                DeafeningScreech_Timer = 33000;
+                //23 seconds until we should try cast this again
+                DeafeningScreech_Timer = 23000;
             }else DeafeningScreech_Timer -= diff;
 
             //If we are within range melee the target

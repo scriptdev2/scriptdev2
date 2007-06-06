@@ -17,9 +17,14 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-
-
-
+/*
+6/3 20:04:22.453  Plague Ghoul gains Enrage.
+6/3 20:04:30.937  Enrage fades from Plague Ghoul.
+6/3 20:04:32.203  Plague Ghoul gains Enrage.
+6/3 20:07:36.921  Enrage fades from Plague Ghoul.
+6/3 20:07:40.218  Plague Ghoul gains Enrage.
+6/3 20:08:38.078  Enrage fades from Plague Ghoul.
+*/
 #define SPELL_CLEAVE    15584
 #define SPELL_REND    18200
 #define SPELL_DAZED    1604

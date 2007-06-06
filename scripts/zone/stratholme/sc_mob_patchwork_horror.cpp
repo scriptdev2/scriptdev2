@@ -18,8 +18,9 @@
 
 // **** This script is still under Developement ****
 
-// Status: check disease cloud, ready for SVN
+//Status: check disease cloud
 
+#define SPELL_THRASH    8876
 #define SPELL_DISEASECLOUD    27793
 #define SPELL_KNOCKAWAY    10101
 #define SPELL_DAZED    1604
@@ -48,6 +49,7 @@ struct MANGOS_DLL_DECL mob_patchwork_horrorAI : public ScriptedAI
         DoGoHome();
 
         m_creature->CastSpell(m_creature,SPELL_DISEASECLOUD,true);
+        m_creature->CastSpell(m_creature,SPELL_THRASH,true);
         HasAura = true;
     }
 
@@ -79,6 +81,7 @@ struct MANGOS_DLL_DECL mob_patchwork_horrorAI : public ScriptedAI
                 if (!HasAura)
                 {
                     m_creature->CastSpell(m_creature,SPELL_DISEASECLOUD,true);
+                    m_creature->CastSpell(m_creature,SPELL_THRASH,true);
                     HasAura = true;
                 }
 

@@ -18,8 +18,6 @@
 
 // **** This script is still under Developement ****
 
-
-
 #define SPELL_RAVENOUSCLAW    15608
 #define SPELL_REND    18200
 #define SPELL_DAZED    1604
@@ -39,7 +37,7 @@ struct MANGOS_DLL_DECL mob_ghoul_ravenerAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        RavenousClaw_Timer = 5000;
+        RavenousClaw_Timer = 3000;
         Rend_Timer = 2000;
         Dazed_Timer = 11000;
         HeadCrack_Timer = 13000;
@@ -98,12 +96,12 @@ struct MANGOS_DLL_DECL mob_ghoul_ravenerAI : public ScriptedAI
             if (RavenousClaw_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 35) //35% chance to cast
+                if (rand()%100 < 25) //25% chance to cast
                 {
                     DoCast(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
                 }
-                //9 seconds until we should cast this again
-                RavenousClaw_Timer = 9000;
+                //3 seconds until we should cast this again
+                RavenousClaw_Timer = 3000;
             }else RavenousClaw_Timer -= diff;
 
             //Rend
@@ -150,8 +148,8 @@ struct MANGOS_DLL_DECL mob_ghoul_ravenerAI : public ScriptedAI
                 {
                     DoCast(m_creature->getVictim(),SPELL_GHOULPLAGUE);
                 }
-                //15 seconds until we should try cast this again
-                GhoulPlague_Timer = 15000;
+                //14 seconds until we should try cast this again
+                GhoulPlague_Timer = 14000;
             }else GhoulPlague_Timer -= diff;
 
             //If we are within range melee the target

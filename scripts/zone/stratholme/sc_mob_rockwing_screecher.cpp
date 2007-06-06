@@ -27,6 +27,7 @@
 //#define SPELL_TERRIFYINGHOWL    8715
 #define SPELL_DAZED    1604
 #define SPELL_DEAFENINGSCREECH    3589
+#define SPELL_DEMORALIZINGSHOUT    16244
 
 struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
 {
@@ -36,6 +37,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
     //uint32 TerrifyingHowl_Timer;
     uint32 Dazed_Timer;
     uint32 DeafeningScreech_Timer;
+    uint32 DemoralizingShout_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
@@ -44,6 +46,7 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
         //TerrifyingHowl_Timer = 15000;
         Dazed_Timer = 10000;
         DeafeningScreech_Timer = 8000;
+        DemoralizingShout_Timer = 6000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -153,6 +156,18 @@ struct MANGOS_DLL_DECL mob_rockwing_screecherAI : public ScriptedAI
                 //26 seconds until we should try cast this again
                 DeafeningScreech_Timer = 26000;
             }else DeafeningScreech_Timer -= diff;
+
+            //DemoralizingShout
+            if (DemoralizingShout_Timer < diff)
+            {
+                if (rand()%100 < 75) //75% chance to cast
+                {
+                    //Cast
+                    DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
+                }
+                //20 seconds until we should try cast this again
+                DemoralizingShout_Timer = 20000;
+            }else DemoralizingShout_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))

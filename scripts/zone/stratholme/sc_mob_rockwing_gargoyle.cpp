@@ -24,7 +24,7 @@
 #define SOUND_FLYAWAY    6526
 
 #define SPELL_DAZED    1604
-#define SPELL_SUNDERARMOR    27991 //might be wrong SA-id
+#define SPELL_SUNDERARMOR    27991
 #define SPELL_DEAFENINGSCREECH    3589
 
 struct MANGOS_DLL_DECL mob_rockwing_gargoyleAI : public ScriptedAI
@@ -119,12 +119,12 @@ struct MANGOS_DLL_DECL mob_rockwing_gargoyleAI : public ScriptedAI
             if (SunderArmor_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 65) //65% chance to cast
+                if (rand()%100 < 75) //75% chance to cast
                 {
                     DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
                 }
-                //13 seconds until we should try cast this again
-                SunderArmor_Timer = 13000;
+                //7 seconds until we should try cast this again
+                SunderArmor_Timer = 7000;
             }else SunderArmor_Timer -= diff;
 
             //DeafeningScreech

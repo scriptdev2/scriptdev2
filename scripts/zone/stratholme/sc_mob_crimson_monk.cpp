@@ -18,29 +18,29 @@
 
 // **** This script is still under Developement ****
 
-//Status: trash doesn't seem to work, but i left it in there nevertheless. Ready for SVN
-
+#define SPELL_THRASH    8876
 #define SPELL_SNAPKICK    24671
-#define SPELL_THRASH    12787
 
 struct MANGOS_DLL_DECL mob_crimson_monkAI : public ScriptedAI
 {
     mob_crimson_monkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 SnapKick_Timer;
-    uint32 Thrash_Timer;
     bool InCombat;
+    bool HasAura;
 
     void EnterEvadeMode()
     {
         SnapKick_Timer = 9000;
-        Thrash_Timer = 4000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        m_creature->CastSpell(m_creature,SPELL_THRASH,true);
+        HasAura = true;
     }
 
     void AttackStart(Unit *who)
@@ -68,6 +68,12 @@ struct MANGOS_DLL_DECL mob_crimson_monkAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
+                if (!HasAura)
+                {
+                    m_creature->CastSpell(m_creature,SPELL_THRASH,true);
+                    HasAura = true;
+                }
+
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
                 InCombat = true;
@@ -93,15 +99,6 @@ struct MANGOS_DLL_DECL mob_crimson_monkAI : public ScriptedAI
                 //9 seconds until we should cast this again
                 SnapKick_Timer = 9000;
             }else SnapKick_Timer -= diff;
-
-            //Thrash
-            if (Thrash_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_THRASH);
-                //4 seconds until we should cast this again
-                Thrash_Timer = 4000;
-            }else Thrash_Timer -= diff;
 
             //If we are within range melee the target
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))

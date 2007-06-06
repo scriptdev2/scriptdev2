@@ -171,7 +171,13 @@ extern void AddSC_lothos_riftwaker();
 //Durotar
 //Duskwood
 //Duskwallow marsh
+//Eversong Woods
+extern void AddSC_mob_q8346();
+
 //Eastern Plaguelands
+extern void AddSC_mob_q5211();
+extern void AddSC_npc_darrowshire_spirit();
+
 //Elwynn Forest
 extern void AddSC_marshal_mcbride();
 extern void AddSC_henze_faulk();
@@ -517,7 +523,13 @@ void ScriptsInit()
     //Durotar
     //Duskwood
     //Duskwallow marsh
-    //Eastern Plaguelands
+    //Eversong Woods
+    AddSC_mob_q8346();
+
+    //Eastern Plaguelands   
+    AddSC_mob_q5211();
+    AddSC_npc_darrowshire_spirit();
+
     //Elwynn Forest
     AddSC_marshal_mcbride();
     AddSC_henze_faulk();
