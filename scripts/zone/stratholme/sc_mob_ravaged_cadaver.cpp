@@ -18,10 +18,10 @@
 
 // **** This script is still under Developement ****
 
-#define SPELL_STRIKE    11976
-#define SPELL_DAZED    1604
-#define SPELL_DEMORALIZINGSHOUT    16244
-#define SPELL_CADAVERWORMS     16143
+#define SPELL_STRIKE                11976
+#define SPELL_DAZED                 1604
+#define SPELL_DEMORALIZINGSHOUT     16244
+#define SPELL_CADAVERWORMS          16143
 
 struct MANGOS_DLL_DECL mob_ravaged_cadaverAI : public ScriptedAI
 {
@@ -102,7 +102,8 @@ struct MANGOS_DLL_DECL mob_ravaged_cadaverAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(10383, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)    
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)

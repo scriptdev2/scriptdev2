@@ -16,10 +16,10 @@
 
 #include "../sc_defines.h"
 
-#define SPELL_SLEEP                24777            
+#define SPELL_SLEEP                24777
 #define SPELL_NOXIOUSBREATH        24818
 #define SPELL_TAILSWEEP            15847
-// #define SPELL_MARKOFNATURE      25040   // Not working
+//#define SPELL_MARKOFNATURE         25040                    // Not working
 #define SPELL_LIGHTNINGWAVE        24819
 #define SPELL_SUMMONDRUIDS         24795
 
@@ -32,7 +32,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
     uint32 TailSweep_Timer;
-    //    uint32 MarkOfNature_Timer;
+    //uint32 MarkOfNature_Timer;
     uint32 LightningWave_Timer;
     uint32 SummonDruids_Timer;
     int Rand;
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         Sleep_Timer = 30000;
         NoxiousBreath_Timer = 15000;
         TailSweep_Timer = 20000;
-        //      MarkOfNature_Timer = 45000;
+        //MarkOfNature_Timer = 45000;
         LightningWave_Timer = 8000;
         SummonDruids_Timer = 0;
         InCombat = false;
@@ -109,7 +109,8 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(15260, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
 

@@ -16,10 +16,10 @@
 
 #include "../sc_defines.h"
 
-#define SPELL_SLEEP                24777            
+#define SPELL_SLEEP                24777
 #define SPELL_NOXIOUSBREATH        24818
 #define SPELL_TAILSWEEP            15847
-// #define SPELL_MARKOFNATURE            25040   // Not working
+//#define SPELL_MARKOFNATURE         25040                    // Not working
 #define SPELL_ARCANEBLAST          24857
 #define SPELL_BELLOWINGROAR        22686
 #define SPELL_SUMMONSHADE          24843
@@ -33,7 +33,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
     uint32 TailSweep_Timer;
-    //    uint32 MarkOfNature_Timer;
+    //uint32 MarkOfNature_Timer;
     uint32 ArcaneBlast_Timer;
     uint32 BellowingRoar_Timer;
     uint32 Shades_Timer;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         Sleep_Timer = 45000;
         NoxiousBreath_Timer = 15000;
         TailSweep_Timer = 20000;
-        //      MarkOfNature_Timer = 45000;
+        //MarkOfNature_Timer = 45000;
         ArcaneBlast_Timer = 8000;
         BellowingRoar_Timer = 30000;
-	Shades_Timer = 60000;                  //The time that Taerar is banished
+        Shades_Timer = 60000;                               //The time that Taerar is banished
         InCombat = false;
         Shades = false;
         WasBanished = false; 
@@ -114,7 +114,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(15302, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -125,7 +126,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             Shades = false;
-	    WasBanished = true;              //Taerar Was banished so time for normal status again.
+            WasBanished = true;                             //Taerar Was banished so time for normal status again.
         } else if (Shades)
                {
                   Shades_Timer -= diff;

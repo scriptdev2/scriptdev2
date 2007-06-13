@@ -18,16 +18,11 @@
 
 // **** This script is still under Developement ****
 
+#define SPELL_SHADOWBOLTVOLLEY               17228
+#define SPELL_IMMOLATE                       15505
+#define SPELL_CURSEOFWEAKNESS                17227
+#define SPELL_DEMONARMOR                     11735
 
-#define SPELL_SHADOWBOLTVOLLEY                17228  
-#define SPELL_IMMOLATE                15505 
-#define SPELL_CURSEOFWEAKNESS                17227            
-#define SPELL_DEMONARMOR                11735
-
-
-     
-
-      
 struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 {
     boss_doomrelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -45,15 +40,13 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 
 
     void EnterEvadeMode()
-    {       
+    {
         ShadowVolley_Timer = 10000;
         Immolate_Timer = 18000;
         CurseOfWeakness_Timer = 5000;
         DemonArmor_Timer = 16000;
         InCombat = false;
         Voidwalkers = false;
-
-
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -96,22 +89,23 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
 
     void SummonVoidwalkers(Unit* victim)
     {
-         Rand = rand()%5;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%5;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%5;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%5;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(16119, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -137,14 +131,14 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
             //Immolate_Timer
             if (Immolate_Timer < diff)
             {
-                 //Cast Immolate on a Random target
-                 Unit* target = NULL;
+                //Cast Immolate on a Random target
+                Unit* target = NULL;
  
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_IMMOLATE);
 
                 //25 seconds
-               Immolate_Timer = 25000;
+                Immolate_Timer = 25000;
             }else Immolate_Timer -= diff;
 
             //CurseOfWeakness_Timer
@@ -154,7 +148,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
 
                 //45 seconds
-               CurseOfWeakness_Timer = 45000;
+                CurseOfWeakness_Timer = 45000;
             }else CurseOfWeakness_Timer -= diff;
 
             //DemonArmor_Timer
@@ -164,12 +158,12 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
                 DoCast(m_creature,SPELL_DEMONARMOR);
 
                 //5 minutes
-               DemonArmor_Timer = 300000;
+                DemonArmor_Timer = 300000;
             }else DemonArmor_Timer -= diff;
 
 
             //Summon Voidwalkers
-            if ( !Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+            if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
             {
                 //Cast
                 SummonVoidwalkers(m_creature->getVictim());
@@ -195,7 +189,6 @@ CreatureAI* GetAI_boss_doomrel(Creature *_Creature)
 {
     return new boss_doomrelAI (_Creature);
 }
-
 
 void AddSC_boss_doomrel()
 {

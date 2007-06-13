@@ -16,10 +16,9 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_WRATH                21667     
-#define SPELL_ENTANGLINGROOTS             21331     
-#define SPELL_TWISTEDTRANQUILITY            21793
-    
+#define SPELL_WRATH                 21667
+#define SPELL_ENTANGLINGROOTS       21331
+#define SPELL_TWISTEDTRANQUILITY    21793
 
 struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
 {
@@ -36,7 +35,7 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
     Creature* Summoned;
 
     void EnterEvadeMode()
-    {       
+    {
         Wrath_Timer = 8000;
         EntanglingRoots_Timer = 2000;
         TwistedTranquility_Timer = 20000;
@@ -84,26 +83,24 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
 
     void SummonAdds(Unit* victim)
     {
-         Rand = rand()%8;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%8;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%8;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%8;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(13743, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
-
-
-
 
     void UpdateAI(const uint32 diff)
     {
@@ -154,7 +151,7 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
             {
                 //Cast
                 SummonAdds(m_creature->getVictim());
-		SummonAdds(m_creature->getVictim());
+                SummonAdds(m_creature->getVictim());
 
                 //28 seconds until we should cast this agian
                 Adds_Timer = 28000;

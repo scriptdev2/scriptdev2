@@ -18,17 +18,15 @@
 
 // **** This script is still under Developement ****
 
-//Status: ready for SVN
+#define SAY_LIVING        "The living are here!"
 
-#define SAY_LIVING    "The living are here!"
-
-#define SOUND_FLYIN     6596
+#define SOUND_FLYIN       6596
 #define SOUND_FLYAWAY     6526
 
-#define SPELL_SUPERINVIS 8149
+#define SPELL_SUPERINVIS  8149
 
-#define SPELL_DAZED	1604
-#define SPELL_SUMMONROCKWINGGARGOYLES	16381
+#define SPELL_DAZED	      1604
+//#define SPELL_SUMMONROCKWINGGARGOYLES         16381
 
 struct MANGOS_DLL_DECL mob_eye_of_naxxramasAI : public ScriptedAI
 {
@@ -117,7 +115,8 @@ struct MANGOS_DLL_DECL mob_eye_of_naxxramasAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(10408, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)

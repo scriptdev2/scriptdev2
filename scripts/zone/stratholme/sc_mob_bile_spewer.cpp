@@ -18,11 +18,9 @@
 
 // **** This script is still under Developement ****
 
-
-
-#define SPELL_VENOMSPIT    24011
-#define SPELL_DAZED    1604
-//#define SPELL_SPAWNBILESLIME    16809
+#define SPELL_VENOMSPIT             24011
+#define SPELL_DAZED                 1604
+//#define SPELL_SPAWNBILESLIME        16809
 
 struct MANGOS_DLL_DECL mob_bile_spewerAI : public ScriptedAI
 {
@@ -99,7 +97,8 @@ struct MANGOS_DLL_DECL mob_bile_spewerAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(10697, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)

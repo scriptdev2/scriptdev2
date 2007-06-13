@@ -18,14 +18,8 @@
 
 // **** This script is still under Developement ****
 
+#define SPELL_FIREBLAST            15573
 
-#define SPELL_FIREBLAST                15573            
-
-
-
-     
-
-      
 struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 {
     boss_ambassador_flamelashAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -39,11 +33,10 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
     Creature* Summoned;
 
     void EnterEvadeMode()
-    {       
+    {
         FireBlast_Timer = 2000;
         Spirit_Timer = 24000;
         InCombat = false;
-
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -86,22 +79,23 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 
     void SummonSpirits(Unit* victim)
     {
-         Rand = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(9178, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -129,10 +123,9 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
             {
                 //Cast
                 SummonSpirits(m_creature->getVictim());
-		SummonSpirits(m_creature->getVictim());
-		SummonSpirits(m_creature->getVictim());
-		SummonSpirits(m_creature->getVictim());
-
+                SummonSpirits(m_creature->getVictim());
+                SummonSpirits(m_creature->getVictim());
+                SummonSpirits(m_creature->getVictim());
 
                 //30 seconds until we should cast this agian
                 Spirit_Timer = 30000;
@@ -156,7 +149,6 @@ CreatureAI* GetAI_boss_ambassador_flamelash(Creature *_Creature)
 {
     return new boss_ambassador_flamelashAI (_Creature);
 }
-
 
 void AddSC_boss_ambassador_flamelash()
 {

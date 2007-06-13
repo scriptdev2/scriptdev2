@@ -18,13 +18,10 @@
 
 // **** This script is still under Developement ****
 
-#define SPELL_MIGHTYBLOW                14099            
-#define SPELL_HAMSTRING                9080
+#define SPELL_MIGHTYBLOW            14099
+#define SPELL_HAMSTRING             9080
 #define SPELL_CLEAVE                20691
-  
-     
 
-      
 struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
 {
     boss_general_angerforgeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -45,15 +42,13 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     Creature* SummonedMedics;
 
     void EnterEvadeMode()
-    {       
+    {
         MightyBlow_Timer = 8000;
         HamString_Timer = 12000;
         Cleave_Timer = 16000;
         Adds_Timer = 0;
         InCombat = false;
         Medics = false;
-
-
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -96,42 +91,44 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
 
     void SummonAdds(Unit* victim)
     {
-         Rand1 = rand()%15;
-         switch (rand()%2)
-         {
-                case 0: Rand1X = 0 - Rand1; break;
-                case 1: Rand1X = 0 + Rand1; break;
-         }
-         Rand1 = 0;
-         Rand1 = rand()%15;
-         switch (rand()%2)
-         {
-                case 0: Rand1Y = 0 - Rand1; break;
-                case 1: Rand1Y = 0 + Rand1; break;
-         }
-         Rand1 = 0;
+        Rand1 = rand()%15;
+        switch (rand()%2)
+        {
+        case 0: Rand1X = 0 - Rand1; break;
+        case 1: Rand1X = 0 + Rand1; break;
+        }
+        Rand1 = 0;
+        Rand1 = rand()%15;
+        switch (rand()%2)
+        {
+        case 0: Rand1Y = 0 - Rand1; break;
+        case 1: Rand1Y = 0 + Rand1; break;
+        }
+        Rand1 = 0;
         SummonedAdds = DoSpawnCreature(8901, Rand1X, Rand1Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        ((CreatureAI*)SummonedAdds->AI())->AttackStart(victim);
+        if(SummonedAdds)
+            ((CreatureAI*)SummonedAdds->AI())->AttackStart(victim);
     }
 
     void SummonMedics(Unit* victim)
     {
-         Rand2 = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: Rand2X = 0 - Rand2; break;
-                case 1: Rand2X = 0 + Rand2; break;
-         }
-         Rand2 = 0;
-         Rand2 = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: Rand2Y = 0 - Rand2; break;
-                case 1: Rand2Y = 0 + Rand2; break;
-         }
-         Rand2 = 0;
+        Rand2 = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: Rand2X = 0 - Rand2; break;
+        case 1: Rand2X = 0 + Rand2; break;
+        }
+        Rand2 = 0;
+        Rand2 = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: Rand2Y = 0 - Rand2; break;
+        case 1: Rand2Y = 0 + Rand2; break;
+        }
+        Rand2 = 0;
         SummonedMedics = DoSpawnCreature(8894, Rand2X, Rand2Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
-        ((CreatureAI*)SummonedMedics->AI())->AttackStart(victim);
+        if(SummonedMedics)
+            ((CreatureAI*)SummonedMedics->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -151,7 +148,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
 
                 //18 seconds
-               MightyBlow_Timer = 18000;
+                MightyBlow_Timer = 18000;
             }else MightyBlow_Timer -= diff;
 
             //HamString_Timer
@@ -161,7 +158,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
 
                 //15 seconds
-               HamString_Timer = 15000;
+                HamString_Timer = 15000;
             }else HamString_Timer -= diff;
 
             //Cleave_Timer
@@ -171,9 +168,8 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
                 //45 seconds
-               Cleave_Timer = 9000;
+                Cleave_Timer = 9000;
             }else Cleave_Timer -= diff;
-
 
             //Adds_Timer
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21 )
@@ -184,7 +180,6 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
                   SummonAdds(m_creature->getVictim());
                   SummonAdds(m_creature->getVictim());
                   SummonAdds(m_creature->getVictim());
-
 
                   //25 seconds until we should cast this agian
                   Adds_Timer = 25000;

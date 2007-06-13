@@ -16,8 +16,8 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_CURSEOFBLOOD                24673            
-//#define SPELL_ILLUSION                17773
+#define SPELL_CURSEOFBLOOD          24673
+//#define SPELL_ILLUSION              17773
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {
@@ -25,7 +25,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
     uint32 CurseOfBlood_Timer;
     uint32 Illusion_Timer;
-//  uint32 Illusioncounter;
+    //uint32 Illusioncounter;
     uint32 Invisible_Timer;
     bool InCombat;
     bool Invisible;
@@ -35,13 +35,12 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     Creature* Summoned;
 
     void EnterEvadeMode()
-    {       
+    {
         CurseOfBlood_Timer = 15000;
         Illusion_Timer = 30000;
-        Invisible_Timer = 3000;            //Too much too low?
+        Invisible_Timer = 3000;                             //Too much too low?
         InCombat = false;
         Invisible = false;
-
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -84,22 +83,23 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
     void SummonIllusions(Unit* victim)
     {
-         Rand = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%10;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%10;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(11439, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
 
                 //45 seconds
-               CurseOfBlood_Timer = 30000;
+                CurseOfBlood_Timer = 30000;
             }else CurseOfBlood_Timer -= diff;
 
             //Illusion_Timer
@@ -141,7 +141,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             {
 
                 //Inturrupt any spell casting
-                 m_creature->InterruptSpell();
+                m_creature->InterruptSpell();
                 //Root self
                 DoCast(m_creature,23973);
                 m_creature->setFaction(35);
@@ -149,15 +149,15 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                 //Cast
                 SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
                 SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
-		SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
+                SummonIllusions(m_creature->getVictim());
                 Invisible = true;
                 Invisible_Timer = 3000;
 

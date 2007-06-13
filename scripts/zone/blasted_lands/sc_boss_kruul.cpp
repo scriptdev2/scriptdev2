@@ -16,13 +16,13 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_SHADOWVOLLEY                21341            
-#define SPELL_CLEAVE           20677
-#define SPELL_THUNDERCLAP            23931
-#define SPELL_TWISTEDREFLECTION            21063
-#define SPELL_VOIDBOLT            21066
-#define SPELL_RAGE           21340
-#define SPELL_CAPTURESOUL               21053   // Changed from 21054
+#define SPELL_SHADOWVOLLEY          21341
+#define SPELL_CLEAVE                20677
+#define SPELL_THUNDERCLAP           23931
+#define SPELL_TWISTEDREFLECTION     21063
+#define SPELL_VOIDBOLT              21066
+#define SPELL_RAGE                  21340
+#define SPELL_CAPTURESOUL           21053                   // Changed from 21054
 
 struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
 {
@@ -42,13 +42,13 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
     bool InCombat;
 
     void EnterEvadeMode()
-    {       
+    {
         ShadowVolley_Timer = 10000;
         Cleave_Timer = 14000;
         ThunderClap_Timer = 20000;
         TwistedReflection_Timer = 25000;
         VoidBolt_Timer = 30000;
-        Rage_Timer = 60000;                //Cast rage after 1 minute
+        Rage_Timer = 60000;                                 //Cast rage after 1 minute
         Hound_Timer = 8000; 
         InCombat = false;
 
@@ -115,7 +115,8 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(19207, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
 

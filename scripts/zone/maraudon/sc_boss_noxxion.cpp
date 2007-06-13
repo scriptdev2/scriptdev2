@@ -16,11 +16,8 @@
 
 #include "../../sc_defines.h"
 
-
-#define SPELL_TOXICVOLLEY                21687  
-#define SPELL_UPPERCUT             22916     
-
-    
+#define SPELL_TOXICVOLLEY           21687
+#define SPELL_UPPERCUT              22916
 
 struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 {
@@ -38,11 +35,11 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
     Creature* Summoned;
 
     void EnterEvadeMode()
-    {       
+    {
         ToxicVolley_Timer = 7000;
         Uppercut_Timer = 16000;
         Adds_Timer = 19000;
-        Invisible_Timer = 15000;            //Too much too low?
+        Invisible_Timer = 15000;                            //Too much too low?
         InCombat = false;
         Invisible = false;
 
@@ -87,24 +84,24 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 
     void SummonAdds(Unit* victim)
     {
-         Rand = rand()%8;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%8;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%8;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%8;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(13456, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
-
 
 
     void UpdateAI(const uint32 diff)

@@ -18,12 +18,10 @@
 
 // **** This script is still under Developement ****
 
-
-
-#define SPELL_ENCASINGWEBS    4962
-#define SPELL_PIERCEARMOR    6016
-#define SPELL_VIRULENTPOISON    16427
-//#define SPELL_RAISEUNDEADSCARAB    17235
+#define SPELL_ENCASINGWEBS          4962
+#define SPELL_PIERCEARMOR           6016
+#define SPELL_VIRULENTPOISON        16427
+//#define SPELL_RAISEUNDEADSCARAB     17235
 
 struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
 {
@@ -102,7 +100,8 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(10876, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)

@@ -16,16 +16,15 @@
 
 #include "../../sc_defines.h"
 
-#define SAY_0   "You'll never leave this place... alive."
-#define SAY_1   "Come, spirits, attend your master."
-#define SAY_SLAY "Too...easy!"
-#define SOUND_AGGRO     5825
-#define SOUND_SLAY      5826
-#define SOUND_SUMMON    5829
+#define SAY_0             "You'll never leave this place... alive."
+#define SAY_1             "Come, spirits, attend your master."
+#define SAY_SLAY          "Too...easy!"
+#define SOUND_AGGRO       5825
+#define SOUND_SLAY        5826
+#define SOUND_SUMMON      5829
 
-
-#define SPELL_AMNENNARSWRATH    13009
-#define SPELL_FROSTBOLT     10179
+#define SPELL_AMNENNARSWRATH        13009
+#define SPELL_FROSTBOLT             10179
 
 struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 {
@@ -112,7 +111,8 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
         }
         Rand = 0;
         Summoned = DoSpawnCreature(8585, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        if(Summoned)
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
 
