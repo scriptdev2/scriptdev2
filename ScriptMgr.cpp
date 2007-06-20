@@ -200,7 +200,7 @@ extern void AddSC_boss_maiden_of_virtue();
 
 //Loch Modan
 //Lower Blackrock Spire
-//Maradon
+//Maraudon
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_lord_vyletongue();
 extern void AddSC_boss_noxxion();
@@ -552,7 +552,7 @@ void ScriptsInit()
 
     //Loch Modan
     //Lower Blackrock Spire
-    //Maradon
+    //Maraudon
     AddSC_boss_ptheradras();
     AddSC_boss_tinkerergizlock();
     AddSC_boss_landslide();
@@ -1270,7 +1270,7 @@ void FillSpellSummary()
         if (!TempSpell)
             continue;
 
-        for (int j=0; j<4; j++)
+        for (int j=0; j<3; j++)
         {
             //Spell targets self
             if ( TempSpell->EffectImplicitTargetA[j] == TARGET_SELF )
