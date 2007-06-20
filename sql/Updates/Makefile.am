@@ -27,4 +27,5 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 pkgdata_DATA = \
 	09_BraveWindfeather.sql \
 	11_SilvaFilnaveth.sql \
-	27_Vaelastraz.sql
+	27_Vaelastraz.sql \
+	r56.sql
