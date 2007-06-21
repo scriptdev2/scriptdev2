@@ -115,6 +115,7 @@ scripts/zone/blackwing_lair/sc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/sc_boss_kruul.cpp \
 scripts/zone/blasted_lands/sc_teremus_the_devourer.cpp \
 scripts/zone/burning_steppes/sc_lothos_riftwaker.cpp \
+scripts/zone/dun_morogh/sc_npc_narm_faulk.cpp \
 scripts/zone/eastern_plaguelands/sc_mob_q5211.cpp \
 scripts/zone/eastern_plaguelands/sc_npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/sc_henze_faulk.cpp \
@@ -203,6 +204,8 @@ scripts/zone/scholomance/sc_boss_lorekeeper_polkelt.cpp \
 scripts/zone/scholomance/sc_boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/sc_boss_the_ravenian.cpp \
 scripts/zone/scholomance/sc_boss_vectus.cpp \
+scripts/zone/silithus/sc_npc_q8304.cpp \
+scripts/zone/silithus/sc_npc_q8507_q8731.cpp \
 scripts/zone/stratholme/sc_boss_archivist_galford.cpp \
 scripts/zone/stratholme/sc_boss_baron_rivendare.cpp \
 scripts/zone/stratholme/sc_boss_baroness_anastari.cpp \

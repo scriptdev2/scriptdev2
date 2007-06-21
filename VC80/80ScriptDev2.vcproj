@@ -530,6 +530,10 @@
 				<Filter
 					Name="Dun Morogh"
 					>
+					<File
+						RelativePath="..\scripts\zone\dun_morogh\sc_npc_narm_faulk.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Durotar"
@@ -1334,6 +1338,14 @@
 				<Filter
 					Name="Silithus"
 					>
+					<File
+						RelativePath="..\scripts\zone\silithus\sc_npc_q8304.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\silithus\sc_npc_q8507_q8731.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Silverpine Forest"

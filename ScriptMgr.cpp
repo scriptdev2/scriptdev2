@@ -168,6 +168,8 @@ extern void AddSC_lothos_riftwaker();
 //Desolace
 //Dire Maul
 //Dun Morogh
+extern void AddSC_npc_narm_faulk();
+
 //Durotar
 //Duskwood
 //Duskwallow marsh
@@ -277,6 +279,9 @@ extern void AddSC_boss_vectus();
 //Searing gorge
 //Shadowfang keep
 //Silithus
+extern void AddSC_npc_q8304();
+extern void AddSC_npc_q8507_q8731();
+
 //Silverpine forest
 //Stockade
 //Stonetalon mountains
@@ -520,6 +525,8 @@ void ScriptsInit()
     //Desolace
     //Dire Maul
     //Dun Morogh
+    AddSC_npc_narm_faulk();
+
     //Durotar
     //Duskwood
     //Duskwallow marsh
@@ -629,6 +636,9 @@ void ScriptsInit()
     //Searing gorge
     //Shadowfang keep
     //Silithus
+    AddSC_npc_q8304();
+    AddSC_npc_q8507_q8731();
+
     //Silverpine forest
     //Stockade
     //Stonetalon mountains
