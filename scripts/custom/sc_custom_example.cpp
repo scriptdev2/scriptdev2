@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                if (m_creature->IsWithinDistInMap(who, ATTACK_DIST))
+                if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                     DoStartMeleeAttack(who);
                 else DoStartRangedAttack(who);
 
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 
 
             //If we are within range melee the target
-            if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Check if our attack is ready (swing timer)
                 if( m_creature->isAttackReady() )

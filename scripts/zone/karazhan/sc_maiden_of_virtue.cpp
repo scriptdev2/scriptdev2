@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             }else Divinewrath_Timer -= diff;
 
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)

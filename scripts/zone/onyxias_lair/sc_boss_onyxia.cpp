@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             }
 
             //If we are within range melee the target and not in phase 2
-            if( phase!=2 && m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( phase!=2 && m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 if( m_creature->isAttackReady() )
                 {

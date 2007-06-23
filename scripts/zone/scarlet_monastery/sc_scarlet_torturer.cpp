@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
             }else Immolate_Timer -= diff;
 
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)

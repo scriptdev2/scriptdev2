@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -323,18 +323,6 @@
 			<Filter
 				Name="servers"
 				>
-				<File
-					RelativePath="..\scripts\servers\sc_battlemaster.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\servers\sc_guildmaster.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\servers\sc_travelmaster.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="custom"
@@ -1524,6 +1512,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\karazhan\sc_netherspite.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\sc_netherspite_infernal.cpp"
 						>
 					</File>
 					<File

@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            if (m_creature->IsWithinDistInMap(who, ATTACK_DIST))
+            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
 				DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
 			
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 
 
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)

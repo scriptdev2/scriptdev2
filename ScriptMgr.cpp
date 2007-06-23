@@ -82,9 +82,6 @@ extern void AddSC_item_test();
 // -- NPC --
 
 // -- Servers --
-extern void AddSC_battlemaster();
-extern void AddSC_guildmaster();
-extern void AddSC_travelmaster();
 
 //--------------------
 //------ ZONE --------
@@ -199,6 +196,8 @@ extern void AddSC_boss_doomlordkazzak();
 //Hinterlands
 //Karazhan
 extern void AddSC_boss_maiden_of_virtue();
+extern void AddSC_boss_malchezaar();
+extern void AddSC_netherspite_infernal();
 
 //Loch Modan
 //Lower Blackrock Spire
@@ -440,9 +439,6 @@ void ScriptsInit()
     // -- NPC --
 
     // -- Servers --
-    AddSC_battlemaster();
-    AddSC_guildmaster();
-    AddSC_travelmaster();
 
     //--------------------
     //------ ZONE --------
@@ -556,6 +552,8 @@ void ScriptsInit()
     //Hinterlands
     //Karazhan
     AddSC_boss_maiden_of_virtue();
+    AddSC_boss_malchezaar();
+    AddSC_netherspite_infernal();
 
     //Loch Modan
     //Lower Blackrock Spire
@@ -971,7 +969,7 @@ void ScriptedAI::UpdateAI(const uint32 diff)
         }
             
         //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             if( m_creature->isAttackReady() )
             {

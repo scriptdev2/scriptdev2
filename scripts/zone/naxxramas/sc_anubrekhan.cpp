@@ -118,7 +118,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         if (!who)
             return false;
 
-        return m_creature->IsWithinDistInMap(who, 100.0f) && who->isVisibleFor(m_creature,true);
+        return m_creature->IsWithinDistInMap(who, 100.0f) && who->isVisibleForOrDetect(m_creature,true);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -241,7 +241,7 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             }else Summon_Timer -= diff;
 
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)

@@ -62,9 +62,6 @@ scripts/honor/sc_honor_vendor.cpp \
 scripts/item/sc_item_test.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
-scripts/servers/sc_battlemaster.cpp \
-scripts/servers/sc_guildmaster.cpp \
-scripts/servers/sc_travelmaster.cpp \
 scripts/zone/azshara/sc_boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/sc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/sc_injured_draenei.cpp \

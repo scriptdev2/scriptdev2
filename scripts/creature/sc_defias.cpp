@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                if (!m_creature->IsWithinDistInMap(who, ATTACK_DIST))
+                if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 {
                     DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
                     IsSelfRooted = true;
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
             }
             
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DIST))
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
                 if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
@@ -190,9 +190,9 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                     if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && rand() % 3 == 0)
                         info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
-                    //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DIST)
+                    //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)
                     if (info) Healing = true;
-                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, ATTACK_DIST, 0, SELECT_EFFECT_DONTCARE);
+                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, ATTACK_DISTANCE, 0, SELECT_EFFECT_DONTCARE);
                
                     //Found a spell, check if we arn't on cooldown
                     if (info && !GlobalCooldown)
