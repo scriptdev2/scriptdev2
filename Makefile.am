@@ -125,6 +125,7 @@ scripts/zone/karazhan/sc_maiden_of_virtue.cpp \
 scripts/zone/karazhan/sc_midnight.cpp \
 scripts/zone/karazhan/sc_moroes.cpp \
 scripts/zone/karazhan/sc_netherspite.cpp \
+scripts/zone/karazhan/sc_netherspite_infernal.cpp \
 scripts/zone/karazhan/sc_nightbane.cpp \
 scripts/zone/karazhan/sc_prince_malchezaar.cpp \
 scripts/zone/karazhan/sc_shade_of_aran.cpp \
