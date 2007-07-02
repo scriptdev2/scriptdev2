@@ -1535,6 +1535,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Stormwind City"
+					>
+					<File
+						RelativePath="..\scripts\zone\stormwind\sc_npc_bartleby.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

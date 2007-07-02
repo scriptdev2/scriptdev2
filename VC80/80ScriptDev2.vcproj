@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -1596,6 +1596,14 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_spire\sc_quartermaster_zigris.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Stormwind City"
+					>
+					<File
+						RelativePath="..\scripts\zone\stormwind\sc_npc_bartleby.cpp"
 						>
 					</File>
 				</Filter>

@@ -29,4 +29,5 @@ pkgdata_DATA = \
 	11_SilvaFilnaveth.sql \
 	27_Vaelastraz.sql \
 	r56.sql \
-	r59.sql
+	r59.sql \
+	r63.sql

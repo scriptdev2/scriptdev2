@@ -127,8 +127,11 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at any heal cast/item used (call non implemented in mangos)
     void HealBy(Unit *healer, uint32 amount_healed) {}
 
-    //Called at any Damage from any attacker
-    void DamageInflict(Unit *healer, uint32 amount_healed) {}
+    // Called at any Damage to any victim (before damage apply)
+    void DamageDeal(Unit *done_to, uint32 &damage) {}
+
+    // Called at any Damage from any attacker (before damage apply)
+    void DamageTaken(Unit *done_by, uint32 &damage) {}
 
     //Is unit visible for MoveInLineOfSight
     bool IsVisible(Unit *who) const

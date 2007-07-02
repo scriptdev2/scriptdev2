@@ -284,6 +284,9 @@ extern void AddSC_npc_q8507_q8731();
 //Silverpine forest
 //Stockade
 //Stonetalon mountains
+//Stormwind City
+extern void AddSC_npc_bartleby();
+
 //Stratholme
 extern void AddSC_boss_fras_siabi();
 extern void AddSC_boss_hearthsinger_forresten();
@@ -640,6 +643,9 @@ void ScriptsInit()
     //Silverpine forest
     //Stockade
     //Stonetalon mountains
+    //Stormwind City
+    AddSC_npc_bartleby();
+
     //Stratholme
     AddSC_boss_fras_siabi();
     AddSC_boss_hearthsinger_forresten();

@@ -469,7 +469,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4005);
 
 /* STORMWIND CITY */
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_bartleby' WHERE `entry` IN (6090);
 
 /* STRANGLETHORN VALE */
 /* Bloodscalp Shaman, Bloodsail Elder Magus, Bloodsail Mage, Bloodsail Warlock, Bloodscalp Axe Thrower, Skullsplitter Axe Thrower, Bloodscalp Mystic, Skullsplitter Mystic */

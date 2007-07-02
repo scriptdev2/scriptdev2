@@ -204,6 +204,7 @@ scripts/zone/scholomance/sc_boss_the_ravenian.cpp \
 scripts/zone/scholomance/sc_boss_vectus.cpp \
 scripts/zone/silithus/sc_npc_q8304.cpp \
 scripts/zone/silithus/sc_npc_q8507_q8731.cpp \
+scripts/zone/stormwind/sc_npc_bartleby.cpp \
 scripts/zone/stratholme/sc_boss_archivist_galford.cpp \
 scripts/zone/stratholme/sc_boss_baron_rivendare.cpp \
 scripts/zone/stratholme/sc_boss_baroness_anastari.cpp \
