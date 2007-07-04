@@ -115,6 +115,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     ScriptedAI(Creature* creature) : m_creature(creature) {}
     ~ScriptedAI() {}
 
+    //*************
+    //CreatureAI Functions to be Scripted
+    //*************
+
     //Called if IsVisible(Unit *who) is true at each *who move
     void MoveInLineOfSight(Unit *) {}
 
@@ -145,10 +149,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at World update tick
     void UpdateAI(const uint32);
 
+    //Called at creature death
     void JustDied(Unit*){}
-
+    
+    //Called at creature killing another unit
     void KilledUnit(Unit*){}
 
+    //Pointer to creature we are manipulating
     Creature* m_creature;
 
     //Check condition for attack stop

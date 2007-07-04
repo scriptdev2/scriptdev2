@@ -30,4 +30,5 @@ pkgdata_DATA = \
 	27_Vaelastraz.sql \
 	r56.sql \
 	r59.sql \
-	r63.sql
+	r63.sql \
+	r65.sql

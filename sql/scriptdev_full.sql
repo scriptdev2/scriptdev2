@@ -274,7 +274,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6206, 6208, 6209, 6215, 6219, 6229, 6228, 6235, 7361, 6407, 6220, 6218, 7603, 6223, 6222, 6234, 6233, 6226, 6227, 6225, 6230, 7079);
 
 /* GRUUL'S LAIR */
-
+/* Gruul the Dragonkiller */
+UPDATE creature_template SET ScriptName="boss_gruul" WHERE entry=19044;
 
 
 /*  */
@@ -443,6 +444,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 
 /* SEARING GORGE */
+/* Lothos Riftwalker */
+UPDATE `creature_template` SET `npcflag`='3', `ScriptName`='npc_lothos_riftwalker' WHERE `entry`='14387';
 /* Glassweb Spider, Searing Lava Spider, Greater Lava Spider */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5856, 5857, 5858);
 

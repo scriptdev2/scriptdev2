@@ -268,7 +268,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     Spawned = m_creature->SummonCreature(CreatureID,469,ADD_X1,ADD_Y1,ADD_Z1,5.000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (target && Spawned)
+                    {
                         Spawned->AI()->AttackStart(target);
+                        Spawned->setFaction(103);
+                    }
                     
                     //1 in 3 chance it will be a chromatic
                     if (rand()%3 == 0)
@@ -282,7 +285,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     Spawned = m_creature->SummonCreature(CreatureID,469,ADD_X2,ADD_Y2,ADD_Z2,5.000,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (target && Spawned)
+                    {
                         Spawned->AI()->AttackStart(target);
+                        Spawned->setFaction(103);
+                    }
 
                     //Begin phase 2 by spawning Nefarian and what not
                     if (SpawnedAdds >= 42)
@@ -309,7 +315,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                         target = NULL;
                         target = SelectUnit(SELECT_TARGET_RANDOM,0);
                         if (target && Nefarian)
+                        {
                             Nefarian->AI()->AttackStart(target);
+                            Nefarian->setFaction(103);
+                        }
                         else DoYell("UNABLE TO SPAWN NEF PROPERLY",LANG_UNIVERSAL,NULL);
                     }
 

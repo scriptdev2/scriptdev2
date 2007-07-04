@@ -18,17 +18,15 @@
 #include "../../sc_defines.h"
 #include <cmath>
 
+#define HEAL1        "The last thing I remember is the ship falling and us getting into the pods. I'll go see how I can help. Thank you!"
+#define HEAL2        "$C, Where am I? Who are you? Oh no! What happened to the ship?."
+#define HEAL3        "$C You saved me! I owe you a debt that I can never repay. I'll go see if I can help the others."
+#define HEAL4        "Ugh... what is this place? Is that all that's left of the ship over there?"
 
-
-#define HEAL1		"Das letzte woran ich mich erinnern kann ist, dass das Schiff abstürzte und wir uns in die Kapseln begaben. Ich werde sehen, wie ich helfen kann. Vielen Dank!"
-#define HEAL2		"$C, Ihr habt mich gerettet! Ich weiß nicht, wie ich Euch jemals genung dafür danken kann. Ich werde sehen, ob ich den anderen helfen kann."
-#define HEAL3		"Dem Licht sei dank! Ich wäre hier draußen umgekommen, wärt Ihr nicht gewesen, $C! Ich muss das Schiff erreichen."
-#define HEAL4		"Aaagggh... Wo bin ich? Ist das alles, was vom Schiff übrig ist?"
-
-#define HELP1		"Oh, diese Schmerzen..."
-#define HELP2		"Alles tut so weh. Lasst es bitte aufhören, bitte!"
-#define HELP3		"Alles tut so weh. Lasst es bitte aufhören, bitte!"
-#define HELP4		"Aaagggh... Ich bin verletzt. Könnt ihr mir helfen?"
+#define HELP1        "Oh, the pain..."
+#define HELP2        "Everything hurts, Please make it stop..."
+#define HELP3        "Ughhh... I hurt. Can you help me?"
+#define HELP4        "I don't know if I can make it, please help me..."
 
 struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
 {

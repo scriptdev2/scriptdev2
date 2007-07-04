@@ -60,6 +60,7 @@ scripts/guard/sc_guard_tirisfal.cpp \
 scripts/guard/sc_guard_undercity.cpp \
 scripts/honor/sc_honor_vendor.cpp \
 scripts/item/sc_item_test.cpp \
+scripts/npc/not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/azshara/sc_boss_azuregos.cpp \
@@ -130,6 +131,8 @@ scripts/zone/karazhan/sc_nightbane.cpp \
 scripts/zone/karazhan/sc_prince_malchezaar.cpp \
 scripts/zone/karazhan/sc_shade_of_aran.cpp \
 scripts/zone/karazhan/sc_terestian_illhoof.cpp \
+scripts/zone/magtheridons_lair/sc_boss_magtheridon.cpp \
+scripts/zone/magtheridons_lair/sc_mob_hellfire_channeler.cpp \
 scripts/zone/maraudon/sc_boss_landslide.cpp \
 scripts/zone/maraudon/sc_boss_lord_vyletongue.cpp \
 scripts/zone/maraudon/sc_boss_noxxion.cpp \
@@ -202,6 +205,7 @@ scripts/zone/scholomance/sc_boss_lorekeeper_polkelt.cpp \
 scripts/zone/scholomance/sc_boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/sc_boss_the_ravenian.cpp \
 scripts/zone/scholomance/sc_boss_vectus.cpp \
+scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
 scripts/zone/silithus/sc_npc_q8304.cpp \
 scripts/zone/silithus/sc_npc_q8507_q8731.cpp \
 scripts/zone/stormwind/sc_npc_bartleby.cpp \

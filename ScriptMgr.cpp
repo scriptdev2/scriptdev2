@@ -80,6 +80,7 @@ extern void AddSC_Honor_Vendor();
 extern void AddSC_item_test();
 
 // -- NPC --
+extern void AddSC_not_selectable();
 
 // -- Servers --
 
@@ -201,6 +202,7 @@ extern void AddSC_netherspite_infernal();
 
 //Loch Modan
 //Lower Blackrock Spire
+//Magtheridon's Lair
 //Maraudon
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_lord_vyletongue();
@@ -238,6 +240,10 @@ extern void AddSC_boss_anubrekhan();
 extern void AddSC_boss_maexxna();
 extern void AddSC_boss_patchwerk();
 extern void AddSC_boss_razuvious();
+extern void AddSC_boss_highlord_mograine();
+extern void AddSC_boss_lady_blaumeux();
+extern void AddSC_boss_sir_zeliek();
+extern void AddSC_boss_thane_korthazz();
 extern void AddSC_boss_kelthuzad();
 
 //Netherstorm
@@ -276,6 +282,8 @@ extern void AddSC_boss_theravenian();
 extern void AddSC_boss_vectus();
 
 //Searing gorge
+extern void AddSC_npc_lothos_riftwalker();
+
 //Shadowfang keep
 //Silithus
 extern void AddSC_npc_q8304();
@@ -440,6 +448,7 @@ void ScriptsInit()
     AddSC_item_test();
 
     // -- NPC --
+    AddSC_not_selectable();
 
     // -- Servers --
 
@@ -560,6 +569,7 @@ void ScriptsInit()
 
     //Loch Modan
     //Lower Blackrock Spire
+    //Magtheridon's Lair
     //Maraudon
     AddSC_boss_ptheradras();
     AddSC_boss_tinkerergizlock();
@@ -597,6 +607,10 @@ void ScriptsInit()
     AddSC_boss_maexxna();
     AddSC_boss_patchwerk();
     AddSC_boss_razuvious();
+    AddSC_boss_highlord_mograine();
+    AddSC_boss_lady_blaumeux();
+    AddSC_boss_sir_zeliek();
+    AddSC_boss_thane_korthazz();
     AddSC_boss_kelthuzad();
 
     //Netherstorm
@@ -635,6 +649,7 @@ void ScriptsInit()
     AddSC_boss_vectus();
 
     //Searing gorge
+    AddSC_npc_lothos_riftwalker();
     //Shadowfang keep
     //Silithus
     AddSC_npc_q8304();

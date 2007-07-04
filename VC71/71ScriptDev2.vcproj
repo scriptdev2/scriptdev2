@@ -255,6 +255,10 @@
 			<Filter
 				Name="npc"
 				>
+				<File
+					RelativePath="..\scripts\npc\not_selectable.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="servers"
@@ -690,6 +694,10 @@
 				<Filter
 					Name="Searing Gorge"
 					>
+					<File
+						RelativePath="..\scripts\zone\searing_gorge\npc_lothos_riftwalker.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Elwynn Forest"
@@ -1540,6 +1548,18 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\stormwind\sc_npc_bartleby.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Magtheridon&apos;s Lair"
+					>
+					<File
+						RelativePath="..\scripts\zone\magtheridons_lair\sc_boss_magtheridon.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\magtheridons_lair\sc_mob_hellfire_channeler.cpp"
 						>
 					</File>
 				</Filter>
