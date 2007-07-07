@@ -1132,7 +1132,7 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
 
     ThreatList::iterator  i = m_threatlist.begin();
 
-    if (position > m_threatlist.size() || !m_threatlist.size())
+    if (position >= m_threatlist.size() || !m_threatlist.size())
         return NULL;
 
     switch (target)
