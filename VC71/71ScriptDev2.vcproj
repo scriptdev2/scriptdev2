@@ -1378,6 +1378,22 @@
 				<Filter
 					Name="Aunchindoun"
 					>
+					<Filter
+						Name="Auchenai Crypts"
+						>
+					</Filter>
+					<Filter
+						Name="Mana Tombs"
+						>
+					</Filter>
+					<Filter
+						Name="Sekketh Halls"
+						>
+					</Filter>
+					<Filter
+						Name="Shadow Labyrinth"
+						>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Azuremyst Isle"
@@ -1422,6 +1438,30 @@
 				<Filter
 					Name="Hellfire Citadel"
 					>
+					<Filter
+						Name="Blood Furnace"
+						>
+					</Filter>
+					<Filter
+						Name="Magtheridon&apos;s lair"
+						>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\boss_magtheridon.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\mob_hellfire_channeler.cpp"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="The Ramparts"
+						>
+					</Filter>
+					<Filter
+						Name="Shattered Halls"
+						>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Hellfire Peninsula"
@@ -1490,6 +1530,22 @@
 				<Filter
 					Name="Tempest Keep"
 					>
+					<Filter
+						Name="Arcatraz"
+						>
+					</Filter>
+					<Filter
+						Name="Botanica"
+						>
+					</Filter>
+					<Filter
+						Name="The Eye"
+						>
+					</Filter>
+					<Filter
+						Name="The Mechanar"
+						>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Terokkar Forest"
@@ -1548,16 +1604,40 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Magtheridon&apos;s Lair"
+					Name="Coilfang Resevoir"
 					>
-					<File
-						RelativePath="..\scripts\zone\magtheridons_lair\boss_magtheridon.cpp"
+					<Filter
+						Name="Serpent Shrine Cavern"
 						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\magtheridons_lair\mob_hellfire_channeler.cpp"
+					</Filter>
+					<Filter
+						Name="Slave Pens"
 						>
-					</File>
+					</Filter>
+					<Filter
+						Name="Steam Vault"
+						>
+					</Filter>
+					<Filter
+						Name="Underbog"
+						>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Caverns of Time"
+					>
+					<Filter
+						Name="The Dark Portal"
+						>
+					</Filter>
+					<Filter
+						Name="Battle for Mt. Hyjal"
+						>
+					</Filter>
+					<Filter
+						Name="Old Hillsbrad"
+						>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

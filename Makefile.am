@@ -119,6 +119,8 @@ scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/elwynn_forest/npc_marshal_mcbride.cpp \
 scripts/zone/eversong_woods/mob_q8346.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
+scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
+scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
@@ -130,8 +132,6 @@ scripts/zone/karazhan/boss_prince_malchezaar.cpp \
 scripts/zone/karazhan/boss_shade_of_aran.cpp \
 scripts/zone/karazhan/boss_terestian_illhoof.cpp \
 scripts/zone/karazhan/mob_netherspite_infernal.cpp \
-scripts/zone/magtheridons_lair/boss_magtheridon.cpp \
-scripts/zone/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_lord_vyletongue.cpp \
 scripts/zone/maraudon/boss_noxxion.cpp \
