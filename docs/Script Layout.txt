@@ -6,7 +6,7 @@ Area - Contains scripts used solely by area triggers
 
 Boss - Boss scripts for bosses that are not zone specific
 
-Creature - Generic Creature scripts for creatures that are not zone specific
+Mob - Generic Creature scripts for creatures that are not zone specific
 
 Custom - Intentionally empty folder from SVN. If you make a custom script please put it here.
 
@@ -26,5 +26,6 @@ Zone - ALL zone specific scripts should be written within these folders. This in
 
 --- Naming Conventions ---
 
-Please keep file names to "sc_objectname.cpp" where objectname is replaced by the name of the object, creature, item, or area that this script will be used by.
+Please keep file names to "type_objectname.cpp" where type is replaced by the type of object and objectname is replaced by the name of the object, creature, item, or area that this script will be used by.
+
 AddSC functions should follow "void AddSC_creaturename(void);" format. Do not append AI or anything else.

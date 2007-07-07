@@ -16,7 +16,7 @@
 
 
 #include "../sc_defines.h"
-#include "sc_guard_ai.h"
+#include "guard_ai.h"
 
 struct MANGOS_DLL_DECL guard_contested : public guardAI
 {

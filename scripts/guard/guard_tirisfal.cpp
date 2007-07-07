@@ -15,7 +15,7 @@
 */
 
 #include "../sc_defines.h"
-#include "sc_guard_ai.h"
+#include "guard_ai.h"
 
 bool GossipHello_guard_tirisfal(Player *player, Creature *_Creature)
 {

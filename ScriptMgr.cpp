@@ -158,8 +158,6 @@ extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
 
 //Burning steppes
-extern void AddSC_lothos_riftwaker();
-
 //Darkshore
 //Deadmines
 //Deadwind pass
@@ -525,8 +523,6 @@ void ScriptsInit()
     AddSC_boss_teremusthedevourer();
 
     //Burning steppes
-    AddSC_lothos_riftwaker();
-
     //Darkshore
     //Deadmines
     //Deadwind pass

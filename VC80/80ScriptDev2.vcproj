@@ -196,19 +196,19 @@
 				Name="boss"
 				>
 				<File
-					RelativePath="..\scripts\boss\sc_boss_emeriss.cpp"
+					RelativePath="..\scripts\boss\boss_emeriss.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\boss\sc_boss_lethon.cpp"
+					RelativePath="..\scripts\boss\boss_lethon.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\boss\sc_boss_taerar.cpp"
+					RelativePath="..\scripts\boss\boss_taerar.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\boss\sc_boss_ysondre.cpp"
+					RelativePath="..\scripts\boss\boss_ysondre.cpp"
 					>
 				</File>
 			</Filter>
@@ -216,27 +216,27 @@
 				Name="creature"
 				>
 				<File
-					RelativePath="..\scripts\creature\sc_defias.cpp"
+					RelativePath="..\scripts\creature\mob_defias.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_generic_creature.cpp"
+					RelativePath="..\scripts\creature\mob_generic_creature.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_kobold.cpp"
+					RelativePath="..\scripts\creature\mob_kobold.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_lumberjack.cpp"
+					RelativePath="..\scripts\creature\mob_shade_of_taerar.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_miner.cpp"
+					RelativePath="..\scripts\creature\npc_lumberjack.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\sc_shade_of_taerar.cpp"
+					RelativePath="..\scripts\creature\npc_miner.cpp"
 					>
 				</File>
 			</Filter>
@@ -244,67 +244,67 @@
 				Name="guard"
 				>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_ai.h"
+					RelativePath="..\scripts\guard\guard_ai.h"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_bluffwatcher.cpp"
+					RelativePath="..\scripts\guard\guard_bluffwatcher.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_contested.cpp"
+					RelativePath="..\scripts\guard\guard_contested.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_darnassus.cpp"
+					RelativePath="..\scripts\guard\guard_darnassus.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_dunmorogh.cpp"
+					RelativePath="..\scripts\guard\guard_dunmorogh.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_durotar.cpp"
+					RelativePath="..\scripts\guard\guard_durotar.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_elwynnforest.cpp"
+					RelativePath="..\scripts\guard\guard_elwynnforest.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_exodar.cpp"
+					RelativePath="..\scripts\guard\guard_exodar.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_ironforge.cpp"
+					RelativePath="..\scripts\guard\guard_ironforge.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_mulgore.cpp"
+					RelativePath="..\scripts\guard\guard_mulgore.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_orgrimmar.cpp"
+					RelativePath="..\scripts\guard\guard_orgrimmar.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_silvermoon.cpp"
+					RelativePath="..\scripts\guard\guard_silvermoon.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_stormwind.cpp"
+					RelativePath="..\scripts\guard\guard_stormwind.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_teldrassil.cpp"
+					RelativePath="..\scripts\guard\guard_teldrassil.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_tirisfal.cpp"
+					RelativePath="..\scripts\guard\guard_tirisfal.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\sc_guard_undercity.cpp"
+					RelativePath="..\scripts\guard\guard_undercity.cpp"
 					>
 				</File>
 			</Filter>
@@ -312,7 +312,7 @@
 				Name="honor"
 				>
 				<File
-					RelativePath="..\scripts\honor\sc_honor_vendor.cpp"
+					RelativePath="..\scripts\honor\honor_vendor.cpp"
 					>
 				</File>
 			</Filter>
@@ -320,7 +320,7 @@
 				Name="npc"
 				>
 				<File
-					RelativePath="..\scripts\npc\not_selectable.cpp"
+					RelativePath="..\scripts\npc\npc_not_selectable.cpp"
 					>
 				</File>
 			</Filter>
@@ -332,11 +332,11 @@
 				Name="custom"
 				>
 				<File
-					RelativePath="..\scripts\custom\sc_custom_example.cpp"
+					RelativePath="..\scripts\custom\custom_example.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\custom\sc_test.cpp"
+					RelativePath="..\scripts\custom\test.cpp"
 					>
 				</File>
 			</Filter>
@@ -348,7 +348,7 @@
 				Name="go"
 				>
 				<File
-					RelativePath="..\scripts\go\sc_go_teleporter.cpp"
+					RelativePath="..\scripts\go\go_teleporter.cpp"
 					>
 				</File>
 			</Filter>
@@ -356,7 +356,7 @@
 				Name="item"
 				>
 				<File
-					RelativePath="..\scripts\item\sc_item_test.cpp"
+					RelativePath="..\scripts\item\item_test.cpp"
 					>
 				</File>
 			</Filter>
@@ -375,7 +375,7 @@
 					Name="Azshara"
 					>
 					<File
-						RelativePath="..\scripts\zone\azshara\sc_boss_azuregos.cpp"
+						RelativePath="..\scripts\zone\azshara\boss_azuregos.cpp"
 						>
 					</File>
 				</Filter>
@@ -399,107 +399,107 @@
 					Name="Blackrock Depths"
 					>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_ambassador_flamelash.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_ambassador_flamelash.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_angerrel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_angerrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_anubshiah.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_anubshiah.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_baelgar.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_baelgar.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_doomrel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_doomrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_doperel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_doperel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_emperor_dagran_thaurissan.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_emperor_dagran_thaurissan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_fineous_darkvire.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_fineous_darkvire.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_general_angerforge.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_general_angerforge.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_gloomrel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_gloomrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_golem_lord_argelmach.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_golem_lord_argelmach.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_gorosh_the_dervish.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_gorosh_the_dervish.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_grizzle.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_grizzle.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_haterel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_haterel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_high_interrogator_gerstahn.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_high_interrogator_gerstahn.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_lord_incendius.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_incendius.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_lord_roccor.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_roccor.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_magmus.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_magmus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_moira_bronzebeard.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_moira_bronzebeard.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_pyromancer_loregrain.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_pyromancer_loregrain.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_seethrel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_seethrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_verek.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_verek.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_vilerel.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_vilerel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_boss_warder_stilgiss.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\boss_warder_stilgiss.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_overmaster_pyron.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\mob_overmaster_pyron.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\sc_phalanx.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\mob_phalanx.cpp"
 						>
 					</File>
 				</Filter>
@@ -523,7 +523,7 @@
 					Name="Dun Morogh"
 					>
 					<File
-						RelativePath="..\scripts\zone\dun_morogh\sc_npc_narm_faulk.cpp"
+						RelativePath="..\scripts\zone\dun_morogh\npc_narm_faulk.cpp"
 						>
 					</File>
 				</Filter>
@@ -543,39 +543,39 @@
 					Name="Blackwing Lair"
 					>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_broodlord_lashlayer.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_broodlord_lashlayer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_chromaggus.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_chromaggus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_ebonroc.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_ebonroc.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_firemaw.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_firemaw.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_flamegor.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_flamegor.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_nefarian.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_nefarian.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_razorgore.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_razorgore.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_vaelastrasz.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_vaelastrasz.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\sc_victor_nefarius.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\npc_victor_nefarius.cpp"
 						>
 					</File>
 				</Filter>
@@ -583,17 +583,13 @@
 					Name="Gruul&apos;s Lair"
 					>
 					<File
-						RelativePath="..\scripts\zone\gruuls_lair\sc_boss_gruul.cpp"
+						RelativePath="..\scripts\zone\gruuls_lair\boss_gruul.cpp"
 						>
 					</File>
 				</Filter>
 				<Filter
 					Name="Burning Steppes"
 					>
-					<File
-						RelativePath="..\scripts\zone\burning_steppes\sc_lothos_riftwaker.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Darkshore"
@@ -603,11 +599,11 @@
 					Name="Eastern Plaguelands"
 					>
 					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\sc_mob_q5211.cpp"
+						RelativePath="..\scripts\zone\eastern_plaguelands\mob_q5211.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\sc_npc_darrowshire_spirit.cpp"
+						RelativePath="..\scripts\zone\eastern_plaguelands\npc_darrowshire_spirit.cpp"
 						>
 					</File>
 				</Filter>
@@ -615,11 +611,11 @@
 					Name="Moonglade"
 					>
 					<File
-						RelativePath="..\scripts\zone\moonglade\sc_bunthen_plainswind.cpp"
+						RelativePath="..\scripts\zone\moonglade\npc_bunthen_plainswind.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\moonglade\sc_silva_filnaveth.cpp"
+						RelativePath="..\scripts\zone\moonglade\npc_silva_filnaveth.cpp"
 						>
 					</File>
 				</Filter>
@@ -635,27 +631,27 @@
 					Name="Ruins of Ahn&apos;Qiraj"
 					>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_ayamiss.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_ayamiss.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_buru.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_buru.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_kurinnaxx.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_kurinnaxx.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_moam.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_moam.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_ossirian.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_ossirian.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\sc_rajaxx.cpp"
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_rajaxx.cpp"
 						>
 					</File>
 				</Filter>
@@ -667,47 +663,47 @@
 					Name="Scarlet Monastery"
 					>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_arcanist_doan.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_arcanist_doan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_azshir_the_sleepless.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_azshir_the_sleepless.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_bloodmage_thalnos.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_bloodmage_thalnos.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_herod.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_herod.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_high_inquisitor_fairbanks.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_high_inquisitor_fairbanks.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_high_inquisitor_whitemane.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_high_inquisitor_whitemane.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_houndmaster_loksey.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_houndmaster_loksey.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_interrogator_vishas.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_interrogator_vishas.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_scarlet_commander_mograine.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_scarlet_commander_mograine.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_boss_scorn.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_scorn.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\sc_scarlet_torturer.cpp"
+						RelativePath="..\scripts\zone\scarlet_monastery\mob_scarlet_torturer.cpp"
 						>
 					</File>
 				</Filter>
@@ -715,43 +711,43 @@
 					Name="Scholomance"
 					>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_doctor_theolen_krastinov.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_doctor_theolen_krastinov.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_illucia_barov.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_illucia_barov.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_instructor_malicia.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_instructor_malicia.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_jandice_barov.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_jandice_barov.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_kormok.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_kormok.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_lord_alexei_barov.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_lord_alexei_barov.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_lorekeeper_polkelt.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_lorekeeper_polkelt.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_ras_frostwhisper.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_ras_frostwhisper.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_the_ravenian.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_the_ravenian.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scholomance\sc_boss_vectus.cpp"
+						RelativePath="..\scripts\zone\scholomance\boss_vectus.cpp"
 						>
 					</File>
 				</Filter>
@@ -767,11 +763,11 @@
 					Name="Elwynn Forest"
 					>
 					<File
-						RelativePath="..\scripts\zone\elwynn_forest\sc_henze_faulk.cpp"
+						RelativePath="..\scripts\zone\elwynn_forest\npc_henze_faulk.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\elwynn_forest\sc_marshal_mcbride.cpp"
+						RelativePath="..\scripts\zone\elwynn_forest\npc_marshal_mcbride.cpp"
 						>
 					</File>
 				</Filter>
@@ -803,39 +799,39 @@
 					Name="Maraudon"
 					>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_landslide.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_landslide.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_lord_vyletongue.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_lord_vyletongue.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_noxxion.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_noxxion.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_princess_theradras.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_princess_theradras.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_rotgrip.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_rotgrip.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_boss_tinkerer_gizlock.cpp"
+						RelativePath="..\scripts\zone\maraudon\boss_tinkerer_gizlock.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_celebras_the_cursed.cpp"
+						RelativePath="..\scripts\zone\maraudon\mob_celebras_the_cursed.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_meshlok_the_harvester.cpp"
+						RelativePath="..\scripts\zone\maraudon\mob_meshlok_the_harvester.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\sc_razorlash.cpp"
+						RelativePath="..\scripts\zone\maraudon\mob_razorlash.cpp"
 						>
 					</File>
 				</Filter>
@@ -843,47 +839,47 @@
 					Name="Molten Core"
 					>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_baron_geddon.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_baron_geddon.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_garr.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_garr.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_gehennas.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_gehennas.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_golemagg.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_golemagg.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_lucifron.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_lucifron.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_magmadar.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_magmadar.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_majordomo_executus.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_majordomo_executus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_ragnaros.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_ragnaros.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_shazzrah.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_shazzrah.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_boss_sulfuron_harbinger.cpp"
+						RelativePath="..\scripts\zone\molten_core\boss_sulfuron_harbinger.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\sc_mob_firelord.cpp"
+						RelativePath="..\scripts\zone\molten_core\mob_firelord.cpp"
 						>
 					</File>
 				</Filter>
@@ -891,7 +887,7 @@
 					Name="Mulgore"
 					>
 					<File
-						RelativePath="..\scripts\zone\mulgore\sc_skorn_whitecloud.cpp"
+						RelativePath="..\scripts\zone\mulgore\npc_skorn_whitecloud.cpp"
 						>
 					</File>
 				</Filter>
@@ -899,83 +895,83 @@
 					Name="Naxxramas"
 					>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_anubrekhan.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_anubrekhan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_faerlina.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_faerlina.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_feugen.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_feugen.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_gluth.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_gluth.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_gothik.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_gothik.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_grobbulus.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_grobbulus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_heigan.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_heigan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_highlord_mograine.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_highlord_mograine.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_kelthuzad.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_kelthuzad.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_lady_blaumeux.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_lady_blaumeux.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_loatheb.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_loatheb.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_maexxna.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_maexxna.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_noth.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_noth.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_patchwerk.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_patchwerk.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_razuvious.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_razuvious.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_sapphiron.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_sapphiron.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_sir_zeliek.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_sir_zeliek.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_stalagg.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_stalagg.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_thaddius.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_thaddius.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\sc_thane_korthazz.cpp"
+						RelativePath="..\scripts\zone\naxxramas\boss_thane_korthazz.cpp"
 						>
 					</File>
 				</Filter>
@@ -983,7 +979,7 @@
 					Name="Onyxia&apos;s Lair"
 					>
 					<File
-						RelativePath="..\scripts\zone\onyxias_lair\sc_boss_onyxia.cpp"
+						RelativePath="..\scripts\zone\onyxias_lair\boss_onyxia.cpp"
 						>
 					</File>
 				</Filter>
@@ -995,7 +991,7 @@
 					Name="Razorfen Downs"
 					>
 					<File
-						RelativePath="..\scripts\zone\razorfen_downs\sc_boss_amnennar_the_coldbringer.cpp"
+						RelativePath="..\scripts\zone\razorfen_downs\boss_amnennar_the_coldbringer.cpp"
 						>
 					</File>
 				</Filter>
@@ -1015,251 +1011,251 @@
 					Name="Stratholme"
 					>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_archivist_galford.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_archivist_galford.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_baron_rivendare.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_baron_rivendare.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_baroness_anastari.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_baroness_anastari.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_black_guard_swordsmith.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_black_guard_swordsmith.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_cannon_master_willey.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_cannon_master_willey.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_crimson_hammersmith.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_crimson_hammersmith.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_dathrohan_balnazzar.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_dathrohan_balnazzar.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_fras_siabi.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_fras_siabi.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_hearthsinger_forresten.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_hearthsinger_forresten.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_magistrate_barthilas.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_magistrate_barthilas.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_maleki_the_pallid.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_maleki_the_pallid.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_malor_the_zealous.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_malor_the_zealous.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_nerubenkan.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_nerubenkan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_postmaster_malown.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_postmaster_malown.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_ramstein_the_gorger.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_ramstein_the_gorger.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_skul.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_skul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_stonespine.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_stonespine.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_the_unforgiven.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_the_unforgiven.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_boss_timmy_the_cruel.cpp"
+						RelativePath="..\scripts\zone\stratholme\boss_timmy_the_cruel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_bile_slime.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_bile_slime.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_bile_spewer.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_bile_spewer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_black_guard_sentry.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_black_guard_sentry.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_broken_cadaver.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_broken_cadaver.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_battle_mage.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_battle_mage.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_conjuror.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_conjuror.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_defender.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_defender.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_gallant.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_gallant.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_guardsman.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_guardsman.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_initiate.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_initiate.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_inquisitor.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_inquisitor.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_monk.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_monk.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_priest.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_priest.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_rifleman.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_rifleman.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crimson_sorcerer.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crimson_sorcerer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crypt_beast.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crypt_beast.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_crypt_crawler.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_crypt_crawler.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_eye_of_naxxramas.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_eye_of_naxxramas.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_fleshflayer_ghoul.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_fleshflayer_ghoul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_freed_soul.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_freed_soul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_ghostly_citizen.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_ghostly_citizen.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_ghoul_ravener.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_ghoul_ravener.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_mangled_cadaver.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_mangled_cadaver.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_mindless_skeleton.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_mindless_skeleton.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_patchwork_horror.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_patchwork_horror.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_plague_ghoul.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_plague_ghoul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_ravaged_cadaver.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_ravaged_cadaver.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_restless_soul.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_restless_soul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_rockwing_gargoyle.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_rockwing_gargoyle.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_rockwing_screecher.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_rockwing_screecher.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_shrieking_banshee.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_shrieking_banshee.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_skeletal_berserker.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_skeletal_berserker.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_skeletal_guardian.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_skeletal_guardian.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_spectral_citizen.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_spectral_citizen.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_spiteful_phantom.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_spiteful_phantom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_acolyte.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_thuzadin_acolyte.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_necromancer.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_thuzadin_necromancer.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_thuzadin_shadowcaster.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_thuzadin_shadowcaster.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_undead_scarab.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_undead_scarab.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_vengeful_phantom.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_vengeful_phantom.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_venom_belcher.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_venom_belcher.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_wailing_banshee.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_wailing_banshee.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\sc_mob_wrath_phantom.cpp"
+						RelativePath="..\scripts\zone\stratholme\mob_wrath_phantom.cpp"
 						>
 					</File>
 				</Filter>
@@ -1279,51 +1275,51 @@
 					Name="Temple of Ahn&apos;Qiraj"
 					>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_cthun.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_cthun.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_fankriss.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_fankriss.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_huhuran.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_huhuran.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_kri.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_kri.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_ouro.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_ouro.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_sartura.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_sartura.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_skeram.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_skeram.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_veklor.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_veklor.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_veknilash.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_veknilash.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_vem.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_vem.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_viscidus.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_viscidus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\sc_yauj.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_yauj.cpp"
 						>
 					</File>
 				</Filter>
@@ -1335,11 +1331,11 @@
 					Name="Silithus"
 					>
 					<File
-						RelativePath="..\scripts\zone\silithus\sc_npc_q8304.cpp"
+						RelativePath="..\scripts\zone\silithus\npc_q8304.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\silithus\sc_npc_q8507_q8731.cpp"
+						RelativePath="..\scripts\zone\silithus\npc_q8507_q8731.cpp"
 						>
 					</File>
 				</Filter>
@@ -1383,55 +1379,55 @@
 					Name="Zul&apos;Gurub"
 					>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_arlokk.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_arlokk.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_gahzranka.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_gahzranka.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_grilek.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_grilek.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_hakkar.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_hakkar.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_hazzarah.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_hazzarah.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_jeklik.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_jeklik.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_jindo.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_jindo.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_mandokir.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_mandokir.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_marli.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_marli.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_renataki.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_renataki.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_thekal.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_thekal.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_venoxis.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_venoxis.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\sc_wushoolay.cpp"
+						RelativePath="..\scripts\zone\zulgurub\boss_wushoolay.cpp"
 						>
 					</File>
 				</Filter>
@@ -1451,11 +1447,11 @@
 					Name="Azuremyst Isle"
 					>
 					<File
-						RelativePath="..\scripts\zone\azuremyst_isle\sc_draenei_survivor.cpp"
+						RelativePath="..\scripts\zone\azuremyst_isle\npc_draenei_survivor.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\azuremyst_isle\sc_injured_draenei.cpp"
+						RelativePath="..\scripts\zone\azuremyst_isle\npc_injured_draenei.cpp"
 						>
 					</File>
 				</Filter>
@@ -1467,7 +1463,7 @@
 					Name="Eversong Woods"
 					>
 					<File
-						RelativePath="..\scripts\zone\eversong_woods\sc_mob_q8346.cpp"
+						RelativePath="..\scripts\zone\eversong_woods\mob_q8346.cpp"
 						>
 					</File>
 				</Filter>
@@ -1479,11 +1475,11 @@
 					Name="Blasted Lands"
 					>
 					<File
-						RelativePath="..\scripts\zone\blasted_lands\sc_boss_kruul.cpp"
+						RelativePath="..\scripts\zone\blasted_lands\boss_kruul.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blasted_lands\sc_teremus_the_devourer.cpp"
+						RelativePath="..\scripts\zone\blasted_lands\mob_teremus_the_devourer.cpp"
 						>
 					</File>
 				</Filter>
@@ -1495,7 +1491,7 @@
 					Name="Hellfire Peninsula"
 					>
 					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\sc_boss_doomlord_kazzak.cpp"
+						RelativePath="..\scripts\zone\hellfire_peninsula\boss_doomlord_kazzak.cpp"
 						>
 					</File>
 				</Filter>
@@ -1503,43 +1499,43 @@
 					Name="Karazhan"
 					>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_curator.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_curator.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_maiden_of_virtue.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_maiden_of_virtue.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_midnight.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_midnight.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_moroes.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_moroes.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_netherspite.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_netherspite.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_netherspite_infernal.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_nightbane.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_nightbane.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_prince_malchezaar.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_prince_malchezaar.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_shade_of_aran.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_shade_of_aran.cpp"
+						RelativePath="..\scripts\zone\karazhan\boss_terestian_illhoof.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\sc_terestian_illhoof.cpp"
+						RelativePath="..\scripts\zone\karazhan\mob_netherspite_infernal.cpp"
 						>
 					</File>
 				</Filter>
@@ -1571,39 +1567,39 @@
 					Name="Blackrock Spire"
 					>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_drakkisath.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_drakkisath.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_halycon.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_halycon.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_highlord_omokk.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_highlord_omokk.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_mother_smolderweb.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_mother_smolderweb.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_overlord_wyrmthalak.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_overlord_wyrmthalak.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_shadow_hunter_voshgajin.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_shadow_hunter_voshgajin.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_the_beast.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_the_beast.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_boss_warmaster_voone.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\boss_warmaster_voone.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\sc_quartermaster_zigris.cpp"
+						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
 						>
 					</File>
 				</Filter>
@@ -1611,7 +1607,7 @@
 					Name="Stormwind City"
 					>
 					<File
-						RelativePath="..\scripts\zone\stormwind\sc_npc_bartleby.cpp"
+						RelativePath="..\scripts\zone\stormwind\npc_bartleby.cpp"
 						>
 					</File>
 				</Filter>
@@ -1619,11 +1615,11 @@
 					Name="Magtheridon&apos;s Lair"
 					>
 					<File
-						RelativePath="..\scripts\zone\magtheridons_lair\sc_boss_magtheridon.cpp"
+						RelativePath="..\scripts\zone\magtheridons_lair\boss_magtheridon.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\magtheridons_lair\sc_mob_hellfire_channeler.cpp"
+						RelativePath="..\scripts\zone\magtheridons_lair\mob_hellfire_channeler.cpp"
 						>
 					</File>
 				</Filter>
