@@ -215,7 +215,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -476,7 +476,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_PHASE2);
                 HasSummonedAxes = false;
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01, 40066);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 40066);
             }
 
             if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && (phase == 2))
@@ -486,7 +486,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_PHASE3);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01, 0);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
             }
 
             if(phase == 1 || phase == 3)

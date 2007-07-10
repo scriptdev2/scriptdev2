@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -133,17 +133,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 else
                      DoCast(m_creature->getVictim(),SPELL_HURTFULSTRIKE); 
 
-                /*Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
-
-                if (target && m_creature->IsWithinDistInMap(target, 30))
-                    DoCast(target,SPELL_HURTFULSTRIKE);
-                else
-                {
-                    // If there's no 2nd target, he casts this spell on the tank
-                    DoCast(m_creature->getVictim(),SPELL_HURTFULSTRIKE);
-                }*/
-
                 HurtfulStrike_Timer= 8000;
             }else HurtfulStrike_Timer -= diff;
 
@@ -178,7 +167,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 switch(GroundSlamPhase)
                 {
                     case 0:
-                    DoCast(m_creature,39258);//Root?
+                    m_creature->m_canMove = false; 
                     IsInGroundSlam= true;
 
                     // **Ground Slam Knockback**
@@ -285,6 +274,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
                         }
                     }
+
+                    //Allow movement
+                    m_creature->m_canMove = true; 
                     
                     // resets everything
                     IsInGroundSlam= false;
