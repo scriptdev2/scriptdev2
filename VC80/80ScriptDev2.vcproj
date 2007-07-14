@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="Windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -371,6 +371,10 @@
 					RelativePath="..\scripts\item\item_test.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\item\purification_mixture.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="zone"
@@ -611,7 +615,7 @@
 					Name="Eastern Plaguelands"
 					>
 					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\mob_q5211.cpp"
+						RelativePath="..\scripts\zone\eastern_plaguelands\mobs_ghoul_flayer.cpp"
 						>
 					</File>
 					<File
@@ -1491,7 +1495,7 @@
 					Name="Eversong Woods"
 					>
 					<File
-						RelativePath="..\scripts\zone\eversong_woods\mob_q8346.cpp"
+						RelativePath="..\scripts\zone\eversong_woods\mobs_mana_tapped.cpp"
 						>
 					</File>
 				</Filter>
@@ -1544,6 +1548,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\hellfire_peninsula\boss_doomlord_kazzak.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_bonechewer_orc.cpp"
 						>
 					</File>
 				</Filter>

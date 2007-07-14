@@ -85,7 +85,7 @@ void SendDefaultMenu_guard_stormwind(Player *player, Creature *_Creature, uint32
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Mailbox
     {
         player->SEND_POI(-8876.48, 649.18, 6, 6, 0, "Stormwind Mailbox");
-        player->SEND_GOSSIP_MENU(3518,_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3861,_Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Stable Master
@@ -188,7 +188,7 @@ void SendClassTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, u
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Warrior
     {
-        player->SEND_POI(-8624.54, 402.61, 6, 6, 0, "Stormwind Barracks");
+        player->SEND_POI(-8624.54, 402.61, 6, 6, 0, "Pig and Whistle Tavern");
         player->SEND_GOSSIP_MENU(901,_Creature->GetGUID());
     }
 

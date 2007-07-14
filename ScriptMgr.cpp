@@ -78,6 +78,7 @@ extern void AddSC_Honor_Vendor();
 
 // -- Item --
 extern void AddSC_item_test();
+extern void AddSC_purification_mixture();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -170,10 +171,10 @@ extern void AddSC_npc_narm_faulk();
 //Duskwood
 //Duskwallow marsh
 //Eversong Woods
-extern void AddSC_mob_q8346();
+extern void AddSC_mobs_mana_tapped();
 
 //Eastern Plaguelands
-extern void AddSC_mob_q5211();
+extern void AddSC_mobs_ghoul_flayer();
 extern void AddSC_npc_darrowshire_spirit();
 
 //Elwynn Forest
@@ -190,6 +191,7 @@ extern void AddSC_boss_gruul();
 //Hellfire Citadel
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
+extern void AddSC_mobs_bonechewer_orc();
 
 //Hillsbrad Foothills
 //Hinterlands
@@ -446,6 +448,7 @@ void ScriptsInit()
 
     // -- Item --
     AddSC_item_test();
+    AddSC_purification_mixture();
 
     // -- NPC --
     AddSC_not_selectable();
@@ -537,10 +540,10 @@ void ScriptsInit()
     //Duskwood
     //Duskwallow marsh
     //Eversong Woods
-    AddSC_mob_q8346();
+    AddSC_mobs_mana_tapped();
 
     //Eastern Plaguelands   
-    AddSC_mob_q5211();
+    AddSC_mobs_ghoul_flayer();
     AddSC_npc_darrowshire_spirit();
 
     //Elwynn Forest
@@ -557,6 +560,7 @@ void ScriptsInit()
     //Hellfire Citadel
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();
+    AddSC_mobs_bonechewer_orc();
 
     //Hillsbrad Foothills
     //Hinterlands

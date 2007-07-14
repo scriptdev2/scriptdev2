@@ -63,6 +63,7 @@ scripts/guard/guard_tirisfal.cpp \
 scripts/guard/guard_undercity.cpp \
 scripts/honor/honor_vendor.cpp \
 scripts/item/item_test.cpp \
+scripts/item/purification_mixture.cpp \
 scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
@@ -116,15 +117,16 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
-scripts/zone/eastern_plaguelands/mob_q5211.cpp \
+scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/elwynn_forest/npc_marshal_mcbride.cpp \
-scripts/zone/eversong_woods/mob_q8346.cpp \
+scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
+scripts/zone/hellfire_peninsula/mobs_bonechewer_orc.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
 scripts/zone/karazhan/boss_midnight.cpp \

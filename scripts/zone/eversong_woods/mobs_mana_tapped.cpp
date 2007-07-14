@@ -18,13 +18,9 @@
 
 // **** This script is still under Developement ****
 
-//id8530 - cannibal ghoul
-//id8531 - gibbering ghoul
-//id8532 - diseased flayer
-
-struct MANGOS_DLL_DECL mob_q5211AI : public ScriptedAI
+struct MANGOS_DLL_DECL mobs_mana_tappedAI : public ScriptedAI
 {
-    mob_q5211AI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_mana_tappedAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     void EnterEvadeMode()
     {
@@ -34,15 +30,15 @@ struct MANGOS_DLL_DECL mob_q5211AI : public ScriptedAI
         DoGoHome();
     }
 
-    void JustDied(Unit* killer)
+    void AttackStart(Unit *who)
     {
-        if (killer->GetTypeId() == TYPEID_PLAYER)
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
-            //pointer check should be enough to check if player has the quest
-            if (((Player*)killer)->GetActiveQuest(5211))
-            {
-                SummonDarrowshireSpirit(m_creature->getVictim());
-            }
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -65,40 +61,28 @@ struct MANGOS_DLL_DECL mob_q5211AI : public ScriptedAI
         }
     }
 
-    void SummonDarrowshireSpirit(Unit* victim)
+    void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-    int Rand;
-    int RandX;
-    int RandY;
-
-        Rand = rand()%5;
-        switch (rand()%2)
+        if (caster->GetTypeId() == TYPEID_PLAYER)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            if( ((Player*)caster)->GetQuestStatus(8346) == QUEST_STATUS_INCOMPLETE && !((Player*)caster)->GetReqKillOrCastCurrentCount(8346, m_creature->GetEntry()) && spell->Id == 28734)
+            {
+                ((Player*)caster)->CastedCreatureOrGO(15468, m_creature->GetGUID(), 28734);
+            }
         }
-        Rand = 0;
-        Rand = rand()%5;
-        switch (rand()%2)
-        {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        DoSpawnCreature(11064, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000);
+        return;
     }
 }; 
-CreatureAI* GetAI_mob_q5211(Creature *_Creature)
+CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
 {
-    return new mob_q5211AI (_Creature);
+    return new mobs_mana_tappedAI (_Creature);
 }
 
-
-void AddSC_mob_q5211()
+void AddSC_mobs_mana_tapped()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="mob_q5211";
-    newscript->GetAI = GetAI_mob_q5211;
+    newscript->Name="mobs_mana_tapped";
+    newscript->GetAI = GetAI_mobs_mana_tapped;
     m_scripts[nrscripts++] = newscript;
 }

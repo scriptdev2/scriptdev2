@@ -46,7 +46,7 @@ UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (4
 UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (40200,40201,40202,40203,40204,40205,40206,40207,40208,40209,40210,40211,40212,40213);
 
 /* ITEM */
-
+UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry`= 23268;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -247,7 +247,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4359, 4376, 4382, 4412, 4413, 4415, 4967);
 
 /* EASTERN PLAGUELANDS */
-UPDATE `creature_template` SET `ScriptName` = 'mob_q5211' WHERE `entry` IN (8530,8531,8532);
+UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
 UPDATE `creature_template` SET `ScriptName` = 'npc_darrowshire_spirit' WHERE `entry` = 11064;
 /* Crimson Bodyguard, Crimson Courier, Crypt Walker, Hate Shrieker, Cursed Mage, Shadowmage, Dark Summoner, Scarlet Archmage, Archmage Angela Dosantos */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (13118, 12337, 8556, 8541, 8524, 8550, 8551, 9451, 16116);
@@ -257,7 +257,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (448, 474, 910, 6866, 116, 94, 732, 46, 30, 43);
 
 /* EVERSONG WOODS */
-UPDATE `creature_template` SET `ScriptName` = 'mob_q8346' WHERE `entry` IN (15273,15274,15294,15298,15367);
+UPDATE `creature_template` SET `ScriptName` = 'mobs_mana_tapped' WHERE `entry` IN (15273,15274,15294,15298,15367);
 
 /* FELWOOD */
 /* Timbermaw Mystic */
@@ -306,6 +306,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* HELLFIRE PENINSULA */
 UPDATE `creature_template` SET `ScriptName` = 'boss_doomlord_kazzak' WHERE `entry` = 18728;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_bonechewer_orc' WHERE `entry` IN (16876, 16925, 18952, 19701);
 
 /* HILLSBRAD FOOTHILLS */
 /* Syndicate Shadow Mage, Elder Moss Creeper, Giant Moss Creeper(also AM), Forest Moss Creeper, Writhing Mage */
