@@ -272,6 +272,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                             //Force player to cast the AoE dmg spell
                             pCastUnit->CastSpell(pCastUnit,&spell ,true);
 
+                            //as shatter doesnt cancel stoned aura we need to do it by hand
+                            pCastUnit->RemoveAurasDueToSpell(SPELL_STONED);
                         }
                     }
 
