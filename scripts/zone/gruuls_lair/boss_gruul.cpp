@@ -255,15 +255,13 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     spell.rangeIndex = 0;              // Index 0 = self only
                     spell.EffectAmplitude[0] = 2000;
 
-                    ThreatList m_threatlist;
-                    m_threatlist = m_creature->GetThreatList();
-
-                    ThreatList::iterator  i = m_threatlist.begin();
+                    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+                    std::list<HostilReference*>::iterator i = m_threatlist.begin();
 
                     //If you have to do a loop over all units in threat list do it this way
                     for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
                     {
-                        Unit* pCastUnit = Unit::GetUnit((*m_creature), i->UnitGuid);
+                        Unit* pCastUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                         if (pCastUnit)
                         {
                             //Force player to cast 22890 -- Dispels all slowing and stun effects

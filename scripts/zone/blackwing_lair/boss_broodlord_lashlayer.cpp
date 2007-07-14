@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
 
                 //Drop 50% aggro
-                m_creature->AddThreat(m_creature->getVictim(),-(m_creature->GetThreat(m_creature->getVictim()->GetGUID())/2));
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
                 //25 seconds until we should cast this agian
                 KnockBack_Timer = 25000;

@@ -1131,10 +1131,9 @@ Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, floa
 
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
 {
-    ThreatList m_threatlist;
-    m_threatlist = m_creature->GetThreatList();
-
-    ThreatList::iterator  i = m_threatlist.begin();
+    //ThreatList m_threatlist;
+    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+    std::list<HostilReference*>::iterator i = m_threatlist.begin();
 
     if (position >= m_threatlist.size() || !m_threatlist.size())
         return NULL;
@@ -1143,17 +1142,17 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
     {
         case SELECT_TARGET_RANDOM:
             advance ( i , rand()%m_threatlist.size());
-            return Unit::GetUnit((*m_creature), i->UnitGuid);
+            return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
         break;
 
         case SELECT_TARGET_TOPAGGRO:
             advance ( i , position);
-            return Unit::GetUnit((*m_creature), i->UnitGuid);
+            return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
         break;
 
         case SELECT_TARGET_BOTTOMAGGRO:
             advance ( i , position);
-            return Unit::GetUnit((*m_creature), i->UnitGuid);
+            return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
         break;
     }
 

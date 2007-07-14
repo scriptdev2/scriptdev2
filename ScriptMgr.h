@@ -27,6 +27,7 @@
 #include "../../game/CreatureAI.h"
 #include "../../game/Spell.h"
 #include "../../game/TargetedMovementGenerator.h"
+#include "../../game/ThreatManager.h"
 #include "../../shared/WorldPacket.h"
 #include "../../shared/Database/DBCStores.h"
 
