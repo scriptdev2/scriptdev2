@@ -15,209 +15,58 @@
 */
 
 #include "../sc_defines.h"
-#include "../../../../game/ObjectAccessor.h"
+#include "../creature/simple_ai.h"
 
-struct MANGOS_DLL_DECL testAI : public ScriptedAI
-{
-    testAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+#define AGGRO_YELL_1      "Me be killin you mon!"
+#define AGGRO_YELL_2      "Some random lines"
+#define AGGRO_YELL_3      "Aggro 3"
 
-    uint32 Timer;
-    uint32 Timer2;
-    uint32 HealTimer;
-    uint32 swap;
-    bool InCombat;
-    Unit* HealTarget;
-
-    void EnterEvadeMode()
-    {
-        Timer = 10000;
-        Timer2 = 10000;
-        swap = 0;
-        HealTarget = NULL;
-
-        InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,1);
-        m_creature->setFaction(35);
-    }
-
-    void KilledUnit(Unit* Victim)
-    {
-    }
-
-    void JustDied(Unit* Killer)
-    {
-    }
-
-    void AttackStart(Unit *who)
-    {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (HealTarget)
-        {
-            if (HealTimer < diff)
-            {
-                DoCast(HealTarget,28306);
-                HealTimer = 3000;
-
-            }HealTimer -= diff;
-        }
-
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
-            return;
-
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            if (Timer < diff)
-            {
-                ThreatList tList;
-                tList = m_creature->GetThreatList();
-
-
-                if (tList.empty())
-                {
-                    DoSay("Threat list empty, ending combat.",0,NULL);
-                    EnterEvadeMode();
-                    return;
-                }
-
-                if (tList.size()==1)
-                {
-                    DoSay("Beginning combat on 1 target: ",0,NULL);
-                }else if (tList.size()==2)
-                {
-                    DoSay("Beginning combat on 2 targets",0,NULL);
-                }else if (tList.size()>2)
-                {
-                    DoSay("Beginning combat on more than 2 targets",0,NULL);
-                }
-
-
-                Timer = 100000;
-            }else Timer-=diff;
-
-            if (Timer2 < diff)
-            {
-                /*ThreatList tList;
-                tList = m_creature->GetThreatList();
-                tList[1].UnitGuid =1;
-
-                //30423 - Netherbeam - Dominance
-                DoCast(m_creature->GetUnitByGUID(tList[rand()%tList.size()]->UnitGuid),30423);
-                */
-
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,30423);
-
-                Timer2 = 1000;
-            }else Timer2-=diff;
-        }
-    }
-
-    void SpellHit(Unit* caster, const SpellEntry* spell)
-    {
-        DoSay("spell hit!",0,NULL);
-    }
-};
-
+#define SPECIAL_YELL_1      "Now die!"
 
 CreatureAI* GetAI_test(Creature *_Creature)
 {
-    return new testAI (_Creature);
-}
+    SimpleAI* ai = new SimpleAI (_Creature);
 
-bool GossipHello_test(Player *player, Creature *_Creature)
-{
-    player->ADD_GOSSIP_ITEM(0, "Test Say Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(1, "Test Yell Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(2, "Test TextEmote Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(3, "Test Wisper Function", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(4, "Buff Me!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(5, "Test Threat List", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(6, "Keep Me Healed!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->SEND_GOSSIP_MENU(3543,_Creature->GetGUID());
-    player->PlayerTalkClass->SendTalking("Test NPC", "Hello, I'm the test NPC for ScriptDev2. Please select an option.");
+    memset(ai->Spell,0,sizeof(ai->Spell));
 
-    return true;
-}
+    ai->AggroYell[0] = AGGRO_YELL_1;
+    ai->AggroYell[1] = AGGRO_YELL_2;
+    ai->AggroYell[2] = AGGRO_YELL_3;
 
-bool GossipSelect_test(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->m_creature->Say("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player->GetGUID());
-        ((testAI*)_Creature->AI())->DoSay("Bla bla bla, say command.$N, $C", LANG_UNIVERSAL, player);
-    }
+    //Flay (10% double attack)
+    ai->Spell[0].Enabled = true;                //Enabled
+    ai->Spell[0].Spell_Id = 32732;              //Flay (10% double attack)
+    ai->Spell[0].Cooldown = -1;                 //Infinite duration no need to cast again
+    ai->Spell[0].First_Cast = 1000;             //Cast this 1 second after we go into combat
+    ai->Spell[0].Cast_Target_Type = CAST_SELF;  //Self
 
-    if (action == GOSSIP_ACTION_INFO_DEF + 2)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->DoYell("Bla bla bla, yell command. $N, $C", LANG_UNIVERSAL, player);
-    }
+    //19643 //ms
+    ai->Spell[1].Enabled = true;
+    ai->Spell[1].Spell_Id = 19643;
+    ai->Spell[1].Cooldown = 7000;
+    ai->Spell[1].First_Cast = 7000;
+    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
-    if (action == GOSSIP_ACTION_INFO_DEF + 3)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->DoTextEmote("Bla bla bla, emote command. $N, $C", player);
-    }
+    //19471 // Charge
+    ai->Spell[2].Enabled = true;
+    ai->Spell[2].Spell_Id = 19471;
+    ai->Spell[2].Cooldown = 10000;
+    ai->Spell[2].First_Cast = 1000;
+    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
-    if (action == GOSSIP_ACTION_INFO_DEF + 4)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->m_creature->Whisper(player->GetGUID(),"Bla bla bla, wisper command. $N, $C");
-    }
+    //32361 //Crystal Prison (deals 50% dmg over 5 seconds)
+    ai->Spell[3].Enabled = true;
+    ai->Spell[3].Spell_Id = 32361;
+    ai->Spell[3].Cooldown = 15000;
+    ai->Spell[3].First_Cast = 12000;
+    ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_LAST_AGGRO;
+    ai->Spell[3].Yell[0] = SPECIAL_YELL_1;
+    ai->Spell[3].Yell[1] = SPECIAL_YELL_1;
+    ai->Spell[3].Yell[2] = SPECIAL_YELL_1;
 
-    if (action == GOSSIP_ACTION_INFO_DEF + 5)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,30468,true);
-    }
+    ai->EnterEvadeMode();
 
-    if (action == GOSSIP_ACTION_INFO_DEF + 6)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->DoSay("Testing Threat list. Initial target = $N. 10 seconds until Testing Starts.", LANG_UNIVERSAL, player);
-        ((testAI*)_Creature->AI())->DoStartRangedAttack(player);
-        ((testAI*)_Creature->AI())->m_creature->setFaction(14);
-    }
-
-    if (action == GOSSIP_ACTION_INFO_DEF + 7)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((testAI*)_Creature->AI())->DoSay("Healing.", LANG_UNIVERSAL, player);
-        ((testAI*)_Creature->AI())->HealTarget = player;
-        ((testAI*)_Creature->AI())->HealTimer = 2000;
-    }
-
-    return true;
+    return ai;
 }
 
 void AddSC_test()
@@ -225,8 +74,6 @@ void AddSC_test()
     Script *newscript;
     newscript = new Script;
     newscript->Name="test";
-    newscript->pGossipHello          = &GossipHello_test;
-    newscript->pGossipSelect         = &GossipSelect_test;
     newscript->GetAI = GetAI_test;
     m_scripts[nrscripts++] = newscript;
 }

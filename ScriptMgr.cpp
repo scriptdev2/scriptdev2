@@ -361,6 +361,8 @@ extern void AddSC_mob_freed_soul();
 //Teldrassil
 //Tempest Keep
 //Temple of ahn'qiraj
+extern void AddSC_boss_cthun();
+
 //Thousand Needles
 //Tirisfal Glades
 //Uldaman
@@ -725,6 +727,8 @@ void ScriptsInit()
     //Teldrassil
     //Tempest Keep
     //Temple of ahn'qiraj
+    AddSC_boss_cthun();
+
     //Thousand Needles
     //Tirisfal Glades
     //Uldaman

@@ -239,10 +239,22 @@
 					RelativePath="..\scripts\creature\npc_miner.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\creature\simple_ai.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\simple_ai.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="guard"
 				>
+				<File
+					RelativePath="..\scripts\guard\guard_ai.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\scripts\guard\guard_ai.h"
 					>
