@@ -19,8 +19,7 @@
 
 // **** This script is still under Developement ****
 
-#define GENERIC_CREATURE_COOLDOWN   5000
-#define GENERIC_CREATURE_ROOTSELF   23973
+#define GENERIC_CREATURE_COOLDOWN   500073
 
 struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
 {
@@ -67,7 +66,7 @@ struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
             DoStartMeleeAttack(who);
             if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
             {
-                DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                m_creature->m_canMove = false;
                 IsSelfRooted = true;
             }
 
@@ -92,7 +91,7 @@ struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
                 DoStartMeleeAttack(who);
                 if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 {
-                    DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                    m_creature->m_canMove = false;
                     IsSelfRooted = true;
                 }
 
@@ -197,7 +196,7 @@ struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
                         //If we are currently moving stop us and set the movement generator
                         if (!IsSelfRooted)
                         {
-                            DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                            m_creature->m_canMove = false;
                             IsSelfRooted = true;
                         }
 
@@ -217,7 +216,7 @@ struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
                     {
                         //Cancel our current spell and then allow movement agian
                         m_creature->InterruptSpell();
-                        m_creature->RemoveAurasDueToSpell(GENERIC_CREATURE_ROOTSELF);
+                        m_creature->m_canMove = true;
                         IsSelfRooted = false;
                     }
                 }

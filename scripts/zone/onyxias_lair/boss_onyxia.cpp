@@ -50,6 +50,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 bellowingroar_timer;
     uint32 reset_timer;
     uint32 phase;
+    bool inCombat;
 
     void EnterEvadeMode()
     {
@@ -62,6 +63,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         whelpspawn_timer = 45000;
         bellowingroar_timer = 0;
         phase = 1;
+        inCombat = false;
         
         m_creature->InterruptSpell();
         m_creature->SetHover(false);
@@ -90,8 +92,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //Begin attack
             DoStartMeleeAttack(who);
 
-            //Initial aggro speach
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+            if (!inCombat)
+            {
+
+                //Initial aggro speach
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                inCombat = true;
+            }
         }
     }
 
@@ -111,8 +118,13 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 //Begin attack
                 DoStartMeleeAttack(who);
 
-                //Initial aggro speach
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                if (!inCombat)
+                {
+
+                    //Initial aggro speach
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    inCombat = true;
+                }
             }
         }
     }

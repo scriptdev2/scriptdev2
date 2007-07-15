@@ -28,7 +28,6 @@
 
 
 #define GENERIC_CREATURE_COOLDOWN 5000
-#define GENERIC_CREATURE_ROOTSELF   23973
 
 struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
 {
@@ -69,7 +68,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 DoStartMeleeAttack(who);
                 if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 {
-                    DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                    m_creature->m_canMove = false;
                     IsSelfRooted = true;
                 }
 
@@ -200,7 +199,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                         //If we are currently moving stop us and set the movement generator
                         if (!IsSelfRooted)
                         {
-                            DoCast(m_creature, GENERIC_CREATURE_ROOTSELF);
+                            m_creature->m_canMove = false;
                             IsSelfRooted = true;
                         }
 
@@ -220,7 +219,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                     {
                         //Cancel our current spell and then allow movement agian
                         m_creature->InterruptSpell();
-                        m_creature->RemoveAurasDueToSpell(GENERIC_CREATURE_ROOTSELF);
+                        m_creature->m_canMove = true;
                         IsSelfRooted = false;
                     }
                 }

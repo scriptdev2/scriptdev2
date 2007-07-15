@@ -20,7 +20,6 @@
 
 // Status: check for aggro, check for root ok, check for correct spellID
 
-#define ROOTSELF   23973
 #define SPELL_SHOOT	15620
 
 struct MANGOS_DLL_DECL mob_crimson_riflemanAI : public ScriptedAI
@@ -95,7 +94,7 @@ struct MANGOS_DLL_DECL mob_crimson_riflemanAI : public ScriptedAI
                 //Lock our position
                 if (!Rooted)
                 {
-                    m_creature->CastSpell(m_creature,ROOTSELF,true);
+                    m_creature->m_canMove = false;
                     Rooted = true;
                 }
                 DoCast(m_creature->getVictim(),SPELL_SHOOT);
@@ -104,7 +103,7 @@ struct MANGOS_DLL_DECL mob_crimson_riflemanAI : public ScriptedAI
             else 
                 if (Rooted && !CanCast(m_creature->getVictim(),Shoot_S))
                 {
-                    m_creature->RemoveAurasDueToSpell(ROOTSELF);    
+                    m_creature->m_canMove = true;    
                     Rooted = false;
                 }
                 Shoot_Timer -= diff;
