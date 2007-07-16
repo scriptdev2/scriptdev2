@@ -19,7 +19,7 @@
 
 // **** This script is still under Developement ****
 
-#define GENERIC_CREATURE_COOLDOWN   500073
+#define GENERIC_CREATURE_COOLDOWN   5000
 
 struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
 {
