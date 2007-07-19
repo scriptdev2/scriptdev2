@@ -66,6 +66,7 @@ extern void AddSC_guard_exodar();
 extern void AddSC_guard_ironforge();
 extern void AddSC_guard_mulgore();
 extern void AddSC_guard_orgrimmar();
+extern void AddSC_guard_shattrath();
 extern void AddSC_guard_silvermoon();
 extern void AddSC_guard_stormwind();
 extern void AddSC_guard_teldrassil();
@@ -78,6 +79,8 @@ extern void AddSC_Honor_Vendor();
 
 // -- Item --
 extern void AddSC_item_test();
+extern void AddSC_area_52_special();
+extern void AddSC_nether_wraith_beacon();
 extern void AddSC_purification_mixture();
 
 // -- NPC --
@@ -436,6 +439,7 @@ void ScriptsInit()
     AddSC_guard_ironforge();
     AddSC_guard_mulgore();
     AddSC_guard_orgrimmar();
+    AddSC_guard_shattrath();
     AddSC_guard_silvermoon();
     AddSC_guard_stormwind();
     AddSC_guard_teldrassil();
@@ -448,6 +452,8 @@ void ScriptsInit()
 
     // -- Item --
     AddSC_item_test();
+    AddSC_area_52_special();
+    AddSC_nether_wraith_beacon();
     AddSC_purification_mixture();
 
     // -- NPC --

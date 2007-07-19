@@ -40,6 +40,7 @@ UPDATE `creature_template` SET `ScriptName` = 'guard_dunmorogh' WHERE `entry` IN
 UPDATE `creature_template` SET `ScriptName` = 'guard_tirisfal' WHERE `entry` IN (1735, 1738, 2210, 1736, 1739, 1737, 1744, 1745, 5725, 1743, 2209, 1746, 1742);
 UPDATE `creature_template` SET `scriptName` = 'guard_silvermoon' WHERE `entry` = 16222;
 UPDATE `creature_template` SET `scriptName` = 'guard_exodar' WHERE `entry` = 16733;
+UPDATE `creature_template` SET `ScriptName` = 'guard_shattrath' WHERE `entry` = 19687;
 
 /* HONOR */
 UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (40100,40101,40102,40103,40104,40105,40106,40107,40108,40109,40110,40111,40112,40113);
@@ -47,6 +48,8 @@ UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (4
 
 /* ITEM */
 UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry`= 23268;
+UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` = 31742;
+UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;

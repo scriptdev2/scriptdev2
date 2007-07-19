@@ -26,6 +26,7 @@
 #define GOSSIP_TEXT_GRYPHON             "Gryphon Master"
 #define GOSSIP_TEXT_BATHANDLER          "Bat Handler"
 #define GOSSIP_TEXT_HIPPOGRYPH          "Hippogryph Master"
+#define GOSSIP_TEXT_FLIGHTMASTER        "Flight Master"
 #define GOSSIP_TEXT_AUCTIONHOUSE        "Auction House"
 #define GOSSIP_TEXT_GUILDMASTER         "Guild Master"
 #define GOSSIP_TEXT_INN                 "The Inn"
@@ -130,6 +131,12 @@
 #define GOSSIP_SENDER_SEC_PROFTRAIN         4
 #define GOSSIP_SENDER_SEC_CLASSTRAIN        5
 #define GOSSIP_SENDER_SEC_BATTLEINFO        6
+#define GOSSIP_SENDER_SEC_BANK              7
+#define GOSSIP_SENDER_SEC_INN               8
+#define GOSSIP_SENDER_SEC_MAILBOX           9
+#define GOSSIP_SENDER_SEC_STABLEMASTER      10
+#define GOSSIP_SENDER_SUB1_BATTLEINFO       11
+#define GOSSIP_SENDER_SUB2_BATTLEINFO       12
 
 #define DEFAULT_GOSSIP_MESSAGE              0xffffff
 

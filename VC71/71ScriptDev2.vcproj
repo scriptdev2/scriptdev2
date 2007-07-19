@@ -236,6 +236,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\guard\guard_shattrath.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\guard\guard_silvermoon.cpp"
 					>
 				</File>
@@ -304,7 +308,15 @@
 				Name="item"
 				>
 				<File
+					RelativePath="..\scripts\item\area_52_special.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\item\item_test.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\item\nether_wraith_beacon.cpp"
 					>
 				</File>
 				<File

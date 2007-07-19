@@ -114,6 +114,8 @@ void SendDefaultMenu_guard_ironforge(Player *player, Creature *_Creature, uint32
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_ROGUE            , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 5);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_WARLOCK          , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 6);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_WARRIOR          , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_SHAMAN           , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 8);
+
         player->SEND_GOSSIP_MENU(2766, _Creature->GetGUID());
     }
 
@@ -131,6 +133,7 @@ void SendDefaultMenu_guard_ironforge(Player *player, Creature *_Creature, uint32
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_MINING           , GOSSIP_SENDER_SEC_PROFTRAIN, GOSSIP_ACTION_INFO_DEF + 10);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_SKINNING         , GOSSIP_SENDER_SEC_PROFTRAIN, GOSSIP_ACTION_INFO_DEF + 11);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_TAILORING        , GOSSIP_SENDER_SEC_PROFTRAIN, GOSSIP_ACTION_INFO_DEF + 12);
+
         player->SEND_GOSSIP_MENU(2793, _Creature->GetGUID());
     }
 }
@@ -199,6 +202,12 @@ void SendClassTrainerMenu_guard_ironforge(Player *player, Creature *_Creature, u
     {
         player->SEND_POI(-5023.08, -1253.68, 6, 6, 0, "Hall of Arms");
         player->SEND_GOSSIP_MENU(2776, _Creature->GetGUID());
+    }
+
+    if (action == GOSSIP_ACTION_INFO_DEF + 8)//Shaman
+    {
+        player->SEND_POI(-4732, -1147, 6, 6, 0, "Ironforge Shaman Trainer");
+        player->SEND_GOSSIP_MENU(2766, _Creature->GetGUID());//incorrect id
     }
 }
 

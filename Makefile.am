@@ -56,13 +56,16 @@ scripts/guard/guard_exodar.cpp \
 scripts/guard/guard_ironforge.cpp \
 scripts/guard/guard_mulgore.cpp \
 scripts/guard/guard_orgrimmar.cpp \
+scripts/guard/guard_shattrath.cpp \
 scripts/guard/guard_silvermoon.cpp \
 scripts/guard/guard_stormwind.cpp \
 scripts/guard/guard_teldrassil.cpp \
 scripts/guard/guard_tirisfal.cpp \
 scripts/guard/guard_undercity.cpp \
 scripts/honor/honor_vendor.cpp \
+scripts/item/area_52_special.cpp \
 scripts/item/item_test.cpp \
+scripts/item/nether_wraith_beacon.cpp \
 scripts/item/purification_mixture.cpp \
 scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \

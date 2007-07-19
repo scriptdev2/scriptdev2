@@ -31,7 +31,8 @@ bool GossipHello_guard_exodar(Player *player, Creature *_Creature)
     player->ADD_GOSSIP_ITEM( 8, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
     player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
     player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+
+    player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
 
     return true;
 }
@@ -45,19 +46,19 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Auction house
     {
         player->SEND_POI(-4023.6, -11739.3, 6, 6, 0, "Exodar Auction House");//18349
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)//Bank
     {
         player->SEND_POI(-3923.89, -11544.5, 6, 6, 0, "Exodar Bank");//17773
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Guild master
     {
         player->SEND_POI(-4092.57, -11626.5, 6, 6, 0, "Exodar Guild Master");//16734
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Hippogryph master
@@ -69,7 +70,7 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
     if (action == GOSSIP_ACTION_INFO_DEF + 5)//Inn
     {
         player->SEND_POI(-3741.87, -11695.1, 6, 6, 0, "Exodar Inn");//16739
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 6)//Mailbox
@@ -81,13 +82,13 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Stable master
     {
         player->SEND_POI(-3786.5, -11702.5, 6, 6, 0, "Stable Master Arthaid");//16764
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Weapon trainer
     {
         player->SEND_POI(-4215.68, -11628.9, 6, 6, 0, "Weapon Master Handiir");//16773
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9565, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 9)//Battlemaster
@@ -98,7 +99,7 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
         player->ADD_GOSSIP_ITEM( 8, GOSSIP_TEXT_EYEOFTHESTORM   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 4);        
         player->ADD_GOSSIP_ITEM( 8, GOSSIP_TEXT_WARSONGULCH     , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 5);
         
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9531, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 10)//Class trainer
@@ -111,7 +112,7 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_SHAMAN               , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 6);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_WARRIOR              , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 7);
         
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 11)//Profession trainer
@@ -130,7 +131,7 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_SKINNING             , GOSSIP_SENDER_SEC_PROFTRAIN, GOSSIP_ACTION_INFO_DEF + 12);
         player->ADD_GOSSIP_ITEM( 3, GOSSIP_TEXT_TAILORING            , GOSSIP_SENDER_SEC_PROFTRAIN, GOSSIP_ACTION_INFO_DEF + 13);
 
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9555, _Creature->GetGUID());
     }
 }
 
@@ -140,31 +141,31 @@ void SendBattleMasterMenu_guard_exodar(Player *player, Creature *_Creature, uint
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//AV
     {
         player->SEND_POI(-3735.7, -11683.63, 6, 6, 0, "Alterac Valley Battlemaster");
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)//AB
     {
         player->SEND_POI(-3735.7, -11683.63, 6, 6, 0, "Arathi Basin Battlemaster");
-        player->SEND_GOSSIP_MENU(9316,  _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551,  _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//A
     {
         player->SEND_POI(-3735.7, -11683.63, 6, 6, 0, "Arena Battlemaster");
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//EOS
     {
         player->SEND_POI(-3735.7, -11683.63, 6, 6, 0, "Eye Of The Storm Battlemaster");
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 5)//WSG
     {
         player->SEND_POI(-3735.7, -11683.63, 6, 6, 0, "Warsong Gulch Battlemaster");
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());//incorrect id
     }
 
 }
@@ -174,31 +175,31 @@ void SendClassTrainerMenu_guard_exodar(Player *player, Creature *_Creature, uint
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Druid
     {
         player->SEND_POI(-4276, -11495, 6, 6, 0, "Exodar Druid Trainer");//16721
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9555, _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)//Hunter
     {
         player->SEND_POI(-4232.18, -11569.2, 6, 6, 0, "Exodar Hunter Trainer");//17122
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9555, _Creature->GetGUID());//incorrect id
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Mage
     {
         player->SEND_POI(-4057.32, -11556.5, 6, 6, 0, "Exodar Mage Trainer");//17513
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9550, _Creature->GetGUID());
     }
     
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Paladin
     {
         player->SEND_POI(-4191.2, -11470.4, 6, 6, 0, "Exodar Paladin Trainer");//17509
-        player->SEND_GOSSIP_MENU(9553, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9553, _Creature->GetGUID());//incorrect id
     }
     
     if (action == GOSSIP_ACTION_INFO_DEF + 5)//Priest
     {
         player->SEND_POI(-3969.63, -11482.8, 6, 6, 0, "Exodar Priest Trainer");//17510
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9555, _Creature->GetGUID());//incorrect id
     }
     
     if (action == GOSSIP_ACTION_INFO_DEF + 6)//Shaman
@@ -210,7 +211,7 @@ void SendClassTrainerMenu_guard_exodar(Player *player, Creature *_Creature, uint
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Warrior
     {
         player->SEND_POI(-4189.43, -11653.7, 6, 6, 0, "Exodar Warrior Trainer");//17120
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9555, _Creature->GetGUID());//incorrect id
     }
 }
 
@@ -220,78 +221,78 @@ void SendProfTrainerMenu_guard_exodar(Player *player, Creature *_Creature, uint3
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Alchemy
     {
         player->SEND_POI(-4146.6, -12531.8, 6, 6, 0, "Exodar Alchemy Trainer");//17215
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 2)//Blacksmithing
     {
         player->SEND_POI(-4728, -12389, 6, 6, 0, "Exodar Blacksmithing Trainer");//17245
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 3)//Cooking
     {
         player->SEND_POI(-4710, -12393.8, 6, 6, 0, "Exodar Cooking Trainer");//17246
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 4)//Enchanting
     {
         player->SEND_POI(-3889.3, -11495, 6, 6, 0, "Exodar Enchanting Trainer");//16742
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 5)//Engineering
     {
         player->SEND_POI(-4257.68, -11640.3, 6, 6, 0, "Exodar Engineering Trainer");//16743
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 6)//First Aid
     {
         player->SEND_POI(-1928.4, -11857, 6, 6, 0, "Exodar First Aid Trainer");//17424
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 7)//Fishing
     {
         player->SEND_POI(-4266.52, -12985.2, 6, 6, 0, "Exodar Fishing Trainer");//17101
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 8)//Jewelcrafting
     {
         player->SEND_POI(-3783, -11546, 6, 6, 0, "Exodar Jewelcrafting Trainer");//16727,16744,19777,19778
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9547, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 9)//Herbalism
     {
         player->SEND_POI(-4052, -11356, 6, 6, 0, "Exodar Herbalist Trainer");//16736
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 10)//Leatherworking
     {
         player->SEND_POI(-4140.6, -11776.7, 6, 6, 0, "Exodar Leatherworking Trainer");//16745
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 11)//Mining
     {
         player->SEND_POI(-4228, -11697, 6, 6, 0, "Exodar Mining Trainer");//16752
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 12)//Skinning
     {
         player->SEND_POI(-4134.97, -11760.5, 6, 6, 0, "Exodar Skinning Trainer");//16763
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF + 13)//Tailoring
     {
         player->SEND_POI(-4092.5, -11744.5, 6, 6, 0, "Exodar Tailor Trainer");//16746, 16729
-        player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
     }
 
 }
@@ -323,7 +324,6 @@ CreatureAI* GetAI_guard_exodar(Creature *_Creature)
 {
     return new guardAI (_Creature);
 }
-
 
 void AddSC_guard_exodar()
 {
