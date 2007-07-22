@@ -1132,7 +1132,7 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
 
 Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime)
 {
-    return m_creature->SummonCreature(id,m_creature->GetMapId(),m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle,t,despawntime);
+    return m_creature->SummonCreature(id,m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle,t,despawntime);
 }
 
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
