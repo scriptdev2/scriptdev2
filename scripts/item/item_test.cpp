@@ -19,10 +19,9 @@
 
 bool ItemUse_item_test(Player *player, Item* _Item)
 {
-    SpellEntry i =(*GetSpellStore()->LookupEntry(32739));
-    i.EffectBasePoints[0] = 50000;
-    i.DurationIndex = 20;
-    player->CastSpell(player,&i ,true);
+    int32 basePoints0 = 50000;
+    //i.DurationIndex = 20; If this required then must be used spellmod
+    player->CastCustomSpell(player,32739,&basePoints0, NULL, NULL, true);
     //player->GetSession()->SendShowBank( player->GetGUID() );
     return true;
 }

@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
             if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
             {
                 //Cast
-                m_creature->SummonCreature(10268,229,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                m_creature->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
                 Summoned = true;                
             }
 

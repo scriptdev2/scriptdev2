@@ -141,10 +141,13 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             {
                 //Modify reverberation to cast on all creatures within 200 yards
                 //On official a dummy spell does this but we don't have that luxury
-                SpellEntry i =(*GetSpellStore()->LookupEntry(SPELL_REVERBERATION));
-                i.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
-                i.rangeIndex = 13;              // Index 13 = 50,000 yard range
-                m_creature->CastSpell(m_creature->getVictim(),&i ,true);
+                
+                // This hack now not supported by core
+                //SpellEntry i =(*GetSpellStore()->LookupEntry(SPELL_REVERBERATION));
+                //i.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
+                //i.rangeIndex = 13;              // Index 13 = 50,000 yard range
+                //m_creature->CastSpell(m_creature->getVictim(),&i ,true);
+                m_creature->CastSpell(m_creature->getVictim(),SPELL_REVERBERATION,true);
 
                 Reverberation_Timer = 45000;
             }else Reverberation_Timer -= diff;
@@ -167,27 +170,31 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 switch(GroundSlamPhase)
                 {
                     case 0:
-                    m_creature->m_canMove = false; 
-                    IsInGroundSlam= true;
+                    {
+                        m_creature->m_canMove = false; 
+                        IsInGroundSlam= true;
 
-                    // **Ground Slam Knockback**
-                    // Using 24199 (knockback 350) as a base we will create the AoE knockback
-                    // Note that on official this isn't actually a knock back but a directed pull twoard other players with a knockback mixed in
-                    // That is currently impossible though so this should do fine
+                        // **Ground Slam Knockback**
+                        // Using 24199 (knockback 350) as a base we will create the AoE knockback
+                        // Note that on official this isn't actually a knock back but a directed pull twoard other players with a knockback mixed in
+                        // That is currently impossible though so this should do fine
 
-                    SpellEntry spell;
-                    spell =(*GetSpellStore()->LookupEntry(24199));
-                    spell.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
-                    spell.rangeIndex = 13;              // Index 13 = 50,000 yard range
-                    spell.EffectAmplitude[0] = 75;
-                    //spell.EffectImplicitTargetA[0] = TARGET_ALL_ENEMY_IN_AREA;
-                    //spell.EffectImplicitTargetB[0] = TARGET_ALL_ENEMY_IN_AREA;
-                    m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
+                        // This hack now not supported by core
+                        //SpellEntry spell;
+                        //spell =(*GetSpellStore()->LookupEntry(24199));
+                        //spell.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
+                        //spell.rangeIndex = 13;              // Index 13 = 50,000 yard range
+                        //spell.EffectAmplitude[0] = 75;
+                        //spell.EffectImplicitTargetA[0] = TARGET_ALL_ENEMY_IN_AREA;
+                        //spell.EffectImplicitTargetB[0] = TARGET_ALL_ENEMY_IN_AREA;
+                        //m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
+                        m_creature->CastSpell(m_creature->getVictim(),24199,true);
 
-                    // Seconds before next phase
-                    GroundSlam_Timer =2000;
-                    GroundSlamPhase++;
-                    break;
+                        // Seconds before next phase
+                        GroundSlam_Timer =2000;
+                        GroundSlamPhase++;
+                        break;
+                    }
 
                     // Gronn Lord's Grasp
                     case 1:
@@ -220,72 +227,81 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
                     // Stoned
                     case 11:
-                    // ** Stoned **
-                    // This spell works fine except that it needs a radius
-                    // So lets give it one
+                    {
+                        // ** Stoned **
+                        // This spell works fine except that it needs a radius
+                        // So lets give it one
 
-                    //SpellEntry 
-                    spell =(*GetSpellStore()->LookupEntry(SPELL_STONED));
-                    spell.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
-                    spell.rangeIndex = 13;              // Index 13 = 50,000 yard range
-                    spell.EffectImplicitTargetA[0] = 22;
-                    spell.EffectImplicitTargetB[0] = 22;
-                    m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
+                        // This hack now not supported by core
+                        //SpellEntry spell;
+                        //spell =(*GetSpellStore()->LookupEntry(SPELL_STONED));
+                        //spell.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
+                        //spell.rangeIndex = 13;              // Index 13 = 50,000 yard range
+                        //spell.EffectImplicitTargetA[0] = 22;
+                        //spell.EffectImplicitTargetB[0] = 22;
+                        //m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
+                        m_creature->CastSpell(m_creature->getVictim(),SPELL_STONED,true);
 
-                    // Seconds before next phase
-                    GroundSlam_Timer =8000;
-                    GroundSlamPhase++;
-                    break;
+                        // Seconds before next phase
+                        GroundSlam_Timer =8000;
+                        GroundSlamPhase++;
+                        break;
+                    }
 
                     // Shatter
                     case 12:
-                    // ** Shatter **
-                    // There is absolutly no spell associated with Shatter
-                    // So we'll make one from a shatter that does 9000 dmg
-                    // We'll make this spell so it dispels stun and then
-                    // Does 2000 damage to all players within a 20 yard radius
-                    // That isn't quite how it works on official but close enough
-                    
-                    //Cast the dummy spell so boss mods work correctly
-                    DoCast(m_creature,33654);
-
-                    //Here is the spell we'll have players cast
-                    //SpellEntry 
-                    spell =(*GetSpellStore()->LookupEntry(33671));
-                    spell.rangeIndex = 0;              // Index 0 = self only
-                    spell.EffectAmplitude[0] = 2000;
-
-                    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-                    std::list<HostilReference*>::iterator i = m_threatlist.begin();
-
-                    //If you have to do a loop over all units in threat list do it this way
-                    for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
                     {
-                        Unit* pCastUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                        if (pCastUnit)
+                        // ** Shatter **
+                        // There is absolutly no spell associated with Shatter
+                        // So we'll make one from a shatter that does 9000 dmg
+                        // We'll make this spell so it dispels stun and then
+                        // Does 2000 damage to all players within a 20 yard radius
+                        // That isn't quite how it works on official but close enough
+
+                        //Cast the dummy spell so boss mods work correctly
+                        DoCast(m_creature,33654);
+
+                        //Here is the spell we'll have players cast
+
+                        // This hack now not supported by core
+                        //SpellEntry spell;
+                        //spell =(*GetSpellStore()->LookupEntry(33671));
+                        //spell.rangeIndex = 0;              // Index 0 = self only
+                        //spell.EffectAmplitude[0] = 2000;
+
+                        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+                        std::list<HostilReference*>::iterator i = m_threatlist.begin();
+
+                        //If you have to do a loop over all units in threat list do it this way
+                        for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
                         {
-                            //Force player to cast 22890 -- Dispels all slowing and stun effects
-                            pCastUnit->CastSpell(pCastUnit,22890,true);
+                            Unit* pCastUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                            if (pCastUnit)
+                            {
+                                //Force player to cast 22890 -- Dispels all slowing and stun effects
+                                pCastUnit->CastSpell(pCastUnit,22890,true);
 
-                            //Force player to cast the AoE dmg spell
-                            pCastUnit->CastSpell(pCastUnit,&spell ,true);
+                                //Force player to cast the AoE dmg spell
+                                //pCastUnit->CastSpell(pCastUnit,&spell ,true);
+                                pCastUnit->CastSpell(pCastUnit,33671,true);
 
-                            //as shatter doesnt cancel stoned aura we need to do it by hand
-                            pCastUnit->RemoveAurasDueToSpell(SPELL_STONED);
+                                //as shatter doesnt cancel stoned aura we need to do it by hand
+                                pCastUnit->RemoveAurasDueToSpell(SPELL_STONED);
+                            }
                         }
-                    }
 
-                    //Allow movement
-                    m_creature->m_canMove = true; 
-                    
-                    // resets everything
-                    IsInGroundSlam= false;
-                    GroundSlam_Timer =120000;
-                    GroundSlamPhase =0;
-                    HurtfulStrike_Timer= 8000;
-                    Reverberation_Timer = 45000;
-                    CaveIn_Timer =35000;
-                    break;
+                        //Allow movement
+                        m_creature->m_canMove = true; 
+
+                        // resets everything
+                        IsInGroundSlam= false;
+                        GroundSlam_Timer =120000;
+                        GroundSlamPhase =0;
+                        HurtfulStrike_Timer= 8000;
+                        Reverberation_Timer = 45000;
+                        CaveIn_Timer =35000;
+                        break;
+                    }
                 }
             }else GroundSlam_Timer -= diff;
 

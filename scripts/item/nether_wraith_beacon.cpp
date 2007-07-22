@@ -22,8 +22,8 @@ bool ItemUse_nether_wraith_beacon(Player *player, Item* _Item)
     if (player->GetQuestStatus(10832) == QUEST_STATUS_INCOMPLETE)
     {
         Creature *Nether;
-        Nether = player->SummonCreature(22408,530,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
-        Nether = player->SummonCreature(22408,530,player->GetPositionX() ,player->GetPositionY()-20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
+        Nether = player->SummonCreature(22408,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
+        Nether = player->SummonCreature(22408,player->GetPositionX() ,player->GetPositionY()-20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
         if (Nether)
             ((CreatureAI*)Nether->AI())->AttackStart(player);
     }

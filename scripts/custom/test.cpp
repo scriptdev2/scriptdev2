@@ -54,11 +54,11 @@ CreatureAI* GetAI_test(Creature *_Creature)
     ai->Spell[2].First_Cast = 1000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
-    //32361 //Crystal Prison (deals 50% dmg over 5 seconds)
+    //41472 //Divine Wrath
     ai->Spell[3].Enabled = true;
-    ai->Spell[3].Spell_Id = 32361;
-    ai->Spell[3].Cooldown = 15000;
-    ai->Spell[3].First_Cast = 12000;
+    ai->Spell[3].Spell_Id = 41472;
+    ai->Spell[3].Cooldown = 16000;
+    ai->Spell[3].First_Cast = 16000;
     ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_LAST_AGGRO;
     ai->Spell[3].Yell[0] = SPECIAL_YELL_1;
     ai->Spell[3].Yell[1] = SPECIAL_YELL_1;

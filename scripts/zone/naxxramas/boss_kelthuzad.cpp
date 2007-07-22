@@ -486,42 +486,42 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     switch(rand()%6)
                     {
                         case 0: 
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Setting walk position
                          Walk_Pos_X = WALKX_LEFT_FAR;
                          Walk_Pos_Y = WALKY_LEFT_FAR;
                          Walk_Pos_Z = WALKZ_LEFT_FAR;						 
                          break;
                         case 1:
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_LEFT_MIDDLE;
                          Walk_Pos_Y = WALKY_LEFT_MIDDLE;
                          Walk_Pos_Z = WALKZ_LEFT_MIDDLE;						 
                          break;
                         case 2:
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_LEFT_NEAR;
                          Walk_Pos_Y = WALKY_LEFT_NEAR;
                          Walk_Pos_Z = WALKZ_LEFT_NEAR;						 
                          break;
                         case 3:
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_FAR;
                          Walk_Pos_Y = WALKY_RIGHT_FAR;
                          Walk_Pos_Z = WALKZ_RIGHT_FAR;						 
                          break;
                         case 4:
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_MIDDLE;
                          Walk_Pos_Y = WALKY_RIGHT_MIDDLE;
                          Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;						 
                          break;
                         case 5:
-                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,NAXXRAMAS_MAP,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_CORPSE_DESPAWN,10);
+                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = m_creature->SummonCreature(16441,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_CORPSE_DESPAWN,10);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_NEAR;
                          Walk_Pos_Y = WALKY_RIGHT_NEAR;

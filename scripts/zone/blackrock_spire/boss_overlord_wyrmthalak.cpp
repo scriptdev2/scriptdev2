@@ -147,8 +147,8 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
             {
 
                 //Cast
-                m_creature->SummonCreature(9216,229,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
-                m_creature->SummonCreature(9268,229,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                m_creature->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                m_creature->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
                 Summoned = true; 
             }
 

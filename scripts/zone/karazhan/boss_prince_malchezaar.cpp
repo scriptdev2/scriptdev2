@@ -300,82 +300,81 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void SummonInfernalKarazhan()
     {
-        uint32 MapID = 532; // MapID for Karazhan Instance
         Invisible = NULL;
         Infernal = NULL;
         switch(rand()%19)
         {
         case 0:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 1:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 2:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 3:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 4:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 5:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 6:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 7:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 8:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 9:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 10:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 12:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 13:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 14:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 15:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 16:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 17:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         case 18:
-            Invisible = m_creature->SummonCreature(12999, MapID, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
             break;
         }
 
@@ -396,7 +395,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     {
         if(m_creature->GetMapId() != 532)
         {
-            uint32 MapID = m_creature->GetMapId();
             uint32 PosX = m_creature->GetPositionX();
             uint32 PosY = m_creature->GetPositionY();
             uint32 PosZ = m_creature->GetPositionZ();
@@ -407,8 +405,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             Invisible = NULL;
             Infernal = NULL;
 
-            Invisible = m_creature->SummonCreature(12999, MapID, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, MapID, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+            Invisible = m_creature->SummonCreature(12999, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
 
             if (Invisible)
             {
@@ -449,7 +447,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         uint32 PosY = m_creature->GetPositionY();
         uint32 PosZ = m_creature->GetPositionZ();
 
-        Axe = m_creature->SummonCreature(17650, MapID, PosX, PosY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+        Axe = m_creature->SummonCreature(17650, PosX, PosY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
         if(Axe && target)
