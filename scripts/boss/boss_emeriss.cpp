@@ -45,6 +45,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         TailSweep_Timer = 20000;
         //	MarkOfNature_Timer = 45000;
         VolatileInfection_Timer = 8000;
+        CorruptionofEarth_Timer = 0;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -149,14 +150,44 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
 
 
             //CorruptionofEarth_Timer
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);                    
+                if (CorruptionofEarth_Timer < diff)
+                {
+                    //Cast
+                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
 
-                //22 seconds until we should cast this agian
-                CorruptionofEarth_Timer = 22000;  
-            }else CorruptionofEarth_Timer -= diff;
+
+                    //1 minutes for next one. Means not again with this health value
+                    CorruptionofEarth_Timer = 60000;
+                } else CorruptionofEarth_Timer -= diff;
+            }
+
+            //CorruptionofEarth_Timer
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+            {
+                if (CorruptionofEarth_Timer < diff)
+                {
+                    //Cast
+                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
+
+                    //1 minutes for next one. Means not again with this health value
+                    CorruptionofEarth_Timer = 60000;
+                } else CorruptionofEarth_Timer -= diff;
+            }
+
+            //CorruptionofEarth_Timer
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+            {
+                if (CorruptionofEarth_Timer < diff)
+                {
+                    //Cast
+                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
+
+                    //1 minutes for next one. Means not again with this health value
+                    CorruptionofEarth_Timer = 60000;
+                } else CorruptionofEarth_Timer -= diff;
+            }
 
 
             //If we are within range melee the target

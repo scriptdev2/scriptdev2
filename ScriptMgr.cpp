@@ -51,6 +51,11 @@ extern void AddSC_boss_shadeoftaerar();
 // -- Custom --
 extern void AddSC_custom_example();
 extern void AddSC_test();
+extern void AddSC_boss_mordenk();
+extern void AddSC_boss_princess();
+extern void AddSC_boss_ronnydance();
+extern void AddSC_mob_children();
+extern void AddSC_boss_tzazika();
 
 // -- GO --
 extern void AddSC_go_teleporter();
@@ -145,6 +150,10 @@ extern void AddSC_boss_shadowvosh();
 extern void AddSC_boss_thebeast();
 extern void AddSC_boss_warmastervoone();
 extern void AddSC_boss_quatermasterzigris();
+extern void AddSC_boss_pyroguard_emberseer();
+extern void AddSC_boss_gyth();
+extern void AddSC_boss_rend_blackhand();
+extern void AddSC_mob_chromatic_elite_guard();
 
 //Blackwing lair
 extern void AddSC_boss_razorgore();
@@ -229,6 +238,18 @@ extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
 extern void AddSC_mob_firelord();
+extern void AddSC_mob_molten_giant();
+extern void AddSC_mob_ancient_core_hound();
+extern void AddSC_mob_molten_destroyer();
+extern void AddSC_mob_firewalker();
+extern void AddSC_mob_firesworn();
+extern void AddSC_mob_flame_guard();
+extern void AddSC_mob_flamewaker();
+extern void AddSC_mob_flamewaker_elite();
+extern void AddSC_mob_flamewaker_healer();
+extern void AddSC_mob_flamewaker_protector();
+extern void AddSC_mob_core_rager();
+extern void AddSC_mob_lavaspawn();
 
 //Moonglade
 extern void AddSC_silva_filnaveth();
@@ -424,6 +445,11 @@ void ScriptsInit()
     // -- Custom --
     AddSC_custom_example();
     AddSC_test();
+    AddSC_boss_mordenk();
+    AddSC_boss_princess();
+    AddSC_boss_ronnydance();
+    AddSC_mob_children();
+    AddSC_boss_tzazika();
 
     // -- GO --
     AddSC_go_teleporter();
@@ -517,6 +543,10 @@ void ScriptsInit()
     AddSC_boss_thebeast();
     AddSC_boss_warmastervoone();
     AddSC_boss_quatermasterzigris();
+    AddSC_boss_gyth();
+    AddSC_boss_pyroguard_emberseer();
+    AddSC_boss_rend_blackhand();
+    AddSC_mob_chromatic_elite_guard();
 
     //Blackwing lair
     AddSC_boss_razorgore();
@@ -601,6 +631,18 @@ void ScriptsInit()
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
     AddSC_mob_firelord();
+    AddSC_mob_molten_giant();
+    AddSC_mob_ancient_core_hound();
+    AddSC_mob_molten_destroyer();
+    AddSC_mob_firewalker();
+    AddSC_mob_firesworn();
+    AddSC_mob_flame_guard();
+    AddSC_mob_flamewaker();
+    AddSC_mob_flamewaker_elite();
+    AddSC_mob_flamewaker_healer();
+    AddSC_mob_flamewaker_protector();
+    AddSC_mob_core_rager();
+    AddSC_mob_lavaspawn();
 
     //Moonglade
     AddSC_silva_filnaveth();

@@ -180,12 +180,15 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             }else LightningWave_Timer -= diff;
 
 
-            //SummonDruids_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 )
+
+            //Summon Druids
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
                 if (SummonDruids_Timer < diff)
                 {
-                    // summon 6 druids every 45s  
+                    // summon 8 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
@@ -193,8 +196,49 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
 
-                    //45 seconds until we should cast this agian
-                    SummonDruids_Timer = 45000;
+                    //90 seconds until we should cast this agian
+                    SummonDruids_Timer = 90000;
+                } else SummonDruids_Timer -= diff;
+            }
+
+            //Summon Druids
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+            {
+                if (SummonDruids_Timer < diff)
+                {
+                    // summon 8 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+
+                    //90 seconds until we should cast this agian
+                    SummonDruids_Timer = 90000;
+                } else SummonDruids_Timer -= diff;
+            }
+
+
+            //Summon Druids
+            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+            {
+                if (SummonDruids_Timer < diff)
+                {
+                    // summon 8 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
+
+                    //90 seconds until we should cast this agian
+                    SummonDruids_Timer = 90000;
                 } else SummonDruids_Timer -= diff;
             }
 

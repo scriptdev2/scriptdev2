@@ -37,13 +37,13 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
     uint32 ArcaneBlast_Timer;
     uint32 BellowingRoar_Timer;
     uint32 Shades_Timer;
+    uint32 Summon_Timer;
     int Rand;
     int RandX;
     int RandY;
     Creature* Summoned;
     bool InCombat;
     bool Shades;
-    bool WasBanished;
 
     void EnterEvadeMode()
     {       
@@ -53,10 +53,10 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //MarkOfNature_Timer = 45000;
         ArcaneBlast_Timer = 8000;
         BellowingRoar_Timer = 30000;
+	Summon_Timer = 0;
         Shades_Timer = 60000;                               //The time that Taerar is banished
         InCombat = false;
-        Shades = false;
-        WasBanished = false; 
+        Shades = false; 
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -125,8 +125,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             //Become unbanished again 
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->m_canMove = true; 
             Shades = false;
-            WasBanished = true;                             //Taerar Was banished so time for normal status again.
         } else if (Shades)
                {
                   Shades_Timer -= diff;
@@ -205,13 +205,15 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
 
             //Summon 3 Shades
-            if ( !Shades  && !WasBanished && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 )
+            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
+
+		if (Summon_Timer < diff)
+		{
 
                 //Inturrupt any spell casting
                  m_creature->InterruptSpell();
-                //Root self
-                DoCast(m_creature,23973);
+                 m_creature->m_canMove = false; 
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
@@ -219,8 +221,53 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 SummonShades(m_creature->getVictim());
                 SummonShades(m_creature->getVictim());
                 SummonShades(m_creature->getVictim());
-                Shades = true;
-            }
+                Summon_Timer = 120000;
+                } else Summon_Timer -= diff;
+	    }
+
+            //Summon 3 Shades
+            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+            {
+
+		if (Summon_Timer < diff)
+		{
+
+                //Inturrupt any spell casting
+                 m_creature->InterruptSpell();
+                 m_creature->m_canMove = false; 
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                //Cast
+                SummonShades(m_creature->getVictim());
+                SummonShades(m_creature->getVictim());
+                SummonShades(m_creature->getVictim());
+                Summon_Timer = 120000;
+                } else Summon_Timer -= diff;
+	    }
+
+
+
+            //Summon 3 Shades
+            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+            {
+
+		if (Summon_Timer < diff)
+		{
+
+                //Inturrupt any spell casting
+                 m_creature->InterruptSpell();
+                 m_creature->m_canMove = false; 
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                //Cast
+                SummonShades(m_creature->getVictim());
+                SummonShades(m_creature->getVictim());
+                SummonShades(m_creature->getVictim());
+                Summon_Timer = 120000;
+                } else Summon_Timer -= diff;
+	    }
 
             //If we are within range melee the target
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))

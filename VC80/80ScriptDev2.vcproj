@@ -910,6 +910,54 @@
 						RelativePath="..\scripts\zone\molten_core\mob_firelord.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_molten_giant.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_ancient_core_hound.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_molten_destroyer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_firewalker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_firesworn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_flame_guard.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_flamewaker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_flamewaker_elite.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_flamewaker_healer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_flamewaker_protector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_core_rager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_lavaspawn.cpp"
+						>
+					</File>					
 				</Filter>
 				<Filter
 					Name="Mulgore"
@@ -1688,6 +1736,22 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_gyth.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_pyroguard_emberseer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_rend_blackhand.cpp"
+						>
+					</File>
+          <File
+						RelativePath="..\scripts\zone\blackrock_spire\mob_chromatic_elite_guard.cpp"
 						>
 					</File>
 				</Filter>

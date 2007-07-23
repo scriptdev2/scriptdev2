@@ -33,4 +33,5 @@ pkgdata_DATA = \
 	r63.sql \
 	r65.sql \
 	r72.sql \
-	r78.sql
+	r78.sql \
+	r81.sql

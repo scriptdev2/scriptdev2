@@ -42,6 +42,12 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
     }
 
     void AttackStart(Unit *who)
@@ -72,6 +78,7 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
                 InCombat = true;
+
             }
         }
     }
@@ -101,8 +108,8 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
                 //Cast Lucifron's curse
                 DoCast(m_creature->getVictim(),SPELL_LUCIFRONCURSE);
 
-                //20 seconds until we should cast this agian
-                LucifronCurse_Timer = 20000;
+                //15 seconds until we should cast this agian
+                LucifronCurse_Timer = 15000;
             }else LucifronCurse_Timer -= diff;
 
             //Shadowshock

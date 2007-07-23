@@ -65,6 +65,12 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
     }
 
     void KilledUnit(Unit* victim)
@@ -109,14 +115,9 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!InCombat)
-                {
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                    InCombat = true;
-                }
-
                 DoStartMeleeAttack(who);
+                InCombat = true;
+
             }
         }
     }

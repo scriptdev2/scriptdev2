@@ -19,9 +19,8 @@
 
 #define SPELL_FIRENOVA                  23462        
 #define SPELL_CLEAVE                    20691
-#define SPELL_CONFLIGURATION            23023
-#define SPELL_THUNDERCLAP               23931        //Not sure if he cast this spell
-
+#define SPELL_CONFLIGURATION            16805
+#define SPELL_THUNDERCLAP               15548        //Not sure if right ID. 23931 would be a harder possibility.
 
 struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
 {
@@ -35,16 +34,20 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        FireNova_Timer = 18000;
+        FireNova_Timer = 6000;
         Cleave_Timer = 8000;
-        Confliguration_Timer = 42000;
-        Thunderclap_Timer = 30000;
+        Confliguration_Timer = 15000;
+        Thunderclap_Timer = 17000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);       
+	m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
     }
 
     void AttackStart(Unit *who)
@@ -96,8 +99,8 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
-                //15 seconds
-                FireNova_Timer = 15000;
+                //10 seconds
+                FireNova_Timer = 10000;
             }else FireNova_Timer -= diff;
 
             //Cleave_Timer
@@ -107,20 +110,17 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
                 //8 seconds until we should cast this agian
-                Cleave_Timer = 10000;
+                Cleave_Timer = 8000;
             }else Cleave_Timer -= diff;
 
             //Confliguration_Timer
             if (Confliguration_Timer < diff)
             {
-                //Cast Confliguration on a Random target
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_CONFLIGURATION);
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CONFLIGURATION);
 
                 //18 seconds until we should cast this agian
-                Confliguration_Timer = 25000;
+                Confliguration_Timer = 18000;
             }else Confliguration_Timer -= diff;
 
             //Thunderclap_Timer
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
 
-                //20 seconds until we should cast this agian
+                //22 seconds until we should cast this agian
                 Thunderclap_Timer = 20000;
             }else Thunderclap_Timer -= diff;
 

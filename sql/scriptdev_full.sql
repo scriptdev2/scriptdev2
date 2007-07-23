@@ -13,6 +13,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_taerar' WHERE `entry` = 1489
 UPDATE `creature_template` SET `ScriptName` = 'boss_shade_of_taerar' WHERE `entry` = 15302;
 UPDATE `creature_template` SET `ScriptName` = 'boss_teremus_the_devourer' WHERE `entry` = 7846;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kruul' WHERE `entry` = 18338;
+UPDATE `creature_template` SET `ScriptName` = 'boss_azuregos' WHERE `entry` = 6109;
 
 /* WORLD CREATURE  These are creatures to be found in more than one spesific zone */
 UPDATE `creature_template` SET `ScriptName` = 'lumberjack' WHERE `entry` IN (11328, 11260);
@@ -172,7 +173,11 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_overlord_wyrmthalak' WHERE `
 /* BLACKROCK SPIRE Upper bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_the_beast' WHERE `entry` = 10430;
 UPDATE `creature_template` SET `ScriptName` = 'boss_drakkisath' WHERE `entry` = 10363;
-/* Warchief Rend Blackhand, Gyth,Pyroguard Emberseer,Jed Runewatcher,Solakar Flamewreath,Goraluk Anvilcrack */
+UPDATE `creature_template` SET `ScriptName` = 'boss_gyth' WHERE `entry` = 10339;
+UPDATE `creature_template` SET `ScriptName` = 'boss_rend_blackhand' WHERE `entry` = 10429;
+UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `entry` = 9816;
+UPDATE `creature_template` SET `ScriptName` = 'mob_chromatic_elite_guard' WHERE `entry` = 10814;
+/* Jed Runewatcher,Solakar Flamewreath,Goraluk Anvilcrack */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (10429,10339,9816,10509,10264,10899);
 
 /* BLACKWING LAIR */
@@ -352,8 +357,19 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_sulfuron' WHERE `entry` = 12
 UPDATE `creature_template` SET `ScriptName` = 'boss_majordomo' WHERE `entry` = 12018;
 UPDATE `creature_template` SET `ScriptName` = 'boss_ragnaros' WHERE `entry` = 11502;
 UPDATE `creature_template` SET `ScriptName` = 'mob_firelord' WHERE `entry`=11668;
-/* Molten Giant, Molten Destroyer, Ancient Core Hound, Core Hound, Core Rager, Flame Imp, Flamewaker, Flamewaker Priest, Flamewaker Healer, Flamewaker Elite, Firewalker, Flameguard, Flamewaker Protector, Son of Flame, Lava Elemental, Firesworn, Lava Reaver, Lava Surger, Lava Spawn, Magmakin */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (11658, 11659, 11673, 11671, 11672, 11669, 11661, 11662, 11663, 11664, 11666, 11667, 12119, 12143, 12076, 12099, 12100, 12101, 12265, 12806);
+UPDATE `creature_template` SET `ScriptName` = 'mob_ancient_core_hound' WHERE `entry` = 11673;
+UPDATE `creature_template` SET `ScriptName` = 'mob_core_rager' WHERE `entry` = 11672;
+UPDATE `creature_template` SET `ScriptName` = 'mob_firesworn' WHERE `entry` = 12099;
+UPDATE `creature_template` SET `ScriptName` = 'mob_firewalker' WHERE `entry` = 11666;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flame_guard' WHERE `entry` = 11667;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker' WHERE `entry` = 11661;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_elite' WHERE `entry` = 11664;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_healer' WHERE `entry` = 11663;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_protector' WHERE `entry` = 12119;
+UPDATE `creature_template` SET `ScriptName` = 'mob_lavaspawn' WHERE `entry` = 12265;
+UPDATE `creature_template` SET `ScriptName` = 'mob_molten_destroyer' WHERE `entry` = 11659;
+UPDATE `creature_template` SET `ScriptName` = 'mob_molten_giant' WHERE `entry` = 11658;
+
 
 /* MOONGLADE */
 

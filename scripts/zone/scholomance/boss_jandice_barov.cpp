@@ -110,6 +110,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11073);     //Jandice Model
+            m_creature->m_canMove = true; 
             Invisible = false;
         } else if (Invisible)
                {
@@ -142,7 +143,6 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
                 //Inturrupt any spell casting
                 m_creature->InterruptSpell();
-                //Root self
                 m_creature->m_canMove = false;
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

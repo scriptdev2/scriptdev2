@@ -41,6 +41,7 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
     uint32 Knockaway_Timer;
     bool Summoned;
     bool InCombat;
+    Creature *SummonedCreature;
 
     void EnterEvadeMode()
     {       
@@ -146,14 +147,16 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
             if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
             {
 
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
                 //Cast
-                m_creature->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
-                m_creature->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                SummonedCreature = m_creature->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
+                SummonedCreature = m_creature->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
+                ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
                 Summoned = true; 
             }
-
-
-
 
 
 

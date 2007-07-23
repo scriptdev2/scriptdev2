@@ -78,6 +78,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
     uint32 MortalStrike_Timer;
     //	uint32 RaiseDead_Timer;
     uint32 SummonSkeletons_Timer;
+    Creature *Summoned;
     bool HasYelled;
     bool HasAura;
     bool InCombat;
@@ -234,13 +235,22 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 
             if (SummonSkeletons_Timer < diff)
             {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
                 //Cast
-                m_creature->SummonCreature(11197,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,29000);
-                m_creature->SummonCreature(11197,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,29000);
-                m_creature->SummonCreature(11197,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,29000);
-                m_creature->SummonCreature(11197,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,29000);
-                m_creature->SummonCreature(11197,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,29000);
-                m_creature->SummonCreature(11197,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                Summoned = m_creature->SummonCreature(11197,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(11197,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(11197,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(11197,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(11197,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(11197,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,29000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
 
                 //34 seconds until we should cast this again
                 SummonSkeletons_Timer = 40000;
@@ -259,7 +269,8 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
             }
         }
     }
-}; 
+};
+
 CreatureAI* GetAI_boss_baron_rivendare(Creature *_Creature)
 {
     return new boss_baron_rivendareAI (_Creature);

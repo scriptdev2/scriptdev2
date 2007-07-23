@@ -56,17 +56,13 @@ scripts/guard/guard_exodar.cpp \
 scripts/guard/guard_ironforge.cpp \
 scripts/guard/guard_mulgore.cpp \
 scripts/guard/guard_orgrimmar.cpp \
-scripts/guard/guard_shattrath.cpp \
 scripts/guard/guard_silvermoon.cpp \
 scripts/guard/guard_stormwind.cpp \
 scripts/guard/guard_teldrassil.cpp \
 scripts/guard/guard_tirisfal.cpp \
 scripts/guard/guard_undercity.cpp \
 scripts/honor/honor_vendor.cpp \
-scripts/item/area_52_special.cpp \
 scripts/item/item_test.cpp \
-scripts/item/nether_wraith_beacon.cpp \
-scripts/item/purification_mixture.cpp \
 scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
@@ -108,6 +104,10 @@ scripts/zone/blackrock_spire/boss_shadow_hunter_voshgajin.cpp \
 scripts/zone/blackrock_spire/boss_the_beast.cpp \
 scripts/zone/blackrock_spire/boss_warmaster_voone.cpp \
 scripts/zone/blackrock_spire/mob_quartermaster_zigris.cpp \
+scripts/zone/blackrock_spire/boss_gyth.cpp \
+scripts/zone/blackrock_spire/boss_pyroguard_emberseer.cpp \
+scripts/zone/blackrock_spire/boss_rend_blackhand.cpp \
+scripts/zone/blackrock_spire/mob_chromatic_elite_guard.cpp \
 scripts/zone/blackwing_lair/boss_broodlord_lashlayer.cpp \
 scripts/zone/blackwing_lair/boss_chromaggus.cpp \
 scripts/zone/blackwing_lair/boss_ebonroc.cpp \
@@ -120,16 +120,15 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
-scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
+scripts/zone/eastern_plaguelands/mob_q5211.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/elwynn_forest/npc_marshal_mcbride.cpp \
-scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
+scripts/zone/eversong_woods/mob_q8346.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
-scripts/zone/hellfire_peninsula/mobs_bonechewer_orc.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
 scripts/zone/karazhan/boss_midnight.cpp \
@@ -160,6 +159,18 @@ scripts/zone/molten_core/boss_ragnaros.cpp \
 scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/mob_firelord.cpp \
+scripts/zone/molten_core/mob_ancient_core_hound.cpp \
+scripts/zone/molten_core/mob_molten_destroyer.cpp \
+scripts/zone/molten_core/mob_firewalker.cpp \
+scripts/zone/molten_core/mob_firesworn.cpp \
+scripts/zone/molten_core/mob_flame_guard.cpp \
+scripts/zone/molten_core/mob_flamewaker.cpp \
+scripts/zone/molten_core/mob_flamewaker_elite.cpp \
+scripts/zone/molten_core/mob_flamewaker_healer.cpp \
+scripts/zone/molten_core/mob_flamewaker_protector.cpp \
+scripts/zone/molten_core/mob_core_rager.cpp \
+scripts/zone/molten_core/mob_lavaspawn.cpp \
+scripts/zone/molten_core/mob_molten_giant.cpp \
 scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
 scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
@@ -307,6 +318,7 @@ system.cpp
 
 
 
+>>>>>>> .theirs
 ## libtool settings
 # API versioning
 # Link against dependencies

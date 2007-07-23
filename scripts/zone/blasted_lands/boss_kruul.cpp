@@ -22,7 +22,7 @@
 #define SPELL_TWISTEDREFLECTION     21063
 #define SPELL_VOIDBOLT              21066
 #define SPELL_RAGE                  21340
-#define SPELL_CAPTURESOUL           21053                   // Changed from 21054
+#define SPELL_CAPTURESOUL           21054                  
 
 struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
 {

@@ -34,7 +34,7 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
     {       
         Flamebreak_Timer = 12000;
         Immolate_Timer = 3000;
-        TerrifyingRoar_Timer = 35000;
+        TerrifyingRoar_Timer = 23000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -93,13 +93,13 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FLAMEBREAK);
 
                 //12 seconds
-                Flamebreak_Timer = 12000;
+                Flamebreak_Timer = 10000;
             }else Flamebreak_Timer -= diff;
 
             //Immolate_Timer
             if (Immolate_Timer < diff)
             {
-                //Cast
+
                 //Cast Immolate on a Random target
                 Unit* target = NULL;
 
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
                 if (target)DoCast(target,SPELL_IMMOLATE);
 
                 //20 seconds until we should cast this agian
-                Immolate_Timer = 20000;
+                Immolate_Timer = 8000;
             }else Immolate_Timer -= diff;
 
             //TerrifyingRoar_Timer
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_TERRIFYINGROAR);
 
                 //30 seconds until we should cast this agian
-                TerrifyingRoar_Timer = 30000;
+                TerrifyingRoar_Timer = 20000;
             }else TerrifyingRoar_Timer -= diff;
 
             //If we are within range melee the target

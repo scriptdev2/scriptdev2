@@ -111,6 +111,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
             //Become visible again 
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->m_canMove = true; 
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11172);     //Noxxion model
             Invisible = false;
         } else if (Invisible)
@@ -155,7 +156,6 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 
                 //Inturrupt any spell casting
                  m_creature->InterruptSpell();
-                //Root self
                 m_creature->m_canMove = false;
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

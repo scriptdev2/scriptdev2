@@ -19,25 +19,36 @@
 
 // Adds NYI
 
-#define SPELL_MAGMASPLASH               13879       //NYI in core
+#define SPELL_MAGMASPLASH               13880       //NYI in core so workaround
 #define SPELL_PYROBLAST                 20228
+#define SPELL_EARTHQUAKE                 19798
 
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
     boss_golemaggAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Pyroblast_Timer;
+    uint32 EarthQuake_Timer;
+    uint32 MagmaSplash_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
     {
         Pyroblast_Timer = 7000;      //These times are probably wrong
+        EarthQuake_Timer = 0;     
+	MagmaSplash_Timer = 12000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
     }
 
     void AttackStart(Unit *who)
@@ -68,6 +79,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
                 InCombat = true;
+
             }
         }
     }
@@ -94,6 +106,31 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
                 //7 seconds until we should cast this agian
                 Pyroblast_Timer = 7000;
             }else Pyroblast_Timer -= diff;
+
+            //MagmaSplash_Timer
+            if (MagmaSplash_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_MAGMASPLASH);
+
+                //5 seconds cause its a proc
+                MagmaSplash_Timer = 5000;
+            }else MagmaSplash_Timer -= diff;
+
+
+            //EarthQuake_Timer
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
+            {
+		if (EarthQuake_Timer < diff)
+	        {
+                DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
+
+                //12 seconds
+                EarthQuake_Timer = 12000;
+                }else EarthQuake_Timer -= diff;
+            }
+
+
 
             //If we are within range melee the target
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))

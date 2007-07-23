@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                         m_creature->InterruptSpell();
 
                         //Root self
-                        DoCast(m_creature,23973);
+                        DoCast(m_creature,33356);
 
                         //Make super invis
                         DoCast(m_creature,8149);
