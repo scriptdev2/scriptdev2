@@ -51,11 +51,6 @@ extern void AddSC_boss_shadeoftaerar();
 // -- Custom --
 extern void AddSC_custom_example();
 extern void AddSC_test();
-extern void AddSC_boss_mordenk();
-extern void AddSC_boss_princess();
-extern void AddSC_boss_ronnydance();
-extern void AddSC_mob_children();
-extern void AddSC_boss_tzazika();
 
 // -- GO --
 extern void AddSC_go_teleporter();
@@ -445,11 +440,6 @@ void ScriptsInit()
     // -- Custom --
     AddSC_custom_example();
     AddSC_test();
-    AddSC_boss_mordenk();
-    AddSC_boss_princess();
-    AddSC_boss_ronnydance();
-    AddSC_mob_children();
-    AddSC_boss_tzazika();
 
     // -- GO --
     AddSC_go_teleporter();
