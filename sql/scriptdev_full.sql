@@ -156,8 +156,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (8933);
 
 /* BLACKROCK SPIRE */
-/* Blackhand Dreadweaver,Blackhand Summoner,Blackhand Veteran,Blackhand Elite,Blackhand Assassin,Blackhand Iron Guard,Chromatic Elite Guard,Chromatic Whelp,Chromatic Dragonspawn,Rookery Whelp,Rookery Guardian,Rage Talon Captain,Rage Talon Fire Tongue,Rage Talon Flamescale */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9817, 9818, 9819, 10317, 10318, 10319, 10814, 10442, 10447, 10161, 10258, 10371, 10372, 10083);
+UPDATE `creature_template` SET `ScriptName` = 'mob_chromatic_elite_guard' WHERE `entry` = 10814;
+/* Blackhand Dreadweaver,Blackhand Summoner,Blackhand Veteran,Blackhand Elite,Blackhand Assassin,Blackhand Iron Guard,Chromatic Whelp,Chromatic Dragonspawn,Rookery Whelp,Rookery Guardian,Rage Talon Captain,Rage Talon Fire Tongue,Rage Talon Flamescale */
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9817, 9818, 9819, 10317, 10318, 10319, 10442, 10447, 10161, 10258, 10371, 10372, 10083);
 /* Spirestone Battle Mage, Spirestone Mystic, Smolderthorn Mystic, Smolderthorn Axe Thrower, Bloodaxe Summoner <Bloodaxe Legion>, Spire Spider, Spire Spiderling */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9197, 9198, 9239, 9267, 9717, 10374, 10375);
 
@@ -176,9 +177,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_drakkisath' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'boss_gyth' WHERE `entry` = 10339;
 UPDATE `creature_template` SET `ScriptName` = 'boss_rend_blackhand' WHERE `entry` = 10429;
 UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `entry` = 9816;
-UPDATE `creature_template` SET `ScriptName` = 'mob_chromatic_elite_guard' WHERE `entry` = 10814;
 /* Jed Runewatcher,Solakar Flamewreath,Goraluk Anvilcrack */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (10429,10339,9816,10509,10264,10899);
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (10509,10264,10899);
 
 /* BLACKWING LAIR */
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
