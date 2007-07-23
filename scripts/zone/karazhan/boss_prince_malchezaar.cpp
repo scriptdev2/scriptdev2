@@ -21,64 +21,64 @@
 #define SOUND_DEATH         9221
 
 // 19 Coordinates for Infernal spawns
-#define ADDZ  91
+#define ADDZ  275.5
 
-#define ADDX1 -11121
-#define ADDY1 -1966
+#define ADDX1 -10922.8
+#define ADDY1 -1985.2
 
-#define ADDX2 -11137
-#define ADDY2 -1971
+#define ADDX2 -10916.2
+#define ADDY2 -1996.2
 
-#define ADDX3 -11162
-#define ADDY3 -1956
+#define ADDX3 -10932.2
+#define ADDY3 -2008.1
 
-#define ADDX4 -11158
-#define ADDY4 -1941
+#define ADDX4 -10948.8
+#define ADDY4 -2022.1
 
-#define ADDX5 -11172
-#define ADDY5 -1931
+#define ADDX5 -10958.7
+#define ADDY5 -1997.7
 
-#define ADDX6 -11118
-#define ADDY6 -1972
+#define ADDX6 -10971.5
+#define ADDY6 -1997.5
 
-#define ADDX7 -11152
-#define ADDY7 -1957
+#define ADDX7 -10990.8
+#define ADDY7 -1995.1
 
-#define ADDX8 -11167
-#define ADDY8 -1942
+#define ADDX8 -10989.8
+#define ADDY8 -1976.5
 
-#define ADDX9 -11165
-#define ADDY9 -1917
+#define ADDX9 -10971.6
+#define ADDY9 -1973.0
 
-#define ADDX10 -11164
-#define ADDY10 -1934
+#define ADDX10 -10955.5
+#define ADDY10 -1974.0
 
-#define ADDX11 -11167
-#define ADDY11 -1903
+#define ADDX11 -10939.6
+#define ADDY11 -1969.8
 
-#define ADDX12 -11151
-#define ADDY12 -1899
+#define ADDX12 -10958.0
+#define ADDY12 -1952.2
 
-#define ADDX13 -11145
-#define ADDY13 -1883
+#define ADDX13 -10941.7
+#define ADDY13 -1954.8
 
-#define ADDX14 -11132
-#define ADDY14 -1888
+#define ADDX14 -10943.1
+#define ADDY14 -1988.5
 
-#define ADDX15 -11117
-#define ADDY15 -1880
+#define ADDX15 -10948.8
+#define ADDY15 -2005.1
 
-#define ADDX16 -11107
-#define ADDY16 -1891
+#define ADDX16 -10984.0
+#define ADDY16 -2019.3
 
-#define ADDX17 -11093
-#define ADDY17 -1889
+#define ADDX17 -10932.8
+#define ADDY17 -1979.6
 
-#define ADDX18 -11091
-#define ADDY18 -1904
+#define ADDX18 -10932.8
+#define ADDY18 -1979.6
 
-#define ADDX19 -11141
-#define ADDY19 -1961
+#define ADDX19 -10935.7
+#define ADDY19 -1996
 
 /*
 SPECIAL?
