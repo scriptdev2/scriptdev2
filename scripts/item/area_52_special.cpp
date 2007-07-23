@@ -25,7 +25,7 @@ bool ItemUse_area_52_special(Player *player, Item* _Item)
     }
     else
     {
-        //player->InterruptSpell();
+        //SendCastResult(SPELL_FAILED_NOT_HERE);
         return true;
     }
 }
