@@ -25,7 +25,7 @@ bool ItemUse_area_52_special(Player *player, Item* _Item)
     }
     else
     {
-        //SendCastResult(SPELL_FAILED_NOT_HERE);
+        player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE,_Item,NULL);
         return true;
     }
 }
