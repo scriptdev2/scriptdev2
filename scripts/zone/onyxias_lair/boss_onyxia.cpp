@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
 
 //        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
-        m_creature->InterruptSpell();
+        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
         m_creature->SetHover(false);
         (*m_creature)->Clear(false);
         m_creature->RemoveAllAuras();
@@ -211,7 +211,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 if (movement_timer < diff)
                 {
                     //Inturrupt whatever we are casting then move to random position
-                    m_creature->InterruptSpell();
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     uint32 position = rand()%9;
 
                     switch (position)
@@ -328,7 +328,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             if ( phase == 1 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 61)
             {
                 phase = 2;
-                m_creature->InterruptSpell();
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                 (*m_creature)->Clear(false);
                 (*m_creature)->Idle();
@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             if ( phase == 2 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 41)
             {
                 phase = 3;
-                m_creature->InterruptSpell();
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                  SpecialMove(-65.8444,-213.809,-85.2985,5000);
                 m_creature->Relocate(-65,-213,-85,0);
                 //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);

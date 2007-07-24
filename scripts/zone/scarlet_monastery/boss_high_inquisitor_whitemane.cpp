@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
 
             //If we are <75% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->m_currentSpell)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 
                 //Healing_Timer
@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                     Healing_Timer = 80000;
                 }else Healing_Timer -= diff;      
                 
-                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
+                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
 
                     if (Healing_Timer < diff)
@@ -224,16 +224,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 MindBlast6_Timer = 35000;
             }else MindBlast6_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

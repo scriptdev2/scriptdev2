@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             }
 
             //If he is 20% enrage
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->m_currentSpell)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 DoCast(m_creature->getVictim(),SPELL_ENRAGE);     
             }
@@ -97,17 +97,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
                 WHIRLWIND_Timer = 30000;
             }else WHIRLWIND_Timer -= diff;
 
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

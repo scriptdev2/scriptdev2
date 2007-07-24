@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                         //MapManager::Instance().GetMap(m_creature->GetMapId(), m_creature)->CreatureRelocation(m_creature,0,0,-5000,0);
                         
                         //Inturrupt any spell casting
-                        m_creature->InterruptSpell();
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
                         //Root self
                         DoCast(m_creature,33356);

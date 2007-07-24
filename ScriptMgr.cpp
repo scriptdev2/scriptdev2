@@ -1067,6 +1067,20 @@ void ScriptedAI::DoStartMeleeAttack(Unit* victim)
     }
 }
 
+void ScriptedAI::DoMeleeAttackIfReady()
+{
+    //If we are within range melee the target
+    if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+    {
+        //Make sure our attack is ready and we arn't currently casting
+        if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+        {
+            m_creature->AttackerStateUpdate(m_creature->getVictim());
+            m_creature->resetAttackTimer();
+        }
+    }
+}
+
 void ScriptedAI::DoStartRangedAttack(Unit* victim)
 {
     if (!victim)
@@ -1093,14 +1107,14 @@ void ScriptedAI::DoStopAttack()
 
 void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
-    if (!victim || m_creature->m_currentSpell)
+    if (!victim || m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
         return;
     m_creature->CastSpell(victim, spelId, false);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 {
-    if (!who || m_creature->m_currentSpell)
+    if (!who || m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
         return;
 
     m_creature->StopMoving();

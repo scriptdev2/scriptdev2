@@ -124,21 +124,12 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
                 phase = 2;
             }else Poison_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
 
             if ( (phase == 2 || phase == 1) && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
             {
                 phase = 3;
-                m_creature->InterruptSpell();
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 DoTextEmote("is going berserk", NULL);
                 DoCast(m_creature, SPELL_BERSERK);
             }

@@ -25,7 +25,7 @@ bool ItemUse_purification_mixture(Player *player, Item* _Item)
 {
     player->CastSpell(player,SPELL_PURIFY,true);
 
-    if(!player->m_currentSpell)
+    if(!player->m_currentSpells[CURRENT_GENERIC_SPELL])
     {
         if (rand()%100 < 65)
         {

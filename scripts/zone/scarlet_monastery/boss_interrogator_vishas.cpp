@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             }
 
             //If we are low on hp Do sayings
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->m_currentSpell)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 //Yell_Timer
                 if (Yell_Timer < diff)
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
                 }else Yell_Timer -= diff;
             }
             
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpell)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 //Yell_Timer
                 if (Yell_Timer < diff)
@@ -144,16 +144,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
                 PowerWordShield_Timer = 60000;
             }else PowerWordShield_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

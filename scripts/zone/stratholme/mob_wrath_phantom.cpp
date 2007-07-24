@@ -124,16 +124,7 @@ struct MANGOS_DLL_DECL mob_wrath_phantomAI : public ScriptedAI
                 HauntingPhantoms_Timer = 13000;
             }else HauntingPhantoms_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

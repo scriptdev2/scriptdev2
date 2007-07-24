@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         {
 
             //If we are <10% hp goes Enraged
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpell && Enrage_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL] && Enrage_Timer < diff)
             {
                 DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_ENRAGE);
@@ -250,16 +250,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 ConeOfCold5_Timer = 40000;
             }else ConeOfCold5_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 };

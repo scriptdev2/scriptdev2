@@ -110,7 +110,6 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11073);     //Jandice Model
-            m_creature->m_canMove = true; 
             Invisible = false;
         } else if (Invisible)
                {
@@ -142,8 +141,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             {
 
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell();
-                m_creature->m_canMove = false;
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
@@ -186,18 +184,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 //                  
 //            }else Illusion_Timer -= diff;
 
-
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

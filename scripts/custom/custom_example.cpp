@@ -254,22 +254,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                     DoCast(m_creature,SPELL_ENRAGE);
                 }else Phase_Timer -= diff;
 
-
-            //If we are within range melee the target
-            if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Check if our attack is ready (swing timer)
-                if( m_creature->isAttackReady() )
-                {
-                    //This here causes us to flip between targets.
-                    //It doesn't do very much right now but it is a decent placeholder
-                    //for when we get an aggro system in place
-
-                    //Send our melee swing and then reset our attack timer
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

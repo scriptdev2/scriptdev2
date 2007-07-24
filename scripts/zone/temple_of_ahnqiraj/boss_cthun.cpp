@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (target)
                     {
-                        m_creature->InterruptSpell();
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         DoCast(target,SPELL_GREEN_BEAM);
                         //Correctly update our target
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     //Switch to Dark Beam
                     Phase = 1;
 
-                    m_creature->InterruptSpell();
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
                     //Select random target for dark beam to start on
                     Unit* target = NULL;
@@ -294,7 +294,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
                     ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
 
-                    m_creature->InterruptSpell();
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
                     //Remove Red coloration from c'thun
                     m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
@@ -446,16 +446,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
                 HamstringTimer = 5000;
             }else HamstringTimer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 };

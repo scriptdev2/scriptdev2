@@ -131,7 +131,7 @@ void guardAI::UpdateAI(const uint32 diff)
         if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
+            if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 bool Healing = false;
                 SpellEntry const *info = NULL;
@@ -162,7 +162,7 @@ void guardAI::UpdateAI(const uint32 diff)
         else 
         {
             //Only run this code if we arn't already casting
-            if (!m_creature->m_currentSpell)
+            if (!m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 bool Healing = false;
                 SpellEntry const *info = NULL;
@@ -200,7 +200,7 @@ void guardAI::UpdateAI(const uint32 diff)
                 else if ((*m_creature)->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
                 {
                     //Cancel our current spell and then mutate new movement generator
-                    m_creature->InterruptSpell();
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     (*m_creature)->Clear(false);
                     (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                 }

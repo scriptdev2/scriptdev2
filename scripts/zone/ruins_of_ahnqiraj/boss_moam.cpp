@@ -103,14 +103,14 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
             }
 
 			//If we are 100%MANA cast Arcane Erruption
-            //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->m_currentSpell)
+            //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
 				DoCast(m_creature->getVictim(),SPELL_ARCANEERUPTION);
 				DoYell(SAY_MANA,LANG_UNIVERSAL,NULL);
             }
 
             //If we are <50%HP cast MANA FIEND (Summon Mana) and Sleep
-            //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpell)
+            //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
 				i=1;
 			DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
@@ -146,18 +146,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
                 DRAINMANA_Timer = 30000;
             }else DRAINMANA_Timer -= diff;
 
-
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

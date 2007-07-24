@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                 //is not very well supported in the core
                 //so added normaly spawning and banish workaround and attack again after 90 secs.
 
-                 m_creature->InterruptSpell();
+                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 //Root self
                 DoCast(m_creature,23973);
                 m_creature->setFaction(35);
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
+                if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();

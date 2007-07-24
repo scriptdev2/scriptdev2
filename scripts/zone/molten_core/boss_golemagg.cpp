@@ -121,27 +121,16 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             //EarthQuake_Timer
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
             {
-		if (EarthQuake_Timer < diff)
-	        {
-                DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
+                if (EarthQuake_Timer < diff)
+                {
+                    DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
 
-                //12 seconds
-                EarthQuake_Timer = 12000;
+                    //12 seconds
+                    EarthQuake_Timer = 12000;
                 }else EarthQuake_Timer -= diff;
             }
 
-
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

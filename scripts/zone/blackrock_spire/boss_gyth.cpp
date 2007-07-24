@@ -55,6 +55,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         Aggro = false;
         InCombat = false;
         RootSelf = false;
+        //m_creature->m_canMove = true;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -109,7 +110,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             if (!Aggro && Aggro_Timer < diff)
             {
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,9723);  // Visible now!
-                m_creature->m_canMove = true; 
                 m_creature->setFaction(14);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Aggro = true;
@@ -118,8 +118,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
         if (!Event && !RootSelf)
         {
-            //Root self
-            m_creature->m_canMove = false; 
+            //m_creature->m_canMove = true;
             RootSelf = true;
         }
 
@@ -216,7 +215,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
                 // summon Rend and Change model to normal Gyth
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell();
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,9806);     //Gyth model
                 m_creature->SummonCreature(10429, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,900000);
                 SummonedRend = true;
@@ -225,14 +224,9 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
 
             //If we are within range melee the target
-            if( Aggro && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if( Aggro )
             {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
+                DoMeleeAttackIfReady();
             }
         }
     }

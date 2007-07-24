@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //If we are <10% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpell && Enrage_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL] && Enrage_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ENRAGE);
 
@@ -108,16 +108,7 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
             }else Enrage_Timer -= diff;
             
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

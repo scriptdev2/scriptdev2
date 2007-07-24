@@ -42,6 +42,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         Invisible_Timer = 15000;                            //Too much too low?
         InCombat = false;
         Invisible = false;
+        //m_creature->m_canMove = true;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -111,9 +112,9 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
             //Become visible again 
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->m_canMove = true; 
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11172);     //Noxxion model
             Invisible = false;
+            //m_creature->m_canMove = true;
         } else if (Invisible)
                {
                   Invisible_Timer -= diff;
@@ -155,8 +156,8 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
             {
 
                 //Inturrupt any spell casting
-                 m_creature->InterruptSpell();
-                m_creature->m_canMove = false;
+                //m_creature->m_canMove = true;
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
@@ -171,17 +172,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
                 Adds_Timer = 40000;
             }else Adds_Timer -= diff;
 
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

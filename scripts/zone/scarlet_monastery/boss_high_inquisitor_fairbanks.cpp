@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpell && Healing_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL] && Healing_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
                 
@@ -170,16 +170,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
                 MindBlast5_Timer = 30000;
             }else MindBlast5_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 };

@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //MarkOfNature_Timer = 45000;
         ArcaneBlast_Timer = 8000;
         BellowingRoar_Timer = 30000;
-	Summon_Timer = 0;
+        Summon_Timer = 0;
         Shades_Timer = 60000;                               //The time that Taerar is banished
         InCombat = false;
         Shades = false; 
@@ -125,14 +125,14 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             //Become unbanished again 
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->m_canMove = true; 
+            //m_creature->m_canMove = true;
             Shades = false;
         } else if (Shades)
-               {
-                  Shades_Timer -= diff;
-                  //Do nothing while banished
-                  return;
-               }
+        {
+            Shades_Timer -= diff;
+            //Do nothing while banished
+            return;
+        }
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
@@ -208,77 +208,64 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
 
-		if (Summon_Timer < diff)
-		{
+                if (Summon_Timer < diff)
+                {
 
-                //Inturrupt any spell casting
-                 m_creature->InterruptSpell();
-                 m_creature->m_canMove = false; 
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    //Inturrupt any spell casting
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->setFaction(35);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    //m_creature->m_canMove = false;
 
-                //Cast
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                Summon_Timer = 120000;
+                    //Cast
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    Summon_Timer = 120000;
                 } else Summon_Timer -= diff;
-	    }
+            }
 
             //Summon 3 Shades
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
             {
 
-		if (Summon_Timer < diff)
-		{
+                if (Summon_Timer < diff)
+                {
 
-                //Inturrupt any spell casting
-                 m_creature->InterruptSpell();
-                 m_creature->m_canMove = false; 
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    //Inturrupt any spell casting
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->setFaction(35);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    //m_creature->m_canMove = false;
 
-                //Cast
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                Summon_Timer = 120000;
+                    //Cast
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    Summon_Timer = 120000;
                 } else Summon_Timer -= diff;
-	    }
-
-
+            }
 
             //Summon 3 Shades
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
             {
-
-		if (Summon_Timer < diff)
-		{
-
-                //Inturrupt any spell casting
-                 m_creature->InterruptSpell();
-                 m_creature->m_canMove = false; 
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                //Cast
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                SummonShades(m_creature->getVictim());
-                Summon_Timer = 120000;
-                } else Summon_Timer -= diff;
-	    }
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
+                if (Summon_Timer < diff)
                 {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
+                    //Inturrupt any spell casting
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->setFaction(35);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    //m_creature->m_canMove = false;
+
+                    //Cast
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    SummonShades(m_creature->getVictim());
+                    Summon_Timer = 120000;
+                } else Summon_Timer -= diff;
             }
+
+            DoMeleeAttackIfReady();
         }
     }
 }; 

@@ -44,6 +44,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
         BuffTimer = 0;          //Rebuff as soon as we can
         InCombat = false;
         IsSelfRooted = false;
+        //m_creature->m_canMove = true;
         
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -68,7 +69,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                 DoStartMeleeAttack(who);
                 if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 {
-                    m_creature->m_canMove = false;
+                    //m_creature->m_canMove = true;
                     IsSelfRooted = true;
                 }
 
@@ -149,7 +150,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
+                if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     bool Healing = false;
                     SpellEntry const *info = NULL;
@@ -180,7 +181,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
             else 
             {
                 //Only run this code if we arn't already casting
-                if (!m_creature->m_currentSpell)
+                if (!m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     bool Healing = false;
                     SpellEntry const *info = NULL;
@@ -199,7 +200,7 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                         //If we are currently moving stop us and set the movement generator
                         if (!IsSelfRooted)
                         {
-                            m_creature->m_canMove = false;
+                            //m_creature->m_canMove = true;
                             IsSelfRooted = true;
                         }
 
@@ -218,9 +219,9 @@ struct MANGOS_DLL_DECL defiasAI : public ScriptedAI
                     else if (IsSelfRooted)
                     {
                         //Cancel our current spell and then allow movement agian
-                        m_creature->InterruptSpell();
-                        m_creature->m_canMove = true;
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         IsSelfRooted = false;
+                        //m_creature->m_canMove = true;
                     }
                 }
             }

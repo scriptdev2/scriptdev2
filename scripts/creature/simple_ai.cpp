@@ -195,7 +195,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
             if (Spell_Timer[i] < diff)
             {
                 //Check Current spell
-                if (!(Spell[i].InturruptPreviousCast && m_creature->m_currentSpell))
+                if (!(Spell[i].InturruptPreviousCast && m_creature->m_currentSpells[CURRENT_GENERIC_SPELL]))
                 {
                     Unit* target = NULL;
 
@@ -244,15 +244,6 @@ void SimpleAI::UpdateAI(const uint32 diff)
 
         }
 
-        //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
+        DoMeleeAttackIfReady();
     }
 }

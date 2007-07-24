@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         {
             if(m_creature->GetPower(POWER_MANA) <= 0)
             {
-                m_creature->InterruptSpell();
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
                 DoCast(m_creature, SPELL_EVOCATION);
@@ -234,18 +234,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
             }
 
-
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)                        
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 };

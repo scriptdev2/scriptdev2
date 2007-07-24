@@ -112,25 +112,15 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
                 Immolate_Timer = 7000;
             }else Immolate_Timer -= diff;
 
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 
+
 CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
 {
     return new mob_fireswornAI (_Creature);
 }
-
 
 void AddSC_mob_firesworn()
 {

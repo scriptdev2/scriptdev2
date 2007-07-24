@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             if (!Transformed)
             {
                 //CrusadersHammer
-                if (CrusadersHammer_Timer < diff && !m_creature->m_currentSpell)
+                if (CrusadersHammer_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else CrusadersHammer_Timer -= diff;
 
                 //CrusaderStrike
-                if (CrusaderStrike_Timer < diff && !m_creature->m_currentSpell)
+                if (CrusaderStrike_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else CrusaderStrike_Timer -= diff;
 
                 //MindBlast
-                if (MindBlast_Timer < diff && !m_creature->m_currentSpell)
+                if (MindBlast_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else MindBlast_Timer -= diff;
 
                 //HolyStrike
-                if (HolyStrike_Timer < diff && !m_creature->m_currentSpell)
+                if (HolyStrike_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -207,7 +207,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else HolyStrike_Timer -= diff;
 
                 //Dazed
-                if (Dazed_Timer < diff && !m_creature->m_currentSpell)
+                if (Dazed_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -232,7 +232,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             } else {
 
                 //ShadowShock
-                if (ShadowShock_Timer < diff && !m_creature->m_currentSpell)
+                if (ShadowShock_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else ShadowShock_Timer -= diff;
 
                 //PsychicScream
-                if (PsychicScream_Timer < diff && !m_creature->m_currentSpell)
+                if (PsychicScream_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else PsychicScream_Timer -= diff;
 
                 //DeepSleep
-                if (DeepSleep_Timer < diff && !m_creature->m_currentSpell)
+                if (DeepSleep_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 }else DeepSleep_Timer -= diff;
 
                 //ShadowBoltVolley
-                if (ShadowBoltVolley_Timer < diff && !m_creature->m_currentSpell)
+                if (ShadowBoltVolley_Timer < diff && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
                 {
                     //Cast
                     if (rand()%100 < 50) //50% chance to cast
@@ -294,16 +294,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
                 //END ELSE TRANSFORMED			
             }
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

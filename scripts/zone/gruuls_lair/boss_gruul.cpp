@@ -171,8 +171,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 {
                     case 0:
                     {
-                        m_creature->m_canMove = false; 
                         IsInGroundSlam= true;
+                        //m_creature->m_canMove = true;
 
                         // **Ground Slam Knockback**
                         // Using 24199 (knockback 350) as a base we will create the AoE knockback
@@ -290,10 +290,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                             }
                         }
 
-                        //Allow movement
-                        m_creature->m_canMove = true; 
-
                         // resets everything
+                        //m_creature->m_canMove = true;
                         IsInGroundSlam= false;
                         GroundSlam_Timer =120000;
                         GroundSlamPhase =0;
@@ -305,16 +303,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 }
             }else GroundSlam_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 };

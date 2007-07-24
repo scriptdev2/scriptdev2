@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         {
 
             //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpell)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
             {
                 //SpecialAoE -> Fucking bitch took lot of my time to test :S
                 if (Polymorph_Timer < diff)
@@ -214,16 +214,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 ManaShield4_Timer = 70000;
             }else ManaShield4_Timer -= diff;
 
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpell)
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

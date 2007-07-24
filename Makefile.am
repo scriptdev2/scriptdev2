@@ -100,18 +100,18 @@ scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
 scripts/zone/blackrock_depths/mob_overmaster_pyron.cpp \
 scripts/zone/blackrock_depths/mob_phalanx.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
+scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \
 scripts/zone/blackrock_spire/boss_highlord_omokk.cpp \
 scripts/zone/blackrock_spire/boss_mother_smolderweb.cpp \
 scripts/zone/blackrock_spire/boss_overlord_wyrmthalak.cpp \
+scripts/zone/blackrock_spire/boss_pyroguard_emberseer.cpp \
+scripts/zone/blackrock_spire/boss_rend_blackhand.cpp \
 scripts/zone/blackrock_spire/boss_shadow_hunter_voshgajin.cpp \
 scripts/zone/blackrock_spire/boss_the_beast.cpp \
 scripts/zone/blackrock_spire/boss_warmaster_voone.cpp \
-scripts/zone/blackrock_spire/mob_quartermaster_zigris.cpp \
-scripts/zone/blackrock_spire/boss_gyth.cpp \
-scripts/zone/blackrock_spire/boss_pyroguard_emberseer.cpp \
-scripts/zone/blackrock_spire/boss_rend_blackhand.cpp \
 scripts/zone/blackrock_spire/mob_chromatic_elite_guard.cpp \
+scripts/zone/blackrock_spire/mob_quartermaster_zigris.cpp \
 scripts/zone/blackwing_lair/boss_broodlord_lashlayer.cpp \
 scripts/zone/blackwing_lair/boss_chromaggus.cpp \
 scripts/zone/blackwing_lair/boss_ebonroc.cpp \
@@ -163,18 +163,18 @@ scripts/zone/molten_core/boss_majordomo_executus.cpp \
 scripts/zone/molten_core/boss_ragnaros.cpp \
 scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
-scripts/zone/molten_core/mob_firelord.cpp \
 scripts/zone/molten_core/mob_ancient_core_hound.cpp \
-scripts/zone/molten_core/mob_molten_destroyer.cpp \
-scripts/zone/molten_core/mob_firewalker.cpp \
+scripts/zone/molten_core/mob_core_rager.cpp \
+scripts/zone/molten_core/mob_firelord.cpp \
 scripts/zone/molten_core/mob_firesworn.cpp \
+scripts/zone/molten_core/mob_firewalker.cpp \
 scripts/zone/molten_core/mob_flame_guard.cpp \
 scripts/zone/molten_core/mob_flamewaker.cpp \
 scripts/zone/molten_core/mob_flamewaker_elite.cpp \
 scripts/zone/molten_core/mob_flamewaker_healer.cpp \
 scripts/zone/molten_core/mob_flamewaker_protector.cpp \
-scripts/zone/molten_core/mob_core_rager.cpp \
 scripts/zone/molten_core/mob_lavaspawn.cpp \
+scripts/zone/molten_core/mob_molten_destroyer.cpp \
 scripts/zone/molten_core/mob_molten_giant.cpp \
 scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
@@ -320,8 +320,6 @@ scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 system.cpp
-
-
 
 ## libtool settings
 # API versioning

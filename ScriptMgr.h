@@ -172,6 +172,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Start attack of victim but stay in position
     void DoStartRangedAttack(Unit* victim);
 
+    //Do melee swing of current victim if in rnage and ready and not casting
+    void DoMeleeAttackIfReady();
+
     //Stop attack of current victim
     void DoStopAttack();
 
