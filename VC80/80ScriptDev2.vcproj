@@ -643,6 +643,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\moonglade\npc_great_bear_spirit.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\moonglade\npc_silva_filnaveth.cpp"
 						>
 					</File>
@@ -1407,11 +1411,11 @@
 					Name="Silithus"
 					>
 					<File
-						RelativePath="..\scripts\zone\silithus\npc_q8304.cpp"
+						RelativePath="..\scripts\zone\silithus\npc_q8507_q8731.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\silithus\npc_q8507_q8731.cpp"
+						RelativePath="..\scripts\zone\silithus\npcs_rutgar_and_frankal.cpp"
 						>
 					</File>
 				</Filter>

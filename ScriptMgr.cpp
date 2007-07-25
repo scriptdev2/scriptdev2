@@ -249,6 +249,7 @@ extern void AddSC_mob_lavaspawn();
 //Moonglade
 extern void AddSC_silva_filnaveth();
 extern void AddSC_bunthen_plainswind();
+extern void AddSC_npc_great_bear_spirit();
 
 //Mulgore
 extern void AddSC_skorn_whitecloud();
@@ -309,8 +310,8 @@ extern void AddSC_npc_lothos_riftwalker();
 
 //Shadowfang keep
 //Silithus
-extern void AddSC_npc_q8304();
 extern void AddSC_npc_q8507_q8731();
+extern void AddSC_npcs_rutgar_and_frankal();
 
 //Silverpine forest
 //Stockade
@@ -642,6 +643,7 @@ void ScriptsInit()
     //Moonglade
     AddSC_silva_filnaveth();
     AddSC_bunthen_plainswind();
+    AddSC_npc_great_bear_spirit();
 
     //Mulgore
     AddSC_skorn_whitecloud();
@@ -701,8 +703,8 @@ void ScriptsInit()
     AddSC_npc_lothos_riftwalker();
     //Shadowfang keep
     //Silithus
-    AddSC_npc_q8304();
     AddSC_npc_q8507_q8731();
+    AddSC_npcs_rutgar_and_frankal();
 
     //Silverpine forest
     //Stockade

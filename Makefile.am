@@ -177,6 +177,7 @@ scripts/zone/molten_core/mob_lavaspawn.cpp \
 scripts/zone/molten_core/mob_molten_destroyer.cpp \
 scripts/zone/molten_core/mob_molten_giant.cpp \
 scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
+scripts/zone/moonglade/npc_great_bear_spirit.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
 scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
@@ -229,8 +230,8 @@ scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
-scripts/zone/silithus/npc_q8304.cpp \
 scripts/zone/silithus/npc_q8507_q8731.cpp \
+scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
 scripts/zone/stratholme/boss_archivist_galford.cpp \
 scripts/zone/stratholme/boss_baron_rivendare.cpp \
