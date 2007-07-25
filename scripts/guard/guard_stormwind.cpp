@@ -315,7 +315,7 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
         SendProfTrainerMenu_guard_stormwind(player, _Creature, action);
 
     if (sender == GOSSIP_SENDER_SEC_BATTLEINFO)
-        SendProfTrainerMenu_guard_stormwind(player, _Creature, action);
+        SendBattleMasterMenu_guard_stormwind(player, _Creature, action);
 
     return true;
 }
