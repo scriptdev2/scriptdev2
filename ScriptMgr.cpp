@@ -264,6 +264,10 @@ extern void AddSC_boss_lady_blaumeux();
 extern void AddSC_boss_sir_zeliek();
 extern void AddSC_boss_thane_korthazz();
 extern void AddSC_boss_kelthuzad();
+extern void AddSC_boss_faerlina();
+extern void AddSC_boss_loatheb();
+extern void AddSC_boss_noth();
+extern void AddSC_boss_gluth();
 
 //Netherstorm
 //Onyxia's Lair
@@ -397,6 +401,7 @@ extern void AddSC_boss_cthun();
 //Zangramarsh
 //Zul'Farrak
 //Zul'Gurub
+
 
 // -------------------
 
@@ -652,6 +657,10 @@ void ScriptsInit()
     AddSC_boss_sir_zeliek();
     AddSC_boss_thane_korthazz();
     AddSC_boss_kelthuzad();
+    AddSC_boss_faerlina();
+    AddSC_boss_loatheb();
+    AddSC_boss_noth();
+    AddSC_boss_gluth();
 
     //Netherstorm
     //Onyxia's Lair
@@ -786,6 +795,7 @@ void ScriptsInit()
     //Zul'Gurub
 
     // -------------------
+
 
 }
 

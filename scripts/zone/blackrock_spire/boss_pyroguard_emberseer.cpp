@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
 
                 //20 seconds until we should cast this agian
-                FlameBuffet_Timer = 18000;
+                FlameBuffet_Timer = 14000;
             }else FlameBuffet_Timer -= diff;
 
             //PyroBlast_Timer

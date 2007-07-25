@@ -35,7 +35,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
         IsSelfRooted = false;
-        //m_creature->m_canMove = true;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -56,7 +55,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
             if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
             {
                 IsSelfRooted = true;
-                //m_creature->m_canMove = true;
             }
 
             InCombat = true;
@@ -81,7 +79,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                 if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 {
                     IsSelfRooted = true;
-                    //m_creature->m_canMove = true;
                 }
 
                 InCombat = true;
@@ -185,7 +182,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         //If we are currently moving stop us and set the movement generator
                         if (!IsSelfRooted)
                         {
-                            //m_creature->m_canMove = true;
                             IsSelfRooted = true;
                         }
 
@@ -206,7 +202,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         //Cancel our current spell and then allow movement agian
                         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         IsSelfRooted = false;
-                        //m_creature->m_canMove = true;
                     }
                 }
             }
