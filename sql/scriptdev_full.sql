@@ -465,7 +465,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* SEARING GORGE */
 /* Lothos Riftwalker */
-UPDATE `creature_template` SET `npcflag`='3', `ScriptName`='npc_lothos_riftwalker' WHERE `entry`='14387';
+UPDATE `creature_template` SET `ScriptName`= 'npc_lothos_riftwalker' WHERE `entry` = 14387;
 /* Glassweb Spider, Searing Lava Spider, Greater Lava Spider */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5856, 5857, 5858);
 
