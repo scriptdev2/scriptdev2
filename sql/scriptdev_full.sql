@@ -476,7 +476,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* SILITHUS */
 /* Orgrimmar Legion Axe Thrower, Stormwind Archmage */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (15617, 15859);
-UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal.cpp' WHERE `entry` IN (15170, 15171);
+UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal' WHERE `entry` IN (15170, 15171);
 UPDATE `creature_template` SET `ScriptName` = 'npc_q8507_q8731' WHERE `entry` IN (15440, 15612);
 
 /* SILVERPINE FOREST */
