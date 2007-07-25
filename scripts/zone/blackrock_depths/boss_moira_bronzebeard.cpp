@@ -75,46 +75,26 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (Target)
+        if (!who || m_creature->getVictim())
             return;
 
-        if(!m_creature->IsHostileTo(who) && who->isAlive())
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
-            if (who->GetEntry()==9019) //replace with emps entry id
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                Target = who;
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (Heal_Timer < diff)
-        {
-            if (Target && Target->GetHealth()!=Target->GetMaxHealth() && Target->isAlive())
-            {
-                m_creature->SetInFront(Target);
-                switch (rand() % 10)
-                {
-                case 1:
-                    DoCast(PlayerHolder, SPELL_RENEW);
-                    DoSay("For my king",LANG_UNIVERSAL, m_creature);
-                    break;
-                case 2:
-                    DoCast(PlayerHolder, SPELL_SHIELD);
-                    DoSay("Take the shield of Holy",LANG_UNIVERSAL, m_creature);
-                    break;
-                default:
-                    DoCast(PlayerHolder, SPELL_HEAL);
-                    break;                    
-                }
-
-                Heal_Timer=14000-rand() % 2000; 
-            }
-        }
-        else  Heal_Timer-=diff;
-
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;

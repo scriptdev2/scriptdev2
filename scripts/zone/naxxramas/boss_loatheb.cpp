@@ -44,8 +44,8 @@
 #define SPELL_INEVITABLE_DOOM       29204
 #define SPELL_REMOVE_CURSE          30281
 
-#define ADD_1X 2909.430
-#define ADD_1Y -3999.460
+#define ADD_1X 2957.040          
+#define ADD_1Y -3997.590         
 #define ADD_1Z 274.280
 
 #define ADD_2X 2909.130
