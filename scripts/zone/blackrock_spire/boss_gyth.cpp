@@ -46,8 +46,8 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     void EnterEvadeMode()
     {
         Dragons_Timer = 3000;
-        Orc_Timer = 35000;
-        Aggro_Timer = 30000;
+        Orc_Timer = 60000;
+        Aggro_Timer = 60000;
         CorrosiveAcid_Timer = 8000;
         Freeze_Timer = 11000;
         Flamebreath_Timer = 4000;
@@ -81,6 +81,8 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     }
 
     void AttackStart(Unit *who)
@@ -160,7 +162,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             } else Aggro_Timer -= diff;
         }
 
-        // Summon Dragon pack. 5 Dragons
+        // Summon Dragon pack. 2 Dragons and 3 Whelps
         if (!Aggro && !SummonedRend && Line1Count > 0) {
             if (Dragons_Timer < diff) {
                 SummonCreatureWithRandomTarget(10372);
@@ -169,18 +171,21 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
                 SummonCreatureWithRandomTarget(10442);
                 SummonCreatureWithRandomTarget(10442);
                 Line1Count = Line1Count - 1;
-                Dragons_Timer = 35000;
+                Dragons_Timer = 60000;
             } else Dragons_Timer -= diff;
         }
 
-        //Summon Orc pack. 1 Orc Handler and 1 Elite Dragonkin
+        //Summon Orc pack. 1 Orc Handler 1 Elite Dragonkin and 3 Whelps
         if (!Aggro && !SummonedRend && Line1Count == 0 && Line2Count > 0)
         {
             if (Orc_Timer < diff) {
                 SummonCreatureWithRandomTarget(10447);
                 SummonCreatureWithRandomTarget(10317);
+                SummonCreatureWithRandomTarget(10442);
+                SummonCreatureWithRandomTarget(10442);
+                SummonCreatureWithRandomTarget(10442);
                 Line2Count = Line2Count - 1;
-                Orc_Timer = 35000;
+                Orc_Timer = 60000;
             } else Orc_Timer -= diff;
         }
 

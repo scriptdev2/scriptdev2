@@ -40,9 +40,9 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        Sleep_Timer = 30000;
-        NoxiousBreath_Timer = 18000;
-        TailSweep_Timer = 20000;
+        Sleep_Timer = 24000;
+        NoxiousBreath_Timer = 12000;
+        TailSweep_Timer = 4000;
         //	MarkOfNature_Timer = 45000;
         VolatileInfection_Timer = 8000;
         CorruptionofEarth_Timer = 0;
@@ -52,6 +52,14 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     }
 
     void AttackStart(Unit *who)
@@ -118,15 +126,18 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
             }else NoxiousBreath_Timer -= diff;
 
 
-            //TailSweep_Timer
-            if (TailSweep_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_TAILSWEEP);
+                //Tailsweep every 2 seconds
+                if (tailsweep_timer < diff)
+                {
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+                    //Only cast if we are behind
+                    if (!m_creature->HasInArc( M_PI, target))
+                        DoCast(target,SPELL_TAILSWEEP);
+                    tailsweep_timer = 2000;
 
-                //20 seconds until we should cast this agian
-                TailSweep_Timer = 20000;
-            }else TailSweep_Timer -= diff;
+                }else tailsweep_timer -= diff;
+            
 
             //             //MarkOfNature_Timer
             //            if (MarkOfNature_Timer < diff)
