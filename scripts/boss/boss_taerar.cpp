@@ -171,18 +171,16 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             } else NoxiousBreath_Timer -= diff;
 
 
-                //Tailsweep every 2 seconds
-                if (tailsweep_timer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                    //Only cast if we are behind
-                    if (!m_creature->HasInArc( M_PI, target))
-                        DoCast(target,SPELL_TAILSWEEP);
-                    tailsweep_timer = 2000;
-
-                }else tailsweep_timer -= diff;
-            }
+            //Tailsweep every 2 seconds
+            if (TailSweep_Timer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+                //Only cast if we are behind
+                if (!m_creature->HasInArc( M_PI, target))
+                    DoCast(target,SPELL_TAILSWEEP);
+                    TailSweep_Timer = 2000;
+            }else TailSweep_Timer -= diff;
 
             //             //MarkOfNature_Timer
             //            if (MarkOfNature_Timer < diff)
@@ -275,9 +273,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     Summon_Timer = 120000;
                 } else Summon_Timer -= diff;
             }
-
-            DoMeleeAttackIfReady();
         }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_taerar(Creature *_Creature)

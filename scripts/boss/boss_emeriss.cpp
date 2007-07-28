@@ -18,11 +18,11 @@
 
 
 #define SPELL_SLEEP                24777            
-#define SPELL_NOXIOUSBREATH            24818
+#define SPELL_NOXIOUSBREATH        24818
 #define SPELL_TAILSWEEP            15847
-// #define SPELL_MARKOFNATURE            25040   // Not working
-#define SPELL_VOLATILEINFECTION           24928
-#define SPELL_CORRUPTIONOFEARTH              24910
+//#define SPELL_MARKOFNATURE         25040   // Not working
+#define SPELL_VOLATILEINFECTION    24928
+#define SPELL_CORRUPTIONOFEARTH    24910
 
 
 
@@ -33,7 +33,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
     uint32 TailSweep_Timer;
-    //    uint32 MarkOfNature_Timer;
+    //uint32 MarkOfNature_Timer;
     uint32 VolatileInfection_Timer;
     uint32 CorruptionofEarth_Timer;
     bool InCombat;
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         Sleep_Timer = 24000;
         NoxiousBreath_Timer = 12000;
         TailSweep_Timer = 4000;
-        //	MarkOfNature_Timer = 45000;
+        //MarkOfNature_Timer = 45000;
         VolatileInfection_Timer = 8000;
         CorruptionofEarth_Timer = 0;
         InCombat = false;
@@ -126,17 +126,16 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
             }else NoxiousBreath_Timer -= diff;
 
 
-                //Tailsweep every 2 seconds
-                if (tailsweep_timer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                    //Only cast if we are behind
-                    if (!m_creature->HasInArc( M_PI, target))
-                        DoCast(target,SPELL_TAILSWEEP);
-                    tailsweep_timer = 2000;
-
-                }else tailsweep_timer -= diff;
+            //Tailsweep every 2 seconds
+            if (TailSweep_Timer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+                //Only cast if we are behind
+                if (!m_creature->HasInArc( M_PI, target))
+                    DoCast(target,SPELL_TAILSWEEP);
+                    TailSweep_Timer = 2000;
+            }else TailSweep_Timer -= diff;
             
 
             //             //MarkOfNature_Timer
@@ -199,9 +198,8 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
                     CorruptionofEarth_Timer = 60000;
                 } else CorruptionofEarth_Timer -= diff;
             }
-
-            DoMeleeAttackIfReady();
         }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_emeriss(Creature *_Creature)

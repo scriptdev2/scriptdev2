@@ -153,19 +153,16 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 NoxiousBreath_Timer = 24000;
             }else NoxiousBreath_Timer -= diff;
 
-
-                //Tailsweep every 2 seconds
-                if (tailsweep_timer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                    //Only cast if we are behind
-                    if (!m_creature->HasInArc( M_PI, target))
-                        DoCast(target,SPELL_TAILSWEEP);
-                    tailsweep_timer = 2000;
-
-                }else tailsweep_timer -= diff;
-            }
+            //Tailsweep every 2 seconds
+            if (TailSweep_Timer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+                //Only cast if we are behind
+                if (!m_creature->HasInArc( M_PI, target))
+                    DoCast(target,SPELL_TAILSWEEP);
+                    TailSweep_Timer = 2000;
+            }else TailSweep_Timer -= diff;
 
             //             //MarkOfNature_Timer
             //            if (MarkOfNature_Timer < diff)
@@ -189,8 +186,6 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 //18 seconds until we should cast this agian
                 LightningWave_Timer = 18000;
             }else LightningWave_Timer -= diff;
-
-
 
             //Summon Druids
             if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
@@ -232,7 +227,6 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 } else SummonDruids_Timer -= diff;
             }
 
-
             //Summon Druids
             if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
             {
@@ -252,9 +246,8 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                     SummonDruids_Timer = 90000;
                 } else SummonDruids_Timer -= diff;
             }
-
-            DoMeleeAttackIfReady();
         }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_ysondre(Creature *_Creature)
