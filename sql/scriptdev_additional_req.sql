@@ -23,6 +23,9 @@ UPDATE `creature_template` SET `npcflag`= 3 WHERE `entry` = 3052;
 /* UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` IN (17900,17901); */
 /* Great Bear Spirit */
 UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 11956;
+/* Captain Blackanvil and Captain Skullsplit */
+UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` IN (15440, 15612);
+
 
 /* */
 /* CREATURE_MOVEMENT */

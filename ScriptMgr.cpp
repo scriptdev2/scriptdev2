@@ -310,7 +310,7 @@ extern void AddSC_npc_lothos_riftwalker();
 
 //Shadowfang keep
 //Silithus
-extern void AddSC_npc_q8507_q8731();
+extern void AddSC_npcs_captains_blackanvil_and_skullsplit();
 extern void AddSC_npcs_rutgar_and_frankal();
 
 //Silverpine forest
@@ -703,7 +703,7 @@ void ScriptsInit()
     AddSC_npc_lothos_riftwalker();
     //Shadowfang keep
     //Silithus
-    AddSC_npc_q8507_q8731();
+    AddSC_npcs_captains_blackanvil_and_skullsplit();
     AddSC_npcs_rutgar_and_frankal();
 
     //Silverpine forest

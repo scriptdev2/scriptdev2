@@ -297,7 +297,7 @@ bool GossipHello_custom_example(Player *player, Creature *_Creature)
 }
 
 //Our Recive emote function
-bool ReciveEmote_custom_example(Player *player, Creature *_Creature, uint32 emote)
+bool ReceiveEmote_custom_example(Player *player, Creature *_Creature, uint32 emote)
 {
     _Creature->HandleEmoteCommand(emote);
 
@@ -323,7 +323,7 @@ void AddSC_custom_example()
     newscript->GetAI = GetAI_custom_example;
     newscript->pGossipHello = &GossipHello_custom_example;
     newscript->pGossipSelect = &GossipSelect_custom_example;
-    newscript->pReceiveEmote = &ReciveEmote_custom_example;
+    newscript->pReceiveEmote = &ReceiveEmote_custom_example;
 
     m_scripts[nrscripts++] = newscript;
 }

@@ -1347,7 +1347,7 @@
 					Name="Silithus"
 					>
 					<File
-						RelativePath="..\scripts\zone\silithus\npc_q8507_q8731.cpp"
+						RelativePath="..\scripts\zone\silithus\npcs_captains_blackanvil_and_skullsplit.cpp"
 						>
 					</File>
 					<File

@@ -230,7 +230,7 @@ scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
-scripts/zone/silithus/npc_q8507_q8731.cpp \
+scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
 scripts/zone/stratholme/boss_archivist_galford.cpp \

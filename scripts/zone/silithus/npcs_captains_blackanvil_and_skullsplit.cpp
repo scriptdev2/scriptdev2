@@ -20,19 +20,16 @@
 
 #define GOSSIP_ITEM        "I need you to sign my Field Duty Papers"
 
-const char GossipTexts[4][75] = 
+const char GossipTexts[3][75] = 
 {
-    {"Be aware on the road of return, i saw some Ironforge Legion."},
-    {"Nice to meet you my Good $C"},
-    {"OK bye, say hello to Windcaller Kaldon for me."},
-    {"Have a good day my friend $N."}
+    {"Nice to meet you my Good $C           "},
+    {"Say hello to Windcaller Kaldon for me."},
+    {"Have a good day my friend $N.         "}
 };
-bool GossipSelect_npc_q8507_q8731(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npcs_captains_blackanvil_and_skullsplit(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if( action == GOSSIP_ACTION_INFO_DEF + 1 )
     {
-        player->PlayerTalkClass->CloseGossip();
-        
         if( player->HasItemCount(23024,1) )
         {
             uint16 dest;
@@ -44,26 +41,31 @@ bool GossipSelect_npc_q8507_q8731(Player *player, Creature *_Creature, uint32 se
                 {
                     player->DestroyItemCount(23024,1,true);
                     player->UpdatePvP(true,true);
-                    _Creature->Say(GossipTexts[rand()%4], LANG_UNIVERSAL, player->GetGUID());
+                    player->PlayerTalkClass->CloseGossip();
+                    _Creature->Say(GossipTexts[rand()%3], LANG_UNIVERSAL, player->GetGUID());
                 }
                 else
-                   _Creature->Say("I can't add you the item. Ask GM quest: Field Duty", LANG_UNIVERSAL, player->GetGUID());  
+                    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
             }
+            else
+                player->SendEquipError(EQUIP_ERR_INVENTORY_FULL,NULL,NULL);
         }
         else if( player->HasItemCount(21143,1) )
-            _Creature->Say("You must prepare first your Field Duty Papper", LANG_UNIVERSAL, player->GetGUID());
+        {
+            player->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND,NULL,NULL);
+            _Creature->Say("Prepare your Unsigned Field Duty Papers", LANG_UNIVERSAL, player->GetGUID());
+        }
         else
-            _Creature->Say("You do not have your Field Duty Papper", LANG_UNIVERSAL, player->GetGUID());  
+            player->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND,NULL,NULL);
     }
     return true;
 }
-bool GossipHello_npc_q8507_q8731(Player *player, Creature *_Creature)
+bool GossipHello_npcs_captains_blackanvil_and_skullsplit(Player *player, Creature *_Creature)
 {
-    if( player->GetQuestStatus(8731) == QUEST_STATUS_INCOMPLETE || 
-        player->GetQuestStatus(8507) == QUEST_STATUS_INCOMPLETE )
+    if( player->GetQuestStatus(8731) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(8507) == QUEST_STATUS_INCOMPLETE )
     {
         player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(3543,_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(7827,_Creature->GetGUID());
     }
     else
     {
@@ -72,12 +74,12 @@ bool GossipHello_npc_q8507_q8731(Player *player, Creature *_Creature)
     }
     return true;
 }
-void AddSC_npc_q8507_q8731()
+void AddSC_npcs_captains_blackanvil_and_skullsplit()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="npc_q8507_q8731";
-    newscript->pGossipHello = &GossipHello_npc_q8507_q8731;
-    newscript->pGossipSelect = &GossipSelect_npc_q8507_q8731;
+    newscript->Name="npcs_captains_blackanvil_and_skullsplit";
+    newscript->pGossipHello =  &GossipHello_npcs_captains_blackanvil_and_skullsplit;
+    newscript->pGossipSelect = &GossipSelect_npcs_captains_blackanvil_and_skullsplit;
     m_scripts[nrscripts++] = newscript;
 }
