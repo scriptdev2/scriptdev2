@@ -18,19 +18,19 @@
 
 
 
-#define SPELL_FROSTNOVA2            865
-#define SPELL_FLAMESHOCK3           8053
-#define SPELL_SHADOWBOLT5	        1106
-#define SPELL_FLAMESPIKE	        8814
-#define SPELL_FIRENOVA              16079
+#define SPELL_FROSTNOVA2                865
+#define SPELL_FLAMESHOCK3               8053
+#define SPELL_SHADOWBOLT5               1106
+#define SPELL_FLAMESPIKE                8814
+#define SPELL_FIRENOVA                  16079
 
-#define SAY_AGGRO			"We hunger for vengeance."
-#define SAY_HEALTH		    "No rest... for the angry dead!"
-#define SAY_DEATH		    "More... More souls!"
+#define SAY_AGGRO                       "We hunger for vengeance."
+#define SAY_HEALTH                      "No rest... for the angry dead!"
+#define SAY_DEATH                       "More... More souls!"
 
-#define SOUND_AGGRO			5844
-#define SOUND_HEALTH		5846
-#define SOUND_DEATH			5845
+#define SOUND_AGGRO                     5844
+#define SOUND_HEALTH                    5846
+#define SOUND_DEATH                     5845
 
 struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
 {
@@ -73,9 +73,12 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
             else DoStartRangedAttack(who);
             
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-            InCombat = true;
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 
@@ -93,8 +96,11 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                if(!InCombat)
+                {
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                }
                 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);

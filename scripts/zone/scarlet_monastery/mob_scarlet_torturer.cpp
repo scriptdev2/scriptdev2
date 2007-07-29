@@ -18,11 +18,11 @@
 
 
 
-#define SPELL_IMMOLATE		37668
+#define SPELL_IMMOLATE           37668
 
-#define SAY_AGGRO1			"What? Oh no. I don't care what you have to say. I just enjoy inflicting pain."
-#define SAY_AGGRO2			"You will talk eventually. You might as well spill it now."
-#define SAY_AGGRO3			"Confess and we shall set you free."
+#define SAY_AGGRO1               "What? Oh no. I don't care what you have to say. I just enjoy inflicting pain."
+#define SAY_AGGRO2               "You will talk eventually. You might as well spill it now."
+#define SAY_AGGRO3               "Confess and we shall set you free."
 
 struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
 {

@@ -18,21 +18,21 @@
 
 
 
-#define SPELL_POLYMORPH	            12826
-#define SPELL_AOESILENCE            8988
-#define SPELL_ARCANEEXPLOSION3      8438
-#define SPELL_ARCANEEXPLOSION4      8439
-#define SPELL_FIREAOE		        25049
-#define SPELL_BLINK                 1953
-#define SPELL_FIREBALL              21162
-#define SPELL_MANASHIELD4           10191
-#define SPELL_ARCANEBUBBLE          9438
+#define SPELL_POLYMORPH                 12826
+#define SPELL_AOESILENCE                8988
+#define SPELL_ARCANEEXPLOSION3          8438
+#define SPELL_ARCANEEXPLOSION4          8439
+#define SPELL_FIREAOE                   25049
+#define SPELL_BLINK                     1953
+#define SPELL_FIREBALL                  21162
+#define SPELL_MANASHIELD4               10191
+#define SPELL_ARCANEBUBBLE              9438
 
-#define SAY_AGGRO			"You will not defile these mysteries!"
-#define SAY_SPECIALAE	    "Burn in righteous fire!"
+#define SAY_AGGRO                       "You will not defile these mysteries!"
+#define SAY_SPECIALAE                   "Burn in righteous fire!"
 
-#define SOUND_AGGRO			5842
-#define SOUND_SPECIALAE		5843
+#define SOUND_AGGRO                     5842
+#define SOUND_SPECIALAE                 5843
 
 struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 {
@@ -83,9 +83,12 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             else DoStartRangedAttack(who);
 
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-            InCombat = true;
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
 
         }
     }
@@ -104,8 +107,11 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 
                 //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                if(!InCombat)
+                {
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                }
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);

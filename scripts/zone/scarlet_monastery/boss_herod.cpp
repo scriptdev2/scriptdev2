@@ -35,7 +35,7 @@
 #define SAY_AGGRO			"Ah, I have been waiting for a real challenge!"
 #define SAY_WHIRLWIND	    "Blades of Light!"
 #define SAY_ENRAGE		    "Light, give me strength!"
-#define SAY_DEATH		    "Ha, is that all?"
+#define SAY_DEATH		    "Hah, is that all?"
 
 #define SOUND_AGGRO			5830
 #define SOUND_WHIRLWIND		5832
@@ -86,8 +86,11 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            }
 
             //Activate Berserker Stance
             DoCast(m_creature,SPELL_BERSERKERSTANCE);

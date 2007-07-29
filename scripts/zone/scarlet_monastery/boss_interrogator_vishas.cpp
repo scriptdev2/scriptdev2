@@ -18,17 +18,17 @@
 
 
 
-#define SPELL_POWERWORDSHIELD		6065
+#define SPELL_POWERWORDSHIELD           6065
 
-#define SAY_AGGRO			"Tell me... tell me everything!"
-#define SAY_HEALTH1			"Naughty secrets"
-#define SAY_HEALTH2			"I'll rip the secrets from your flesh!"
-#define SAY_DEATH		    "Purged by pain!"
+#define SAY_AGGRO                       "Tell me... tell me everything!"
+#define SAY_HEALTH1                     "Naughty secrets"
+#define SAY_HEALTH2                     "I'll rip the secrets from your flesh!"
+#define SAY_DEATH                       "Purged by pain!"
 
-#define SOUND_AGGRO			5847
-#define SOUND_HEALTH1		5849
-#define SOUND_HEALTH2		5850
-#define SOUND_DEATH			5848
+#define SOUND_AGGRO                     5847
+#define SOUND_HEALTH1                   5849
+#define SOUND_HEALTH2                   5850
+#define SOUND_DEATH                     5848
 
 struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 {
@@ -60,9 +60,12 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             DoStartMeleeAttack(who);
             
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-            InCombat = true;
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 

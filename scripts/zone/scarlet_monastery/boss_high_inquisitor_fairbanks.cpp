@@ -18,14 +18,14 @@
 
 
 
-#define SPELL_SLEEP2		        1090
-#define SPELL_CURSEOFBLOOD          16098
-#define SPELL_SMITE			        6060
-#define SPELL_SHADOWWORDPAIN	    2767
-#define SPELL_FLASHHEAL4            9474
-#define SPELL_RENEW6			    6078
-#define SPELL_DEVOURINGPLAGUE3      19277
-#define SPELL_MINDBLAST5	        8105
+#define SPELL_SLEEP2                    1090
+#define SPELL_CURSEOFBLOOD              16098
+#define SPELL_SMITE                     6060
+#define SPELL_SHADOWWORDPAIN            2767
+#define SPELL_FLASHHEAL4                9474
+#define SPELL_RENEW6                    6078
+#define SPELL_DEVOURINGPLAGUE3          19277
+#define SPELL_MINDBLAST5                8105
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 {

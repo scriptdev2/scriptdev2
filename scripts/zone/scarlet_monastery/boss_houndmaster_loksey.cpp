@@ -18,12 +18,12 @@
 
 
 
-#define SPELL_SUMMONSCARLETHOUND	16174
-#define SPELL_ENRAGE				28747
+#define SPELL_SUMMONSCARLETHOUND        16174
+#define SPELL_ENRAGE                    28747
 
-#define SAY_AGGRO			"Release the hounds!"
+#define SAY_AGGRO                       "Release the hounds!"
 
-#define SOUND_AGGRO			5841
+#define SOUND_AGGRO                     5841
 
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
@@ -54,13 +54,16 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
             DoStartMeleeAttack(who);
             
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-            //Cast
-            DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
+                //Cast
+                DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
 
-            InCombat = true;
+                InCombat = true;
+            }
         }
     }
 
@@ -78,8 +81,11 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                if(!InCombat)
+                {
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                }
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);

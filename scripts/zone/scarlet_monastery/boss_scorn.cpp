@@ -18,10 +18,10 @@
 
 
 
-#define SPELL_LICHSLAP			28873
-#define SPELL_FROSTBOLTVOLLEY	8398
-#define SPELL_MINDFLAY			17313
-#define SPELL_FROSTNOVA			15531
+#define SPELL_LICHSLAP                  28873
+#define SPELL_FROSTBOLTVOLLEY           8398
+#define SPELL_MINDFLAY                  17313
+#define SPELL_FROSTNOVA                 15531
 
 struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
 {

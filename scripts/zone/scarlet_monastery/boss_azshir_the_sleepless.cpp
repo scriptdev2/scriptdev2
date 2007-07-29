@@ -18,9 +18,9 @@
 
 
 
-#define SPELL_CALLOFTHEGRAVE        17831
-#define SPELL_TERRIFY			    7399
-#define SPELL_SOULSIPHON		    7290
+#define SPELL_CALLOFTHEGRAVE            17831
+#define SPELL_TERRIFY                   7399
+#define SPELL_SOULSIPHON                7290
 
 struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 {

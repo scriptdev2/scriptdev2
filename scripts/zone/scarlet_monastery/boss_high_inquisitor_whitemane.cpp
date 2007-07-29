@@ -18,29 +18,29 @@
 
 
 
-#define SPELL_DEEPSLEEP				9256
-#define SPELL_SCARLETRESURRECTION	9232
+#define SPELL_DEEPSLEEP                 9256
+#define SPELL_SCARLETRESURRECTION       9232
 
-#define SPELL_CRUSADERSTRIKE        17281
-#define SPELL_HAMMEROFJUSTICE	    13005
-#define SPELL_HOLYSMITE6	        9481
-#define SPELL_HOLYFIRE5 		    15265
-#define SPELL_MINDBLAST6	        8106
+#define SPELL_CRUSADERSTRIKE            17281
+#define SPELL_HAMMEROFJUSTICE           13005
+#define SPELL_HOLYSMITE6                9481
+#define SPELL_HOLYFIRE5                 15265
+#define SPELL_MINDBLAST6                8106
 
-#define SPELL_POWERWORDSHIELD		6065
+#define SPELL_POWERWORDSHIELD           6065
 
-#define SPELL_RENEW					6078
-#define SPELL_FLASHHEAL6	        10916
+#define SPELL_RENEW                     6078
+#define SPELL_FLASHHEAL6                10916
 
-#define SAY_AGGRO			"There is no escape for you. The Crusade shall destroy all who carry the Scourge's taint."
-#define SAY_SPAWN			"What, Mograine has fallen? You shall pay for this treachery! "
-#define SAY_RES				"Arise, my champion!"
-#define SAY_DEATH		    "The Light has spoken!"
+#define SAY_AGGRO                       "There is no escape for you. The Crusade shall destroy all who carry the Scourge's taint."
+#define SAY_SPAWN                       "What, Mograine has fallen? You shall pay for this treachery! "
+#define SAY_RES                         "Arise, my champion!"
+#define SAY_DEATH                       "The Light has spoken!"
 
 //#define SOUND_AGGRO
-#define SOUND_RES			5840
-#define SOUND_SPAWN			5838
-#define SOUND_DEATH			5839
+#define SOUND_RES                       5840
+#define SOUND_SPAWN                     5838
+#define SOUND_DEATH                     5839
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
@@ -80,10 +80,13 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-            
+
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            InCombat = true;
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                InCombat = true;
+            }
         }
     }
 
@@ -101,7 +104,10 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Say our dialog
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                if(!InCombat)
+                {
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                }
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);

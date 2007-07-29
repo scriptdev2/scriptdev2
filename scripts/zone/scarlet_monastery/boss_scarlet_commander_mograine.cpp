@@ -16,25 +16,23 @@
 
 #include "../../sc_defines.h"
 
-
-
 #define SPELL_DIVINESHIELD2         1020
 #define SPELL_CRUSADERSTRIKE5       35395
 #define SPELL_HAMMEROFJUSTICE3      5589
-#define SPELL_HOLYLIGHT6	        3472
+#define SPELL_HOLYLIGHT6            3472
 #define SPELL_CONSECRATION3         20922
 #define SPELL_BLESSINGOFWISDOM      1044
 #define SPELL_RETRIBUTIONAURA3      10299
 #define SPELL_BLESSINGOFPROTECTION3 10278
-#define SPELL_FLASHHEAL6	        10916
+#define SPELL_FLASHHEAL6            10916
 
-#define SAY_AGGRO			"Infidels! They must be purified!"
-#define SAY_RES				"At your side, milady!"
-#define SAY_DEATH		    "Unworthy!"
+#define SAY_AGGRO                   "Infidels! They must be purified!"
+#define SAY_RES                     "At your side, milady!"
+#define SAY_DEATH                   "Unworthy!"
 
-#define SOUND_AGGRO			5835
-#define SOUND_RES			5837
-#define SOUND_DEATH		    5836
+#define SOUND_AGGRO                 5835
+#define SOUND_RES                   5837
+#define SOUND_DEATH                 5836
 
 struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 {
@@ -77,10 +75,12 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             DoStartMeleeAttack(who);
             
             //Say our dialog
-            DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-
-            InCombat = true;
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 
