@@ -126,4 +126,4 @@ void AddSC_npc_bartleby()
     newscript->GetAI = GetAI_npc_bartleby;
     newscript->pQuestAccept = &QuestAccept_npc_bartleby;
     m_scripts[nrscripts++] = newscript;
-} 
+}
