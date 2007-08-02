@@ -28,6 +28,7 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
     uint32 SoulBurn_Timer;
     uint32 SummonLavaSpawn_Timer;
     bool InCombat;
+    Creature *Summoned;
 
     void EnterEvadeMode()
     {
@@ -116,8 +117,11 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
             //SummonLavaSpawn
             if (SummonLavaSpawn_Timer < diff)
             {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                m_creature->SummonCreature(12265, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(12265, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
                 SummonLavaSpawn_Timer = 30000;
             }else SummonLavaSpawn_Timer -= diff;
 
