@@ -16,12 +16,12 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_TRAMPLE                15550 	
-#define SPELL_CLEAVE             20691 
-#define SPELL_SUNDERINCLEAVE   25174
-#define SPELL_KNOCKAWAY    10101             
+#define SPELL_TRAMPLE           15550
+#define SPELL_CLEAVE            20691
+#define SPELL_SUNDERINCLEAVE    25174
+#define SPELL_KNOCKAWAY         10101
 
-#define SAY_AGGRO1      "Mine! Mine! Mine! Gizlock is the ruler of this domain! You shall never reveal my presence!"    
+#define SAY_AGGRO1              "Mine! Mine! Mine! Gizlock is the ruler of this domain! You shall never reveal my presence!"
 
 struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 {
@@ -56,9 +56,14 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            if (!HasYelled)
+            {
+                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                HasYelled = true;
+            }
+
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-	    DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
             InCombat = true;
         }
     }
