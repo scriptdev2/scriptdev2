@@ -71,16 +71,16 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            DoCast(m_creature,SPELL_RETRIBUTIONAURA3);
-            DoStartMeleeAttack(who);
-            
             //Say our dialog
             if(!InCombat)
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                DoCast(m_creature,SPELL_RETRIBUTIONAURA3);
                 InCombat = true;
             }
+
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -99,8 +99,6 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                InCombat = true;
             }
         }
     }
@@ -115,7 +113,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //If we are <50% hp cast Arcane Bubble and start casting SPECIAL Arcane Explosion
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 
                 //heal_Timer

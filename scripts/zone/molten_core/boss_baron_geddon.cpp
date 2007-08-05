@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         {
 
             //If we are <2% hp cast Armageddom
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 DoCast(m_creature,SPELL_ARMAGEDDOM);
                 DoTextEmote("performs one last service for Ragnaros.",NULL);

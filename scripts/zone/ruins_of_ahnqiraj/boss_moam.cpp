@@ -103,14 +103,14 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
             }
 
 			//If we are 100%MANA cast Arcane Erruption
-            //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->IsNonMeleeSpellCasted(false))
             {
 				DoCast(m_creature->getVictim(),SPELL_ARCANEERUPTION);
 				DoYell(SAY_MANA,LANG_UNIVERSAL,NULL);
             }
 
             //If we are <50%HP cast MANA FIEND (Summon Mana) and Sleep
-            //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
             {
 				i=1;
 			DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);

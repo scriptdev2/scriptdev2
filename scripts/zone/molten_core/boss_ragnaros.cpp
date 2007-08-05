@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+                if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
                 {
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();

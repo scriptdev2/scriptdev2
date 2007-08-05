@@ -77,11 +77,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            //Begin melee attack if we are within range
-            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-                DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
-
             //Say our dialog
             if(!InCombat)
             {
@@ -90,6 +85,10 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 InCombat = true;
             }
 
+            //Begin melee attack if we are within range
+            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
+                DoStartMeleeAttack(who);
+            else DoStartRangedAttack(who);
         }
     }
 
@@ -106,16 +105,8 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 
-                //Say our dialog
-                if(!InCombat)
-                {
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                }
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }
@@ -131,7 +122,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         {
 
             //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 //SpecialAoE -> Fucking bitch took lot of my time to test :S
                 if (Polymorph_Timer < diff)

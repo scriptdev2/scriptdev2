@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+                if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
                 {
                     bool Healing = false;
                     SpellEntry const *info = NULL;
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             else 
             {
                 //Only run this code if we arn't already casting
-                if (!m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+                if (!m_creature->IsNonMeleeSpellCasted(false))
                 {
                     bool Healing = false;
                     SpellEntry const *info = NULL;

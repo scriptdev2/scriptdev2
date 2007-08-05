@@ -57,8 +57,6 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            DoStartMeleeAttack(who);
-            
             //Say our dialog
             if(!InCombat)
             {
@@ -66,6 +64,9 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO);
                 InCombat = true;
             }
+
+            DoStartMeleeAttack(who);
+
         }
     }
 
@@ -84,8 +85,6 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-
-                InCombat = true;
             }
         }
     }
@@ -107,7 +106,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             }
 
             //If we are low on hp Do sayings
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 60 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 //Yell_Timer
                 if (Yell_Timer < diff)
@@ -122,7 +121,7 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
                 }else Yell_Timer -= diff;
             }
             
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 //Yell_Timer
                 if (Yell_Timer < diff)

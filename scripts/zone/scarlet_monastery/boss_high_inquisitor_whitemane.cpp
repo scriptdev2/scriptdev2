@@ -79,14 +79,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            DoStartMeleeAttack(who);
-
             //Say our dialog
             if(!InCombat)
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 InCombat = true;
             }
+
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -103,15 +103,8 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Say our dialog
-                if(!InCombat)
-                {
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                }
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }
@@ -140,7 +133,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
 
             //If we are <75% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 
                 //Healing_Timer
@@ -154,7 +147,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                     Healing_Timer = 80000;
                 }else Healing_Timer -= diff;      
                 
-                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
                 {
 
                     if (Healing_Timer < diff)

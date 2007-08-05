@@ -51,8 +51,6 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            DoStartMeleeAttack(who);
-            
             //Say our dialog
             if(!InCombat)
             {
@@ -64,6 +62,8 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
                 InCombat = true;
             }
+
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -80,17 +80,9 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Say our dialog
-                if(!InCombat)
-                {
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                }
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
 
-                InCombat = true;
             }
         }
     }
@@ -105,7 +97,7 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             //If we are <10% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL] && Enrage_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ENRAGE);
 

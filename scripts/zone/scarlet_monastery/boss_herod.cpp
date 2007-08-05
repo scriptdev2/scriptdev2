@@ -90,13 +90,12 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-            }
 
-            //Activate Berserker Stance
-            DoCast(m_creature,SPELL_BERSERKERSTANCE);
+                //Activate Berserker Stance
+                DoCast(m_creature,SPELL_BERSERKERSTANCE);
 
-            //Switch between 2 different charge methods
-            switch (rand()%2)
+                //Switch between 2 different charge methods
+                switch (rand()%2)
                 {
                 case 0:
                     DoCast(m_creature,SPELL_RUSHINGCHARGE);
@@ -107,9 +106,10 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                     break;
                 }
 
-            DoStartMeleeAttack(who);
+                InCombat = true;
+            }
 
-            InCombat = true;
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -126,21 +126,8 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Switch between 2 different charge methods
-                switch (rand()%2)
-                    {
-                    case 0:
-                        DoCast(m_creature,SPELL_RUSHINGCHARGE);
-                        break;
-                
-                    case 1:
-                        DoCast(m_creature,SPELL_RUSHINGCHARGE1);
-                        break;
-                    }
-
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }
@@ -156,7 +143,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         {
 
             //If we are <10% hp goes Enraged
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL] && Enrage_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
             {
                 DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_ENRAGE);

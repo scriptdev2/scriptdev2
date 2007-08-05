@@ -195,7 +195,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
             if (Spell_Timer[i] < diff)
             {
                 //Check Current spell
-                if (!(Spell[i].InturruptPreviousCast && m_creature->m_currentSpells[CURRENT_GENERIC_SPELL]))
+                if (!(Spell[i].InturruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
                 {
                     Unit* target = NULL;
 

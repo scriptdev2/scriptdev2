@@ -1085,7 +1085,7 @@ void ScriptedAI::DoMeleeAttackIfReady()
     if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
     {
         //Make sure our attack is ready and we arn't currently casting
-        if( m_creature->isAttackReady() && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+        if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
         {
             m_creature->AttackerStateUpdate(m_creature->getVictim());
             m_creature->resetAttackTimer();
@@ -1119,14 +1119,14 @@ void ScriptedAI::DoStopAttack()
 
 void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
-    if (!victim || m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+    if (!victim || m_creature->IsNonMeleeSpellCasted(false))
         return;
     m_creature->CastSpell(victim, spelId, false);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
 {
-    if (!who || m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+    if (!who || m_creature->IsNonMeleeSpellCasted(false))
         return;
 
     m_creature->StopMoving();

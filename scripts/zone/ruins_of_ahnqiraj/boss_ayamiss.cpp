@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
             }
 
 			//If he is 70% start phase 2
-            if (phase==1 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 70 && !m_creature->m_currentSpells[CURRENT_GENERIC_SPELL])
+            if (phase==1 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 70 && !m_creature->IsNonMeleeSpellCasted(false))
             {
 				phase=2;
 				
