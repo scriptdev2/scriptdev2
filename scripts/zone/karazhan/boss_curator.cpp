@@ -1,5 +1,3 @@
-
-
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -218,7 +216,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 }else HatefulBoltTimer -= diff;
             }
 
-            if(m_creature->GetMaxHealth()*100 / m_creature->GetHealth() < 15)
+            if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
             {
                 phase = 2;
                 DoCast(m_creature, SPELL_ENRAGE);

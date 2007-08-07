@@ -54,6 +54,7 @@ extern void AddSC_test();
 
 // -- GO --
 extern void AddSC_go_teleporter();
+extern void AddSC_go_orb_of_command();
 
 // -- Guard --
 extern void AddSC_guard_bluffwatcher();
@@ -449,6 +450,7 @@ void ScriptsInit()
 
     // -- GO --
     AddSC_go_teleporter();
+    AddSC_go_orb_of_command();
 
     // -- Guard --
     AddSC_guard_bluffwatcher();

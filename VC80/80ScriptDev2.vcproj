@@ -364,6 +364,10 @@
 				Name="go"
 				>
 				<File
+					RelativePath="..\scripts\go\go_orb_of_command.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\go\go_teleporter.cpp"
 					>
 				</File>
@@ -911,27 +915,23 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_firelord.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\molten_core\mob_molten_giant.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\molten_core\mob_ancient_core_hound.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_molten_destroyer.cpp"
+						RelativePath="..\scripts\zone\molten_core\mob_core_rager.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_firewalker.cpp"
+						RelativePath="..\scripts\zone\molten_core\mob_firelord.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\zone\molten_core\mob_firesworn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_firewalker.cpp"
 						>
 					</File>
 					<File
@@ -955,13 +955,17 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_core_rager.cpp"
+						RelativePath="..\scripts\zone\molten_core\mob_lavaspawn.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_lavaspawn.cpp"
+						RelativePath="..\scripts\zone\molten_core\mob_molten_destroyer.cpp"
 						>
-					</File>					
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\mob_molten_giant.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Mulgore"
@@ -1597,6 +1601,10 @@
 							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\mob_hellfire_channeler.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\mob_hellfire_warder.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="The Ramparts"
@@ -1659,6 +1667,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\karazhan\mob_homunculus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\karazhan\mob_kilrek.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\karazhan\mob_netherspite_infernal.cpp"
 						>
 					</File>
@@ -1674,6 +1690,10 @@
 				<Filter
 					Name="Shadowmoon Valley"
 					>
+					<File
+						RelativePath="..\scripts\zone\shadowmoon_valley\boss_doomwalker.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Tempest Keep"
@@ -1711,6 +1731,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_gyth.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_spire\boss_halycon.cpp"
 						>
 					</File>
@@ -1727,6 +1751,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_pyroguard_emberseer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_rend_blackhand.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_spire\boss_shadow_hunter_voshgajin.cpp"
 						>
 					</File>
@@ -1739,23 +1771,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_spire\boss_gyth.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_spire\boss_pyroguard_emberseer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_spire\boss_rend_blackhand.cpp"
-						>
-					</File>
-          <File
 						RelativePath="..\scripts\zone\blackrock_spire\mob_chromatic_elite_guard.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
 						>
 					</File>
 				</Filter>
@@ -1781,6 +1801,10 @@
 					<Filter
 						Name="Steam Vault"
 						>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Underbog"

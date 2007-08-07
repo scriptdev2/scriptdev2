@@ -3,46 +3,34 @@
 #include "../../../sc_defines.h"
 
 #define SPELL_SHADOW_BOLT_VOLLEY    39175
-#define SPELL_DARK_MENDING          30528
-#define SPELL_HELLFIRE_CHANNELING   31059
-#define SPELL_HELLFIRE_CAST_VISUAL  24207
-#define SPELL_FEAR                  39176
+#define SPELL_DEATH_COIL            33130
+#define SPELL_RAIN_OF_FIRE          38635
 
-#define ADD 18946
-
-struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
 {
-    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_hellfire_warderAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Shadow_Timer;
-    uint32 Dark_Timer;
-    uint32 Fear_Timer;
-    uint32 Spawn_Timer;
+    uint32 Death_Timer;
+    uint32 Rain_Timer;
 
     bool InCombat;
-    bool HasAdd;
 
     int RandTime(int time) {return ((rand()%time)*1000);}
     
     void EnterEvadeMode()
     {
         Shadow_Timer = 10000;
-        Dark_Timer = 30000;
-        Fear_Timer = 20000;
-        Spawn_Timer = 30000;
+        Death_Timer = 50000;
+        Rain_Timer = 30000;
 
         InCombat = false;
-        HasAdd = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
 
         DoGoHome();
-
-        // Must be scripted - don't know how.....
-        //DoCast(m_creature,SPELL_HELLFIRE_CHANNELING);
-        //DoCast(m_creature,SPELL_HELLFIRE_CAST_VISUAL);
     }
 
     void AttackStart(Unit *who)
@@ -95,25 +83,28 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
                     DoFaceTarget(m_creature->getVictim());
                     DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
                 }
-                Shadow_Timer = RandTime(30);
+                Shadow_Timer = RandTime(60);
             }else Shadow_Timer -= diff;
 
-//          Don't know how else i can select friendly creature... don't work...
-/*
-            if (Dark_Timer < diff)
+            if (Death_Timer < diff)
             {
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_SINGLE_FRIEND, 0);
+                target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
 
-                if (target && (target->GetMaxHealth() > target->GetHealth()))
+                if (target)
                 {
                     DoFaceTarget(target);
-                    DoCast(target,SPELL_DARK_MENDING);
+                    DoCast(target,SPELL_DEATH_COIL);
                 }
-                Dark_Timer = RandTime(60);
-            }else Dark_Timer -= diff;
-*/
-            if (Fear_Timer < diff)
+                else
+                {
+                    DoFaceTarget(m_creature->getVictim());
+                    DoCast(m_creature->getVictim(),SPELL_DEATH_COIL);
+                }
+                Death_Timer = RandTime(60);
+            }else Death_Timer -= diff;
+
+            if (Rain_Timer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
@@ -121,44 +112,31 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
                 if (target)
                 {
                     DoFaceTarget(target);
-                    DoCast(target,SPELL_FEAR);
+                    DoCast(target,SPELL_RAIN_OF_FIRE);
                 }
                 else
                 {
                     DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_FEAR);
+                    DoCast(m_creature->getVictim(),SPELL_RAIN_OF_FIRE);
                 }
-                Fear_Timer = RandTime(50);
-            }else Fear_Timer -= diff;
-
-            if (!HasAdd && Spawn_Timer < diff)
-            {
-                float A = m_creature->GetAngle(m_creature);
-                Creature* Infernal = m_creature->SummonCreature(ADD, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
-                Infernal->setFaction(m_creature->getFaction());
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                Infernal->AI()->AttackStart(target);
-
-                HasAdd = true;
-            }else Spawn_Timer -= diff;
+                Rain_Timer = RandTime(60);
+            }else Rain_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
     }
 };
 
-CreatureAI* GetAI_mob_hellfire_channeler(Creature *_Creature)
+CreatureAI* GetAI_mob_hellfire_warder(Creature *_Creature)
 {
-    return new mob_hellfire_channelerAI (_Creature);
+    return new mob_hellfire_warderAI (_Creature);
 }
 
-void AddSC_mob_hellfire_channeler()
+void AddSC_mob_hellfire_warder()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="mob_hellfire_channeler";
-    newscript->GetAI = GetAI_mob_hellfire_channeler;
+    newscript->Name="mob_hellfire_warder";
+    newscript->GetAI = GetAI_mob_hellfire_warder;
     m_scripts[nrscripts++] = newscript;
 }

@@ -3,9 +3,7 @@ Simple list of things we need to do.
 
 --- ScriptDev2 Framework ---
 
-- New function to spawn mobs from within scriptdev
-- Fix item scripts
-- Remove Honor vendor scripts since they are useless
+- Rewrite simple scripts to use SimpleAI class instead of their current defined class which wastes resources and compile time. 
 
 --- Scripting with Priorities ---
 1) Boss AI scripts
@@ -15,8 +13,6 @@ Simple list of things we need to do.
 
 --- Core Problems ---
 
-- Unable to spawn from within scriptdev (possible fix in Mangoscript but needs to be applied to core)
-- Unable to create new movement generators (you shouldn't need to though)
-- Item scripts arn't implemented in the core
-- Spell scripts arn't implemented in the core
-- Events/EventScripts don't even truely exist in the core yet
+- Unable to write new movement generators (you shouldn't need to though)
+- Spell scripts are only controllable by the core
+- Events/EventScripts are only controllable by the core

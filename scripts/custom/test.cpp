@@ -27,8 +27,7 @@ CreatureAI* GetAI_test(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
 
-    memset(ai->Spell,0,sizeof(ai->Spell));
-
+    //
     ai->AggroYell[0] = AGGRO_YELL_1;
     ai->AggroYell[1] = AGGRO_YELL_2;
     ai->AggroYell[2] = AGGRO_YELL_3;
@@ -60,9 +59,6 @@ CreatureAI* GetAI_test(Creature *_Creature)
     ai->Spell[3].Cooldown = 16000;
     ai->Spell[3].First_Cast = 16000;
     ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_LAST_AGGRO;
-    ai->Spell[3].Yell[0] = SPECIAL_YELL_1;
-    ai->Spell[3].Yell[1] = SPECIAL_YELL_1;
-    ai->Spell[3].Yell[2] = SPECIAL_YELL_1;
 
     ai->EnterEvadeMode();
 

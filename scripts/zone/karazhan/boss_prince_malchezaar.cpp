@@ -1,4 +1,3 @@
-
 #include "../../sc_defines.h"
 
 #define SAY_AGGRO           "Madness has brought you here to me. I shall be your undoing."
@@ -94,6 +93,7 @@ AXETOSS2?
 #define SPELL_ENFEEBLE          30843
 
 #define SPELL_SHADOWNOVA        30852
+
 #define SPELL_SW_PAIN           30854
 #define SPELL_THRASH_PASSIVE    12787
 
@@ -104,7 +104,7 @@ AXETOSS2?
 #define SPELL_AMPLIFY_DAMAGE    12738
 
 //Infernals cast this once every 3 seconds and they do not move
-#define SPELL_INFERNAL_EFFECT    23056
+#define SPELL_INFERNAL_EFFECT   23056
 #define SPELL_HELLFIRE          39132
 
 #define NETHERSPITE_INFERNAL    17646
@@ -281,20 +281,20 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         Enfeebled = false;
     }
 
-    uint32 DoCalculateRandomLocation(uint32 Pos)
+    float DoCalculateRandomLocation(float Pos)
     {
-        uint32 Loc;
-        uint32 Rand = rand()%31;
+        float Loc;
+        float Rand = rand()%31;
+
         switch(rand()%2)
         {
-        case 0:
-            Loc = Pos + Rand;
-            break;
-        case 1:
-            Loc = Pos -Rand;
-            break;
+            case 0:
+                Loc = Pos + Rand;
+                break;
+            case 1:
+                Loc = Pos -Rand;
+                break;
         }
-
         return Loc;
     }
 
@@ -302,6 +302,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     {
         Invisible = NULL;
         Infernal = NULL;
+
         switch(rand()%19)
         {
         case 0:
@@ -395,12 +396,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     {
         if(m_creature->GetMapId() != 532)
         {
-            uint32 PosX = m_creature->GetPositionX();
-            uint32 PosY = m_creature->GetPositionY();
-            uint32 PosZ = m_creature->GetPositionZ();
+            float PosX = m_creature->GetPositionX();
+            float PosY = m_creature->GetPositionY();
+            float PosZ = m_creature->GetPositionZ();
 
-            uint32 LocX = DoCalculateRandomLocation(PosX);
-            uint32 LocY = DoCalculateRandomLocation(PosY);
+            float LocX = DoCalculateRandomLocation(PosX);
+            float LocY = DoCalculateRandomLocation(PosY);
 
             Invisible = NULL;
             Infernal = NULL;
@@ -443,9 +444,9 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     void SummonAxe()
     {
         uint32 MapID = m_creature->GetMapId();
-        uint32 PosX = m_creature->GetPositionX();
-        uint32 PosY = m_creature->GetPositionY();
-        uint32 PosZ = m_creature->GetPositionZ();
+        float PosX = m_creature->GetPositionX();
+        float PosY = m_creature->GetPositionY();
+        float PosZ = m_creature->GetPositionZ();
 
         Axe = m_creature->SummonCreature(17650, PosX, PosY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -574,7 +575,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         }
     }
 };
-
 
 CreatureAI* GetAI_boss_malchezaar(Creature *_Creature)
 {

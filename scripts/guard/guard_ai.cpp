@@ -21,11 +21,6 @@
 
 #define GENERIC_CREATURE_COOLDOWN 5000
 
-/*guardAI::guardAI(Creature *c) : ScriptedAI(c)
-{
-    EnterEvadeMode();
-}*/
-
 void guardAI::EnterEvadeMode()
 {
     GlobalCooldown = 0;
@@ -44,8 +39,11 @@ void guardAI::AttackStart(Unit *who)
         return;
 
     //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
-    if (who->GetTypeId() == TYPEID_PLAYER)
+    if (who->GetTypeId() == TYPEID_PLAYER && !ZoneAttackMsgTimer)
+    {
         m_creature->SendZoneUnderAttackMessage((Player*)who);
+        ZoneAttackMsgTimer = 30000;
+    }
 
     if (who->isTargetableForAttack() && who!= m_creature)
     {
@@ -72,8 +70,11 @@ void guardAI::MoveInLineOfSight(Unit *who)
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
             //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
-            if (who->GetTypeId() == TYPEID_PLAYER)
+            if (who->GetTypeId() == TYPEID_PLAYER && !ZoneAttackMsgTimer)
+            {
                 m_creature->SendZoneUnderAttackMessage((Player*)who);
+                ZoneAttackMsgTimer = 30000;
+            }
 
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
@@ -91,6 +92,12 @@ void guardAI::UpdateAI(const uint32 diff)
     if (GlobalCooldown > diff)
         GlobalCooldown -= diff;
     else GlobalCooldown = 0;
+
+    //Always decrease ZoneAttackMsgTimer
+    if (ZoneAttackMsgTimer > diff)
+        ZoneAttackMsgTimer -= diff;
+    else ZoneAttackMsgTimer = 0;
+
 
     //Buff timer (only buff when we are alive and not in combat
     if (m_creature->isAlive() && !InCombat)

@@ -45,7 +45,7 @@ public:
     uint32 Kill_Spell;
     uint32 Kill_Target_Type;
 
-    struct
+    struct SimpleAI_Spell
     {
         uint32 Spell_Id;                //Spell ID to cast
         uint32 First_Cast;              //Delay for first cast

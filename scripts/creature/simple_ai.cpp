@@ -2,6 +2,34 @@
 
 SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
 {
+    //Clear all data
+    AggroYell[0] = NULL;
+    AggroYell[1] = NULL;
+    AggroYell[2] = NULL;
+    Aggro_Sound[0] = 0;
+    Aggro_Sound[1] = 0;
+    Aggro_Sound[2] = 0;
+
+    Death_Yell[0] = NULL;
+    Death_Yell[1] = NULL;
+    Death_Yell[2] = NULL;
+    Death_Sound[0] = 0;
+    Death_Sound[1] = 0;
+    Death_Sound[2] = 0;
+    Death_Spell = 0;
+    Death_Target_Type = 0;
+
+    Kill_Yell[0] = NULL;
+    Kill_Yell[1] = NULL;
+    Kill_Yell[2] = NULL;
+    Kill_Sound[0] = 0;
+    Kill_Sound[1] = 0;
+    Kill_Sound[2] = 0;
+    Kill_Spell = 0;
+    Kill_Target_Type = 0;
+
+    memset(Spell,0,sizeof(Spell));
+
     EnterEvadeMode();
 }
 
@@ -186,7 +214,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
     if( m_creature->getVictim() && m_creature->isAlive())
     {
         //Spells
-        for (uint32 i = 0; i < 10; i++)
+        for (uint32 i = 0; i < 10; ++i)
         {
             //Spell not valid
             if (!Spell[i].Enabled || !Spell[i].Spell_Id || !Spell[i].Cooldown)

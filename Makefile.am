@@ -43,6 +43,7 @@ scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
 scripts/custom/test.cpp \
+scripts/go/go_orb_of_command.cpp \
 scripts/go/go_teleporter.cpp \
 scripts/guard/guard_ai.cpp \
 scripts/guard/guard_ai.h \
@@ -123,6 +124,7 @@ scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
+scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
@@ -132,6 +134,7 @@ scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
+scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_bonechewer_orc.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
@@ -143,6 +146,8 @@ scripts/zone/karazhan/boss_nightbane.cpp \
 scripts/zone/karazhan/boss_prince_malchezaar.cpp \
 scripts/zone/karazhan/boss_shade_of_aran.cpp \
 scripts/zone/karazhan/boss_terestian_illhoof.cpp \
+scripts/zone/karazhan/mob_homunculus.cpp \
+scripts/zone/karazhan/mob_kilrek.cpp \
 scripts/zone/karazhan/mob_netherspite_infernal.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_lord_vyletongue.cpp \
@@ -230,6 +235,7 @@ scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
+scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
