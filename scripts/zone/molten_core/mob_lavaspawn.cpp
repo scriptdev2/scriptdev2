@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
     void EnterEvadeMode()
     {
 
-	Split_Timer = 8000;         //Split after 10 seconds
+	Split_Timer = 10000;         //Split after 10 seconds
         InCombat = false;
 
         m_creature->RemoveAllAuras();

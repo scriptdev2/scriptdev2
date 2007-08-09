@@ -37,7 +37,9 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
     uint32 ArcaneBlast_Timer;
     uint32 BellowingRoar_Timer;
     uint32 Shades_Timer;
-    uint32 Summon_Timer;
+    uint32 Summon1_Timer;
+    uint32 Summon2_Timer;
+    uint32 Summon3_Timer;
     int Rand;
     int RandX;
     int RandY;
@@ -47,13 +49,15 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        Sleep_Timer = 24000;
-        NoxiousBreath_Timer = 12000;
+        Sleep_Timer = 15000;
+        NoxiousBreath_Timer = 8000;
         TailSweep_Timer = 4000;
         //MarkOfNature_Timer = 45000;
-        ArcaneBlast_Timer = 8000;
+        ArcaneBlast_Timer = 12000;
         BellowingRoar_Timer = 30000;
-        Summon_Timer = 0;
+        Summon1_Timer = 0;
+        Summon2_Timer = 0;
+        Summon3_Timer = 0;
         Shades_Timer = 60000;                               //The time that Taerar is banished
         InCombat = false;
         Shades = false; 
@@ -154,11 +158,14 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             if (Sleep_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_SLEEP);
+                Unit* target = NULL;
 
-                //16 seconds
-                Sleep_Timer = 16000;
-            } else Sleep_Timer -= diff;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_SLEEP);
+
+                //14 seconds
+                Sleep_Timer = 14000;
+            }else Sleep_Timer -= diff;
 
             //NoxiousBreath_Timer
             if (NoxiousBreath_Timer < diff)
@@ -166,8 +173,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
 
-                //24 seconds until we should cast this agian
-                NoxiousBreath_Timer = 24000;
+                //20 seconds until we should cast this agian
+                NoxiousBreath_Timer = 18000 + rand()%6000;
             } else NoxiousBreath_Timer -= diff;
 
 
@@ -199,7 +206,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_ARCANEBLAST);
 
                 //11 seconds until we should cast this agian
-                ArcaneBlast_Timer = 11000;
+                ArcaneBlast_Timer = 7000 + rand()%5000;
             }else ArcaneBlast_Timer -= diff;
 
             //BellowingRoar_Timer
@@ -217,7 +224,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
 
-                if (Summon_Timer < diff)
+                if (Summon1_Timer < diff)
                 {
 
                     //Inturrupt any spell casting
@@ -230,15 +237,15 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
-                    Summon_Timer = 120000;
-                } else Summon_Timer -= diff;
+                    Summon1_Timer = 120000;
+                } else Summon1_Timer -= diff;
             }
 
             //Summon 3 Shades
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
             {
 
-                if (Summon_Timer < diff)
+                if (Summon2_Timer < diff)
                 {
 
                     //Inturrupt any spell casting
@@ -251,14 +258,14 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
-                    Summon_Timer = 120000;
-                } else Summon_Timer -= diff;
+                    Summon2_Timer = 120000;
+                } else Summon2_Timer -= diff;
             }
 
             //Summon 3 Shades
             if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
             {
-                if (Summon_Timer < diff)
+                if (Summon3_Timer < diff)
                 {
                     //Inturrupt any spell casting
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
@@ -270,8 +277,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
                     SummonShades(m_creature->getVictim());
-                    Summon_Timer = 120000;
-                } else Summon_Timer -= diff;
+                    Summon3_Timer = 120000;
+                } else Summon3_Timer -= diff;
             }
         }
         DoMeleeAttackIfReady();

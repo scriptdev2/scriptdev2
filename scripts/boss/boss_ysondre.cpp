@@ -34,7 +34,9 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
     uint32 TailSweep_Timer;
     //uint32 MarkOfNature_Timer;
     uint32 LightningWave_Timer;
-    uint32 SummonDruids_Timer;
+    uint32 SummonDruids1_Timer;
+    uint32 SummonDruids2_Timer;
+    uint32 SummonDruids3_Timer;
     int Rand;
     int RandX;
     int RandY;
@@ -43,12 +45,14 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        Sleep_Timer = 30000;
-        NoxiousBreath_Timer = 15000;
+        Sleep_Timer = 15000;
+        NoxiousBreath_Timer = 8000;
         TailSweep_Timer = 4000;
         //MarkOfNature_Timer = 45000;
-        LightningWave_Timer = 8000;
-        SummonDruids_Timer = 0;
+        LightningWave_Timer = 12000;
+        SummonDruids1_Timer = 0;
+        SummonDruids2_Timer = 0;
+        SummonDruids3_Timer = 0;
         InCombat = false;
 
 
@@ -102,14 +106,14 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
     void SummonDruids(Unit* victim)
     {
-        Rand = rand()%20;
+        Rand = rand()%10;
         switch (rand()%2)
         {
         case 0: RandX = 0 - Rand; break;
         case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
-        Rand = rand()%20;
+        Rand = rand()%10;
         switch (rand()%2)
         {
         case 0: RandY = 0 - Rand; break;
@@ -137,10 +141,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             if (Sleep_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_SLEEP);
+                Unit* target = NULL;
 
-                //16 seconds
-                Sleep_Timer = 16000;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_SLEEP);
+
+                //14 seconds
+                Sleep_Timer = 14000;
             }else Sleep_Timer -= diff;
 
             //NoxiousBreath_Timer
@@ -149,8 +156,8 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
 
-                //24 seconds until we should cast this agian
-                NoxiousBreath_Timer = 24000;
+                //20 seconds until we should cast this agian
+                NoxiousBreath_Timer = 18000 + rand()%6000;
             }else NoxiousBreath_Timer -= diff;
 
             //Tailsweep every 2 seconds
@@ -183,16 +190,18 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_LIGHTNINGWAVE);
 
-                //18 seconds until we should cast this agian
-                LightningWave_Timer = 18000;
+                //11 seconds until we should cast this agian
+                LightningWave_Timer = 7000 + rand()%5000;
             }else LightningWave_Timer -= diff;
 
             //Summon Druids
             if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
-                if (SummonDruids_Timer < diff)
+                if (SummonDruids1_Timer < diff)
                 {
-                    // summon 8 druids  
+                    // summon 10 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
@@ -202,17 +211,19 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
 
-                    //90 seconds until we should cast this agian
-                    SummonDruids_Timer = 90000;
-                } else SummonDruids_Timer -= diff;
+                    //60 seconds until we should cast this agian
+                    SummonDruids1_Timer = 60000;
+                } else SummonDruids1_Timer -= diff;
             }
 
             //Summon Druids
             if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
             {
-                if (SummonDruids_Timer < diff)
+                if (SummonDruids2_Timer < diff)
                 {
-                    // summon 8 druids  
+                    // summon 10 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
@@ -222,17 +233,19 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
 
-                    //90 seconds until we should cast this agian
-                    SummonDruids_Timer = 90000;
-                } else SummonDruids_Timer -= diff;
+                    //60 seconds until we should cast this agian
+                    SummonDruids2_Timer = 60000;
+                } else SummonDruids2_Timer -= diff;
             }
 
             //Summon Druids
             if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
             {
-                if (SummonDruids_Timer < diff)
+                if (SummonDruids3_Timer < diff)
                 {
-                    // summon 8 druids  
+                    // summon 10 druids  
+                    SummonDruids(m_creature->getVictim());
+                    SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
@@ -242,9 +255,9 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                     SummonDruids(m_creature->getVictim());
                     SummonDruids(m_creature->getVictim());
 
-                    //90 seconds until we should cast this agian
-                    SummonDruids_Timer = 90000;
-                } else SummonDruids_Timer -= diff;
+                    //60 seconds until we should cast this agian
+                    SummonDruids3_Timer = 60000;
+                } else SummonDruids3_Timer -= diff;
             }
         }
         DoMeleeAttackIfReady();
