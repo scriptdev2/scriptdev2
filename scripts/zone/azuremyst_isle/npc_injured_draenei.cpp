@@ -17,9 +17,6 @@
 
 #include "../../sc_defines.h"
 
-
-
-
 struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
 {
     injured_draeneiAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}

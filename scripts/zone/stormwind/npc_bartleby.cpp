@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
 
 struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 {

@@ -87,6 +87,14 @@ void SimpleAI::MoveInLineOfSight(Unit *who)
     if (!who || m_creature->getVictim())
         return;
 
+    //In combat so check if this creature is friendly
+    //And add it to the heal list
+    if (m_creature->getVictim())
+    {
+    }
+
+    else
+
     if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
     {
         float attackRadius = m_creature->GetAttackDistance(who);

@@ -15,6 +15,8 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 // **** This script is still under Developement ****
 

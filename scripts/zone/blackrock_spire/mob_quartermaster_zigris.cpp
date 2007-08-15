@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Creature.h"
 
 #define SPELL_SHOOT                22907            
 #define SPELL_STUNBOMB            16497

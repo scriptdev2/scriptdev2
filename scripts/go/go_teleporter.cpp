@@ -17,6 +17,7 @@
 
 
 #include "../sc_defines.h"
+#include "../../../../game/Player.h"
 
 bool GOHello_go_teleporter(Player *player, GameObject* _GO)
 {

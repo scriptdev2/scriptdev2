@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "../../../../game/Player.h"
 
 bool ItemUse_nether_wraith_beacon(Player *player, Item* _Item)
 {

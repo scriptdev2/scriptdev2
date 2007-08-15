@@ -15,10 +15,9 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
 
-
-
-#define SAY_HEAL "Danke Junge. Echt Danke."
+#define SAY_HEAL "<Missing English Text>"
 
 struct MANGOS_DLL_DECL henze_faulkAI : public ScriptedAI
 {

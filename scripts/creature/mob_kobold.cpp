@@ -16,8 +16,7 @@
 
 
 #include "../sc_defines.h"
-
-
+#include "../../../../game/TargetedMovementGenerator.h"
 
 #define KOBOLD_AGGRO_SAY    "You no take candle"
 #define GENERIC_CREATURE_COOLDOWN 5000

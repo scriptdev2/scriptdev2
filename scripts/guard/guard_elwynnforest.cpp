@@ -17,6 +17,8 @@
 
 #include "../sc_defines.h"
 #include "guard_ai.h"
+#include "../../../../game/Player.h"
+#include "../../../../game/GossipDef.h"
 
 bool GossipHello_guard_elwynnforest(Player *player, Creature *_Creature)
 {

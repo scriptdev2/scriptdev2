@@ -16,6 +16,8 @@
 
 
 #include "../../sc_defines.h"
+#include "../../../../../game/TargetedMovementGenerator.h"
+#include "../../../../../shared/WorldPacket.h"
 
 #define SPELL_WINGBUFFET 18500
 #define SPELL_FLAMEBREATH 18435

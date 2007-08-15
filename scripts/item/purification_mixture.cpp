@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "../../../../game/Player.h"
 
 #define SPELL_PURIFY      29200
 #define SPELL_TOXIC       29278

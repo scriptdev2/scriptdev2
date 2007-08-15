@@ -99,16 +99,6 @@
 #define TRADESKILL_LEVEL_ARTISAN            4
 #define TRADESKILL_LEVEL_MASTER             5
 
-// Dialog defines
-
-#define DIALOG_STATUS_NONE                  0
-#define DIALOG_STATUS_UNAVAILABLE           1
-#define DIALOG_STATUS_CHAT                  2
-#define DIALOG_STATUS_INCOMPLETE            3
-#define DIALOG_STATUS_REWARD_REP            4
-#define DIALOG_STATUS_AVAILABLE             5
-#define DIALOG_STATUS_REWARD                6
-
 // Gossip defines
 
 #define GOSSIP_ACTION_TRADE                 1

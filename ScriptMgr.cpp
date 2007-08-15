@@ -17,7 +17,14 @@
 
 #include "config.h"
 #include "ScriptMgr.h"
+#include "../../shared/WorldPacket.h"
+#include "../../game/Player.h"
+#include "../../game/GameObject.h"
+#include "../../game/GossipDef.h"
+#include "../../game/QuestDef.h"
 #include "../../game/TargetedMovementGenerator.h"
+#include "../../game/Spell.h"
+#include "../../shared/Database/DBCStores.h"
 
 uint8 loglevel = 0;
 int nrscripts;
@@ -186,7 +193,6 @@ extern void AddSC_mobs_ghoul_flayer();
 extern void AddSC_npc_darrowshire_spirit();
 
 //Elwynn Forest
-extern void AddSC_marshal_mcbride();
 extern void AddSC_henze_faulk();
 
 //Felwood
@@ -581,7 +587,6 @@ void ScriptsInit()
     AddSC_npc_darrowshire_spirit();
 
     //Elwynn Forest
-    AddSC_marshal_mcbride();
     AddSC_henze_faulk();
 
     //Felwood
@@ -1021,6 +1026,14 @@ bool ReceiveEmote( Player *player, Creature *_Creature, uint32 emote )
     return tmpscript->pReceiveEmote(player, _Creature, emote);
 }
 
+bool ScriptedAI::IsVisible(Unit* who) const
+{
+    if (!who)
+        return false;
+
+    return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
+}
+
 void ScriptedAI::AttackStart(Unit* who)
 {
     if (!who)
@@ -1190,9 +1203,9 @@ void ScriptedAI::DoFaceTarget(Unit *unit)
     m_creature->SetInFront(unit);
 }
 
-Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime)
+Creature* ScriptedAI::DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime)
 {
-    return m_creature->SummonCreature(id,m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle,t,despawntime);
+    return m_creature->SummonCreature(id,m_creature->GetPositionX() + x,m_creature->GetPositionY() + y,m_creature->GetPositionZ() + z, angle, (TempSummonType)type, despawntime);
 }
 
 Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)

@@ -16,6 +16,7 @@
 
 
 #include "guard_ai.h"
+#include "../../../../game/TargetedMovementGenerator.h"
 
 // **** This script is for use within every single guard to save coding time ****
 

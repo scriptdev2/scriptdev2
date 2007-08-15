@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "../../../../game/Player.h"
 
 bool ItemUse_item_test(Player *player, Item* _Item)
 {

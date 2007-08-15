@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
 
 // **** This script is still under Developement ****
 

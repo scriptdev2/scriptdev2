@@ -15,6 +15,8 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 bool GossipHello_bunthen_plainswind(Player *player, Creature *_Creature)
 {

@@ -15,7 +15,7 @@
 */
 
 #include "../sc_defines.h"
-#include "../../../../game/ObjectAccessor.h"
+#include "../../../../game/Player.h"
 
 bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
 {

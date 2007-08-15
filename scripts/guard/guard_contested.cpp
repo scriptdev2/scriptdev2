@@ -17,6 +17,8 @@
 
 #include "../sc_defines.h"
 #include "guard_ai.h"
+#include "../../../../game/Player.h"
+#include "../../../../game/GossipDef.h"
 
 struct MANGOS_DLL_DECL guard_contested : public guardAI
 {

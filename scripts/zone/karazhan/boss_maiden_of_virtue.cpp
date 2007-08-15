@@ -1,4 +1,3 @@
-
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,7 +19,7 @@
 #define SPELL_REPENTANCE          29511
 #define SPELL_HOLYFIRE            29522
 #define SPELL_DIVINEWRATH         28883
-#define SPELL_HOLYGROUNDAURA      29523
+#define SPELL_HOLYGROUNDAURA      29512 // old 29523 - doesn't work
 
 #define SAY_AGGRO               "Your behavior will not be tolerated!"
 #define SAY_SLAY1               "Anh ah ah..."
@@ -29,6 +28,7 @@
 #define SAY_REPENTANCE1         "Cast out your corrupt thoughts"
 #define SAY_REPENTANCE2         "Your impurity must be cleansed."
 #define SAY_DEATH               "Death comes. Will your conscience be clear?"
+
 #define SOUND_AGGRO             9204
 #define SOUND_SLAY1             9207
 #define SOUND_SLAY2             9311 
@@ -44,45 +44,47 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
     uint32 Repentance_Timer;
     uint32 Holyfire_Timer;
     uint32 Divinewrath_Timer;
-    bool Holyground;
+    uint32 Holyground_Timer;
+
     bool InCombat;
+
+    int RandTime(int time) {return ((rand()%time)*1000);}
 
     void EnterEvadeMode()
     {
-        Repentance_Timer = 45000;      
-        Holyfire_Timer = 20000;
-        Divinewrath_Timer = 15000;
-        Holyground = false;
+        Repentance_Timer    = 45000;
+        Holyfire_Timer      = 20000;
+        Divinewrath_Timer   = 15000;
+        Holyground_Timer    = 3000;
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
+
         DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)
     {
       
-       if(rand()%2)
-            return;
+       if(rand()%2) return;
                 
        switch(rand()%3)
        {
            case 0:
-           DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
-           DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-           break;
-
+               DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
+               DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+               break;
            case 1:
-           DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
-           DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-           break;
-
+               DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
+               DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+               break;
            case 2:
-           DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
-           DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-           break;
+               DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
+               DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+               break;
         }
     }
 
@@ -94,20 +96,17 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
-            return;
+        if (!who) return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
             if (!InCombat)
             {
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
             }
+            DoStartMeleeAttack(who);
         }
     }
 
@@ -124,100 +123,80 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
                 if (!InCombat)
                 {
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
                 }
+                DoStartMeleeAttack(who);
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
-            return;
+        if (!m_creature->SelectHostilTarget()) return;
 
-        //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {         
-
-            if (!Holyground)
+            if (Holyground_Timer < diff)
             {
               DoCast(m_creature,SPELL_HOLYGROUNDAURA);
-              Holyground = true;
-            }  
+              Holyground_Timer = 4000;
+            }else Holyground_Timer -= diff;
 
-            //Repentance_Timer
             if (Repentance_Timer < diff)
             {
-                //Cast
                 DoCast(m_creature->getVictim(),SPELL_REPENTANCE);
 
-               switch(rand()%2)
-               {
-                case 0:
-                 DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
-                 DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
-                 break;
-
-                case 1:
-                 DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
-                 DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
-                 break;
-               }
-                //45 seconds until we should cast this agian
+                switch(rand()%2)
+                {
+                    case 0:
+                        DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
+                        break;
+                    case 1:
+                        DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
+                    break;
+                }
                 Repentance_Timer = 45000;
             }else Repentance_Timer -= diff;
 
-            //Holyfire_Timer
             if (Holyfire_Timer < diff)
             {
-                //Select Random Target
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                //Cast
                 if (target)
                      DoCast(target,SPELL_HOLYFIRE);
                 else
                      DoCast(m_creature->getVictim(),SPELL_HOLYFIRE); 
-
-                //Random time until we should cast this again
-                Holyfire_Timer = (rand()%50)*1000; 
+                Holyfire_Timer = RandTime(50);
             }else Holyfire_Timer -= diff;
             
-            //Divinewrath_Timer
             if (Divinewrath_Timer < diff)
             { 
-                //Select Random Target
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                //Cast
                 if (target)
                      DoCast(target,SPELL_DIVINEWRATH);
                 else
                      DoCast(m_creature->getVictim(),SPELL_DIVINEWRATH); 
-                       
-                //Random Time until we should cast this agian
-                 Divinewrath_Timer = (rand()%50)*1000; 
+                 Divinewrath_Timer = RandTime(50);
             }else Divinewrath_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
     }
 };
+
 CreatureAI* GetAI_boss_maiden_of_virtue(Creature *_Creature)
 {
     return new boss_maiden_of_virtueAI (_Creature);
 }
-
 
 void AddSC_boss_maiden_of_virtue()
 {

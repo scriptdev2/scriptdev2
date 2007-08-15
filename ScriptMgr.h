@@ -18,20 +18,18 @@
 #ifndef SCRIPTMGR_H
 #define SCRIPTMGR_H
 
-#include "../../game/Player.h"
-#include "../../game/GameObject.h"
-#include "../../game/SharedDefines.h"
-#include "../../game/GossipDef.h"
-#include "../../game/QuestDef.h"
-#include "../../game/WorldSession.h"
+//Only required includes
 #include "../../game/CreatureAI.h"
-#include "../../game/Spell.h"
-#include "../../game/TargetedMovementGenerator.h"
-#include "../../game/ThreatManager.h"
-#include "../../shared/WorldPacket.h"
-#include "../../shared/Database/DBCStores.h"
+#include "../../game/Creature.h"
 
 #define MAX_SCRIPTS 1000
+
+class Player;
+class Creature;
+class Quest;
+class Item;
+class GameObject;
+
 
 struct Script
 {
@@ -106,10 +104,6 @@ enum SelectAggroTarget
     SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
 };
 
-//Chat defines
-#define CHAT_MSG_MONSTER_SAY    0x0B
-#define CHAT_MSG_MONSTER_YELL   0x0C
-#define CHAT_MSG_MONSTER_EMOTE  0x0D
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
@@ -139,13 +133,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DamageTaken(Unit *done_by, uint32 &damage) {}
 
     //Is unit visible for MoveInLineOfSight
-    bool IsVisible(Unit *who) const
-    {
-        if (!who)
-            return false;
-
-        return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
-    }
+    bool IsVisible(Unit *who) const;
 
     //Called at World update tick
     void UpdateAI(const uint32);
@@ -203,7 +191,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoFaceTarget(Unit* unit);
 
     //Spawns a creature relative to m_creature
-    Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, TempSummonType t, uint32 despawntime);
+    Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);
     
     //Selects a unit from the creature's current aggro list
     Unit* SelectUnit(SelectAggroTarget target, uint32 position);

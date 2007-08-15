@@ -16,6 +16,8 @@
 
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 #define GOSSIP_ITEM     "Free me"
 

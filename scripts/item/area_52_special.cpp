@@ -16,6 +16,7 @@
 
 
 #include "../sc_defines.h"
+#include "../../../../game/Player.h"
 
 bool ItemUse_area_52_special(Player *player, Item* _Item)
 {

@@ -14,8 +14,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
 {

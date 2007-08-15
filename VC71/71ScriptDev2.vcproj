@@ -738,10 +738,6 @@
 						RelativePath="..\scripts\zone\elwynn_forest\npc_henze_faulk.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\scripts\zone\elwynn_forest\npc_marshal_mcbride.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Felwood"

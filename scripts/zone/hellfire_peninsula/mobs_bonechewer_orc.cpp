@@ -16,6 +16,8 @@
 
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/QuestDef.h"
 
 // **** This script is still under Developement ****
 

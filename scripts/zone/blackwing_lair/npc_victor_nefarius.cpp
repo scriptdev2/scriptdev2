@@ -15,6 +15,8 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 #define SAY_GAMESBEGIN          "Let the games begin!"
 #define SAY_VAEL_INTRO          "<unknown>"

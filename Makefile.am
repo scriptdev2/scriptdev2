@@ -129,7 +129,6 @@ scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
-scripts/zone/elwynn_forest/npc_marshal_mcbride.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \

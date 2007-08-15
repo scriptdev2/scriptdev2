@@ -17,6 +17,8 @@
 //*** NEEDS ADDITIOINAL REVIEW ***
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/GossipDef.h"
 
 #define SPELL_ESSENCEOFTHERED       23513
 #define SPELL_FLAMEBREATH           18435       //Wrong spell. Damage is right but it should not proc the heated blade.
