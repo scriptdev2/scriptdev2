@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 //                {
 //                m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
 //                DoCast(target,SPELL_ARCANEEXPLOSION);
-                }
+//                }
 
                 //20 seconds until we should cast this agian
                 Countspell_Timer = 16000 + rand()%4000;
