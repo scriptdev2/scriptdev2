@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 #define SPELL_KNOCKBACK                19813	
-#define SPELL_STOMP                    4283                     
+#define SPELL_STOMP                    15593                     
 
     
 
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL mob_molten_giantAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_STOMP);
 
                 //12 seconds until we should cast this agian
-                Stomp_Timer = 12000;
+                Stomp_Timer = 8000;
             }else Stomp_Timer -= diff;
 
             DoMeleeAttackIfReady();

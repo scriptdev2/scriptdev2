@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
     void EnterEvadeMode()
     {
 
-	Split_Timer = 10000;         //Split after 10 seconds
+	Split_Timer = 12000;         //Split after 12 seconds
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -121,8 +121,8 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
                 //Cast
                 Split(m_creature->getVictim());
 
-                //8 seconds until we should cast this agian
-                Split_Timer = 8000;
+                //12-14 seconds until we should cast this agian
+                Split_Timer = 12000 + rand()%2000;
             }else Split_Timer -= diff;
 
             DoMeleeAttackIfReady();

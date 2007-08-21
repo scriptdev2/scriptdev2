@@ -17,8 +17,6 @@
 #include "../../sc_defines.h"
 
 
-// Teleporting NYI
-
 #define SPELL_ARCANEEXPLOSION           19712
 #define SPELL_SHAZZRAHCURSE             19713
 #define SPELL_DEADENMAGIC               19714
@@ -104,7 +102,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
 
                 //6 seconds until we should cast this agian
-                ArcaneExplosion_Timer = 6000;
+                ArcaneExplosion_Timer = 4000 + rand()%4000;
             }else ArcaneExplosion_Timer -= diff;
 
             //ShazzrahCurse_Timer
@@ -117,7 +115,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
                 if (target)DoCast(target,SPELL_SHAZZRAHCURSE);
 
                 //30 seconds until we should cast this agian
-                ShazzrahCurse_Timer = 30000;
+                ShazzrahCurse_Timer = 26000 + rand()%5000;
             }else ShazzrahCurse_Timer -= diff;
 
             //DeadenMagic_Timer
@@ -136,8 +134,21 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
 
+//                // Teleporting him to a random gamer and casting Arcane Explosion after that.
+//                // Blink is not working cause of LoS System we need to do this hardcoded.
+//
+//                Unit* target = NULL;
+//
+//                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+//
+//                if (target) 
+//                {
+//                m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
+//                DoCast(target,SPELL_ARCANEEXPLOSION);
+                }
+
                 //20 seconds until we should cast this agian
-                Countspell_Timer = 20000;
+                Countspell_Timer = 16000 + rand()%4000;
             }else Countspell_Timer -= diff;
 
             DoMeleeAttackIfReady();

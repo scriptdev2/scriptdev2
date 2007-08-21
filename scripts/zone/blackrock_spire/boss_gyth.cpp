@@ -17,8 +17,9 @@
 #include "../../sc_defines.h"
 
 #define SPELL_CORROSIVEACID      20667
-#define SPELL_FREEZE             20712
-#define SPELL_FLAMEBREATH        18763
+#define SPELL_FREEZE             18763
+#define SPELL_FLAMEBREATH        20712
+
 
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI

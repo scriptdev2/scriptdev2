@@ -14,6 +14,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_shade_of_taerar' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'boss_teremus_the_devourer' WHERE `entry` = 7846;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kruul' WHERE `entry` = 18338;
 UPDATE `creature_template` SET `ScriptName` = 'boss_azuregos' WHERE `entry` = 6109;
+UPDATE `creature_template` SET `ScriptName` = 'mob_dementeddruids' WHERE `entry` = 15260;
 
 /* WORLD CREATURE  These are creatures to be found in more than one spesific zone */
 UPDATE `creature_template` SET `ScriptName` = 'lumberjack' WHERE `entry` IN (11328, 11260);

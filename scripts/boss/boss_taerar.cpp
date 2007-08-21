@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
 
                 //20 seconds until we should cast this agian
-                NoxiousBreath_Timer = 18000 + rand()%6000;
+                NoxiousBreath_Timer = 14000 + rand()%6000;
             } else NoxiousBreath_Timer -= diff;
 
 

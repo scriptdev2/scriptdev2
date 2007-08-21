@@ -121,12 +121,10 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
             //ConeOfFire_Timer
             if (ConeOfFire_Timer < diff)
             {
-                //Cast
-                if (rand()%100 < 80) //80% chance to cast
-                {
+
                     DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
-                }
-                //10 seconds until we should cast this agian
+                
+                //7 seconds until we should cast this agian
                 ConeOfFire_Timer = 7000;
             }else ConeOfFire_Timer -= diff;
 

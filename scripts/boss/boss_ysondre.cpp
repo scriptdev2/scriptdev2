@@ -23,8 +23,10 @@
 #define SPELL_LIGHTNINGWAVE        24819
 #define SPELL_SUMMONDRUIDS         24795
 
+//druid spells
+#define SPELL_MOONFIRE             21669
 
-
+// Ysondre script
 struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 {
     boss_ysondreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -157,14 +159,14 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
 
                 //20 seconds until we should cast this agian
-                NoxiousBreath_Timer = 18000 + rand()%6000;
+                NoxiousBreath_Timer = 14000 + rand()%6000;
             }else NoxiousBreath_Timer -= diff;
 
             //Tailsweep every 2 seconds
             if (TailSweep_Timer < diff)
             {
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 //Only cast if we are behind
                 if (!m_creature->HasInArc( M_PI, target))
                     DoCast(target,SPELL_TAILSWEEP);
@@ -199,18 +201,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 if (SummonDruids1_Timer < diff)
                 {
-                    // summon 10 druids  
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-
+                  // summon 10 druids 
+                  Unit* target = NULL;
+                  for(int i = 0; i < 10;i++)
+                  {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonDruids(target);
+                  }
                     //60 seconds until we should cast this agian
                     SummonDruids1_Timer = 60000;
                 } else SummonDruids1_Timer -= diff;
@@ -221,18 +218,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 if (SummonDruids2_Timer < diff)
                 {
-                    // summon 10 druids  
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-
+                    // summon 10 druids 
+                  Unit* target = NULL;
+                  for(int i = 0; i < 10;i++)
+                  {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonDruids(target);
+                  }
                     //60 seconds until we should cast this agian
                     SummonDruids2_Timer = 60000;
                 } else SummonDruids2_Timer -= diff;
@@ -243,18 +235,13 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
             {
                 if (SummonDruids3_Timer < diff)
                 {
-                    // summon 10 druids  
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-                    SummonDruids(m_creature->getVictim());
-
+                    // summon 10 druids 
+                  Unit* target = NULL;
+                  for(int i = 0; i < 10;i++)
+                  {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonDruids(target);
+                  }
                     //60 seconds until we should cast this agian
                     SummonDruids3_Timer = 60000;
                 } else SummonDruids3_Timer -= diff;
@@ -263,9 +250,92 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 }; 
+// Summoned druid script
+struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
+{
+    mob_dementeddruidsAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 MoonFire_Timer;
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        MoonFire_Timer = 3000;
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
+
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+
+            //MoonFire_Timer
+            if (MoonFire_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_MOONFIRE);
+
+                //5 seconds
+                MoonFire_Timer = 5000;
+            }else MoonFire_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    }
+}; 
+
+
 CreatureAI* GetAI_boss_ysondre(Creature *_Creature)
 {
     return new boss_ysondreAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_dementeddruids(Creature *_Creature)
+{
+    return new mob_dementeddruidsAI (_Creature);
 }
 
 
@@ -275,5 +345,10 @@ void AddSC_boss_ysondre()
     newscript = new Script;
     newscript->Name="boss_ysondre";
     newscript->GetAI = GetAI_boss_ysondre;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_dementeddruids";
+    newscript->GetAI = GetAI_mob_dementeddruids;
     m_scripts[nrscripts++] = newscript;
 }
