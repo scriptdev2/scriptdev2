@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
 
 
             //Split_Timer
-            if (Split_Timer < diff)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0 && Split_Timer < diff)
             {
 
                 //Inturrupt any spell casting
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
                 Split(m_creature->getVictim());
 
                 //12-14 seconds until we should cast this agian
-                Split_Timer = 12000 + rand()%2000;
+                Split_Timer = 10000 + rand()%4000;
             }else Split_Timer -= diff;
 
             DoMeleeAttackIfReady();

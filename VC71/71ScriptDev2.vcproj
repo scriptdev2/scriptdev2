@@ -164,10 +164,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\mob_shade_of_taerar.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\creature\npc_lumberjack.cpp"
 					>
 				</File>

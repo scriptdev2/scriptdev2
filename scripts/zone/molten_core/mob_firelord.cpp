@@ -32,8 +32,8 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        SoulBurn_Timer = 8000;
-        SummonLavaSpawn_Timer = 12000;
+        SoulBurn_Timer = 6000;
+        SummonLavaSpawn_Timer = 10000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
 //            }else SummonLavaSpawn_Timer -= diff;
 
             //SummonLavaSpawn
-            if (SummonLavaSpawn_Timer < diff)
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0 && SummonLavaSpawn_Timer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
