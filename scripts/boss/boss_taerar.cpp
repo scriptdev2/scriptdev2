@@ -16,6 +16,8 @@
 
 #include "../sc_defines.h"
 
+//Spells of Taerar
+
 #define SPELL_SLEEP                24777
 #define SPELL_NOXIOUSBREATH        24818
 #define SPELL_TAILSWEEP            15847
@@ -25,6 +27,10 @@
 #define SPELL_SUMMONSHADE          24843
 
 
+//Spells of Shades of Taerar
+
+#define SPELL_POSIONCLOUD                24840  	
+#define SPELL_POSIONBREATH             20667   
 
 struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 {
@@ -234,9 +240,11 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     //m_creature->m_canMove = false;
 
                     //Cast
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonShades(target);
+                    SummonShades(target);
+                    SummonShades(target);
                     Summon1_Timer = 120000;
                 } else Summon1_Timer -= diff;
             }
@@ -255,9 +263,11 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     //m_creature->m_canMove = false;
 
                     //Cast
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonShades(target);
+                    SummonShades(target);
+                    SummonShades(target);
                     Summon2_Timer = 120000;
                 } else Summon2_Timer -= diff;
             }
@@ -274,21 +284,119 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                     //m_creature->m_canMove = false;
 
                     //Cast
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
-                    SummonShades(m_creature->getVictim());
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonShades(target);
+                    SummonShades(target);
+                    SummonShades(target);
                     Summon3_Timer = 120000;
                 } else Summon3_Timer -= diff;
             }
         }
         DoMeleeAttackIfReady();
     }
+};
+
+
+// Shades of Taerar Script
+         
+struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
+{
+    boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 PoisonCloud_Timer;
+    uint32 PosionBreath_Timer;
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {       
+        PoisonCloud_Timer = 8000;
+        PosionBreath_Timer = 12000;
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
+
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+            
+            //PoisonCloud_Timer
+            if (PoisonCloud_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_POSIONCLOUD);
+
+                //30 seconds
+                PoisonCloud_Timer = 30000;
+            }else PoisonCloud_Timer -= diff;
+
+            //PosionBreath_Timer
+            if (PosionBreath_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_POSIONBREATH);
+
+                //12 seconds until we should cast this agian
+                PosionBreath_Timer = 12000;
+            }else PosionBreath_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    }
 }; 
+
 CreatureAI* GetAI_boss_taerar(Creature *_Creature)
 {
     return new boss_taerarAI (_Creature);
 }
 
+CreatureAI* GetAI_boss_shadeoftaerar(Creature *_Creature)
+{
+    return new boss_shadeoftaerarAI (_Creature);
+}
 
 void AddSC_boss_taerar()
 {
@@ -296,5 +404,10 @@ void AddSC_boss_taerar()
     newscript = new Script;
     newscript->Name="boss_taerar";
     newscript->GetAI = GetAI_boss_taerar;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="boss_shade_of_taerar";
+    newscript->GetAI = GetAI_boss_shadeoftaerar;
     m_scripts[nrscripts++] = newscript;
 }

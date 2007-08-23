@@ -36,7 +36,6 @@ scripts/boss/boss_ysondre.cpp \
 scripts/creature/mob_defias.cpp \
 scripts/creature/mob_generic_creature.cpp \
 scripts/creature/mob_kobold.cpp \
-scripts/creature/mob_shade_of_taerar.cpp \
 scripts/creature/npc_lumberjack.cpp \
 scripts/creature/npc_miner.cpp \
 scripts/creature/simple_ai.cpp \
@@ -326,6 +325,7 @@ scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 system.cpp
+
 
 ## libtool settings
 # API versioning

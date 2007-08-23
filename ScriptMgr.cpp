@@ -53,7 +53,6 @@ extern void AddSC_generic_creature();
 extern void AddSC_defias();
 extern void AddSC_lumberjack();
 extern void AddSC_miner();
-extern void AddSC_boss_shadeoftaerar();
 
 // -- Custom --
 extern void AddSC_custom_example();
@@ -448,7 +447,6 @@ void ScriptsInit()
     AddSC_defias();
     AddSC_lumberjack();
     AddSC_miner();
-    AddSC_boss_shadeoftaerar();
 
     // -- Custom --
     AddSC_custom_example();
@@ -705,6 +703,7 @@ void ScriptsInit()
     AddSC_boss_rasfrost();
     AddSC_boss_theravenian();
     AddSC_boss_vectus();
+  
 
     //Searing gorge
     AddSC_npc_lothos_riftwalker();

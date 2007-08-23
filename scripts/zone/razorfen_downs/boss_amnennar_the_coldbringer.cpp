@@ -60,10 +60,14 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-            DoYell(SAY_0, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-            InCombat = true;
+                if (!InCombat)
+                {
+                    DoYell(SAY_0,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                    InCombat = true;
+                }
         }
     }
 
@@ -83,7 +87,12 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
+                if (!InCombat)
+                {
+                    DoYell(SAY_0,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                    InCombat = true;
+                }
             }
         }
     }
@@ -144,8 +153,8 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_FROSTBOLT);
 
-                //10 seconds until we should cast this again
-                FrostBolt_Timer = 12000;
+                //8 seconds until we should cast this again
+                FrostBolt_Timer = 8000;
             } else FrostBolt_Timer -= diff;
 
             if ( !Spectrals && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
@@ -153,10 +162,12 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
                 DoYell(SAY_1, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_SUMMON);
 
-                //Cast
-                SummonSpectrals(m_creature->getVictim());
-                SummonSpectrals(m_creature->getVictim());
-                SummonSpectrals(m_creature->getVictim());
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                
+                SummonSpectrals(target);
+                SummonSpectrals(target);
+                SummonSpectrals(target);
                 Spectrals = true;
             }
 

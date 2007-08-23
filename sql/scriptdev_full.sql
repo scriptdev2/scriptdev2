@@ -460,8 +460,9 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_doctor_theolen_krastinov' WH
 UPDATE `creature_template` SET `ScriptName` = 'boss_jandice_barov' WHERE `entry` = 10503;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lorekeeper_polkelt' WHERE `entry` = 10901;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kormok' WHERE `entry` = 16118;
-/* Illusion of Jandice Barov, Darkmaster Gandling, Kirtonos the Herald, Rattlegore, Marduk Blackpool, Risen Guard, Risen Bonewarder, Risen Lackey, Risen Aberration, Risen Warrior, Risen Protector, Risen Construct, Risen Guardian, Diseased Ghoul, Ragged Ghoul, Spectral Projection, Spectral Teacher, Necrofiend, Scholomance Neophyte, Scholomance Acolyte, Scholomance Occultist */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11439, 1853, 10506, 11622, 10433, 10489, 10491, 10482, 10485, 10486, 10487, 10488, 11598, 10495, 10497, 11263, 10500, 11551, 10470, 10471, 10472);
+UPDATE `creature_template` SET `ScriptName` = 'mob_illusionofjandicebarov' WHERE `entry` = 11439;
+/* Darkmaster Gandling, Kirtonos the Herald, Rattlegore, Marduk Blackpool, Risen Guard, Risen Bonewarder, Risen Lackey, Risen Aberration, Risen Warrior, Risen Protector, Risen Construct, Risen Guardian, Diseased Ghoul, Ragged Ghoul, Spectral Projection, Spectral Teacher, Necrofiend, Scholomance Neophyte, Scholomance Acolyte, Scholomance Occultist */
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1853, 10506, 11622, 10433, 10489, 10491, 10482, 10485, 10486, 10487, 10488, 11598, 10495, 10497, 11263, 10500, 11551, 10470, 10471, 10472);
 /* Scholomance Student, Scholomance Necromancer, Scholomance Adept, Scholomance Handler, Splintered Skeleton, Skulking Corpse, Unstable Corpse, Reanimated Corpse, Aspect of Banality, Aspect of Corruption, Aspect of Malice, Aspect of Shadow, Blood Steward of Kirtonos, Spectral Tutor, Dark Shade, Corrupted Spirit, Malicious Spirit, Banal Spirit, Scholomance Dark Summoner */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 

@@ -16,8 +16,16 @@
 
 #include "../../sc_defines.h"
 
+// Spells of Jandice Barov
+
 #define SPELL_CURSEOFBLOOD          24673
 //#define SPELL_ILLUSION              17773
+
+
+//Spells of Illusion of Jandice Barov
+
+#define SPELL_CLEAVE                15584
+
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {
@@ -46,6 +54,14 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     }
 
     void AttackStart(Unit *who)
@@ -145,17 +161,14 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                //Cast
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
-                SummonIllusions(m_creature->getVictim());
+
+                //Summon 10 Illusions attacking random gamers
+                Unit* target = NULL;
+                for(int i = 0; i < 10;i++)
+                  {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    SummonIllusions(target);
+                  }
                 Invisible = true;
                 Invisible_Timer = 3000;
 
@@ -187,10 +200,96 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
     }
+};
+
+// Illusion of Jandice Barov Script
+
+struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
+{
+    mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 Cleave_Timer;
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        Cleave_Timer = 4000;
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, IMMUNE_DAMAGE_MAGIC, true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget())
+            return;
+
+        //Check if we have a current target
+        if( m_creature->getVictim() && m_creature->isAlive())
+        {
+
+            //Cleave_Timer
+            if (Cleave_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+                //5-8 seconds
+                Cleave_Timer = 5000 + rand()%3000;
+            }else Cleave_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    }
 }; 
+
+
 CreatureAI* GetAI_boss_jandicebarov(Creature *_Creature)
 {
     return new boss_jandicebarovAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_illusionofjandicebarov(Creature *_Creature)
+{
+    return new mob_illusionofjandicebarovAI (_Creature);
 }
 
 
@@ -201,4 +300,10 @@ void AddSC_boss_jandicebarov()
     newscript->Name="boss_jandice_barov";
     newscript->GetAI = GetAI_boss_jandicebarov;
     m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_illusionofjandicebarov";
+    newscript->GetAI = GetAI_mob_illusionofjandicebarov;
+    m_scripts[nrscripts++] = newscript;
 }
+ 
