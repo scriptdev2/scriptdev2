@@ -1135,6 +1135,8 @@ void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
 {
     if (!victim || m_creature->IsNonMeleeSpellCasted(false))
         return;
+
+    m_creature->StopMoving();
     m_creature->CastSpell(victim, spelId, false);
 }
 
