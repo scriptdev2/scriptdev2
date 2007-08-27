@@ -1396,7 +1396,7 @@ void FillSpellSummary()
             //Spell targets AoE at enemy
             if ( TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
-                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_AROUND_CASTER ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED )
                 SpellSummary[i].Targets |= 1 << (SELECT_TARGET_AOE_ENEMY-1);
 
@@ -1405,7 +1405,7 @@ void FillSpellSummary()
                  TempSpell->EffectImplicitTargetA[j] == TARGET_CURRENT_SELECTED_ENEMY ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_INSTANT ||
-                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMIES_AROUND_CASTER ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_AROUND_CASTER ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_ENEMY_IN_AREA_CHANNELED )
                 SpellSummary[i].Targets |= 1 << (SELECT_TARGET_ANY_ENEMY-1);
 
@@ -1417,7 +1417,8 @@ void FillSpellSummary()
 
             //Spell targets aoe friends
             if ( TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_PARTY_AROUND_CASTER ||
-                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY )
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_AROUND_CASTER)
                 SpellSummary[i].Targets |= 1 << (SELECT_TARGET_AOE_FRIEND-1);
 
             //Spell targets any friend(or self)
@@ -1425,7 +1426,8 @@ void FillSpellSummary()
                  TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_FRIEND ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_SINGLE_PARTY ||
                  TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_PARTY_AROUND_CASTER ||
-                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY )
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_AREAEFFECT_PARTY ||
+                 TempSpell->EffectImplicitTargetA[j] == TARGET_ALL_AROUND_CASTER)
                 SpellSummary[i].Targets |= 1 << (SELECT_TARGET_ANY_FRIEND-1);
 
             //Make sure that this spell includes a damage effect
@@ -1435,10 +1437,11 @@ void FillSpellSummary()
                  TempSpell->Effect[j] == SPELL_EFFECT_HEALTH_LEECH )
                 SpellSummary[i].Effects |= 1 << (SELECT_EFFECT_DAMAGE-1);
 
-            //Make sure that this spell includes a healing effect
+            //Make sure that this spell includes a healing effect (or an apply aura with a periodic heal)
             if ( TempSpell->Effect[j] == SPELL_EFFECT_HEAL || 
                  TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MAX_HEALTH || 
-                 TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MECHANICAL )
+                 TempSpell->Effect[j] == SPELL_EFFECT_HEAL_MECHANICAL ||
+                 (TempSpell->Effect[j] == SPELL_EFFECT_APPLY_AURA  && TempSpell->EffectApplyAuraName[j]== 8 ))
                 SpellSummary[i].Effects |= 1 << (SELECT_EFFECT_HEALING-1);
 
             //Make sure that this spell applies an aura
