@@ -18,7 +18,7 @@
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
 
-bool ItemUse_nether_wraith_beacon(Player *player, Item* _Item)
+bool ItemUse_nether_wraith_beacon(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     if (player->GetQuestStatus(10832) == QUEST_STATUS_INCOMPLETE)
     {

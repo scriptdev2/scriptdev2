@@ -29,7 +29,7 @@ class Creature;
 class Quest;
 class Item;
 class GameObject;
-
+class SpellCastTargets;
 
 struct Script
 {
@@ -60,8 +60,8 @@ struct Script
 
     CreatureAI* (*GetAI)(Creature *_Creature);
 
-    bool (*pReceiveEmote         )(Player *player, Creature *_Creature, uint32 emote);
-    bool (*pItemUse             )(Player *player, Item* _Item);
+    bool (*pReceiveEmote        )(Player *player, Creature *_Creature, uint32 emote);
+    bool (*pItemUse             )(Player *player, Item* _Item, SpellCastTargets const& targets);
     // -----------------------------------------
 
 };

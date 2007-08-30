@@ -18,7 +18,7 @@
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
 
-bool ItemUse_item_test(Player *player, Item* _Item)
+bool ItemUse_item_test(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     int32 basePoints0 = 50000;
     //i.DurationIndex = 20; If this required then must be used spellmod

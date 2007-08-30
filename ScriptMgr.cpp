@@ -1004,14 +1004,14 @@ CreatureAI* GetAI(Creature *_Creature)
 }
 
 MANGOS_DLL_EXPORT
-bool ItemUse( Player *player, Item* _Item)
+bool ItemUse( Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     Script *tmpscript = NULL;
 
     tmpscript = GetScriptByName(_Item->GetProto()->ScriptName);
     if(!tmpscript || !tmpscript->pItemUse) return false;
 
-    return tmpscript->pItemUse(player,_Item);
+    return tmpscript->pItemUse(player,_Item,targets);
 }
 
 MANGOS_DLL_EXPORT

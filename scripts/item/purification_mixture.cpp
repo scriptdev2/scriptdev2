@@ -22,7 +22,7 @@
 #define SPELL_TOXIC       29278
 #define SPELL_PURIFIED    29277
 
-bool ItemUse_purification_mixture(Player *player, Item* _Item)
+bool ItemUse_purification_mixture(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     player->CastSpell(player,SPELL_PURIFY,true);
 

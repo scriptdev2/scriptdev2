@@ -18,7 +18,7 @@
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
 
-bool ItemUse_area_52_special(Player *player, Item* _Item)
+bool ItemUse_area_52_special(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     if ( player->GetAreaId() == 3803 )
     {
