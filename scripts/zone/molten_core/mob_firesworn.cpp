@@ -17,7 +17,8 @@
 #include "../../sc_defines.h"
 
 #define SPELL_IMMOLATE                20294	
-#define SPELL_ERUPTION                    19497                     
+#define SPELL_ERUPTION                19497       
+#define SPELL_DEATHTOUCH                  5              
 
     
 
@@ -26,23 +27,29 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
     mob_fireswornAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Immolate_Timer;
+    uint32 Eruption_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
     {       
         Immolate_Timer = 2000;
+        Eruption_Timer = 0;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -100,7 +107,7 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
             if (Immolate_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 60) //60% chance to cast
+                if (rand()%100 < 70) //70% chance to cast
                 {
                  //Cast Immolate on a Random target
                  Unit* target = NULL;
@@ -108,9 +115,24 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_IMMOLATE);
                 }
-                //7 seconds until we should cast this again
-                Immolate_Timer = 7000;
+                //5 seconds until we should cast this again
+                Immolate_Timer = 5000;
             }else Immolate_Timer -= diff;
+
+
+            //Casting Eruption on HP <= 3% and Deathtouch to kill the firesworn.
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 3 )
+            {
+               if (Eruption_Timer < diff)
+               {
+                 //Cast
+                 DoCast(m_creature->getVictim(),SPELL_ERUPTION);
+                 DoCast(m_creature,SPELL_DEATHTOUCH);
+
+                 //12 seconds until we should cast this again
+                 Eruption_Timer = 12000;
+               }else Eruption_Timer -= diff;
+            }
 
             DoMeleeAttackIfReady();
         }

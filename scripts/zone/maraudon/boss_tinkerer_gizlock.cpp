@@ -50,8 +50,12 @@ struct MANGOS_DLL_DECL boss_tinkerergizlockAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-            InCombat = true;
+                //Say our dialog on initial aggro
+                if (!InCombat)
+                {
+                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                    InCombat = true;
+                }
         }
     }
 
@@ -69,7 +73,12 @@ struct MANGOS_DLL_DECL boss_tinkerergizlockAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-                InCombat = true;
+                //Say our dialog on initial aggro
+                if (!InCombat)
+                {
+                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                    InCombat = true;
+                }
 
             }
         }

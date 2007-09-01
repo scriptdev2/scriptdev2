@@ -40,12 +40,16 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -101,8 +105,8 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (target)DoCast(target,SPELL_SOULBURN);
                 }
-                //20 seconds until we should cast this again
-                SoulBurn_Timer = 20000;
+                //15-22 seconds until we should cast this again
+                SoulBurn_Timer = 15000 + rand()%7000;
             }else SoulBurn_Timer -= diff;
 
 //            //SummonLavaSpawn
@@ -115,16 +119,18 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
 //            }else SummonLavaSpawn_Timer -= diff;
 
             //SummonLavaSpawn
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0 && SummonLavaSpawn_Timer < diff)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
             {
+                if (SummonLavaSpawn_Timer < diff)
+                {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                Summoned = m_creature->SummonCreature(12265, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(12265, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
                 SummonLavaSpawn_Timer = 30000;
-            }else SummonLavaSpawn_Timer -= diff;
-
+                }else SummonLavaSpawn_Timer -= diff;
+            }
             DoMeleeAttackIfReady();
         }
     }

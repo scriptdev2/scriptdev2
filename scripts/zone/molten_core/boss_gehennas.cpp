@@ -32,9 +32,9 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        ShadowBolt_Timer = 7000;
-        RainOfFire_Timer = 35000;
-        GehennasCurse_Timer = 30000;
+        ShadowBolt_Timer = 6000;
+        RainOfFire_Timer = 10000;
+        GehennasCurse_Timer = 12000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -47,6 +47,9 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -112,8 +115,8 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
                 if (target)
                 DoCast(target,SPELL_RAINOFFIRE);
 
-                //35 seconds until we should cast this agian
-                RainOfFire_Timer = 35000;
+                //4-12 seconds until we should cast this agian
+                RainOfFire_Timer = 4000 + rand()%8000;
             }else RainOfFire_Timer -= diff;
 
             //GehennasCurse_Timer
@@ -122,8 +125,8 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
 
-                //30 seconds until we should cast this agian
-                GehennasCurse_Timer = 30000;
+                //22-30 seconds until we should cast this agian
+                GehennasCurse_Timer = 22000 + rand()%8000;;
             }else GehennasCurse_Timer -= diff;
 
             DoMeleeAttackIfReady();

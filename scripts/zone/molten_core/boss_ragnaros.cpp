@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 
-// Adds NYI and the intro dialog is NYI
+// Intro dialog is NYI
 
 #define SPELL_HANDOFRAGNAROS        19780
 #define SPELL_WRATHOFRAGNAROS       20566
@@ -27,6 +27,7 @@
 
 #define SPELL_SONSOFFLAME_DUMMY     21108       //Server side effect
 #define SPELL_RAGSUBMERGE           21107       //Stealth aura
+#define SPELL_MELTWEAPON            21388
 
 #define SAY_ARRIVAL_1       "TOO SOON! YOU HAVE AWAKENED ME TOO SOON, EXECUTUS! WHAT IS THE MEANING OF THIS INTRUSION?"
 #define SAY_ARRIVAL_3       "FOOL! YOU ALLOWED THESE INSECTS TO RUN RAMPANT THROUGH THE HALLOWED CORE, AND NOW YOU LEAD THEM TO MY VERY LAIR? YOU HAVE FAILED ME, EXECUTUS! JUSTICE SHALL BE MET, INDEED!"
@@ -103,6 +104,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
     bool HasSubmergedOnce;
     bool WasBanished; 
     bool InCombat;
+    bool HasAura;
 
     void EnterEvadeMode()
     {
@@ -129,6 +131,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
+        HasAura = true;
     }
 
     void KilledUnit(Unit* victim)
@@ -172,6 +176,13 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+		if (!HasAura)
+                {
+                    m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
+                    HasAura = true;
+                }
+
 
                 //Begin ranged attack because Ragnaros is rooted at all times
                 DoStartRangedAttack(who);

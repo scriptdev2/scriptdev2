@@ -45,6 +45,9 @@ struct MANGOS_DLL_DECL mob_flamewaker_protectorAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -94,12 +97,9 @@ struct MANGOS_DLL_DECL mob_flamewaker_protectorAI : public ScriptedAI
             if (Cleave_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 60) //60% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                }
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
                 //6 seconds until we should cast this again
-                Cleave_Timer = 6000;
+                Cleave_Timer = 5000 + rand()%5000;
             }else Cleave_Timer -= diff;
 
 
@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_protectorAI : public ScriptedAI
             if (DominateMind_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 60) //60% chance to cast
+                if (rand()%100 < 70) //60% chance to cast
                 {
                  //Cast Dominate Mind on a Random target
                  Unit* target = NULL;

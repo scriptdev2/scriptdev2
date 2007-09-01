@@ -33,7 +33,7 @@ struct MANGOS_DLL_DECL mob_flamewakerAI : public ScriptedAI
     void EnterEvadeMode()
     {       
         FistOfRagnaros_Timer = 12000;
-        SunderArmor_Timer = 7000;
+        SunderArmor_Timer = 5000;
         Strike_Timer = 15000;
         InCombat = false;
 
@@ -41,12 +41,16 @@ struct MANGOS_DLL_DECL mob_flamewakerAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -107,24 +111,18 @@ struct MANGOS_DLL_DECL mob_flamewakerAI : public ScriptedAI
             if (SunderArmor_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
-                }
+                DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
                 //14 seconds until we should cast this agian
-                SunderArmor_Timer = 14000;
+                SunderArmor_Timer = 10000 + rand()%8000;
             }else SunderArmor_Timer -= diff;
 
             //Strike_Timer
             if (Strike_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 60) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_STRIKE);
-                }
-                //11 seconds until we should cast this again
-                Strike_Timer = 10000;
+                DoCast(m_creature->getVictim(),SPELL_STRIKE);
+                //7-12 seconds until we should cast this again
+                Strike_Timer = 7000 + rand()%5000;
             }else Strike_Timer -= diff;
 
             DoMeleeAttackIfReady();

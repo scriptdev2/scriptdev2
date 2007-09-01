@@ -124,10 +124,13 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
             if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
             {
-                //SpecialAoE -> Fucking bitch took lot of my time to test :S
+                
                 if (Polymorph_Timer < diff)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_POLYMORPH);
+                Unit* target = NULL;
+
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_POLYMORPH);
                     Polymorph_Timer = 40000;
                 }else Polymorph_Timer -= diff;
 
@@ -167,8 +170,8 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION3);
 
-                //30 seconds until we should cast this agian
-                ArcaneExplosion3_Timer = 10000;
+                //8 seconds until we should cast this agian
+                ArcaneExplosion3_Timer = 8000;
             }else ArcaneExplosion3_Timer -= diff;
 
             //ArcaneExplosion4_Timer
@@ -177,7 +180,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION4);
 
-                //35 seconds until we should cast this agian
+                //10 seconds until we should cast this agian
                 ArcaneExplosion4_Timer = 10000;
             }else ArcaneExplosion4_Timer -= diff;
 
@@ -187,8 +190,8 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature,SPELL_BLINK);
 
-                //35 seconds until we should cast this agian
-                Blink_Timer = 40000;
+                //30 seconds until we should cast this agian
+                Blink_Timer = 30000;
             }else Blink_Timer -= diff;
 
             //Fireball_Timer
@@ -197,8 +200,8 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_FIREBALL);
 
-                //35 seconds until we should cast this agian
-                Fireball_Timer = 10000;
+                //12 seconds until we should cast this agian
+                Fireball_Timer = 12000;
             }else Fireball_Timer -= diff;
 
             //ManaShiled4_Timer

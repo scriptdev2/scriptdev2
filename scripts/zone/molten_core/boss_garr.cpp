@@ -46,6 +46,9 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -97,8 +100,8 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature,SPELL_ANTIMAGICPULSE);
 
-                //20 seconds until we should cast this agian
-                AntiMagicPulse_Timer = 20000;
+                //14-18 seconds until we should cast this agian
+                AntiMagicPulse_Timer = 14000 + rand()%4000;
             }else AntiMagicPulse_Timer -= diff;
 
             //MagmaShackles_Timer
@@ -107,8 +110,8 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature,SPELL_MAGMASHACKLES);
 
-                //15 seconds until we should cast this agian
-                MagmaShackles_Timer = 15000;
+                //8-12 seconds until we should cast this agian
+                MagmaShackles_Timer = 8000 + rand()%4000;
             }else MagmaShackles_Timer -= diff;
 
             DoMeleeAttackIfReady();

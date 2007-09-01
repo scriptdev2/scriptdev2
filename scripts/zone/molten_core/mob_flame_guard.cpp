@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL mob_flame_guardAI : public ScriptedAI
             if (Flame_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 65) //65% chance to cast
+                if (rand()%100 < 80) //80% chance to cast
                 {
                     DoCast(m_creature->getVictim(),SPELL_FLAME);
                 }

@@ -38,12 +38,16 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -94,7 +98,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
                 case 1: RandY = 0 + Rand; break;
          }
          Rand = 0;
-        Summoned = DoSpawnCreature(12265, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 600000);
+        Summoned = DoSpawnCreature(12265, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
         if(Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
@@ -112,18 +116,18 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
 
 
             //Split_Timer
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0 && Split_Timer < diff)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
             {
-
-                //Inturrupt any spell casting
-                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                if (Split_Timer < diff)
+                {
 
                 //Cast
                 Split(m_creature->getVictim());
 
                 //12-14 seconds until we should cast this agian
                 Split_Timer = 10000 + rand()%4000;
-            }else Split_Timer -= diff;
+                }else Split_Timer -= diff;
+            }
 
             DoMeleeAttackIfReady();
         }

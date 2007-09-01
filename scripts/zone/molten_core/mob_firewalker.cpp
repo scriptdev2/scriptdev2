@@ -45,6 +45,9 @@ struct MANGOS_DLL_DECL mob_firewalkerAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -94,12 +97,9 @@ struct MANGOS_DLL_DECL mob_firewalkerAI : public ScriptedAI
             if (InciteFlames_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 60) //60% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_INCITEFLAMES);
-                }
-                //8 seconds until we should cast this again
-                InciteFlames_Timer = 8000;
+                DoCast(m_creature->getVictim(),SPELL_INCITEFLAMES);
+                //7-11 seconds until we should cast this again
+                InciteFlames_Timer = 7000 + rand()%4000;
             }else InciteFlames_Timer -= diff;
 
 
@@ -107,12 +107,9 @@ struct MANGOS_DLL_DECL mob_firewalkerAI : public ScriptedAI
             if (MeltArmor_Timer < diff)
             {
                 //Cast
-                if (rand()%100 < 55) //55% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_MELTARMOR);
-                }
-                //15 seconds until we should cast this agian
-                MeltArmor_Timer = 15000;
+                DoCast(m_creature->getVictim(),SPELL_MELTARMOR);
+                //12-20 seconds until we should cast this agian
+                MeltArmor_Timer = 12000 + rand()%8000;
             }else MeltArmor_Timer -= diff;
 
             DoMeleeAttackIfReady();

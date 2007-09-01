@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Healing_Timer;
+    uint32 Renew_Timer;
     uint32 PowerWordShield_Timer;
     uint32 CrusaderStrike_Timer;
     uint32 HammerOfJustice_Timer;
@@ -57,13 +58,14 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        Healing_Timer = 80000;
-        PowerWordShield_Timer = 20000;
-        CrusaderStrike_Timer = 40000;
-        HammerOfJustice_Timer = 30000;
+        Healing_Timer = 0;
+        Renew_Timer= 0;
+        PowerWordShield_Timer = 2000;
+        CrusaderStrike_Timer = 12000;
+        HammerOfJustice_Timer = 18000;
         HolySmite6_Timer = 10000;
-        HolyFire5_Timer = 45000;
-        MindBlast6_Timer = 35000;
+        HolyFire5_Timer = 20000;
+        MindBlast6_Timer = 6000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -133,7 +135,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
 
             //If we are <75% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 && !m_creature->IsNonMeleeSpellCasted(false))
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
             {
                 
                 //Healing_Timer
@@ -143,25 +145,24 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                     DoCast(m_creature,SPELL_FLASHHEAL6);
                     return;
     
-                    //80 seconds until we should cast this agian
-                    Healing_Timer = 80000;
-                }else Healing_Timer -= diff;      
+                    //22-32 seconds until we should cast this agian
+                    Healing_Timer = 22000 + rand()%10000;
+                }else Healing_Timer -= diff;    
+            }  
                 
-                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
+                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
                 {
 
-                    if (Healing_Timer < diff)
+                    if (Renew_Timer < diff)
                     {
     
                         DoCast(m_creature,SPELL_RENEW);
-                        return;
-    
-                        //80 seconds until we should cast this agian
-                        Healing_Timer = 40000;
-                    }else Healing_Timer -= diff;      
+
+                        //30 seconds until we should cast this agian
+                        Renew_Timer = 30000;
+                    }else Renew_Timer -= diff;      
                 }
-                return;
-            }
+
             
             //PowerWordShield_Timer
             if (PowerWordShield_Timer < diff)
@@ -169,8 +170,8 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature,SPELL_POWERWORDSHIELD);
 
-                //60 seconds until we should cast this agian
-                PowerWordShield_Timer = 60000;
+                //30 seconds until we should cast this agian
+                PowerWordShield_Timer = 25000;
             }else PowerWordShield_Timer -= diff;
 
             //CrusaderStrike_Timer
@@ -179,8 +180,8 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
 
-                //40 seconds until we should cast this agian
-                CrusaderStrike_Timer = 40000;
+                //15 seconds until we should cast this agian
+                CrusaderStrike_Timer = 15000;
             }else CrusaderStrike_Timer -= diff;
 
             //HammerOfJustice_Timer
@@ -189,8 +190,8 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
 
-                //40 seconds until we should cast this agian
-                HammerOfJustice_Timer = 30000;
+                //12 seconds until we should cast this agian
+                HammerOfJustice_Timer = 12000;
             }else HammerOfJustice_Timer -= diff;
 
             //HolySmite6_Timer
@@ -199,7 +200,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_HOLYSMITE6);
 
-                //30 seconds until we should cast this agian
+                //10 seconds until we should cast this agian
                 HolySmite6_Timer = 10000;
             }else HolySmite6_Timer -= diff;
 
@@ -209,18 +210,18 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
                 //Cast
                 DoCast(m_creature->getVictim(),SPELL_HOLYFIRE5);
 
-                //45 seconds until we should cast this agian
-                HolyFire5_Timer = 45000;
+                //15 seconds until we should cast this agian
+                HolyFire5_Timer = 15000;
             }else HolyFire5_Timer -= diff;
 
             //MindBlast6_Timer
             if (MindBlast6_Timer < diff)
             {
                 //Cast
-                DoCast(m_creature,SPELL_MINDBLAST6);
+                DoCast(m_creature->getVictim(),SPELL_MINDBLAST6);
 
-                //345 seconds until we should cast this agian
-                MindBlast6_Timer = 35000;
+                //8 seconds until we should cast this agian
+                MindBlast6_Timer = 8000;
             }else MindBlast6_Timer -= diff;
 
             DoMeleeAttackIfReady();
