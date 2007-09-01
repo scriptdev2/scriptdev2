@@ -1233,7 +1233,7 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
 
         case SELECT_TARGET_BOTTOMAGGRO:
             advance ( r , position);
-            return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+            return Unit::GetUnit((*m_creature),(*r)->getUnitGuid());
         break;
     }
 

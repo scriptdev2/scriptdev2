@@ -38,16 +38,36 @@ void SimpleAI::EnterEvadeMode()
     InCombat = false;
 
     //Reset cast timers
-    Spell_Timer[0] = Spell[0].First_Cast;
-    Spell_Timer[1] = Spell[1].First_Cast;
-    Spell_Timer[2] = Spell[2].First_Cast;
-    Spell_Timer[3] = Spell[3].First_Cast;
-    Spell_Timer[4] = Spell[4].First_Cast;
-    Spell_Timer[5] = Spell[5].First_Cast;
-    Spell_Timer[6] = Spell[6].First_Cast;
-    Spell_Timer[7] = Spell[7].First_Cast;
-    Spell_Timer[8] = Spell[8].First_Cast;
-    Spell_Timer[9] = Spell[9].First_Cast;
+    if (Spell[0].First_Cast >= 0)
+        Spell_Timer[0] = Spell[0].First_Cast;
+    else Spell[0].First_Cast = 0;
+    if (Spell[1].First_Cast >= 0)
+        Spell_Timer[1] = Spell[1].First_Cast;
+    else Spell[1].First_Cast = 0;
+    if (Spell[2].First_Cast >= 0)
+        Spell_Timer[2] = Spell[2].First_Cast;
+    else Spell[2].First_Cast = 0;
+    if (Spell[3].First_Cast >= 0)
+        Spell_Timer[3] = Spell[3].First_Cast;
+    else Spell[3].First_Cast = 0;
+    if (Spell[4].First_Cast >= 0)
+        Spell_Timer[4] = Spell[4].First_Cast;
+    else Spell[4].First_Cast = 0;
+    if (Spell[5].First_Cast >= 0)
+        Spell_Timer[5] = Spell[5].First_Cast;
+    else Spell[5].First_Cast = 0;
+    if (Spell[6].First_Cast >= 0)
+        Spell_Timer[6] = Spell[6].First_Cast;
+    else Spell[6].First_Cast = 0;
+    if (Spell[7].First_Cast >= 0)
+        Spell_Timer[7] = Spell[7].First_Cast;
+    else Spell[7].First_Cast = 0;
+    if (Spell[8].First_Cast >= 0)
+        Spell_Timer[8] = Spell[8].First_Cast;
+    else Spell[8].First_Cast = 0;
+    if (Spell[9].First_Cast >= 0)
+        Spell_Timer[9] = Spell[9].First_Cast;
+    else Spell[9].First_Cast = 0;
 
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
@@ -229,11 +249,15 @@ void SimpleAI::UpdateAI(const uint32 diff)
         for (uint32 i = 0; i < 10; ++i)
         {
             //Spell not valid
-            if (!Spell[i].Enabled || !Spell[i].Spell_Id || !Spell[i].Cooldown)
+            if (!Spell[i].Enabled || !Spell[i].Spell_Id)
                 continue;
 
             if (Spell_Timer[i] < diff)
             {
+                //Check if this is a percentage based
+                if (Spell[i].First_Cast < 0 && Spell[i].First_Cast > -100 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > Spell[i].First_Cast)
+                    continue;
+
                 //Check Current spell
                 if (!(Spell[i].InturruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
                 {

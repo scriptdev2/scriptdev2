@@ -49,7 +49,7 @@ public:
     {
         uint32 Spell_Id;                //Spell ID to cast
         int32 First_Cast;               //Delay for first cast
-        int32 Cooldown;                 //Cooldown between casts
+        uint32 Cooldown;                //Cooldown between casts
         uint32 Cast_Target_Type;        //Target type (note that certain spells may ignore this)
         bool InturruptPreviousCast;     //Inturrupt a previous cast if this spell needs to be cast
         bool Enabled;                   //Spell enabled or disabled (default: false)
