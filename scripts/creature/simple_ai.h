@@ -24,7 +24,7 @@ struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 
     void KilledUnit(Unit *victim);
 
-    void JustDied(Unit *killer);
+    void DamageTaken(Unit *killer, uint32 &damage);
 
     void MoveInLineOfSight(Unit *who);
 

@@ -1214,6 +1214,7 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
     //ThreatList m_threatlist;
     std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
     std::list<HostilReference*>::iterator i = m_threatlist.begin();
+    std::list<HostilReference*>::reverse_iterator r = m_threatlist.rbegin();
 
     if (position >= m_threatlist.size() || !m_threatlist.size())
         return NULL;
@@ -1231,7 +1232,7 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
         break;
 
         case SELECT_TARGET_BOTTOMAGGRO:
-            advance ( i , position);
+            advance ( r , position);
             return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
         break;
     }

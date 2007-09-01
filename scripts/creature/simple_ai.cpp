@@ -168,8 +168,12 @@ void SimpleAI::KilledUnit(Unit *victim)
         DoCast(target, Kill_Spell);
 }
 
-void SimpleAI::JustDied(Unit *killer)
+void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
 {
+    //Return if damage taken won't kill us
+    if (m_creature->GetHealth() > damage)
+        return;
+
     uint32 random_yell = rand()%3;
 
     //Random yell
@@ -180,7 +184,7 @@ void SimpleAI::JustDied(Unit *killer)
     if (Death_Sound[random_yell])
         DoPlaySoundToSet(m_creature, Death_Sound[random_yell]);
 
-    if (!Kill_Spell)
+    if (!Death_Spell)
         return;
 
     Unit* target = NULL;
