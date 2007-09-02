@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_HAMSTRING                9080
 #define SPELL_CLEAVE             15579  
 #define SPELL_MORTALSTRIKE            15708
@@ -80,45 +80,40 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //HamString_Timer
+        if (HamString_Timer < diff)
         {
-            
-            //HamString_Timer
-            if (HamString_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
 
-                //14 seconds
-                HamString_Timer = 14000;
-            }else HamString_Timer -= diff;
+            //14 seconds
+            HamString_Timer = 14000;
+        }else HamString_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //8 seconds until we should cast this agian
-                Cleave_Timer = 8000;
-            }else Cleave_Timer -= diff;
+            //8 seconds until we should cast this agian
+            Cleave_Timer = 8000;
+        }else Cleave_Timer -= diff;
 
-            //MortalStrike_Timer
-            if (MortalStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+        //MortalStrike_Timer
+        if (MortalStrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
 
-                //12 seconds until we should cast this agian
-                MortalStrike_Timer = 12000;
-            }else MortalStrike_Timer -= diff;
+            //12 seconds until we should cast this agian
+            MortalStrike_Timer = 12000;
+        }else MortalStrike_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_gloomrel(Creature *_Creature)

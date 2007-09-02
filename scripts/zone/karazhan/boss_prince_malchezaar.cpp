@@ -288,12 +288,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         switch(rand()%2)
         {
-            case 0:
-                Loc = Pos + Rand;
-                break;
-            case 1:
-                Loc = Pos -Rand;
-                break;
+        case 0:
+            Loc = Pos + Rand;
+            break;
+        case 1:
+            Loc = Pos -Rand;
+            break;
         }
         return Loc;
     }
@@ -457,122 +457,117 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 60)
+            phase = 1;
+
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (phase == 1))
         {
-            if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 60)
-                phase = 1;
-
-            if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (phase == 1))
-            {
-                phase = 2;
-                DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-                HasSummonedAxes = false;
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 40066);
-            }
-
-            if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && (phase == 2))
-            {
-                AddTimer = 20000;
-                phase = 3;
-                DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_PHASE3);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-            }
-
-            if(phase == 1 || phase == 3)
-            {
-                if(SWPainTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_SW_PAIN);
-                    SWPainTimer = 20000;
-                }else SWPainTimer -= diff;
-
-                if(ShadowNovaTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
-                    ShadowNovaTimer = 35000;
-                }else ShadowNovaTimer -= diff;
-            }
-
-            if(phase == 1 || phase == 2)
-            {
-                if(AddTimer < diff)
-                {
-                    SummonInfernal(diff);
-                    AddTimer = 45000;
-                }else AddTimer -= diff;
-
-                if(EnfeebleTimer < diff)
-                {
-                    EnfeebleHealthEffect();
-                    EnfeebleTimer = 30000;
-                    EnfeebleResetTimer = 8000;
-                }else EnfeebleTimer -= diff;
-
-                if((EnfeebleResetTimer < diff) && Enfeebled)
-                {
-                    EnfeebleResetHealth();
-                }else EnfeebleResetTimer -= diff;
-
-                if(ShadowNovaTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
-                    ShadowNovaTimer = 35000;
-                }else ShadowNovaTimer -= diff;
-            }
-
-            if(phase == 2)
-            {
-                if(CleaveTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_CLEAVE);
-                    CleaveTimer = 5000;
-                }else CleaveTimer -= diff;
-
-                if(SunderArmorTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
-                    SunderArmorTimer = 15000;
-                }else SunderArmorTimer -= diff;
-            }
-
-            if(phase == 3)
-            {
-                if(!HasSummonedAxes)
-                {
-                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    SummonAxe();
-                    SummonAxe();
-                    HasSummonedAxes = true;
-                }
-
-                if(AmplifyDamageTimer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    DoCast(target, SPELL_AMPLIFY_DAMAGE);
-                    AmplifyDamageTimer = 10000;
-                }else AmplifyDamageTimer -= diff;
-
-                if(AddTimer < diff)
-                {
-                    SummonInfernal(diff);
-                    AddTimer = 20000;
-                }else AddTimer -= diff;
-
-            }
-
-            DoMeleeAttackIfReady();
+            phase = 2;
+            DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_PHASE2);
+            HasSummonedAxes = false;
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 40066);
         }
+
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && (phase == 2))
+        {
+            AddTimer = 20000;
+            phase = 3;
+            DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_PHASE3);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+        }
+
+        if(phase == 1 || phase == 3)
+        {
+            if(SWPainTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_SW_PAIN);
+                SWPainTimer = 20000;
+            }else SWPainTimer -= diff;
+
+            if(ShadowNovaTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
+                ShadowNovaTimer = 35000;
+            }else ShadowNovaTimer -= diff;
+        }
+
+        if(phase == 1 || phase == 2)
+        {
+            if(AddTimer < diff)
+            {
+                SummonInfernal(diff);
+                AddTimer = 45000;
+            }else AddTimer -= diff;
+
+            if(EnfeebleTimer < diff)
+            {
+                EnfeebleHealthEffect();
+                EnfeebleTimer = 30000;
+                EnfeebleResetTimer = 8000;
+            }else EnfeebleTimer -= diff;
+
+            if((EnfeebleResetTimer < diff) && Enfeebled)
+            {
+                EnfeebleResetHealth();
+            }else EnfeebleResetTimer -= diff;
+
+            if(ShadowNovaTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
+                ShadowNovaTimer = 35000;
+            }else ShadowNovaTimer -= diff;
+        }
+
+        if(phase == 2)
+        {
+            if(CleaveTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+                CleaveTimer = 5000;
+            }else CleaveTimer -= diff;
+
+            if(SunderArmorTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
+                SunderArmorTimer = 15000;
+            }else SunderArmorTimer -= diff;
+        }
+
+        if(phase == 3)
+        {
+            if(!HasSummonedAxes)
+            {
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                SummonAxe();
+                SummonAxe();
+                HasSummonedAxes = true;
+            }
+
+            if(AmplifyDamageTimer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                DoCast(target, SPELL_AMPLIFY_DAMAGE);
+                AmplifyDamageTimer = 10000;
+            }else AmplifyDamageTimer -= diff;
+
+            if(AddTimer < diff)
+            {
+                SummonInfernal(diff);
+                AddTimer = 20000;
+            }else AddTimer -= diff;
+
+        }
+
+        DoMeleeAttackIfReady();
     }
 };
 

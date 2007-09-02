@@ -147,9 +147,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Pointer to creature we are manipulating
     Creature* m_creature;
 
-    //Check condition for attack stop
-    virtual bool needToStop() const;
-
     //*************
     //AI Helper Functions
     //*************
@@ -201,8 +198,5 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Checks if you can cast the specified spell
     bool CanCast(Unit* Target, SpellEntry const *Spell);
-
-    //Returns true if you are out of tether(spawnpoint) range
-    bool CheckTether();
 };
 #endif

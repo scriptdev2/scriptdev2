@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     uint32 ClassCall_Timer;
     bool Phase3;
     bool InCombat;
-    
+
     void EnterEvadeMode()
     {
         ShadowFlame_Timer = 12000;       //These times are probably wrong
@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
     }
-    
+
     void KilledUnit(Unit* Victim)
     {
         if (rand()%5)
@@ -124,17 +124,17 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
                 InCombat = true;
                 switch (rand()%3)
                 {
-                    case 0:
+                case 0:
                     DoYell(SAY_XHEALTH,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_XHEALTH);
                     break;
 
-                    case 1:
+                case 1:
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO);
                     break;
 
-                    case 2:
+                case 2:
                     DoYell(SAY_SHADOWFLAME,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_SHADOWFLAME);
                     break;
@@ -160,23 +160,23 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                
+
                 if (!InCombat)
                 {
                     InCombat = true;
                     switch (rand()%3)
                     {
-                        case 0:
+                    case 0:
                         DoYell(SAY_XHEALTH,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_XHEALTH);
                         break;
 
-                        case 1:
+                    case 1:
                         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_AGGRO);
                         break;
 
-                        case 2:
+                    case 2:
                         DoYell(SAY_SHADOWFLAME,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_SHADOWFLAME);
                         break;
@@ -191,132 +191,129 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-        
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //ShadowFlame_Timer
+        if (ShadowFlame_Timer < diff)
         {
-            //ShadowFlame_Timer
-            if (ShadowFlame_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+
+            //12 seconds till recast
+            ShadowFlame_Timer = 12000;
+        }else ShadowFlame_Timer -= diff;
+
+        //BellowingRoar_Timer
+        if (BellowingRoar_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
+
+            //30 seconds till recast
+            BellowingRoar_Timer = 30000;
+        }else BellowingRoar_Timer -= diff;
+
+        //VeilOfShadow_Timer
+        if (VeilOfShadow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+
+            //15 seconds till recast
+            VeilOfShadow_Timer = 15000;
+        }else VeilOfShadow_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //5 seconds till recast
+            Cleave_Timer = 7000;
+        }else Cleave_Timer -= diff;
+
+        //TailLash_Timer
+        if (TailLash_Timer < diff)
+        {
+            //Cast NYI since we need a better check for behind target
+            //DoCast(m_creature->getVictim(),SPELL_TAILLASH);
+
+            //10 seconds till recast
+            TailLash_Timer = 10000;
+        }else TailLash_Timer -= diff;
+
+        //ClassCall_Timer
+        if (ClassCall_Timer < diff)
+        {
+            //Cast a random class call
+            //On official it is based on what classes are currently on the hostil list
+            //but we can't do that yet so just randomly call one
+
+            switch (rand()%9)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+            case 0:
+                DoYell(SAY_MAGE,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_MAGE);
+                break;
 
-                //12 seconds till recast
-                ShadowFlame_Timer = 12000;
-            }else ShadowFlame_Timer -= diff;
+            case 1:
+                DoYell(SAY_WARRIOR,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_WARRIOR);
+                break;
 
-            //BellowingRoar_Timer
-            if (BellowingRoar_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
+            case 2:
+                DoYell(SAY_DRUID,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_DRUID);
+                break;
 
-                //30 seconds till recast
-                BellowingRoar_Timer = 30000;
-            }else BellowingRoar_Timer -= diff;
-            
-            //VeilOfShadow_Timer
-            if (VeilOfShadow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+            case 3:
+                DoYell(SAY_PRIEST,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_PRIEST);
+                break;
 
-                //15 seconds till recast
-                VeilOfShadow_Timer = 15000;
-            }else VeilOfShadow_Timer -= diff;
+            case 4:
+                DoYell(SAY_PALADIN,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_PALADIN);
+                break;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            case 5:
+                DoYell(SAY_SHAMAN,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_SHAMAN);
+                break;
 
-                //5 seconds till recast
-                Cleave_Timer = 7000;
-            }else Cleave_Timer -= diff;
+            case 6:
+                DoYell(SAY_WARLOCK,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_WARLOCK);
+                break;
 
-            //TailLash_Timer
-            if (TailLash_Timer < diff)
-            {
-                //Cast NYI since we need a better check for behind target
-                //DoCast(m_creature->getVictim(),SPELL_TAILLASH);
+            case 7:
+                DoYell(SAY_HUNTER,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_HUNTER);
+                break;
 
-                //10 seconds till recast
-                TailLash_Timer = 10000;
-            }else TailLash_Timer -= diff;
-
-            //ClassCall_Timer
-            if (ClassCall_Timer < diff)
-            {
-                //Cast a random class call
-                //On official it is based on what classes are currently on the hostil list
-                //but we can't do that yet so just randomly call one
-
-                switch (rand()%9)
-                {
-                    case 0:
-                    DoYell(SAY_MAGE,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_MAGE);
-                    break;
-
-                    case 1:
-                    DoYell(SAY_WARRIOR,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_WARRIOR);
-                    break;
-
-                    case 2:
-                    DoYell(SAY_DRUID,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_DRUID);
-                    break;
-
-                    case 3:
-                    DoYell(SAY_PRIEST,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_PRIEST);
-                    break;
-
-                    case 4:
-                    DoYell(SAY_PALADIN,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_PALADIN);
-                    break;
-
-                    case 5:
-                    DoYell(SAY_SHAMAN,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_SHAMAN);
-                    break;
-
-                    case 6:
-                    DoYell(SAY_WARLOCK,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_WARLOCK);
-                    break;
-
-                    case 7:
-                    DoYell(SAY_HUNTER,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_HUNTER);
-                    break;
-
-                    case 8:
-                    DoYell(SAY_ROGUE,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_ROGUE);
-                    break;
-                }
-
-                //35-40 seconds till recast
-                ClassCall_Timer = 35000 + (rand() % 5000);
-            }else ClassCall_Timer -= diff;
-
-            //Phase3 begins when we are below X health
-            if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
-            {
-                Phase3 = true;
-                DoYell(SAY_RAISE_SKELETONS,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_RAISE_SKELETONS);
+            case 8:
+                DoYell(SAY_ROGUE,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_ROGUE);
+                break;
             }
-            
-            DoMeleeAttackIfReady();
+
+            //35-40 seconds till recast
+            ClassCall_Timer = 35000 + (rand() % 5000);
+        }else ClassCall_Timer -= diff;
+
+        //Phase3 begins when we are below X health
+        if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        {
+            Phase3 = true;
+            DoYell(SAY_RAISE_SKELETONS,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_RAISE_SKELETONS);
         }
+
+        DoMeleeAttackIfReady();
     }
+
 };
 CreatureAI* GetAI_boss_nefarian(Creature *_Creature)
 {

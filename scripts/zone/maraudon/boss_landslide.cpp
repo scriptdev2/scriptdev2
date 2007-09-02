@@ -102,53 +102,48 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //KnockBack_Timer
+        if (KnockBack_Timer < diff)
         {
+            Unit* target = NULL;
 
-            //KnockBack_Timer
-            if (KnockBack_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+
+            //20 seconds
+            KnockBack_Timer = 15000;
+        }else KnockBack_Timer -= diff;
+
+        //WarStomp_Timer
+        if (WarStomp_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+
+            //12 seconds until we should cast this agian
+            WarStomp_Timer = 12000;
+        }else WarStomp_Timer -= diff;
+
+
+        //Adds_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
+        {
+            if (Adds_Timer < diff)
             {
-                 Unit* target = NULL;
- 
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+                // summon 3 Adds  
+                SummonAdds(m_creature->getVictim());
+                SummonAdds(m_creature->getVictim());
+                SummonAdds(m_creature->getVictim());
 
-                //20 seconds
-                KnockBack_Timer = 15000;
-            }else KnockBack_Timer -= diff;
-
-            //WarStomp_Timer
-            if (WarStomp_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
-
-                //12 seconds until we should cast this agian
-                WarStomp_Timer = 12000;
-            }else WarStomp_Timer -= diff;
-
-
-            //Adds_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
-            {
-                if (Adds_Timer < diff)
-                {
-                  // summon 3 Adds  
-                  SummonAdds(m_creature->getVictim());
-                  SummonAdds(m_creature->getVictim());
-                  SummonAdds(m_creature->getVictim());
-
-                  //45 seconds until we should cast this agian
-                  Adds_Timer = 45000;
-                } else Adds_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+                //45 seconds until we should cast this agian
+                Adds_Timer = 45000;
+            } else Adds_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_landslide(Creature *_Creature)

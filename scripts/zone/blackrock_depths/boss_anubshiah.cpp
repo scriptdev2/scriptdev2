@@ -25,9 +25,9 @@
 #define SPELL_DEMONARMOR                11735
 #define SPELL_ENVELOPINGWEB               15471
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
 {
     boss_anubshiahAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
         CurseOfTongues_Timer = 24000;
         CurseOfWeakness_Timer = 12000;
         DemonArmor_Timer = 3000;
-	EnvelopingWeb_Timer = 16000;
+        EnvelopingWeb_Timer = 16000;
         InCombat = false;
 
 
@@ -93,71 +93,66 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowBolt_Timer
+        if (ShadowBolt_Timer < diff)
         {
-            
-            //ShadowBolt_Timer
-            if (ShadowBolt_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
 
-                //7 seconds
-               ShadowBolt_Timer = 7000;
-            }else ShadowBolt_Timer -= diff;
+            //7 seconds
+            ShadowBolt_Timer = 7000;
+        }else ShadowBolt_Timer -= diff;
 
-            //CurseOfTongues_Timer
-            if (CurseOfTongues_Timer < diff)
-            {
-                 //Cast Curse Of Tongues on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_CURSEOFTONGUES);
+        //CurseOfTongues_Timer
+        if (CurseOfTongues_Timer < diff)
+        {
+            //Cast Curse Of Tongues on a Random target
+            Unit* target = NULL;
 
-                //18 seconds
-               CurseOfTongues_Timer = 18000;
-            }else CurseOfTongues_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_CURSEOFTONGUES);
 
-            //CurseOfWeakness_Timer
-            if (CurseOfWeakness_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
+            //18 seconds
+            CurseOfTongues_Timer = 18000;
+        }else CurseOfTongues_Timer -= diff;
 
-                //45 seconds
-               CurseOfWeakness_Timer = 45000;
-            }else CurseOfWeakness_Timer -= diff;
+        //CurseOfWeakness_Timer
+        if (CurseOfWeakness_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
 
-            //DemonArmor_Timer
-            if (DemonArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_DEMONARMOR);
+            //45 seconds
+            CurseOfWeakness_Timer = 45000;
+        }else CurseOfWeakness_Timer -= diff;
 
-                //5 minutes
-               DemonArmor_Timer = 300000;
-            }else DemonArmor_Timer -= diff;
+        //DemonArmor_Timer
+        if (DemonArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_DEMONARMOR);
 
-            //EnvelopingWeb_Timer
-            if (EnvelopingWeb_Timer < diff)
-            {
-                 //Cast EnvelopingWeb  on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_ENVELOPINGWEB);
+            //5 minutes
+            DemonArmor_Timer = 300000;
+        }else DemonArmor_Timer -= diff;
 
-                //12 seconds
-               EnvelopingWeb_Timer = 12000;
-            }else EnvelopingWeb_Timer -= diff;
+        //EnvelopingWeb_Timer
+        if (EnvelopingWeb_Timer < diff)
+        {
+            //Cast EnvelopingWeb  on a Random target
+            Unit* target = NULL;
 
-            DoMeleeAttackIfReady();
-        }
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_ENVELOPINGWEB);
+
+            //12 seconds
+            EnvelopingWeb_Timer = 12000;
+        }else EnvelopingWeb_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_anubshiah(Creature *_Creature)

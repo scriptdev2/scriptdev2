@@ -24,7 +24,7 @@
 #define SPELL_BLIZZARD           19099
 #define SPELL_FROSTNOVA                 15063
 #define SPELL_FROSTWARD              15004       
-     
+
 
 struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
 {
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
     void EnterEvadeMode()
     {       
         FrostArmor_Timer = 2000;
-	Frostbolt_Timer = 6000;
+        Frostbolt_Timer = 6000;
         Blizzard_Timer = 18000;
         FrostNova_Timer = 12000;
         FrostWard_Timer = 25000;
@@ -89,71 +89,66 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FrostArmor_Timer
+        if (FrostArmor_Timer < diff)
         {
-     
-            //FrostArmor_Timer
-            if (FrostArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature, SPELL_FROSTARMOR);
+            //Cast
+            DoCast(m_creature, SPELL_FROSTARMOR);
 
-                //180 seconds
-                FrostArmor_Timer = 180000;
-            }else FrostArmor_Timer -= diff;
+            //180 seconds
+            FrostArmor_Timer = 180000;
+        }else FrostArmor_Timer -= diff;
 
 
-       
-            //Frostbolt_Timer
-            if (Frostbolt_Timer < diff)
-            {
-   
-                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
 
-                //15 seconds
-                Frostbolt_Timer = 15000;
-            }else Frostbolt_Timer -= diff;
+        //Frostbolt_Timer
+        if (Frostbolt_Timer < diff)
+        {
 
-            //Blizzard_Timer
-            if (Blizzard_Timer < diff)
-            {
-                 //Cast Blizzard on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_BLIZZARD);
+            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
 
-                //22 seconds until we should cast this agian
-                Blizzard_Timer = 22000;
-            }else Blizzard_Timer -= diff;
+            //15 seconds
+            Frostbolt_Timer = 15000;
+        }else Frostbolt_Timer -= diff;
+
+        //Blizzard_Timer
+        if (Blizzard_Timer < diff)
+        {
+            //Cast Blizzard on a Random target
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_BLIZZARD);
+
+            //22 seconds until we should cast this agian
+            Blizzard_Timer = 22000;
+        }else Blizzard_Timer -= diff;
 
 
-            //FrostNova_Timer
-            if (FrostNova_Timer < diff)
-            {
-                
-                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+        //FrostNova_Timer
+        if (FrostNova_Timer < diff)
+        {
 
-                //14 seconds until we should cast this agian
-                FrostNova_Timer = 14000;
-            }else FrostNova_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
 
-            //FrostWard_Timer
-            if (FrostWard_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_FROSTWARD);
+            //14 seconds until we should cast this agian
+            FrostNova_Timer = 14000;
+        }else FrostNova_Timer -= diff;
 
-                //68 seconds until we should cast this agian
-                FrostWard_Timer = 68000;
-            }else FrostWard_Timer -= diff;
+        //FrostWard_Timer
+        if (FrostWard_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_FROSTWARD);
 
-            DoMeleeAttackIfReady();
-        }
+            //68 seconds until we should cast this agian
+            FrostWard_Timer = 68000;
+        }else FrostWard_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_seethrel(Creature *_Creature)

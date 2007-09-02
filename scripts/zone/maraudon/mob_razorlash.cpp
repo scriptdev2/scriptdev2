@@ -19,7 +19,7 @@
 #define SPELL_PUNCTURE                21911    
 #define SPELL_CLEAVE             15584     
 #define SPELL_THORNVOLLEY            21749
-    
+
 
 struct MANGOS_DLL_DECL razorlashAI : public ScriptedAI
 {
@@ -82,46 +82,42 @@ struct MANGOS_DLL_DECL razorlashAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Puncture_Timer
+        if (Puncture_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_PUNCTURE);
+
+            //20 seconds
+            Puncture_Timer = 12000;
+        }else Puncture_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //8 seconds until we should cast this agian
+            Cleave_Timer = 8000;
+        }else Cleave_Timer -= diff;
+
+
+        //ThornVolley_Timer
+        if (ThornVolley_Timer < diff)
         {
 
-            //Puncture_Timer
-            if (Puncture_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_PUNCTURE);
+            DoCast(m_creature->getVictim(),SPELL_THORNVOLLEY);
 
-                //20 seconds
-                Puncture_Timer = 12000;
-            }else Puncture_Timer -= diff;
+            //30 seconds until we should cast this agian
+            ThornVolley_Timer = 12000;
+        }else ThornVolley_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //8 seconds until we should cast this agian
-                Cleave_Timer = 8000;
-            }else Cleave_Timer -= diff;
-
-
-            //ThornVolley_Timer
-            if (ThornVolley_Timer < diff)
-            {
-
-                DoCast(m_creature->getVictim(),SPELL_THORNVOLLEY);
-
-                //30 seconds until we should cast this agian
-                ThornVolley_Timer = 12000;
-            }else ThornVolley_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_razorlash(Creature *_Creature)
 {

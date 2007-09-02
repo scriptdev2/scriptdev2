@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
     bool InCombat;
 
     int RandTime(int time) {return ((rand()%time)*1000);}
-    
+
     void EnterEvadeMode()
     {
         Shadow_Timer = 10000;
@@ -78,67 +78,67 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if (m_creature->getVictim() && m_creature->isAlive())
+        if (Shadow_Timer < diff)
         {
-            if (Shadow_Timer < diff)
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_SHADOW_BOLT_VOLLEY);
-                }
-                else
-                {
-                    DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
-                }
-                Shadow_Timer = RandTime(60);
-            }else Shadow_Timer -= diff;
-
-            if (Death_Timer < diff)
+                DoFaceTarget(target);
+                DoCast(target,SPELL_SHADOW_BOLT_VOLLEY);
+            }
+            else
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+                DoFaceTarget(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
+            }
+            Shadow_Timer = RandTime(60);
+        }else Shadow_Timer -= diff;
 
-                if (target)
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_DEATH_COIL);
-                }
-                else
-                {
-                    DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_DEATH_COIL);
-                }
-                Death_Timer = RandTime(60);
-            }else Death_Timer -= diff;
+        if (Death_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
 
-            if (Rain_Timer < diff)
+            if (target)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                DoFaceTarget(target);
+                DoCast(target,SPELL_DEATH_COIL);
+            }
+            else
+            {
+                DoFaceTarget(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_DEATH_COIL);
+            }
+            Death_Timer = RandTime(60);
+        }else Death_Timer -= diff;
 
-                if (target)
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_RAIN_OF_FIRE);
-                }
-                else
-                {
-                    DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_RAIN_OF_FIRE);
-                }
-                Rain_Timer = RandTime(60);
-            }else Rain_Timer -= diff;
+        if (Rain_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoMeleeAttackIfReady();
-        }
+            if (target)
+            {
+                DoFaceTarget(target);
+                DoCast(target,SPELL_RAIN_OF_FIRE);
+            }
+            else
+            {
+                DoFaceTarget(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_RAIN_OF_FIRE);
+            }
+            Rain_Timer = RandTime(60);
+        }else Rain_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 };
 
 CreatureAI* GetAI_mob_hellfire_warder(Creature *_Creature)

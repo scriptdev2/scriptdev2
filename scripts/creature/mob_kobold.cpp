@@ -116,96 +116,85 @@ struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
             }else BuffTimer -= diff;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are within range melee the target
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-            //Check if we should stop attacking because our victim is no longer in range or we are to far from spawn point
-            if (CheckTether())
+            //Make sure our attack is ready and we arn't currently casting
+            if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
             {
-                EnterEvadeMode();
-                return;
-            }
-            
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+                bool Healing = false;
+                SpellEntry const *info = NULL;
+
+                //Select a healing spell if less than 30% hp
+                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
+                    info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
+
+                //No healing spell available, select a hostile spell
+                if (info) Healing = true;
+                else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
+
+                //20% chance to replace our white hit with a spell
+                if (info && rand() % 5 == 0 && !GlobalCooldown)
                 {
-                    bool Healing = false;
-                    SpellEntry const *info = NULL;
+                    //Cast the spell
+                    if (Healing)DoCastSpell(m_creature, info);
+                    else DoCastSpell(m_creature->getVictim(), info);
 
-                    //Select a healing spell if less than 30% hp
-                    if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
-                        info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
-
-                    //No healing spell available, select a hostile spell
-                    if (info) Healing = true;
-                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
-
-                    //20% chance to replace our white hit with a spell
-                    if (info && rand() % 5 == 0 && !GlobalCooldown)
-                    {
-                        //Cast the spell
-                        if (Healing)DoCastSpell(m_creature, info);
-                            else DoCastSpell(m_creature->getVictim(), info);
-
-                        //Set our global cooldown
-                        GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
-                    }
-                    else m_creature->AttackerStateUpdate(m_creature->getVictim());
-
-                    m_creature->resetAttackTimer();
+                    //Set our global cooldown
+                    GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
                 }
+                else m_creature->AttackerStateUpdate(m_creature->getVictim());
+
+                m_creature->resetAttackTimer();
             }
-            else 
+        }
+        else 
+        {
+            //Only run this code if we arn't already casting
+            if (!m_creature->IsNonMeleeSpellCasted(false))
             {
-                //Only run this code if we arn't already casting
-                if (!m_creature->IsNonMeleeSpellCasted(false))
+                bool Healing = false;
+                SpellEntry const *info = NULL;
+
+                //Select a healing spell if less than 30% hp ONLY 33% of the time
+                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && rand() % 3 == 0)
+                    info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
+
+                //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)
+                if (info) Healing = true;
+                else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, ATTACK_DISTANCE, 0, SELECT_EFFECT_DONTCARE);
+
+                //Found a spell, check if we arn't on cooldown
+                if (info && !GlobalCooldown)
                 {
-                    bool Healing = false;
-                    SpellEntry const *info = NULL;
-
-                    //Select a healing spell if less than 30% hp ONLY 33% of the time
-                    if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30 && rand() % 3 == 0)
-                        info = SelectSpell(m_creature, -1, -1, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
-
-                    //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)
-                    if (info) Healing = true;
-                        else info = SelectSpell(m_creature->getVictim(), -1, -1, SELECT_TARGET_ANY_ENEMY, 0, 0, ATTACK_DISTANCE, 0, SELECT_EFFECT_DONTCARE);
-               
-                    //Found a spell, check if we arn't on cooldown
-                    if (info && !GlobalCooldown)
+                    //If we are currently moving stop us and set the movement generator
+                    if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
                     {
-                        //If we are currently moving stop us and set the movement generator
-                        if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
-                        {
-                            (*m_creature)->Clear(false);
-                            (*m_creature)->Idle();
-                        }
-
-                        //Face target
-                        DoFaceTarget(m_creature->getVictim());
-
-                        //Cast spell
-                        if (Healing) DoCastSpell(m_creature,info);
-                            else DoCastSpell(m_creature->getVictim(),info);
-
-                        //Set our global cooldown
-                        GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
-                        
-
-                    }//If no spells available and we arn't moving run to target
-                    else if ((*m_creature)->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
-                    {
-                        //Cancel our current spell and then mutate new movement generator
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         (*m_creature)->Clear(false);
-                        (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
+                        (*m_creature)->Idle();
                     }
+
+                    //Face target
+                    DoFaceTarget(m_creature->getVictim());
+
+                    //Cast spell
+                    if (Healing) DoCastSpell(m_creature,info);
+                    else DoCastSpell(m_creature->getVictim(),info);
+
+                    //Set our global cooldown
+                    GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
+
+
+                }//If no spells available and we arn't moving run to target
+                else if ((*m_creature)->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
+                {
+                    //Cancel our current spell and then mutate new movement generator
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    (*m_creature)->Clear(false);
+                    (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
                 }
             }
         }

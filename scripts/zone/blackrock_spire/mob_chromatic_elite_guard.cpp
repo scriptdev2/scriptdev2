@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);       
-	m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
     }
 
     void AttackStart(Unit *who)
@@ -62,14 +62,8 @@ struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
-#ifdef MANGOS_USE_VMAPS
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && 
-                m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && 
-                m_creature->IsWithinLOSInMap(who))
-#else
             if (m_creature->IsWithinDistInMap(who, attackRadius) && 
                 m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
-#endif
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
@@ -84,26 +78,22 @@ struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //KnockDown_Timer
+        if (KnockDown_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
 
-            //KnockDown_Timer
-            if (KnockDown_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+            //8 seconds
+            KnockDown_Timer = 8000;
+        }else KnockDown_Timer -= diff;
 
-                //8 seconds
-                KnockDown_Timer = 8000;
-            }else KnockDown_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_mob_chromatic_elite_guard(Creature *_Creature)
 {

@@ -152,89 +152,86 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     {
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if(m_creature->GetPower(POWER_MANA) <= 0)
         {
-            if(m_creature->GetPower(POWER_MANA) <= 0)
-            {
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
-                DoCast(m_creature, SPELL_EVOCATION);
-                m_creature->DeleteThreatList();
-            }
-
-            if(phase == 1)
-            {
-                if(AddTimer < diff)
-                {
-                    uint32 LocX = m_creature->GetPositionX();
-                    uint32 LocY = m_creature->GetPositionY();
-                    uint32 LocZ = m_creature->GetPositionZ();
-                    //Summon Astral Flare
-                    Creature* AstralFlare = DoSpawnCreature(17096, LocX, LocY, LocZ, 5.000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-                    AstralFlare->AI()->AttackStart(target);
-
-                    //Reduce Mana by 10%
-                    uint32 mana = ((m_creature->GetMaxPower(POWER_MANA) / (m_creature->GetMaxPower(POWER_MANA) / 10)) - m_creature->GetPower(POWER_MANA));                
-                    m_creature->SetPower(POWER_MANA, mana);
-                    switch(rand()%3)
-                    {
-                    case 0:
-                        DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
-                        break;
-                    case 1:
-                        DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                        break;
-                    case 2:
-                        DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
-                        break;
-                    case 3:
-                        DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                        break;                            
-                    }
-                    AddTimer = 10000;
-                }else AddTimer -= diff;
-
-                if(HatefulBoltTimer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
-                    DoCast(target, SPELL_HATEFUL_BOLT);
-
-                    HatefulBoltTimer = 15000;
-                }else HatefulBoltTimer -= diff;
-            }
-
-            if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
-            {
-                phase = 2;
-                DoCast(m_creature, SPELL_ENRAGE);
-                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            }
-
-            if(BerserkTimer < diff)
-            {
-                phase = 2;
-                DoCast(m_creature, SPELL_BERSERK);
-                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            }
-
-            DoMeleeAttackIfReady();
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
+            DoCast(m_creature, SPELL_EVOCATION);
+            m_creature->DeleteThreatList();
         }
+
+        if(phase == 1)
+        {
+            if(AddTimer < diff)
+            {
+                uint32 LocX = m_creature->GetPositionX();
+                uint32 LocY = m_creature->GetPositionY();
+                uint32 LocZ = m_creature->GetPositionZ();
+                //Summon Astral Flare
+                Creature* AstralFlare = DoSpawnCreature(17096, LocX, LocY, LocZ, 5.000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+                AstralFlare->AI()->AttackStart(target);
+
+                //Reduce Mana by 10%
+                uint32 mana = ((m_creature->GetMaxPower(POWER_MANA) / (m_creature->GetMaxPower(POWER_MANA) / 10)) - m_creature->GetPower(POWER_MANA));                
+                m_creature->SetPower(POWER_MANA, mana);
+                switch(rand()%3)
+                {
+                case 0:
+                    DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
+                    break;
+                case 1:
+                    DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
+                    break;
+                case 2:
+                    DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
+                    break;
+                case 3:
+                    DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
+                    break;                            
+                }
+                AddTimer = 10000;
+            }else AddTimer -= diff;
+
+            if(HatefulBoltTimer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+                DoCast(target, SPELL_HATEFUL_BOLT);
+
+                HatefulBoltTimer = 15000;
+            }else HatefulBoltTimer -= diff;
+        }
+
+        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
+        {
+            phase = 2;
+            DoCast(m_creature, SPELL_ENRAGE);
+            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }
+
+        if(BerserkTimer < diff)
+        {
+            phase = 2;
+            DoCast(m_creature, SPELL_BERSERK);
+            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }
+
+        DoMeleeAttackIfReady();
     }
+
 };
 
 

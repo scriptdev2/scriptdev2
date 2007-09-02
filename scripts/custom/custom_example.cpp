@@ -187,77 +187,66 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Spell 1 timer
+        if (Spell_1_Timer < diff)
         {
-            //Check if we should stop attacking because our victim is no longer in range or we are to far from spawnpoint
-            if (CheckTether())
-            {
-                EnterEvadeMode();
-                return;
-            }
+            DoFaceTarget(m_creature->getVictim());
 
-            //Spell 1 timer
-            if (Spell_1_Timer < diff)
-            {
-                DoFaceTarget(m_creature->getVictim());
+            //Cast spell one on our current target.
+            if (rand()%50 > 10)
+                DoCast(m_creature->getVictim(),SPELL_ONE_ALT);
+            else if (m_creature->GetDistanceSq(m_creature->getVictim()) < 250)
+                DoCast(m_creature->getVictim(),SPELL_ONE);
 
+            Spell_1_Timer = 5000;
+        }else Spell_1_Timer -= diff;
+
+        //Spell 2 timer
+        if (Spell_2_Timer < diff)
+        {
+            //Cast spell one on our current target.
+            DoCast(m_creature->getVictim(),SPELL_TWO);
+
+            Spell_2_Timer = 37000;
+        }else Spell_2_Timer -= diff;
+
+        //Spell 3 timer
+        if (Phase > 1)
+            if (Spell_3_Timer < diff)
+            {
                 //Cast spell one on our current target.
-                if (rand()%50 > 10)
-                    DoCast(m_creature->getVictim(),SPELL_ONE_ALT);
-                else if (m_creature->GetDistanceSq(m_creature->getVictim()) < 250)
-                    DoCast(m_creature->getVictim(),SPELL_ONE);
+                DoCast(m_creature->getVictim(),SPELL_THREE);
 
-                Spell_1_Timer = 5000;
-            }else Spell_1_Timer -= diff;
+                Spell_3_Timer = 19000;
+            }else Spell_3_Timer -= diff;
 
-            //Spell 2 timer
-            if (Spell_2_Timer < diff)
+        //Beserk timer
+        if (Phase > 1)
+            if (Beserk_Timer < diff)
             {
-                //Cast spell one on our current target.
-                DoCast(m_creature->getVictim(),SPELL_TWO);
+                //Say our line then cast uber death spell
+                DoPlaySoundToSet(m_creature,8588);
+                DoYell(SAY_BESERK,LANG_UNIVERSAL,m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_BESERK);
 
-                Spell_2_Timer = 37000;
-            }else Spell_2_Timer -= diff;
+                //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
+                Beserk_Timer = 12000;
+            }else Beserk_Timer -= diff;
 
-            //Spell 3 timer
-            if (Phase > 1)
-                if (Spell_3_Timer < diff)
-                {
-                    //Cast spell one on our current target.
-                    DoCast(m_creature->getVictim(),SPELL_THREE);
+        //Phase timer
+        if (Phase == 1)
+            if (Phase_Timer < diff)
+            {
+                //Go to next phase
+                Phase++;
+                DoYell(SAY_PHASE,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_ENRAGE);
+            }else Phase_Timer -= diff;
 
-                    Spell_3_Timer = 19000;
-                }else Spell_3_Timer -= diff;
-
-            //Beserk timer
-            if (Phase > 1)
-                if (Beserk_Timer < diff)
-                {
-                    //Say our line then cast uber death spell
-                    DoPlaySoundToSet(m_creature,8588);
-                    DoYell(SAY_BESERK,LANG_UNIVERSAL,m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_BESERK);
-
-                    //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
-                    Beserk_Timer = 12000;
-                }else Beserk_Timer -= diff;
-
-            //Phase timer
-            if (Phase == 1)
-                if (Phase_Timer < diff)
-                {
-                    //Go to next phase
-                    Phase++;
-                    DoYell(SAY_PHASE,LANG_UNIVERSAL,NULL);
-                    DoCast(m_creature,SPELL_ENRAGE);
-                }else Phase_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 

@@ -83,45 +83,41 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //CrowdPummel_Timer
+        if (CrowdPummel_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
 
-            //CrowdPummel_Timer
-            if (CrowdPummel_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
+            //14 seconds
+            CrowdPummel_Timer = 14000;
+        }else CrowdPummel_Timer -= diff;
 
-                //14 seconds
-                CrowdPummel_Timer = 14000;
-            }else CrowdPummel_Timer -= diff;
+        //MightyBlow_Timer
+        if (MightyBlow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
 
-            //MightyBlow_Timer
-            if (MightyBlow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
-
-                //10 seconds until we should cast this agian
-                MightyBlow_Timer = 10000;
-            }else MightyBlow_Timer -= diff;
+            //10 seconds until we should cast this agian
+            MightyBlow_Timer = 10000;
+        }else MightyBlow_Timer -= diff;
 
 
-            //Summon Gizrul
-            if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
-            {
-                //Cast
-                m_creature->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
-                Summoned = true;                
-            }
-
-            DoMeleeAttackIfReady();
+        //Summon Gizrul
+        if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
+        {
+            //Cast
+            m_creature->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+            Summoned = true;                
         }
+
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_halycon(Creature *_Creature)
 {

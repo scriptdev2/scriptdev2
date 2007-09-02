@@ -123,97 +123,93 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowVolley_Timer
+        if (ShadowVolley_Timer < diff)
         {
-
-            //ShadowVolley_Timer
-            if (ShadowVolley_Timer < diff)
-            {
-                if (rand()%100 < 46) //46% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
-                }
-                //5 seconds
-                ShadowVolley_Timer = 5000;
-            }else ShadowVolley_Timer -= diff;
-
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                if (rand()%100 < 50) //50% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                }
-                //10 seconds until we should cast this again
-                Cleave_Timer = 10000;
-            }else Cleave_Timer -= diff;
-
-
-            //ThunderClap_Timer
-            if (ThunderClap_Timer < diff)
-            {
-                if (rand()%100 < 20) //20% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
-                }
-                //12 seconds until we should cast this again
-                ThunderClap_Timer = 12000;
-            }else ThunderClap_Timer -= diff;
-
-            //TwistedReflection_Timer
-            if (TwistedReflection_Timer < diff)
+            if (rand()%100 < 46) //46% chance to cast
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_TWISTEDREFLECTION);
-                //30 seconds until we should cast this again
-                TwistedReflection_Timer = 30000;
-            }else TwistedReflection_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
+            }
+            //5 seconds
+            ShadowVolley_Timer = 5000;
+        }else ShadowVolley_Timer -= diff;
 
-
-            //VoidBolt_Timer
-            if (VoidBolt_Timer < diff)
-            {
-                if (rand()%100 < 40) //40% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
-                }
-                //18 seconds until we should cast this again
-                VoidBolt_Timer = 18000;
-            }else VoidBolt_Timer -= diff;
-
-            //Rage_Timer
-            if (Rage_Timer < diff)
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            if (rand()%100 < 50) //50% chance to cast
             {
                 //Cast
-                DoCast(m_creature,SPELL_RAGE);
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            }
+            //10 seconds until we should cast this again
+            Cleave_Timer = 10000;
+        }else Cleave_Timer -= diff;
 
-                //70 seconds until we should cast this again
-                Rage_Timer = 70000;
-            }else Rage_Timer -= diff;
 
-            //Hound_Timer
-            if (Hound_Timer < diff)
+        //ThunderClap_Timer
+        if (ThunderClap_Timer < diff)
+        {
+            if (rand()%100 < 20) //20% chance to cast
             {
                 //Cast
-                SummonHounds(m_creature->getVictim());
-                SummonHounds(m_creature->getVictim());
-                SummonHounds(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            }
+            //12 seconds until we should cast this again
+            ThunderClap_Timer = 12000;
+        }else ThunderClap_Timer -= diff;
 
-                //45 seconds until we should cast this agian
-                Hound_Timer = 45000;
-            }else Hound_Timer -= diff;
+        //TwistedReflection_Timer
+        if (TwistedReflection_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_TWISTEDREFLECTION);
+            //30 seconds until we should cast this again
+            TwistedReflection_Timer = 30000;
+        }else TwistedReflection_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+
+        //VoidBolt_Timer
+        if (VoidBolt_Timer < diff)
+        {
+            if (rand()%100 < 40) //40% chance to cast
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
+            }
+            //18 seconds until we should cast this again
+            VoidBolt_Timer = 18000;
+        }else VoidBolt_Timer -= diff;
+
+        //Rage_Timer
+        if (Rage_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_RAGE);
+
+            //70 seconds until we should cast this again
+            Rage_Timer = 70000;
+        }else Rage_Timer -= diff;
+
+        //Hound_Timer
+        if (Hound_Timer < diff)
+        {
+            //Cast
+            SummonHounds(m_creature->getVictim());
+            SummonHounds(m_creature->getVictim());
+            SummonHounds(m_creature->getVictim());
+
+            //45 seconds until we should cast this agian
+            Hound_Timer = 45000;
+        }else Hound_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_kruul(Creature *_Creature)
 {

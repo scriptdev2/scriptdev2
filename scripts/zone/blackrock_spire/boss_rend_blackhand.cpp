@@ -85,47 +85,43 @@ struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //WhirlWind_Timer
+        if (WhirlWind_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
 
-            //WhirlWind_Timer
-            if (WhirlWind_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
+            //18 seconds
+            WhirlWind_Timer = 18000;
+        }else WhirlWind_Timer -= diff;
 
-                //18 seconds
-                WhirlWind_Timer = 18000;
-            }else WhirlWind_Timer -= diff;
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //10 seconds until we should cast this agian
-                Cleave_Timer = 10000;
-            }else Cleave_Timer -= diff;
+            //10 seconds until we should cast this agian
+            Cleave_Timer = 10000;
+        }else Cleave_Timer -= diff;
 
 
-            //Thunderclap_Timer
-            if (Thunderclap_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+        //Thunderclap_Timer
+        if (Thunderclap_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
 
-                //16 seconds until we should cast this agian
-                Thunderclap_Timer = 16000;
-            }else Thunderclap_Timer -= diff;
+            //16 seconds until we should cast this agian
+            Thunderclap_Timer = 16000;
+        }else Thunderclap_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_rend_blackhand(Creature *_Creature)
 {

@@ -18,14 +18,14 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_THUNDERCLAP                8732              
 #define SPELL_FIREBALLVOLLEY                22425
 #define SPELL_MIGHTYBLOW                14099
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI
 {
     phalanxAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI
     {       
         ThunderClap_Timer = 12000;
         FireballVolley_Timer =0;
-	MightyBlow_Timer = 15000;
+        MightyBlow_Timer = 15000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -84,48 +84,44 @@ struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ThunderClap_Timer
+        if (ThunderClap_Timer < diff)
         {
-            
-            //ThunderClap_Timer
-            if (ThunderClap_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
 
-                //10 seconds
-               ThunderClap_Timer = 10000;
-            }else ThunderClap_Timer -= diff;
+            //10 seconds
+            ThunderClap_Timer = 10000;
+        }else ThunderClap_Timer -= diff;
 
-            //FireballVolley_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        //FireballVolley_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
+            if (FireballVolley_Timer < diff)
             {
-		if (FireballVolley_Timer < diff)
-	        {
                 DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
 
                 //15 seconds
                 FireballVolley_Timer = 15000;
-                }else FireballVolley_Timer -= diff;
-            }
-
-            //MightyBlow_Timer
-            if (MightyBlow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
-
-                //10 seconds
-               MightyBlow_Timer = 10000;
-            }else MightyBlow_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            }else FireballVolley_Timer -= diff;
         }
+
+        //MightyBlow_Timer
+        if (MightyBlow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+
+            //10 seconds
+            MightyBlow_Timer = 10000;
+        }else MightyBlow_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_phalanx(Creature *_Creature)
 {

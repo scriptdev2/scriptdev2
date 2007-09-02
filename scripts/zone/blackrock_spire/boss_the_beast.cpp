@@ -79,50 +79,46 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Flamebreak_Timer
+        if (Flamebreak_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMEBREAK);
+
+            //12 seconds
+            Flamebreak_Timer = 10000;
+        }else Flamebreak_Timer -= diff;
+
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
         {
 
-            //Flamebreak_Timer
-            if (Flamebreak_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBREAK);
+            //Cast Immolate on a Random target
+            Unit* target = NULL;
 
-                //12 seconds
-                Flamebreak_Timer = 10000;
-            }else Flamebreak_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_IMMOLATE);
 
-            //Immolate_Timer
-            if (Immolate_Timer < diff)
-            {
+            //20 seconds until we should cast this agian
+            Immolate_Timer = 8000;
+        }else Immolate_Timer -= diff;
 
-                //Cast Immolate on a Random target
-                Unit* target = NULL;
+        //TerrifyingRoar_Timer
+        if (TerrifyingRoar_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_TERRIFYINGROAR);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_IMMOLATE);
+            //30 seconds until we should cast this agian
+            TerrifyingRoar_Timer = 20000;
+        }else TerrifyingRoar_Timer -= diff;
 
-                //20 seconds until we should cast this agian
-                Immolate_Timer = 8000;
-            }else Immolate_Timer -= diff;
-
-            //TerrifyingRoar_Timer
-            if (TerrifyingRoar_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_TERRIFYINGROAR);
-
-                //30 seconds until we should cast this agian
-                TerrifyingRoar_Timer = 20000;
-            }else TerrifyingRoar_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_thebeast(Creature *_Creature)
 {

@@ -80,45 +80,41 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Shadowflame Timer
+        if (ShadowFlame_Timer < diff)
         {
-            //Shadowflame Timer
-            if (ShadowFlame_Timer < diff)
-            {
-                //Cast Shadowflame
-                DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+            //Cast Shadowflame
+            DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
-                //60 seconds until we should cast this agian
-                ShadowFlame_Timer = 60000;
-            }else ShadowFlame_Timer -= diff;
+            //60 seconds until we should cast this agian
+            ShadowFlame_Timer = 60000;
+        }else ShadowFlame_Timer -= diff;
 
-            //Wing Buffet Timer
-            if (WingBuffet_Timer < diff)
-            {
-                //Cast Wing Buffet
-                DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
+        //Wing Buffet Timer
+        if (WingBuffet_Timer < diff)
+        {
+            //Cast Wing Buffet
+            DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
 
-                //30 seconds until we should cast this agian
-                WingBuffet_Timer = 30000;
-            }else WingBuffet_Timer -= diff;
+            //30 seconds until we should cast this agian
+            WingBuffet_Timer = 30000;
+        }else WingBuffet_Timer -= diff;
 
-            //Shadow of Ebonroc Timer
-            if (ShadowOfEbonroc_Timer < diff)
-            {
-                //Cast Shadow of Ebonroc
-                DoCast(m_creature->getVictim(),SPELL_SHADOWOFEBONROC);
+        //Shadow of Ebonroc Timer
+        if (ShadowOfEbonroc_Timer < diff)
+        {
+            //Cast Shadow of Ebonroc
+            DoCast(m_creature->getVictim(),SPELL_SHADOWOFEBONROC);
 
-                //45 seconds until we should cast this agian
-                ShadowOfEbonroc_Timer = 45000;
-            }else ShadowOfEbonroc_Timer -= diff;
+            //45 seconds until we should cast this agian
+            ShadowOfEbonroc_Timer = 45000;
+        }else ShadowOfEbonroc_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 };
 CreatureAI* GetAI_boss_ebonroc(Creature *_Creature)
 {

@@ -134,69 +134,64 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MightyBlow_Timer
+        if (MightyBlow_Timer < diff)
         {
-            
-            //MightyBlow_Timer
-            if (MightyBlow_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+
+            //18 seconds
+            MightyBlow_Timer = 18000;
+        }else MightyBlow_Timer -= diff;
+
+        //HamString_Timer
+        if (HamString_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+
+            //15 seconds
+            HamString_Timer = 15000;
+        }else HamString_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //45 seconds
+            Cleave_Timer = 9000;
+        }else Cleave_Timer -= diff;
+
+        //Adds_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21 )
+        {
+            if (Adds_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+                // summon 3 Adds every 25s  
+                SummonAdds(m_creature->getVictim());
+                SummonAdds(m_creature->getVictim());
+                SummonAdds(m_creature->getVictim());
 
-                //18 seconds
-                MightyBlow_Timer = 18000;
-            }else MightyBlow_Timer -= diff;
-
-            //HamString_Timer
-            if (HamString_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
-
-                //15 seconds
-                HamString_Timer = 15000;
-            }else HamString_Timer -= diff;
-
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //45 seconds
-                Cleave_Timer = 9000;
-            }else Cleave_Timer -= diff;
-
-            //Adds_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21 )
-            {
-                if (Adds_Timer < diff)
-                {
-                  // summon 3 Adds every 25s  
-                  SummonAdds(m_creature->getVictim());
-                  SummonAdds(m_creature->getVictim());
-                  SummonAdds(m_creature->getVictim());
-
-                  //25 seconds until we should cast this agian
-                  Adds_Timer = 25000;
-                } else Adds_Timer -= diff;
-            }
-
-            //Summon Medics
-            if ( !Medics && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21 )
-            {
-                //Cast
-                SummonMedics(m_creature->getVictim());
-                SummonMedics(m_creature->getVictim());
-                Medics = true;
-            }
-
-            DoMeleeAttackIfReady();
+                //25 seconds until we should cast this agian
+                Adds_Timer = 25000;
+            } else Adds_Timer -= diff;
         }
+
+        //Summon Medics
+        if ( !Medics && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 21 )
+        {
+            //Cast
+            SummonMedics(m_creature->getVictim());
+            SummonMedics(m_creature->getVictim());
+            Medics = true;
+        }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_general_angerforge(Creature *_Creature)

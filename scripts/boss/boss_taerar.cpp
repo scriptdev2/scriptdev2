@@ -153,153 +153,149 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Sleep_Timer
+        if (Sleep_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SLEEP);
+
+            //14 seconds
+            Sleep_Timer = 14000;
+        }else Sleep_Timer -= diff;
+
+        //NoxiousBreath_Timer
+        if (NoxiousBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
+
+            //20 seconds until we should cast this agian
+            NoxiousBreath_Timer = 14000 + rand()%6000;
+        } else NoxiousBreath_Timer -= diff;
+
+
+        //Tailsweep every 2 seconds
+        if (TailSweep_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+            //Only cast if we are behind
+            if (!m_creature->HasInArc( M_PI, target))
+                DoCast(target,SPELL_TAILSWEEP);
+            TailSweep_Timer = 2000;
+        }else TailSweep_Timer -= diff;
+
+        //             //MarkOfNature_Timer
+        //            if (MarkOfNature_Timer < diff)
+        //             {
+        //                 //Cast
+        //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
+        // 
+        //                 //45 seconds until we should cast this agian
+        //                 MarkOfNature_Timer = 45000;
+        //             }else MarkOfNature_Timer -= diff;
+
+        //ArcaneBlast_Timer
+        if (ArcaneBlast_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ARCANEBLAST);
+
+            //11 seconds until we should cast this agian
+            ArcaneBlast_Timer = 7000 + rand()%5000;
+        }else ArcaneBlast_Timer -= diff;
+
+        //BellowingRoar_Timer
+        if (BellowingRoar_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
+
+            //18 seconds until we should cast this agian
+            BellowingRoar_Timer = 30000;
+        } else BellowingRoar_Timer -= diff;
+
+
+        //Summon 3 Shades
+        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
         {
 
-            //Sleep_Timer
-            if (Sleep_Timer < diff)
+            if (Summon1_Timer < diff)
             {
+
+                //Inturrupt any spell casting
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                //m_creature->m_canMove = false;
+
                 //Cast
                 Unit* target = NULL;
-
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SLEEP);
-
-                //14 seconds
-                Sleep_Timer = 14000;
-            }else Sleep_Timer -= diff;
-
-            //NoxiousBreath_Timer
-            if (NoxiousBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
-
-                //20 seconds until we should cast this agian
-                NoxiousBreath_Timer = 14000 + rand()%6000;
-            } else NoxiousBreath_Timer -= diff;
-
-
-            //Tailsweep every 2 seconds
-            if (TailSweep_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                //Only cast if we are behind
-                if (!m_creature->HasInArc( M_PI, target))
-                    DoCast(target,SPELL_TAILSWEEP);
-                    TailSweep_Timer = 2000;
-            }else TailSweep_Timer -= diff;
-
-            //             //MarkOfNature_Timer
-            //            if (MarkOfNature_Timer < diff)
-            //             {
-            //                 //Cast
-            //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
-            // 
-            //                 //45 seconds until we should cast this agian
-            //                 MarkOfNature_Timer = 45000;
-            //             }else MarkOfNature_Timer -= diff;
-
-            //ArcaneBlast_Timer
-            if (ArcaneBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ARCANEBLAST);
-
-                //11 seconds until we should cast this agian
-                ArcaneBlast_Timer = 7000 + rand()%5000;
-            }else ArcaneBlast_Timer -= diff;
-
-            //BellowingRoar_Timer
-            if (BellowingRoar_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
-
-                //18 seconds until we should cast this agian
-                BellowingRoar_Timer = 30000;
-            } else BellowingRoar_Timer -= diff;
-
-
-            //Summon 3 Shades
-            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
-            {
-
-                if (Summon1_Timer < diff)
-                {
-
-                    //Inturrupt any spell casting
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                    m_creature->setFaction(35);
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    //m_creature->m_canMove = false;
-
-                    //Cast
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    SummonShades(target);
-                    SummonShades(target);
-                    SummonShades(target);
-                    Summon1_Timer = 120000;
-                } else Summon1_Timer -= diff;
-            }
-
-            //Summon 3 Shades
-            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
-            {
-
-                if (Summon2_Timer < diff)
-                {
-
-                    //Inturrupt any spell casting
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                    m_creature->setFaction(35);
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    //m_creature->m_canMove = false;
-
-                    //Cast
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    SummonShades(target);
-                    SummonShades(target);
-                    SummonShades(target);
-                    Summon2_Timer = 120000;
-                } else Summon2_Timer -= diff;
-            }
-
-            //Summon 3 Shades
-            if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
-            {
-                if (Summon3_Timer < diff)
-                {
-                    //Inturrupt any spell casting
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                    m_creature->setFaction(35);
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    //m_creature->m_canMove = false;
-
-                    //Cast
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    SummonShades(target);
-                    SummonShades(target);
-                    SummonShades(target);
-                    Summon3_Timer = 120000;
-                } else Summon3_Timer -= diff;
-            }
+                SummonShades(target);
+                SummonShades(target);
+                SummonShades(target);
+                Summon1_Timer = 120000;
+            } else Summon1_Timer -= diff;
         }
+
+        //Summon 3 Shades
+        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        {
+
+            if (Summon2_Timer < diff)
+            {
+
+                //Inturrupt any spell casting
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                //m_creature->m_canMove = false;
+
+                //Cast
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                SummonShades(target);
+                SummonShades(target);
+                SummonShades(target);
+                Summon2_Timer = 120000;
+            } else Summon2_Timer -= diff;
+        }
+
+        //Summon 3 Shades
+        if ( !Shades  && (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        {
+            if (Summon3_Timer < diff)
+            {
+                //Inturrupt any spell casting
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                //m_creature->m_canMove = false;
+
+                //Cast
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                SummonShades(target);
+                SummonShades(target);
+                SummonShades(target);
+                Summon3_Timer = 120000;
+            } else Summon3_Timer -= diff;
+        }
+
         DoMeleeAttackIfReady();
     }
 };
 
 
 // Shades of Taerar Script
-         
+
 struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
 {
     boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -356,35 +352,30 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //PoisonCloud_Timer
+        if (PoisonCloud_Timer < diff)
         {
-            
-            //PoisonCloud_Timer
-            if (PoisonCloud_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_POSIONCLOUD);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_POSIONCLOUD);
 
-                //30 seconds
-                PoisonCloud_Timer = 30000;
-            }else PoisonCloud_Timer -= diff;
+            //30 seconds
+            PoisonCloud_Timer = 30000;
+        }else PoisonCloud_Timer -= diff;
 
-            //PosionBreath_Timer
-            if (PosionBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_POSIONBREATH);
+        //PosionBreath_Timer
+        if (PosionBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_POSIONBREATH);
 
-                //12 seconds until we should cast this agian
-                PosionBreath_Timer = 12000;
-            }else PosionBreath_Timer -= diff;
+            //12 seconds until we should cast this agian
+            PosionBreath_Timer = 12000;
+        }else PosionBreath_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 

@@ -78,46 +78,41 @@ struct MANGOS_DLL_DECL boss_golemlordargelmachAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ChainLightning_Timer
+        if (ChainLightning_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CHAINLIGHTNING);
 
-            //ChainLightning_Timer
-            if (ChainLightning_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CHAINLIGHTNING);
-
-                //15 seconds until we should cast this agian
-                ChainLightning_Timer = 15000;
-            }else ChainLightning_Timer -= diff;
+            //15 seconds until we should cast this agian
+            ChainLightning_Timer = 15000;
+        }else ChainLightning_Timer -= diff;
 
 
-            //Shock_Timer
-            if (Shock_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHOCK);
+        //Shock_Timer
+        if (Shock_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHOCK);
 
-                //7 seconds until we should cast this agian
-                Shock_Timer = 7000;
-            }else Shock_Timer -= diff;
+            //7 seconds until we should cast this agian
+            Shock_Timer = 7000;
+        }else Shock_Timer -= diff;
 
-            //LightningShield_Timer
-            if (LightningShield_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_LIGHTNINGSHIELD);
+        //LightningShield_Timer
+        if (LightningShield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_LIGHTNINGSHIELD);
 
-                //45 seconds
-                LightningShield_Timer = 45000;
-            }else LightningShield_Timer -= diff;
+            //45 seconds
+            LightningShield_Timer = 45000;
+        }else LightningShield_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_golemlordargelmach(Creature *_Creature)

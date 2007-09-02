@@ -17,15 +17,15 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_FLAMESHOCK                10448            
 #define SPELL_MOLTENBLAST            15095
 #define SPELL_FIREWARD               15041
 #define SPELL_SEARINGTOTEM               10438
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
 {
     boss_pyromancer_loregrainAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -86,58 +86,53 @@ struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FlameShock_Timer
+        if (FlameShock_Timer < diff)
         {
-            
-            //FlameShock_Timer
-            if (FlameShock_Timer < diff)
-            {
-                 //Cast Flam Shock on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_FLAMESHOCK);
+            //Cast Flam Shock on a Random target
+            Unit* target = NULL;
 
-                //8 seconds until we should cast this agian
-                FlameShock_Timer = 8000;
-            }else FlameShock_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_FLAMESHOCK);
 
-            //MoltenBlast_Timer
-            if (MoltenBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MOLTENBLAST);
+            //8 seconds until we should cast this agian
+            FlameShock_Timer = 8000;
+        }else FlameShock_Timer -= diff;
 
-                //12 seconds until we should cast this agian
-                MoltenBlast_Timer = 12000;
-            }else MoltenBlast_Timer -= diff;
+        //MoltenBlast_Timer
+        if (MoltenBlast_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MOLTENBLAST);
 
-            //FireWard_Timer
-            if (FireWard_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREWARD);
+            //12 seconds until we should cast this agian
+            MoltenBlast_Timer = 12000;
+        }else MoltenBlast_Timer -= diff;
 
-                //16 seconds
-               FireWard_Timer = 16000;
-            }else FireWard_Timer -= diff;
+        //FireWard_Timer
+        if (FireWard_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREWARD);
 
-            //SearingTotem_Timer
-            if (SearingTotem_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SEARINGTOTEM);
+            //16 seconds
+            FireWard_Timer = 16000;
+        }else FireWard_Timer -= diff;
 
-                //30 seconds
-               SearingTotem_Timer = 25000;
-            }else SearingTotem_Timer -= diff;
+        //SearingTotem_Timer
+        if (SearingTotem_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SEARINGTOTEM);
 
-            DoMeleeAttackIfReady();
-        }
+            //30 seconds
+            SearingTotem_Timer = 25000;
+        }else SearingTotem_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_pyromancer_loregrain(Creature *_Creature)

@@ -82,46 +82,42 @@ struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Shoot_Timer
+        if (Shoot_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHOOT);
 
-            //Shoot_Timer
-            if (Shoot_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHOOT);
+            //5 milliseconds only if he is in the range...
+            Shoot_Timer = 500;
+        }else Shoot_Timer -= diff;
 
-                //5 milliseconds only if he is in the range...
-                Shoot_Timer = 500;
-            }else Shoot_Timer -= diff;
+        //StunBomb_Timer
+        if (StunBomb_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STUNBOMB);
 
-            //StunBomb_Timer
-            if (StunBomb_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STUNBOMB);
+            //14 seconds until we should cast this agian
+            StunBomb_Timer = 14000;
+        }else StunBomb_Timer -= diff;
 
-                //14 seconds until we should cast this agian
-                StunBomb_Timer = 14000;
-            }else StunBomb_Timer -= diff;
+        //Dazed_Timer
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-            //Dazed_Timer
-            if (Dazed_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DAZED);
+            //18 seconds
+            Dazed_Timer = 18000;
+        }else Dazed_Timer -= diff;
 
-                //18 seconds
-                Dazed_Timer = 18000;
-            }else Dazed_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_quatermasterzigris(Creature *_Creature)
 {

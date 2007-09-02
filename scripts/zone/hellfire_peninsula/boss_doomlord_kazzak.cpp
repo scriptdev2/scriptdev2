@@ -95,83 +95,79 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowVolley_Timer
+        if (ShadowVolley_Timer < diff)
         {
-
-            //ShadowVolley_Timer
-            if (ShadowVolley_Timer < diff)
-            {
-                if (rand()%100 < 55) //55% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
-                }
-                //5 seconds
-                ShadowVolley_Timer = 5000;
-            }else ShadowVolley_Timer -= diff;
-
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                if (rand()%100 < 50) //50% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                }
-                //10 seconds until we should cast this agian
-                Cleave_Timer = 10000;
-            }else Cleave_Timer -= diff;
-
-
-            //ThunderClap_Timer
-            if (ThunderClap_Timer < diff)
-            {
-                if (rand()%100 < 20) //20% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
-                }
-                //12 seconds until we should cast this agian
-                ThunderClap_Timer = 10000;
-            }else ThunderClap_Timer -= diff;
-
-
-            //VoidBolt_Timer
-            if (VoidBolt_Timer < diff)
+            if (rand()%100 < 55) //55% chance to cast
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
+                DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
+            }
+            //5 seconds
+            ShadowVolley_Timer = 5000;
+        }else ShadowVolley_Timer -= diff;
 
-                //18 seconds until we should cast this again
-                VoidBolt_Timer = 18000;
-            }else VoidBolt_Timer -= diff;
-
-            //MarkOfKazzak_Timer
-            if (MarkOfKazzak_Timer < diff)
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            if (rand()%100 < 50) //50% chance to cast
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_MARKOFKAZZAK);
-                //20 seconds until we should cast this agian
-                MarkOfKazzak_Timer = 20000;
-            }else MarkOfKazzak_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            }
+            //10 seconds until we should cast this agian
+            Cleave_Timer = 10000;
+        }else Cleave_Timer -= diff;
 
-            //Rage_Timer
-            if (Rage_Timer < diff)
+
+        //ThunderClap_Timer
+        if (ThunderClap_Timer < diff)
+        {
+            if (rand()%100 < 20) //20% chance to cast
             {
                 //Cast
-                DoCast(m_creature,SPELL_RAGE);
+                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            }
+            //12 seconds until we should cast this agian
+            ThunderClap_Timer = 10000;
+        }else ThunderClap_Timer -= diff;
 
-                //27 seconds until we should cast this agian
-                Rage_Timer = 27000;
-            }else Rage_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        //VoidBolt_Timer
+        if (VoidBolt_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VOIDBOLT);
+
+            //18 seconds until we should cast this again
+            VoidBolt_Timer = 18000;
+        }else VoidBolt_Timer -= diff;
+
+        //MarkOfKazzak_Timer
+        if (MarkOfKazzak_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MARKOFKAZZAK);
+            //20 seconds until we should cast this agian
+            MarkOfKazzak_Timer = 20000;
+        }else MarkOfKazzak_Timer -= diff;
+
+        //Rage_Timer
+        if (Rage_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_RAGE);
+
+            //27 seconds until we should cast this agian
+            Rage_Timer = 27000;
+        }else Rage_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_doomlordkazzak(Creature *_Creature)
 {

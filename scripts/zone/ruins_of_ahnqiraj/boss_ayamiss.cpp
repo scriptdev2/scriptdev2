@@ -76,51 +76,38 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If he is 70% start phase 2
+        if (phase==1 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 70 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                EnterEvadeMode();
-                return;
-            }
+            phase=2;
 
-			//If he is 70% start phase 2
-            if (phase==1 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 70 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-				phase=2;
-				
-            }
-
-
-
-            //STINGERSPRAY_Timer (only in phase2)
-            if (phase==2 && STINGERSPRAY_Timer < diff)
-            {
-				DoCast(m_creature->getVictim(),SPELL_STINGERSPRAY);
-                STINGERSPRAY_Timer = 30000;
-            }else STINGERSPRAY_Timer -= diff;
-
-            //POISONSTINGER_Timer (only in phase1)
-            if (phase==1 && POISONSTINGER_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_POISONSTINGER);
-                POISONSTINGER_Timer = 30000;
-            }else POISONSTINGER_Timer -= diff;
-
-			 //SUMMONSWARMER_Timer (only in phase1)
-            if (SUMMONSWARMER_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_SUMMONSWARMER);
-                SUMMONSWARMER_Timer = 60000;
-            }else SUMMONSWARMER_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+
+        //STINGERSPRAY_Timer (only in phase2)
+        if (phase==2 && STINGERSPRAY_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_STINGERSPRAY);
+            STINGERSPRAY_Timer = 30000;
+        }else STINGERSPRAY_Timer -= diff;
+
+        //POISONSTINGER_Timer (only in phase1)
+        if (phase==1 && POISONSTINGER_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_POISONSTINGER);
+            POISONSTINGER_Timer = 30000;
+        }else POISONSTINGER_Timer -= diff;
+
+        //SUMMONSWARMER_Timer (only in phase1)
+        if (SUMMONSWARMER_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SUMMONSWARMER);
+            SUMMONSWARMER_Timer = 60000;
+        }else SUMMONSWARMER_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_ayamiss(Creature *_Creature)

@@ -116,65 +116,61 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
             Invisible = false;
             //m_creature->m_canMove = true;
         } else if (Invisible)
-               {
-                  Invisible_Timer -= diff;
-                  //Do nothing while invisible
-                  return;
-               }
+        {
+            Invisible_Timer -= diff;
+            //Do nothing while invisible
+            return;
+        }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ToxicVolley_Timer
+        if (ToxicVolley_Timer < diff)
         {
 
-            //ToxicVolley_Timer
-            if (ToxicVolley_Timer < diff)
-            {
+            DoCast(m_creature->getVictim(),SPELL_TOXICVOLLEY);
 
-                DoCast(m_creature->getVictim(),SPELL_TOXICVOLLEY);
+            //9 seconds
+            ToxicVolley_Timer = 9000;
+        }else ToxicVolley_Timer -= diff;
 
-                //9 seconds
-                ToxicVolley_Timer = 9000;
-            }else ToxicVolley_Timer -= diff;
+        //Uppercut_Timer
+        if (Uppercut_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
 
-            //Uppercut_Timer
-            if (Uppercut_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
-
-                //12 seconds until we should cast this agian
-                Uppercut_Timer = 12000;
-            }else Uppercut_Timer -= diff;
+            //12 seconds until we should cast this agian
+            Uppercut_Timer = 12000;
+        }else Uppercut_Timer -= diff;
 
 
-            //Adds_Timer
-            if (!Invisible && Adds_Timer < diff)
-            {
+        //Adds_Timer
+        if (!Invisible && Adds_Timer < diff)
+        {
 
-                //Inturrupt any spell casting
-                //m_creature->m_canMove = true;
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                Invisible = true;
-                Invisible_Timer = 15000;
-                //40 seconds until we should cast this agian
-                Adds_Timer = 40000;
-            }else Adds_Timer -= diff;
+            //Inturrupt any spell casting
+            //m_creature->m_canMove = true;
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->setFaction(35);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+            SummonAdds(m_creature->getVictim());
+            SummonAdds(m_creature->getVictim());
+            SummonAdds(m_creature->getVictim());
+            SummonAdds(m_creature->getVictim());
+            SummonAdds(m_creature->getVictim());
+            Invisible = true;
+            Invisible_Timer = 15000;
+            //40 seconds until we should cast this agian
+            Adds_Timer = 40000;
+        }else Adds_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_noxxion(Creature *_Creature)
 {

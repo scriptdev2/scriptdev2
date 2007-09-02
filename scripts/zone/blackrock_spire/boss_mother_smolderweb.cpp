@@ -84,57 +84,53 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Crystalize_Timer
+        if (Crystalize_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CRYSTALIZE);
+
+            //20 seconds
+            Crystalize_Timer = 14000;
+        }else Crystalize_Timer -= diff;
+
+        //MothersMilk_Timer
+        if (MothersMilk_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MOTHERSMILK);
+
+            //60 seconds until we should cast this agian
+            MothersMilk_Timer = 60000;
+        }else MothersMilk_Timer -= diff;
+
+
+        //Posion_Timer
+        if (Posion_Timer < diff)
         {
 
-            //Crystalize_Timer
-            if (Crystalize_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CRYSTALIZE);
+            DoCast(m_creature->getVictim(),SPELL_POSION);
 
-                //20 seconds
-                Crystalize_Timer = 14000;
-            }else Crystalize_Timer -= diff;
+            //7 seconds until we should cast this agian
+            Posion_Timer = 7000;
+        }else Posion_Timer -= diff;
 
-            //MothersMilk_Timer
-            if (MothersMilk_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MOTHERSMILK);
+        //WebExplosion_Timer
+        if (WebExplosion_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WEBEXPLOSION);
 
-                //60 seconds until we should cast this agian
-                MothersMilk_Timer = 60000;
-            }else MothersMilk_Timer -= diff;
+            //20 seconds until we should cast this agian
+            WebExplosion_Timer = 20000;
+        }else WebExplosion_Timer -= diff;
 
-
-            //Posion_Timer
-            if (Posion_Timer < diff)
-            {
-
-                DoCast(m_creature->getVictim(),SPELL_POSION);
-
-                //7 seconds until we should cast this agian
-                Posion_Timer = 7000;
-            }else Posion_Timer -= diff;
-
-            //WebExplosion_Timer
-            if (WebExplosion_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WEBEXPLOSION);
-
-                //20 seconds until we should cast this agian
-                WebExplosion_Timer = 20000;
-            }else WebExplosion_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_mothersmolderweb(Creature *_Creature)
 {

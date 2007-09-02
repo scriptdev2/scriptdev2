@@ -18,11 +18,11 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_FROSTBOLT                12737    //Not sure if right ID            
 #define SPELL_FROSTNOVA            12748        //Not sure if right ID
 
-      
+
 struct MANGOS_DLL_DECL boss_warder_stilgissAI : public ScriptedAI
 {
     boss_warder_stilgissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -79,35 +79,30 @@ struct MANGOS_DLL_DECL boss_warder_stilgissAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FrostBolt_Timer
+        if (FrostBolt_Timer < diff)
         {
-            
-            //FrostBolt_Timer
-            if (FrostBolt_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
 
-                //7 seconds until we should cast this agian
-                FrostBolt_Timer = 7000;
-            }else FrostBolt_Timer -= diff;
+            //7 seconds until we should cast this agian
+            FrostBolt_Timer = 7000;
+        }else FrostBolt_Timer -= diff;
 
-            //FrostNova_Timer
-            if (FrostNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+        //FrostNova_Timer
+        if (FrostNova_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
 
-                //5 seconds until we should cast this agian
-                FrostNova_Timer = 5000;
-            }else FrostNova_Timer -= diff;
+            //5 seconds until we should cast this agian
+            FrostNova_Timer = 5000;
+        }else FrostNova_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_warder_stilgiss(Creature *_Creature)

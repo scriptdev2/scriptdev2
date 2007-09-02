@@ -18,11 +18,11 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_HOLYSHOCK                20930    //Not sure if right ID            
 #define SPELL_KICK            15614
 
-      
+
 struct MANGOS_DLL_DECL boss_fineous_darkvireAI : public ScriptedAI
 {
     boss_fineous_darkvireAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -79,42 +79,38 @@ struct MANGOS_DLL_DECL boss_fineous_darkvireAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //HolyShock_Timer
+        if (HolyShock_Timer < diff)
         {
-            
-            //HolyShock_Timer
-            if (HolyShock_Timer < diff)
-            {
 
-                 //Cast Holy Shock on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_HOLYSHOCK);
+            //Cast Holy Shock on a Random target
+            Unit* target = NULL;
 
-		// And then cast Holy Shock on himself. Not working cause of cooldown spell
-                DoCast(m_creature,SPELL_HOLYSHOCK);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_HOLYSHOCK);
 
-                //16 seconds cause its a proc
-               HolyShock_Timer = 16000;
-            }else HolyShock_Timer -= diff;
+            // And then cast Holy Shock on himself. Not working cause of cooldown spell
+            DoCast(m_creature,SPELL_HOLYSHOCK);
 
-            //Kick_Timer
-            if (Kick_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KICK);
+            //16 seconds cause its a proc
+            HolyShock_Timer = 16000;
+        }else HolyShock_Timer -= diff;
 
-                //7 seconds until we should cast this agian
-                Kick_Timer = 7000;
-            }else Kick_Timer -= diff;
+        //Kick_Timer
+        if (Kick_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KICK);
 
-            DoMeleeAttackIfReady();
-        }
+            //7 seconds until we should cast this agian
+            Kick_Timer = 7000;
+        }else Kick_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_fineous_darkvire(Creature *_Creature)

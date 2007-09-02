@@ -73,106 +73,106 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         switch (rand()%20)
         {
             //B1 - Incin
-            case 0:
+        case 0:
             Breath1_Spell = SPELL_INCINERATE;
             Breath2_Spell = SPELL_TIMELAPSE;
             break;
 
-            case 1:
+        case 1:
             Breath1_Spell = SPELL_INCINERATE;
             Breath2_Spell = SPELL_CORROSIVEACID;
             break;
 
-            case 2:
+        case 2:
             Breath1_Spell = SPELL_INCINERATE;
             Breath2_Spell = SPELL_IGNITEFLESH;
             break;
 
-            case 3:
+        case 3:
             Breath1_Spell = SPELL_INCINERATE;
             Breath2_Spell = SPELL_FROSTBURN;
             break;
 
             //B1 - TL
-            case 4:
+        case 4:
             Breath1_Spell = SPELL_TIMELAPSE;
             Breath2_Spell = SPELL_INCINERATE;
             break;
 
-            case 5:
+        case 5:
             Breath1_Spell = SPELL_TIMELAPSE;
             Breath2_Spell = SPELL_CORROSIVEACID;
             break;
 
-            case 6:
+        case 6:
             Breath1_Spell = SPELL_TIMELAPSE;
             Breath2_Spell = SPELL_IGNITEFLESH;
             break;
 
-            case 7:
+        case 7:
             Breath1_Spell = SPELL_TIMELAPSE;
             Breath2_Spell = SPELL_FROSTBURN;
             break;
 
             //B1 - Acid
-            case 8:
+        case 8:
             Breath1_Spell = SPELL_CORROSIVEACID;
             Breath2_Spell = SPELL_INCINERATE;
             break;
 
-            case 9:
+        case 9:
             Breath1_Spell = SPELL_CORROSIVEACID;
             Breath2_Spell = SPELL_TIMELAPSE;
             break;
 
-            case 10:
+        case 10:
             Breath1_Spell = SPELL_CORROSIVEACID;
             Breath2_Spell = SPELL_IGNITEFLESH;
             break;
 
-            case 11:
+        case 11:
             Breath1_Spell = SPELL_CORROSIVEACID;
             Breath2_Spell = SPELL_FROSTBURN;
             break;
 
             //B1 - Ignite
-            case 12:
+        case 12:
             Breath1_Spell = SPELL_IGNITEFLESH;
             Breath2_Spell = SPELL_INCINERATE;
             break;
 
-            case 13:
+        case 13:
             Breath1_Spell = SPELL_IGNITEFLESH;
             Breath2_Spell = SPELL_CORROSIVEACID;
             break;
 
-            case 14:
+        case 14:
             Breath1_Spell = SPELL_IGNITEFLESH;
             Breath2_Spell = SPELL_TIMELAPSE;
             break;
 
-            case 15:
+        case 15:
             Breath1_Spell = SPELL_IGNITEFLESH;
             Breath2_Spell = SPELL_FROSTBURN;
             break;
 
             //B1 - Frost
-            case 16:
+        case 16:
             Breath1_Spell = SPELL_FROSTBURN;
             Breath2_Spell = SPELL_INCINERATE;
             break;
 
-            case 17:
+        case 17:
             Breath1_Spell = SPELL_FROSTBURN;
             Breath2_Spell = SPELL_TIMELAPSE;
             break;
 
-            case 18:
+        case 18:
             Breath1_Spell = SPELL_FROSTBURN;
             Breath2_Spell = SPELL_CORROSIVEACID;
             break;
 
-            case 19:
+        case 19:
             Breath1_Spell = SPELL_FROSTBURN;
             Breath2_Spell = SPELL_IGNITEFLESH;
             break;
@@ -250,152 +250,149 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {            
-            //Shimmer_Timer Timer
-            if (Shimmer_Timer < diff)
+        //Shimmer_Timer Timer
+        if (Shimmer_Timer < diff)
+        {
+            //Remove old vurlnability spell
+            if (CurrentVurln_Spell)
+                m_creature->RemoveAurasDueToSpell(CurrentVurln_Spell);
+
+            //Cast new random vurlnabilty on self
+            uint32 spell;
+            switch (rand()%5)
             {
-                //Remove old vurlnability spell
-                if (CurrentVurln_Spell)
-                    m_creature->RemoveAurasDueToSpell(CurrentVurln_Spell);
+            case 0:
+                spell = SPELL_FIRE_VURNALBILTY;
+                break;
 
-                //Cast new random vurlnabilty on self
-                uint32 spell;
-                switch (rand()%5)
-                {
-                    case 0:
-                    spell = SPELL_FIRE_VURNALBILTY;
-                    break;
+            case 1:
+                spell = SPELL_FROST_VURNALBILTY;
+                break;
 
-                    case 1:
-                    spell = SPELL_FROST_VURNALBILTY;
-                    break;
+            case 2:
+                spell = SPELL_SHADOW_VURNALBILTY;
+                break;
 
-                    case 2:
-                    spell = SPELL_SHADOW_VURNALBILTY;
-                    break;
+            case 3:
+                spell = SPELL_NATURE_VURNALBILTY;
+                break;
 
-                    case 3:
-                    spell = SPELL_NATURE_VURNALBILTY;
-                    break;
-
-                    case 4:
-                    spell = SPELL_ARCANE_VURNALBILTY;
-                    break;
-                }
-                
-                DoCast(m_creature,spell);
-                CurrentVurln_Spell = spell;
-
-                DoTextEmote(EMOTE_SHIMMER, NULL);
-
-                //45 seconds until we should cast this agian
-                Shimmer_Timer = 45000;
-            }else Shimmer_Timer -= diff;
-
-            //Breath1_Timer
-            if (Breath1_Timer < diff)
-            {
-                //Cast Breath1_Spell
-                DoCast(m_creature->getVictim(),Breath1_Spell);
-
-                //30 seconds until we should cast this agian
-                Breath1_Timer = 60000;
-            }else Breath1_Timer -= diff;
-
-            //Breath2_Timer
-            if (Breath2_Timer < diff)
-            {
-                //Cast Breath2_Spell
-                DoCast(m_creature->getVictim(),Breath2_Spell);
-
-                //30 seconds until we should cast this agian
-                Breath2_Timer = 60000;
-            }else Breath2_Timer -= diff;
-
-            //Affliction_Timer
-            if (Affliction_Timer < diff)
-            {
-                //Pick a random target then cast a random debuff
-                //Currently there is no ability to select a random target
-                //So we will just leave this code out
-                //DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
-                {
-                    switch (rand()%5)
-                    {
-                        case 0:
-                        DoCast(target,SPELL_BROODAF_BLUE);
-                        break;
-
-                        case 1:
-                        DoCast(target,SPELL_BROODAF_BLACK);
-                        break;
-
-                        case 2:
-                        DoCast(target,SPELL_BROODAF_RED);
-                        break;
-
-                        case 3:
-                        DoCast(target,SPELL_BROODAF_BRONZE);
-                        break;
-
-                        case 4:
-                        DoCast(target,SPELL_BROODAF_GREEN);
-                        break;
-                    }
-
-                    //Chromatic mutation if target is effected by all afflictions
-                    if (target->HasAura(SPELL_BROODAF_BLUE,0) 
-                        && target->HasAura(SPELL_BROODAF_BLACK,0) 
-                        && target->HasAura(SPELL_BROODAF_RED,0) 
-                        && target->HasAura(SPELL_BROODAF_BRONZE,0) 
-                        && target->HasAura(SPELL_BROODAF_GREEN,0))
-                    {
-                        //target->RemoveAllAuras();
-
-                        //Chromatic mutation is causing issues
-                        //Assuming it is caused by a lack of core support for Charm
-                        //So instead we instant kill our target
-                        //DoCast(target,SPELL_CHROMATIC_MUT_1);
-                        //target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, 0, false);
-                    }
-
-                }
-
-                //10 seconds until we should cast this agian
-                Affliction_Timer = 10000;
-            }else Affliction_Timer -= diff;
-
-            //Frenzy_Timer
-            if (Frenzy_Timer < diff)
-            {
-                //Cast Frenzy_
-                DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote(EMOTE_FRENZY,NULL);
-
-                //10-15 seconds until we should cast this agian
-                Frenzy_Timer = 10000 + (rand() % 5000);
-            }else Frenzy_Timer -= diff;
-
-            //Enrage if not already enraged and below 20%
-            if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
-            {
-                DoCast(m_creature,SPELL_ENRAGE);
-                Enraged = true;
+            case 4:
+                spell = SPELL_ARCANE_VURNALBILTY;
+                break;
             }
 
-            DoMeleeAttackIfReady();
+            DoCast(m_creature,spell);
+            CurrentVurln_Spell = spell;
+
+            DoTextEmote(EMOTE_SHIMMER, NULL);
+
+            //45 seconds until we should cast this agian
+            Shimmer_Timer = 45000;
+        }else Shimmer_Timer -= diff;
+
+        //Breath1_Timer
+        if (Breath1_Timer < diff)
+        {
+            //Cast Breath1_Spell
+            DoCast(m_creature->getVictim(),Breath1_Spell);
+
+            //30 seconds until we should cast this agian
+            Breath1_Timer = 60000;
+        }else Breath1_Timer -= diff;
+
+        //Breath2_Timer
+        if (Breath2_Timer < diff)
+        {
+            //Cast Breath2_Spell
+            DoCast(m_creature->getVictim(),Breath2_Spell);
+
+            //30 seconds until we should cast this agian
+            Breath2_Timer = 60000;
+        }else Breath2_Timer -= diff;
+
+        //Affliction_Timer
+        if (Affliction_Timer < diff)
+        {
+            //Pick a random target then cast a random debuff
+            //Currently there is no ability to select a random target
+            //So we will just leave this code out
+            //DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
+            {
+                switch (rand()%5)
+                {
+                case 0:
+                    DoCast(target,SPELL_BROODAF_BLUE);
+                    break;
+
+                case 1:
+                    DoCast(target,SPELL_BROODAF_BLACK);
+                    break;
+
+                case 2:
+                    DoCast(target,SPELL_BROODAF_RED);
+                    break;
+
+                case 3:
+                    DoCast(target,SPELL_BROODAF_BRONZE);
+                    break;
+
+                case 4:
+                    DoCast(target,SPELL_BROODAF_GREEN);
+                    break;
+                }
+
+                //Chromatic mutation if target is effected by all afflictions
+                if (target->HasAura(SPELL_BROODAF_BLUE,0) 
+                    && target->HasAura(SPELL_BROODAF_BLACK,0) 
+                    && target->HasAura(SPELL_BROODAF_RED,0) 
+                    && target->HasAura(SPELL_BROODAF_BRONZE,0) 
+                    && target->HasAura(SPELL_BROODAF_GREEN,0))
+                {
+                    //target->RemoveAllAuras();
+
+                    //Chromatic mutation is causing issues
+                    //Assuming it is caused by a lack of core support for Charm
+                    //So instead we instant kill our target
+                    //DoCast(target,SPELL_CHROMATIC_MUT_1);
+                    //target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, 0, false);
+                }
+
+            }
+
+            //10 seconds until we should cast this agian
+            Affliction_Timer = 10000;
+        }else Affliction_Timer -= diff;
+
+        //Frenzy_Timer
+        if (Frenzy_Timer < diff)
+        {
+            //Cast Frenzy_
+            DoCast(m_creature,SPELL_FRENZY);
+            DoTextEmote(EMOTE_FRENZY,NULL);
+
+            //10-15 seconds until we should cast this agian
+            Frenzy_Timer = 10000 + (rand() % 5000);
+        }else Frenzy_Timer -= diff;
+
+        //Enrage if not already enraged and below 20%
+        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        {
+            DoCast(m_creature,SPELL_ENRAGE);
+            Enraged = true;
         }
+
+        DoMeleeAttackIfReady();
     }
+
 };
 CreatureAI* GetAI_boss_chromaggus(Creature *_Creature)
 {

@@ -17,14 +17,14 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_SUNDERARMOR                24317                   
 #define SPELL_SHIELDBLOCK            12169
 #define SPELL_STRIKE               15580
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
 {
     boss_angerrelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -83,46 +83,42 @@ struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //SunderArmor_Timer
+        if (SunderArmor_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
 
-            //SunderArmor_Timer
-            if (SunderArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
-
-                //28 seconds
-               SunderArmor_Timer = 28000;
-            }else SunderArmor_Timer -= diff;
+            //28 seconds
+            SunderArmor_Timer = 28000;
+        }else SunderArmor_Timer -= diff;
 
 
-            //ShieldBlock_Timer
-            if (ShieldBlock_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_SHIELDBLOCK);
+        //ShieldBlock_Timer
+        if (ShieldBlock_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_SHIELDBLOCK);
 
-                //25 seconds
-               ShieldBlock_Timer = 25000;
-            }else ShieldBlock_Timer -= diff;
+            //25 seconds
+            ShieldBlock_Timer = 25000;
+        }else ShieldBlock_Timer -= diff;
 
-            //Strike_Timer
-            if (Strike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STRIKE);
+        //Strike_Timer
+        if (Strike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STRIKE);
 
-                //10 seconds
-               Strike_Timer = 10000;
-            }else Strike_Timer -= diff;
+            //10 seconds
+            Strike_Timer = 10000;
+        }else Strike_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_angerrel(Creature *_Creature)

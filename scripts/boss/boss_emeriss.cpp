@@ -102,110 +102,106 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Sleep_Timer
+        if (Sleep_Timer < diff)
         {
+            //Cast
+            Unit* target = NULL;
 
-            //Sleep_Timer
-            if (Sleep_Timer < diff)
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SLEEP);
+
+            //14 seconds
+            Sleep_Timer = 14000;
+        }else Sleep_Timer -= diff;
+
+        //NoxiousBreath_Timer
+        if (NoxiousBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
+
+            //20 seconds until we should cast this agian
+            NoxiousBreath_Timer = 14000 + rand()%6000;
+        }else NoxiousBreath_Timer -= diff;
+
+
+        //Tailsweep every 2 seconds
+        if (TailSweep_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+            //Only cast if we are behind
+            if (!m_creature->HasInArc( M_PI, target))
+                DoCast(target,SPELL_TAILSWEEP);
+            TailSweep_Timer = 2000;
+        }else TailSweep_Timer -= diff;
+
+
+        //             //MarkOfNature_Timer
+        //            if (MarkOfNature_Timer < diff)
+        //             {
+        //                 //Cast
+        //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
+        // 
+        //                 //45 seconds until we should cast this agian
+        //                 MarkOfNature_Timer = 45000;
+        //             }else MarkOfNature_Timer -= diff;
+
+        //VolatileInfection_Timer
+        if (VolatileInfection_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VOLATILEINFECTION);
+
+            //8 seconds until we should cast this agian
+            VolatileInfection_Timer = 7000 + rand()%5000;
+        }else VolatileInfection_Timer -= diff;
+
+
+        //CorruptionofEarth_Timer
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
+        {
+            if (CorruptionofEarth1_Timer < diff)
             {
                 //Cast
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SLEEP);
-
-                //14 seconds
-                Sleep_Timer = 14000;
-            }else Sleep_Timer -= diff;
-
-            //NoxiousBreath_Timer
-            if (NoxiousBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
-
-                //20 seconds until we should cast this agian
-                NoxiousBreath_Timer = 14000 + rand()%6000;
-            }else NoxiousBreath_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
 
 
-            //Tailsweep every 2 seconds
-            if (TailSweep_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                //Only cast if we are behind
-                if (!m_creature->HasInArc( M_PI, target))
-                    DoCast(target,SPELL_TAILSWEEP);
-                    TailSweep_Timer = 2000;
-            }else TailSweep_Timer -= diff;
-            
-
-            //             //MarkOfNature_Timer
-            //            if (MarkOfNature_Timer < diff)
-            //             {
-            //                 //Cast
-            //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
-            // 
-            //                 //45 seconds until we should cast this agian
-            //                 MarkOfNature_Timer = 45000;
-            //             }else MarkOfNature_Timer -= diff;
-
-            //VolatileInfection_Timer
-            if (VolatileInfection_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_VOLATILEINFECTION);
-
-                //8 seconds until we should cast this agian
-                VolatileInfection_Timer = 7000 + rand()%5000;
-            }else VolatileInfection_Timer -= diff;
-
-
-            //CorruptionofEarth_Timer
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
-            {
-                if (CorruptionofEarth1_Timer < diff)
-                {
-                    //Cast
-                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
-
-
-                    //1 minutes for next one. Means not again with this health value
-                    CorruptionofEarth1_Timer = 60000;
-                } else CorruptionofEarth1_Timer -= diff;
-            }
-
-            //CorruptionofEarth_Timer
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
-            {
-                if (CorruptionofEarth2_Timer < diff)
-                {
-                    //Cast
-                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
-
-                    //1 minutes for next one. Means not again with this health value
-                    CorruptionofEarth2_Timer = 60000;
-                } else CorruptionofEarth2_Timer -= diff;
-            }
-
-            //CorruptionofEarth_Timer
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
-            {
-                if (CorruptionofEarth3_Timer < diff)
-                {
-                    //Cast
-                   DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
-
-                    //1 minutes for next one. Means not again with this health value
-                    CorruptionofEarth3_Timer = 60000;
-                } else CorruptionofEarth3_Timer -= diff;
-            }
+                //1 minutes for next one. Means not again with this health value
+                CorruptionofEarth1_Timer = 60000;
+            } else CorruptionofEarth1_Timer -= diff;
         }
+
+        //CorruptionofEarth_Timer
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        {
+            if (CorruptionofEarth2_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
+
+                //1 minutes for next one. Means not again with this health value
+                CorruptionofEarth2_Timer = 60000;
+            } else CorruptionofEarth2_Timer -= diff;
+        }
+
+        //CorruptionofEarth_Timer
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        {
+            if (CorruptionofEarth3_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_CORRUPTIONOFEARTH);  
+
+                //1 minutes for next one. Means not again with this health value
+                CorruptionofEarth3_Timer = 60000;
+            } else CorruptionofEarth3_Timer -= diff;
+        }
+
         DoMeleeAttackIfReady();
     }
 }; 

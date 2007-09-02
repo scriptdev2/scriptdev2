@@ -76,35 +76,30 @@ struct MANGOS_DLL_DECL boss_baelgarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MagmaSplash_Timer
+        if (MagmaSplash_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MAGMASPLASH);
 
-            //MagmaSplash_Timer
-            if (MagmaSplash_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MAGMASPLASH);
+            //8 seconds cause its a proc
+            MagmaSplash_Timer = 8000;
+        }else MagmaSplash_Timer -= diff;
 
-                //8 seconds cause its a proc
-                MagmaSplash_Timer = 8000;
-            }else MagmaSplash_Timer -= diff;
+        //SpawnOfBaelgar_Timer
+        if (SpawnOfBaelgar_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SPAWNSOFBAELGAR);
 
-            //SpawnOfBaelgar_Timer
-            if (SpawnOfBaelgar_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SPAWNSOFBAELGAR);
+            //25 seconds until we should cast this agian
+            SpawnOfBaelgar_Timer = 25000;
+        }else SpawnOfBaelgar_Timer -= diff;
 
-                //25 seconds until we should cast this agian
-                SpawnOfBaelgar_Timer = 25000;
-            }else SpawnOfBaelgar_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_baelgar(Creature *_Creature)

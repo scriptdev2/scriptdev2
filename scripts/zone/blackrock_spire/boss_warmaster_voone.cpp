@@ -91,87 +91,83 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Snapkick_Timer
+        if (Snapkick_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SNAPKICK);
+
+
+            //6 seconds
+            Snapkick_Timer = 6000;
+        }else Snapkick_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //12 seconds until we should cast this agian
+            Cleave_Timer = 12000;
+        }else Cleave_Timer -= diff;
+
+        //Uppercut_Timer
+        if (Uppercut_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+
+            //20 seconds until we should cast this agian
+            Uppercut_Timer = 14000;
+        }else Uppercut_Timer -= diff;
+
+        //MortalStrike_Timer
+        if (MortalStrike_Timer < diff)
         {
 
-            //Snapkick_Timer
-            if (Snapkick_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SNAPKICK);
+            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
 
+            //8 seconds until we should cast this agian
+            MortalStrike_Timer = 10000;
+        }else MortalStrike_Timer -= diff;
 
-                //6 seconds
-                Snapkick_Timer = 6000;
-            }else Snapkick_Timer -= diff;
+        //Pummel_Timer
+        if (Pummel_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_PUMMEL);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //30 seconds until we should cast this agian
+            Pummel_Timer = 16000;
+        }else Pummel_Timer -= diff;
 
-                //12 seconds until we should cast this agian
-                Cleave_Timer = 12000;
-            }else Cleave_Timer -= diff;
+        //ThrowAxe_Timer
+        if (ThrowAxe_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_THROWAXE);
 
-            //Uppercut_Timer
-            if (Uppercut_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+            //30 seconds until we should cast this agian
+            ThrowAxe_Timer = 8000;
+        }else ThrowAxe_Timer -= diff;
 
-                //20 seconds until we should cast this agian
-                Uppercut_Timer = 14000;
-            }else Uppercut_Timer -= diff;
+        //Dazed_Timer
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-            //MortalStrike_Timer
-            if (MortalStrike_Timer < diff)
-            {
+            //24 seconds until we should cast this agian
+            Dazed_Timer = 24000;
+        }else Dazed_Timer -= diff;
 
-                DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-
-                //8 seconds until we should cast this agian
-                MortalStrike_Timer = 10000;
-            }else MortalStrike_Timer -= diff;
-
-            //Pummel_Timer
-            if (Pummel_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PUMMEL);
-
-                //30 seconds until we should cast this agian
-                Pummel_Timer = 16000;
-            }else Pummel_Timer -= diff;
-
-            //ThrowAxe_Timer
-            if (ThrowAxe_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THROWAXE);
-
-                //30 seconds until we should cast this agian
-                ThrowAxe_Timer = 8000;
-            }else ThrowAxe_Timer -= diff;
-
-            //Dazed_Timer
-            if (Dazed_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DAZED);
-
-                //24 seconds until we should cast this agian
-                Dazed_Timer = 24000;
-            }else Dazed_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_warmastervoone(Creature *_Creature)
 {

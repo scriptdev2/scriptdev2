@@ -78,47 +78,43 @@ struct MANGOS_DLL_DECL boss_teremusthedevourerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FlameBreath_Timer
+        if (FlameBreath_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
 
-            //FlameBreath_Timer
-            if (FlameBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
+            //10 seconds
+            FlameBreath_Timer = 10000;
+        }else FlameBreath_Timer -= diff;
 
-                //10 seconds
-                FlameBreath_Timer = 10000;
-            }else FlameBreath_Timer -= diff;
+        //SoulConsumption_Timer
+        if (SoulConsumption_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SOULCONSUMPTION);
 
-            //SoulConsumption_Timer
-            if (SoulConsumption_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SOULCONSUMPTION);
-
-                //18 seconds until we should cast this agian
-                SoulConsumption_Timer = 18000;
-            }else SoulConsumption_Timer -= diff;
+            //18 seconds until we should cast this agian
+            SoulConsumption_Timer = 18000;
+        }else SoulConsumption_Timer -= diff;
 
 
-            //ResistAll_Timer
-            if (ResistAll_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_RESISTALL);
+        //ResistAll_Timer
+        if (ResistAll_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_RESISTALL);
 
-                //45 seconds until we should cast this agian
-                ResistAll_Timer = 45000;
-            }else ResistAll_Timer -= diff;
+            //45 seconds until we should cast this agian
+            ResistAll_Timer = 45000;
+        }else ResistAll_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_teremusthedevourer(Creature *_Creature)
 {

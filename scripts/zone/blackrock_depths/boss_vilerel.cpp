@@ -25,9 +25,9 @@
 #define SPELL_SHIELD                10901
 
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 {
     boss_vilerelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -90,55 +90,50 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MindBlast_Timer
+        if (MindBlast_Timer < diff)
         {
-            
-            //MindBlast_Timer
-            if (MindBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
 
-                //7 seconds
-               MindBlast_Timer = 7000;
-            }else MindBlast_Timer -= diff;
+            //7 seconds
+            MindBlast_Timer = 7000;
+        }else MindBlast_Timer -= diff;
 
-            //Heal_Timer
-            if (Heal_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_HEAL);
+        //Heal_Timer
+        if (Heal_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_HEAL);
 
-                //20 seconds
-               Heal_Timer = 20000;
-            }else Heal_Timer -= diff;
+            //20 seconds
+            Heal_Timer = 20000;
+        }else Heal_Timer -= diff;
 
-            //PrayerOfHealing_Timer
-            if (PrayerOfHealing_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_PRAYEROFHEALING);
+        //PrayerOfHealing_Timer
+        if (PrayerOfHealing_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_PRAYEROFHEALING);
 
-                //30 seconds
-               PrayerOfHealing_Timer = 30000;
-            }else PrayerOfHealing_Timer -= diff;
+            //30 seconds
+            PrayerOfHealing_Timer = 30000;
+        }else PrayerOfHealing_Timer -= diff;
 
-            //Shield_Timer
-            if (Shield_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_SHIELD);
+        //Shield_Timer
+        if (Shield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_SHIELD);
 
-                //30 seconds
-               Shield_Timer = 30000;
-            }else Shield_Timer -= diff;
+            //30 seconds
+            Shield_Timer = 30000;
+        }else Shield_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_vilerel(Creature *_Creature)

@@ -193,96 +193,92 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                 }
             }else SpeachTimer -= diff;
 
-        
+
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        // Yell if hp lower than 15%
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15 && !HasYelled)
         {
-            
-            // Yell if hp lower than 15%
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15 && !HasYelled)
-            {
-                //Say our dialog
-                DoYell(SAY_HALFLIFE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_HALFLIFE);
-                HasYelled = true;
-            }
-            
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //25 seconds until we should cast this again
-                Cleave_Timer = 15000;
-            }else Cleave_Timer -= diff;
-
-            //FlameBreath_Timer
-            if (FlameBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
-
-                //25 seconds until we should cast this again
-                FlameBreath_Timer = 25000;
-            }else FlameBreath_Timer -= diff;
-            
-            //BurningAdrenalineCaster_Timer (NOT YET IMPLEMENTED due to the fact that we can't randomly select a target yet)
-            if (BurningAdrenalineCaster_Timer < diff)
-            {
-                //Cast
-                //DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
-                    DoCast(target,SPELL_BURNINGADRENALINE);
-
-                //15 seconds until we should cast this agian
-                BurningAdrenalineCaster_Timer = 15000;
-            }else BurningAdrenalineCaster_Timer -= diff;
-
-            //BurningAdrenalineTank_Timer
-            if (BurningAdrenalineTank_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
-
-                //45 seconds until we should cast this agian
-                BurningAdrenalineTank_Timer = 45000;
-            }else BurningAdrenalineTank_Timer -= diff;
-            
-            //FireNova_Timer
-            if (FireNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
-
-                //5 seconds until we should cast this again
-                FireNova_Timer = 5000;
-            }else FireNova_Timer -= diff;
-            
-            //TailSwipe_Timer
-            if (TailSwipe_Timer < diff)
-            {
-                //Only cast if we are behind
-                /*if (!m_creature->HasInArc( M_PI, m_creature->getVictim()))
-                {
-                    DoCast(m_creature->getVictim(),SPELL_TAILSWIPE);
-                }*/
-
-                //20 seconds until we should cast this again
-                TailSwipe_Timer = 20000;
-            }else TailSwipe_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            //Say our dialog
+            DoYell(SAY_HALFLIFE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_HALFLIFE);
+            HasYelled = true;
         }
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //25 seconds until we should cast this again
+            Cleave_Timer = 15000;
+        }else Cleave_Timer -= diff;
+
+        //FlameBreath_Timer
+        if (FlameBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
+
+            //25 seconds until we should cast this again
+            FlameBreath_Timer = 25000;
+        }else FlameBreath_Timer -= diff;
+
+        //BurningAdrenalineCaster_Timer (NOT YET IMPLEMENTED due to the fact that we can't randomly select a target yet)
+        if (BurningAdrenalineCaster_Timer < diff)
+        {
+            //Cast
+            //DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
+                DoCast(target,SPELL_BURNINGADRENALINE);
+
+            //15 seconds until we should cast this agian
+            BurningAdrenalineCaster_Timer = 15000;
+        }else BurningAdrenalineCaster_Timer -= diff;
+
+        //BurningAdrenalineTank_Timer
+        if (BurningAdrenalineTank_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
+
+            //45 seconds until we should cast this agian
+            BurningAdrenalineTank_Timer = 45000;
+        }else BurningAdrenalineTank_Timer -= diff;
+
+        //FireNova_Timer
+        if (FireNova_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+
+            //5 seconds until we should cast this again
+            FireNova_Timer = 5000;
+        }else FireNova_Timer -= diff;
+
+        //TailSwipe_Timer
+        if (TailSwipe_Timer < diff)
+        {
+            //Only cast if we are behind
+            /*if (!m_creature->HasInArc( M_PI, m_creature->getVictim()))
+            {
+            DoCast(m_creature->getVictim(),SPELL_TAILSWIPE);
+            }*/
+
+            //20 seconds until we should cast this again
+            TailSwipe_Timer = 20000;
+        }else TailSwipe_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 };
 
 void SendDefaultMenu_boss_vael(Player *player, Creature *_Creature, uint32 action)

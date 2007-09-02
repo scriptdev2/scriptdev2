@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     bool HasAdd;
 
     int RandTime(int time) {return ((rand()%time)*1000);}
-    
+
     void EnterEvadeMode()
     {
         Shadow_Timer = 10000;
@@ -90,77 +90,77 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if (m_creature->getVictim() && m_creature->isAlive())
+        if (Shadow_Timer < diff)
         {
-            if (Shadow_Timer < diff)
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_SHADOW_BOLT_VOLLEY);
-                }
-                else
-                {
-                    DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
-                }
-                Shadow_Timer = RandTime(30);
-            }else Shadow_Timer -= diff;
-
-//          Don't know how else i can select friendly creature... don't work...
-/*
-            if (Dark_Timer < diff)
+                DoFaceTarget(target);
+                DoCast(target,SPELL_SHADOW_BOLT_VOLLEY);
+            }
+            else
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_SINGLE_FRIEND, 0);
+                DoFaceTarget(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
+            }
+            Shadow_Timer = RandTime(30);
+        }else Shadow_Timer -= diff;
 
-                if (target && (target->GetMaxHealth() > target->GetHealth()))
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_DARK_MENDING);
-                }
-                Dark_Timer = RandTime(60);
-            }else Dark_Timer -= diff;
-*/
-            if (Fear_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        //          Don't know how else i can select friendly creature... don't work...
+        /*
+        if (Dark_Timer < diff)
+        {
+        Unit* target = NULL;
+        target = SelectUnit(SELECT_TARGET_SINGLE_FRIEND, 0);
 
-                if (target)
-                {
-                    DoFaceTarget(target);
-                    DoCast(target,SPELL_FEAR);
-                }
-                else
-                {
-                    DoFaceTarget(m_creature->getVictim());
-                    DoCast(m_creature->getVictim(),SPELL_FEAR);
-                }
-                Fear_Timer = RandTime(50);
-            }else Fear_Timer -= diff;
-
-            if (!HasAdd && Spawn_Timer < diff)
-            {
-                float A = m_creature->GetAngle(m_creature);
-                Creature* Infernal = m_creature->SummonCreature(ADD, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
-                Infernal->setFaction(m_creature->getFaction());
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                Infernal->AI()->AttackStart(target);
-
-                HasAdd = true;
-            }else Spawn_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+        if (target && (target->GetMaxHealth() > target->GetHealth()))
+        {
+        DoFaceTarget(target);
+        DoCast(target,SPELL_DARK_MENDING);
         }
+        Dark_Timer = RandTime(60);
+        }else Dark_Timer -= diff;
+        */
+        if (Fear_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
+            {
+                DoFaceTarget(target);
+                DoCast(target,SPELL_FEAR);
+            }
+            else
+            {
+                DoFaceTarget(m_creature->getVictim());
+                DoCast(m_creature->getVictim(),SPELL_FEAR);
+            }
+            Fear_Timer = RandTime(50);
+        }else Fear_Timer -= diff;
+
+        if (!HasAdd && Spawn_Timer < diff)
+        {
+            float A = m_creature->GetAngle(m_creature);
+            Creature* Infernal = m_creature->SummonCreature(ADD, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+            Infernal->setFaction(m_creature->getFaction());
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Infernal->AI()->AttackStart(target);
+
+            HasAdd = true;
+        }else Spawn_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 };
 
 CreatureAI* GetAI_mob_hellfire_channeler(Creature *_Creature)

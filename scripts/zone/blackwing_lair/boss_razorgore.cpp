@@ -91,56 +91,52 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
         {
-            
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //15 seconds until we should cast this agian
-                Cleave_Timer = 15000;
-            }else Cleave_Timer -= diff;
+            //15 seconds until we should cast this agian
+            Cleave_Timer = 15000;
+        }else Cleave_Timer -= diff;
 
-            //WarStomp_Timer
-            if (WarStomp_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+        //WarStomp_Timer
+        if (WarStomp_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
-                //35 seconds until we should cast this agian
-                WarStomp_Timer = 35000;
-            }else WarStomp_Timer -= diff;
-            
-            //FireballVolley_Timer
-            if (FireballVolley_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
+            //35 seconds until we should cast this agian
+            WarStomp_Timer = 35000;
+        }else WarStomp_Timer -= diff;
 
-                //20 seconds until we should cast this agian
-                FireballVolley_Timer = 20000;
-            }else FireballVolley_Timer -= diff;
-            
-                        //Conflagration_Timer
-            if (Conflagration_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
+        //FireballVolley_Timer
+        if (FireballVolley_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
 
-                //30 seconds until we should cast this agian
-                Conflagration_Timer = 30000;
-            }else Conflagration_Timer -= diff;
+            //20 seconds until we should cast this agian
+            FireballVolley_Timer = 20000;
+        }else FireballVolley_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        //Conflagration_Timer
+        if (Conflagration_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
+
+            //30 seconds until we should cast this agian
+            Conflagration_Timer = 30000;
+        }else Conflagration_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 };
 CreatureAI* GetAI_boss_razorgore(Creature *_Creature)
 {

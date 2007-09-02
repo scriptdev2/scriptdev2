@@ -1048,15 +1048,8 @@ void ScriptedAI::AttackStart(Unit* who)
 void ScriptedAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a current target
-    if( m_creature->isAlive() && m_creature->SelectHostilTarget())
+    if( m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
     {
-        //Check if we should stop attacking because our victim is no longer in range
-        if (CheckTether())
-        {
-            EnterEvadeMode();
-            return;
-        }
-            
         //If we are within range melee the target
         if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
@@ -1174,14 +1167,6 @@ void ScriptedAI::DoGoHome()
         if( (*m_creature)->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE )
             (*m_creature)->TargetedHome();
     }
-}
-
-bool ScriptedAI::needToStop() const
-{
-    if (!m_creature->getVictim() || !m_creature->isAlive())
-        return true;
-
-    return false;
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)
@@ -1356,15 +1341,6 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
         return false;
 
     return true;
-}
-
-bool ScriptedAI::CheckTether()
-{
-    float rx,ry,rz;
-    m_creature->GetRespawnCoord(rx, ry, rz);
-    float spawndist = m_creature->GetDistanceSq(rx,ry,rz);
-    //float length = m_creature->GetDistanceSq(m_creature->getVictim());
-    return ( spawndist > CREATURE_THREAT_RADIUS );
 }
 
 void FillSpellSummary()

@@ -15,7 +15,7 @@ struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
     void EnterEvadeMode()
     {
         Firebolt_Timer = 0;      
-        
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -59,17 +59,15 @@ struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
+        //Chain cast
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->m_silenced)
+            DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
+        else DoMeleeAttackIfReady();
 
-            //Chain cast
-            if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->m_silenced)
-                DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
-            else DoMeleeAttackIfReady();
-
-        }
     }
 };
 

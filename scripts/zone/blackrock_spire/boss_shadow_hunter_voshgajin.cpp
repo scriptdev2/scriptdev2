@@ -79,49 +79,45 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //CurseOfBlood_Timer
+        if (CurseOfBlood_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
 
-            //CurseOfBlood_Timer
-            if (CurseOfBlood_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+            //45 seconds
+            CurseOfBlood_Timer = 45000;
+        }else CurseOfBlood_Timer -= diff;
 
-                //45 seconds
-                CurseOfBlood_Timer = 45000;
-            }else CurseOfBlood_Timer -= diff;
+        //Hex_Timer
+        if (Hex_Timer < diff)
+        {
+            //Cast HEX on a Random target
+            Unit* target = NULL;
 
-            //Hex_Timer
-            if (Hex_Timer < diff)
-            {
-                //Cast HEX on a Random target
-                Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_HEX);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_HEX);
+            //15 seconds until we should cast this agian
+            Hex_Timer = 15000;
+        }else Hex_Timer -= diff;
 
-                //15 seconds until we should cast this agian
-                Hex_Timer = 15000;
-            }else Hex_Timer -= diff;
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //7 seconds until we should cast this agian
+            Cleave_Timer = 7000;
+        }else Cleave_Timer -= diff;
 
-                //7 seconds until we should cast this agian
-                Cleave_Timer = 7000;
-            }else Cleave_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_shadowvosh(Creature *_Creature)
 {

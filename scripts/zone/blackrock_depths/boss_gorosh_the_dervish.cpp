@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_WHIRLWIND                15589
 #define SPELL_MORTALSTRIKE            24573
 
@@ -77,36 +77,32 @@ struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //WhirlWind_Timer
+        if (WhirlWind_Timer < diff)
         {
-            
-            //WhirlWind_Timer
-            if (WhirlWind_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_WHIRLWIND);
+            //Cast
+            DoCast(m_creature,SPELL_WHIRLWIND);
 
-                //15 seconds
-                WhirlWind_Timer = 15000;
-            }else WhirlWind_Timer -= diff;
+            //15 seconds
+            WhirlWind_Timer = 15000;
+        }else WhirlWind_Timer -= diff;
 
 
-            //MortalStrike_Timer
-            if (MortalStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+        //MortalStrike_Timer
+        if (MortalStrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
 
-                //15 seconds until we should cast this agian
-                MortalStrike_Timer = 15000;
-            }else MortalStrike_Timer -= diff;
+            //15 seconds until we should cast this agian
+            MortalStrike_Timer = 15000;
+        }else MortalStrike_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_gorosh_the_dervish(Creature *_Creature)

@@ -87,36 +87,32 @@ struct MANGOS_DLL_DECL boss_tinkerergizlockAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //GoblinGun_Timer
+        if (GoblinGun_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GOBLINGUN);
 
-            //GoblinGun_Timer
-            if (GoblinGun_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_GOBLINGUN);
+            //15 seconds
+            GoblinGun_Timer = 16000;
+        }else GoblinGun_Timer -= diff;
 
-                //15 seconds
-                GoblinGun_Timer = 16000;
-            }else GoblinGun_Timer -= diff;
+        //Bomb_Timer
+        if (Bomb_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BOMB);
 
-            //Bomb_Timer
-            if (Bomb_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BOMB);
+            //17 seconds until we should cast this agian
+            Bomb_Timer = 14000;
+        }else Bomb_Timer -= diff;
 
-                //17 seconds until we should cast this agian
-                Bomb_Timer = 14000;
-            }else Bomb_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_tinkerergizlock(Creature *_Creature)
 {

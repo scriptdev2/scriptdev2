@@ -18,12 +18,12 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_FIRENOVA                11307             
 #define SPELL_FIREBLAST                10199
-     
 
-      
+
+
 struct MANGOS_DLL_DECL overmaster_pyronAI : public ScriptedAI
 {
     overmaster_pyronAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL overmaster_pyronAI : public ScriptedAI
     void EnterEvadeMode()
     {       
         FireNova_Timer = 15000;
-	FireBlast_Timer = 8000;
+        FireBlast_Timer = 8000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -80,36 +80,32 @@ struct MANGOS_DLL_DECL overmaster_pyronAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireNova_Timer
+        if (FireNova_Timer < diff)
         {
-            
-            //FireNova_Timer
-            if (FireNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
-                //10 seconds
-               FireNova_Timer = 10000;
-            }else FireNova_Timer -= diff;
+            //10 seconds
+            FireNova_Timer = 10000;
+        }else FireNova_Timer -= diff;
 
-            //FireBlast_Timer
-            if (FireBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREBLAST);
+        //FireBlast_Timer
+        if (FireBlast_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREBLAST);
 
-                //12 seconds
-               FireBlast_Timer = 12000;
-            }else FireBlast_Timer -= diff;
+            //12 seconds
+            FireBlast_Timer = 12000;
+        }else FireBlast_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_overmaster_pyron(Creature *_Creature)
 {

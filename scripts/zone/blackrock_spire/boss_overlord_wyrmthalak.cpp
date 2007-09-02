@@ -94,73 +94,69 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //BlastWave_Timer
+        if (BlastWave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+
+            //20 seconds
+            BlastWave_Timer = 20000;
+        }else BlastWave_Timer -= diff;
+
+        //Shout_Timer
+        if (Shout_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHOUT);
+
+            //10 seconds until we should cast this agian
+            Shout_Timer = 10000;
+        }else Shout_Timer -= diff;
+
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
         {
 
-            //BlastWave_Timer
-            if (BlastWave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //20 seconds
-                BlastWave_Timer = 20000;
-            }else BlastWave_Timer -= diff;
+            //7 seconds until we should cast this agian
+            Cleave_Timer = 7000;
+        }else Cleave_Timer -= diff;
 
-            //Shout_Timer
-            if (Shout_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHOUT);
+        //Knockaway_Timer
+        if (Knockaway_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
 
-                //10 seconds until we should cast this agian
-                Shout_Timer = 10000;
-            }else Shout_Timer -= diff;
+            //14 seconds until we should cast this agian
+            Knockaway_Timer = 14000;
+        }else Knockaway_Timer -= diff;
 
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
+        //Summon two Beserks
+        if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
 
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                //7 seconds until we should cast this agian
-                Cleave_Timer = 7000;
-            }else Cleave_Timer -= diff;
-
-            //Knockaway_Timer
-            if (Knockaway_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
-
-                //14 seconds until we should cast this agian
-                Knockaway_Timer = 14000;
-            }else Knockaway_Timer -= diff;
-
-
-            //Summon two Beserks
-            if ( !Summoned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
-            {
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                //Cast
-                SummonedCreature = m_creature->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
-                ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
-                SummonedCreature = m_creature->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
-                ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
-                Summoned = true; 
-            }
-
-            DoMeleeAttackIfReady();
+            //Cast
+            SummonedCreature = m_creature->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+            ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
+            SummonedCreature = m_creature->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000);
+            ((CreatureAI*)SummonedCreature->AI())->AttackStart(target);
+            Summoned = true; 
         }
+
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_overlordwyrmthalak(Creature *_Creature)
 {

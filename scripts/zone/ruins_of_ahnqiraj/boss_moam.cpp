@@ -89,65 +89,54 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are 100%MANA cast Arcane Erruption
+        //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                EnterEvadeMode();
-                return;
-            }
-
-			//If we are 100%MANA cast Arcane Erruption
-            //if (j==1 && m_creature->GetMana()*100 / m_creature->GetMaxMana() == 100 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-				DoCast(m_creature->getVictim(),SPELL_ARCANEERUPTION);
-				DoYell(SAY_MANA,LANG_UNIVERSAL,NULL);
-            }
-
-            //If we are <50%HP cast MANA FIEND (Summon Mana) and Sleep
-            //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-				i=1;
-			DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
-			DoCast(m_creature->getVictim(),SPELL_GRDRSLEEP);
-            }
-
-             //SUMMONMANA_Timer
-            if (i==1 && SUMMONMANA_Timer < diff)
-            {
-                //Cast
-				DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
-				                //90 seconds until we should cast this agian
-                SUMMONMANA_Timer = 90000;
-            }else SUMMONMANA_Timer -= diff;
-
-            //TRAMPLE_Timer
-            if (TRAMPLE_Timer < diff)
-            {
-                //Cast
-				DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
-				j=1;
-                //30 seconds until we should cast this agian
-                TRAMPLE_Timer = 30000;
-            }else TRAMPLE_Timer -= diff;
-
-            //DRAINMANA_Timer
-            if (DRAINMANA_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DRAINMANA);
-
-                //30 seconds until we should cast this agian
-                DRAINMANA_Timer = 30000;
-            }else DRAINMANA_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            DoCast(m_creature->getVictim(),SPELL_ARCANEERUPTION);
+            DoYell(SAY_MANA,LANG_UNIVERSAL,NULL);
         }
+
+        //If we are <50%HP cast MANA FIEND (Summon Mana) and Sleep
+        //if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+        {
+            i=1;
+            DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
+            DoCast(m_creature->getVictim(),SPELL_GRDRSLEEP);
+        }
+
+        //SUMMONMANA_Timer
+        if (i==1 && SUMMONMANA_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUMMONMANA);
+            //90 seconds until we should cast this agian
+            SUMMONMANA_Timer = 90000;
+        }else SUMMONMANA_Timer -= diff;
+
+        //TRAMPLE_Timer
+        if (TRAMPLE_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
+            j=1;
+            //30 seconds until we should cast this agian
+            TRAMPLE_Timer = 30000;
+        }else TRAMPLE_Timer -= diff;
+
+        //DRAINMANA_Timer
+        if (DRAINMANA_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DRAINMANA);
+
+            //30 seconds until we should cast this agian
+            DRAINMANA_Timer = 30000;
+        }else DRAINMANA_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_moam(Creature *_Creature)

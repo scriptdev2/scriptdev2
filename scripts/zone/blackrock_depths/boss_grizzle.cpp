@@ -18,12 +18,12 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_GROUNDTREMOR                6524            
 #define SPELL_FRENZY                28371
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
 {
     boss_grizzleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -80,38 +80,33 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //GroundTremor_Timer
+        if (GroundTremor_Timer < diff)
         {
-            
-            //GroundTremor_Timer
-            if (GroundTremor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_GROUNDTREMOR);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GROUNDTREMOR);
 
-                //8 seconds
-               GroundTremor_Timer = 8000;
-            }else GroundTremor_Timer -= diff;
+            //8 seconds
+            GroundTremor_Timer = 8000;
+        }else GroundTremor_Timer -= diff;
 
-            //Frenzy_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        //Frenzy_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
+            if (Frenzy_Timer < diff)
             {
-		if (Frenzy_Timer < diff)
-	        {
                 DoCast(m_creature,SPELL_FRENZY);
                 DoTextEmote("goes into a killing frenzy!",NULL);
 
                 //15 seconds
                 Frenzy_Timer = 15000;
-                }else Frenzy_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+            }else Frenzy_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_grizzle(Creature *_Creature)

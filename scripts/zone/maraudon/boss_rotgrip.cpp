@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 #define SPELL_PUNCTURE             21911   
-           
+
 struct MANGOS_DLL_DECL boss_rotgripAI : public ScriptedAI
 {
     boss_rotgripAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -73,26 +73,22 @@ struct MANGOS_DLL_DECL boss_rotgripAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Puncture_Timer
+        if (Puncture_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_PUNCTURE);
 
-            //Puncture_Timer
-            if (Puncture_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PUNCTURE);
+            //12 seconds
+            Puncture_Timer = 12000;
+        }else Puncture_Timer -= diff;
 
-                //12 seconds
-                Puncture_Timer = 12000;
-            }else Puncture_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_rotgrip(Creature *_Creature)
 {

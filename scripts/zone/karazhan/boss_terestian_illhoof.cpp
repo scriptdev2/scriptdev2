@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
         SpawnKilrek_Timer       = 0;
         SpawnHomunculus_Timer   = 10000;
         ShadowBolt_Timer        = 20000;
-        
+
         InCombat = false;
         FirstSpawn = true;
 
@@ -64,14 +64,14 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
 
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_DIED1,LANG_UNIVERSAL,Victim);
-                DoPlaySoundToSet(m_creature, SOUND_DIED1);
-                break;
-            case 1:
-                DoYell(SAY_DIED2,LANG_UNIVERSAL,Victim);
-                DoPlaySoundToSet(m_creature, SOUND_DIED2);
-                break;
+        case 0:
+            DoYell(SAY_DIED1,LANG_UNIVERSAL,Victim);
+            DoPlaySoundToSet(m_creature, SOUND_DIED1);
+            break;
+        case 1:
+            DoYell(SAY_DIED2,LANG_UNIVERSAL,Victim);
+            DoPlaySoundToSet(m_creature, SOUND_DIED2);
+            break;
         }
     }
 
@@ -122,94 +122,92 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if (SpawnKilrek_Timer < diff)
         {
- 
-            if (SpawnKilrek_Timer < diff)
-            {
-                float A = m_creature->GetAngle(m_creature);
-                Creature* Kilrek = m_creature->SummonCreature(17229, m_creature->GetPositionX(), m_creature->GetPositionY()+10, m_creature->GetPositionZ(), A, TEMPSUMMON_CORPSE_DESPAWN, 10000);
-                Kilrek->setFaction(m_creature->getFaction());
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            float A = m_creature->GetAngle(m_creature);
+            Creature* Kilrek = m_creature->SummonCreature(17229, m_creature->GetPositionX(), m_creature->GetPositionY()+10, m_creature->GetPositionZ(), A, TEMPSUMMON_CORPSE_DESPAWN, 10000);
+            Kilrek->setFaction(m_creature->getFaction());
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-                if (target)
-                    Kilrek->AI()->AttackStart(target);
-                else Kilrek->AI()->AttackStart(m_creature->getVictim());
+            if (target)
+                Kilrek->AI()->AttackStart(target);
+            else Kilrek->AI()->AttackStart(m_creature->getVictim());
 
-                SpawnKilrek_Timer = 20000;
-            }
-
-            if (SpawnHomunculus_Timer < diff)
-            {
-                if (FirstSpawn)
-                {
-                    DoYell(SAY_SPAWN1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPAWN1);
-                }                
-                float A = m_creature->GetAngle(m_creature);
-                Creature* Homunculus = m_creature->SummonCreature(16539, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                Homunculus->setFaction(m_creature->getFaction());
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-                if (target)
-                    Homunculus->AI()->AttackStart(target);
-                else Homunculus->AI()->AttackStart(m_creature->getVictim());
-
-                if (FirstSpawn)
-                {
-                    DoYell(SAY_SPAWN2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPAWN2);
-                    FirstSpawn = false;
-                }
-                SpawnHomunculus_Timer = 6000;
-            }else SpawnHomunculus_Timer -= diff;
-
-            if (ShadowBolt_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT);
-                ShadowBolt_Timer = 10000;
-            }else ShadowBolt_Timer -= diff;
-            
-            if (SummonChains_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
-                {
-
-                    //TODO: Summon chains creature
-                    DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,target);
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
-                    DoCast(target,SPELL_SUMMON_DEMONCHAINS);
-                    DoCast(target,SPELL_DEMON_CHAINS);
-                    DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,target);
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
-                }
-                else
-                {
-                    DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,m_creature->getVictim());
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
-                    DoCast(m_creature->getVictim(),SPELL_SUMMON_DEMONCHAINS);
-                    DoCast(m_creature->getVictim(),SPELL_DEMON_CHAINS);
-                    DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,m_creature->getVictim());
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
-                }
-                SummonChains_Timer = 50000;
-            }else SummonChains_Timer -= diff;
-            
-            if (Enrage_Timer < diff)
-            { 
-                DoCast(m_creature,SPELL_ENRAGE);
-                Enrage_Timer = 600000; 
-            }else Enrage_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            SpawnKilrek_Timer = 20000;
         }
+
+        if (SpawnHomunculus_Timer < diff)
+        {
+            if (FirstSpawn)
+            {
+                DoYell(SAY_SPAWN1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SPAWN1);
+            }                
+            float A = m_creature->GetAngle(m_creature);
+            Creature* Homunculus = m_creature->SummonCreature(16539, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
+            Homunculus->setFaction(m_creature->getFaction());
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+            if (target)
+                Homunculus->AI()->AttackStart(target);
+            else Homunculus->AI()->AttackStart(m_creature->getVictim());
+
+            if (FirstSpawn)
+            {
+                DoYell(SAY_SPAWN2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SPAWN2);
+                FirstSpawn = false;
+            }
+            SpawnHomunculus_Timer = 6000;
+        }else SpawnHomunculus_Timer -= diff;
+
+        if (ShadowBolt_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT);
+            ShadowBolt_Timer = 10000;
+        }else ShadowBolt_Timer -= diff;
+
+        if (SummonChains_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)
+            {
+
+                //TODO: Summon chains creature
+                DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,target);
+                DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
+                DoCast(target,SPELL_SUMMON_DEMONCHAINS);
+                DoCast(target,SPELL_DEMON_CHAINS);
+                DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,target);
+                DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
+            }
+            else
+            {
+                DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,m_creature->getVictim());
+                DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
+                DoCast(m_creature->getVictim(),SPELL_SUMMON_DEMONCHAINS);
+                DoCast(m_creature->getVictim(),SPELL_DEMON_CHAINS);
+                DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,m_creature->getVictim());
+                DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
+            }
+            SummonChains_Timer = 50000;
+        }else SummonChains_Timer -= diff;
+
+        if (Enrage_Timer < diff)
+        { 
+            DoCast(m_creature,SPELL_ENRAGE);
+            Enrage_Timer = 600000; 
+        }else Enrage_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

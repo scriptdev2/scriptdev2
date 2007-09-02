@@ -18,12 +18,12 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_FIERYBURST                13900             
 #define SPELL_WARSTOMP                24375
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 {
     boss_magmusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -80,37 +80,32 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FieryBurst_Timer
+        if (FieryBurst_Timer < diff)
         {
-            
-            //FieryBurst_Timer
-            if (FieryBurst_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIERYBURST);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIERYBURST);
 
-                //6 seconds
-               FieryBurst_Timer = 6000;
-            }else FieryBurst_Timer -= diff;
+            //6 seconds
+            FieryBurst_Timer = 6000;
+        }else FieryBurst_Timer -= diff;
 
-            //WarStomp_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        //WarStomp_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
+            if (WarStomp_Timer < diff)
             {
-		if (WarStomp_Timer < diff)
-	        {
                 DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
                 //8 seconds
                 WarStomp_Timer = 8000;
-                }else WarStomp_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+            }else WarStomp_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_magmus(Creature *_Creature)

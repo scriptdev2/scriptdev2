@@ -96,44 +96,39 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MindBlast_Timer
+        if (MindBlast_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
 
-            //MindBlast_Timer
-            if (MindBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
+            //14 seconds
+            MindBlast_Timer = 14000;
+        }else MindBlast_Timer -= diff;
 
-                //14 seconds
-                MindBlast_Timer = 14000;
-            }else MindBlast_Timer -= diff;
+        //ShadowWordPain_Timer
+        if (ShadowWordPain_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
 
-            //ShadowWordPain_Timer
-            if (ShadowWordPain_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            //18 seconds
+            ShadowWordPain_Timer = 18000;
+        }else ShadowWordPain_Timer -= diff;
 
-                //18 seconds
-                ShadowWordPain_Timer = 18000;
-            }else ShadowWordPain_Timer -= diff;
+        //Smite_Timer
+        if (Smite_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SMITE);
 
-            //Smite_Timer
-            if (Smite_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SMITE);
+            //10 seconds
+            Smite_Timer = 10000;
+        }else Smite_Timer -= diff;
 
-                //10 seconds
-                Smite_Timer = 10000;
-            }else Smite_Timer -= diff;
-
-        }
     }
 };
 CreatureAI* GetAI_boss_moira_bronzebeard(Creature *_Creature)

@@ -28,7 +28,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
     uint32 WingBuffet_Timer;
     uint32 Frenzy_Timer;
     bool InCombat;
-    
+
     void EnterEvadeMode()
     {
         ShadowFlame_Timer = 45000;      //These times are probably wrong
@@ -78,45 +78,42 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {            
-            //ShadowFlame_Timer
-            if (ShadowFlame_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
+        //ShadowFlame_Timer
+        if (ShadowFlame_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
-                //45 seconds till recast
-                ShadowFlame_Timer = 45000;
-            }else ShadowFlame_Timer -= diff;
+            //45 seconds till recast
+            ShadowFlame_Timer = 45000;
+        }else ShadowFlame_Timer -= diff;
 
-            //WingBuffet_Timer
-            if (WingBuffet_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
+        //WingBuffet_Timer
+        if (WingBuffet_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
 
-                //25 seconds till recast
-                WingBuffet_Timer = 25000;
-            }else WingBuffet_Timer -= diff;
-            
-            //Frenzy_Timer
-            if (Frenzy_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_FRENZY);
+            //25 seconds till recast
+            WingBuffet_Timer = 25000;
+        }else WingBuffet_Timer -= diff;
 
-                //cast this every 10-15 seconds
-                Frenzy_Timer = 10000 + (rand()%5000);
-            }else Frenzy_Timer -= diff;
+        //Frenzy_Timer
+        if (Frenzy_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_FRENZY);
 
-            DoMeleeAttackIfReady();
-        }
+            //cast this every 10-15 seconds
+            Frenzy_Timer = 10000 + (rand()%5000);
+        }else Frenzy_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
+
 };
 CreatureAI* GetAI_boss_flamegor(Creature *_Creature)
 {

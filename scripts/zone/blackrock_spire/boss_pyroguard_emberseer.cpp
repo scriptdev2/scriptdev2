@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);       
-	m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZED, true);
     }
 
     void AttackStart(Unit *who)
@@ -82,49 +82,44 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireNova_Timer
+        if (FireNova_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
-            //FireNova_Timer
-            if (FireNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
-
-                //6 seconds
-                FireNova_Timer = 6000;
-            }else FireNova_Timer -= diff;
+            //6 seconds
+            FireNova_Timer = 6000;
+        }else FireNova_Timer -= diff;
 
 
-            //FlameBuffet_Timer
-            if (FlameBuffet_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
+        //FlameBuffet_Timer
+        if (FlameBuffet_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMEBUFFET);
 
-                //20 seconds until we should cast this agian
-                FlameBuffet_Timer = 14000;
-            }else FlameBuffet_Timer -= diff;
+            //20 seconds until we should cast this agian
+            FlameBuffet_Timer = 14000;
+        }else FlameBuffet_Timer -= diff;
 
-            //PyroBlast_Timer
-            if (PyroBlast_Timer < diff)
-            {
-                //Cast Immolate on a Random target
-                Unit* target = NULL;
+        //PyroBlast_Timer
+        if (PyroBlast_Timer < diff)
+        {
+            //Cast Immolate on a Random target
+            Unit* target = NULL;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_PYROBLAST);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_PYROBLAST);
 
-                //20 seconds until we should cast this agian
-                PyroBlast_Timer = 15000;
-            }else PyroBlast_Timer -= diff;
+            //20 seconds until we should cast this agian
+            PyroBlast_Timer = 15000;
+        }else PyroBlast_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_pyroguard_emberseer(Creature *_Creature)

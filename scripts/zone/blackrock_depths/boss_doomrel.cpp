@@ -111,69 +111,65 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //ShadowVolley_Timer
+        if (ShadowVolley_Timer < diff)
         {
-            
-            //ShadowVolley_Timer
-            if (ShadowVolley_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
 
-                //12 seconds
-               ShadowVolley_Timer = 12000;
-            }else ShadowVolley_Timer -= diff;
+            //12 seconds
+            ShadowVolley_Timer = 12000;
+        }else ShadowVolley_Timer -= diff;
 
-            //Immolate_Timer
-            if (Immolate_Timer < diff)
-            {
-                //Cast Immolate on a Random target
-                Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_IMMOLATE);
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
+        {
+            //Cast Immolate on a Random target
+            Unit* target = NULL;
 
-                //25 seconds
-                Immolate_Timer = 25000;
-            }else Immolate_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_IMMOLATE);
 
-            //CurseOfWeakness_Timer
-            if (CurseOfWeakness_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
+            //25 seconds
+            Immolate_Timer = 25000;
+        }else Immolate_Timer -= diff;
 
-                //45 seconds
-                CurseOfWeakness_Timer = 45000;
-            }else CurseOfWeakness_Timer -= diff;
+        //CurseOfWeakness_Timer
+        if (CurseOfWeakness_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
 
-            //DemonArmor_Timer
-            if (DemonArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_DEMONARMOR);
+            //45 seconds
+            CurseOfWeakness_Timer = 45000;
+        }else CurseOfWeakness_Timer -= diff;
 
-                //5 minutes
-                DemonArmor_Timer = 300000;
-            }else DemonArmor_Timer -= diff;
+        //DemonArmor_Timer
+        if (DemonArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_DEMONARMOR);
+
+            //5 minutes
+            DemonArmor_Timer = 300000;
+        }else DemonArmor_Timer -= diff;
 
 
-            //Summon Voidwalkers
-            if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
-            {
-                //Cast
-                SummonVoidwalkers(m_creature->getVictim());
-                SummonVoidwalkers(m_creature->getVictim());
-                SummonVoidwalkers(m_creature->getVictim());
-                Voidwalkers = true;
-            }
-
-            DoMeleeAttackIfReady();
+        //Summon Voidwalkers
+        if (!Voidwalkers && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
+            //Cast
+            SummonVoidwalkers(m_creature->getVictim());
+            SummonVoidwalkers(m_creature->getVictim());
+            SummonVoidwalkers(m_creature->getVictim());
+            Voidwalkers = true;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_doomrel(Creature *_Creature)

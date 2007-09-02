@@ -86,56 +86,52 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireNova_Timer
+        if (FireNova_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
-            //FireNova_Timer
-            if (FireNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+            //10 seconds
+            FireNova_Timer = 10000;
+        }else FireNova_Timer -= diff;
 
-                //10 seconds
-                FireNova_Timer = 10000;
-            }else FireNova_Timer -= diff;
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //8 seconds until we should cast this agian
+            Cleave_Timer = 8000;
+        }else Cleave_Timer -= diff;
 
-                //8 seconds until we should cast this agian
-                Cleave_Timer = 8000;
-            }else Cleave_Timer -= diff;
+        //Confliguration_Timer
+        if (Confliguration_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CONFLIGURATION);
 
-            //Confliguration_Timer
-            if (Confliguration_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CONFLIGURATION);
+            //18 seconds until we should cast this agian
+            Confliguration_Timer = 18000;
+        }else Confliguration_Timer -= diff;
 
-                //18 seconds until we should cast this agian
-                Confliguration_Timer = 18000;
-            }else Confliguration_Timer -= diff;
+        //Thunderclap_Timer
+        if (Thunderclap_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
 
-            //Thunderclap_Timer
-            if (Thunderclap_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            //22 seconds until we should cast this agian
+            Thunderclap_Timer = 20000;
+        }else Thunderclap_Timer -= diff;
 
-                //22 seconds until we should cast this agian
-                Thunderclap_Timer = 20000;
-            }else Thunderclap_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_drakkisath(Creature *_Creature)
 {

@@ -86,7 +86,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
         //Check if we have a current target

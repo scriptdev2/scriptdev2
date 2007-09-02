@@ -69,36 +69,25 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If he is 20% enrage
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                EnterEvadeMode();
-                return;
-            }
-
-            //If he is 20% enrage
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-                DoCast(m_creature->getVictim(),SPELL_ENRAGE);     
-            }
-
-
-
-            //WHIRLWIND_Timer (only in phase2)
-            if (WHIRLWIND_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
-                WHIRLWIND_Timer = 30000;
-            }else WHIRLWIND_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            DoCast(m_creature->getVictim(),SPELL_ENRAGE);     
         }
+
+
+
+        //WHIRLWIND_Timer (only in phase2)
+        if (WHIRLWIND_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
+            WHIRLWIND_Timer = 30000;
+        }else WHIRLWIND_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_sartura(Creature *_Creature)

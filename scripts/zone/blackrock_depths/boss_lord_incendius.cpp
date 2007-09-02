@@ -18,12 +18,12 @@
 
 // **** This script is still under Developement ****
 
-    
+
 #define SPELL_FIRESTORM               13899            
 #define SPELL_MIGHTYBLOW           14099
 #define SPELL_CURSE           26977
 
-      
+
 struct MANGOS_DLL_DECL boss_lord_incendiusAI : public ScriptedAI
 {
     boss_lord_incendiusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -82,45 +82,40 @@ struct MANGOS_DLL_DECL boss_lord_incendiusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireStorm_Timer
+        if (FireStorm_Timer < diff)
         {
-            
-            //FireStorm_Timer
-            if (FireStorm_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRESTORM);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRESTORM);
 
-                //20 seconds 
-               FireStorm_Timer = 18000;
-            }else FireStorm_Timer -= diff;
+            //20 seconds 
+            FireStorm_Timer = 18000;
+        }else FireStorm_Timer -= diff;
 
-            //MightyBlow_Timer
-            if (MightyBlow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+        //MightyBlow_Timer
+        if (MightyBlow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
 
-                //12 seconds until we should cast this agian
-                MightyBlow_Timer = 12000;
-            }else MightyBlow_Timer -= diff;
+            //12 seconds until we should cast this agian
+            MightyBlow_Timer = 12000;
+        }else MightyBlow_Timer -= diff;
 
-            //Curse_Timer
-            if (Curse_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSE);
+        //Curse_Timer
+        if (Curse_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSE);
 
-                //28 seconds until we should cast this agian
-                Curse_Timer = 22000;
-            }else Curse_Timer -= diff;
+            //28 seconds until we should cast this agian
+            Curse_Timer = 22000;
+        }else Curse_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lord_incendius(Creature *_Creature)

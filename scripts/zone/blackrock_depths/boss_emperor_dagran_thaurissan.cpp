@@ -80,60 +80,55 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if (HandOfThaurissan_Timer < diff)
         {
 
-            if (HandOfThaurissan_Timer < diff)
+            //Cast Hand of Thaurissan on a Random target
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_HANDOFTHAURISSAN);
+
+
+            //3 Hands of Thaurissan will be casted
+            if (Counter < 3)
             {
+                HandOfThaurissan_Timer = 1000;
+                Counter++;
+            }
+            else {
 
-                 //Cast Hand of Thaurissan on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_HANDOFTHAURISSAN);
+                //20 seconds until we should cast this again
+                HandOfThaurissan_Timer = 20000;
+                Counter=0;
+            }
 
-                               
-                  //3 Hands of Thaurissan will be casted
-                  if (Counter < 3)
-                  {
-                    HandOfThaurissan_Timer = 1000;
-                    Counter++;
-                  }
-                  else {
-                	
-			//20 seconds until we should cast this again
-                	HandOfThaurissan_Timer = 20000;
-			Counter=0;
-                  }
+        }else HandOfThaurissan_Timer -= diff;
 
-            }else HandOfThaurissan_Timer -= diff;
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //10 seconds until we should cast this agian
+            Cleave_Timer = 14000;
+        }else Cleave_Timer -= diff;
 
-                //10 seconds until we should cast this agian
-                Cleave_Timer = 14000;
-            }else Cleave_Timer -= diff;
+        //MortalStrike_Timer
+        if (MortalStrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
 
-            //MortalStrike_Timer
-            if (MortalStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+            //16 seconds
+            MortalStrike_Timer = 16000;
+        }else MortalStrike_Timer -= diff;
 
-                //16 seconds
-                MortalStrike_Timer = 16000;
-            }else MortalStrike_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_draganthaurissan(Creature *_Creature)

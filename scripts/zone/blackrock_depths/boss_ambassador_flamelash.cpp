@@ -101,38 +101,34 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //FireBlast_Timer
+        if (FireBlast_Timer < diff)
         {
-            
-            //FireBlast_Timer
-            if (FireBlast_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREBLAST);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREBLAST);
 
-                //7 seconds
-               FireBlast_Timer = 7000;
-            }else FireBlast_Timer -= diff;
+            //7 seconds
+            FireBlast_Timer = 7000;
+        }else FireBlast_Timer -= diff;
 
-            //Spirit_Timer
-            if (Spirit_Timer < diff)
-            {
-                //Cast
-                SummonSpirits(m_creature->getVictim());
-                SummonSpirits(m_creature->getVictim());
-                SummonSpirits(m_creature->getVictim());
-                SummonSpirits(m_creature->getVictim());
+        //Spirit_Timer
+        if (Spirit_Timer < diff)
+        {
+            //Cast
+            SummonSpirits(m_creature->getVictim());
+            SummonSpirits(m_creature->getVictim());
+            SummonSpirits(m_creature->getVictim());
+            SummonSpirits(m_creature->getVictim());
 
-                //30 seconds until we should cast this agian
-                Spirit_Timer = 30000;
-            }else Spirit_Timer -= diff;
+            //30 seconds until we should cast this agian
+            Spirit_Timer = 30000;
+        }else Spirit_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_ambassador_flamelash(Creature *_Creature)

@@ -94,96 +94,92 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //WarStomp_Timer
+        if (WarStomp_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+
+            //18 seconds
+            WarStomp_Timer = 14000;
+        }else WarStomp_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //10 seconds until we should cast this agian
+            Cleave_Timer = 8000;
+        }else Cleave_Timer -= diff;
+
+        //Strike_Timer
+        if (Strike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STRIKE);
+
+            //8 seconds until we should cast this agian
+            Strike_Timer = 10000;
+        }else Strike_Timer -= diff;
+
+        //Rend_Timer
+        if (Rend_Timer < diff)
         {
 
-            //WarStomp_Timer
-            if (WarStomp_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+            DoCast(m_creature->getVictim(),SPELL_REND);
 
-                //18 seconds
-                WarStomp_Timer = 14000;
-            }else WarStomp_Timer -= diff;
+            //8 seconds until we should cast this agian
+            Rend_Timer = 18000;
+        }else Rend_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+        //SunderArmor_Timer
+        if (SunderArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
 
-                //10 seconds until we should cast this agian
-                Cleave_Timer = 8000;
-            }else Cleave_Timer -= diff;
+            //25 seconds until we should cast this agian
+            SunderArmor_Timer = 25000;
+        }else SunderArmor_Timer -= diff;
 
-            //Strike_Timer
-            if (Strike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STRIKE);
+        //KnockAway_Timer
+        if (KnockAway_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
 
-                //8 seconds until we should cast this agian
-                Strike_Timer = 10000;
-            }else Strike_Timer -= diff;
+            //12 seconds until we should cast this agian
+            KnockAway_Timer = 12000;
+        }else KnockAway_Timer -= diff;
 
-            //Rend_Timer
-            if (Rend_Timer < diff)
-            {
+        //Slow_Timer
+        if (Slow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SLOW);
 
-                DoCast(m_creature->getVictim(),SPELL_REND);
+            //14 seconds until we should cast this agian
+            Slow_Timer = 18000;
+        }else Slow_Timer -= diff;
 
-                //8 seconds until we should cast this agian
-                Rend_Timer = 18000;
-            }else Rend_Timer -= diff;
+        //Dazed_Timer
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-            //SunderArmor_Timer
-            if (SunderArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
+            //20 seconds until we should cast this agian
+            Dazed_Timer = 12000;
+        }else Dazed_Timer -= diff;
 
-                //25 seconds until we should cast this agian
-                SunderArmor_Timer = 25000;
-            }else SunderArmor_Timer -= diff;
-
-            //KnockAway_Timer
-            if (KnockAway_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
-
-                //12 seconds until we should cast this agian
-                KnockAway_Timer = 12000;
-            }else KnockAway_Timer -= diff;
-
-            //Slow_Timer
-            if (Slow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SLOW);
-
-                //14 seconds until we should cast this agian
-                Slow_Timer = 18000;
-            }else Slow_Timer -= diff;
-
-            //Dazed_Timer
-            if (Dazed_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DAZED);
-
-                //20 seconds until we should cast this agian
-                Dazed_Timer = 12000;
-            }else Dazed_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_highlordomokk(Creature *_Creature)
 {

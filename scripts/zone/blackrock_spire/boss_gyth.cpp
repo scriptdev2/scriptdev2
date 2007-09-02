@@ -135,19 +135,13 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     {
         //char buf[200];
 
-        // Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
-        // Check if we have a current target
-        if (! (m_creature->getVictim() && m_creature->isAlive()))
-        {
-            return;
-        }
 
         if (!RootSelf)
         {
-//            m_creature->m_canMove = true;
+            //            m_creature->m_canMove = true;
             DoCast(m_creature, 33356);
             RootSelf = true;
         }
@@ -211,7 +205,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
                 // 16 seconds until we should cast this again
                 Freeze_Timer = 16000;
-             } else Freeze_Timer -= diff;
+            } else Freeze_Timer -= diff;
 
             // Flamebreath_Timer
             if (Flamebreath_Timer < diff)

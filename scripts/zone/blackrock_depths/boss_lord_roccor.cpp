@@ -18,14 +18,14 @@
 
 // **** This script is still under Developement ****
 // 	  ****  made by NuRRi ****
-    
+
 #define SPELL_FLAMESHOCK                10448            
 #define SPELL_EARTHSHOCK            10414
 #define SPELL_GROUNDTREMOR               6524
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_lord_roccorAI : public ScriptedAI
 {
     boss_lord_roccorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -84,45 +84,40 @@ struct MANGOS_DLL_DECL boss_lord_roccorAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FlameShock_Timer
+        if (FlameShock_Timer < diff)
         {
-            
-            //FlameShock_Timer
-            if (FlameShock_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK);
 
-                //8 seconds until we should cast this agian
-                FlameShock_Timer = 8000;
-            }else FlameShock_Timer -= diff;
+            //8 seconds until we should cast this agian
+            FlameShock_Timer = 8000;
+        }else FlameShock_Timer -= diff;
 
-            //EarthShock_Timer
-            if (EarthShock_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_EARTHSHOCK);
+        //EarthShock_Timer
+        if (EarthShock_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_EARTHSHOCK);
 
-                //12 seconds until we should cast this agian
-                EarthShock_Timer = 12000;
-            }else EarthShock_Timer -= diff;
+            //12 seconds until we should cast this agian
+            EarthShock_Timer = 12000;
+        }else EarthShock_Timer -= diff;
 
-            //GroundTremor_Timer
-            if (GroundTremor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_GROUNDTREMOR);
+        //GroundTremor_Timer
+        if (GroundTremor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GROUNDTREMOR);
 
-                //15 seconds
-               GroundTremor_Timer = 15000;
-            }else GroundTremor_Timer -= diff;
+            //15 seconds
+            GroundTremor_Timer = 15000;
+        }else GroundTremor_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lord_roccor(Creature *_Creature)

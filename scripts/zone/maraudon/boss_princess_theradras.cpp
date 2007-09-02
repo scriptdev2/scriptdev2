@@ -83,60 +83,56 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Dustfield_Timer
+        if (Dustfield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DUSTFIELD);
+
+            //14 seconds
+            Dustfield_Timer = 14000;
+        }else Dustfield_Timer -= diff;
+
+        //Boulder_Timer
+        if (Boulder_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BOULDER);
+
+            //10 seconds until we should cast this agian
+            Boulder_Timer = 10000;
+        }else Boulder_Timer -= diff;
+
+
+        //Knockdown_Timer
+        if (Knockdown_Timer < diff)
         {
 
-            //Dustfield_Timer
-            if (Dustfield_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DUSTFIELD);
+            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
 
-                //14 seconds
-                Dustfield_Timer = 14000;
-            }else Dustfield_Timer -= diff;
+            //12 seconds until we should cast this agian
+            Knockdown_Timer = 12000;
+        }else Knockdown_Timer -= diff;
 
-            //Boulder_Timer
-            if (Boulder_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BOULDER);
+        //RepulsiveGaze_Timer
+        if (RepulsiveGaze_Timer < diff)
+        {
+            //Cast Repulsive Gaze on a Random target
+            Unit* target = NULL;
 
-                //10 seconds until we should cast this agian
-                Boulder_Timer = 10000;
-            }else Boulder_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_REPULSIVEGAZE);
 
+            //20 seconds until we should cast this agian
+            RepulsiveGaze_Timer = 20000;
+        }else RepulsiveGaze_Timer -= diff;
 
-            //Knockdown_Timer
-            if (Knockdown_Timer < diff)
-            {
-
-                DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
-
-                //12 seconds until we should cast this agian
-                Knockdown_Timer = 12000;
-            }else Knockdown_Timer -= diff;
-
-            //RepulsiveGaze_Timer
-            if (RepulsiveGaze_Timer < diff)
-            {
-                 //Cast Repulsive Gaze on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_REPULSIVEGAZE);
-
-                //20 seconds until we should cast this agian
-                RepulsiveGaze_Timer = 20000;
-            }else RepulsiveGaze_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_boss_ptheradras(Creature *_Creature)
 {

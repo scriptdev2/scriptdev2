@@ -34,6 +34,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     uint32 BlastWave_Timer;
     uint32 MortalStrike_Timer;
     uint32 KnockBack_Timer;
+    uint32 LeashCheck_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
@@ -42,6 +43,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         BlastWave_Timer = 35000;
         MortalStrike_Timer = 15000;
         KnockBack_Timer = 25000;
+        LeashCheck_Timer = 2000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -98,67 +100,68 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {            
-
-            //If they try to kite us we evade back
-            if (CheckTether())
-            {
-                DoYell(SAY_LEASH,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_LEASH);
+        //LeashCheck_Timer
+        if (LeashCheck_Timer < diff)
+        {
+            float rx,ry,rz;
+            m_creature->GetRespawnCoord(rx, ry, rz);
+            float spawndist_sq = m_creature->GetDistanceSq(rx,ry,rz);
+            if ( spawndist_sq > 2500 )
+            { 
                 EnterEvadeMode();
                 return;
             }
+            //2 seconds until we should check this agian
+            LeashCheck_Timer = 2000;
+        }else LeashCheck_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //25 seconds until we should cast this agian
-                Cleave_Timer = 25000;
-            }else Cleave_Timer -= diff;
+            //25 seconds until we should cast this agian
+            Cleave_Timer = 25000;
+        }else Cleave_Timer -= diff;
 
-            // BlastWave
-            if (BlastWave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);                
+        // BlastWave
+        if (BlastWave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);                
 
-                //35 seconds until we should cast this again
-                BlastWave_Timer = 35000;
-            }else BlastWave_Timer -= diff;
-            
-            //MortalStrike_Timer
-            if (MortalStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-                // he casts it first after 15 seconds and then each 35 seconds. <- now it should be desyncronised from blastwave.Thx Ntsc.
-                //25 seconds until we should cast this agian
-                MortalStrike_Timer = 35000;
-            }else MortalStrike_Timer -= diff;
-            
-                //KnockBack_Timer
-            if (KnockBack_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            //35 seconds until we should cast this again
+            BlastWave_Timer = 35000;
+        }else BlastWave_Timer -= diff;
 
-                //Drop 50% aggro
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+        //MortalStrike_Timer
+        if (MortalStrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
+            // he casts it first after 15 seconds and then each 35 seconds. <- now it should be desyncronised from blastwave.Thx Ntsc.
+            //25 seconds until we should cast this agian
+            MortalStrike_Timer = 35000;
+        }else MortalStrike_Timer -= diff;
 
-                //25 seconds until we should cast this agian
-                KnockBack_Timer = 25000;
-            }else KnockBack_Timer -= diff;
+        //KnockBack_Timer
+        if (KnockBack_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
 
-            DoMeleeAttackIfReady();
-        }
+            //Drop 50% aggro
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+
+            //25 seconds until we should cast this agian
+            KnockBack_Timer = 25000;
+        }else KnockBack_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_broodlord(Creature *_Creature)

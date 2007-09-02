@@ -105,61 +105,57 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Wrath_Timer
+        if (Wrath_Timer < diff)
+        {
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_WRATH);
+
+            //20 seconds
+            Wrath_Timer = 20000;
+        }else Wrath_Timer -= diff;
+
+        //EntanglingRoots_Timer
+        if (EntanglingRoots_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ENTANGLINGROOTS);
+
+            //12 seconds until we should cast this agian
+            EntanglingRoots_Timer = 12000;
+        }else EntanglingRoots_Timer -= diff;
+
+
+        //TwistedTranquility_Timer
+        if (TwistedTranquility_Timer < diff)
         {
 
-            //Wrath_Timer
-            if (Wrath_Timer < diff)
-            {
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_WRATH);
+            DoCast(m_creature->getVictim(),SPELL_TWISTEDTRANQUILITY);
 
-                //20 seconds
-                Wrath_Timer = 20000;
-            }else Wrath_Timer -= diff;
-
-            //EntanglingRoots_Timer
-            if (EntanglingRoots_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ENTANGLINGROOTS);
-
-                //12 seconds until we should cast this agian
-                EntanglingRoots_Timer = 12000;
-            }else EntanglingRoots_Timer -= diff;
+            //30 seconds until we should cast this agian
+            TwistedTranquility_Timer = 30000;
+        }else TwistedTranquility_Timer -= diff;
 
 
-            //TwistedTranquility_Timer
-            if (TwistedTranquility_Timer < diff)
-            {
+        //Adds_Timer
+        if (Adds_Timer < diff)
+        {
+            //Cast
+            SummonAdds(m_creature->getVictim());
+            SummonAdds(m_creature->getVictim());
 
-                DoCast(m_creature->getVictim(),SPELL_TWISTEDTRANQUILITY);
+            //28 seconds until we should cast this agian
+            Adds_Timer = 28000;
+        }else Adds_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                TwistedTranquility_Timer = 30000;
-            }else TwistedTranquility_Timer -= diff;
-
-
-            //Adds_Timer
-            if (Adds_Timer < diff)
-            {
-                //Cast
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-
-                //28 seconds until we should cast this agian
-                Adds_Timer = 28000;
-            }else Adds_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 }; 
 CreatureAI* GetAI_celebras_the_cursed(Creature *_Creature)
 {

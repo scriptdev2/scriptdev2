@@ -75,35 +75,30 @@ struct MANGOS_DLL_DECL boss_lord_vyletongueAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //PutridBreath_Timer
+        if (PutridBreath_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_PUTRIDBREATH);
 
-            //PutridBreath_Timer
-            if (PutridBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PUTRIDBREATH);
+            //16 seconds
+            PutridBreath_Timer = 16000;
+        }else PutridBreath_Timer -= diff;
 
-                //16 seconds
-                PutridBreath_Timer = 16000;
-            }else PutridBreath_Timer -= diff;
+        //SmokeBomb_Timer
+        if (SmokeBomb_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SMOKEBOMB);
 
-            //SmokeBomb_Timer
-            if (SmokeBomb_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SMOKEBOMB);
+            //12 seconds until we should cast this agian
+            SmokeBomb_Timer = 12000;
+        }else SmokeBomb_Timer -= diff;
 
-                //12 seconds until we should cast this agian
-                SmokeBomb_Timer = 12000;
-            }else SmokeBomb_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lord_vyletongue(Creature *_Creature)

@@ -17,15 +17,15 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_SHADOWWORDPAIN                10894            
 #define SPELL_MANABURN            10876
 #define SPELL_PSYCHICSCREAM               8122
 #define SPELL_SHADOWSHIELD               22417
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
 {
     boss_high_interrogator_gerstahnAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -86,61 +86,56 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowWordPain_Timer
+        if (ShadowWordPain_Timer < diff)
         {
-            
-            //ShadowWordPain_Timer
-            if (ShadowWordPain_Timer < diff)
-            {
-                 //Cast Flam Shock on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SHADOWWORDPAIN);
+            //Cast Flam Shock on a Random target
+            Unit* target = NULL;
 
-                //7 seconds until we should cast this agian
-                ShadowWordPain_Timer = 7000;
-            }else ShadowWordPain_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SHADOWWORDPAIN);
 
-            //ManaBurn_Timer
-            if (ManaBurn_Timer < diff)
-            {
-                 //Cast Mana Burn on a Random target
-                 Unit* target = NULL;
+            //7 seconds until we should cast this agian
+            ShadowWordPain_Timer = 7000;
+        }else ShadowWordPain_Timer -= diff;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_MANABURN);
+        //ManaBurn_Timer
+        if (ManaBurn_Timer < diff)
+        {
+            //Cast Mana Burn on a Random target
+            Unit* target = NULL;
 
-                //14 seconds until we should cast this agian
-                ManaBurn_Timer = 10000;
-            }else ManaBurn_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_MANABURN);
 
-            //PsychicScream_Timer
-            if (PsychicScream_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PSYCHICSCREAM);
+            //14 seconds until we should cast this agian
+            ManaBurn_Timer = 10000;
+        }else ManaBurn_Timer -= diff;
 
-                //30 seconds
-               PsychicScream_Timer = 30000;
-            }else PsychicScream_Timer -= diff;
+        //PsychicScream_Timer
+        if (PsychicScream_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_PSYCHICSCREAM);
 
-            //ShadowShield_Timer
-            if (ShadowShield_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_SHADOWSHIELD);
+            //30 seconds
+            PsychicScream_Timer = 30000;
+        }else PsychicScream_Timer -= diff;
 
-                //25 seconds
-               ShadowShield_Timer = 25000;
-            }else ShadowShield_Timer -= diff;
+        //ShadowShield_Timer
+        if (ShadowShield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_SHADOWSHIELD);
 
-            DoMeleeAttackIfReady();
-        }
+            //25 seconds
+            ShadowShield_Timer = 25000;
+        }else ShadowShield_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature *_Creature)

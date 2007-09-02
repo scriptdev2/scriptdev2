@@ -17,15 +17,15 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_SHADOWBOLT                17483         //Not sure if right ID            
 #define SPELL_MANABURN            10876
 #define SPELL_SHADOWSHIELD               22417
 #define SPELL_STRIKE               15580
 
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
 {
     boss_haterelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -86,64 +86,60 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowBolt_Timer
+        if (ShadowBolt_Timer < diff)
         {
-            
-            //ShadowBolt_Timer
-            if (ShadowBolt_Timer < diff)
-            {
-                 //Cast Shadow Bolt on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SHADOWBOLT);
+            //Cast Shadow Bolt on a Random target
+            Unit* target = NULL;
 
-                //10 seconds until we should cast this agian
-                ShadowBolt_Timer = 7000;
-            }else ShadowBolt_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SHADOWBOLT);
 
-            //ManaBurn_Timer
-            if (ManaBurn_Timer < diff)
-            {
-                 //Cast Mana Burn on a Random target
-                 Unit* target = NULL;
+            //10 seconds until we should cast this agian
+            ShadowBolt_Timer = 7000;
+        }else ShadowBolt_Timer -= diff;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_MANABURN);
+        //ManaBurn_Timer
+        if (ManaBurn_Timer < diff)
+        {
+            //Cast Mana Burn on a Random target
+            Unit* target = NULL;
 
-                //14 seconds until we should cast this agian
-                ManaBurn_Timer = 13000;
-            }else ManaBurn_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_MANABURN);
+
+            //14 seconds until we should cast this agian
+            ManaBurn_Timer = 13000;
+        }else ManaBurn_Timer -= diff;
 
 
-            //ShadowShield_Timer
-            if (ShadowShield_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_SHADOWSHIELD);
+        //ShadowShield_Timer
+        if (ShadowShield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_SHADOWSHIELD);
 
-                //25 seconds
-               ShadowShield_Timer = 25000;
-            }else ShadowShield_Timer -= diff;
+            //25 seconds
+            ShadowShield_Timer = 25000;
+        }else ShadowShield_Timer -= diff;
 
-            //Strike_Timer
-            if (Strike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STRIKE);
+        //Strike_Timer
+        if (Strike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STRIKE);
 
-                //10 seconds
-               Strike_Timer = 10000;
-            }else Strike_Timer -= diff;
+            //10 seconds
+            Strike_Timer = 10000;
+        }else Strike_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
+
 CreatureAI* GetAI_boss_haterel(Creature *_Creature)
 {
     return new boss_haterelAI (_Creature);

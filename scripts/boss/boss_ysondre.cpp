@@ -132,120 +132,115 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Sleep_Timer
+        if (Sleep_Timer < diff)
         {
+            //Cast
+            Unit* target = NULL;
 
-            //Sleep_Timer
-            if (Sleep_Timer < diff)
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SLEEP);
+
+            //14 seconds
+            Sleep_Timer = 14000;
+        }else Sleep_Timer -= diff;
+
+        //NoxiousBreath_Timer
+        if (NoxiousBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
+
+            //20 seconds until we should cast this agian
+            NoxiousBreath_Timer = 14000 + rand()%6000;
+        }else NoxiousBreath_Timer -= diff;
+
+        //Tailsweep every 2 seconds
+        if (TailSweep_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            //Only cast if we are behind
+            if (!m_creature->HasInArc( M_PI, target))
+                DoCast(target,SPELL_TAILSWEEP);
+            TailSweep_Timer = 2000;
+        }else TailSweep_Timer -= diff;
+
+        //             //MarkOfNature_Timer
+        //            if (MarkOfNature_Timer < diff)
+        //             {
+        //                 //Cast
+        //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
+        // 
+        //                 //45 seconds until we should cast this agian
+        //                 MarkOfNature_Timer = 45000;
+        //             }else MarkOfNature_Timer -= diff;
+
+        //LightningWave_Timer
+        if (LightningWave_Timer < diff)
+        {
+            //Cast LIGHTNINGWAVE on a Random target
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_LIGHTNINGWAVE);
+
+            //11 seconds until we should cast this agian
+            LightningWave_Timer = 7000 + rand()%5000;
+        }else LightningWave_Timer -= diff;
+
+        //Summon Druids
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
+        {
+            if (SummonDruids1_Timer < diff)
             {
-                //Cast
+                // summon 10 druids 
                 Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SLEEP);
-
-                //14 seconds
-                Sleep_Timer = 14000;
-            }else Sleep_Timer -= diff;
-
-            //NoxiousBreath_Timer
-            if (NoxiousBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
-
-                //20 seconds until we should cast this agian
-                NoxiousBreath_Timer = 14000 + rand()%6000;
-            }else NoxiousBreath_Timer -= diff;
-
-            //Tailsweep every 2 seconds
-            if (TailSweep_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                //Only cast if we are behind
-                if (!m_creature->HasInArc( M_PI, target))
-                    DoCast(target,SPELL_TAILSWEEP);
-                    TailSweep_Timer = 2000;
-            }else TailSweep_Timer -= diff;
-
-            //             //MarkOfNature_Timer
-            //            if (MarkOfNature_Timer < diff)
-            //             {
-            //                 //Cast
-            //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
-            // 
-            //                 //45 seconds until we should cast this agian
-            //                 MarkOfNature_Timer = 45000;
-            //             }else MarkOfNature_Timer -= diff;
-
-            //LightningWave_Timer
-            if (LightningWave_Timer < diff)
-            {
-                //Cast LIGHTNINGWAVE on a Random target
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_LIGHTNINGWAVE);
-
-                //11 seconds until we should cast this agian
-                LightningWave_Timer = 7000 + rand()%5000;
-            }else LightningWave_Timer -= diff;
-
-            //Summon Druids
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
-            {
-                if (SummonDruids1_Timer < diff)
+                for(int i = 0; i < 10;i++)
                 {
-                  // summon 10 druids 
-                  Unit* target = NULL;
-                  for(int i = 0; i < 10;i++)
-                  {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
-                  }
-                    //60 seconds until we should cast this agian
-                    SummonDruids1_Timer = 60000;
-                } else SummonDruids1_Timer -= diff;
-            }
+                }
+                //60 seconds until we should cast this agian
+                SummonDruids1_Timer = 60000;
+            } else SummonDruids1_Timer -= diff;
+        }
 
-            //Summon Druids
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        //Summon Druids
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50)
+        {
+            if (SummonDruids2_Timer < diff)
             {
-                if (SummonDruids2_Timer < diff)
+                // summon 10 druids 
+                Unit* target = NULL;
+                for(int i = 0; i < 10;i++)
                 {
-                    // summon 10 druids 
-                  Unit* target = NULL;
-                  for(int i = 0; i < 10;i++)
-                  {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
-                  }
-                    //60 seconds until we should cast this agian
-                    SummonDruids2_Timer = 60000;
-                } else SummonDruids2_Timer -= diff;
-            }
+                }
+                //60 seconds until we should cast this agian
+                SummonDruids2_Timer = 60000;
+            } else SummonDruids2_Timer -= diff;
+        }
 
-            //Summon Druids
-            if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        //Summon Druids
+        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25)
+        {
+            if (SummonDruids3_Timer < diff)
             {
-                if (SummonDruids3_Timer < diff)
+                // summon 10 druids 
+                Unit* target = NULL;
+                for(int i = 0; i < 10;i++)
                 {
-                    // summon 10 druids 
-                  Unit* target = NULL;
-                  for(int i = 0; i < 10;i++)
-                  {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
-                  }
-                    //60 seconds until we should cast this agian
-                    SummonDruids3_Timer = 60000;
-                } else SummonDruids3_Timer -= diff;
-            }
+                }
+                //60 seconds until we should cast this agian
+                SummonDruids3_Timer = 60000;
+            } else SummonDruids3_Timer -= diff;
         }
         DoMeleeAttackIfReady();
     }
@@ -305,7 +300,7 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Check if we have a current target
@@ -325,7 +320,7 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
     }
-}; 
+};
 
 
 CreatureAI* GetAI_boss_ysondre(Creature *_Creature)

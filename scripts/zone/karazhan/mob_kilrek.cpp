@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
     void EnterEvadeMode()
     {
         Amplify_Timer = 0;      
-        
+
         InCombat = false;
         Broken = false;
 
@@ -79,23 +79,22 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if (Amplify_Timer < diff)
         {
-            if (Amplify_Timer < diff)
-            {
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                DoCast(m_creature->getVictim(),SPELL_AMPLIFY_FLAMES);
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoCast(m_creature->getVictim(),SPELL_AMPLIFY_FLAMES);
 
-                Amplify_Timer = 20000;
-            }else Amplify_Timer -= diff;
+            Amplify_Timer = 20000;
+        }else Amplify_Timer -= diff;
 
-            //Chain cast
-            if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->m_silenced)
-                DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
-            else DoMeleeAttackIfReady();
-        }
+        //Chain cast
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->m_silenced)
+            DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
+        else DoMeleeAttackIfReady();
     }
 };
 

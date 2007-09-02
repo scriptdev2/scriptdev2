@@ -84,48 +84,37 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <30% cast enrage
+        if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //Check if we should stop attacking because our victim is no longer attackable
-            if (needToStop())
-            {
-                EnterEvadeMode();
-                return;
-            }
-
-            //If we are <30% cast enrage
-            if (i==0 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-				i=1;
-			DoCast(m_creature->getVictim(),SPELL_ENRAGE);
-            }
-            
-            //MORTALWOUND_Timer
-            if (MORTALWOUND_Timer < diff)
-            {
-                //Cast
-				DoCast(m_creature->getVictim(),SPELL_MORTALWOUND);
-
-                //30 seconds until we should cast this agian
-                MORTALWOUND_Timer = 30000;
-            }else MORTALWOUND_Timer -= diff;
-
-            //SANDTRAP_Timer
-            if (SANDTRAP_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SANDTRAP);
-
-                //30 seconds until we should cast this agian
-                SANDTRAP_Timer = 30000;
-            }else SANDTRAP_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            i=1;
+            DoCast(m_creature->getVictim(),SPELL_ENRAGE);
         }
+
+        //MORTALWOUND_Timer
+        if (MORTALWOUND_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MORTALWOUND);
+
+            //30 seconds until we should cast this agian
+            MORTALWOUND_Timer = 30000;
+        }else MORTALWOUND_Timer -= diff;
+
+        //SANDTRAP_Timer
+        if (SANDTRAP_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SANDTRAP);
+
+            //30 seconds until we should cast this agian
+            SANDTRAP_Timer = 30000;
+        }else SANDTRAP_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_kurinnaxx(Creature *_Creature)

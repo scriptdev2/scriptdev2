@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-    
+
 #define SPELL_SINISTERSTRIKE                15581
 #define SPELL_BACKSTAB             15582  
 #define SPELL_GOUGE            13579
@@ -80,45 +80,40 @@ struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //SinisterStrike_Timer
+        if (SinisterStrike_Timer < diff)
         {
-            
-            //SinisterStrike_Timer
-            if (SinisterStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
 
-                //7 seconds
-                SinisterStrike_Timer = 7000;
-            }else SinisterStrike_Timer -= diff;
+            //7 seconds
+            SinisterStrike_Timer = 7000;
+        }else SinisterStrike_Timer -= diff;
 
-            //BackStab_Timer
-            if (BackStab_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BACKSTAB);
+        //BackStab_Timer
+        if (BackStab_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BACKSTAB);
 
-                //6 seconds until we should cast this agian
-                BackStab_Timer = 6000;
-            }else BackStab_Timer -= diff;
+            //6 seconds until we should cast this agian
+            BackStab_Timer = 6000;
+        }else BackStab_Timer -= diff;
 
-            //Gouge_Timer
-            if (Gouge_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_GOUGE);
+        //Gouge_Timer
+        if (Gouge_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GOUGE);
 
-                //8 seconds until we should cast this agian
-                Gouge_Timer = 8000;
-            }else Gouge_Timer -= diff;
+            //8 seconds until we should cast this agian
+            Gouge_Timer = 8000;
+        }else Gouge_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_doperel(Creature *_Creature)

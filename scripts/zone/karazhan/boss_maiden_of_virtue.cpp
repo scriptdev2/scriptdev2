@@ -68,23 +68,23 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void KilledUnit(Unit* Victim)
     {
-      
-       if(rand()%2) return;
-                
-       switch(rand()%3)
-       {
-           case 0:
-               DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
-               DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-               break;
-           case 1:
-               DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
-               DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-               break;
-           case 2:
-               DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
-               DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-               break;
+
+        if(rand()%2) return;
+
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+            break;
+        case 2:
+            DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+            break;
         }
     }
 
@@ -136,61 +136,61 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {         
-            if (Holyground_Timer < diff)
+        if (Holyground_Timer < diff)
+        {
+            DoCast(m_creature,SPELL_HOLYGROUNDAURA);
+            Holyground_Timer = 4000;
+        }else Holyground_Timer -= diff;
+
+        if (Repentance_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_REPENTANCE);
+
+            switch(rand()%2)
             {
-              DoCast(m_creature,SPELL_HOLYGROUNDAURA);
-              Holyground_Timer = 4000;
-            }else Holyground_Timer -= diff;
+            case 0:
+                DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
+                break;
+            case 1:
+                DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
+                break;
+            }
+            Repentance_Timer = 45000;
+        }else Repentance_Timer -= diff;
 
-            if (Repentance_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_REPENTANCE);
+        if (Holyfire_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                switch(rand()%2)
-                {
-                    case 0:
-                        DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
-                        break;
-                    case 1:
-                        DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
-                    break;
-                }
-                Repentance_Timer = 45000;
-            }else Repentance_Timer -= diff;
+            if (target)
+                DoCast(target,SPELL_HOLYFIRE);
+            else
+                DoCast(m_creature->getVictim(),SPELL_HOLYFIRE); 
+            Holyfire_Timer = RandTime(50);
+        }else Holyfire_Timer -= diff;
 
-            if (Holyfire_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        if (Divinewrath_Timer < diff)
+        { 
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                if (target)
-                     DoCast(target,SPELL_HOLYFIRE);
-                else
-                     DoCast(m_creature->getVictim(),SPELL_HOLYFIRE); 
-                Holyfire_Timer = RandTime(50);
-            }else Holyfire_Timer -= diff;
-            
-            if (Divinewrath_Timer < diff)
-            { 
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+                DoCast(target,SPELL_DIVINEWRATH);
+            else
+                DoCast(m_creature->getVictim(),SPELL_DIVINEWRATH); 
+            Divinewrath_Timer = RandTime(50);
+        }else Divinewrath_Timer -= diff;
 
-                if (target)
-                     DoCast(target,SPELL_DIVINEWRATH);
-                else
-                     DoCast(m_creature->getVictim(),SPELL_DIVINEWRATH); 
-                 Divinewrath_Timer = RandTime(50);
-            }else Divinewrath_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
+
 };
 
 CreatureAI* GetAI_boss_maiden_of_virtue(Creature *_Creature)
