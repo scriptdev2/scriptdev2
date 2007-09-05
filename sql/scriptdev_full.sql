@@ -1,8 +1,5 @@
 /*  */
 
-/* SCRIPTDEV SPESIFIC  .. Dev Note.. Not currently in use */
-
-
 /* UNKNOWN LOCATION */
 
 
@@ -559,8 +556,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_mindless_skeleton' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_acolyte' WHERE `entry` = 10399;
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_necromancer' WHERE `entry` = 10400;
 UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_shadowcaster' WHERE `entry` = 10398;
-UPDATE `creature_template` SET `ScriptName` = 'mob_spectral_citizen' WHERE `entry` = 10384;
-UPDATE `creature_template` SET `ScriptName` = 'mob_ghostly_citizen' WHERE `entry` = 10385;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_spectral_ghostly_citizen' WHERE `entry` IN (10384, 10385);
 UPDATE `creature_template` SET `ScriptName` = 'mob_restless_soul' WHERE `entry` = 11122;
 UPDATE `creature_template` SET `ScriptName` = 'mob_freed_soul' WHERE `entry` = 11136;
 /* Jarien, Aurius, Ash'ari Crystal, Elder Farwhisper, Mindless Undead */
