@@ -1184,6 +1184,14 @@
 					</File>
 				</Filter>
 				<Filter
+					Name="Silvermoon"
+					>
+					<File
+						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="Silverpine Forest"
 					>
 				</Filter>
@@ -1442,6 +1450,10 @@
 				<Filter
 					Name="Nagrand"
 					>
+					<File
+						RelativePath="..\scripts\zone\nagrand\mob_shattered_rumbler.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Netherstorm"
@@ -1452,6 +1464,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\shadowmoon_valley\boss_doomwalker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowmoon_valley\npc_neltharaku.cpp"
 						>
 					</File>
 				</Filter>
@@ -1544,6 +1560,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\stormwind\npc_bartleby.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stormwind\npc_dashel_stonefist.cpp"
 						>
 					</File>
 				</Filter>

@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL henze_faulkAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if(Spellkind->Id == 2050)
+        if(Spellkind->Id == 8593)
         {
             DoCast(m_creature,32343);
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);

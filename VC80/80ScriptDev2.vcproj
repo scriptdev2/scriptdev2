@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="ScriptDev2"
 	ProjectGUID="{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	RootNamespace="ScriptDev2"
@@ -1506,6 +1506,10 @@
 				<Filter
 					Name="Nagrand"
 					>
+					<File
+						RelativePath="..\scripts\zone\nagrand\mob_shattered_rumbler.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Netherstorm"
@@ -1516,6 +1520,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\shadowmoon_valley\boss_doomwalker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowmoon_valley\npc_neltharaku.cpp"
 						>
 					</File>
 				</Filter>
@@ -1610,6 +1618,10 @@
 						RelativePath="..\scripts\zone\stormwind\npc_bartleby.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\stormwind\npc_dashel_stonefist.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Coilfang Resevoir"
@@ -1650,6 +1662,14 @@
 						Name="Old Hillsbrad"
 						>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="Silvermoon"
+					>
+					<File
+						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

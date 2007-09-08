@@ -234,9 +234,12 @@ scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
+scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
+scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
+scripts/zone/stormwind/npc_dashel_stonefist.cpp \
 scripts/zone/stratholme/boss_archivist_galford.cpp \
 scripts/zone/stratholme/boss_baron_rivendare.cpp \
 scripts/zone/stratholme/boss_baroness_anastari.cpp \

@@ -261,6 +261,8 @@ extern void AddSC_npc_great_bear_spirit();
 extern void AddSC_skorn_whitecloud();
 
 //Nagrand
+extern void AddSC_mob_shattered_rumbler();
+
 //Naxxramas
 extern void AddSC_boss_anubrekhan();
 extern void AddSC_boss_maexxna();
@@ -315,15 +317,21 @@ extern void AddSC_boss_vectus();
 extern void AddSC_npc_lothos_riftwalker();
 
 //Shadowfang keep
+//Shadowmoon Valley
+extern void AddSC_neltharaku();
 //Silithus
 extern void AddSC_npcs_captains_blackanvil_and_skullsplit();
 extern void AddSC_npcs_rutgar_and_frankal();
+
+//Silvermoon
+extern void AddSC_npc_blood_knight_stillblade();
 
 //Silverpine forest
 //Stockade
 //Stonetalon mountains
 //Stormwind City
 extern void AddSC_npc_bartleby();
+extern void AddSC_npc_dashel_stonefist();
 
 //Stratholme
 extern void AddSC_boss_fras_siabi();
@@ -612,6 +620,7 @@ void ScriptsInit()
     AddSC_skorn_whitecloud();
 
     //Nagrand
+    AddSC_mob_shattered_rumbler();
     //Naxxramas
     AddSC_boss_anubrekhan();
     AddSC_boss_maexxna();
@@ -666,15 +675,21 @@ void ScriptsInit()
     //Searing gorge
     AddSC_npc_lothos_riftwalker();
     //Shadowfang keep
+    //Shadowmoon Valley
+    AddSC_neltharaku();
     //Silithus
     AddSC_npcs_captains_blackanvil_and_skullsplit();
     AddSC_npcs_rutgar_and_frankal();
+
+    //Silvermoon
+    AddSC_npc_blood_knight_stillblade();
 
     //Silverpine forest
     //Stockade
     //Stonetalon mountains
     //Stormwind City
     AddSC_npc_bartleby();
+    AddSC_npc_dashel_stonefist();
 
     //Stratholme
     AddSC_boss_fras_siabi();

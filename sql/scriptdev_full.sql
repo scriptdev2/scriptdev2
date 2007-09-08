@@ -378,6 +378,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_great_bear_spirit' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 3232);
 
 /* NAGRAND */
+UPDATE creature_template SET ScriptName = 'shattered_rumbler' WHERE entry = '17157';
 
 /* NAXXRAMAS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_anubrekhan' WHERE `entry` = 15956;
@@ -473,11 +474,18 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* Archmage Arugal */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4275);
 
+/* SHADOWMOON VALLEY */
+UPDATE `creature_template` SET `ScriptName`='neltharaku' WHERE (`entry`='21657');
+
+
 /* SILITHUS */
 /* Orgrimmar Legion Axe Thrower, Stormwind Archmage */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (15617, 15859);
 UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal' WHERE `entry` IN (15170, 15171);
 UPDATE `creature_template` SET `ScriptName` = 'npcs_captains_blackanvil_and_skullsplit' WHERE `entry` IN (15440, 15612);
+
+/* SILVERMOON */
+UPDATE creature_template SET ScriptName = 'blood_knight_stillblade' WHERE entry = '17768';
 
 /* SILVERPINE FOREST */
 /* Dalaran Apprentice, Dalaran Conjuror, Dalaran Mage, Dalaran Wizard, Rot Hide Mystic, Rot Hide Gladerunner, Rot Hide Brute, Rot Hide Plague Weaver, Rot Hide Savage, Rot Hide Bruiser, Mist Creeper, Dalaran Apprentice, Dalaran Wizard, Dalaran Protector, Dalaran Warder, Dalaran Mage, Dalaran Conjuror, Lake Creeper, Elder Lake Creeper, Vile Fin Shorecreeper, Nightlash, Archmage Ataeric */
@@ -493,6 +501,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* STORMWIND CITY */
 UPDATE `creature_template` SET `ScriptName` = 'npc_bartleby' WHERE `entry` IN (6090);
+UPDATE creature_template SET ScriptName = 'dashel_stonefist' WHERE entry = '4961';
 
 /* STRANGLETHORN VALE */
 /* Bloodscalp Shaman, Bloodsail Elder Magus, Bloodsail Mage, Bloodsail Warlock, Bloodscalp Axe Thrower, Skullsplitter Axe Thrower, Bloodscalp Mystic, Skullsplitter Mystic */

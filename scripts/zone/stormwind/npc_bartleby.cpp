@@ -39,6 +39,24 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
     {
         PlayerHolder = NULL;
     }
+    
+    void DamageTaken(Unit *done_by, uint32 & damage)
+    { 
+        if ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
+        {
+            //Take 0 damage
+            damage = 0;
+            
+            if (done_by->GetTypeId() == TYPEID_PLAYER)
+            {
+                ((Player*)done_by)->AttackStop();
+                ((Player*)done_by)->CompleteQuest(1640);
+            }
+            m_creature->CombatStop();
+            EnterEvadeMode();
+            }
+        AttackedBy(done_by);
+    }
 
     void AttackStart(Unit *who)
     {
@@ -89,14 +107,6 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
                     m_creature->AttackerStateUpdate(m_creature->getVictim());
                     m_creature->resetAttackTimer();
                 }
-            }
-
-            if (PlayerHolder && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
-            {
-                ((Player*)PlayerHolder)->AttackStop();
-                m_creature->CombatStop();
-                ((Player*)PlayerHolder)->CompleteQuest(1640);
-                EnterEvadeMode();
             }
         }
     }
