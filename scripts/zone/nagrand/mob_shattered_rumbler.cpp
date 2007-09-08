@@ -16,48 +16,45 @@
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
- 
+
 struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
 {
     bool Spawn;
-	Creature* tSpawn0;
-	Creature* tSpawn1;
-	Creature* tSpawn2;
- 
+
     mob_shattered_rumblerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
- 
+
     void EnterEvadeMode()
     {
-		Spawn = false;
+        Spawn = false;
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         DoGoHome();
     }
- 
+
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
         if(Spellkind->Id == 32001 && !Spawn)
         {
             float x = m_creature->GetPositionX();
-			float y = m_creature->GetPositionY();
-			float z = m_creature->GetPositionZ();
- 
-			tSpawn0 = Hitter->SummonCreature(18181,x+(0.7 * (rand()%30)),y+(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-			tSpawn1 = Hitter->SummonCreature(18181,x+(rand()%5),y-(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-			tSpawn2 = Hitter->SummonCreature(18181,x-(rand()%5),y+(0.5 *(rand()%60)),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-			m_creature->setDeathState(CORPSE);
+            float y = m_creature->GetPositionY();
+            float z = m_creature->GetPositionZ();
+
+            Hitter->SummonCreature(18181,x+(0.7 * (rand()%30)),y+(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
+            Hitter->SummonCreature(18181,x+(rand()%5),y-(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
+            Hitter->SummonCreature(18181,x-(rand()%5),y+(0.5 *(rand()%60)),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
+            m_creature->setDeathState(CORPSE);
             Spawn = true;
         }
         return;
     }
- 
+
 };
 CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 {
     return new mob_shattered_rumblerAI (_Creature);
 }
- 
- 
+
+
 void AddSC_mob_shattered_rumbler()
 {
     Script *newscript;

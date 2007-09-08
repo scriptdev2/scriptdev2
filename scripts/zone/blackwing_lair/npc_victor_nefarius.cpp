@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 {
     boss_victor_nefariusAI(Creature *c) : ScriptedAI(c) 
     {
-        Nefarian = NULL;
+        NefarianGUID = 0;
         EnterEvadeMode();
         srand(time(NULL));
         switch (rand()%20)
@@ -162,7 +162,8 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     uint32 ResetTimer;
     uint32 DrakType1;
     uint32 DrakType2;
-    Creature* Nefarian;
+    uint64 NefarianGUID;
+    uint32 NefCheckTime;
 
     void EnterEvadeMode()
     {
@@ -170,7 +171,8 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         AddSpawnTimer = 10000;
         ShadowBoltTimer = 5000;
         ResetTimer = 60000;        //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
-        Nefarian = NULL;
+        NefarianGUID = 0;
+        NefCheckTime = 2000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -309,6 +311,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     m_creature->addUnitState(UNIT_STAT_FLEEING);
 
                     //Spawn nef and have him attack a random target
+                    Creature* Nefarian = NULL;
                     Nefarian = m_creature->SummonCreature(CREATURE_NEFARIAN,NEF_X,NEF_Y,NEF_Z,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,120000);
                     target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
@@ -316,22 +319,31 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     {
                         Nefarian->AI()->AttackStart(target);
                         Nefarian->setFaction(103);
+                        NefarianGUID = Nefarian->GetGUID();
                     }
                     else DoYell("UNABLE TO SPAWN NEF PROPERLY",LANG_UNIVERSAL,NULL);
                 }
 
-                AddSpawnTimer = 10000;
+                AddSpawnTimer = 5000;
             }else AddSpawnTimer -= diff;
         }
-        else if (Nefarian)
+        else if (NefarianGUID)
         {
-            //If nef is dead then we die to so the players get out of combat
-            //and cannot repeat the event
-            if (!Nefarian->isAlive())
+            if (NefCheckTime < diff)
             {
-                Nefarian = NULL;
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
-            }
+                Unit* Nefarian = NULL;
+                Nefarian = Unit::GetUnit((*m_creature),NefarianGUID);
+
+                //If nef is dead then we die to so the players get out of combat
+                //and cannot repeat the event
+                if (!Nefarian || !Nefarian->isAlive())
+                {
+                    NefarianGUID = 0;
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                }
+
+                NefCheckTime = 2000;
+            }else NefCheckTime -= diff;
 
         }
     }

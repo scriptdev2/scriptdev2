@@ -73,6 +73,7 @@ scripts/sc_defines.h \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
+scripts/zone/black_temple/mob_blacktemple.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \
@@ -183,6 +184,7 @@ scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/npc_great_bear_spirit.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
 scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
+scripts/zone/nagrand/mob_shattered_rumbler.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
 scripts/zone/naxxramas/boss_faerlina.cpp \
 scripts/zone/naxxramas/boss_feugen.cpp \
@@ -260,6 +262,8 @@ scripts/zone/stratholme/boss_stonespine.cpp \
 scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
+scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
+scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_cthun.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_fankriss.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_huhuran.cpp \
@@ -272,6 +276,9 @@ scripts/zone/temple_of_ahnqiraj/boss_veknilash.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_vem.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_yauj.cpp \
+scripts/zone/uldaman/boss_ironaya.cpp \
+scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
+scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
 scripts/zone/zulgurub/boss_grilek.cpp \

@@ -14,39 +14,30 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "../../../sc_defines.h"
 
-struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
+#define SPELL_COUNTERCHARGE         35035
+#define SPELL_KNOCKAWAY	            22893
+
+struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 {
-    npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-        
+    mob_crystalcore_devastatorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 Knockaway_Timer;
+    uint32 Countercharge_Timer;
+    bool InCombat;
+
     void EnterEvadeMode()
     {
+        Countercharge_Timer = 9000;
+        Knockaway_Timer = 25000;
+
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-        m_creature->setFaction(11);
         DoGoHome();
-        m_creature->setEmoteState(7);
-    }
-
-    void DamageTaken(Unit *done_by, uint32 & damage)
-    { 
-        if ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
-        {
-            //Take 0 damage
-            damage = 0;
-            
-            if (done_by->GetTypeId() == TYPEID_PLAYER)
-            {
-                ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1447);
-            }
-            m_creature->CombatStop();
-            EnterEvadeMode();
-            }
-        AttackedBy(done_by);
     }
 
     void AttackStart(Unit *who)
@@ -56,6 +47,11 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            if(!InCombat)
+            {
+                InCombat = true;
+            }
+
             DoStartMeleeAttack(who);
         }
     }
@@ -81,7 +77,6 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;
@@ -89,42 +84,51 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
+            //Knockaway_Timer
+            if (Knockaway_Timer < diff)
+            {		
+                m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady())
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
+                // current aggro target is knocked away pick new target
+                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+
+                if (!Target || Target == m_creature->getVictim())
+                    Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+
+                if (Target)
+                    m_creature->TauntApply(Target);
+
+                //23 seconds until we should cast this agian
+                Knockaway_Timer = 23000;
             }
+            else Knockaway_Timer -= diff;
+
+            //Countercharge_Timer
+            if (Countercharge_Timer < diff)
+            {
+                //Cast
+                DoCast(this->m_creature,SPELL_COUNTERCHARGE);
+
+                //45 seconds until we should cast this agian
+                Countercharge_Timer = 45000;
+            }else Countercharge_Timer -= diff;
+
+
+            DoMeleeAttackIfReady();
         }
     }
 };
 
-bool QuestAccept_npc_dashel_stonefist(Player *player, Creature *_Creature, Quest *_Quest)
+CreatureAI* GetAI_mob_crystalcore_devastator(Creature *_Creature)
 {
-    if(_Quest->GetQuestId() == 1447)
-    {
-        _Creature->setFaction(168);
-        ((npc_dashel_stonefistAI*)_Creature->AI())->AttackStart(player);
-    }
-    return true;
+    return new mob_crystalcore_devastatorAI (_Creature);
 }
 
-CreatureAI* GetAI_npc_dashel_stonefist(Creature *_creature)
-{
-    return new npc_dashel_stonefistAI(_creature);
-}
-
-void AddSC_npc_dashel_stonefist()
+void AddSC_mob_crystalcore_devastator()
 {
     Script *newscript;
-
     newscript = new Script;
-    newscript->Name = "dashel_stonefist";
-    newscript->GetAI = GetAI_npc_dashel_stonefist;
-    newscript->pQuestAccept = &QuestAccept_npc_dashel_stonefist;
+    newscript->Name="mob_crystalcore_devastator";
+    newscript->GetAI = GetAI_mob_crystalcore_devastator;
     m_scripts[nrscripts++] = newscript;
 }

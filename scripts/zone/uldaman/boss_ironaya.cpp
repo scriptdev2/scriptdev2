@@ -15,38 +15,37 @@
 */
 
 #include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
 
-struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
+#define SPELL_ARCINGSMASH           39144
+#define SPELL_KNOCKAWAY	            22893
+#define SPELL_WSTOMP	            16727
+
+#define SAY_AGGRO			"None may steal the secrets of the makers!"
+
+// Need to find correct sound ID
+// #define SOUND_AGGRO			5830
+
+
+struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 {
-    npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-        
+    boss_ironayaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 Arcing_Timer;
+    bool hasCastedWstomp;
+    bool hasCastedKnockaway;
+    bool InCombat;
+
     void EnterEvadeMode()
     {
+        Arcing_Timer = 3000;
+        hasCastedKnockaway = false;
+        hasCastedWstomp = false;
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-        m_creature->setFaction(11);
         DoGoHome();
-        m_creature->setEmoteState(7);
-    }
-
-    void DamageTaken(Unit *done_by, uint32 & damage)
-    { 
-        if ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
-        {
-            //Take 0 damage
-            damage = 0;
-            
-            if (done_by->GetTypeId() == TYPEID_PLAYER)
-            {
-                ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1447);
-            }
-            m_creature->CombatStop();
-            EnterEvadeMode();
-            }
-        AttackedBy(done_by);
     }
 
     void AttackStart(Unit *who)
@@ -56,6 +55,15 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            //Say our dialog
+            if(!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                //   DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+
+                InCombat = true;
+            }
+
             DoStartMeleeAttack(who);
         }
     }
@@ -81,7 +89,6 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget())
             return;
@@ -89,42 +96,56 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
         //Check if we have a current target
         if( m_creature->getVictim() && m_creature->isAlive())
         {
+            //If we are <50% hp do knockaway ONCE
+            if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
+            {		
+                m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady())
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
+                // current aggro target is knocked away pick new target
+                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+
+                if (!Target || Target == m_creature->getVictim())
+                    Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+
+                if (Target)
+                    m_creature->TauntApply(Target);
+
+                //Shouldn't cast this agian
+                hasCastedKnockaway = true;
             }
+
+            //Arcing_Timer
+            if (Arcing_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature,SPELL_ARCINGSMASH);
+
+                //10 seconds until we should cast this agian
+                Arcing_Timer = 13000;
+            }else Arcing_Timer -= diff;
+
+            if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
+            {
+                //Cast
+                DoCast(m_creature,SPELL_WSTOMP);
+                hasCastedWstomp = true;
+            }
+
+            DoMeleeAttackIfReady();
         }
     }
 };
 
-bool QuestAccept_npc_dashel_stonefist(Player *player, Creature *_Creature, Quest *_Quest)
+CreatureAI* GetAI_boss_ironaya(Creature *_Creature)
 {
-    if(_Quest->GetQuestId() == 1447)
-    {
-        _Creature->setFaction(168);
-        ((npc_dashel_stonefistAI*)_Creature->AI())->AttackStart(player);
-    }
-    return true;
+    return new boss_ironayaAI (_Creature);
 }
 
-CreatureAI* GetAI_npc_dashel_stonefist(Creature *_creature)
-{
-    return new npc_dashel_stonefistAI(_creature);
-}
-
-void AddSC_npc_dashel_stonefist()
+void AddSC_boss_ironaya()
 {
     Script *newscript;
-
     newscript = new Script;
-    newscript->Name = "dashel_stonefist";
-    newscript->GetAI = GetAI_npc_dashel_stonefist;
-    newscript->pQuestAccept = &QuestAccept_npc_dashel_stonefist;
+    newscript->Name="boss_ironaya";
+    newscript->GetAI = GetAI_boss_ironaya;
     m_scripts[nrscripts++] = newscript;
 }

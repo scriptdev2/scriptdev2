@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         EnterEvadeMode();
     }
 
-    Unit *PlayerHolder;
+    uint64 PlayerGUID;
     uint32 SpeachTimer;
     uint32 SpeachNum;
     uint32 Cleave_Timer;
@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        PlayerHolder = NULL;
+        PlayerGUID = 0;
         SpeachTimer = NULL;
         SpeachNum = 0;
         Cleave_Timer = 15000;      //These times are probably wrong
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     void BeginSpeach(Unit* target)
     {
         //Stand up and begin speach
-        PlayerHolder = target;
+        PlayerGUID = target->GetGUID();
 
         //10 seconds
         DoYell(SAY_LINE1,LANG_UNIVERSAL,NULL);
@@ -181,9 +181,9 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                 default:
                     m_creature->setFaction(103);
                     m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
-                    if (PlayerHolder)
+                    if (PlayerGUID && Unit::GetUnit((*m_creature),PlayerGUID))
                     {
-                        DoStartMeleeAttack(PlayerHolder);
+                        DoStartMeleeAttack(Unit::GetUnit((*m_creature),PlayerGUID));
                         DoCast(m_creature,SPELL_ESSENCEOFTHERED);
                     }
 

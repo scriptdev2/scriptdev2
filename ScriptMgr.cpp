@@ -112,6 +112,8 @@ extern void AddSC_draenei_survivor();
 //Badlands
 //Barrens
 //Black Temple
+extern void AddSC_mob_blacktemple();
+
 //Blackfathom Depths
 //Blackrock Depths
 extern void AddSC_boss_ambassador_flamelash();
@@ -173,6 +175,17 @@ extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
 
 //Burning steppes
+//Caverns of Time
+//--Battle for Mt. Hyjal
+//--Old Hillsbrad
+//--The Dark Portal
+//Coilfang Resevoir
+//--Serpent Shrine Cavern
+//--Slave Pens
+//--Steam Vault
+extern void AddSC_boss_warlord_kalithresh();
+
+//--Underbog
 //Darkshore
 //Deadmines
 //Deadwind pass
@@ -319,6 +332,7 @@ extern void AddSC_npc_lothos_riftwalker();
 //Shadowfang keep
 //Shadowmoon Valley
 extern void AddSC_neltharaku();
+
 //Silithus
 extern void AddSC_npcs_captains_blackanvil_and_skullsplit();
 extern void AddSC_npcs_rutgar_and_frankal();
@@ -358,12 +372,23 @@ extern void AddSC_mobs_stratholme();
 //Tanaris
 //Teldrassil
 //Tempest Keep
+//--Arcatraz
+//--Botanica
+//--The Eye
+extern void AddSC_mob_crystalcore_devastator();
+extern void AddSC_mob_the_eye();
+
+//--The Mechanar
 //Temple of ahn'qiraj
 extern void AddSC_boss_cthun();
 
 //Thousand Needles
 //Tirisfal Glades
 //Uldaman
+extern void AddSC_boss_ironaya();
+extern void AddSC_mob_jadespine_basilisk();
+extern void AddSC_mob_uldaman();
+
 //Un'Goro Crater
 //Upper blackrock spire
 //Wailing caverns
@@ -472,20 +497,21 @@ void ScriptsInit()
     //Badlands
     //Barrens
     //Black Temple
+    AddSC_mob_blacktemple();
+
     //Blackfathom Depths
     //Blackrock Depths
-    AddSC_boss_baelgar();
-    AddSC_boss_draganthaurissan();
-    AddSC_boss_golemlordargelmach();
-    AddSC_boss_moira_bronzebeard();
     AddSC_boss_ambassador_flamelash();
     AddSC_boss_angerrel();
     AddSC_boss_anubshiah();
+    AddSC_boss_baelgar();
     AddSC_boss_doomrel();
     AddSC_boss_doperel();
+    AddSC_boss_draganthaurissan();
     AddSC_boss_fineous_darkvire();
     AddSC_boss_general_angerforge();
     AddSC_boss_gloomrel();
+    AddSC_boss_golemlordargelmach();
     AddSC_boss_gorosh_the_dervish();
     AddSC_boss_grizzle();
     AddSC_boss_haterel();
@@ -493,6 +519,7 @@ void ScriptsInit()
     AddSC_boss_lord_incendius();
     AddSC_boss_lord_roccor();
     AddSC_boss_magmus();
+    AddSC_boss_moira_bronzebeard();
     AddSC_boss_pyromancer_loregrain();
     AddSC_boss_seethrel();
     AddSC_boss_verek();
@@ -500,6 +527,7 @@ void ScriptsInit()
     AddSC_boss_warder_stilgiss();
     AddSC_overmaster_pyron();
     AddSC_phalanx();
+
 
     //Blackrock Spire
     AddSC_boss_drakkisath();
@@ -511,8 +539,8 @@ void ScriptsInit()
     AddSC_boss_thebeast();
     AddSC_boss_warmastervoone();
     AddSC_boss_quatermasterzigris();
-    AddSC_boss_gyth();
     AddSC_boss_pyroguard_emberseer();
+    AddSC_boss_gyth();
     AddSC_boss_rend_blackhand();
     AddSC_mob_chromatic_elite_guard();
 
@@ -532,6 +560,17 @@ void ScriptsInit()
     AddSC_boss_teremusthedevourer();
 
     //Burning steppes
+    //Caverns of Time
+    //--Battle for Mt. Hyjal
+    //--Old Hillsbrad
+    //--The Dark Portal
+    //Coilfang Resevoir
+    //--Serpent Shrine Cavern
+    //--Slave Pens
+    //--Steam Vault
+    AddSC_boss_warlord_kalithresh();
+
+    //--Underbog
     //Darkshore
     //Deadmines
     //Deadwind pass
@@ -546,7 +585,7 @@ void ScriptsInit()
     //Eversong Woods
     AddSC_mobs_mana_tapped();
 
-    //Eastern Plaguelands   
+    //Eastern Plaguelands
     AddSC_mobs_ghoul_flayer();
     AddSC_npc_darrowshire_spirit();
 
@@ -576,12 +615,12 @@ void ScriptsInit()
     //Lower Blackrock Spire
     //Magtheridon's Lair
     //Maraudon
-    AddSC_boss_ptheradras();
-    AddSC_boss_tinkerergizlock();
     AddSC_boss_landslide();
     AddSC_boss_lord_vyletongue();
     AddSC_boss_noxxion();
+    AddSC_boss_ptheradras();
     AddSC_boss_rotgrip();
+    AddSC_boss_tinkerergizlock();
     AddSC_celebras_the_cursed();
     AddSC_meshlok_the_harvester();
     AddSC_razorlash();
@@ -621,6 +660,7 @@ void ScriptsInit()
 
     //Nagrand
     AddSC_mob_shattered_rumbler();
+
     //Naxxramas
     AddSC_boss_anubrekhan();
     AddSC_boss_maexxna();
@@ -670,13 +710,14 @@ void ScriptsInit()
     AddSC_boss_rasfrost();
     AddSC_boss_theravenian();
     AddSC_boss_vectus();
-  
 
     //Searing gorge
     AddSC_npc_lothos_riftwalker();
+
     //Shadowfang keep
     //Shadowmoon Valley
     AddSC_neltharaku();
+
     //Silithus
     AddSC_npcs_captains_blackanvil_and_skullsplit();
     AddSC_npcs_rutgar_and_frankal();
@@ -716,12 +757,23 @@ void ScriptsInit()
     //Tanaris
     //Teldrassil
     //Tempest Keep
+    //--Arcatraz
+    //--Botanica
+    //--The Eye
+    AddSC_mob_crystalcore_devastator();
+    AddSC_mob_the_eye();
+
+    //--The Mechanar
     //Temple of ahn'qiraj
     AddSC_boss_cthun();
 
     //Thousand Needles
     //Tirisfal Glades
     //Uldaman
+    AddSC_boss_ironaya();
+    AddSC_mob_jadespine_basilisk();
+    AddSC_mob_uldaman();
+
     //Un'Goro Crater
     //Upper blackrock spire
     //Wailing caverns

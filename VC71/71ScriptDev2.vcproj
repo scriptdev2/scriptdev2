@@ -1184,14 +1184,6 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Silvermoon"
-					>
-					<File
-						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Silverpine Forest"
 					>
 				</Filter>
@@ -1286,6 +1278,18 @@
 				<Filter
 					Name="Uldaman"
 					>
+					<File
+						RelativePath="..\scripts\zone\uldaman\boss_ironaya.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\uldaman\mob_jadespine_basilisk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\uldaman\mob_uldaman.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Un&apos;Goro Crater"
@@ -1326,6 +1330,10 @@
 				<Filter
 					Name="Black Temple"
 					>
+					<File
+						RelativePath="..\scripts\zone\black_temple\mob_blacktemple.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Eversong Woods"
@@ -1485,6 +1493,14 @@
 					<Filter
 						Name="The Eye"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_crystalcore_devastator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_the_eye.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="The Mechanar"
@@ -1606,6 +1622,14 @@
 						Name="Old Hillsbrad"
 						>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="Silvermoon"
+					>
+					<File
+						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

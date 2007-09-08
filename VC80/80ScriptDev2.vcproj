@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="ScriptDev2"
 	ProjectGUID="{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	RootNamespace="ScriptDev2"
@@ -1342,6 +1342,18 @@
 				<Filter
 					Name="Uldaman"
 					>
+					<File
+						RelativePath="..\scripts\zone\uldaman\boss_ironaya.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\uldaman\mob_jadespine_basilisk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\uldaman\mob_uldaman.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Un&apos;Goro Crater"
@@ -1382,6 +1394,10 @@
 				<Filter
 					Name="Black Temple"
 					>
+					<File
+						RelativePath="..\scripts\zone\black_temple\mob_blacktemple.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Eversong Woods"
@@ -1541,6 +1557,14 @@
 					<Filter
 						Name="The Eye"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_crystalcore_devastator.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_the_eye.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="The Mechanar"
