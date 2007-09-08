@@ -14,7 +14,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\..\..\bin\debug"
-			IntermediateDirectory=".\ScriptDev2___Win32_Debug"
+			IntermediateDirectory=".\ScriptDev2__Win32_Debug"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -36,7 +36,7 @@
 				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC71\zlib___Win32_Debug;..\..\..\..\win\VC71\zthread___Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug"
+				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC71\zlib__Win32_Debug;..\..\..\..\win\VC71\zthread__Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -66,7 +66,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\..\..\bin\release"
-			IntermediateDirectory=".\ScriptDev2___Win32_Release"
+			IntermediateDirectory=".\ScriptDev2__Win32_Release"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -85,7 +85,7 @@
 				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC71\zlib___Win32_Release;..\..\..\..\win\VC71\zthread___Win32_Release;..\..\..\..\win\VC71\mangosd__Win32_Release"
+				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC71\zlib__Win32_Release;..\..\..\..\win\VC71\zthread__Win32_Release;..\..\..\..\win\VC71\mangosd__Win32_Release"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
