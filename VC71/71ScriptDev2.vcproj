@@ -192,67 +192,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\guard\guard_bluffwatcher.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_contested.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_darnassus.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_dunmorogh.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_durotar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_elwynnforest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_exodar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_ironforge.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_mulgore.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_orgrimmar.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_shattrath.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_silvermoon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_stormwind.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_teldrassil.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_tirisfal.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\guard\guard_undercity.cpp"
+					RelativePath="..\scripts\guard\guards.cpp"
 					>
 				</File>
 			</Filter>
@@ -558,6 +498,10 @@
 				<Filter
 					Name="Darkshore"
 					>
+					<File
+						RelativePath="..\scripts\zone\darkshore\mobs_darkshore.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Eastern Plaguelands"
@@ -678,6 +622,10 @@
 				<Filter
 					Name="Scholomance"
 					>
+					<File
+						RelativePath="..\scripts\zone\scholomance\boss_death_knight_darkreaver.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\scripts\zone\scholomance\boss_doctor_theolen_krastinov.cpp"
 						>
@@ -1018,6 +966,10 @@
 				<Filter
 					Name="Stranglethorn Vale"
 					>
+					<File
+						RelativePath="..\scripts\zone\stranglethorn_vale\mobs_stranglethorn_vale.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Stratholme"
@@ -1110,6 +1062,10 @@
 				<Filter
 					Name="Tanaris"
 					>
+					<File
+						RelativePath="..\scripts\zone\tanaris\npcs_tanaris.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Teldrassil"
@@ -1459,7 +1415,11 @@
 					Name="Nagrand"
 					>
 					<File
-						RelativePath="..\scripts\zone\nagrand\mob_shattered_rumbler.cpp"
+						RelativePath="..\scripts\zone\nagrand\mobs_nagrand.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\nagrand\npcs_nagrand.cpp"
 						>
 					</File>
 				</Filter>
@@ -1510,10 +1470,18 @@
 				<Filter
 					Name="Terokkar Forest"
 					>
+					<File
+						RelativePath="..\scripts\zone\terokkar_forest\mobs_terokkar_forest.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Zangramarsh"
 					>
+					<File
+						RelativePath="..\scripts\zone\zangramarsh\npcs_zangarmarsh.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Blackrock Spire"

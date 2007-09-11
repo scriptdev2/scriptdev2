@@ -63,23 +63,7 @@ extern void AddSC_go_teleporter();
 extern void AddSC_go_orb_of_command();
 
 // -- Guard --
-extern void AddSC_guard_bluffwatcher();
-extern void AddSC_guard_contested();
-extern void AddSC_guard_darnassus();
-extern void AddSC_guard_dunmorogh();
-extern void AddSC_guard_durotar();
-extern void AddSC_guard_elwynnforest();
-extern void AddSC_guard_exodar();
-extern void AddSC_guard_ironforge();
-extern void AddSC_guard_mulgore();
-extern void AddSC_guard_orgrimmar();
-extern void AddSC_guard_shattrath();
-extern void AddSC_guard_silvermoon();
-extern void AddSC_guard_stormwind();
-extern void AddSC_guard_teldrassil();
-extern void AddSC_guard_tirisfal();
-extern void AddSC_guard_undercity();
-
+extern void AddSC_guards();
 
 // -- Honor --
 extern void AddSC_Honor_Vendor();
@@ -187,6 +171,8 @@ extern void AddSC_boss_warlord_kalithresh();
 
 //--Underbog
 //Darkshore
+extern void AddSC_mobs_darkshore();
+
 //Deadmines
 //Deadwind pass
 //Desolace
@@ -274,7 +260,8 @@ extern void AddSC_npc_great_bear_spirit();
 extern void AddSC_skorn_whitecloud();
 
 //Nagrand
-extern void AddSC_mob_shattered_rumbler();
+extern void AddSC_mobs_nagrand();
+extern void AddSC_npcs_nagrand();
 
 //Naxxramas
 extern void AddSC_boss_anubrekhan();
@@ -315,6 +302,7 @@ extern void AddSC_boss_scorn();
 extern void AddSC_scarlet_torturer();
 
 //Scholomance
+extern void AddSC_boss_death_knight_darkreaver();
 extern void AddSC_boss_theolenkrastinov();
 extern void AddSC_boss_illuciabarov();
 extern void AddSC_boss_instructormalicia();
@@ -347,6 +335,9 @@ extern void AddSC_npc_blood_knight_stillblade();
 extern void AddSC_npc_bartleby();
 extern void AddSC_npc_dashel_stonefist();
 
+//Stranglethorn Vale
+extern void AddSC_mobs_stranglethorn_vale();
+
 //Stratholme
 extern void AddSC_boss_fras_siabi();
 extern void AddSC_boss_hearthsinger_forresten();
@@ -370,6 +361,8 @@ extern void AddSC_mobs_stratholme();
 
 //Sunken Temple
 //Tanaris
+extern void AddSC_npcs_tanaris();
+
 //Teldrassil
 //Tempest Keep
 //--Arcatraz
@@ -397,6 +390,8 @@ extern void AddSC_mob_uldaman();
 //Wetlands
 //Winterspring
 //Zangramarsh
+extern void AddSC_npcs_zangarmarsh();
+
 //Zul'Farrak
 //Zul'Gurub
 
@@ -448,22 +443,7 @@ void ScriptsInit()
     AddSC_go_orb_of_command();
 
     // -- Guard --
-    AddSC_guard_bluffwatcher();
-    AddSC_guard_contested();
-    AddSC_guard_darnassus();
-    AddSC_guard_dunmorogh();
-    AddSC_guard_durotar();
-    AddSC_guard_elwynnforest();
-    AddSC_guard_exodar();
-    AddSC_guard_ironforge();
-    AddSC_guard_mulgore();
-    AddSC_guard_orgrimmar();
-    AddSC_guard_shattrath();
-    AddSC_guard_silvermoon();
-    AddSC_guard_stormwind();
-    AddSC_guard_teldrassil();
-    AddSC_guard_tirisfal();
-    AddSC_guard_undercity();
+    AddSC_guards();
 
 
     // -- Honor --
@@ -572,6 +552,8 @@ void ScriptsInit()
 
     //--Underbog
     //Darkshore
+    AddSC_mobs_darkshore();
+
     //Deadmines
     //Deadwind pass
     //Desolace
@@ -659,7 +641,8 @@ void ScriptsInit()
     AddSC_skorn_whitecloud();
 
     //Nagrand
-    AddSC_mob_shattered_rumbler();
+    AddSC_mobs_nagrand();
+    AddSC_npcs_nagrand();
 
     //Naxxramas
     AddSC_boss_anubrekhan();
@@ -700,6 +683,7 @@ void ScriptsInit()
     AddSC_scarlet_torturer();
 
     //Scholomance
+    AddSC_boss_death_knight_darkreaver();
     AddSC_boss_theolenkrastinov();
     AddSC_boss_illuciabarov();
     AddSC_boss_instructormalicia();
@@ -732,6 +716,9 @@ void ScriptsInit()
     AddSC_npc_bartleby();
     AddSC_npc_dashel_stonefist();
 
+    //Stranglethorn Vale
+    AddSC_mobs_stranglethorn_vale();
+
     //Stratholme
     AddSC_boss_fras_siabi();
     AddSC_boss_hearthsinger_forresten();
@@ -755,6 +742,8 @@ void ScriptsInit()
 
     //Sunken Temple
     //Tanaris
+    AddSC_npcs_tanaris();
+
     //Teldrassil
     //Tempest Keep
     //--Arcatraz
@@ -782,6 +771,8 @@ void ScriptsInit()
     //Wetlands
     //Winterspring
     //Zangramarsh
+    AddSC_npcs_zangarmarsh();
+
     //Zul'Farrak
     //Zul'Gurub
 

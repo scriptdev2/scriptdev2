@@ -217,6 +217,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 
 /* DARKSHORE */
+UPDATE `creature_template` SET `ScriptName` = 'mob_lunaclaw' WHERE `entry` = 12138;
 /* Delmanis the Hated, Greymist Oracle,  */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3662, 2207);
 
@@ -283,7 +284,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* GRUUL'S LAIR */
 /* Gruul the Dragonkiller */
-UPDATE creature_template SET ScriptName="boss_gruul" WHERE entry=19044;
+UPDATE `creature_template` SET `ScriptName` = 'boss_gruul' WHERE `entry`= 19044;
 
 
 /*  */
@@ -379,7 +380,10 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_great_bear_spirit' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 3232);
 
 /* NAGRAND */
-UPDATE creature_template SET ScriptName = 'shattered_rumbler' WHERE entry = '17157';
+UPDATE `creature_template` SET `ScriptName` = 'mob_gurok_the_usurper' WHERE `entry` = 18182;
+UPDATE `creature_template` SET `ScriptName` = 'mob_shattered_rumbler' WHERE `entry` = 17157;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_kilsorrow_agent' WHERE `entry` IN (17146, 17147, 17148, 18397, 18658);
+UPDATE `creature_template` SET `ScriptName` = 'npc_altruis_the_sufferer' WHERE `entry` = 18417;
 
 /* NAXXRAMAS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_anubrekhan' WHERE `entry` = 15956;
@@ -449,6 +453,7 @@ UPDATE `creature_template` SET `ScriptName` = 'scarlet_torturer' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6488, 4299, 4296, 4300);
 
 /* SCHOLOMANCE */
+UPDATE `creature_template` SET `ScriptName` = 'boss_death_knight_darkreaver' WHERE `entry` = 14516;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lord_alexei_barov' WHERE `entry` = 10504;
 UPDATE `creature_template` SET `ScriptName` = 'boss_instructor_malicia' WHERE `entry` = 10505;
 UPDATE `creature_template` SET `ScriptName` = 'boss_boss_ras_frostwhisper' WHERE `entry` = 10508;
@@ -486,7 +491,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'npcs_captains_blackanvil_and_skullsplit' WHERE `entry` IN (15440, 15612);
 
 /* SILVERMOON */
-UPDATE creature_template SET ScriptName = 'blood_knight_stillblade' WHERE entry = '17768';
+UPDATE `creature_template` SET `ScriptName` = 'blood_knight_stillblade' WHERE `entry` = 17768;
 
 /* SILVERPINE FOREST */
 /* Dalaran Apprentice, Dalaran Conjuror, Dalaran Mage, Dalaran Wizard, Rot Hide Mystic, Rot Hide Gladerunner, Rot Hide Brute, Rot Hide Plague Weaver, Rot Hide Savage, Rot Hide Bruiser, Mist Creeper, Dalaran Apprentice, Dalaran Wizard, Dalaran Protector, Dalaran Warder, Dalaran Mage, Dalaran Conjuror, Lake Creeper, Elder Lake Creeper, Vile Fin Shorecreeper, Nightlash, Archmage Ataeric */
@@ -501,10 +506,11 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4005);
 
 /* STORMWIND CITY */
-UPDATE `creature_template` SET `ScriptName` = 'npc_bartleby' WHERE `entry` IN (6090);
-UPDATE creature_template SET ScriptName = 'dashel_stonefist' WHERE entry = '4961';
+UPDATE `creature_template` SET `ScriptName` = 'npc_bartleby' WHERE `entry` = 6090;
+UPDATE `creature_template` SET `ScriptName` = 'dashel_stonefist' WHERE `entry` = 4961;
 
 /* STRANGLETHORN VALE */
+UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530;
 /* Bloodscalp Shaman, Bloodsail Elder Magus, Bloodsail Mage, Bloodsail Warlock, Bloodscalp Axe Thrower, Skullsplitter Axe Thrower, Bloodscalp Mystic, Skullsplitter Mystic */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (697, 1653, 1562, 1564, 694, 696, 701, 780);
 
@@ -583,6 +589,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (747, 740, 741, 743, 745, 769);
 
 /* TANARIS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_steward_of_time' WHERE `entry` = 20142;
 /* Dunemaul Ogre Mage, Wastewander Shadow Mage, Sandfury Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5473, 5617, 5646);
 
@@ -609,6 +616,12 @@ UPDATE `creature_template` SET `scriptname`='mob_crystalcore_devastator' WHERE `
 
 /* TEMPLE OF AHN'QIRAJ */
 
+
+/* TEROKKAR FOREST */
+UPDATE `creature_template` SET `ScriptName` = 'mob_infested_root_walker' WHERE `entry` = 22095;
+UPDATE `creature_template` SET `ScriptName` = 'mob_netherweb_victim' WHERE `entry` = 22355;
+UPDATE `creature_template` SET `ScriptName` = 'mob_rotting_forest_rager' WHERE `entry` = 22307;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_shadow_council_covert' WHERE `entry` IN (18716, 18717, 18719);
 
 /* THOUSAND NEEDLES */
 
@@ -653,8 +666,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* Cobalt Mageweaver, Chillwind Chimaera */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7437, 7448);
 
-/* ZANGRAMARSH */
-
+/* ZANGARMARSH */
+UPDATE `creature_template` SET `ScriptName` = 'npcs_ashyen_and_keleth' WHERE `entry` IN (17900, 17901);
+UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` = 18197;
 
 /* ZUL'FARRAK */
 

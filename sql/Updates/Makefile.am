@@ -42,4 +42,5 @@ pkgdata_DATA = \
 	r110.sql \
 	r121.sql \
 	r123.sql \
-	r124.sql
+	r124.sql \
+	r125.sql

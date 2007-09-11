@@ -46,22 +46,7 @@ scripts/go/go_orb_of_command.cpp \
 scripts/go/go_teleporter.cpp \
 scripts/guard/guard_ai.cpp \
 scripts/guard/guard_ai.h \
-scripts/guard/guard_bluffwatcher.cpp \
-scripts/guard/guard_contested.cpp \
-scripts/guard/guard_darnassus.cpp \
-scripts/guard/guard_dunmorogh.cpp \
-scripts/guard/guard_durotar.cpp \
-scripts/guard/guard_elwynnforest.cpp \
-scripts/guard/guard_exodar.cpp \
-scripts/guard/guard_ironforge.cpp \
-scripts/guard/guard_mulgore.cpp \
-scripts/guard/guard_orgrimmar.cpp \
-scripts/guard/guard_shattrath.cpp \
-scripts/guard/guard_silvermoon.cpp \
-scripts/guard/guard_stormwind.cpp \
-scripts/guard/guard_teldrassil.cpp \
-scripts/guard/guard_tirisfal.cpp \
-scripts/guard/guard_undercity.cpp \
+scripts/guard/guards.cpp \
 scripts/honor/honor_vendor.cpp \
 scripts/item/area_52_special.cpp \
 scripts/item/item_test.cpp \
@@ -125,6 +110,7 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
+scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
@@ -184,7 +170,8 @@ scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/npc_great_bear_spirit.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
 scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
-scripts/zone/nagrand/mob_shattered_rumbler.cpp \
+scripts/zone/nagrand/mobs_nagrand.cpp \
+scripts/zone/nagrand/npcs_nagrand.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
 scripts/zone/naxxramas/boss_faerlina.cpp \
 scripts/zone/naxxramas/boss_feugen.cpp \
@@ -224,6 +211,7 @@ scripts/zone/scarlet_monastery/boss_interrogator_vishas.cpp \
 scripts/zone/scarlet_monastery/boss_scarlet_commander_mograine.cpp \
 scripts/zone/scarlet_monastery/boss_scorn.cpp \
 scripts/zone/scarlet_monastery/mob_scarlet_torturer.cpp \
+scripts/zone/scholomance/boss_death_knight_darkreaver.cpp \
 scripts/zone/scholomance/boss_doctor_theolen_krastinov.cpp \
 scripts/zone/scholomance/boss_illucia_barov.cpp \
 scripts/zone/scholomance/boss_instructor_malicia.cpp \
@@ -242,6 +230,7 @@ scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
 scripts/zone/stormwind/npc_dashel_stonefist.cpp \
+scripts/zone/stranglethorn_vale/mobs_stranglethorn_vale.cpp \
 scripts/zone/stratholme/boss_archivist_galford.cpp \
 scripts/zone/stratholme/boss_baron_rivendare.cpp \
 scripts/zone/stratholme/boss_baroness_anastari.cpp \
@@ -262,6 +251,7 @@ scripts/zone/stratholme/boss_stonespine.cpp \
 scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
+scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_cthun.cpp \
@@ -276,9 +266,11 @@ scripts/zone/temple_of_ahnqiraj/boss_veknilash.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_vem.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_yauj.cpp \
+scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
+scripts/zone/zangramarsh/npcs_zangarmarsh.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
 scripts/zone/zulgurub/boss_grilek.cpp \
