@@ -154,14 +154,15 @@ CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
 ## mob_netherweb_victim
 ######*/
 
+//various mobs to summon: Bonelasher, Broken Skeleton, Auchenai Death-Speaker, Skithian Dreadhawk, Mature Bone Sifter, Auchenai Doomsayer
 const uint32 netherwebVictims[6] = 
 {
-    {18470},//Bonelasher
-    {16805},//Broken Skeleton
-    {21242},//Auchenai Death-Speaker
-    {18452},//Skithian Dreadhawk
-    {22482},//Mature Bone Sifter
-    {21285}//Auchenai Doomsayer
+    {18470},
+    {16805},
+    {21242},
+    {18452},
+    {22482},
+    {21285}
 };
 struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 {
