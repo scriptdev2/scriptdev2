@@ -76,6 +76,7 @@ extern void AddSC_purification_mixture();
 
 // -- NPC --
 extern void AddSC_not_selectable();
+extern void AddSC_npc_guardian();
 
 // -- Servers --
 
@@ -457,6 +458,7 @@ void ScriptsInit()
 
     // -- NPC --
     AddSC_not_selectable();
+    AddSC_npc_guardian();
 
     // -- Servers --
 
@@ -1207,7 +1209,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mech
         return false;
 
     //Silenced so we can't cast
-    if (m_creature->m_silenced)
+    if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
         return false;
 
     //Using the extended script system we first create a list of viable spells
@@ -1295,7 +1297,7 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
         return false;
 
     //Silenced so we can't cast
-    if (m_creature->m_silenced)
+    if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
         return false;
 
     //Check for power

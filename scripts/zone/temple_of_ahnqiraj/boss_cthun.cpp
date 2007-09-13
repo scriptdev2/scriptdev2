@@ -128,6 +128,9 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         {
             //Add them to our threat list
             m_creature->AddThreat(who,1.0f);
+
+            // Attack
+            DoStartRangedAttack(who);
         }
     }
 

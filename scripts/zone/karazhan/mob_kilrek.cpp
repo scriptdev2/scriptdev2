@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         }else Amplify_Timer -= diff;
 
         //Chain cast
-        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->m_silenced)
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
             DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
         else DoMeleeAttackIfReady();
     }

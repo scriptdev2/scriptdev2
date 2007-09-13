@@ -52,6 +52,7 @@ scripts/item/area_52_special.cpp \
 scripts/item/item_test.cpp \
 scripts/item/nether_wraith_beacon.cpp \
 scripts/item/purification_mixture.cpp \
+scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \

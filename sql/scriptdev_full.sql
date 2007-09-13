@@ -56,6 +56,7 @@ UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'silva_filnaveth' WHERE `entry` = 11800;
 UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 UPDATE `creature_template` SET `ScriptName` = 'bunthen_plainswind' WHERE `entry` = 11798;
+UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry`='5764';
 
 /* SERVERS */
 UPDATE `creature_template` SET `ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);

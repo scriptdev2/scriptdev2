@@ -208,6 +208,10 @@
 				Name="npc"
 				>
 				<File
+					RelativePath="..\scripts\npc\npc_guardian.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\npc\npc_not_selectable.cpp"
 					>
 				</File>
