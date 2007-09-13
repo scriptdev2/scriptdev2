@@ -871,10 +871,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mob_firesworn.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\molten_core\mob_firewalker.cpp"
 						>
 					</File>

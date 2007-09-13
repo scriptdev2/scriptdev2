@@ -814,7 +814,7 @@ CreatureAI* GetAI_mob_eye_of_naxxramas(Creature *_Creature)
     SimpleAI* ai = new SimpleAI (_Creature);
 
     //say
-    ai->AggroYell[0] = SAY_LIVING;
+    ai->Aggro_Yell[0] = SAY_LIVING;
     
     //FlyIn sound
     ai->Aggro_Sound[0] = 6596;

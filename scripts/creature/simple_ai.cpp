@@ -3,9 +3,9 @@
 SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
 {
     //Clear all data
-    AggroYell[0] = NULL;
-    AggroYell[1] = NULL;
-    AggroYell[2] = NULL;
+    Aggro_Yell[0] = NULL;
+    Aggro_Yell[1] = NULL;
+    Aggro_Yell[2] = NULL;
     Aggro_Sound[0] = 0;
     Aggro_Sound[1] = 0;
     Aggro_Sound[2] = 0;
@@ -90,8 +90,8 @@ void SimpleAI::AttackStart(Unit *who)
         {
             uint32 random_yell = rand()%3;
             //Random yell
-            if (AggroYell[random_yell])
-                DoYell(AggroYell[random_yell], LANG_UNIVERSAL, who);
+            if (Aggro_Yell[random_yell])
+                DoYell(Aggro_Yell[random_yell], LANG_UNIVERSAL, who);
 
             //Random sound
             if (Aggro_Sound[random_yell])
@@ -132,8 +132,8 @@ void SimpleAI::MoveInLineOfSight(Unit *who)
                 {
                     uint32 random_yell = rand()%3;
                     //Random yell
-                    if (AggroYell[random_yell])
-                        DoYell(AggroYell[random_yell], LANG_UNIVERSAL, who);
+                    if (Aggro_Yell[random_yell])
+                        DoYell(Aggro_Yell[random_yell], LANG_UNIVERSAL, who);
 
                     //Random sound
                     if (Aggro_Sound[random_yell])

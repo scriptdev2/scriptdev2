@@ -157,7 +157,6 @@ scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/mob_ancient_core_hound.cpp \
 scripts/zone/molten_core/mob_core_rager.cpp \
 scripts/zone/molten_core/mob_firelord.cpp \
-scripts/zone/molten_core/mob_firesworn.cpp \
 scripts/zone/molten_core/mob_firewalker.cpp \
 scripts/zone/molten_core/mob_flame_guard.cpp \
 scripts/zone/molten_core/mob_flamewaker.cpp \

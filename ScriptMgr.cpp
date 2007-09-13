@@ -243,7 +243,6 @@ extern void AddSC_mob_molten_giant();
 extern void AddSC_mob_ancient_core_hound();
 extern void AddSC_mob_molten_destroyer();
 extern void AddSC_mob_firewalker();
-extern void AddSC_mob_firesworn();
 extern void AddSC_mob_flame_guard();
 extern void AddSC_mob_flamewaker();
 extern void AddSC_mob_flamewaker_elite();
@@ -625,7 +624,6 @@ void ScriptsInit()
     AddSC_mob_ancient_core_hound();
     AddSC_mob_molten_destroyer();
     AddSC_mob_firewalker();
-    AddSC_mob_firesworn();
     AddSC_mob_flame_guard();
     AddSC_mob_flamewaker();
     AddSC_mob_flamewaker_elite();

@@ -15,12 +15,19 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../creature/simple_ai.h"
 
 
 // Adds NYI
 
+// Garr spells
 #define SPELL_ANTIMAGICPULSE        19492
 #define SPELL_MAGMASHACKLES         19496
+#define SPELL_ENRAGE                19516   //Stacking enrage (stacks to 10 times)
+
+//Add spells
+#define SPELL_ERUPTION              19497
+#define SPELL_IMMOLATE              20294
 
 struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 {
@@ -28,12 +35,16 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 
     uint32 AntiMagicPulse_Timer;
     uint32 MagmaShackles_Timer;
+    uint32 CheckAdds_Timer;
+    uint64 Add[8];
+    bool Enraged[8];
     bool InCombat;
 
     void EnterEvadeMode()
     {
         AntiMagicPulse_Timer = 25000;      //These times are probably wrong
         MagmaShackles_Timer = 15000;
+        CheckAdds_Timer = 2000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -84,6 +95,44 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         }
     }
 
+    void SpawnAdds()
+    {
+        for (int32 i = 0; i < 8; i++)
+        {
+            Unit* pUnit = NULL; 
+            pUnit = DoSpawnCreature(12099, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 1000);
+
+            if (pUnit)
+                Add[i] = pUnit->GetGUID();
+
+            Enraged[i] = false;
+        }
+        
+    }
+
+    void CheckAdds()
+    {
+        for (int32 i = 0; i < 8; i++)
+        {
+            if (Enraged[i])
+                continue;
+
+            if (Add[i])
+            {
+                Unit* pUnit = NULL; 
+                pUnit = Unit::GetUnit((*m_creature), Add[i]);
+
+                if (pUnit && pUnit->isAlive())
+                    continue;
+            }
+
+            //Add isn't alive so enrage once
+            DoCast(m_creature, SPELL_ENRAGE);
+            Enraged[i] = true;
+        }
+
+    }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
@@ -124,11 +173,36 @@ CreatureAI* GetAI_boss_garr(Creature *_Creature)
 }
 
 
+CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
+{
+    SimpleAI* ai = new SimpleAI (_Creature);
+
+    //Cast eruption upon death
+    ai->Death_Spell = SPELL_ERUPTION;
+    ai->Death_Target_Type = CAST_SELF;  //Self
+
+    //Cast eruption upon death
+    ai->Spell[0].Enabled = true;
+    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    ai->Spell[0].Cooldown = 7000;
+    ai->Spell[0].First_Cast = 7000;
+    ai->Spell[0].Spell_Id = SPELL_IMMOLATE;
+
+    ai->EnterEvadeMode();
+
+    return ai;
+}
+
 void AddSC_boss_garr()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name="boss_garr";
     newscript->GetAI = GetAI_boss_garr;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_firesworn";
+    newscript->GetAI = GetAI_mob_firesworn;
     m_scripts[nrscripts++] = newscript;
 }

@@ -32,7 +32,7 @@ struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 
 public:
 
-    char* AggroYell[3];
+    char* Aggro_Yell[3];
     uint32 Aggro_Sound[3];
 
     char* Death_Yell[3];
