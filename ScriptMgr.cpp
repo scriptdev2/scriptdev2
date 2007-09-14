@@ -192,7 +192,7 @@ extern void AddSC_mobs_ghoul_flayer();
 extern void AddSC_npc_darrowshire_spirit();
 
 //Elwynn Forest
-extern void AddSC_henze_faulk();
+extern void AddSC_npc_henze_faulk();
 
 //Felwood
 //Feralas
@@ -576,7 +576,7 @@ void ScriptsInit()
     AddSC_npc_darrowshire_spirit();
 
     //Elwynn Forest
-    AddSC_henze_faulk();
+    AddSC_npc_henze_faulk();
 
     //Felwood
     //Feralas
