@@ -375,6 +375,9 @@ extern void AddSC_mob_the_eye();
 //Temple of ahn'qiraj
 extern void AddSC_boss_cthun();
 
+//Terokkar Forest
+extern void AddSC_mobs_terokkar_forest();
+
 //Thousand Needles
 //Tirisfal Glades
 //Uldaman
@@ -755,6 +758,9 @@ void ScriptsInit()
     //--The Mechanar
     //Temple of ahn'qiraj
     AddSC_boss_cthun();
+
+    //Terokkar Forest
+    AddSC_mobs_terokkar_forest();
 
     //Thousand Needles
     //Tirisfal Glades
