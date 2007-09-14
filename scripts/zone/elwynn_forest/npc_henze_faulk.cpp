@@ -17,28 +17,26 @@
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 
-#define SAY_HEAL "<Missing English Text>"
+// **** This script is still under Developement ****
 
-struct MANGOS_DLL_DECL henze_faulkAI : public ScriptedAI
+#define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
+
+struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
 {
-    uint32 ResetlifeTimer;
-    uint32 DoSayHealTimer;
-    bool DoSayHeal;
+    uint32 lifeTimer;
+    bool spellHit;
 
-    henze_faulkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_henze_faulkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     void EnterEvadeMode()
     {
-        ResetlifeTimer= 60000;
-        DoSayHealTimer = 5000;
-        DoSayHeal = false;
+        lifeTimer = 120000;
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         DoGoHome();
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
-        m_creature->SetHealth(1);
-        m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, 32);
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // ley down
+        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
+        spellHit = false;
     }
 
     void AttackStart(Unit *who)
@@ -48,77 +46,43 @@ struct MANGOS_DLL_DECL henze_faulkAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        return; //ignore everyone around them (won't aggro anything)
+        return;
     }
 
     void UpdateAI(const uint32 diff)
     {
-
-        if (m_creature->GetHealth() > 1)
+        if (!m_creature->GetUInt32Value(UNIT_FIELD_BYTES_1))
         {
-            if(ResetlifeTimer < diff)
-            {
-                m_creature->SetHealth(1);
-                ResetlifeTimer = 60000;
-                m_creature->RemoveAllAuras();
-            }
-            else ResetlifeTimer -= diff;
+            if(lifeTimer < diff)
+                m_creature->AI()->EnterEvadeMode();
+            else 
+                lifeTimer -= diff;
         }
-
-        if(DoSayHeal)
-        {
-            if(DoSayHealTimer < diff)
-            {
-                DoSay(SAY_HEAL,LANG_COMMON,NULL);
-                DoSayHealTimer = 5000;
-                DoSayHeal = false;
-            }else DoSayHealTimer -= diff;
-        }
-
-        return;
     }
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if(Spellkind->Id == 8593)
+        if(Spellkind->Id == 8593 && !spellHit)
         {
             DoCast(m_creature,32343);
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
-            m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, 0);
+            m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             m_creature->RemoveAllAuras();
-            DoSayHeal = true;
+            DoSay(SAY_HEAL,LANG_COMMON,NULL);
+            spellHit = true;
         }
-        return;
     }
 
 };
-CreatureAI* GetAI_henze_faulk(Creature *_Creature)
+CreatureAI* GetAI_npc_henze_faulk(Creature *_Creature)
 {
-    return new henze_faulkAI (_Creature);
+    return new npc_henze_faulkAI (_Creature);
 }
-
-bool QuestAccept_henze_faulk(Player *player, Creature *creature, Quest *quest )
-{
-    if(quest->GetQuestId() == 1787)
-    {
-        creature->RemoveAllAuras();
-        creature->DeleteThreatList();
-        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
-        creature->SetHealth(1);
-        creature->SetFlag(UNIT_DYNAMIC_FLAGS, 32);
-        creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // ley down
-        return true;
-    }
-    return false;
-}
-
-
-void AddSC_henze_faulk()
+void AddSC_npc_henze_faulk()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="henze_faulk";
-    newscript->GetAI = GetAI_henze_faulk;
-    newscript->pQuestAccept = &QuestAccept_henze_faulk;
+    newscript->Name="npc_henze_faulk";
+    newscript->GetAI = GetAI_npc_henze_faulk;
     m_scripts[nrscripts++] = newscript;
 }

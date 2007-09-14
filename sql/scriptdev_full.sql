@@ -265,6 +265,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* ELWYNN FOREST */
 /* Hogger, Defias Rogue Wizard, Defias Enchanter, Defias Bodyguard, Defias Bandit, Defias Cutpurse, Murloc Lurker, Murloc Forager, Forest Spider, Mine Spider */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (448, 474, 910, 6866, 116, 94, 732, 46, 30, 43);
+UPDATE `creature_template` SET `ScriptName` = 'npc_henze_faulk' WHERE `entry`= 6172;
 
 /* EVERSONG WOODS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_mana_tapped' WHERE `entry` IN (15273,15274,15294,15298,15367);
