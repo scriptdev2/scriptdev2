@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 //        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
         m_creature->SetHover(false);
-        (*m_creature)->Clear(false);
+        (*m_creature).GetMotionMaster()->Clear(false);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -332,8 +332,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 phase = 2;
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                (*m_creature)->Clear(false);
-                (*m_creature)->Idle();
+                (*m_creature).GetMotionMaster()->Clear(false);
+                (*m_creature).GetMotionMaster()->Idle();
                 DoCast(m_creature,11010);//hover?
                 m_creature->SetHover(true);
                 DoCast(m_creature,18430);//Dragon hover?
@@ -352,8 +352,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                 m_creature->SetHover(false);
-                (*m_creature)->Clear(false);
-                (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
+                (*m_creature).GetMotionMaster()->Clear(false);
+                (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
                 DoYell(SAY_PHASE_3_TRANS,LANG_UNIVERSAL,NULL);
             }
 

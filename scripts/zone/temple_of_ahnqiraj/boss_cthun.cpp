@@ -16,6 +16,8 @@
 
 #include "../../sc_defines.h"
 
+#define PI                          3.14
+
 //Random Wispers - No txt only sound
 #define RND_WISPER_1                8580 //Death is close
 #define RND_WISPER_2                8581 //You are already dead
@@ -84,8 +86,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     uint32 ClawTentacleTimer;
 
     //Dark Glare phase
-    uint32 RefreshTimer;
-    float Angle;
+    uint32 DarkGlareTick;
+    uint32 DarkGlareTickTimer;
+    float DarkGlareAngle;
+    uint32 i;
 
     
     void EnterEvadeMode()
@@ -102,7 +106,12 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
         ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
 
-        //Dark Beam phase 35 seconds
+        //Dark Beam phase 35 seconds (each tick = 1 second, 35 ticks)
+        DarkGlareTick = 0;
+        DarkGlareTickTimer = 1000;
+        DarkGlareAngle = 0;
+
+        i = 0;
 
 
         m_creature->RemoveAllAuras();
@@ -113,11 +122,11 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     
     void AttackStart(Unit *who)
     {
-        if (!who)
+        /*if (!who)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
-            DoStartRangedAttack(who);
+            DoStartRangedAttack(who);*/
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -197,6 +206,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     {
                         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                         DoCast(target,SPELL_GREEN_BEAM);
+
                         //Correctly update our target
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
                     }
@@ -264,10 +274,17 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
 
                         //Face our target
+                        DarkGlareAngle = m_creature->GetAngle(target);
+                        DarkGlareTickTimer = 1000;
+                        DarkGlareTick = 0;
                     }
 
                     //Add red coloration to C'thun
                     DoCast(m_creature,SPELL_RED_COLORATION);
+
+                    //Set emote state
+                    m_creature->setEmoteState(i);
+                    i++;
                     
                     //Darkbeam for 35 seconds
                     PhaseTimer = 35000;
@@ -278,15 +295,28 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             else if (Phase == 1)
             {
                 //EyeTentacleTimer
-                if (EyeTentacleTimer < diff)
-                {
+                if (DarkGlareTick < 35)
+                    if (DarkGlareTickTimer < diff)
+                    {
 
-                    //SPELL_DARK_GLARE
-                    DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
+                        //SPELL_DARK_GLARE
+                        DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
 
-                    //
-                    EyeTentacleTimer = 45000;
-                }else EyeTentacleTimer -= diff;
+                        //Remove any target
+                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+
+                        //Set angle and cast
+                        m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+
+                        //
+                        DoCast(NULL, SPELL_DARK_GLARE);
+
+                        //Increase tick
+                        DarkGlareTick++;
+
+                        //1 second per tick
+                        DarkGlareTickTimer = 1000;
+                    }else DarkGlareTickTimer -= diff;
 
                 //PhaseTimer
                 if (PhaseTimer < diff)

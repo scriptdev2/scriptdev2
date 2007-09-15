@@ -177,10 +177,10 @@ void guardAI::UpdateAI(const uint32 diff)
             if (info && !GlobalCooldown)
             {
                 //If we are currently moving stop us and set the movement generator
-                if ((*m_creature)->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
+                if ((*m_creature).GetMotionMaster()->top()->GetMovementGeneratorType()!=IDLE_MOTION_TYPE)
                 {
-                    (*m_creature)->Clear(false);
-                    (*m_creature)->Idle();
+                    (*m_creature).GetMotionMaster()->Clear(false);
+                    (*m_creature).GetMotionMaster()->Idle();
                 }
 
                 //Face target
@@ -195,12 +195,12 @@ void guardAI::UpdateAI(const uint32 diff)
 
 
             }//If no spells available and we arn't moving run to target
-            else if ((*m_creature)->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
+            else if ((*m_creature).GetMotionMaster()->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
             {
                 //Cancel our current spell and then mutate new movement generator
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                (*m_creature)->Clear(false);
-                (*m_creature)->Mutate(new TargetedMovementGenerator(*m_creature->getVictim()));
+                (*m_creature).GetMotionMaster()->Clear(false);
+                (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
             }
         }
     }

@@ -21,6 +21,7 @@
 //Only required includes
 #include "../../game/CreatureAI.h"
 #include "../../game/Creature.h"
+#include "../../game/InstanceData.h"
 
 #define MAX_SCRIPTS 1000
 
@@ -30,39 +31,41 @@ class Quest;
 class Item;
 class GameObject;
 class SpellCastTargets;
+class Map;
 
 struct Script
 {
     Script() :
-    pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
-        pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pChooseReward(NULL),
-        pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
-        pGOChooseReward(NULL),pReceiveEmote(NULL),pItemUse(NULL), GetAI(NULL)
-        {}
+pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
+pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pChooseReward(NULL),
+pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
+pGOChooseReward(NULL),pReceiveEmote(NULL),pItemUse(NULL), GetAI(NULL), GetInstanceData(NULL)
+{}
 
-    std::string Name;
+std::string Name;
 
-    // -- Quest/gossip Methods to be scripted --
-    bool (*pGossipHello         )(Player *player, Creature *_Creature);
-    bool (*pQuestAccept         )(Player *player, Creature *_Creature, Quest *_Quest );
-    bool (*pGossipSelect        )(Player *player, Creature *_Creature, uint32 sender, uint32 action );
-    bool (*pGossipSelectWithCode)(Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode );
-    bool (*pQuestSelect         )(Player *player, Creature *_Creature, Quest *_Quest );
-    bool (*pQuestComplete       )(Player *player, Creature *_Creature, Quest *_Quest );
-    uint32 (*pNPCDialogStatus   )(Player *player, Creature *_Creature );
-    bool (*pChooseReward        )(Player *player, Creature *_Creature, Quest *_Quest, uint32 opt );
-    bool (*pItemHello           )(Player *player, Item *_Item, Quest *_Quest );
-    bool (*pGOHello             )(Player *player, GameObject *_GO );
-    bool (*pAreaTrigger         )(Player *player, Quest *_Quest, uint32 triggerID );
-    bool (*pItemQuestAccept     )(Player *player, Item *_Item, Quest *_Quest );
-    bool (*pGOQuestAccept       )(Player *player, GameObject *_GO, Quest *_Quest );
-    bool (*pGOChooseReward      )(Player *player, GameObject *_GO, Quest *_Quest, uint32 opt );
+// -- Quest/gossip Methods to be scripted --
+bool (*pGossipHello         )(Player*, Creature*);
+bool (*pQuestAccept         )(Player*, Creature*, Quest* );
+bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32  );
+bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , char* );
+bool (*pQuestSelect         )(Player*, Creature*, Quest* );
+bool (*pQuestComplete       )(Player*, Creature*, Quest* );
+uint32 (*pNPCDialogStatus   )(Player*, Creature* );
+bool (*pChooseReward        )(Player*, Creature*, Quest*, uint32 );
+bool (*pItemHello           )(Player*, Item*, Quest* );
+bool (*pGOHello             )(Player*, GameObject* );
+bool (*pAreaTrigger         )(Player*, Quest *, uint32 );
+bool (*pItemQuestAccept     )(Player*, Item *, Quest* );
+bool (*pGOQuestAccept       )(Player*, GameObject*, Quest* );
+bool (*pGOChooseReward      )(Player*, GameObject*_GO, Quest*, uint32 );
+bool (*pReceiveEmote        )(Player*, Creature*, uint32 );
+bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
 
-    CreatureAI* (*GetAI)(Creature *_Creature);
+CreatureAI* (*GetAI)(Creature*);
+InstanceData* (*GetInstanceData)(Map*);
 
-    bool (*pReceiveEmote        )(Player *player, Creature *_Creature, uint32 emote);
-    bool (*pItemUse             )(Player *player, Item* _Item, SpellCastTargets const& targets);
-    // -----------------------------------------
+// -----------------------------------------
 
 };
 
@@ -75,7 +78,7 @@ extern Script *m_scripts[MAX_SCRIPTS];
 enum SelectTarget
 {
     SELECT_TARGET_DONTCARE = 0,         //All target types allowed
-    
+
     SELECT_TARGET_SELF,                 //Only Self casting
 
     SELECT_TARGET_SINGLE_ENEMY,         //Only Single Enemy
@@ -140,7 +143,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Called at creature death
     void JustDied(Unit*){}
-    
+
     //Called at creature killing another unit
     void KilledUnit(Unit*){}
 
@@ -189,7 +192,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Spawns a creature relative to m_creature
     Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);
-    
+
     //Selects a unit from the creature's current aggro list
     Unit* SelectUnit(SelectAggroTarget target, uint32 position);
 

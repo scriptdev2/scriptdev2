@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
         {
             if(isMove)
             {
-                (*m_creature)->Clear();
+                (*m_creature).GetMotionMaster()->Clear();
                 CreatureMove(-4115.053711f,-13754.831055f,73.508949f);
                 isMove = false;
             }
