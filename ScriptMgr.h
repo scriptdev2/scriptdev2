@@ -23,7 +23,7 @@
 #include "../../game/Creature.h"
 #include "../../game/InstanceData.h"
 
-#define MAX_SCRIPTS 1000
+#define MAX_SCRIPTS 5000
 
 class Player;
 class Creature;

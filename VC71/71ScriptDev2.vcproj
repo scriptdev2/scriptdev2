@@ -483,6 +483,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackwing_lair\instance_blackwing_lair.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackwing_lair\npc_victor_nefarius.cpp"
 						>
 					</File>
@@ -492,6 +496,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\gruuls_lair\boss_gruul.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
 						>
 					</File>
 				</Filter>
@@ -568,6 +576,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\boss_rajaxx.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\ruins_of_ahnqiraj\instance_ruins_of_ahnqiraj.cpp"
 						>
 					</File>
 				</Filter>
@@ -795,6 +807,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\molten_core\instance_molten_core.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\molten_core\mob_ancient_core_hound.cpp"
 						>
 					</File>
@@ -932,6 +948,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_thane_korthazz.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\naxxramas\instance_naxxramas.cpp"
 						>
 					</File>
 				</Filter>
@@ -1122,6 +1142,10 @@
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_yauj.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Thousand Needles"
@@ -1230,6 +1254,10 @@
 						RelativePath="..\scripts\zone\zulgurub\boss_wushoolay.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Uldaman"
@@ -1287,6 +1315,10 @@
 					Name="Black Temple"
 					>
 					<File
+						RelativePath="..\scripts\zone\black_temple\instance_black_temple.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\black_temple\mob_blacktemple.cpp"
 						>
 					</File>
@@ -1327,6 +1359,10 @@
 						>
 						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\boss_magtheridon.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
 							>
 						</File>
 						<File
@@ -1399,6 +1435,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\karazhan\instance_karazhan.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\karazhan\mob_homunculus.cpp"
 						>
 					</File>
@@ -1453,6 +1493,10 @@
 					<Filter
 						Name="The Eye"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\instance_the_eye.cpp"
+							>
+						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_crystalcore_devastator.cpp"
 							>
@@ -1557,6 +1601,10 @@
 					<Filter
 						Name="Serpent Shrine Cavern"
 						>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Slave Pens"
@@ -1585,6 +1633,10 @@
 					<Filter
 						Name="Battle for Mt. Hyjal"
 						>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\instance_hyjal.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Old Hillsbrad"

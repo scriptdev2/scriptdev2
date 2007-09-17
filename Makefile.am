@@ -59,6 +59,7 @@ scripts/sc_defines.h \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
+scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/mob_blacktemple.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
@@ -107,9 +108,12 @@ scripts/zone/blackwing_lair/boss_flamegor.cpp \
 scripts/zone/blackwing_lair/boss_nefarian.cpp \
 scripts/zone/blackwing_lair/boss_razorgore.cpp \
 scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
+scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
+scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
+scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
@@ -118,7 +122,9 @@ scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
+scripts/zone/gruuls_lair/instance_gruuls_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
+scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
@@ -132,6 +138,7 @@ scripts/zone/karazhan/boss_nightbane.cpp \
 scripts/zone/karazhan/boss_prince_malchezaar.cpp \
 scripts/zone/karazhan/boss_shade_of_aran.cpp \
 scripts/zone/karazhan/boss_terestian_illhoof.cpp \
+scripts/zone/karazhan/instance_karazhan.cpp \
 scripts/zone/karazhan/mob_homunculus.cpp \
 scripts/zone/karazhan/mob_kilrek.cpp \
 scripts/zone/karazhan/mob_netherspite_infernal.cpp \
@@ -154,6 +161,7 @@ scripts/zone/molten_core/boss_majordomo_executus.cpp \
 scripts/zone/molten_core/boss_ragnaros.cpp \
 scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
+scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mob_ancient_core_hound.cpp \
 scripts/zone/molten_core/mob_core_rager.cpp \
 scripts/zone/molten_core/mob_firelord.cpp \
@@ -192,6 +200,7 @@ scripts/zone/naxxramas/boss_sir_zeliek.cpp \
 scripts/zone/naxxramas/boss_stalagg.cpp \
 scripts/zone/naxxramas/boss_thaddius.cpp \
 scripts/zone/naxxramas/boss_thane_korthazz.cpp \
+scripts/zone/naxxramas/instance_naxxramas.cpp \
 scripts/zone/onyxias_lair/boss_onyxia.cpp \
 scripts/zone/razorfen_downs/boss_amnennar_the_coldbringer.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_ayamiss.cpp \
@@ -200,6 +209,7 @@ scripts/zone/ruins_of_ahnqiraj/boss_kurinnaxx.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_moam.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_ossirian.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_rajaxx.cpp \
+scripts/zone/ruins_of_ahnqiraj/instance_ruins_of_ahnqiraj.cpp \
 scripts/zone/scarlet_monastery/boss_arcanist_doan.cpp \
 scripts/zone/scarlet_monastery/boss_azshir_the_sleepless.cpp \
 scripts/zone/scarlet_monastery/boss_bloodmage_thalnos.cpp \
@@ -252,6 +262,7 @@ scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
+scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_cthun.cpp \
@@ -266,6 +277,7 @@ scripts/zone/temple_of_ahnqiraj/boss_veknilash.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_vem.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_yauj.cpp \
+scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
@@ -284,6 +296,7 @@ scripts/zone/zulgurub/boss_renataki.cpp \
 scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
+scripts/zone/zulgurub/instance_zulgurub.cpp \
 system.cpp
 
 

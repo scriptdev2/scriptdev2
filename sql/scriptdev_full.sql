@@ -115,6 +115,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3273, 3269, 3458, 3271, 3265, 3459, 3267, 3250, 3270, 9458);
 
 /* BLACK TEMPLE */
+UPDATE `instance_template` SET `script` = 'instance_black_temple' WHERE `map`= 564;
 /* BT Trash Mobs */
 UPDATE `creature_template` SET `scriptname`='mob_blacktemple' WHERE `entry` IN (22844,22845,22846,22849,22853,22855,22869,22873,22875,22876,22877,22878,22880,22881,22882,22883,22884,22945,22953,22954,23337,23339);
 
@@ -182,6 +183,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (10509,10264,10899);
 
 /* BLACKWING LAIR */
+UPDATE `instance_template` SET `script` = 'instance_blackwing_lair' WHERE `map`= 469;
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
 UPDATE `creature_template` SET `ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
 UPDATE `creature_template` SET `ScriptName` = 'boss_broodlord' WHERE `entry` = 12017;
@@ -204,6 +206,19 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 
 /*  */
+/* CAVERNS OF TIME */
+/*  */
+
+/* MT. HYJAL */
+UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map`= 534;
+
+/* OLD HILLSBRAD */
+
+/* THE DARK PORTAL */
+
+
+
+/*  */
 /* COILFANG RESERVOIR */
 /*  */
 
@@ -214,6 +229,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* THE STEAMVAULT */
 
 /* SERPENTSHRINE CAVERN */
+UPDATE `instance_template` SET `script` = 'instance_serpent_shrine' WHERE `map`= 548;
 
 
 
@@ -285,6 +301,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6206, 6208, 6209, 6215, 6219, 6229, 6228, 6235, 7361, 6407, 6220, 6218, 7603, 6223, 6222, 6234, 6233, 6226, 6227, 6225, 6230, 7079);
 
 /* GRUUL'S LAIR */
+UPDATE `instance_template` SET `script` = 'instance_gruuls_lair' WHERE `map`= 565;
 /* Gruul the Dragonkiller */
 UPDATE `creature_template` SET `ScriptName` = 'boss_gruul' WHERE `entry`= 19044;
 
@@ -312,6 +329,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17465, 17694, 17671, 17622, 17695, 16809, 16807, 16704, 16700, 16699, 16593);
 
 /* MAGTHERIDON'S LAIR */
+UPDATE `instance_template` SET `script` = 'instance_magtheridons_lair' WHERE `map`= 544;
 
 
 
@@ -331,6 +349,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 
 /* KARAZHAN */
+UPDATE `instance_template` SET `script` = 'instance_karazhan' WHERE `map`= 532;
 
 
 /* LOCH MODAN */
@@ -349,6 +368,7 @@ UPDATE `creature_template` SET `ScriptName` = 'meshlok_the_harvester' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'razorlash' WHERE `entry` = 12258;
 
 /* MOLTEN CORE */
+UPDATE `instance_template` SET `script` = 'instance_molten_core' WHERE `map`= 409;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lucifron' WHERE `entry` = 12118;
 UPDATE `creature_template` SET `ScriptName` = 'boss_magmadar' WHERE `entry` = 11982;
 UPDATE `creature_template` SET `ScriptName` = 'boss_gehennas' WHERE `entry` = 12259;
@@ -388,6 +408,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_kilsorrow_agent' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'npc_altruis_the_sufferer' WHERE `entry` = 18417;
 
 /* NAXXRAMAS */
+UPDATE `instance_template` SET `script` = 'instance_naxxramas' WHERE `map`= 533;
 UPDATE `creature_template` SET `ScriptName` = 'boss_anubrekhan' WHERE `entry` = 15956;
 UPDATE `creature_template` SET `ScriptName` = 'boss_faerlina' WHERE `entry` = 15953;
 UPDATE `creature_template` SET `ScriptName` = 'boss_maexxna' WHERE `entry` = 15952;
@@ -437,6 +458,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (436, 548, 544, 545, 578, 1083, 422, 429, 434, 433, 432, 568, 579, 430, 424, 712, 446, 441, 442, 505, 4463);
 
 /* RUINS OF AHN'QIRAJ */
+UPDATE `instance_template` SET `script` = 'instance_ruins_of_ahnqiraj' WHERE `map`= 509;
 
 
 /* SCARLET MONASTERY */
@@ -611,12 +633,14 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* THE ARCATRAZ */
 
 /* THE EYE */
+UPDATE `instance_template` SET `script` = 'instance_the_eye' WHERE `map`= 550;
 /* The Eye Trash Mobs */
 UPDATE `creature_template` SET `scriptname`='mob_the_eye' WHERE `entry` IN (20031,20032,20033,20034,20035,20039,20041,20043,20046,20052);
 UPDATE `creature_template` SET `scriptname`='mob_crystalcore_devastator' WHERE `entry`='20040';
 
 
 /* TEMPLE OF AHN'QIRAJ */
+UPDATE `instance_template` SET `script` = 'instance_temple_of_ahnqiraj' WHERE `map`= 531;
 
 
 /* TEROKKAR FOREST */
@@ -676,6 +700,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` =
 
 
 /* ZUL'GURUB */
+UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map`= 309;
 /* Gurubashi Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11350);
 
