@@ -39,12 +39,15 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
-        if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
+        if (done_by->GetTypeId() == TYPEID_PLAYER)
         {
-            if (m_creature->GetHealth() <= damage)
+            if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
             {
-                if (rand()%100 < 75)
-                    m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
+                if (m_creature->GetHealth() <= damage)
+                {
+                    if (rand()%100 < 75)
+                        m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
+                }
             }
         }
     }
@@ -105,12 +108,15 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
-        if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
+        if (done_by->GetTypeId() == TYPEID_PLAYER)
         {
-            if (m_creature->GetHealth() <= damage)
+            if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
             {
-                if (rand()%100 < 75)
-                    m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
+                if (m_creature->GetHealth() <= damage)
+                {
+                    if (rand()%100 < 75)
+                        m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
+                }
             }
         }
     }
