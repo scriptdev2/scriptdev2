@@ -28,9 +28,9 @@ CreatureAI* GetAI_test(Creature *_Creature)
     SimpleAI* ai = new SimpleAI (_Creature);
 
     //
-    ai->Aggro_Yell[0] = AGGRO_YELL_1;
-    ai->Aggro_Yell[1] = AGGRO_YELL_2;
-    ai->Aggro_Yell[2] = AGGRO_YELL_3;
+    ai->Aggro_Text[0] = AGGRO_YELL_1;
+    ai->Aggro_Text[1] = AGGRO_YELL_2;
+    ai->Aggro_Text[2] = AGGRO_YELL_3;
 
     //Flay (10% double attack)
     ai->Spell[0].Enabled = true;                //Enabled

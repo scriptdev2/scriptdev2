@@ -3,25 +3,34 @@
 SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
 {
     //Clear all data
-    Aggro_Yell[0] = NULL;
-    Aggro_Yell[1] = NULL;
-    Aggro_Yell[2] = NULL;
+    Aggro_Text[0] = NULL;
+    Aggro_Text[1] = NULL;
+    Aggro_Text[2] = NULL;
+    Aggro_Say[0] = false;
+    Aggro_Say[1] = false;
+    Aggro_Say[2] = false;
     Aggro_Sound[0] = 0;
     Aggro_Sound[1] = 0;
     Aggro_Sound[2] = 0;
 
-    Death_Yell[0] = NULL;
-    Death_Yell[1] = NULL;
-    Death_Yell[2] = NULL;
+    Death_Text[0] = NULL;
+    Death_Text[1] = NULL;
+    Death_Text[2] = NULL;
+    Death_Say[0] = false;
+    Death_Say[1] = false;
+    Death_Say[2] = false;
     Death_Sound[0] = 0;
     Death_Sound[1] = 0;
     Death_Sound[2] = 0;
     Death_Spell = 0;
     Death_Target_Type = 0;
 
-    Kill_Yell[0] = NULL;
-    Kill_Yell[1] = NULL;
-    Kill_Yell[2] = NULL;
+    Kill_Text[0] = NULL;
+    Kill_Text[1] = NULL;
+    Kill_Text[2] = NULL;
+    Kill_Say[0] = false;
+    Kill_Say[1] = false;
+    Kill_Say[2] = false;
     Kill_Sound[0] = 0;
     Kill_Sound[1] = 0;
     Kill_Sound[2] = 0;
@@ -88,14 +97,17 @@ void SimpleAI::AttackStart(Unit *who)
         //Say our dialog
         if (!InCombat)
         {
-            uint32 random_yell = rand()%3;
+            uint32 random_text = rand()%3;
+
             //Random yell
-            if (Aggro_Yell[random_yell])
-                DoYell(Aggro_Yell[random_yell], LANG_UNIVERSAL, who);
+            if (Aggro_Text[random_text])
+                if (Aggro_Say[random_text])
+                    DoSay(Aggro_Text[random_text], LANG_UNIVERSAL, who);
+                else DoYell(Aggro_Text[random_text], LANG_UNIVERSAL, who);
 
             //Random sound
-            if (Aggro_Sound[random_yell])
-                DoPlaySoundToSet(m_creature, Aggro_Sound[random_yell]);
+            if (Aggro_Sound[random_text])
+                DoPlaySoundToSet(m_creature, Aggro_Sound[random_text]);
 
             InCombat = true;
         }
@@ -130,14 +142,17 @@ void SimpleAI::MoveInLineOfSight(Unit *who)
                 //Say our dialog
                 if (!InCombat)
                 {
-                    uint32 random_yell = rand()%3;
+                    uint32 random_text = rand()%3;
+
                     //Random yell
-                    if (Aggro_Yell[random_yell])
-                        DoYell(Aggro_Yell[random_yell], LANG_UNIVERSAL, who);
+                    if (Aggro_Text[random_text])
+                        if (Aggro_Say[random_text])
+                            DoSay(Aggro_Text[random_text], LANG_UNIVERSAL, who);
+                        else DoYell(Aggro_Text[random_text], LANG_UNIVERSAL, who);
 
                     //Random sound
-                    if (Aggro_Sound[random_yell])
-                        DoPlaySoundToSet(m_creature, Aggro_Sound[random_yell]);
+                    if (Aggro_Sound[random_text])
+                        DoPlaySoundToSet(m_creature, Aggro_Sound[random_text]);
 
                     InCombat = true;
                 }
@@ -147,15 +162,17 @@ void SimpleAI::MoveInLineOfSight(Unit *who)
 
 void SimpleAI::KilledUnit(Unit *victim)
 {
-    uint32 random_yell = rand()%3;
+    uint32 random_text = rand()%3;
 
     //Random yell
-    if (Kill_Yell[random_yell])
-        DoYell(Kill_Yell[random_yell], LANG_UNIVERSAL, victim);
+    if (Kill_Text[random_text])
+        if (Kill_Say[random_text])
+            DoSay(Kill_Text[random_text], LANG_UNIVERSAL, victim);
+        else DoYell(Kill_Text[random_text], LANG_UNIVERSAL, victim);
 
     //Random sound
-    if (Kill_Sound[random_yell])
-        DoPlaySoundToSet(m_creature, Kill_Sound[random_yell]);
+    if (Kill_Sound[random_text])
+        DoPlaySoundToSet(m_creature, Kill_Sound[random_text]);
 
     if (!Kill_Spell)
         return;
@@ -195,15 +212,17 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
     if (m_creature->GetHealth() > damage)
         return;
 
-    uint32 random_yell = rand()%3;
+    uint32 random_text = rand()%3;
 
     //Random yell
-    if (Death_Yell[random_yell])
-        DoYell(Death_Yell[random_yell], LANG_UNIVERSAL, killer);
+    if (Death_Text[random_text])
+        if (Death_Say[random_text])
+            DoSay(Death_Text[random_text], LANG_UNIVERSAL, killer);
+        else DoYell(Death_Text[random_text], LANG_UNIVERSAL, killer);
 
     //Random sound
-    if (Death_Sound[random_yell])
-        DoPlaySoundToSet(m_creature, Death_Sound[random_yell]);
+    if (Death_Sound[random_text])
+        DoPlaySoundToSet(m_creature, Death_Sound[random_text]);
 
     if (!Death_Spell)
         return;
@@ -287,15 +306,17 @@ void SimpleAI::UpdateAI(const uint32 diff)
 
                     //Yell and sound use the same number so that you can make
                     //the creature yell with the correct sound effect attached
-                    uint32 random_yell = rand()%3;
+                    uint32 random_text = rand()%3;
 
                     //Random yell
-                    if (Spell[i].Yell[random_yell])
-                        DoYell(Spell[i].Yell[random_yell], LANG_UNIVERSAL, target);
+                    if (Spell[i].Text[random_text])
+                        if (Spell[i].Say[random_text])
+                            DoSay(Spell[i].Text[random_text], LANG_UNIVERSAL, target);
+                        else DoYell(Spell[i].Text[random_text], LANG_UNIVERSAL, target);
 
                     //Random sound
-                    if (Spell[i].Yell_Sound[random_yell])
-                        DoPlaySoundToSet(m_creature, Spell[i].Yell_Sound[random_yell]);
+                    if (Spell[i].Text_Sound[random_text])
+                        DoPlaySoundToSet(m_creature, Spell[i].Text_Sound[random_text]);
                 }
 
             }

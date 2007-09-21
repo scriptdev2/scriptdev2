@@ -32,15 +32,18 @@ struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 
 public:
 
-    char* Aggro_Yell[3];
+    char* Aggro_Text[3];
+    bool Aggro_Say[3];
     uint32 Aggro_Sound[3];
 
-    char* Death_Yell[3];
+    char* Death_Text[3];
+    bool Death_Say[3];
     uint32 Death_Sound[3];
     uint32 Death_Spell;
     uint32 Death_Target_Type;
 
-    char* Kill_Yell[3];
+    char* Kill_Text[3];
+    bool Kill_Say[3];
     uint32 Kill_Sound[3];
     uint32 Kill_Spell;
     uint32 Kill_Target_Type;
@@ -54,9 +57,10 @@ public:
         bool InturruptPreviousCast;     //Inturrupt a previous cast if this spell needs to be cast
         bool Enabled;                   //Spell enabled or disabled (default: false)
 
-        //3 yells to many?
-        char* Yell[3];
-        uint32 Yell_Sound[3];
+        //3 texts to many?
+        char* Text[3];
+        bool Say[3];
+        uint32 Text_Sound[3];
     }Spell[10];
 
 protected:

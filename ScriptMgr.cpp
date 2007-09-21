@@ -373,6 +373,9 @@ extern void AddSC_mob_the_eye();
 
 //--The Mechanar
 //Temple of ahn'qiraj
+extern void AddSC_Yauj();
+extern void AddSC_Kri();
+extern void AddSC_Vem();
 extern void AddSC_boss_cthun();
 
 //Terokkar Forest
@@ -759,6 +762,9 @@ void ScriptsInit()
 
     //--The Mechanar
     //Temple of ahn'qiraj
+    AddSC_Yauj();
+    AddSC_Kri();
+    AddSC_Vem();
     AddSC_boss_cthun();
 
     //Terokkar Forest
