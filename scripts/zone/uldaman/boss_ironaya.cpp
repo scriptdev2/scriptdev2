@@ -17,13 +17,11 @@
 #include "../../sc_defines.h"
 
 #define SPELL_ARCINGSMASH           39144
-#define SPELL_KNOCKAWAY	            22893
-#define SPELL_WSTOMP	            16727
+#define SPELL_KNOCKAWAY             22893
+#define SPELL_WSTOMP                16727
 
-#define SAY_AGGRO			"None may steal the secrets of the makers!"
-
-// Need to find correct sound ID
-// #define SOUND_AGGRO			5830
+#define SAY_AGGRO           "None may steal the secrets of the makers!"
+#define SOUND_AGGRO         5851
 
 
 struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
@@ -59,7 +57,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
             if(!InCombat)
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                //   DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
                 InCombat = true;
             }

@@ -49,34 +49,34 @@ void SimpleAI::EnterEvadeMode()
     //Reset cast timers
     if (Spell[0].First_Cast >= 0)
         Spell_Timer[0] = Spell[0].First_Cast;
-    else Spell[0].First_Cast = 0;
+    else Spell_Timer[0] = 1000;
     if (Spell[1].First_Cast >= 0)
         Spell_Timer[1] = Spell[1].First_Cast;
-    else Spell[1].First_Cast = 0;
+    else Spell_Timer[1] = 1000;
     if (Spell[2].First_Cast >= 0)
         Spell_Timer[2] = Spell[2].First_Cast;
-    else Spell[2].First_Cast = 0;
+    else Spell_Timer[2] = 1000;
     if (Spell[3].First_Cast >= 0)
         Spell_Timer[3] = Spell[3].First_Cast;
-    else Spell[3].First_Cast = 0;
+    else Spell_Timer[3] = 1000;
     if (Spell[4].First_Cast >= 0)
         Spell_Timer[4] = Spell[4].First_Cast;
-    else Spell[4].First_Cast = 0;
+    else Spell_Timer[4] = 1000;
     if (Spell[5].First_Cast >= 0)
         Spell_Timer[5] = Spell[5].First_Cast;
-    else Spell[5].First_Cast = 0;
+    else Spell_Timer[5] = 1000;
     if (Spell[6].First_Cast >= 0)
         Spell_Timer[6] = Spell[6].First_Cast;
-    else Spell[6].First_Cast = 0;
+    else Spell_Timer[6] = 1000;
     if (Spell[7].First_Cast >= 0)
         Spell_Timer[7] = Spell[7].First_Cast;
-    else Spell[7].First_Cast = 0;
+    else Spell_Timer[7] = 1000;
     if (Spell[8].First_Cast >= 0)
         Spell_Timer[8] = Spell[8].First_Cast;
-    else Spell[8].First_Cast = 0;
+    else Spell_Timer[8] = 1000;
     if (Spell[9].First_Cast >= 0)
         Spell_Timer[9] = Spell[9].First_Cast;
-    else Spell[9].First_Cast = 0;
+    else Spell_Timer[9] = 1000;
 
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();

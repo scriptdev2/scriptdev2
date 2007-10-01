@@ -19,15 +19,15 @@
 
 bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
 {
-	if (player->GetQuestRewardStatus(7761))	player->TeleportTo(469,-7672,-1107,396, 0); 
-		return true;
+    if (player->GetQuestRewardStatus(7761))	player->TeleportTo(469,-7672,-1107,399, 0); 
+    return true;
 }
 
 void AddSC_go_orb_of_command()
 {
-	Script *newscript;
-	newscript = new Script;
-	newscript->Name="go_orb_of_command";
-	newscript->pGOHello		  = &GOHello_go_orb_of_command;
-	m_scripts[nrscripts++] = newscript;
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="go_orb_of_command";
+    newscript->pGOHello		  = &GOHello_go_orb_of_command;
+    m_scripts[nrscripts++] = newscript;
 }
