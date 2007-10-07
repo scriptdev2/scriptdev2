@@ -33,9 +33,9 @@ enum EncounterState
 3 - Void Reaver event
 */
  
-struct MANGOS_DLL_DECL instance_the_eye : public InstanceData
+struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 {
-    instance_the_eye(Map *Map) : InstanceData(Map) {Initialize();};
+    instance_the_eye(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
     Creature *ThaladredTheDarkener;
     Creature *LordSanguinar;

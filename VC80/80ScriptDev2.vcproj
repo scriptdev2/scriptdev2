@@ -563,6 +563,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\gruuls_lair\boss_high_king_maulgar.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
 						>
 					</File>
@@ -1557,6 +1561,10 @@
 					<Filter
 						Name="The Eye"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_kaelthas.cpp"
+							>
+						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\instance_the_eye.cpp"
 							>

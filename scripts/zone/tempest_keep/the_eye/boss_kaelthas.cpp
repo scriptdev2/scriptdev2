@@ -64,15 +64,7 @@
 
 #define PHOENIX                            21362
 #define NETHER_VAPOR                       21002
-
-enum KaelthasAdvisors
-{
-    THALADRED_THE_DARKENER      = 0,
-    LORD_SANGUINAR              = 1,
-    GRAND_ASTROMANCER_CAPERNIAN = 2,
-    MASTER_ENGINEER_TELONICUS   = 3
-};
-
+/*
 // kaelthas AI
 struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
@@ -95,6 +87,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     uint32 Phase;
     uint32 Phase1Subphase;
     uint32 Phase_Timer; // generic timer
+
     bool InCombat;
     bool InGravityLapse;
 
@@ -103,7 +96,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     void EnterEvadeMode()
     {
         Phase = 0;
-
         GravityLapse_Timer = 60000+rand()%30000;
         GravityLapse_Phase = 0;
         NetherBeam_Timer = 15000;
@@ -112,6 +104,27 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         Phoenix_Timer = 30000;
         ShockBarrier_Timer = 60000;
         InGravityLapse = false;
+
+        //if he was fighting
+        if(InCombat)
+        {
+            //respawn if died & apply flags
+            Unit *pUnit;
+            for(uint8 i = 0; i < 4; i++)
+            {
+                pUnit = Unit::GetUnit((*m_creature), Advisor[i]);
+                if(pUnit)
+                {
+                    ((Creature*)pUnit)->Respawn();
+                    ((Creature*)pUnit)->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    ((Creature*)pUnit)->setFaction(35);
+                    ((Creature*)pUnit)->AI()->EnterEvadeMode();
+                }
+            }
+
+            //reset encounter
+            m_creature->GetInstanceData()->SetData("KaelThasEvent", 0); // 0 = NOT_STARTED
+        }
 
         InCombat = false;
 
@@ -132,11 +145,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         Advisor[3] = m_creature->GetInstanceData()->GetUnit("MasterEngineerTelonicus")->GetGUID();
 
         if(!Advisor[0] || !Advisor[1] || !Advisor[2] || !Advisor[3])
-        {
-            // this means advisors have already been killed, but then the group has failed vs kael
-            m_creature->GetInstanceData()->SetData("KaelThasEvent", 2); // state 2 = FAILED
             return;
-        }
 
         DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_INTRO);
@@ -334,9 +343,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Phase = 4;
 
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
                     target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
                     if(target)
                         DoStartMeleeAttack(target);
+
+                    InCombat = true;
                 }
                 break;
             }
@@ -350,18 +362,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
             if(Phase >= 4)
             {
-                // Arcane Disruption
-                // every minute or so he will cast this, dealing approximately 2000 arcane damage to everyone in the raid and disorienting them for 10 seconds.
+                //ArcaneDisruption_Timer
                 if(ArcaneDisruption_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(), SPELL_ARCANE_DISRUPTION);
                     ArcaneDisruption_Timer = 60000;
                 }else ArcaneDisruption_Timer -= diff;
 
-                // Shock Barrier
-                // every minute he will put up his Shock Barrier. When active, the barrier absorbs 100,000 damage and gives him immunity to interruption effects
-                // Pyroblast
-                // Pyroblast - used every minute in conjunction with Shock Barrier.
+                //ShockBarrier_Timer
                 if(ShockBarrier_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_SHOCK_BARRIER);
@@ -370,8 +378,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     ShockBarrier_Timer = 60000;
                 }else ShockBarrier_Timer -= diff;
 
-                // Phoenix
-                // Every minute Kael'thas will do a flamestrike animation on top of a random player. After a few seconds, it will do about 2000 damage to all players in the area, and then spawn a pheonix add
+                //Phoenix_Timer
                 if(Phoenix_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_PHOENIX_ANIMATION);
@@ -400,15 +407,16 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Phoenix_Timer = 60000;
                 }else Phoenix_Timer -= diff;
 
-                // Start Phase 5
+                //Start Phase 5
                 if(Phase == 4 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
                 {
                     Phase = 5;
                 }
                 
-                // Phase 5
+                //Phase 5
                 if(Phase == 5)
                 {
+                    //GravityLapse_Timer
                     if(GravityLapse_Timer < diff)
                     {
                         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
@@ -515,7 +523,7 @@ struct MANGOS_DLL_DECL mob_nether_vaporAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        // if a player is within 8 yard, cast Nether Vapor
+        //if a player is within 8 yard, cast Nether Vapor
         if (m_creature->IsWithinDistInMap(who, 8))
         {
             DoCast(who, SPELL_NETHER_VAPOR);
@@ -546,3 +554,4 @@ void AddSC_boss_kaelthas()
     newscript->GetAI = GetAI_mob_nether_vapor;
     m_scripts[nrscripts++] = newscript;
 }
+*/

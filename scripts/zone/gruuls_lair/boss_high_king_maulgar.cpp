@@ -32,19 +32,24 @@
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33239
 #define SPELL_ENRAGE             34970     
-
+/*
 //High King Maulgar AI (normal AI)
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
     boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c) 
     {
-        Council[0] = NULL;
-        Council[1] = NULL;
-        Council[2] = NULL;
-        Council[3] = NULL;
+        if (c->GetInstanceData())
+            pInstance = (ScriptedInstance*)(m_creature->GetInstanceData());
+        else pInstance = NULL;
+
+        Council[0] = 0;
+        Council[1] = 0;
+        Council[2] = 0;
+        Council[3] = 0;
         EnterEvadeMode();
     }
 
+    ScriptedInstance* pInstance; 
     uint32 ArcingSmash_Timer;
     uint32 MightyBlow_Timer;
     uint32 Whirlwind_Timer;
@@ -53,7 +58,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     bool Phase2;
     bool InCombat;
 
-    Creature *Council[4];
+    uint64 Council[4];
 
     void EnterEvadeMode()
     {       
@@ -62,6 +67,25 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         Whirlwind_Timer = 30000;
         Charging_Timer = 0;
         Phase2 = false;
+
+        //respawn if died & apply flags
+        Creature *pCreature;
+        for(uint8 i = 0; i < 4; i++)
+        {
+            pCreature = (Creature*)(Unit::GetUnit((*m_creature), Council[i]));
+            if(pCreature)
+            {
+                pCreature->Respawn();
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                pCreature->setFaction(35);
+                pCreature->AI()->EnterEvadeMode();
+            }
+        }
+
+        //reset encounter
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -74,15 +98,15 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
+        case 0:
             DoPlaySoundToSet(m_creature, SOUND_SLAY1);
             break;
 
-            case 1:
+        case 1:
             DoPlaySoundToSet(m_creature, SOUND_SLAY2);
             break;
 
-            case 2:
+        case 2:
             DoPlaySoundToSet(m_creature, SOUND_SLAY3);
             break;
         }
@@ -91,47 +115,28 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
-        m_creature->GetInstanceData()->SetData("HighKingMaulgarEvent", 3); // 3 = DONE
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
     }
 
-    void StartEvent()
+    void StartEvent(Unit* pAttacker)
     {
-        Council[0] = m_creature->GetInstanceData()->GetUnit("KigglerTheCrazed");
-        Council[1] = m_creature->GetInstanceData()->GetUnit("BlindeyeTheSeer");
-        Council[2] = m_creature->GetInstanceData()->GetUnit("OlmTheSummoner");
-        Council[3] = m_creature->GetInstanceData()->GetUnit("KroshFirehand");
-
-        if(!Council[0]|| !Council[1] || !Council[2] || !Council[3])
-        {
-            // means FAILED
-            DoYell("Unable to found my council. Event failed.", LANG_UNIVERSAL, NULL);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->setFaction(35);
-            m_creature->GetInstanceData()->SetData("HighKingMaulgarEvent", 2); // 2 = FAILED
-
-            for(uint8 i = 0; i < 4; i++)
-                if(Council[i])
-                {
-                    Council[i]->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Council[i]->setFaction(35);
-                }
+        if (!pInstance)
             return;
-        }
+
+        Council[0] = pInstance->GetUnitGUID("Kiggler");
+        Council[1] = pInstance->GetUnitGUID("Blindeye");
+        Council[2] = pInstance->GetUnitGUID("Olm");
+        Council[3] = pInstance->GetUnitGUID("Krosh");
+
+        if(!Council[0] || !Council[1] || !Council[2] || !Council[3])
+            return;
 
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        for(uint8 i = 0; i < 4; i++)
-        {
-            Council[i]->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            Council[i]->setFaction(14);
-
-            Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(target)
-                Council[i]->AI()->AttackStart(target);
-        }
-
         InCombat = true;
-        m_creature->GetInstanceData()->SetData("HighKingMaulgarEvent", 1); // 1 = IN_PROGRESS
+        pInstance->SetData("Event_Maulgar_Started", pAttacker->GetGUIDLow());
+        pInstance->SetData("Event_Maulgar_Started_data2", pAttacker->GetGUIDHigh());
     }
 
     void AttackStart(Unit *who)
@@ -139,14 +144,13 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (!who)
             return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
+        if (who->isTargetableForAttack() && who!= m_creature) // 0 = NOT_STARTED
         {
-            if(!m_creature->GetInstanceData()->GetData("HighKingMaulgarEvent")) // 0 = NOT_STARTED
+            //Begin melee attack if we are within range
+            if(!InCombat)
             {
-                //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                if(!InCombat)
-                    StartEvent();
+                StartEvent(who);
             }
         }
     }
@@ -164,11 +168,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if(!m_creature->GetInstanceData()->GetData("HighKingMaulgarEvent")) // 0 = NOT_STARTED
+                if(!InCombat)
                 {
                     DoStartMeleeAttack(who);
-                    if(!InCombat)
-                        StartEvent();
+                    StartEvent(who);
                 }
             }
         }
@@ -176,9 +179,25 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        //Only if not incombat check if someone else is in combat
+        if (!InCombat && pInstance->GetData("Event_Maulgar_Status"))
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("Maulgar_Event_Starter"));
+
+            if (pUnit)
+            {
+                DoStartMeleeAttack(pUnit);
+                StartEvent(pUnit);
+            }
+        }
+
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
-           return;
+            return;
+
+        //We are incombat but someone else isn't, evade
+        if (InCombat && !pInstance->GetData("Event_Maulgar_Status"))
+            EnterEvadeMode();
 
         //ArcingSmash_Timer
         if (ArcingSmash_Timer < diff)
@@ -219,28 +238,34 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                     DoStartMeleeAttack(target);
 
                 Charging_Timer = 20000;
-             }else Charging_Timer -= diff;
-         }
+            }else Charging_Timer -= diff;
+        }
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_high_king_maulgar(Creature *_Creature)
-{
-    return new boss_high_king_maulgarAI (_Creature);
-}
-
 
 //Olm The Summoner AI (normal AI)
 struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 {
-    boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) 
+    {
+        if (c->GetInstanceData())
+            pInstance = (ScriptedInstance*)(m_creature->GetInstanceData());
+        else pInstance = NULL;
+
+        EnterEvadeMode();
+    }
 
     uint32 DarkDecay_Timer;
     uint32 Summon_Timer;
 
+    ScriptedInstance* pInstance; 
+
+    bool InCombat;
+
     void EnterEvadeMode()
-    {       
+    {
         DarkDecay_Timer = 10000;
         Summon_Timer = 15000;
 
@@ -248,6 +273,12 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        //reset encounter
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
+
+        InCombat = false;
     }
 
     void AttackStart(Unit *who)
@@ -258,7 +289,13 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
+            if (!InCombat)
+            {
+                InCombat = true;
+                pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                DoStartMeleeAttack(who);
+            }
         }
     }
 
@@ -275,7 +312,14 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                if (!InCombat)
+                {
+
+                    InCombat = true;
+                    pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                    pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                    DoStartMeleeAttack(who);
+                }
             }
         }
     }
@@ -283,33 +327,47 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     float DoCalculateRandomLocation()
     {
         float Loc;
-        float Rand = rand()%6;
+        float Rand = rand()%8;
 
         switch(rand()%2)
         {
-            case 0:
+        case 0:
             Loc = 0 + Rand;
             break;
 
-            case 1:
+        case 1:
             Loc = 0 - Rand;
             break;
         }
-
         return Loc;
     }
 
     void UpdateAI(const uint32 diff)
     {
+        //Only if not incombat check if someone else is in combat
+        if (!InCombat && pInstance->GetData("Event_Maulgar_Status"))
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("Maulgar_Event_Starter"));
+
+            if (pUnit)
+            {
+                DoStartMeleeAttack(pUnit);
+                InCombat = true;
+            }
+        }
+
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
-           return;
+            return;
+
+        //We are incombat but someone else isn't, evade
+        if (InCombat && !pInstance->GetData("Event_Maulgar_Status"))
+            EnterEvadeMode();
 
         //DarkDecay_Timer
         if(DarkDecay_Timer < diff)
         {
             DoCast(m_creature->getVictim(), 33129);
-
             DarkDecay_Timer = 20000;
         }else DarkDecay_Timer -= diff;
 
@@ -318,109 +376,419 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         {
             Creature *Add = NULL;
             Add = DoSpawnCreature(18847, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-
             Summon_Timer = 30000;
         }else Summon_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
+
+//Kiggler The Crazed AI
+struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
+{
+    boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c) 
+    {
+        if (c->GetInstanceData())
+            pInstance = (ScriptedInstance*)(m_creature->GetInstanceData());
+        else pInstance = NULL;
+        EnterEvadeMode();
+    }
+
+    uint32 GreatherPolymorph_Timer;
+    uint32 LightningBolt_Timer;
+    uint32 ArcaneShock_Timer;
+    uint32 ArcaneExplosion_Timer;
+
+    ScriptedInstance* pInstance; 
+
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        GreatherPolymorph_Timer = 5000;
+        LightningBolt_Timer = 10000;
+        ArcaneShock_Timer = 20000;
+        ArcaneExplosion_Timer = 30000;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+
+        //reset encounter
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
+
+        InCombat = false;
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            if (!InCombat)
+            {
+
+                InCombat = true;
+                pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+
+                    InCombat = true;
+                    pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                    pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                    DoStartMeleeAttack(who);
+                }
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Only if not incombat check if someone else is in combat
+        if (!InCombat && pInstance->GetData("Event_Maulgar_Status"))
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("Maulgar_Event_Starter"));
+
+            if (pUnit)
+            {
+                DoStartMeleeAttack(pUnit);
+                InCombat = true;
+            }
+        }
+
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //We are incombat but someone else isn't, evade
+        if (InCombat && !pInstance->GetData("Event_Maulgar_Status"))
+            EnterEvadeMode();
+
+        //GreatherPolymorph_Timer
+        if(GreatherPolymorph_Timer < diff)
+        {
+            Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(target)
+                DoCast(target, 33173);
+
+            GreatherPolymorph_Timer = 20000;
+        }else GreatherPolymorph_Timer -= diff;
+
+        //LightningBolt_Timer
+        if(LightningBolt_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 36152);
+            LightningBolt_Timer = 15000;
+        }else LightningBolt_Timer -= diff;
+
+        //ArcaneShock_Timer
+        if(ArcaneShock_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 33175);
+            ArcaneShock_Timer = 20000;
+        }else ArcaneShock_Timer -= diff;
+
+        //ArcaneExplosion_Timer
+        if(ArcaneExplosion_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 33237);
+            ArcaneExplosion_Timer = 30000;
+        }else ArcaneExplosion_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+//Blindeye The Seer AI
+struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
+{
+    boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c) 
+    {
+        if (c->GetInstanceData())
+            pInstance = (ScriptedInstance*)(m_creature->GetInstanceData());
+        else pInstance = NULL;
+        EnterEvadeMode();
+    }
+
+    uint32 GreaterPowerWordShield_Timer;
+    uint32 Heal_Timer;
+
+    ScriptedInstance* pInstance; 
+
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        GreaterPowerWordShield_Timer = 5000;
+        Heal_Timer = 30000;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+
+        //reset encounter
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
+
+        InCombat = false;
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            if (!InCombat)
+                {
+
+                    InCombat = true;
+                    pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                    pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                    DoStartMeleeAttack(who);
+                }
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+
+                    InCombat = true;
+                    pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                    pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                    DoStartMeleeAttack(who);
+                }
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Only if not incombat check if someone else is in combat
+        if (!InCombat && pInstance->GetData("Event_Maulgar_Status"))
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("Maulgar_Event_Starter"));
+
+            if (pUnit)
+            {
+                DoStartMeleeAttack(pUnit);
+                InCombat = true;
+            }
+        }
+
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //We are incombat but someone else isn't, evade
+        if (InCombat && !pInstance->GetData("Event_Maulgar_Status"))
+            EnterEvadeMode();
+
+        //GreaterPowerWordShield_Timer
+        if(GreaterPowerWordShield_Timer < diff)
+        {
+            DoCast(m_creature, 33147);
+            GreaterPowerWordShield_Timer = 40000;
+        }else GreaterPowerWordShield_Timer -= diff;
+
+        //Heal_Timer
+        if(Heal_Timer < diff)
+        {
+            DoCast(m_creature, 33144);
+            Heal_Timer = 60000;
+        }else Heal_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+//Krosh Firehand AI
+struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
+{
+    boss_krosh_firehandAI(Creature *c) : ScriptedAI(c) 
+    {
+        if (c->GetInstanceData())
+            pInstance = (ScriptedInstance*)(m_creature->GetInstanceData());
+        else pInstance = NULL;
+        EnterEvadeMode();
+    }
+
+    uint32 GreaterFireball_Timer;
+    uint32 SpellShield_Timer;
+    uint32 BlastWave_Timer;
+
+    ScriptedInstance* pInstance; 
+
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        GreaterFireball_Timer = 10000;
+        SpellShield_Timer = 5000;
+        BlastWave_Timer = 20000;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+
+        //reset encounter
+        if (pInstance)
+            pInstance->SetData("Event_Maulgar_Ended", 0);
+
+        InCombat = false;
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            if (!InCombat)
+            {
+
+                InCombat = true;
+                pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+
+                    InCombat = true;
+                    pInstance->SetData("Event_Maulgar_Started", who->GetGUIDLow());
+                    pInstance->SetData("Event_Maulgar_Started_data2", who->GetGUIDHigh());
+                    DoStartMeleeAttack(who);
+                }
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Only if not incombat check if someone else is in combat
+        if (!InCombat && pInstance->GetData("Event_Maulgar_Status"))
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("Maulgar_Event_Starter"));
+
+            if (pUnit)
+            {
+                DoStartMeleeAttack(pUnit);
+                InCombat = true;
+            }
+        }
+
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //We are incombat but someone else isn't, evade
+        if (InCombat && !pInstance->GetData("Event_Maulgar_Status"))
+            EnterEvadeMode();
+
+        //GreaterFireball_Timer
+        if(GreaterFireball_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 33051);
+            GreaterFireball_Timer = 30000;
+        }else GreaterFireball_Timer -= diff;
+
+        //SpellShield_Timer
+        if(SpellShield_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 33054);
+            SpellShield_Timer = 50000;
+        }else SpellShield_Timer -= diff;
+
+        //BlastWave_Timer
+        if(BlastWave_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), 33061);
+            BlastWave_Timer = 60000;
+        }else BlastWave_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_high_king_maulgar(Creature *_Creature)
+{
+    return new boss_high_king_maulgarAI (_Creature);
+}
 CreatureAI* GetAI_boss_olm_the_summoner(Creature *_Creature)
 {
     return new boss_olm_the_summonerAI (_Creature);
 }
-
-// Kiggler The Crazed AI (simple AI)
-CreatureAI* GetAI_boss_kiggler_the_crazed(Creature *_Creature)
+CreatureAI *GetAI_boss_kiggler_the_crazed(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //Greather Polymorph
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 33173;
-    ai->Spell[0].Cooldown = 20000;
-    ai->Spell[0].First_Cast = 5000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_RANDOM;
-
-    //Lightning Bolt
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = 36152;
-    ai->Spell[1].Cooldown = 15000;
-    ai->Spell[1].First_Cast = 10000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //Arcane Shock
-    ai->Spell[2].Enabled = true;
-    ai->Spell[2].Spell_Id = 33175;
-    ai->Spell[2].Cooldown = 20000;
-    ai->Spell[2].First_Cast = 20000;
-    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //Arcane Explosion
-    ai->Spell[3].Enabled = true;
-    ai->Spell[3].Spell_Id = 33237;
-    ai->Spell[3].Cooldown = 30000;
-    ai->Spell[3].First_Cast = 30000;
-    ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new boss_kiggler_the_crazedAI (_Creature);
 }
-
-//Blindeye The Seer AI (simple AI)
-CreatureAI* GetAI_boss_blindeye_the_seer(Creature *_Creature)
+CreatureAI *GetAI_boss_blindeye_the_seer(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //Greater Power Word: Shield
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 33147;
-    ai->Spell[0].Cooldown = 40000;
-    ai->Spell[0].First_Cast = 5000;
-    ai->Spell[0].Cast_Target_Type = CAST_SELF;
-
-    //Heal
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = 33144;
-    ai->Spell[1].Cooldown = 60000;
-    ai->Spell[1].First_Cast = 30000;
-    ai->Spell[1].Cast_Target_Type = CAST_SELF;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new boss_blindeye_the_seerAI (_Creature);
 }
-
-//Krosh Firehand AI (simple AI)
-CreatureAI* GetAI_boss_krosh_firehand(Creature *_Creature)
+CreatureAI *GetAI_boss_krosh_firehand(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //Greater Fireball
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 33051;
-    ai->Spell[0].Cooldown = 30000;
-    ai->Spell[0].First_Cast = 10000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //Spell Shield
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = 33054;
-    ai->Spell[1].Cooldown = 50000;
-    ai->Spell[1].First_Cast = 5000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //Blast Wave (AoE)
-    ai->Spell[2].Enabled = true;
-    ai->Spell[2].Spell_Id = 33061;
-    ai->Spell[2].Cooldown = 60000;
-    ai->Spell[2].First_Cast = 20000;
-    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new boss_krosh_firehandAI (_Creature);
 }
 
 void AddSC_boss_high_king_maulgar()
@@ -452,3 +820,4 @@ void AddSC_boss_high_king_maulgar()
     newscript->GetAI = GetAI_boss_krosh_firehand;
     m_scripts[nrscripts++] = newscript;
 }
+*/

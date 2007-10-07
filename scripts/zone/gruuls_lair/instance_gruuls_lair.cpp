@@ -16,109 +16,122 @@
  
 #include "../../sc_defines.h"
 
-#define ENCOUNTERS     2
-
-enum EncounterState
+struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 {
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
+    instance_gruuls_lair(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-struct MANGOS_DLL_DECL instance_gruuls_lair : public InstanceData
-{
-    instance_gruuls_lair(Map *Map) : InstanceData(Map) {Initialize();};
+    bool MaulgarInProgress;
+    bool GruulInProgress;
 
-    uint32 Encounters[ENCOUNTERS];
+    uint64 Kiggler;
+    uint64 Blindeye;
+    uint64 Olm;
+    uint64 Krosh;
+    uint64 Maulgar;
+    uint64 Gruul;
 
-    Creature *KigglerTheCrazed;
-    Creature *BlindeyeTheSeer;
-    Creature *OlmTheSummoner;
-    Creature *KroshFirehand;
+    uint64 Maulgar_Event_Starter;
 
-    virtual void Initialize()
+    void Initialize()
     {
-        KigglerTheCrazed = NULL;
-        BlindeyeTheSeer = NULL;
-        OlmTheSummoner = NULL;
-        KroshFirehand = NULL;
+        MaulgarInProgress = false;
+        GruulInProgress = false;
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+        Kiggler = 0;
+        Blindeye = 0;
+        Olm = 0;
+        Krosh = 0;
+        Maulgar = 0;
+        Gruul = 0;
+
+        Maulgar_Event_Starter = 0;
     }
 
-    virtual bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const 
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS) return true; 
+        if (MaulgarInProgress || GruulInProgress)
+            return true;
 
         return false;
     }
 
-    virtual void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         switch(creature_entry)
         {
             case 18835:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
-            KigglerTheCrazed = creature;
+            Kiggler = creature->GetGUID();
             break;
 
             case 18836:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
-            BlindeyeTheSeer = creature;
+            Blindeye = creature->GetGUID();
             break;
 
             case 18834:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
-            OlmTheSummoner = creature;
+            Olm = creature->GetGUID();
             break;
 
             case 18832:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
-            KroshFirehand = creature;
+            Krosh = creature->GetGUID();
+            break;
+
+            case 18831:
+            Maulgar = creature->GetGUID();
+            break;
+
+            case 19044:
+            Gruul = creature->GetGUID();
             break;
         }
     }
-
-    virtual Creature* GetUnit(char *identifier)
+    uint64 GetUnitGUID(char *identifier)
     {
-        if(identifier == "KigglerTheCrazed")
-            return KigglerTheCrazed;
-        else if(identifier == "BlindeyeTheSeer")
-            return BlindeyeTheSeer;
-        else if(identifier == "OlmTheSummoner")
-            return OlmTheSummoner;
-        else if(identifier == "KroshFirehand")
-            return KroshFirehand;
-
-        return NULL; 
-    }
-
-    virtual void SetData(char *type, uint32 data)
-    {
-        if(type == "HighKingMaulgarEvent")
-            Encounters[0] = data;
-        else if(type == "GruulEvent")
-            Encounters[1] = data;
-    }
-
-    virtual uint32 GetData(char *type)
-    {
-        if(type == "HighKingMaulgarEvent")
-            return Encounters[0];
-        else if(type == "GruulEvent")
-            return Encounters[1];
+        if (identifier == "Kiggler")
+            return Kiggler;
+        else if (identifier == "Blindeye")
+            return Blindeye;
+        else if (identifier == "Olm")
+            return Olm;
+        else if (identifier == "Krosh")
+            return Krosh;
+        else if (identifier == "High")
+            return Maulgar;
+        else if (identifier == "Maulgar_Event_Starter")
+            return Maulgar_Event_Starter;
+        else if (identifier == "Gruul")
+            return Gruul;
 
         return 0;
     }
 
-    virtual GameObject* GetGO(char *identifier) { return NULL; }
+    void SetData(char *type, uint32 data)
+    {
+        if(type == "Event_Maulgar_Started")
+        {
+            MaulgarInProgress = true;
+            Maulgar_Event_Starter = data;
+        }
+        else if(type == "Event_Maulgar_Started_data2")
+        {
+            Maulgar_Event_Starter += data << 32;
+
+        }else if(type == "Event_Gruul_Started")
+            GruulInProgress = true;
+        else if(type == "Event_Maulgar_Ended")
+            MaulgarInProgress = false;
+        else if(type == "Event_Gruul_Ended")
+            GruulInProgress = false;
+    }
+
+    virtual uint32 GetData(char *type) 
+    { 
+        if(type == "Event_Maulgar_Status")
+            return MaulgarInProgress;
+        else if(type == "Event_Gruul_Status")
+            return GruulInProgress;
+
+        return 0;
+    }
 };
 
 InstanceData* GetInstanceData_instance_gruuls_lair(Map* map)

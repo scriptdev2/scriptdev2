@@ -35,9 +35,9 @@ enum EncounterState
 5 - Lady Vashj Event
 */
 
-struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public InstanceData
+struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
 {
-    instance_serpentshrine_cavern(Map *Map) : InstanceData(Map) {Initialize();};
+    instance_serpentshrine_cavern(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
     uint32 Encounters[ENCOUNTERS];
 

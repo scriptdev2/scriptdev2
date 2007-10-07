@@ -202,4 +202,20 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Checks if you can cast the specified spell
     bool CanCast(Unit* Target, SpellEntry const *Spell);
 };
+
+class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
+{
+    public:
+
+        ScriptedInstance(Map *map) : InstanceData(map) {}
+        ~ScriptedInstance() {}
+
+        //Retrevial of unit guids
+        virtual uint64 GetUnitGUID(char *identifier) {return 0; }
+
+        //All-purpose data storage
+        virtual uint32 GetData(char *type) { return 0; }
+        virtual void SetData(char *type, uint32 data) {}
+};
+
 #endif

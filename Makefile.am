@@ -122,6 +122,7 @@ scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
+scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/instance_gruuls_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
@@ -262,6 +263,7 @@ scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
+scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
@@ -298,7 +300,6 @@ scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
 system.cpp
-
 
 ## libtool settings
 # API versioning

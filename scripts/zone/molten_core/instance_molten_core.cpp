@@ -11,11 +11,11 @@
 #define ID_DOMO         12018
 #define ID_RAGNAROS     11502
 
-class MANGOS_DLL_SPEC MoltenCore : public InstanceData
+class MANGOS_DLL_SPEC MoltenCore : public ScriptedInstance
 {
 public:
 
-    MoltenCore(Map *map) : InstanceData(map) {}
+    MoltenCore(Map *map) : ScriptedInstance(map) {}
     ~MoltenCore() {}
 
     uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros;
