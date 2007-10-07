@@ -30,6 +30,11 @@ UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` IN (18716, 18717, 187
 /* Elder Kuruti */
 UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 18197;
 
+/* Beaten Corpse*/
+UPDATE creature_template SET npcflag=1 WHERE entry=10668;
+UPDATE quest_template  SET SpecialFlags=8, ReqCreatureOrGOId1=10668, ReqCreatureOrGOCount1=1  WHERE entry=4921;
+
+
 
 /* */
 /* CREATURE_MOVEMENT */

@@ -66,9 +66,12 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 {
     boss_hydross_the_unstableAI(Creature *c) : ScriptedAI(c) 
     {
+        if (c->GetInstanceData()) pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
         Invisible = NULL;
         EnterEvadeMode();
     }
+
+    ScriptedInstance* pInstance; 
 
     uint32 PosCheck_Timer;
     uint32 MarkOfHydross_Timer;
@@ -111,11 +114,11 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
 
-        m_creature->GetInstanceData()->SetData("HydrossTheUnstableEvent", 0); // 0 = NOT_STARTED
+        if(pInstance)
+            pInstance->SetData("HydrossTheUnstableEvent", 0); // 0 = NOT_STARTED
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPTED, true);
     }
 
     void StartEvent()
@@ -123,7 +126,8 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        m_creature->GetInstanceData()->SetData("HydrossTheUnstableEvent", 1); // 1 = IN_PROGRESS
+        if(pInstance)
+            pInstance->SetData("HydrossTheUnstableEvent", 1); // 1 = IN_PROGRESS
 
         InCombat = true;
     }
@@ -171,7 +175,8 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_CLEAN_DEATH);
         }
 
-        m_creature->GetInstanceData()->SetData("HydrossTheUnstableEvent", 3); // 3 = DONE
+        if(pInstance)
+            pInstance->SetData("HydrossTheUnstableEvent", 3); // 3 = DONE
 
         // despawn invisible trigger
         DespawnCreatureIfExists(Invisible);

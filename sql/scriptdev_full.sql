@@ -102,6 +102,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* AZSHARA */
 /* Draconic Magelord, Draconic Mageweaver, Archmage Xylem */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6129, 6131, 8379);
+/* Spitelashes for polymorph quest */
+UPDATE `creature_template` SET `ScriptName` = 'mobs_spitelashes' WHERE entry IN (6190,6193,6194,6195,6196,7885,7886,12204,12205);
 
 /* AZUREMYST ISLE */
 UPDATE `creature_template` set `ScriptName` = 'injured_draenei' where `entry` = 16971;
@@ -113,6 +115,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* BARRENS */
 /* Kolkar Stormer, Razormane Geomancer, Razormane Seer, Razormane Mystic, Razormane Hunter, Razormane Warfrenzy, Razormane Water Seeker, Silithid Creeper, Elder Mystic Razorsnout, Horde Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3273, 3269, 3458, 3271, 3265, 3459, 3267, 3250, 3270, 9458);
+/* Beaten corpse */
+UPDATE creature_template SET ScriptName='npc_beaten_corpse' WHERE entry=10668;
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script` = 'instance_black_temple' WHERE `map`= 564;
@@ -150,6 +154,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_vilerel' WHERE `entry` = 903
 UPDATE `creature_template` SET `ScriptName` = 'boss_warder_stilgiss' WHERE `entry` = 9041;
 UPDATE `creature_template` SET `ScriptName` = 'overmaster_pyron' WHERE `entry` = 9026;
 UPDATE `creature_template` SET `ScriptName` = 'phalanx' WHERE `entry` = 9502;
+UPDATE `creature_template` SET `ScriptName` = 'npc_lokhtos_darkbargainer' WHERE `entry` = 12944;
+
 /* Hedrum the Creeper, Dark Keeper Zimrel */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9032, 9441);
 /* Anvilrage military */
@@ -223,6 +229,8 @@ UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map`= 534;
 /*  */
 
 /* THE SLAVE PENS */
+UPDATE creature_template SET ScriptName='boss_rokmar_the_crackler' WHERE entry=17991;
+UPDATE creature_template SET ScriptName='boss_warlord_kalithresh' WHERE entry=17798;
 
 /* THE UNDERBOG */
 
@@ -271,6 +279,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* DUSTWALLOW MARSH */
 /* Mirefin Murloc, Darkmist Spider, Withervine Creeper, Darkfang Creeper, Darkfang Spider, Giant Darkfang Spider, Archmage Tervosh */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4359, 4376, 4382, 4412, 4413, 4415, 4967);
+/* Lady Jaina Proudmoore */
+UPDATE creature_template SET ScriptName='npc_lady_jaina_proudmoore' WHERE entry=4968;
 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
@@ -350,6 +360,29 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* KARAZHAN */
 UPDATE `instance_template` SET `script` = 'instance_karazhan' WHERE `map`= 532;
+UPDATE `creature_template` SET `ScriptName` = 'boss_midnight' WHERE `entry` = 16151;
+UPDATE `creature_template` SET `ScriptName` = 'boss_attumen' WHERE `entry` = 15550;
+UPDATE `creature_template` SET `ScriptName` = 'boss_moroes' WHERE `entry` = 15687;
+UPDATE `creature_template` SET `ScriptName` = 'boss_maiden_of_virtue' WHERE `entry` = 16457;
+UPDATE `creature_template` SET `ScriptName` = 'boss_curator' WHERE `entry` = 15691;
+UPDATE `creature_template` SET `ScriptName` = 'boss_big_bad_wolf' WHERE `entry` = 17521;
+UPDATE `creature_template` SET `ScriptName` = 'boss_julianne' WHERE `entry` = 17534;
+UPDATE `creature_template` SET `ScriptName` = 'boss_romulo' WHERE `entry` = 17533;
+UPDATE `creature_template` SET `ScriptName` = 'boss_dorothee' WHERE `entry` = 17535;
+UPDATE `creature_template` SET `ScriptName` = 'boss_strawman' WHERE `entry` = 17543;
+UPDATE `creature_template` SET `ScriptName` = 'boss_tinhead' WHERE `entry` = 17547;
+UPDATE `creature_template` SET `ScriptName` = 'boss_tito' WHERE `entry` = 17548;
+UPDATE `creature_template` SET `ScriptName` = 'boss_roar' WHERE `entry` = 17546;
+UPDATE `creature_template` SET `ScriptName` = 'boss_crone' WHERE `entry` = 18168;
+UPDATE `creature_template` SET `ScriptName` = 'boss_terestian_illhoof' WHERE `entry` = 15688;
+UPDATE `creature_template` SET `ScriptName` = 'boss_shade_of_aran' WHERE `entry` = 16524;
+UPDATE `creature_template` SET `ScriptName` = 'boss_netherspite' WHERE `entry` = 15689;
+UPDATE `creature_template` SET `ScriptName` = 'boss_malchezaar' WHERE `entry` = 15690;
+UPDATE `creature_template` SET `ScriptName` = 'boss_nightbane' WHERE `entry` = 17225;
+
+UPDATE `creature_template` SET `ScriptName` = 'mob_homunculus' WHERE `entry` = 16539;
+UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229;
+UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;
 
 
 /* LOCH MODAN */

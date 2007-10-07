@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
-        if (done_by->GetTypeId() == TYPEID_PLAYER)
+        if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
         {
             if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
             {

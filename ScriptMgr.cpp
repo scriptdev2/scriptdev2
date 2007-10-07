@@ -89,6 +89,7 @@ extern void AddSC_npc_guardian();
 //Aunchindoun
 //Azshara
 extern void AddSC_boss_azuregos();
+extern void AddSC_mobs_spitelashes();
 
 //Azuremyst Isle
 extern void AddSC_injured_draenei();
@@ -96,6 +97,8 @@ extern void AddSC_draenei_survivor();
 
 //Badlands
 //Barrens
+extern void AddSC_npc_beaten_corpse();
+
 //Black Temple
 extern void AddSC_mob_blacktemple();
 
@@ -127,7 +130,7 @@ extern void AddSC_boss_vilerel();
 extern void AddSC_boss_warder_stilgiss();
 extern void AddSC_overmaster_pyron();
 extern void AddSC_phalanx();
-
+extern void AddSC_npc_lokhtos_darkbargainer();
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -158,6 +161,7 @@ extern void AddSC_boss_victor_nefarius();
 //Blasted lands
 extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
+extern void AddSC_instance_serpentshrine_cavern();
 
 //Burning steppes
 //Caverns of Time
@@ -166,7 +170,12 @@ extern void AddSC_boss_teremusthedevourer();
 //--The Dark Portal
 //Coilfang Resevoir
 //--Serpent Shrine Cavern
+extern void AddSC_boss_hydross_the_unstable();
+extern void AddSC_boss_leotheras_the_blind();
+
 //--Slave Pens
+extern void AddSC_boss_rokmar_the_crackler();
+
 //--Steam Vault
 extern void AddSC_boss_warlord_kalithresh();
 
@@ -184,6 +193,8 @@ extern void AddSC_npc_narm_faulk();
 //Durotar
 //Duskwood
 //Duskwallow marsh
+extern void AddSC_npc_lady_jaina_proudmoore();
+
 //Eversong Woods
 extern void AddSC_mobs_mana_tapped();
 
@@ -200,6 +211,8 @@ extern void AddSC_npc_henze_faulk();
 //Gnomeregan
 //Gruul's Lair
 extern void AddSC_boss_gruul();
+extern void AddSC_boss_high_king_maulgar();
+extern void AddSC_instance_gruuls_lair();
 
 //Hellfire Citadel
 //Hellfire Peninsula
@@ -209,8 +222,12 @@ extern void AddSC_mobs_bonechewer_orc();
 //Hillsbrad Foothills
 //Hinterlands
 //Karazhan
+extern void AddSC_boss_curator();
 extern void AddSC_boss_maiden_of_virtue();
 extern void AddSC_boss_malchezaar();
+extern void AddSC_boss_terestian_illhoof();
+extern void AddSC_mob_homunculus();
+extern void AddSC_mob_kilrek();
 extern void AddSC_netherspite_infernal();
 
 //Loch Modan
@@ -368,6 +385,8 @@ extern void AddSC_npcs_tanaris();
 //--Arcatraz
 //--Botanica
 //--The Eye
+extern void AddSC_boss_kaelthas();
+extern void AddSC_instance_the_eye();
 extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
 
@@ -453,7 +472,6 @@ void ScriptsInit()
     // -- Guard --
     AddSC_guards();
 
-
     // -- Honor --
     AddSC_Honor_Vendor();
 
@@ -478,6 +496,7 @@ void ScriptsInit()
     //Aunchindoun
     //Azshara
     AddSC_boss_azuregos();
+    AddSC_mobs_spitelashes();
 
     //Azuremyst Isle
     AddSC_injured_draenei();
@@ -485,6 +504,8 @@ void ScriptsInit()
 
     //Badlands
     //Barrens
+    AddSC_npc_beaten_corpse();
+
     //Black Temple
     AddSC_mob_blacktemple();
 
@@ -516,7 +537,7 @@ void ScriptsInit()
     AddSC_boss_warder_stilgiss();
     AddSC_overmaster_pyron();
     AddSC_phalanx();
-
+    AddSC_npc_lokhtos_darkbargainer();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();
@@ -547,6 +568,7 @@ void ScriptsInit()
     //Blasted lands
     AddSC_boss_kruul();
     AddSC_boss_teremusthedevourer();
+    AddSC_instance_serpentshrine_cavern();
 
     //Burning steppes
     //Caverns of Time
@@ -555,7 +577,12 @@ void ScriptsInit()
     //--The Dark Portal
     //Coilfang Resevoir
     //--Serpent Shrine Cavern
+    AddSC_boss_hydross_the_unstable();
+    AddSC_boss_leotheras_the_blind();
+
     //--Slave Pens
+    AddSC_boss_rokmar_the_crackler();
+
     //--Steam Vault
     AddSC_boss_warlord_kalithresh();
 
@@ -573,6 +600,8 @@ void ScriptsInit()
     //Durotar
     //Duskwood
     //Duskwallow marsh
+    AddSC_npc_lady_jaina_proudmoore();
+
     //Eversong Woods
     AddSC_mobs_mana_tapped();
 
@@ -589,6 +618,8 @@ void ScriptsInit()
     //Gnomeregan
     //Gruul's Lair
     AddSC_boss_gruul();
+    AddSC_boss_high_king_maulgar();
+    AddSC_instance_gruuls_lair();
 
     //Hellfire Citadel
     //Hellfire Peninsula
@@ -598,8 +629,12 @@ void ScriptsInit()
     //Hillsbrad Foothills
     //Hinterlands
     //Karazhan
+    AddSC_boss_curator();
     AddSC_boss_maiden_of_virtue();
     AddSC_boss_malchezaar();
+    AddSC_boss_terestian_illhoof();
+    AddSC_mob_homunculus();
+    AddSC_mob_kilrek();
     AddSC_netherspite_infernal();
 
     //Loch Modan
@@ -757,6 +792,8 @@ void ScriptsInit()
     //--Arcatraz
     //--Botanica
     //--The Eye
+    AddSC_boss_kaelthas();
+    AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
     AddSC_mob_the_eye();
 
@@ -789,6 +826,7 @@ void ScriptsInit()
 
     //Zul'Farrak
     //Zul'Gurub
+
 
     // -------------------
 

@@ -39,15 +39,27 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
 {
     instance_serpentshrine_cavern(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
+    uint64 Sharkkis;
+    uint64 Tidalvess;
+    uint64 Caribdis;
+    uint64 LadyVashj;
+    uint64 TaintedElemental;
+
     uint32 Encounters[ENCOUNTERS];
 
-    virtual void Initialize()
+    void Initialize()
     {
+        Sharkkis = 0;
+        Tidalvess = 0;
+        Caribdis = 0;
+        LadyVashj = 0;
+        TaintedElemental = 0;
+
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
     }
 
-    virtual bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             if(Encounters[i] == IN_PROGRESS) return true; 
@@ -55,12 +67,48 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         return false;
     }
 
-    virtual void OnCreatureCreate(Creature *creature, uint32 creature_entry) { }
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch(creature_entry)
+        {
+            case 21212:
+            LadyVashj = creature->GetGUID();
+            break;
+ 
+            case 22009:
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+            TaintedElemental = creature->GetGUID();
+            break;
 
-    virtual Creature* GetUnit(char *identifier) { return NULL; }
-    virtual GameObject* GetGO(char *identifier) { return NULL; }
+            case 21966:
+            Sharkkis = creature->GetGUID();
+            break;
 
-    virtual void SetData(char *type, uint32 data)
+            case 21965:
+            Tidalvess = creature->GetGUID();
+            break;
+
+            case 21964:
+            Caribdis = creature->GetGUID();
+            break;
+        }
+    }
+
+    uint64 GetUnitGUID(char *identifier)
+    {
+        if(identifier == "Sharkkis")
+            return Sharkkis;
+        else if(identifier == "Tidalvess")
+            return Tidalvess;
+        else if(identifier == "Caribdis")
+            return Caribdis;
+        else if(identifier == "LadyVashj")
+            return LadyVashj;
+
+        return NULL;
+    }
+
+    void SetData(char *type, uint32 data)
     {
         if(type == "HydrossTheUnstableEvent")
             Encounters[0] = data;
@@ -76,7 +124,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             Encounters[5] = data;
     }
 
-    virtual uint32 GetData(char *type)
+    uint32 GetData(char *type)
     {
         if(type == "HydrossTheUnstableEvent")
             return Encounters[0];

@@ -57,8 +57,10 @@ scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/azshara/boss_azuregos.cpp \
+scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
+scripts/zone/barrens/npc_beaten_corpse.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/mob_blacktemple.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
@@ -87,6 +89,7 @@ scripts/zone/blackrock_depths/boss_vilerel.cpp \
 scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
 scripts/zone/blackrock_depths/mob_overmaster_pyron.cpp \
 scripts/zone/blackrock_depths/mob_phalanx.cpp \
+scripts/zone/blackrock_depths/npc_lokhtos_darkbargainer.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
 scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \
@@ -113,10 +116,14 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
+scripts/zone/coilfang_resevoir/serpent_shrine/boss_hydross_the_unstable.cpp \
+scripts/zone/coilfang_resevoir/serpent_shrine/boss_leotheras_the_blind.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
+scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
+scripts/zone/dustwallow_marsh/npc_lady_jaina_proudmoore.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \

@@ -37,24 +37,25 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 {
     instance_the_eye(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    Creature *ThaladredTheDarkener;
-    Creature *LordSanguinar;
-    Creature *GrandAstromancerCapernian;
-    Creature *MasterEngineerTelonicus;
+    uint64 ThaladredTheDarkener;
+    uint64 LordSanguinar;
+    uint64 GrandAstromancerCapernian;
+    uint64 MasterEngineerTelonicus;
+
     uint32 Encounters[ENCOUNTERS];
 
-    virtual void Initialize()
+    void Initialize()
     {
-        ThaladredTheDarkener = NULL;
-        LordSanguinar = NULL;
-        GrandAstromancerCapernian = NULL;
-        MasterEngineerTelonicus = NULL;
+        ThaladredTheDarkener = 0;
+        LordSanguinar = 0;
+        GrandAstromancerCapernian = 0;
+        MasterEngineerTelonicus = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
     }
 
-    virtual bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             if(Encounters[i] == IN_PROGRESS) return true;
@@ -62,37 +63,37 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         return false;
     }
 
-    virtual void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         switch(creature_entry)
         {
             case 20064:
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             creature->setFaction(35);
-            ThaladredTheDarkener = creature;
+            ThaladredTheDarkener = creature->GetGUID();
             break;
 
             case 20063:
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             creature->setFaction(35);
-            MasterEngineerTelonicus = creature;
+            MasterEngineerTelonicus = creature->GetGUID();
             break;
 
             case 20062:
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             creature->setFaction(35);
-            GrandAstromancerCapernian = creature;
+            GrandAstromancerCapernian = creature->GetGUID();
             break;
 
             case 20060:
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             creature->setFaction(35);
-            LordSanguinar = creature;
+            LordSanguinar = creature->GetGUID();
             break;
         }
     }
 
-    virtual Creature* GetUnit(char *identifier)
+    uint64 GetUnitGUID(char *identifier)
     {
         if(identifier == "ThaladredTheDarkener" && ThaladredTheDarkener)
             return ThaladredTheDarkener;
@@ -106,7 +107,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         return NULL;
     }
 
-    virtual void SetData(char *type, uint32 data)
+    void SetData(char *type, uint32 data)
     {
         if(type == "KaelThasEvent")
             Encounters[0] = data;
@@ -118,7 +119,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             Encounters[3] = data;
     }
 
-    virtual uint32 GetData(char *type)
+    uint32 GetData(char *type)
     {
         if(type == "KaelThasEvent")
             return Encounters[0];
@@ -131,8 +132,6 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 
         return 0;
     }
-
-    virtual GameObject* GetGO(char *identifier) { return NULL; }
 };
 
 InstanceData* GetInstanceData_instance_the_eye(Map* map)

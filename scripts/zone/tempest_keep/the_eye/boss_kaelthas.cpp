@@ -64,18 +64,21 @@
 
 #define PHOENIX                            21362
 #define NETHER_VAPOR                       21002
-/*
+
 // kaelthas AI
 struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature *c) : ScriptedAI(c)
     {
+        if (c->GetInstanceData()) pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
         Advisor[0] = 0;
         Advisor[1] = 0;
         Advisor[2] = 0;
         Advisor[3] = 0;
         EnterEvadeMode();
     }
+
+    ScriptedInstance* pInstance;
 
     uint32 ArcaneDisruption_Timer;
     uint32 Phoenix_Timer;
@@ -122,8 +125,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 }
             }
 
-            //reset encounter
-            m_creature->GetInstanceData()->SetData("KaelThasEvent", 0); // 0 = NOT_STARTED
+            if(pInstance)
+                pInstance->SetData("KaelThasEvent", 0); // 0 = NOT_STARTED
         }
 
         InCombat = false;
@@ -139,10 +142,13 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void StartEvent()
     {
-        Advisor[0] = m_creature->GetInstanceData()->GetUnit("ThaladredTheDarkener")->GetGUID();
-        Advisor[1] = m_creature->GetInstanceData()->GetUnit("LordSanguinar")->GetGUID();
-        Advisor[2] = m_creature->GetInstanceData()->GetUnit("GrandAstromancerCapernian")->GetGUID();
-        Advisor[3] = m_creature->GetInstanceData()->GetUnit("MasterEngineerTelonicus")->GetGUID();
+        if(!pInstance)
+            return;
+
+        Advisor[0] = pInstance->GetUnitGUID("ThaladredTheDarkener");
+        Advisor[1] = pInstance->GetUnitGUID("LordSanguinar");
+        Advisor[2] = pInstance->GetUnitGUID("GrandAstromancerCapernian");
+        Advisor[3] = pInstance->GetUnitGUID("MasterEngineerTelonicus");
 
         if(!Advisor[0] || !Advisor[1] || !Advisor[2] || !Advisor[3])
             return;
@@ -150,7 +156,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_INTRO);
 
-        m_creature->GetInstanceData()->SetData("KaelThasEvent", 1); // 1 = IN_PROGRESS
+        pInstance->SetData("KaelThasEvent", 1); // 1 = IN_PROGRESS
 
         Phase1Subphase = 0;
         Phase_Timer = 23000;
@@ -178,7 +184,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
-        m_creature->GetInstanceData()->SetData("KaelThasEvent", 3); // 3 = DONE
+        if(pInstance)
+            pInstance->SetData("KaelThasEvent", 3); // 3 = DONE
     }
 
     void AttackStart(Unit *who)
@@ -211,7 +218,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
             }
-            else if (!Phase && m_creature->IsWithinDistInMap(who, 60.0f) && !m_creature->GetInstanceData()->GetData("KaelThasEvent")) // 0 = NOT STARTED
+            else if (!Phase && m_creature->IsWithinDistInMap(who, 60.0f) && pInstance && !pInstance->GetData("KaelThasEvent")) // 0 = NOT STARTED
                 StartEvent();
         }
     }
@@ -554,4 +561,3 @@ void AddSC_boss_kaelthas()
     newscript->GetAI = GetAI_mob_nether_vapor;
     m_scripts[nrscripts++] = newscript;
 }
-*/

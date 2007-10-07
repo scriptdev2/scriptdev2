@@ -32,7 +32,7 @@
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33239
 #define SPELL_ENRAGE             34970     
-/*
+
 //High King Maulgar AI (normal AI)
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
@@ -820,4 +820,3 @@ void AddSC_boss_high_king_maulgar()
     newscript->GetAI = GetAI_boss_krosh_firehand;
     m_scripts[nrscripts++] = newscript;
 }
-*/

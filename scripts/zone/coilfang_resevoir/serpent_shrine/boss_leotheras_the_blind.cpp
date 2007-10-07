@@ -51,7 +51,13 @@
 
 struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 {
-    boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c)
+    {
+        if (c->GetInstanceData()) pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
+        EnterEvadeMode();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 Whirlwind_Timer;
     uint32 ChaosBlast_Timer;
@@ -82,7 +88,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
 
-        m_creature->GetInstanceData()->SetData("LeotherasTheBlindEvent", 0); // 0 = NOT_STARTED
+        if(pInstance)
+            pInstance->SetData("LeotherasTheBlindEvent", 0); // 0 = NOT_STARTED
     }
 
     void SetDemonFinalForm(Unit *target)
@@ -99,12 +106,24 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoStartMeleeAttack(target);
     }
 
+    void SetNightelfFinalForm()
+    {
+        IsFinalForm = true;
+        DemonForm = false;
+
+        DoYell(SAY_FINAL_FORM, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_FINAL_FORM);
+
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
+    }
+
     void StartEvent()
     {
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        m_creature->GetInstanceData()->SetData("LeotherasTheBlindEvent", 1); // 1 = IN_PROGRESS
+        if(pInstance)
+            pInstance->SetData("LeotherasTheBlindEvent", 1); // 1 = IN_PROGRESS
 
         InCombat = true;
     }
@@ -157,7 +176,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_DEATH);
         }
 
-        m_creature->GetInstanceData()->SetData("LeotherasTheBlindEvent", 3); // 3 = DONE
+        if(pInstance)
+            pInstance->SetData("LeotherasTheBlindEvent", 3); // 3 = DONE
     }
 
     void AttackStart(Unit *who)
@@ -263,12 +283,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             if(DemonForm)
                 ((boss_leotheras_the_blindAI*)DemonForm->AI())->SetDemonFinalForm(m_creature->getVictim());
 
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
-            DemonForm = false;
-
-            DoYell(SAY_FINAL_FORM, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_FINAL_FORM);
-            IsFinalForm = true;
+            SetNightelfFinalForm();
         }
 
         DoMeleeAttackIfReady();

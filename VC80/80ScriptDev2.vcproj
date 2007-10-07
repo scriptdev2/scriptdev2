@@ -350,6 +350,10 @@
 						RelativePath="..\scripts\zone\azshara\boss_azuregos.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\azshara\mobs_spitelashes.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Badlands"
@@ -358,6 +362,10 @@
 				<Filter
 					Name="Barrens"
 					>
+					<File
+						RelativePath="..\scripts\zone\barrens\npc_beaten_corpse.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Blackfathom Depths"
@@ -474,6 +482,10 @@
 						RelativePath="..\scripts\zone\blackrock_depths\mob_phalanx.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\npc_lokhtos_darkbargainer.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Deadmines"
@@ -510,6 +522,10 @@
 				<Filter
 					Name="Dustwallow Marsh"
 					>
+					<File
+						RelativePath="..\scripts\zone\dustwallow_marsh\npc_lady_jaina_proudmoore.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Blackwing Lair"
@@ -1674,6 +1690,14 @@
 						Name="Serpent Shrine Cavern"
 						>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_hydross_the_unstable.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_leotheras_the_blind.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
@@ -1681,6 +1705,10 @@
 					<Filter
 						Name="Slave Pens"
 						>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\slave_pens\boss_rokmar.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Steam Vault"
