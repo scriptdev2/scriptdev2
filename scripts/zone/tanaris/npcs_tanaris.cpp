@@ -25,7 +25,7 @@
 ## npc_steward_of_time
 ######*/
 
-bool QuestAccept_npc_steward_of_time(Player *player, Creature *creature, Quest *quest )
+bool QuestAccept_npc_steward_of_time(Player *player, Creature *creature, Quest const *quest )
 {
         std::vector<uint32> nodes;                          //To The Master's Lair, q-id 10279
 

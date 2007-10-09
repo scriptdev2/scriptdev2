@@ -53,9 +53,10 @@ CreatureAI* GetAI_test(Creature *_Creature)
     ai->Spell[2].First_Cast = 1000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
-    //41472 //Divine Wrath
+    //41472 //ARcane orb
+
     ai->Spell[3].Enabled = true;
-    ai->Spell[3].Spell_Id = 41472;
+    ai->Spell[3].Spell_Id = 34172;
     ai->Spell[3].Cooldown = 16000;
     ai->Spell[3].First_Cast = 16000;
     ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_LAST_AGGRO;

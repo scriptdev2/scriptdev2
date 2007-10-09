@@ -132,7 +132,7 @@ CreatureAI* GetAI_neltharaku(Creature *_Creature)
     return new neltharakuAI (_Creature);
 }
 
-bool QuestAccept_neltharaku(Player *player, Creature *creature, Quest *quest )
+bool QuestAccept_neltharaku(Player *player, Creature *creature, Quest const* quest )
 {
     if(quest->GetQuestId() == 10814)
     {

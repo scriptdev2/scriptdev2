@@ -176,7 +176,8 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-                AstralFlare->AI()->AttackStart(target);
+                if (AstralFlare && target)
+                    AstralFlare->AI()->AttackStart(target);
 
                 //Reduce Mana by 10%
                 uint32 mana = ((m_creature->GetMaxPower(POWER_MANA) / (m_creature->GetMaxPower(POWER_MANA) / 10)) - m_creature->GetPower(POWER_MANA));                

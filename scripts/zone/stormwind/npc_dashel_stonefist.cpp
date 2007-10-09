@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
     }
 };
 
-bool QuestAccept_npc_dashel_stonefist(Player *player, Creature *_Creature, Quest *_Quest)
+bool QuestAccept_npc_dashel_stonefist(Player *player, Creature *_Creature, Quest const *_Quest)
 {
     if(_Quest->GetQuestId() == 1447)
     {

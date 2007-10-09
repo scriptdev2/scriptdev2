@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         }
         else if(type == "Event_Maulgar_Started_data2")
         {
-            Maulgar_Event_Starter += data << 32;
+            Maulgar_Event_Starter += (uint64(data) << 32);
 
         }else if(type == "Event_Gruul_Started")
             GruulInProgress = true;

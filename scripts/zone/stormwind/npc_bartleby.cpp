@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
     }
 };
 
-bool QuestAccept_npc_bartleby(Player *player, Creature *_Creature, Quest *_Quest)
+bool QuestAccept_npc_bartleby(Player *player, Creature *_Creature, Quest const *_Quest)
 {
     if(_Quest->GetQuestId() == 1640)
     {

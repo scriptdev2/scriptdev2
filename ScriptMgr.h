@@ -46,19 +46,19 @@ std::string Name;
 
 // -- Quest/gossip Methods to be scripted --
 bool (*pGossipHello         )(Player*, Creature*);
-bool (*pQuestAccept         )(Player*, Creature*, Quest* );
+bool (*pQuestAccept         )(Player*, Creature*, Quest const* );
 bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32  );
 bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , char* );
-bool (*pQuestSelect         )(Player*, Creature*, Quest* );
-bool (*pQuestComplete       )(Player*, Creature*, Quest* );
+bool (*pQuestSelect         )(Player*, Creature*, Quest const* );
+bool (*pQuestComplete       )(Player*, Creature*, Quest const* );
 uint32 (*pNPCDialogStatus   )(Player*, Creature* );
-bool (*pChooseReward        )(Player*, Creature*, Quest*, uint32 );
-bool (*pItemHello           )(Player*, Item*, Quest* );
+bool (*pChooseReward        )(Player*, Creature*, Quest const*, uint32 );
+bool (*pItemHello           )(Player*, Item*, Quest const* );
 bool (*pGOHello             )(Player*, GameObject* );
-bool (*pAreaTrigger         )(Player*, Quest *, uint32 );
-bool (*pItemQuestAccept     )(Player*, Item *, Quest* );
-bool (*pGOQuestAccept       )(Player*, GameObject*, Quest* );
-bool (*pGOChooseReward      )(Player*, GameObject*_GO, Quest*, uint32 );
+bool (*pAreaTrigger         )(Player*, Quest const*, uint32 );
+bool (*pItemQuestAccept     )(Player*, Item *, Quest const* );
+bool (*pGOQuestAccept       )(Player*, GameObject*, Quest const* );
+bool (*pGOChooseReward      )(Player*, GameObject*_GO, Quest const*, uint32 );
 bool (*pReceiveEmote        )(Player*, Creature*, uint32 );
 bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
 

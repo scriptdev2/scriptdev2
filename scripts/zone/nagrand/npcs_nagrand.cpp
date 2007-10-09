@@ -25,7 +25,7 @@
 ## npc_altruis_the_sufferer
 ######*/
 
-bool QuestAccept_npc_altruis_the_sufferer(Player *player, Creature *creature, Quest *quest )
+bool QuestAccept_npc_altruis_the_sufferer(Player *player, Creature *creature, Quest const *quest )
 {
     if ( !player->GetQuestRewardStatus(9991) == 1 )         //Survey the Land, q-id 9991
     {

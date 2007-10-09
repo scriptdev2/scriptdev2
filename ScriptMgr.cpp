@@ -888,7 +888,7 @@ bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, u
 }
 
 MANGOS_DLL_EXPORT
-bool QuestAccept( Player *player, Creature *_Creature, Quest *_Quest )
+bool QuestAccept( Player *player, Creature *_Creature, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -900,7 +900,7 @@ bool QuestAccept( Player *player, Creature *_Creature, Quest *_Quest )
 }
 
 MANGOS_DLL_EXPORT
-bool QuestSelect( Player *player, Creature *_Creature, Quest *_Quest )
+bool QuestSelect( Player *player, Creature *_Creature, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -912,7 +912,7 @@ bool QuestSelect( Player *player, Creature *_Creature, Quest *_Quest )
 }
 
 MANGOS_DLL_EXPORT
-bool QuestComplete( Player *player, Creature *_Creature, Quest *_Quest )
+bool QuestComplete( Player *player, Creature *_Creature, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -924,7 +924,7 @@ bool QuestComplete( Player *player, Creature *_Creature, Quest *_Quest )
 }
 
 MANGOS_DLL_EXPORT
-bool ChooseReward( Player *player, Creature *_Creature, Quest *_Quest, uint32 opt )
+bool ChooseReward( Player *player, Creature *_Creature, Quest const *_Quest, uint32 opt )
 {
     Script *tmpscript = NULL;
 
@@ -948,7 +948,7 @@ uint32 NPCDialogStatus( Player *player, Creature *_Creature )
 }
 
 MANGOS_DLL_EXPORT
-bool ItemHello( Player *player, Item *_Item, Quest *_Quest )
+bool ItemHello( Player *player, Item *_Item, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -960,7 +960,7 @@ bool ItemHello( Player *player, Item *_Item, Quest *_Quest )
 }
 
 MANGOS_DLL_EXPORT
-bool ItemQuestAccept( Player *player, Item *_Item, Quest *_Quest )
+bool ItemQuestAccept( Player *player, Item *_Item, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -984,7 +984,7 @@ bool GOHello( Player *player, GameObject *_GO )
 }
 
 MANGOS_DLL_EXPORT
-bool GOQuestAccept( Player *player, GameObject *_GO, Quest *_Quest )
+bool GOQuestAccept( Player *player, GameObject *_GO, Quest const *_Quest )
 {
     Script *tmpscript = NULL;
 
@@ -996,7 +996,7 @@ bool GOQuestAccept( Player *player, GameObject *_GO, Quest *_Quest )
 }
 
 MANGOS_DLL_EXPORT
-bool GOChooseReward( Player *player, GameObject *_GO, Quest *_Quest, uint32 opt )
+bool GOChooseReward( Player *player, GameObject *_GO, Quest const *_Quest, uint32 opt )
 {
     Script *tmpscript = NULL;
 
@@ -1008,7 +1008,7 @@ bool GOChooseReward( Player *player, GameObject *_GO, Quest *_Quest, uint32 opt 
 }
 
 MANGOS_DLL_EXPORT
-bool AreaTrigger      ( Player *player, Quest *_Quest, uint32 triggerID )
+bool AreaTrigger      ( Player *player, Quest const *_Quest, uint32 triggerID )
 {
     Script *tmpscript = NULL;
 
