@@ -65,11 +65,11 @@ bool GossipSelect_npc_great_bear_spirit(Player *player, Creature *_Creature, uin
         case GOSSIP_ACTION_INFO_DEF + 3:
             player->SEND_GOSSIP_MENU(4735, _Creature->GetGUID());
 
-            if (player->SatisfyQuestRace(5929, NULL) && !player->GetReqKillOrCastCurrentCount(5929, _Creature->GetEntry()) )//ally
+            if (player->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(5929, _Creature->GetEntry()) )//ally
             {
                 player->KilledMonster( 11956,_Creature->GetGUID() );
             }
-            if (player->SatisfyQuestRace(5930, NULL) && !player->GetReqKillOrCastCurrentCount(5930, _Creature->GetEntry()) )//horde
+            if (player->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(5930, _Creature->GetEntry()) )//horde
             {
                 player->KilledMonster( 11956,_Creature->GetGUID() );
             }
