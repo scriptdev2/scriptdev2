@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL mob_flame_guardAI : public ScriptedAI
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);       
-	    m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
     }
 
@@ -83,50 +83,45 @@ struct MANGOS_DLL_DECL mob_flame_guardAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireShield_Timer
+        if (FireShield_Timer < diff)
         {
-            
-            //FireShield_Timer
-            if (FireShield_Timer < diff)
+
+            DoCast(m_creature,SPELL_FIRESHIELD);
+
+            //60 seconds until we should cast this again
+            FireShield_Timer = 60000;
+        }else FireShield_Timer -= diff;
+
+
+        //Flame_Timer
+        if (Flame_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 80) //80% chance to cast
             {
+                DoCast(m_creature->getVictim(),SPELL_FLAME);
+            }
+            //7seconds until we should cast this agian
+            Flame_Timer = 7000;
+        }else Flame_Timer -= diff;
 
-                    DoCast(m_creature,SPELL_FIRESHIELD);
-
-                //60 seconds until we should cast this again
-                FireShield_Timer = 60000;
-            }else FireShield_Timer -= diff;
-
-
-            //Flame_Timer
-            if (Flame_Timer < diff)
+        //ConeOfFire_Timer
+        if (ConeOfFire_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 65) //65% chance to cast
             {
-                //Cast
-                if (rand()%100 < 80) //80% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FLAME);
-                }
-                //7seconds until we should cast this agian
-                Flame_Timer = 7000;
-            }else Flame_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
+            }
+            //11 seconds until we should cast this again
+            ConeOfFire_Timer = 11000;
+        }else ConeOfFire_Timer -= diff;
 
-            //ConeOfFire_Timer
-            if (ConeOfFire_Timer < diff)
-            {
-                //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
-                }
-                //11 seconds until we should cast this again
-                ConeOfFire_Timer = 11000;
-            }else ConeOfFire_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_flame_guard(Creature *_Creature)

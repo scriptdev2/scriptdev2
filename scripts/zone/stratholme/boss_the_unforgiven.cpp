@@ -78,38 +78,34 @@ struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Frostbolt
+        if (Frostbolt_Timer < diff)
         {
-            //Frostbolt
-            if (Frostbolt_Timer < diff)
+            //Cast
+            if (rand()%100 < 95) //95% chance to cast
             {
-                //Cast
-                if (rand()%100 < 95) //95% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
-                }
-                //4 seconds until we should cast this again
-                Frostbolt_Timer = 4000;
-            }else Frostbolt_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            }
+            //4 seconds until we should cast this again
+            Frostbolt_Timer = 4000;
+        }else Frostbolt_Timer -= diff;
 
-            //Chilled
-            if (Chilled_Timer < diff)
+        //Chilled
+        if (Chilled_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 45) //45% chance to cast
             {
-                //Cast
-                if (rand()%100 < 45) //45% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CHILLED);
-                }
-                //14 seconds until we should cast this again
-                Chilled_Timer = 14000;
-            }else Chilled_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CHILLED);
+            }
+            //14 seconds until we should cast this again
+            Chilled_Timer = 14000;
+        }else Chilled_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_the_unforgiven(Creature *_Creature)

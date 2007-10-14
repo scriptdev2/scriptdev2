@@ -81,39 +81,34 @@ struct MANGOS_DLL_DECL boss_black_guard_swordsmithAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Dazed
+        if (Dazed_Timer < diff)
         {
-
-            //Dazed
-            if (Dazed_Timer < diff)
+            //Cast
+            if (rand()%100 < 75) //75% chance to cast
             {
-                //Cast
-                if (rand()%100 < 75) //75% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_DAZED);
-                }
-                //20 seconds until we should cast this again
-                Dazed_Timer = 20000;
-            }else Dazed_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_DAZED);
+            }
+            //20 seconds until we should cast this again
+            Dazed_Timer = 20000;
+        }else Dazed_Timer -= diff;
 
-            //BansheeCurse
-            if (BansheeCurse_Timer < diff)
+        //BansheeCurse
+        if (BansheeCurse_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 10) //10% chance to cast
             {
-                //Cast
-                if (rand()%100 < 10) //10% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_BANSHEECURSE);
-                }
-                //15 seconds until we should cast this again
-                BansheeCurse_Timer = 15000;
-            }else BansheeCurse_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_BANSHEECURSE);
+            }
+            //15 seconds until we should cast this again
+            BansheeCurse_Timer = 15000;
+        }else BansheeCurse_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_black_guard_swordsmith(Creature *_Creature)

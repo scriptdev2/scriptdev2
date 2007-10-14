@@ -83,50 +83,46 @@ struct MANGOS_DLL_DECL boss_crimson_hammersmithAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //BoneSmelt
+        if (BoneSmelt_Timer < diff)
         {
-            //BoneSmelt
-            if (BoneSmelt_Timer < diff)
+            //Cast
+            if (rand()%100 < 20) //20% chance to cast
             {
-                //Cast
-                if (rand()%100 < 20) //20% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_BONESMELT);
-                }
-                //20 seconds until we should cast this again
-                BoneSmelt_Timer = 20000;
-            }else BoneSmelt_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_BONESMELT);
+            }
+            //20 seconds until we should cast this again
+            BoneSmelt_Timer = 20000;
+        }else BoneSmelt_Timer -= diff;
 
-            //Dazed
-            if (Dazed_Timer < diff)
+        //Dazed
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 45) //45% chance to cast
             {
-                //Cast
-                if (rand()%100 < 45) //45% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_DAZED);
-                }
-                //13 seconds until we should cast this again
-                Dazed_Timer = 13000;
-            }else Dazed_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_DAZED);
+            }
+            //13 seconds until we should cast this again
+            Dazed_Timer = 13000;
+        }else Dazed_Timer -= diff;
 
-            //HammerOfJustice
-            if (HammerOfJustice_Timer < diff)
+        //HammerOfJustice
+        if (HammerOfJustice_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 65) //65% chance to cast
             {
-                //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
-                }
-                //16 seconds until we should cast this again
-                HammerOfJustice_Timer = 16000;
-            }else HammerOfJustice_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
+            }
+            //16 seconds until we should cast this again
+            HammerOfJustice_Timer = 16000;
+        }else HammerOfJustice_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_crimson_hammersmith(Creature *_Creature)

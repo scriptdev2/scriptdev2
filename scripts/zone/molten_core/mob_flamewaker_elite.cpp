@@ -89,45 +89,40 @@ struct MANGOS_DLL_DECL mob_flamewaker_eliteAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MagicReflection_Timer
+        if (MagicReflection_Timer < diff)
         {
-            
-            //MagicReflection_Timer
-            if (MagicReflection_Timer < diff)
-            {
-                //Cast NYI in core
-                //DoCast(m_creature,SPELL_MAGICREFLECTION);
+            //Cast NYI in core
+            //DoCast(m_creature,SPELL_MAGICREFLECTION);
 
-                //60 seconds until we should cast this agian
-                MagicReflection_Timer = 60000;
-            }else MagicReflection_Timer -= diff;
+            //60 seconds until we should cast this agian
+            MagicReflection_Timer = 60000;
+        }else MagicReflection_Timer -= diff;
 
-            //DamageReflection_Timer
-            if (DamageReflection_Timer < diff)
-            {
-                //Cast NYI in core
-                //DoCast(m_creature,SPELL_DAMAGEREFLECTION);
+        //DamageReflection_Timer
+        if (DamageReflection_Timer < diff)
+        {
+            //Cast NYI in core
+            //DoCast(m_creature,SPELL_DAMAGEREFLECTION);
 
-                //60 seconds until we should cast this agian
-                DamageReflection_Timer = 60000;
-            }else DamageReflection_Timer -= diff;
+            //60 seconds until we should cast this agian
+            DamageReflection_Timer = 60000;
+        }else DamageReflection_Timer -= diff;
 
-            //Blastwave_Timer
-            if (Blastwave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+        //Blastwave_Timer
+        if (Blastwave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
 
-                //12 seconds until we should cast this agian
-                Blastwave_Timer = 12000;
-            }else Blastwave_Timer -= diff;
+            //12 seconds until we should cast this agian
+            Blastwave_Timer = 12000;
+        }else Blastwave_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_flamewaker_elite(Creature *_Creature)

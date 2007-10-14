@@ -25,10 +25,23 @@
 #define SPELL_RETALIATION		40546
 
 #define SAY_TAUNT				"Do you smell that? Fresh meat has somehow breached our citadel. Be wary of any intruders." 
+#define SOUND_TAUNT			    
+
 #define SAY_AGGRO_1				"Heh... this may hurt a little."
+#define SOUND_AGGRO_1			10332
 #define SAY_AGGRO_2				"What do we have here? ..." 
+#define SOUND_AGGRO_2			10331
+#define SAY_AGGRO_3				"" 
+#define SOUND_AGGRO_3			10333
+
+
 #define SAY_SURGE				"Back off, pup!" 
+#define SOUND_SURGE				10330	
+
 #define SAY_HEAL				"Heal me! QUICKLY!" 
+#define SOUND_HEAL				10329
+
+#define SOUND_DIE				10336
 
 struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
@@ -75,10 +88,12 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
                 {
                 case 0:
                     DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
                     break;
 
                 case 1:
                     DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                     break;                    
                 }
                 InCombat = true;
@@ -106,10 +121,12 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
                     {
                     case 0:
                         DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
                         break;
 
                     case 1:
                         DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                         break;
                     }
                     InCombat = true;
@@ -128,54 +145,49 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
 
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if(MortalWound_Timer < diff)
+        {                   
+            DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
+
+            MortalWound_Timer = 5000+rand()%8000;
+        }else MortalWound_Timer -= diff;
+
+        if(Surge_Timer < diff)
         {
-            if(MortalWound_Timer < diff)
-            {                   
-                DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
+            DoYell(SAY_SURGE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SURGE);
 
-                MortalWound_Timer = 5000+rand()%8000;
-            }else MortalWound_Timer -= diff;
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            if(Surge_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0); 
-                DoYell(SAY_SURGE, LANG_UNIVERSAL, NULL);
-                DoCast(target,SPELL_SURGE);
+            DoCast(target,SPELL_SURGE);
 
-                Surge_Timer = 5000+rand()%8000;
-            }else Surge_Timer -= diff;
+            Surge_Timer = 5000+rand()%8000;
+        }else Surge_Timer -= diff;
 
-            if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
-            {
-                if(Retaliation_Timer < diff)
-                {              
-                    DoCast(m_creature->getVictim(),SPELL_RETALIATION);
-                    Retaliation_Timer = 5000;
-                }else Retaliation_Timer -= diff;
-            }
-
-            if(!YelledForHeal)
-                if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 40)
-                {
-                    DoYell(SAY_HEAL, LANG_UNIVERSAL, NULL);
-                    m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth()*0.3);
-                    YelledForHeal = true;		
-                }
-
-            if(m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                if( m_creature->isAttackReady() )
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
-            }
+        if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
+        {
+            if(Retaliation_Timer < diff)
+            {              
+                DoCast(m_creature->getVictim(),SPELL_RETALIATION);
+                Retaliation_Timer = 5000;
+            }else Retaliation_Timer -= diff;
         }
+
+        if(!YelledForHeal)
+            if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 40)
+            {
+                DoYell(SAY_HEAL, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_HEAL);
+
+                //m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth()*0.3);
+                YelledForHeal = true;		
+            }
+
+        DoMeleeAttackIfReady();
     }
 };
 

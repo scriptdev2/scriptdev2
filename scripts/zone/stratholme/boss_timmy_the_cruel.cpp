@@ -85,24 +85,19 @@ struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //RavenousClaw
+        if (RavenousClaw_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
+            //15 seconds until we should cast this again
+            RavenousClaw_Timer = 15000;
+        }else RavenousClaw_Timer -= diff;
 
-            //RavenousClaw
-            if (RavenousClaw_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
-                //15 seconds until we should cast this again
-                RavenousClaw_Timer = 15000;
-            }else RavenousClaw_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_timmy_the_cruel(Creature *_Creature)

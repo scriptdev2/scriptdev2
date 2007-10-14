@@ -85,59 +85,55 @@ struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Frostbolt
+        if (Frostbolt_Timer < diff)
         {
-            //Frostbolt
-            if (Frostbolt_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
-                //6 seconds until we should cast this again
-                Frostbolt_Timer = 6000;
-            }else Frostbolt_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            //6 seconds until we should cast this again
+            Frostbolt_Timer = 6000;
+        }else Frostbolt_Timer -= diff;
 
-            //Chilled
-            if (Chilled_Timer < diff)
+        //Chilled
+        if (Chilled_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 20) //20% chance to cast
             {
-                //Cast
-                if (rand()%100 < 20) //20% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CHILLED);
-                }
-                //23 seconds until we should cast this again
-                Chilled_Timer = 23000;
-            }else Chilled_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CHILLED);
+            }
+            //23 seconds until we should cast this again
+            Chilled_Timer = 23000;
+        }else Chilled_Timer -= diff;
 
-            //FrostNova
-            if (FrostNova_Timer < diff)
+        //FrostNova
+        if (FrostNova_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 50) //50% chance to cast
             {
-                //Cast
-                if (rand()%100 < 50) //50% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
-                }
-                //16 seconds until we should cast this again
-                FrostNova_Timer = 16000;
-            }else FrostNova_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+            }
+            //16 seconds until we should cast this again
+            FrostNova_Timer = 16000;
+        }else FrostNova_Timer -= diff;
 
-            //ArcaneBolt
-            if (ArcaneBolt_Timer < diff)
+        //ArcaneBolt
+        if (ArcaneBolt_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 40) //40% chance to cast
             {
-                //Cast
-                if (rand()%100 < 40) //40% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_ARCANEBOLT);
-                }
-                //11 seconds until we should cast this again
-                ArcaneBolt_Timer = 11000;
-            }else ArcaneBolt_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_ARCANEBOLT);
+            }
+            //11 seconds until we should cast this again
+            ArcaneBolt_Timer = 11000;
+        }else ArcaneBolt_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_skul(Creature *_Creature)

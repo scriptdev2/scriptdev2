@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
     void EnterEvadeMode()
     {       
         IceArmor_Timer = 2000;
-	Frostbolt_Timer = 8000;
+        Frostbolt_Timer = 8000;
         ChillNova_Timer = 12000;
         Freeze_Timer = 18000;
         FrostVolley_Timer = 24000;
@@ -88,81 +88,76 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //IceArmor_Timer
+        if (IceArmor_Timer < diff)
         {
-     
-            //IceArmor_Timer
-            if (IceArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature, SPELL_ICEARMOR);
+            //Cast
+            DoCast(m_creature, SPELL_ICEARMOR);
 
-                //180 seconds
-                IceArmor_Timer = 180000;
-            }else IceArmor_Timer -= diff;
+            //180 seconds
+            IceArmor_Timer = 180000;
+        }else IceArmor_Timer -= diff;
 
 
-       
-            //Frostbolt_Timer
-            if (Frostbolt_Timer < diff)
-            {
-   
-                 //Cast FrostBolt on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_FROSTBOLT);
 
-                //18 seconds
-                Frostbolt_Timer = 8000;
-            }else Frostbolt_Timer -= diff;
+        //Frostbolt_Timer
+        if (Frostbolt_Timer < diff)
+        {
 
-            //Freeze_Timer
-            if (Freeze_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FREEZE);
+            //Cast FrostBolt on a Random target
+            Unit* target = NULL;
 
-                //24 seconds until we should cast this agian
-                Freeze_Timer = 24000;
-            }else Freeze_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_FROSTBOLT);
 
-            //Fear_Timer
-            if (Fear_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FEAR);
+            //18 seconds
+            Frostbolt_Timer = 8000;
+        }else Frostbolt_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                Fear_Timer = 30000;
-            }else Fear_Timer -= diff;
+        //Freeze_Timer
+        if (Freeze_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FREEZE);
 
-            //ChillNova_Timer
-            if (ChillNova_Timer < diff)
-            {
-                
-                DoCast(m_creature->getVictim(),SPELL_CHILLNOVA);
+            //24 seconds until we should cast this agian
+            Freeze_Timer = 24000;
+        }else Freeze_Timer -= diff;
 
-                //14 seconds until we should cast this agian
-                ChillNova_Timer = 14000;
-            }else ChillNova_Timer -= diff;
+        //Fear_Timer
+        if (Fear_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FEAR);
 
-            //FrostVolley_Timer
-            if (FrostVolley_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTVOLLEY);
+            //30 seconds until we should cast this agian
+            Fear_Timer = 30000;
+        }else Fear_Timer -= diff;
 
-                //7 seconds until we should cast this agian
-                FrostVolley_Timer = 15000;
-            }else FrostVolley_Timer -= diff;
+        //ChillNova_Timer
+        if (ChillNova_Timer < diff)
+        {
 
-            DoMeleeAttackIfReady();
-        }
+            DoCast(m_creature->getVictim(),SPELL_CHILLNOVA);
+
+            //14 seconds until we should cast this agian
+            ChillNova_Timer = 14000;
+        }else ChillNova_Timer -= diff;
+
+        //FrostVolley_Timer
+        if (FrostVolley_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTVOLLEY);
+
+            //7 seconds until we should cast this agian
+            FrostVolley_Timer = 15000;
+        }else FrostVolley_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_rasfrost(Creature *_Creature)

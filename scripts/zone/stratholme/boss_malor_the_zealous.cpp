@@ -78,35 +78,31 @@ struct MANGOS_DLL_DECL boss_malor_the_zealousAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //GroundSmash
+        if (GroundSmash_Timer < diff)
         {
-            //GroundSmash
-            if (GroundSmash_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GROUNDSMASH);
+
+            //10 seconds until we should cast this again
+            GroundSmash_Timer = 10000;
+        }else GroundSmash_Timer -= diff;
+
+        //LayOnHands
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 3)
+        {
+            if (!LayOnHands)
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_GROUNDSMASH);
-
-                //10 seconds until we should cast this again
-                GroundSmash_Timer = 10000;
-            }else GroundSmash_Timer -= diff;
-
-            //LayOnHands
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 3)
-            {
-                if (!LayOnHands)
-                {
-                    //Cast
-                    DoCast(m_creature,SPELL_LAYONHANDS);
-                    LayOnHands = true;
-                }
+                DoCast(m_creature,SPELL_LAYONHANDS);
+                LayOnHands = true;
             }
-
-            DoMeleeAttackIfReady();
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_malor_the_zealous(Creature *_Creature)

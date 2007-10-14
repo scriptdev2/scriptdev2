@@ -75,11 +75,11 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
         switch (rand()%2)
         {
-            case 0:
+        case 0:
             DoPlaySoundToSet(m_creature, SOUND_SLAY1);
             break;
 
-            case 1:
+        case 1:
             DoPlaySoundToSet(m_creature, SOUND_SLAY2);
             break;
         }
@@ -104,15 +104,15 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
             {
                 switch (rand()%3)
                 {
-                    case 0:
+                case 0:
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
                     break;
 
-                    case 1:
+                case 1:
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
                     break;
 
-                    case 2:
+                case 2:
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                     break;
                 }
@@ -141,15 +141,15 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
                 {
                     switch (rand()%3)
                     {
-                        case 0:
+                    case 0:
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
                         break;
 
-                        case 1:
+                    case 1:
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
                         break;
 
-                        case 2:
+                    case 2:
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                         break;
                     }
@@ -162,66 +162,61 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //UnbalancingStrike_Timer
+        if (UnbalancingStrike_Timer < diff)
         {
-            
-            //UnbalancingStrike_Timer
-            if (UnbalancingStrike_Timer < diff)
+            //Cast Unbalancing strike
+            DoCast(m_creature->getVictim(),SPELL_UNBALANCINGSTRIKE);
+
+            //30 seconds until we should cast this agian
+            UnbalancingStrike_Timer = 30000;
+        }else UnbalancingStrike_Timer -= diff;
+
+        //DisruptingShout_Timer
+        if (DisruptingShout_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(), SPELL_DISRUPTINGSHOUT);
+
+            //25 seconds until we should cast this agian
+            DisruptingShout_Timer = 25000;
+        }else DisruptingShout_Timer -= diff;
+
+        //CommandSound_Timer
+        if (CommandSound_Timer < diff)
+        {
+            //Play a random command sound
+            switch (rand()%5)
             {
-                //Cast Unbalancing strike
-                DoCast(m_creature->getVictim(),SPELL_UNBALANCINGSTRIKE);
+            case 0:
+                DoPlaySoundToSet(m_creature, SOUND_COMMND1);
+                break;
 
-                //30 seconds until we should cast this agian
-                UnbalancingStrike_Timer = 30000;
-            }else UnbalancingStrike_Timer -= diff;
+            case 1:
+                DoPlaySoundToSet(m_creature, SOUND_COMMND2);
+                break;
 
-            //DisruptingShout_Timer
-            if (DisruptingShout_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(), SPELL_DISRUPTINGSHOUT);
+            case 2:
+                DoPlaySoundToSet(m_creature, SOUND_COMMND3);
+                break;
 
-                //25 seconds until we should cast this agian
-                DisruptingShout_Timer = 25000;
-            }else DisruptingShout_Timer -= diff;
+            case 3:
+                DoPlaySoundToSet(m_creature, SOUND_COMMND4);
+                break;
 
-            //CommandSound_Timer
-            if (CommandSound_Timer < diff)
-            {
-                //Play a random command sound
-                switch (rand()%5)
-                {
-                    case 0:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND1);
-                    break;
+            case 4:
+                DoPlaySoundToSet(m_creature, SOUND_COMMND5);
+                break;
+            }
 
-                    case 1:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND2);
-                    break;
+            //40 seconds until we should cast this agian
+            CommandSound_Timer = 40000;
+        }else CommandSound_Timer -= diff;
 
-                    case 2:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND3);
-                    break;
-
-                    case 3:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND4);
-                    break;
-
-                    case 4:
-                    DoPlaySoundToSet(m_creature, SOUND_COMMND5);
-                    break;
-                }
-
-                //40 seconds until we should cast this agian
-                CommandSound_Timer = 40000;
-            }else CommandSound_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_razuvious(Creature *_Creature)

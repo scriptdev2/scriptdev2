@@ -21,7 +21,7 @@
 #define SPELL_SILENCE                 15487
 #define SPELL_FEAR              6215       
 
-       
+
 
 struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
 {
@@ -83,58 +83,53 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //CurseOfAgony_Timer
+        if (CurseOfAgony_Timer < diff)
         {
-            
-            //CurseOfAgony_Timer
-            if (CurseOfAgony_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFAGONY);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFAGONY);
 
-                //30 seconds
-                CurseOfAgony_Timer = 30000;
-            }else CurseOfAgony_Timer -= diff;
+            //30 seconds
+            CurseOfAgony_Timer = 30000;
+        }else CurseOfAgony_Timer -= diff;
 
-            //ShadowShock_Timer
-            if (ShadowShock_Timer < diff)
-            {
-                 //Cast ShadowShock on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SHADOWSHOCK);
+        //ShadowShock_Timer
+        if (ShadowShock_Timer < diff)
+        {
+            //Cast ShadowShock on a Random target
+            Unit* target = NULL;
 
-                //12 seconds until we should cast this agian
-                ShadowShock_Timer = 12000;
-            }else ShadowShock_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SHADOWSHOCK);
 
-            //Silence_Timer
-            if (Silence_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            //12 seconds until we should cast this agian
+            ShadowShock_Timer = 12000;
+        }else ShadowShock_Timer -= diff;
 
-                //14 seconds until we should cast this agian
-                Silence_Timer = 14000;
-            }else Silence_Timer -= diff;
+        //Silence_Timer
+        if (Silence_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SILENCE);
 
-            //Fear_Timer
-            if (Fear_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FEAR);
+            //14 seconds until we should cast this agian
+            Silence_Timer = 14000;
+        }else Silence_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                Fear_Timer = 30000;
-            }else Fear_Timer -= diff;
+        //Fear_Timer
+        if (Fear_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FEAR);
 
-            DoMeleeAttackIfReady();
-        }
+            //30 seconds until we should cast this agian
+            Fear_Timer = 30000;
+        }else Fear_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_illuciabarov(Creature *_Creature)

@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if(Phase == 1 && (m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 95)
@@ -266,81 +266,78 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
             else ResetTimer -= diff;
 
             //Return since we have no target
-            if (!m_creature->SelectHostilTarget())
+            if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
                 return;
 
             if(m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE ))
                 return;
 
-            if( m_creature->getVictim() && m_creature->isAlive())
+            if(CleaveTimer < diff)
             {
-                if(CleaveTimer < diff)
-                {
-                    Unit *target = m_creature->getVictim();
-                    DoCast(target, SPELL_SHADOWCLEAVE);
-                    CleaveTimer = 10000 + (rand()%6)*1000;
-                } else CleaveTimer -= diff;
+                Unit *target = m_creature->getVictim();
+                DoCast(target, SPELL_SHADOWCLEAVE);
+                CleaveTimer = 10000 + (rand()%6)*1000;
+            } else CleaveTimer -= diff;
 
-                if(CurseTimer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_INTAGIBLE_PRESENCE);
-                    CurseTimer = 30000;
-                } else CurseTimer -= diff;
+            if(CurseTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_INTAGIBLE_PRESENCE);
+                CurseTimer = 30000;
+            } else CurseTimer -= diff;
 
-                if(RandomYellTimer < diff)
+            if(RandomYellTimer < diff)
+            {
+                switch(rand()%2)
                 {
-                    switch(rand()%2)
+                case 0:
+                    DoYell(SAY_RANDOM1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_RANDOM1);
+                    break;
+                case 1:
+                    DoYell(SAY_RANDOM2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_RANDOM2);
+                    break;
+                }
+                RandomYellTimer = 30000 + (rand()%31)*1000;
+            } else RandomYellTimer -= diff;
+
+            if(m_creature->GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID) )
+            {
+                if(ChargeTimer < diff)
+                {
+                    Unit *target;
+                    std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+                    std::vector<Unit *> target_list;
+                    for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                     {
-                    case 0:
-                        DoYell(SAY_RANDOM1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_RANDOM1);
-                        break;
-                    case 1:
-                        DoYell(SAY_RANDOM2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_RANDOM2);
-                        break;
+                        target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                        if(target && target->GetDistance2dSq(m_creature) > 25) // checking if > 25 is faster than doing a square root and checking if > 5
+                            target_list.push_back(target);
+                        target = NULL;
                     }
-                    RandomYellTimer = 30000 + (rand()%31)*1000;
-                } else RandomYellTimer -= diff;
+                    if(target_list.size())
+                        target = *(target_list.begin()+rand()%target_list.size());
 
-                if(m_creature->GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID) )
+                    DoCast(target, SPELL_BERSERKER_CHARGE);
+                    ChargeTimer = 20000;
+                } else ChargeTimer -= diff;
+            }
+            else
+            {
+                if( (m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
                 {
-                    if(ChargeTimer < diff)
+                    Creature *pMidnight = (Creature*)Unit::GetUnit(*m_creature, Midnight);
+                    if(pMidnight && pMidnight->GetTypeId() == TYPEID_UNIT)
                     {
-                        Unit *target;
-                        std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
-                        std::vector<Unit *> target_list;
-                        for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
-                        {
-                            target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                            if(target && target->GetDistance2dSq(m_creature) > 25) // checking if > 25 is faster than doing a square root and checking if > 5
-                                target_list.push_back(target);
-                            target = NULL;
-                        }
-                        if(target_list.size())
-                            target = *(target_list.begin()+rand()%target_list.size());
-
-                        DoCast(target, SPELL_BERSERKER_CHARGE);
-                        ChargeTimer = 20000;
-                    } else ChargeTimer -= diff;
-                }
-                else
-                {
-                    if( (m_creature->GetHealth()*100)/m_creature->GetMaxHealth() < 25)
-                    {
-                        Creature *pMidnight = (Creature*)Unit::GetUnit(*m_creature, Midnight);
-                        if(pMidnight && pMidnight->GetTypeId() == TYPEID_UNIT)
-                        {
-                            ((boss_midnightAI*)(pMidnight->AI()))->Mount(m_creature);
-                            m_creature->SetHealth(pMidnight->GetHealth());
-                        }
-                    }            
-                }
-
-                DoMeleeAttackIfReady();
+                        ((boss_midnightAI*)(pMidnight->AI()))->Mount(m_creature);
+                        m_creature->SetHealth(pMidnight->GetHealth());
+                    }
+                }            
             }
 
+            DoMeleeAttackIfReady();
     }
+
 
     void SpellHit(Unit *source, const SpellEntry *spell)
     {

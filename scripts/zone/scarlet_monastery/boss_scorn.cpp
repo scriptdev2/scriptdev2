@@ -82,54 +82,50 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //LichSlap_Timer
+        if (LichSlap_Timer < diff)
         {
-            //LichSlap_Timer
-            if (LichSlap_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_LICHSLAP);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_LICHSLAP);
 
-                //45 seconds until we should cast this agian
-                LichSlap_Timer = 45000;
-            }else LichSlap_Timer -= diff;
+            //45 seconds until we should cast this agian
+            LichSlap_Timer = 45000;
+        }else LichSlap_Timer -= diff;
 
-            //FrostboltVolley_Timer
-            if (FrostboltVolley_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTBOLTVOLLEY);
+        //FrostboltVolley_Timer
+        if (FrostboltVolley_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTBOLTVOLLEY);
 
-                //30 seconds until we should cast this agian
-                FrostboltVolley_Timer = 20000;
-            }else FrostboltVolley_Timer -= diff;
+            //30 seconds until we should cast this agian
+            FrostboltVolley_Timer = 20000;
+        }else FrostboltVolley_Timer -= diff;
 
-            //MindFlay_Timer
-            if (MindFlay_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
+        //MindFlay_Timer
+        if (MindFlay_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MINDFLAY);
 
-                //30 seconds until we should cast this agian
-                MindFlay_Timer = 20000;
-            }else MindFlay_Timer -= diff;
+            //30 seconds until we should cast this agian
+            MindFlay_Timer = 20000;
+        }else MindFlay_Timer -= diff;
 
-            //FrostNova_Timer
-            if (FrostNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+        //FrostNova_Timer
+        if (FrostNova_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
 
-                //30 seconds until we should cast this agian
-                FrostNova_Timer = 15000;
-            }else FrostNova_Timer -= diff;
+            //30 seconds until we should cast this agian
+            FrostNova_Timer = 15000;
+        }else FrostNova_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_scorn(Creature *_Creature)

@@ -19,7 +19,7 @@
 #define SPELL_INCITEFLAMES                19635	
 #define SPELL_MELTARMOR                    19631                     
 
-    
+
 
 struct MANGOS_DLL_DECL mob_firewalkerAI : public ScriptedAI
 {
@@ -86,34 +86,29 @@ struct MANGOS_DLL_DECL mob_firewalkerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //InciteFlames_Timer
+        if (InciteFlames_Timer < diff)
         {
-            
-            //InciteFlames_Timer
-            if (InciteFlames_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_INCITEFLAMES);
-                //7-11 seconds until we should cast this again
-                InciteFlames_Timer = 7000 + rand()%4000;
-            }else InciteFlames_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_INCITEFLAMES);
+            //7-11 seconds until we should cast this again
+            InciteFlames_Timer = 7000 + rand()%4000;
+        }else InciteFlames_Timer -= diff;
 
 
-            //MeltArmor_Timer
-            if (MeltArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MELTARMOR);
-                //12-20 seconds until we should cast this agian
-                MeltArmor_Timer = 12000 + rand()%8000;
-            }else MeltArmor_Timer -= diff;
+        //MeltArmor_Timer
+        if (MeltArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MELTARMOR);
+            //12-20 seconds until we should cast this agian
+            MeltArmor_Timer = 12000 + rand()%8000;
+        }else MeltArmor_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_firewalker(Creature *_Creature)

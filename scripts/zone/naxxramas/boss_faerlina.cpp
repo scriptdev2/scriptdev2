@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         RainOfFire_Timer = 16000;
         Enrage_Timer = 60000;
         InCombat = false;
-	HasTaunted = false;
+        HasTaunted = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -74,30 +74,30 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-                //Say our dialog on initial aggro
-                if (!InCombat)
+            //Say our dialog on initial aggro
+            if (!InCombat)
+            {
+                switch (rand()%4)
                 {
-                    switch (rand()%4)
-                    {
-                    case 0:
-                           DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                        break;
-                    case 1:
-                           DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                        break;
-                    case 2:
-                           DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                        break;
-                    case 3:
-                           DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
-                        break;
-                    }
-                    InCombat = true;
+                case 0:
+                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                    break;
+                case 1:
+                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                    break;
+                case 2:
+                    DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                    break;
+                case 3:
+                    DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
+                    break;
                 }
+                InCombat = true;
+            }
         }
     }
 
@@ -130,20 +130,20 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
                     switch (rand()%4)
                     {
                     case 0:
-                           DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                        DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
                         break;
                     case 1:
-                           DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                        DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
                         break;
                     case 2:
-                           DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                        DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
                         break;
                     case 3:
-                           DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
+                        DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
                         break;
                     }
                     InCombat = true;
@@ -163,17 +163,17 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     void KilledUnit(Unit* victim)
     {
 
-                    switch (rand()%2)
-                    {
-                    case 0:
-                        DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-                        break;
-                    case 1:
-                        DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-                        break;
-                    }
+        switch (rand()%2)
+        {
+        case 0:
+            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+            break;
+        }
 
     }
 
@@ -187,49 +187,44 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //PoisonBoltVolley_Timer
+        if (PoisonBoltVolley_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_POSIONBOLT_VOLLEY);
+
+            //11 seconds
+            PoisonBoltVolley_Timer = 11000;
+        }else PoisonBoltVolley_Timer -= diff;
+
+        //RainOfFire_Timer
+        if (RainOfFire_Timer < diff)
         {
 
-            //PoisonBoltVolley_Timer
-            if (PoisonBoltVolley_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_POSIONBOLT_VOLLEY);
+            //Cast Immolate on a Random target
+            Unit* target = NULL;
 
-                //11 seconds
-                PoisonBoltVolley_Timer = 11000;
-            }else PoisonBoltVolley_Timer -= diff;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_RAINOFFIRE);
 
-            //RainOfFire_Timer
-            if (RainOfFire_Timer < diff)
-            {
+            //16 seconds until we should cast this agian
+            RainOfFire_Timer = 16000;
+        }else RainOfFire_Timer -= diff;
 
-                //Cast Immolate on a Random target
-                Unit* target = NULL;
+        //Enrage_Timer
+        if (Enrage_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_ENRAGE);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_RAINOFFIRE);
+            //61 seconds until we should cast this agian
+            Enrage_Timer = 61000;
+        }else Enrage_Timer -= diff;
 
-                //16 seconds until we should cast this agian
-                RainOfFire_Timer = 16000;
-            }else RainOfFire_Timer -= diff;
-
-            //Enrage_Timer
-            if (Enrage_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_ENRAGE);
-
-                //61 seconds until we should cast this agian
-                Enrage_Timer = 61000;
-            }else Enrage_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_faerlina(Creature *_Creature)

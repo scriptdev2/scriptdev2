@@ -20,7 +20,7 @@
 struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 {
     npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-        
+
     void EnterEvadeMode()
     {
         m_creature->RemoveAllAuras();
@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
         {
             //Take 0 damage
             damage = 0;
-            
+
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             }
             m_creature->CombatStop();
             EnterEvadeMode();
-            }
+        }
         AttackedBy(done_by);
     }
 
@@ -83,21 +83,17 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
     {
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
 
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        {
+            //Make sure our attack is ready and we arn't currently casting
+            if( m_creature->isAttackReady())
             {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady())
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
+                m_creature->AttackerStateUpdate(m_creature->getVictim());
+                m_creature->resetAttackTimer();
             }
         }
     }

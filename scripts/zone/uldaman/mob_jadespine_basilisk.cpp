@@ -69,37 +69,32 @@ struct MANGOS_DLL_DECL mob_jadespine_basiliskAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Cslumber_Timer
+        if (Cslumber_Timer < diff)
         {
+            //Cast
+            // DoCast(m_creature->getVictim(),SPELL_CSLUMBER);
+            m_creature->CastSpell(m_creature->getVictim(),SPELL_CSLUMBER, true);
 
-            //Cslumber_Timer
-            if (Cslumber_Timer < diff)
-            {
-                //Cast
-                // DoCast(m_creature->getVictim(),SPELL_CSLUMBER);
-                m_creature->CastSpell(m_creature->getVictim(),SPELL_CSLUMBER, true);
+            //Stop attacking target thast asleep and pick new target
+            //10 seconds until we should cast this agian
+            Cslumber_Timer = 28000;
 
-                //Stop attacking target thast asleep and pick new target
-                //10 seconds until we should cast this agian
-                Cslumber_Timer = 28000;
+            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
 
-                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+            if (!Target || Target == m_creature->getVictim())
+                Target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-                if (!Target || Target == m_creature->getVictim())
-                    Target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if (Target)
+                m_creature->TauntApply(Target);
 
-                if (Target)
-                    m_creature->TauntApply(Target);
-
-            }else Cslumber_Timer -= diff;
+        }else Cslumber_Timer -= diff;
 
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 

@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
             //Say our dialog
             if(!InCombat)
             {
-            
+
                 //Switch between 3 different aggro saying
                 switch (rand()%3)
                 {
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-            
+
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
             }
@@ -95,24 +95,20 @@ struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {          
-            //Immolate_Timer
-            if (Immolate_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_IMMOLATE);
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_IMMOLATE);
 
-                //45 seconds until we should cast this agian
-                Immolate_Timer = 45000;
-            }else Immolate_Timer -= diff;
+            //45 seconds until we should cast this agian
+            Immolate_Timer = 45000;
+        }else Immolate_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_scarlet_torturer(Creature *_Creature)

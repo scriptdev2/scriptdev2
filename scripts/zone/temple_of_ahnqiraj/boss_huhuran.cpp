@@ -92,63 +92,59 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //Frenzy_Timer
+        if (Frenzy_Timer < diff && phase == 1)
         {
+            //Cast
+            DoCast(m_creature, SPELL_FRENZY);
 
-            //Frenzy_Timer
-            if (Frenzy_Timer < diff && phase == 1)
-            {
-                //Cast
-                DoCast(m_creature, SPELL_FRENZY);
+            //30 seconds until we should cast this agian
+            Frenzy_Timer = 30000;
+        }else Frenzy_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                Frenzy_Timer = 30000;
-            }else Frenzy_Timer -= diff;
+        // Wyvern Timer
+        if (Wyvern_Timer < diff && phase == 1)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WYVERNSTING);
 
-            // Wyvern Timer
-            if (Wyvern_Timer < diff && phase == 1)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WYVERNSTING);
+            //35 seconds until we should cast this again
+            Wyvern_Timer = 35000;
+        }else Wyvern_Timer -= diff;
 
-                //35 seconds until we should cast this again
-                Wyvern_Timer = 35000;
-            }else Wyvern_Timer -= diff;
+        //Spit Timer
+        if (Spit_Timer < diff && phase == 1 )
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
+            //15 seconds until we should cast this agian
+            Spit_Timer = 15000;
+        }else Spit_Timer -= diff;
 
-            //Spit Timer
-            if (Spit_Timer < diff && phase == 1 )
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
-                //15 seconds until we should cast this agian
-                Spit_Timer = 15000;
-            }else Spit_Timer -= diff;
+        //Poison Timer
+        if (Poison_Timer < diff && (phase == 1 || phase == 2))
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
 
-            //Poison Timer
-            if (Poison_Timer < diff && (phase == 1 || phase == 2))
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
+            //Cast first after 5 minutes, then 5 seconds until we should cast this agian
+            Poison_Timer = 5000;
+            phase = 2;
+        }else Poison_Timer -= diff;
 
-                //Cast first after 5 minutes, then 5 seconds until we should cast this agian
-                Poison_Timer = 5000;
-                phase = 2;
-            }else Poison_Timer -= diff;
-
-            if ( (phase == 2 || phase == 1) && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
-            {
-                phase = 3;
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                DoTextEmote("is going berserk", NULL);
-                DoCast(m_creature, SPELL_BERSERK);
-            }
-
-            DoMeleeAttackIfReady();
+        if ( (phase == 2 || phase == 1) && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
+        {
+            phase = 3;
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoTextEmote("is going berserk", NULL);
+            DoCast(m_creature, SPELL_BERSERK);
         }
+
+        DoMeleeAttackIfReady();
     }
 
 };

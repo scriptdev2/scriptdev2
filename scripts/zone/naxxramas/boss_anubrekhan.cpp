@@ -92,17 +92,17 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             {
                 switch(rand()%3)
                 {
-                    case 0:
+                case 0:
                     DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
                     break;
 
-                    case 1:
+                case 1:
                     DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
                     break;
 
-                    case 2:
+                case 2:
                     DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                     break;
@@ -141,17 +141,17 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-                        case 0:
+                    case 0:
                         DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
                         break;
 
-                        case 1:
+                    case 1:
                         DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
                         break;
 
-                        case 2:
+                    case 2:
                         DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                         break;
@@ -163,27 +163,27 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
             {
                 switch(rand()%5)
                 {
-                    case 0:
+                case 0:
                     DoYell(SAY_TAUNT1, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_TAUNT1);
                     break;
 
-                    case 1:
+                case 1:
                     DoYell(SAY_TAUNT2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_TAUNT2);
                     break;
 
-                    case 2:
+                case 2:
                     DoYell(SAY_TAUNT3, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_TAUNT3);
                     break;
 
-                    case 3:
+                case 3:
                     DoYell(SAY_TAUNT4, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_TAUNT4);
                     break;
 
-                    case 4:
+                case 4:
                     DoYell(SAY_GREET, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_GREET);
                     break;
@@ -196,52 +196,47 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Impale_Timer
+        if (Impale_Timer < diff)
         {
-            
-            //Impale_Timer
-            if (Impale_Timer < diff)
+            //Cast Impale on a random target
+            //Do NOT cast it when we are afflicted by locust swarm
+            if (!m_creature->HasAura(SPELL_LOCUSTSWARM,1))
             {
-                //Cast Impale on a random target
-                //Do NOT cast it when we are afflicted by locust swarm
-                if (!m_creature->HasAura(SPELL_LOCUSTSWARM,1))
-                {
-                    Unit* target = NULL;
+                Unit* target = NULL;
 
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if (target)DoCast(target,SPELL_IMPALE);
-                }
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_IMPALE);
+            }
 
-                //15 seconds until we should cast this agian
-                Impale_Timer = 15000;
-            }else Impale_Timer -= diff;
+            //15 seconds until we should cast this agian
+            Impale_Timer = 15000;
+        }else Impale_Timer -= diff;
 
-            //LocustSwarm_Timer
-            if (LocustSwarm_Timer < diff)
-            {
-                //Cast Locust Swarm buff on ourselves
-                DoCast(m_creature, SPELL_LOCUSTSWARM);
+        //LocustSwarm_Timer
+        if (LocustSwarm_Timer < diff)
+        {
+            //Cast Locust Swarm buff on ourselves
+            DoCast(m_creature, SPELL_LOCUSTSWARM);
 
-                //90 seconds until we should cast this agian
-                LocustSwarm_Timer = 90000;
-            }else LocustSwarm_Timer -= diff;
+            //90 seconds until we should cast this agian
+            LocustSwarm_Timer = 90000;
+        }else LocustSwarm_Timer -= diff;
 
-            //Summon_Timer
-            if (Summon_Timer < diff)
-            {
-                //Summon a crypt guard
-                DoCast(m_creature, SPELL_SUMMONGUARD);
+        //Summon_Timer
+        if (Summon_Timer < diff)
+        {
+            //Summon a crypt guard
+            DoCast(m_creature, SPELL_SUMMONGUARD);
 
-                //45 seconds until we should cast this agian
-                Summon_Timer = 45000;
-            }else Summon_Timer -= diff;
+            //45 seconds until we should cast this agian
+            Summon_Timer = 45000;
+        }else Summon_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_anubrekhan(Creature *_Creature)

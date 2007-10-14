@@ -101,74 +101,70 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //WailingDead
+        if (WailingDead_Timer < diff)
         {
-            //WailingDead
-            if (WailingDead_Timer < diff)
+            //Cast
+            if (rand()%100 < 65) //65% chance to cast
             {
-                //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_WAILINGDEAD);
-                }
-                //19 seconds until we should cast this again
-                WailingDead_Timer = 19000;
-            }else WailingDead_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_WAILINGDEAD);
+            }
+            //19 seconds until we should cast this again
+            WailingDead_Timer = 19000;
+        }else WailingDead_Timer -= diff;
 
-            //Backhand
-            if (Backhand_Timer < diff)
+        //Backhand
+        if (Backhand_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 45) //45% chance to cast
             {
-                //Cast
-                if (rand()%100 < 45) //45% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_BACKHAND);
-                }
-                //8 seconds until we should cast this again
-                Backhand_Timer = 8000;
-            }else Backhand_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_BACKHAND);
+            }
+            //8 seconds until we should cast this again
+            Backhand_Timer = 8000;
+        }else Backhand_Timer -= diff;
 
-            //CurseOfWeakness
-            if (CurseOfWeakness_Timer < diff)
+        //CurseOfWeakness
+        if (CurseOfWeakness_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 3) //3% chance to cast
             {
-                //Cast
-                if (rand()%100 < 3) //3% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
-                }
-                //20 seconds until we should cast this again
-                CurseOfWeakness_Timer = 20000;
-            }else CurseOfWeakness_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
+            }
+            //20 seconds until we should cast this again
+            CurseOfWeakness_Timer = 20000;
+        }else CurseOfWeakness_Timer -= diff;
 
-            //CurseOfTongues
-            if (CurseOfTongues_Timer < diff)
+        //CurseOfTongues
+        if (CurseOfTongues_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 3) //3% chance to cast
             {
-                //Cast
-                if (rand()%100 < 3) //3% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CURSEOFTONGUES);
-                }
-                //22 seconds until we should cast this again
-                CurseOfTongues_Timer = 22000;
-            }else CurseOfTongues_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CURSEOFTONGUES);
+            }
+            //22 seconds until we should cast this again
+            CurseOfTongues_Timer = 22000;
+        }else CurseOfTongues_Timer -= diff;
 
-            //CallOfTheGrave
-            if (CallOfTheGrave_Timer < diff)
+        //CallOfTheGrave
+        if (CallOfTheGrave_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 5) //5% chance to cast
             {
-                //Cast
-                if (rand()%100 < 5) //5% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
-                }
-                //25 seconds until we should cast this again
-                CallOfTheGrave_Timer = 25000;
-            }else CallOfTheGrave_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
+            }
+            //25 seconds until we should cast this again
+            CallOfTheGrave_Timer = 25000;
+        }else CallOfTheGrave_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_postmaster_malown(Creature *_Creature)

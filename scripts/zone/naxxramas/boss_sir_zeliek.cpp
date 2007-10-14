@@ -123,46 +123,42 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        // Mark of Zeliek
+        if(Mark_Timer < diff)
         {
-            // Mark of Zeliek
-            if(Mark_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_MARK_OF_ZELIEK);
-                Mark_Timer = 12000;
-            }else Mark_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_MARK_OF_ZELIEK);
+            Mark_Timer = 12000;
+        }else Mark_Timer -= diff;
 
-            // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
-            if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        {
+            if(ShieldWall1)
             {
-                if(ShieldWall1)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall1 = false;
-                }
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall1 = false;
             }
-            if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
-            {
-                if(ShieldWall2)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall2 = false;
-                }
-            }
-
-            // Holy Wrath
-            if(HolyWrath_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_HOLY_WRATH);
-                HolyWrath_Timer = 12000;
-            }else HolyWrath_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+        if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        {
+            if(ShieldWall2)
+            {
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall2 = false;
+            }
+        }
+
+        // Holy Wrath
+        if(HolyWrath_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_HOLY_WRATH);
+            HolyWrath_Timer = 12000;
+        }else HolyWrath_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_sir_zeliek(Creature *_Creature)

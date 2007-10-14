@@ -72,8 +72,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-				
-				if (!HasAura)
+
+                if (!HasAura)
                 {
                     m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
                     HasAura = true;
@@ -89,40 +89,36 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //Pyroblast_Timer
+        if (Pyroblast_Timer < diff)
         {
-            
-            //Pyroblast_Timer
-            if (Pyroblast_Timer < diff)
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_PYROBLAST);
+
+            //7 seconds until we should cast this agian
+            Pyroblast_Timer = 7000;
+        }else Pyroblast_Timer -= diff;
+
+        //EarthQuake_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
+        {
+            if (EarthQuake_Timer < diff)
             {
-                //Cast
-                Unit* target = NULL;
+                DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_PYROBLAST);
-
-                //7 seconds until we should cast this agian
-                Pyroblast_Timer = 7000;
-            }else Pyroblast_Timer -= diff;
-
-            //EarthQuake_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
-            {
-                if (EarthQuake_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
-
-                    //12 seconds
-                    EarthQuake_Timer = 12000;
-                }else EarthQuake_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+                //12 seconds
+                EarthQuake_Timer = 12000;
+            }else EarthQuake_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_golemagg(Creature *_Creature)

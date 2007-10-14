@@ -81,49 +81,44 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ShadowBolt_Timer
+        if (ShadowBolt_Timer < diff)
         {
-            
-            //ShadowBolt_Timer
-            if (ShadowBolt_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
 
-                //7 seconds until we should cast this agian
-                ShadowBolt_Timer = 7000;
-            }else ShadowBolt_Timer -= diff;
+            //7 seconds until we should cast this agian
+            ShadowBolt_Timer = 7000;
+        }else ShadowBolt_Timer -= diff;
 
-            //RainOfFire_Timer
-            if (RainOfFire_Timer < diff)
-            {
-                //Cast
-                Unit* target = NULL;
+        //RainOfFire_Timer
+        if (RainOfFire_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
                 DoCast(target,SPELL_RAINOFFIRE);
 
-                //4-12 seconds until we should cast this agian
-                RainOfFire_Timer = 4000 + rand()%8000;
-            }else RainOfFire_Timer -= diff;
+            //4-12 seconds until we should cast this agian
+            RainOfFire_Timer = 4000 + rand()%8000;
+        }else RainOfFire_Timer -= diff;
 
-            //GehennasCurse_Timer
-            if (GehennasCurse_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
+        //GehennasCurse_Timer
+        if (GehennasCurse_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
 
-                //22-30 seconds until we should cast this agian
-                GehennasCurse_Timer = 22000 + rand()%8000;;
-            }else GehennasCurse_Timer -= diff;
+            //22-30 seconds until we should cast this agian
+            GehennasCurse_Timer = 22000 + rand()%8000;;
+        }else GehennasCurse_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_gehennas(Creature *_Creature)

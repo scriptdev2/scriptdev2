@@ -86,57 +86,53 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //DemoralizingShout_Timer
+        if (DemoralizingShout_Timer < diff)
         {
-            //DemoralizingShout_Timer
-            if (DemoralizingShout_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
 
-                //20-25 seconds until we should cast this agian
-                DemoralizingShout_Timer = 20000 + rand()%5000;
-            }else DemoralizingShout_Timer -= diff;
+            //20-25 seconds until we should cast this agian
+            DemoralizingShout_Timer = 20000 + rand()%5000;
+        }else DemoralizingShout_Timer -= diff;
 
-            //Inspire_Timer
-            if (Inspire_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_INSPIRE);
+        //Inspire_Timer
+        if (Inspire_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_INSPIRE);
 
-                //28-32 seconds until we should cast this agian
-                Inspire_Timer = 28000 + rand()%4000;
-            }else Inspire_Timer -= diff;
+            //28-32 seconds until we should cast this agian
+            Inspire_Timer = 28000 + rand()%4000;
+        }else Inspire_Timer -= diff;
 
-            //Knockdown_Timer
-            if (Knockdown_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+        //Knockdown_Timer
+        if (Knockdown_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
 
-                //17-20 seconds until we should cast this agian
-                Knockdown_Timer = 17000 + rand()%3000;
-            }else Knockdown_Timer -= diff;
+            //17-20 seconds until we should cast this agian
+            Knockdown_Timer = 17000 + rand()%3000;
+        }else Knockdown_Timer -= diff;
 
-            //Flamespear_Timer
-            if (Flamespear_Timer < diff)
-            {
-                //Cast
-                Unit* target = NULL;
+        //Flamespear_Timer
+        if (Flamespear_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_FLAMESPEAR);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_FLAMESPEAR);
 
-                //12-16 seconds until we should cast this agian
-                Flamespear_Timer = 12000 + rand()%4000;
-            }else Flamespear_Timer -= diff;
+            //12-16 seconds until we should cast this agian
+            Flamespear_Timer = 12000 + rand()%4000;
+        }else Flamespear_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_sulfuron(Creature *_Creature)

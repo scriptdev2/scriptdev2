@@ -19,7 +19,7 @@
 #define SPELL_UNHOLYAURA                17466	//Workaround cause right spell would be 17467
 #define SPELL_IMMOLATE             20294        // Old ID  was 15570       
 #define SPELL_VEILOFSHADOW            17820
-    
+
 
 struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 {
@@ -79,50 +79,45 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //UnholyAura
+        if (UnholyAura_Timer < diff)
         {
-            
-		//UnholyAura
-            if (UnholyAura_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_UNHOLYAURA);
-                //2.5 seconds until we should cast this again
-                UnholyAura_Timer = 2500;
-            }else UnholyAura_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_UNHOLYAURA);
+            //2.5 seconds until we should cast this again
+            UnholyAura_Timer = 2500;
+        }else UnholyAura_Timer -= diff;
 
 
-            //Immolate_Timer
-            if (Immolate_Timer < diff)
-            {
-    
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
+        {
 
-                 //Cast Immolate on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_IMMOLATE);
 
-                //24 seconds until we should cast this agian
-                Immolate_Timer = 24000;
-            }else Immolate_Timer -= diff;
+            //Cast Immolate on a Random target
+            Unit* target = NULL;
 
-            //VeilofShadow_Timer
-            if (VeilofShadow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_IMMOLATE);
 
-                //25 seconds until we should cast this agian
-                VeilofShadow_Timer = 25000;
-            }else VeilofShadow_Timer -= diff;
+            //24 seconds until we should cast this agian
+            Immolate_Timer = 24000;
+        }else Immolate_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        //VeilofShadow_Timer
+        if (VeilofShadow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
+
+            //25 seconds until we should cast this agian
+            VeilofShadow_Timer = 25000;
+        }else VeilofShadow_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lordalexeibarov(Creature *_Creature)

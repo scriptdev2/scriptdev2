@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
+
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
             }
@@ -114,108 +114,103 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
 
-            //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+            if (Polymorph_Timer < diff)
             {
-                
-                if (Polymorph_Timer < diff)
-                {
                 Unit* target = NULL;
 
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_POLYMORPH);
-                    Polymorph_Timer = 40000;
-                }else Polymorph_Timer -= diff;
+                Polymorph_Timer = 40000;
+            }else Polymorph_Timer -= diff;
 
-                if (Yell_Timer < diff)
-                {
-                    DoYell(SAY_SPECIALAE,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_SPECIALAE);
-                    Yell_Timer = 40000;
-                }else Yell_Timer -= diff;
-
-                if (ArcaneBubble_Timer < diff)
-                {
-                    DoCast(m_creature,SPELL_ARCANEBUBBLE);
-                    ArcaneBubble_Timer = 40000;
-                }else ArcaneBubble_Timer -= diff;
-
-                if (FullAOE_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FIREAOE);
-                    FullAOE_Timer = 40000;
-                }else FullAOE_Timer -= diff;
-            }
-
-            //AoESilence_Timer
-            if (AoESilence_Timer < diff)
+            if (Yell_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_AOESILENCE);
+                DoYell(SAY_SPECIALAE,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SPECIALAE);
+                Yell_Timer = 40000;
+            }else Yell_Timer -= diff;
 
-                //60 seconds until we should cast this agian
-                AoESilence_Timer = 30000;
-            }else AoESilence_Timer -= diff;
-
-            //ArcaneExplosion3_Timer
-            if (ArcaneExplosion3_Timer < diff)
+            if (ArcaneBubble_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION3);
+                DoCast(m_creature,SPELL_ARCANEBUBBLE);
+                ArcaneBubble_Timer = 40000;
+            }else ArcaneBubble_Timer -= diff;
 
-                //8 seconds until we should cast this agian
-                ArcaneExplosion3_Timer = 8000;
-            }else ArcaneExplosion3_Timer -= diff;
-
-            //ArcaneExplosion4_Timer
-            if (ArcaneExplosion4_Timer < diff)
+            if (FullAOE_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION4);
-
-                //10 seconds until we should cast this agian
-                ArcaneExplosion4_Timer = 10000;
-            }else ArcaneExplosion4_Timer -= diff;
-
-            //Blink_Timer
-            if (Blink_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_BLINK);
-
-                //30 seconds until we should cast this agian
-                Blink_Timer = 30000;
-            }else Blink_Timer -= diff;
-
-            //Fireball_Timer
-            if (Fireball_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREBALL);
-
-                //12 seconds until we should cast this agian
-                Fireball_Timer = 12000;
-            }else Fireball_Timer -= diff;
-
-            //ManaShiled4_Timer
-            if (ManaShield4_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_MANASHIELD4);
-
-                //35 seconds until we should cast this agian
-                ManaShield4_Timer = 70000;
-            }else ManaShield4_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+                DoCast(m_creature->getVictim(),SPELL_FIREAOE);
+                FullAOE_Timer = 40000;
+            }else FullAOE_Timer -= diff;
         }
+
+        //AoESilence_Timer
+        if (AoESilence_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_AOESILENCE);
+
+            //60 seconds until we should cast this agian
+            AoESilence_Timer = 30000;
+        }else AoESilence_Timer -= diff;
+
+        //ArcaneExplosion3_Timer
+        if (ArcaneExplosion3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION3);
+
+            //8 seconds until we should cast this agian
+            ArcaneExplosion3_Timer = 8000;
+        }else ArcaneExplosion3_Timer -= diff;
+
+        //ArcaneExplosion4_Timer
+        if (ArcaneExplosion4_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION4);
+
+            //10 seconds until we should cast this agian
+            ArcaneExplosion4_Timer = 10000;
+        }else ArcaneExplosion4_Timer -= diff;
+
+        //Blink_Timer
+        if (Blink_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_BLINK);
+
+            //30 seconds until we should cast this agian
+            Blink_Timer = 30000;
+        }else Blink_Timer -= diff;
+
+        //Fireball_Timer
+        if (Fireball_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREBALL);
+
+            //12 seconds until we should cast this agian
+            Fireball_Timer = 12000;
+        }else Fireball_Timer -= diff;
+
+        //ManaShiled4_Timer
+        if (ManaShield4_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_MANASHIELD4);
+
+            //35 seconds until we should cast this agian
+            ManaShield4_Timer = 70000;
+        }else ManaShield4_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_arcanist_doan(Creature *_Creature)

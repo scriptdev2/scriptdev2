@@ -19,7 +19,7 @@
 #define SPELL_KNOCKBACK                19813	
 #define SPELL_STOMP                    15593                     
 
-    
+
 
 struct MANGOS_DLL_DECL mob_molten_giantAI : public ScriptedAI
 {
@@ -87,36 +87,31 @@ struct MANGOS_DLL_DECL mob_molten_giantAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //KnockBack_Timer
+        if (KnockBack_Timer < diff)
         {
-            
-	    //KnockBack_Timer
-            if (KnockBack_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
 
-                //15 seconds until we should cast this again
-                KnockBack_Timer = 15000;
-            }else KnockBack_Timer -= diff;
+            //15 seconds until we should cast this again
+            KnockBack_Timer = 15000;
+        }else KnockBack_Timer -= diff;
 
 
-            //Stomp_Timer
-            if (Stomp_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STOMP);
+        //Stomp_Timer
+        if (Stomp_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STOMP);
 
-                //12 seconds until we should cast this agian
-                Stomp_Timer = 8000;
-            }else Stomp_Timer -= diff;
+            //12 seconds until we should cast this agian
+            Stomp_Timer = 8000;
+        }else Stomp_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_molten_giant(Creature *_Creature)

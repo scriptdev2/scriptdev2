@@ -89,75 +89,70 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //WebTrap_Timer
+        if (WebTrap_Timer < diff)
         {
-            
-            //WebTrap_Timer
-            if (WebTrap_Timer < diff)
-            {
-                //Cast WebTrap on a Random target
-                Unit* target = NULL;
+            //Cast WebTrap on a Random target
+            Unit* target = NULL;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_WEBTRAP);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_WEBTRAP);
 
-                //40 seconds until we should cast this agian
-                WebTrap_Timer = 40000;
-            }else WebTrap_Timer -= diff;
+            //40 seconds until we should cast this agian
+            WebTrap_Timer = 40000;
+        }else WebTrap_Timer -= diff;
 
-            //WebSpray_Timer
-            if (WebSpray_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(), SPELL_WEBSPRAY);
+        //WebSpray_Timer
+        if (WebSpray_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(), SPELL_WEBSPRAY);
 
-                //40 seconds until we should cast this agian
-                WebSpray_Timer = 40000;
-            }else WebSpray_Timer -= diff;
+            //40 seconds until we should cast this agian
+            WebSpray_Timer = 40000;
+        }else WebSpray_Timer -= diff;
 
-            //PoisonShock_Timer
-            if (PoisonShock_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(), SPELL_POISONSHOCK);
+        //PoisonShock_Timer
+        if (PoisonShock_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(), SPELL_POISONSHOCK);
 
-                //20 seconds until we should cast this agian
-                PoisonShock_Timer = 20000;
-            }else PoisonShock_Timer -= diff;
+            //20 seconds until we should cast this agian
+            PoisonShock_Timer = 20000;
+        }else PoisonShock_Timer -= diff;
 
-            //NecroticPoison_Timer
-            if (NecroticPoison_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(), SPELL_NECROTICPOISON);
+        //NecroticPoison_Timer
+        if (NecroticPoison_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(), SPELL_NECROTICPOISON);
 
-                //30 seconds until we should cast this agian
-                NecroticPoison_Timer = 30000;
-            }else NecroticPoison_Timer -= diff;
+            //30 seconds until we should cast this agian
+            NecroticPoison_Timer = 30000;
+        }else NecroticPoison_Timer -= diff;
 
-            //SummonSpiderling_Timer
-            if (SummonSpiderling_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature, SPELL_SUMMON_SPIDERLING);
+        //SummonSpiderling_Timer
+        if (SummonSpiderling_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature, SPELL_SUMMON_SPIDERLING);
 
-                //40 seconds until we should cast this agian
-                SummonSpiderling_Timer = 40000;
-            }else SummonSpiderling_Timer -= diff;
+            //40 seconds until we should cast this agian
+            SummonSpiderling_Timer = 40000;
+        }else SummonSpiderling_Timer -= diff;
 
-            //Enrage if not already enraged and below 30%
-            if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30)
-            {
-                DoCast(m_creature,SPELL_ENRAGE);
-                Enraged = true;
-            }
-
-            DoMeleeAttackIfReady();
+        //Enrage if not already enraged and below 30%
+        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30)
+        {
+            DoCast(m_creature,SPELL_ENRAGE);
+            Enraged = true;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_maexxna(Creature *_Creature)

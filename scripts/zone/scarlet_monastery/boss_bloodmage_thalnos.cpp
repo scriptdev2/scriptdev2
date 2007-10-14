@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
+
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
             }
@@ -104,77 +104,73 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <35% hp
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 35)
         {
-            //If we are <35% hp
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 35)
-            {
-                Yell_Timer -= diff;
+            Yell_Timer -= diff;
 
-                if (Yell_Timer < diff)
-                {
-                    DoYell(SAY_HEALTH,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_HEALTH);
-                    Yell_Timer = 900000;
-                }
+            if (Yell_Timer < diff)
+            {
+                DoYell(SAY_HEALTH,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_HEALTH);
+                Yell_Timer = 900000;
             }
-
-            //FrostNova2_Timer
-            if (FrostNova2_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA2);
-
-                //30 seconds until we should cast this agian
-                FrostNova2_Timer = 10000;
-            }else FrostNova2_Timer -= diff;
-
-            //FlameShock3_Timer
-            if (FlameShock3_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK3);
-
-                //30 seconds until we should cast this agian
-                FlameShock3_Timer = 15000;
-            }else FlameShock3_Timer -= diff;
-
-            //ShadowBolt5_Timer
-            if (ShadowBolt5_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT5);
-
-                //45 seconds until we should cast this agian
-                ShadowBolt5_Timer = 20000;
-            }else ShadowBolt5_Timer -= diff;
-
-            //FlameSpike_Timer
-            if (FlameSpike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FLAMESPIKE);
-
-                //45 seconds until we should cast this agian
-                FlameSpike_Timer = 30000;
-            }else FlameSpike_Timer -= diff;
-
-            //FireNova_Timer
-            if (FireNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
-
-                //30 seconds until we should cast this agian
-                FireNova_Timer = 20000;
-            }else FireNova_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+
+        //FrostNova2_Timer
+        if (FrostNova2_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA2);
+
+            //30 seconds until we should cast this agian
+            FrostNova2_Timer = 10000;
+        }else FrostNova2_Timer -= diff;
+
+        //FlameShock3_Timer
+        if (FlameShock3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK3);
+
+            //30 seconds until we should cast this agian
+            FlameShock3_Timer = 15000;
+        }else FlameShock3_Timer -= diff;
+
+        //ShadowBolt5_Timer
+        if (ShadowBolt5_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT5);
+
+            //45 seconds until we should cast this agian
+            ShadowBolt5_Timer = 20000;
+        }else ShadowBolt5_Timer -= diff;
+
+        //FlameSpike_Timer
+        if (FlameSpike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FLAMESPIKE);
+
+            //45 seconds until we should cast this agian
+            FlameSpike_Timer = 30000;
+        }else FlameSpike_Timer -= diff;
+
+        //FireNova_Timer
+        if (FireNova_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+
+            //30 seconds until we should cast this agian
+            FireNova_Timer = 20000;
+        }else FireNova_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

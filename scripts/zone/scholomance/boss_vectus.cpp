@@ -15,13 +15,13 @@
 */
 
 #include "../../sc_defines.h"
-    
+
 #define SPELL_FIRESHIELD                19626           
 #define SPELL_BLASTWAVE            13021
 #define SPELL_FRENZY                28371
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
 {
     boss_vectusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
     {       
         FireShield_Timer = 2000;
         BlastWave_Timer = 14000;
-	Frenzy_Timer = 0;
+        Frenzy_Timer = 0;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -80,48 +80,43 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireShield_Timer
+        if (FireShield_Timer < diff)
         {
-            
-            //FireShield_Timer
-            if (FireShield_Timer < diff)
+            //Cast
+            DoCast(m_creature, SPELL_FIRESHIELD);
+
+            //90 seconds
+            FireShield_Timer = 90000;
+        }else FireShield_Timer -= diff;
+
+        //BlastWave_Timer
+        if (BlastWave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+
+            //12 seconds until we should cast this agian
+            BlastWave_Timer = 12000;
+        }else BlastWave_Timer -= diff;
+
+        //Frenzy_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
+        {
+            if (Frenzy_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature, SPELL_FIRESHIELD);
-
-                //90 seconds
-               FireShield_Timer = 90000;
-            }else FireShield_Timer -= diff;
-
-            //BlastWave_Timer
-            if (BlastWave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
-
-                //12 seconds until we should cast this agian
-                BlastWave_Timer = 12000;
-            }else BlastWave_Timer -= diff;
-
-            //Frenzy_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 25 )
-            {
-		if (Frenzy_Timer < diff)
-	        {
                 DoCast(m_creature,SPELL_FRENZY);
                 DoTextEmote("goes into a killing frenzy!",NULL);
 
                 //24 seconds
                 Frenzy_Timer = 24000;
-                }else Frenzy_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+            }else Frenzy_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_vectus(Creature *_Creature)

@@ -15,14 +15,14 @@
 */
 
 #include "../../sc_defines.h"
-  
+
 #define SPELL_CALLOFGRAVES                17831
 #define SPELL_CORRUPTION             11672  
 #define SPELL_FLASHHEAL            10917
 #define SPELL_RENEW                 10929
 #define SPELL_HEALINGTOUCH              9889       
 
-       
+
 
 struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 {
@@ -91,90 +91,85 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //CallOfGraves_Timer
+        if (CallOfGraves_Timer < diff)
         {
-            
-            //CallOfGraves_Timer
-            if (CallOfGraves_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CALLOFGRAVES);
+
+            //65 seconds
+            CallOfGraves_Timer = 65000;
+        }else CallOfGraves_Timer -= diff;
+
+        //Corruption_Timer
+        if (Corruption_Timer < diff)
+        {
+            //Cast VoidBolt on a Random target
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_CORRUPTION);
+
+            //20 seconds until we should cast this agian
+            Corruption_Timer = 24000;
+        }else Corruption_Timer -= diff;
+
+
+        //Renew_Timer
+        if (Renew_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature, SPELL_RENEW);
+
+            //10 seconds until we should cast this agian
+            Renew_Timer = 10000;
+        }else Renew_Timer -= diff;
+
+
+        //FlashHeal_Timer
+        if (FlashHeal_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_FLASHHEAL);
+
+            //5 Flashheals will be casted
+            if (FlashCounter < 2)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CALLOFGRAVES);
+                FlashHeal_Timer = 5000;
+                FlashCounter++;
+            }
+            else {
+                FlashCounter=0;
+                //30 seconds until we should cast this again
+                FlashHeal_Timer = 30000;
+            }
 
-                //65 seconds
-                CallOfGraves_Timer = 65000;
-            }else CallOfGraves_Timer -= diff;
+        }else FlashHeal_Timer -= diff;
 
-            //Corruption_Timer
-            if (Corruption_Timer < diff)
+        //HealingTouch_Timer
+        if (HealingTouch_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_HEALINGTOUCH);
+
+            //3 Healingtouchs will be casted
+            if (HealingTouch_Timer < 2)
             {
-                 //Cast VoidBolt on a Random target
-                 Unit* target = NULL;
- 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_CORRUPTION);
+                HealingTouch_Timer = 5500;
+                TouchCounter++;
+            }
+            else {
+                TouchCounter=0;
+                //30 seconds until we should cast this again
+                HealingTouch_Timer = 30000;
+            }
 
-                //20 seconds until we should cast this agian
-                Corruption_Timer = 24000;
-            }else Corruption_Timer -= diff;
+        }else HealingTouch_Timer -= diff;
 
-
-            //Renew_Timer
-            if (Renew_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature, SPELL_RENEW);
-
-                //10 seconds until we should cast this agian
-                Renew_Timer = 10000;
-            }else Renew_Timer -= diff;
-
-
-            //FlashHeal_Timer
-            if (FlashHeal_Timer < diff)
-            {
-                  //Cast
-                DoCast(m_creature,SPELL_FLASHHEAL);
-                                
-                  //5 Flashheals will be casted
-                  if (FlashCounter < 2)
-                  {
-                    FlashHeal_Timer = 5000;
-                    FlashCounter++;
-                  }
-                  else {
-                	FlashCounter=0;
-			//30 seconds until we should cast this again
-                	FlashHeal_Timer = 30000;
-                  }
-                  
-            }else FlashHeal_Timer -= diff;
-
-            //HealingTouch_Timer
-            if (HealingTouch_Timer < diff)
-            {
-                  //Cast
-                DoCast(m_creature,SPELL_HEALINGTOUCH);
-                                
-                  //3 Healingtouchs will be casted
-                  if (HealingTouch_Timer < 2)
-                  {
-                    HealingTouch_Timer = 5500;
-                    TouchCounter++;
-                  }
-                  else {
-                	TouchCounter=0;
-			//30 seconds until we should cast this again
-                	HealingTouch_Timer = 30000;
-                  }
-                  
-            }else HealingTouch_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_instructormalicia(Creature *_Creature)

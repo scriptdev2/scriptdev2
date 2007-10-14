@@ -88,49 +88,45 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            //If we are <50% hp do knockaway ONCE
-            if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
-            {		
-                m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
+        //If we are <50% hp do knockaway ONCE
+        if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
+        {		
+            m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
-                // current aggro target is knocked away pick new target
-                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+            // current aggro target is knocked away pick new target
+            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
 
-                if (!Target || Target == m_creature->getVictim())
-                    Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+            if (!Target || Target == m_creature->getVictim())
+                Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
 
-                if (Target)
-                    m_creature->TauntApply(Target);
+            if (Target)
+                m_creature->TauntApply(Target);
 
-                //Shouldn't cast this agian
-                hasCastedKnockaway = true;
-            }
-
-            //Arcing_Timer
-            if (Arcing_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_ARCINGSMASH);
-
-                //10 seconds until we should cast this agian
-                Arcing_Timer = 13000;
-            }else Arcing_Timer -= diff;
-
-            if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
-            {
-                //Cast
-                DoCast(m_creature,SPELL_WSTOMP);
-                hasCastedWstomp = true;
-            }
-
-            DoMeleeAttackIfReady();
+            //Shouldn't cast this agian
+            hasCastedKnockaway = true;
         }
+
+        //Arcing_Timer
+        if (Arcing_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_ARCINGSMASH);
+
+            //10 seconds until we should cast this agian
+            Arcing_Timer = 13000;
+        }else Arcing_Timer -= diff;
+
+        if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
+        {
+            //Cast
+            DoCast(m_creature,SPELL_WSTOMP);
+            hasCastedWstomp = true;
+        }
+
+        DoMeleeAttackIfReady();
     }
 };
 

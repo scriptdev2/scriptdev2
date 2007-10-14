@@ -31,7 +31,7 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
     void EnterEvadeMode()
     {
 
-	Split_Timer = 12000;         //Split after 12 seconds
+        Split_Timer = 12000;         //Split after 12 seconds
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -84,20 +84,20 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
 
     void Split(Unit* victim)
     {
-         Rand = rand()%4;
-         switch (rand()%2)
-         {
-                case 0: RandX = 0 - Rand; break;
-                case 1: RandX = 0 + Rand; break;
-         }
-         Rand = 0;
-         Rand = rand()%4;
-         switch (rand()%2)
-         {
-                case 0: RandY = 0 - Rand; break;
-                case 1: RandY = 0 + Rand; break;
-         }
-         Rand = 0;
+        Rand = rand()%4;
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = 0;
+        Rand = rand()%4;
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }
+        Rand = 0;
         Summoned = DoSpawnCreature(12265, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
         if(Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
@@ -107,30 +107,24 @@ struct MANGOS_DLL_DECL mob_lavaspawnAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Split_Timer
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
         {
-
-
-            //Split_Timer
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
+            if (Split_Timer < diff)
             {
-                if (Split_Timer < diff)
-                {
 
                 //Cast
                 Split(m_creature->getVictim());
 
                 //12-14 seconds until we should cast this agian
                 Split_Timer = 10000 + rand()%4000;
-                }else Split_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+            }else Split_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_mob_lavaspawn(Creature *_Creature)

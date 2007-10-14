@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 
             Enraged[i] = false;
         }
-        
+
     }
 
     void CheckAdds()
@@ -128,35 +128,30 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //AntiMagicPulse_Timer
+        if (AntiMagicPulse_Timer < diff)
         {
-            
-            //AntiMagicPulse_Timer
-            if (AntiMagicPulse_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_ANTIMAGICPULSE);
+            //Cast
+            DoCast(m_creature,SPELL_ANTIMAGICPULSE);
 
-                //14-18 seconds until we should cast this agian
-                AntiMagicPulse_Timer = 14000 + rand()%4000;
-            }else AntiMagicPulse_Timer -= diff;
+            //14-18 seconds until we should cast this agian
+            AntiMagicPulse_Timer = 14000 + rand()%4000;
+        }else AntiMagicPulse_Timer -= diff;
 
-            //MagmaShackles_Timer
-            if (MagmaShackles_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_MAGMASHACKLES);
+        //MagmaShackles_Timer
+        if (MagmaShackles_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_MAGMASHACKLES);
 
-                //8-12 seconds until we should cast this agian
-                MagmaShackles_Timer = 8000 + rand()%4000;
-            }else MagmaShackles_Timer -= diff;
+            //8-12 seconds until we should cast this agian
+            MagmaShackles_Timer = 8000 + rand()%4000;
+        }else MagmaShackles_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_garr(Creature *_Creature)

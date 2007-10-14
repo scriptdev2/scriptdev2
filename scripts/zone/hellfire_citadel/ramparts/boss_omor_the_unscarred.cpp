@@ -20,15 +20,29 @@
 #define SPELL_TREACHEROUS_AURA	30695
 #define SPELL_REFLECT			23920
 
-//Missing Sound IDs
-
 #define SAY_AGGRO_1				"You dare challenge me?!" 
-#define SAY_AGGRO_2				"I will not be defeated!" 
+#define SOUND_AGGRO_1			10280
+#define SAY_AGGRO_2				"I will not be defeated!"
+#define SOUND_AGGRO_2			10279
+#define SAY_AGGRO_3             ""
+#define SOUND_AGGRO_3			10281
+
+
 #define SAY_SUMMON				"Achor-she-ki! Feast my pet! Eat your fill!"
+#define SOUND_SUMMON			10277
+
 #define SAY_CURSE				"A-Kreesh!"	
-#define SAY_KILL				"Die, weakling!"
+#define SOUND_CURSE				10278
+
+#define SAY_KILL_1				"Die, weakling!"
+#define SOUND_KILL_1			10282			
+
 #define SAY_DIE					"It is... not over." 
+#define SOUND_DIE				10284
+
 #define SAY_WIPE				"I am victorious!" 	
+#define SOUND_WIPE				10283	
+
 
 #define ADD_X1			-1133.756
 #define ADD_Y1			 1720.647
@@ -53,7 +67,10 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     void EnterEvadeMode()
     {   
         if (InCombat)
+        {
             DoYell(SAY_WIPE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_WIPE);
+        }
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -70,7 +87,8 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);  
+        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL); 
+        DoPlaySoundToSet(m_creature,SOUND_DIE);
     }
 
     void KilledUnit(Unit* victim)
@@ -78,7 +96,8 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        DoYell(SAY_KILL,LANG_UNIVERSAL,NULL);
+        DoYell(SAY_KILL_1,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_KILL_1);
     }
 
     void AttackStart(Unit *who)
@@ -96,10 +115,12 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 {
                 case 0:
                     DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
                     break;
 
                 case 1:
                     DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                     break;                    
                 }
                 InCombat = true;
@@ -127,10 +148,12 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                     {
                     case 0:
                         DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
                         break;
 
                     case 1:
                         DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                         break;
                     }
                     InCombat = true;
@@ -142,61 +165,63 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
 
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if(ShadowWhip_Timer < diff)
+        {   
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            DoCast(target,SPELL_SHADOW_WHIP);
+
+            ShadowWhip_Timer = 2000+rand()%8000;
+        }else ShadowWhip_Timer -= diff;
+
+        if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
         {
-            if(ShadowWhip_Timer < diff)
-            {   
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoCast(target,SPELL_SHADOW_WHIP);
+            if(Reflect_Timer < diff)
+            {              
+                DoCast(m_creature,SPELL_REFLECT);
 
-                ShadowWhip_Timer = 2000+rand()%8000;
-            }else ShadowWhip_Timer -= diff;
-
-            if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
-            {
-                if(Reflect_Timer < diff)
-                {              
-                    DoCast(m_creature,SPELL_REFLECT);
-
-                    Reflect_Timer = 5000;
-                }else Reflect_Timer -= diff;
-            }
-
-            if(TreacherousAura_Timer < diff)
-            {   
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoYell(SAY_CURSE,LANG_UNIVERSAL,NULL);
-                DoCast(target,SPELL_TREACHEROUS_AURA);
-
-                TreacherousAura_Timer = 5000+rand()%8000;
-            }else TreacherousAura_Timer -= diff;
-
-            if(Summon_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
-
-                Creature* Summoned = NULL;
-
-                //Summoned = m_creature->SummonCreature(17540,ADD_X1,ADD_Y1,ADD_Z1,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-                if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-
-                Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-                if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-
-                Summon_Timer = 15000;
-
-            }else Summon_Timer -= diff;
+                Reflect_Timer = 5000;
+            }else Reflect_Timer -= diff;
         }
+
+        if(TreacherousAura_Timer < diff)
+        {   
+            DoYell(SAY_CURSE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_CURSE);
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            DoCast(target,SPELL_TREACHEROUS_AURA);
+
+            TreacherousAura_Timer = 5000+rand()%8000;
+        }else TreacherousAura_Timer -= diff;
+
+        if(Summon_Timer < diff)
+        {
+            DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SUMMON);
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            Creature* Summoned = NULL;
+
+            //Summoned = m_creature->SummonCreature(17540,ADD_X1,ADD_Y1,ADD_Z1,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+            Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+            if (Summoned && target)
+                Summoned->AI()->AttackStart(target);
+
+            Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+            if (Summoned && target)
+                Summoned->AI()->AttackStart(target);
+
+            Summon_Timer = 15000;
+
+        }else Summon_Timer -= diff;
     }   
 };
 

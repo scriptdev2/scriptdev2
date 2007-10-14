@@ -107,53 +107,49 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //EncasingWebs
+        if (EncasingWebs_Timer < diff)
         {
-            //EncasingWebs
-            if (EncasingWebs_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ENCASINGWEBS);
-                //30 seconds until we should cast this again
-                EncasingWebs_Timer = 30000;
-            }else EncasingWebs_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ENCASINGWEBS);
+            //30 seconds until we should cast this again
+            EncasingWebs_Timer = 30000;
+        }else EncasingWebs_Timer -= diff;
 
-            //PierceArmor
-            if (PierceArmor_Timer < diff)
+        //PierceArmor
+        if (PierceArmor_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 75) //75% chance to cast
             {
-                //Cast
-                if (rand()%100 < 75) //75% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_PIERCEARMOR);
-                }
-                //35 seconds until we should cast this again
-                PierceArmor_Timer = 35000;
-            }else PierceArmor_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_PIERCEARMOR);
+            }
+            //35 seconds until we should cast this again
+            PierceArmor_Timer = 35000;
+        }else PierceArmor_Timer -= diff;
 
-            //VirulentPoison
-            if (VirulentPoison_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_VIRULENTPOISON);
-                //20 seconds until we should cast this again
-                VirulentPoison_Timer = 20000;
-            }else VirulentPoison_Timer -= diff;
+        //VirulentPoison
+        if (VirulentPoison_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VIRULENTPOISON);
+            //20 seconds until we should cast this again
+            VirulentPoison_Timer = 20000;
+        }else VirulentPoison_Timer -= diff;
 
-            //RaiseUndeadScarab
-            if (RaiseUndeadScarab_Timer < diff)
-            {
-                //Cast
-                RaiseUndeadScarab(m_creature->getVictim());
-                //16 seconds until we should cast this again
-                RaiseUndeadScarab_Timer = 16000;
-            }else RaiseUndeadScarab_Timer -= diff;
+        //RaiseUndeadScarab
+        if (RaiseUndeadScarab_Timer < diff)
+        {
+            //Cast
+            RaiseUndeadScarab(m_creature->getVictim());
+            //16 seconds until we should cast this again
+            RaiseUndeadScarab_Timer = 16000;
+        }else RaiseUndeadScarab_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_nerubenkan(Creature *_Creature)

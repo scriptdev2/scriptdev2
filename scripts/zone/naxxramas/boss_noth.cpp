@@ -58,8 +58,8 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     {       
         Blink_Timer = 25000;
         Curse_Timer = 4000;
-	Wrath_Timer = 9000;
-	Summon_Timer = 12000;
+        Wrath_Timer = 9000;
+        Summon_Timer = 12000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -78,26 +78,26 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-                //Say our dialog on initial aggro
-                if (!InCombat)
+            //Say our dialog on initial aggro
+            if (!InCombat)
+            {
+                switch (rand()%3)
                 {
-                    switch (rand()%3)
-                    {
-                    case 0:
-                           DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                        break;
-                    case 1:
-                           DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                        break;
-                    case 2:
-                           DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                        break;
-                    }
-                    InCombat = true;
+                case 0:
+                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                    break;
+                case 1:
+                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                    break;
+                case 2:
+                    DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                    break;
                 }
+                InCombat = true;
+            }
         }
     }
 
@@ -120,16 +120,16 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
                     switch (rand()%3)
                     {
                     case 0:
-                           DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                        DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
                         break;
                     case 1:
-                           DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                        DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
                         break;
                     case 2:
-                           DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                           DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                        DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
                         break;
                     }
                     InCombat = true;
@@ -142,18 +142,18 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     void KilledUnit(Unit* victim)
     {
 
-                    switch (rand()%2)
-                    {
-                    case 0:
-                        DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-                        break;
-                    case 1:
-                        DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-			DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-                        break;
+        switch (rand()%2)
+        {
+        case 0:
+            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+            break;
 
-                    }
+        }
     }
 
 
@@ -167,74 +167,69 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Blink_Timer
+        if (Blink_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CRIPPLE);
+            DoCast(m_creature,SPELL_BLINK);
+
+            //25 seconds
+            Blink_Timer = 25000;
+        }else Blink_Timer -= diff;
+
+        //Curse_Timer
+        if (Curse_Timer < diff)
         {
 
-            //Blink_Timer
-            if (Blink_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEPLAGUEBRINGER);
+
+            //28 seconds until we should cast this agian
+            Curse_Timer = 28000;
+        }else Curse_Timer -= diff;
+
+        //Wrath_Timer
+        if (Wrath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WRATHPLAGUEBRINGER);
+
+            //18 seconds until we should cast this agian
+            Wrath_Timer = 18000;
+        }else Wrath_Timer -= diff;
+
+        //Summon_Timer
+        if (Summon_Timer < diff)
+        {
+
+            DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SUMMON);
+            Unit* target = NULL;
+            Unit* SummonedSkeletons = NULL;
+
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+
+            if (SummonedSkeletons)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CRIPPLE);
-                DoCast(m_creature,SPELL_BLINK);
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)
+                    SummonedSkeletons->AddThreat(target,1.0f);
+            }
 
-                //25 seconds
-                Blink_Timer = 25000;
-            }else Blink_Timer -= diff;
+            //30 seconds until we should cast this agian
+            Summon_Timer = 30500;
+        } else Summon_Timer -= diff;
 
-            //Curse_Timer
-            if (Curse_Timer < diff)
-            {
-
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEPLAGUEBRINGER);
-
-                //28 seconds until we should cast this agian
-                Curse_Timer = 28000;
-            }else Curse_Timer -= diff;
-
-            //Wrath_Timer
-            if (Wrath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WRATHPLAGUEBRINGER);
-
-                //18 seconds until we should cast this agian
-                Wrath_Timer = 18000;
-            }else Wrath_Timer -= diff;
-
-            //Summon_Timer
-            if (Summon_Timer < diff)
-            {
-
-                    DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_SUMMON);
-                    Unit* target = NULL;
-                    Unit* SummonedSkeletons = NULL;
-
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-                    SummonedSkeletons = m_creature->SummonCreature(16984,2684.804,-3502.517,261.313,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-
-                    if (SummonedSkeletons)
-                    {
-                        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                        if (target)
-                            SummonedSkeletons->AddThreat(target,1.0f);
-                    }
-
-                //30 seconds until we should cast this agian
-                Summon_Timer = 30500;
-            } else Summon_Timer -= diff;
-            
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_noth(Creature *_Creature)

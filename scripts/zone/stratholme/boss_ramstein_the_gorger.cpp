@@ -78,38 +78,34 @@ struct MANGOS_DLL_DECL boss_ramstein_the_gorgerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Trample
+        if (Trample_Timer < diff)
         {
-            //Trample
-            if (Trample_Timer < diff)
+            //Cast
+            if (rand()%100 < 75) //75% chance to cast
             {
-                //Cast
-                if (rand()%100 < 75) //75% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
-                }
-                //7 seconds until we should cast this again
-                Trample_Timer = 7000;
-            }else Trample_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
+            }
+            //7 seconds until we should cast this again
+            Trample_Timer = 7000;
+        }else Trample_Timer -= diff;
 
-            //Knockout
-            if (Knockout_Timer < diff)
+        //Knockout
+        if (Knockout_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 70) //70% chance to cast
             {
-                //Cast
-                if (rand()%100 < 70) //70% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_KNOCKOUT);
-                }
-                //10 seconds until we should cast this again
-                Knockout_Timer = 10000;
-            }else Knockout_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_KNOCKOUT);
+            }
+            //10 seconds until we should cast this again
+            Knockout_Timer = 10000;
+        }else Knockout_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_ramstein_the_gorger(Creature *_Creature)

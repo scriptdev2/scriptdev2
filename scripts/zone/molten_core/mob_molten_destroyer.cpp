@@ -19,7 +19,7 @@
 #define SPELL_TRAMPLE                15550	
 #define SPELL_KNOCKBACK                    19813                     
 
-    
+
 
 struct MANGOS_DLL_DECL mob_molten_destroyerAI : public ScriptedAI
 {
@@ -87,40 +87,35 @@ struct MANGOS_DLL_DECL mob_molten_destroyerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Trample
+        if (Trample_Timer < diff)
         {
-            
-            //Trample
-            if (Trample_Timer < diff)
+            //Cast
+            if (rand()%100 < 90) //90% chance to cast
             {
-                //Cast
-                if (rand()%100 < 90) //90% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
-                }
-                //7 seconds until we should cast this again
-                Trample_Timer = 7000;
-            }else Trample_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
+            }
+            //7 seconds until we should cast this again
+            Trample_Timer = 7000;
+        }else Trample_Timer -= diff;
 
 
-            //KnockBack_Timer
-            if (KnockBack_Timer < diff)
+        //KnockBack_Timer
+        if (KnockBack_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 70) //90% chance to cast
             {
-                //Cast
-                if (rand()%100 < 70) //90% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
-                }
-                //8 seconds until we should cast this agian
-                KnockBack_Timer = 8000;
-            }else KnockBack_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            }
+            //8 seconds until we should cast this agian
+            KnockBack_Timer = 8000;
+        }else KnockBack_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_molten_destroyer(Creature *_Creature)

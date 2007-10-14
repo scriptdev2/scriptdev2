@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
                 case 0:
                     DoCast(m_creature,SPELL_RUSHINGCHARGE);
                     break;
-            
+
                 case 1:
                     DoCast(m_creature,SPELL_RUSHINGCHARGE1);
                     break;
@@ -135,113 +135,108 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <10% hp goes Enraged
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
         {
+            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_ENRAGE);
 
-            //If we are <10% hp goes Enraged
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
-            {
-                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_ENRAGE);
+            DoCast(m_creature,SPELL_ENRAGE);
 
-                DoCast(m_creature,SPELL_ENRAGE);
-
-                //Shouldn't cast this agian
-                Enrage_Timer = diff;
-            }
-            
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //30 seconds until we should cast this agian
-                Cleave_Timer = 15000;
-            }else Cleave_Timer -= diff;
-
-            //Yelling and Whirlwind casting
-            if (Yell_Timer < diff)
-            {
-                //Say Whirlwind monologe
-                DoYell(SAY_WHIRLWIND,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_WHIRLWIND);
-                Yell_Timer = 30000;
-            }else Yell_Timer -= diff;
-
-            if (Whirlwind_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
-                Whirlwind_Timer = 30000;
-            }else Whirlwind_Timer -= diff;
-
-            //SunderArmor_Timer
-            if (SunderArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
-
-                //40 seconds until we should cast this agian
-                SunderArmor_Timer = 40000;
-            }else SunderArmor_Timer -= diff;
-
-            //Rend_Timer
-            if (Rend_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_REND);
-
-                //45 seconds until we should cast this agian
-                Rend_Timer = 25000;
-            }else Rend_Timer -= diff;
-
-            //ThunderClap_Timer
-            if (ThunderClap_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
-
-                //45 seconds until we should cast this agian
-                ThunderClap_Timer = 20000;
-            }else ThunderClap_Timer -= diff;
-
-            //Slam_Timer
-            if (Slam_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SLAM);
-
-                //30 seconds until we should cast this agian
-                Slam_Timer = 20000;
-            }else Slam_Timer -= diff;
-
-            //Fireball11_Timer
-            if (Fireball11_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIREBALL11);
-
-                //30 seconds until we should cast this agian
-                Fireball11_Timer = 30000;
-            }else Fireball11_Timer -= diff;
-
-            //ConeOfCold5_Timer
-            if (ConeOfCold5_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CONEOFCOLD5);
-
-                //190 seconds until we should cast this agian
-                ConeOfCold5_Timer = 40000;
-            }else ConeOfCold5_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            //Shouldn't cast this agian
+            Enrage_Timer = diff;
         }
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //30 seconds until we should cast this agian
+            Cleave_Timer = 15000;
+        }else Cleave_Timer -= diff;
+
+        //Yelling and Whirlwind casting
+        if (Yell_Timer < diff)
+        {
+            //Say Whirlwind monologe
+            DoYell(SAY_WHIRLWIND,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_WHIRLWIND);
+            Yell_Timer = 30000;
+        }else Yell_Timer -= diff;
+
+        if (Whirlwind_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
+            Whirlwind_Timer = 30000;
+        }else Whirlwind_Timer -= diff;
+
+        //SunderArmor_Timer
+        if (SunderArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
+
+            //40 seconds until we should cast this agian
+            SunderArmor_Timer = 40000;
+        }else SunderArmor_Timer -= diff;
+
+        //Rend_Timer
+        if (Rend_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_REND);
+
+            //45 seconds until we should cast this agian
+            Rend_Timer = 25000;
+        }else Rend_Timer -= diff;
+
+        //ThunderClap_Timer
+        if (ThunderClap_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+
+            //45 seconds until we should cast this agian
+            ThunderClap_Timer = 20000;
+        }else ThunderClap_Timer -= diff;
+
+        //Slam_Timer
+        if (Slam_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SLAM);
+
+            //30 seconds until we should cast this agian
+            Slam_Timer = 20000;
+        }else Slam_Timer -= diff;
+
+        //Fireball11_Timer
+        if (Fireball11_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIREBALL11);
+
+            //30 seconds until we should cast this agian
+            Fireball11_Timer = 30000;
+        }else Fireball11_Timer -= diff;
+
+        //ConeOfCold5_Timer
+        if (ConeOfCold5_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CONEOFCOLD5);
+
+            //190 seconds until we should cast this agian
+            ConeOfCold5_Timer = 40000;
+        }else ConeOfCold5_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

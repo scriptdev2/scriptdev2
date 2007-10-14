@@ -128,77 +128,72 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11073);     //Jandice Model
             Invisible = false;
         } else if (Invisible)
-               {
-                  Invisible_Timer -= diff;
-                  //Do nothing while invisible
-                  return;
-               }
+        {
+            Invisible_Timer -= diff;
+            //Do nothing while invisible
+            return;
+        }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //CurseOfBlood_Timer
+        if (CurseOfBlood_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+
+            //45 seconds
+            CurseOfBlood_Timer = 30000;
+        }else CurseOfBlood_Timer -= diff;
+
+        //Illusion_Timer
+        if (!Invisible && Illusion_Timer < diff)
         {
 
-            //CurseOfBlood_Timer
-            if (CurseOfBlood_Timer < diff)
+            //Inturrupt any spell casting
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->setFaction(35);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+
+            //Summon 10 Illusions attacking random gamers
+            Unit* target = NULL;
+            for(int i = 0; i < 10;i++)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                SummonIllusions(target);
+            }
+            Invisible = true;
+            Invisible_Timer = 3000;
 
-                //45 seconds
-                CurseOfBlood_Timer = 30000;
-            }else CurseOfBlood_Timer -= diff;
-
-            //Illusion_Timer
-            if (!Invisible && Illusion_Timer < diff)
-            {
-
-                //Inturrupt any spell casting
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-
-                //Summon 10 Illusions attacking random gamers
-                Unit* target = NULL;
-                for(int i = 0; i < 10;i++)
-                  {
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    SummonIllusions(target);
-                  }
-                Invisible = true;
-                Invisible_Timer = 3000;
-
-                //25 seconds until we should cast this agian
-                Illusion_Timer = 25000;
-            }else Illusion_Timer -= diff;
+            //25 seconds until we should cast this agian
+            Illusion_Timer = 25000;
+        }else Illusion_Timer -= diff;
 
 
-//            //Illusion_Timer
-//            if (Illusion_Timer < diff)
-//            {
-//                  //Cast
-//                DoCast(m_creature->getVictim(),SPELL_ILLUSION);
-//                                
-//                  //3 Illusion will be summoned
-//                  if (Illusioncounter < 3)
-//                  {
-//                    Illusion_Timer = 500;
-//                    Illusioncounter++;
-//                  }
-//                  else {
-//                      //15 seconds until we should cast this again
-//                      Illusion_Timer = 15000;
-//                      Illusioncounter=0;
-//                  }
-//                  
-//            }else Illusion_Timer -= diff;
+        //            //Illusion_Timer
+        //            if (Illusion_Timer < diff)
+        //            {
+        //                  //Cast
+        //                DoCast(m_creature->getVictim(),SPELL_ILLUSION);
+        //                                
+        //                  //3 Illusion will be summoned
+        //                  if (Illusioncounter < 3)
+        //                  {
+        //                    Illusion_Timer = 500;
+        //                    Illusioncounter++;
+        //                  }
+        //                  else {
+        //                      //15 seconds until we should cast this again
+        //                      Illusion_Timer = 15000;
+        //                      Illusioncounter=0;
+        //                  }
+        //                  
+        //            }else Illusion_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -259,25 +254,20 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //5-8 seconds
+            Cleave_Timer = 5000 + rand()%3000;
+        }else Cleave_Timer -= diff;
 
-                //5-8 seconds
-                Cleave_Timer = 5000 + rand()%3000;
-            }else Cleave_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 
@@ -306,4 +296,3 @@ void AddSC_boss_jandicebarov()
     newscript->GetAI = GetAI_mob_illusionofjandicebarov;
     m_scripts[nrscripts++] = newscript;
 }
- 

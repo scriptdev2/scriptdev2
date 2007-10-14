@@ -19,7 +19,7 @@
 #define SPELL_CLEAVE                20691	
 #define SPELL_DOMINATEMIND                    20740                     
 
-    
+
 
 struct MANGOS_DLL_DECL mob_flamewaker_protectorAI : public ScriptedAI
 {
@@ -86,41 +86,36 @@ struct MANGOS_DLL_DECL mob_flamewaker_protectorAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
         {
-            
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                //6 seconds until we should cast this again
-                Cleave_Timer = 5000 + rand()%5000;
-            }else Cleave_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            //6 seconds until we should cast this again
+            Cleave_Timer = 5000 + rand()%5000;
+        }else Cleave_Timer -= diff;
 
 
-            //DominateMind_Timer
-            if (DominateMind_Timer < diff)
+        //DominateMind_Timer
+        if (DominateMind_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 70) //60% chance to cast
             {
-                //Cast
-                if (rand()%100 < 70) //60% chance to cast
-                {
-                 //Cast Dominate Mind on a Random target
-                 Unit* target = NULL;
- 
+                //Cast Dominate Mind on a Random target
+                Unit* target = NULL;
+
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)DoCast(target,SPELL_DOMINATEMIND);
-                }
-                //20 seconds until we should cast this agian
-                DominateMind_Timer = 20000;
-            }else DominateMind_Timer -= diff;
+            }
+            //20 seconds until we should cast this agian
+            DominateMind_Timer = 20000;
+        }else DominateMind_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_flamewaker_protector(Creature *_Creature)

@@ -53,9 +53,9 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     boss_highlord_mograineAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Mark_Timer;
-	uint32 RighteousFire_Timer;
-	bool ShieldWall1;
-	bool ShieldWall2;
+    uint32 RighteousFire_Timer;
+    bool ShieldWall1;
+    bool ShieldWall2;
     bool InCombat;
 
     void EnterEvadeMode()
@@ -78,17 +78,17 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
         {
             switch(rand()%3)
             {
-                case 0:
+            case 0:
                 DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
                 break;
 
-                case 1:
+            case 1:
                 DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
                 break;
 
-                case 2:
+            case 2:
                 DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
                 break;
@@ -100,12 +100,12 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
+        case 0:
             DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY1);
             break;
 
-            case 1:
+        case 1:
             DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY2);
             break;
@@ -155,49 +155,45 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        // Mark of Mograine
+        if(Mark_Timer < diff)
         {
-            // Mark of Mograine
-            if(Mark_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_MARK_OF_MOGRAINE);
-                Mark_Timer = 12000;
-            }else Mark_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_MARK_OF_MOGRAINE);
+            Mark_Timer = 12000;
+        }else Mark_Timer -= diff;
 
-            // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
-            if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        {
+            if(ShieldWall1)
             {
-                if(ShieldWall1)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall1 = false;
-                }
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall1 = false;
             }
-            if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
-            {
-                if(ShieldWall2)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall2 = false;
-                }
-            }
-
-            // Righteous Fire
-            if(RighteousFire_Timer < diff)
-            {
-                if(rand()%4 == 1) // 1/4
-                {
-                    DoCast(m_creature->getVictim(),SPELL_RIGHTEOUS_FIRE);
-                }
-                RighteousFire_Timer = 2000; // right
-            }else RighteousFire_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+        if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        {
+            if(ShieldWall2)
+            {
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall2 = false;
+            }
+        }
+
+        // Righteous Fire
+        if(RighteousFire_Timer < diff)
+        {
+            if(rand()%4 == 1) // 1/4
+            {
+                DoCast(m_creature->getVictim(),SPELL_RIGHTEOUS_FIRE);
+            }
+            RighteousFire_Timer = 2000; // right
+        }else RighteousFire_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_highlord_mograine(Creature *_Creature)

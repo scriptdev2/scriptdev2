@@ -82,44 +82,40 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {            
-            //Impending doom timer
-            if (ImpendingDoom_Timer < diff)
-            {
-                //Cast impending doom
-                DoCast(m_creature->getVictim(),SPELL_IMPENDINGDOOM);
+        //Impending doom timer
+        if (ImpendingDoom_Timer < diff)
+        {
+            //Cast impending doom
+            DoCast(m_creature->getVictim(),SPELL_IMPENDINGDOOM);
 
-                //20 seconds until we should cast this agian
-                ImpendingDoom_Timer = 20000;
-            }else ImpendingDoom_Timer -= diff;
+            //20 seconds until we should cast this agian
+            ImpendingDoom_Timer = 20000;
+        }else ImpendingDoom_Timer -= diff;
 
-            //Lucifron's curse timer
-            if (LucifronCurse_Timer < diff)
-            {
-                //Cast Lucifron's curse
-                DoCast(m_creature->getVictim(),SPELL_LUCIFRONCURSE);
+        //Lucifron's curse timer
+        if (LucifronCurse_Timer < diff)
+        {
+            //Cast Lucifron's curse
+            DoCast(m_creature->getVictim(),SPELL_LUCIFRONCURSE);
 
-                //15 seconds until we should cast this agian
-                LucifronCurse_Timer = 15000;
-            }else LucifronCurse_Timer -= diff;
+            //15 seconds until we should cast this agian
+            LucifronCurse_Timer = 15000;
+        }else LucifronCurse_Timer -= diff;
 
-            //Shadowshock
-            if (ShadowShock_Timer < diff)
-            {
-                //Cast shadow shock
-                DoCast(m_creature->getVictim(),SPELL_SHADOWSHOCK);
+        //Shadowshock
+        if (ShadowShock_Timer < diff)
+        {
+            //Cast shadow shock
+            DoCast(m_creature->getVictim(),SPELL_SHADOWSHOCK);
 
-                //6 seconds until we should cast this agian
-                ShadowShock_Timer = 6000;
-            }else ShadowShock_Timer -= diff;
+            //6 seconds until we should cast this agian
+            ShadowShock_Timer = 6000;
+        }else ShadowShock_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lucifron(Creature *_Creature)

@@ -121,51 +121,45 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //Cast Ageis if less than 50% hp
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
         {
-
-            //Cast Ageis if less than 50% hp
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
-            {
-                DoCast(m_creature,SPELL_AEGIS);
-            }
-            
-            //MagicReflection_Timer
-            if (MagicReflection_Timer < diff)
-            {
-                //Cast NYI in core
-                //DoCast(m_creature,SPELL_MAGICREFLECTION);
-
-                //60 seconds until we should cast this agian
-                MagicReflection_Timer = 60000;
-            }else MagicReflection_Timer -= diff;
-
-            //DamageReflection_Timer
-            if (DamageReflection_Timer < diff)
-            {
-                //Cast NYI in core
-                //DoCast(m_creature,SPELL_DAMAGEREFLECTION);
-
-                //60 seconds until we should cast this agian
-                DamageReflection_Timer = 60000;
-            }else DamageReflection_Timer -= diff;
-
-            //Blastwave_Timer
-            if (Blastwave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
-
-                //10 seconds until we should cast this agian
-                Blastwave_Timer = 10000;
-            }else Blastwave_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            DoCast(m_creature,SPELL_AEGIS);
         }
+
+        //MagicReflection_Timer
+        if (MagicReflection_Timer < diff)
+        {
+            DoCast(m_creature,SPELL_MAGICREFLECTION);
+
+            //60 seconds until we should cast this agian
+            MagicReflection_Timer = 60000;
+        }else MagicReflection_Timer -= diff;
+
+        //DamageReflection_Timer
+        if (DamageReflection_Timer < diff)
+        {
+            DoCast(m_creature,SPELL_DAMAGEREFLECTION);
+
+            //60 seconds until we should cast this agian
+            DamageReflection_Timer = 60000;
+        }else DamageReflection_Timer -= diff;
+
+        //Blastwave_Timer
+        if (Blastwave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
+
+            //10 seconds until we should cast this agian
+            Blastwave_Timer = 10000;
+        }else Blastwave_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_majordomo(Creature *_Creature)

@@ -84,71 +84,66 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //ArcaneExplosion_Timer
+        if (ArcaneExplosion_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
 
-            //ArcaneExplosion_Timer
-            if (ArcaneExplosion_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
+            //6 seconds until we should cast this agian
+            ArcaneExplosion_Timer = 4000 + rand()%4000;
+        }else ArcaneExplosion_Timer -= diff;
 
-                //6 seconds until we should cast this agian
-                ArcaneExplosion_Timer = 4000 + rand()%4000;
-            }else ArcaneExplosion_Timer -= diff;
+        //ShazzrahCurse_Timer
+        if (ShazzrahCurse_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
 
-            //ShazzrahCurse_Timer
-            if (ShazzrahCurse_Timer < diff)
-            {
-                //Cast
-                Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_SHAZZRAHCURSE);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_SHAZZRAHCURSE);
+            //30 seconds until we should cast this agian
+            ShazzrahCurse_Timer = 26000 + rand()%5000;
+        }else ShazzrahCurse_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                ShazzrahCurse_Timer = 26000 + rand()%5000;
-            }else ShazzrahCurse_Timer -= diff;
+        //DeadenMagic_Timer
+        if (DeadenMagic_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_DEADENMAGIC);
 
-            //DeadenMagic_Timer
-            if (DeadenMagic_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_DEADENMAGIC);
+            //45 seconds until we should cast this agian
+            DeadenMagic_Timer = 45000;
+        }else DeadenMagic_Timer -= diff;
 
-                //45 seconds until we should cast this agian
-                DeadenMagic_Timer = 45000;
-            }else DeadenMagic_Timer -= diff;
+        //Countspell_Timer
+        if (Countspell_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
 
-            //Countspell_Timer
-            if (Countspell_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
+            //                // Teleporting him to a random gamer and casting Arcane Explosion after that.
+            //                // Blink is not working cause of LoS System we need to do this hardcoded.
+            //
+            //                Unit* target = NULL;
+            //
+            //                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            //
+            //                if (target) 
+            //                {
+            //                m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
+            //                DoCast(target,SPELL_ARCANEEXPLOSION);
+            //                }
 
-//                // Teleporting him to a random gamer and casting Arcane Explosion after that.
-//                // Blink is not working cause of LoS System we need to do this hardcoded.
-//
-//                Unit* target = NULL;
-//
-//                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-//
-//                if (target) 
-//                {
-//                m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
-//                DoCast(target,SPELL_ARCANEEXPLOSION);
-//                }
+            //20 seconds until we should cast this agian
+            Countspell_Timer = 16000 + rand()%4000;
+        }else Countspell_Timer -= diff;
 
-                //20 seconds until we should cast this agian
-                Countspell_Timer = 16000 + rand()%4000;
-            }else Countspell_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_shazzrah(Creature *_Creature)

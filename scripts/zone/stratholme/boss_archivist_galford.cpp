@@ -81,49 +81,45 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FireNova
+        if (FireNova_Timer < diff)
         {
-            //FireNova
-            if (FireNova_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+
+            //17 seconds until we should cast this again
+            FireNova_Timer = 17000;
+        }else FireNova_Timer -= diff;
+
+        //BurningWinds
+        if (BurningWinds_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 50) //50% chance to cast
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
+                DoCast(m_creature->getVictim(),SPELL_BURNINGWINDS);
+            }
 
-                //17 seconds until we should cast this again
-                FireNova_Timer = 17000;
-            }else FireNova_Timer -= diff;
+            //15 seconds until we should cast this again
+            BurningWinds_Timer = 15000;
+        }else BurningWinds_Timer -= diff;
 
-            //BurningWinds
-            if (BurningWinds_Timer < diff)
+        //Pyroblast
+        if (Pyroblast_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 55) //55% chance to cast
             {
-                //Cast
-                if (rand()%100 < 50) //50% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_BURNINGWINDS);
-                }
+                DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
+            }
+            //21 seconds until we should cast this again
+            Pyroblast_Timer = 21000;
+        }else Pyroblast_Timer -= diff;
 
-                //15 seconds until we should cast this again
-                BurningWinds_Timer = 15000;
-            }else BurningWinds_Timer -= diff;
-
-            //Pyroblast
-            if (Pyroblast_Timer < diff)
-            {
-                //Cast
-                if (rand()%100 < 55) //55% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
-                }
-                //21 seconds until we should cast this again
-                Pyroblast_Timer = 21000;
-            }else Pyroblast_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_archivist_galford(Creature *_Creature)

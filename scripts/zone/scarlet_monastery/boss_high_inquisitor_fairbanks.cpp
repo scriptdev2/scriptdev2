@@ -94,84 +94,80 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->IsNonMeleeSpellCasted(false) && Healing_Timer < diff)
         {
-            //If we are <45% hp cast Renew rank 6 or Flash heal rank 4
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 45 && !m_creature->IsNonMeleeSpellCasted(false) && Healing_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
-                
-                //30 seconds until we should cast this agian
-                Healing_Timer = 30000;
+            DoCast(m_creature->getVictim(),SPELL_RENEW6 || SPELL_FLASHHEAL4);
 
-            }else Healing_Timer -= diff;
+            //30 seconds until we should cast this agian
+            Healing_Timer = 30000;
 
-            //Sleep2_Timer
-            if (Sleep2_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SLEEP2);
+        }else Healing_Timer -= diff;
 
-                //45 seconds until we should cast this agian
-                Sleep2_Timer = 45000;
-            }else Sleep2_Timer -= diff;
+        //Sleep2_Timer
+        if (Sleep2_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SLEEP2);
 
-            //Smite_Timer
-            if (Smite_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SMITE);
+            //45 seconds until we should cast this agian
+            Sleep2_Timer = 45000;
+        }else Sleep2_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                Smite_Timer = 20000;
-            }else Smite_Timer -= diff;
+        //Smite_Timer
+        if (Smite_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SMITE);
 
-            //ShadowWordPain_Timer
-            if (ShadowWordPain_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
+            //30 seconds until we should cast this agian
+            Smite_Timer = 20000;
+        }else Smite_Timer -= diff;
 
-                //30 seconds until we should cast this agian
-                ShadowWordPain_Timer = 30000;
-            }else ShadowWordPain_Timer -= diff;
+        //ShadowWordPain_Timer
+        if (ShadowWordPain_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
 
-            //CurseOfBlood_Timer
-            if (CurseOfBlood_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
+            //30 seconds until we should cast this agian
+            ShadowWordPain_Timer = 30000;
+        }else ShadowWordPain_Timer -= diff;
 
-                //45 seconds until we should cast this agian
-                CurseOfBlood_Timer = 25000;
-            }else CurseOfBlood_Timer -= diff;
+        //CurseOfBlood_Timer
+        if (CurseOfBlood_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
 
-            //DevouringPlague3_Timer
-            if (DevouringPlague3_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DEVOURINGPLAGUE3);
+            //45 seconds until we should cast this agian
+            CurseOfBlood_Timer = 25000;
+        }else CurseOfBlood_Timer -= diff;
 
-                //35 seconds until we should cast this agian
-                DevouringPlague3_Timer = 35000;
-            }else DevouringPlague3_Timer -= diff;
+        //DevouringPlague3_Timer
+        if (DevouringPlague3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DEVOURINGPLAGUE3);
 
-            //MindBlast5_Timer
-            if (MindBlast5_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MINDBLAST5);
+            //35 seconds until we should cast this agian
+            DevouringPlague3_Timer = 35000;
+        }else DevouringPlague3_Timer -= diff;
 
-                //200 seconds until we should cast this agian
-                MindBlast5_Timer = 30000;
-            }else MindBlast5_Timer -= diff;
+        //MindBlast5_Timer
+        if (MindBlast5_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MINDBLAST5);
 
-            DoMeleeAttackIfReady();
-        }
+            //200 seconds until we should cast this agian
+            MindBlast5_Timer = 30000;
+        }else MindBlast5_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

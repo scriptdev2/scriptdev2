@@ -84,59 +84,55 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //FrostNova
+        if (FrostNova_Timer < diff)
         {
-            //FrostNova
-            if (FrostNova_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
-                //23 seconds until we should cast this again
-                FrostNova_Timer = 23000;
-            }else FrostNova_Timer -= diff;
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
+            //23 seconds until we should cast this again
+            FrostNova_Timer = 23000;
+        }else FrostNova_Timer -= diff;
 
-            //Frostbolt
-            if (Frostbolt_Timer < diff)
+        //Frostbolt
+        if (Frostbolt_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 90) //90% chance to cast
             {
-                //Cast
-                if (rand()%100 < 90) //90% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
-                }
-                //3.5 seconds until we should cast this again
-                Frostbolt_Timer = 3500;
-            }else Frostbolt_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            }
+            //3.5 seconds until we should cast this again
+            Frostbolt_Timer = 3500;
+        }else Frostbolt_Timer -= diff;
 
-            //IceTomb
-            if (IceTomb_Timer < diff)
+        //IceTomb
+        if (IceTomb_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 65) //65% chance to cast
             {
-                //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_ICETOMB);
-                }
-                //28 seconds until we should cast this again
-                IceTomb_Timer = 28000;
-            }else IceTomb_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_ICETOMB);
+            }
+            //28 seconds until we should cast this again
+            IceTomb_Timer = 28000;
+        }else IceTomb_Timer -= diff;
 
-            //DrainLife
-            if (DrainLife_Timer < diff)
+        //DrainLife
+        if (DrainLife_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 55) //55% chance to cast
             {
-                //Cast
-                if (rand()%100 < 55) //55% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_DRAINLIFE);
-                }
-                //31 seconds until we should cast this again
-                DrainLife_Timer = 31000;
-            }else DrainLife_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_DRAINLIFE);
+            }
+            //31 seconds until we should cast this again
+            DrainLife_Timer = 31000;
+        }else DrainLife_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_maleki_the_pallid(Creature *_Creature)

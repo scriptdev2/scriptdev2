@@ -97,55 +97,50 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Trample_Timer
+        if (Trample_Timer < diff)
         {
-            
-            //Trample_Timer
-            if (Trample_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_TRAMPLE);
 
-                //10 seconds
-                Trample_Timer = 10000;
-            }else Trample_Timer -= diff;
+            //10 seconds
+            Trample_Timer = 10000;
+        }else Trample_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //7 seconds until we should cast this agian
-                Cleave_Timer = 7000;
-            }else Cleave_Timer -= diff;
+            //7 seconds until we should cast this agian
+            Cleave_Timer = 7000;
+        }else Cleave_Timer -= diff;
 
-            //SunderingCleave_Timer
-            if (SunderingCleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SUNDERINCLEAVE);
+        //SunderingCleave_Timer
+        if (SunderingCleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUNDERINCLEAVE);
 
-                //20 seconds until we should cast this agian
-                SunderingCleave_Timer = 20000;
-            }else SunderingCleave_Timer -= diff;
+            //20 seconds until we should cast this agian
+            SunderingCleave_Timer = 20000;
+        }else SunderingCleave_Timer -= diff;
 
-            //KnockAway_Timer
-            if (KnockAway_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
+        //KnockAway_Timer
+        if (KnockAway_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
 
-                //12 seconds until we should cast this agian
-                KnockAway_Timer = 12000;
-            }else KnockAway_Timer -= diff;
+            //12 seconds until we should cast this agian
+            KnockAway_Timer = 12000;
+        }else KnockAway_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_theravenian(Creature *_Creature)

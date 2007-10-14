@@ -23,7 +23,7 @@
 #define SPELL_ANCIENTDESPAIR                   19369 
 #define SPELL_CONEOFFIRE                   19630                
 
-    
+
 
 struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
 {
@@ -91,49 +91,45 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        if (Debuff_Timer < diff)
         {
-        
-            if (Debuff_Timer < diff)
+            switch(rand()%5)
             {
-                    switch(rand()%5)
-                    {
-                        case 0:
-                            DoCast(m_creature->getVictim(),SPELL_GROUNDSTOMP);
-                            break;
-                        case 1:
-                            DoCast(m_creature->getVictim(),SPELL_ANCIENTDREAD);
-                            break;
-                        case 2:
-                            DoCast(m_creature->getVictim(),SPELL_CAUTERIZINGFLAMES);
-                            break;
-                        case 3:
-                            DoCast(m_creature->getVictim(),SPELL_WITHERINGHEAT);
-                            break;
-                        case 4:
-                            DoCast(m_creature->getVictim(),SPELL_ANCIENTDESPAIR);
-                            break;
-                    }
-                Debuff_Timer = 24000;
-            }else Debuff_Timer -= diff;
+            case 0:
+                DoCast(m_creature->getVictim(),SPELL_GROUNDSTOMP);
+                break;
+            case 1:
+                DoCast(m_creature->getVictim(),SPELL_ANCIENTDREAD);
+                break;
+            case 2:
+                DoCast(m_creature->getVictim(),SPELL_CAUTERIZINGFLAMES);
+                break;
+            case 3:
+                DoCast(m_creature->getVictim(),SPELL_WITHERINGHEAT);
+                break;
+            case 4:
+                DoCast(m_creature->getVictim(),SPELL_ANCIENTDESPAIR);
+                break;
+            }
+            Debuff_Timer = 24000;
+        }else Debuff_Timer -= diff;
 
 
-            //ConeOfFire_Timer
-            if (ConeOfFire_Timer < diff)
-            {
+        //ConeOfFire_Timer
+        if (ConeOfFire_Timer < diff)
+        {
 
-                    DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
-                
-                //7 seconds until we should cast this agian
-                ConeOfFire_Timer = 7000;
-            }else ConeOfFire_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
 
-            DoMeleeAttackIfReady();
-        }
+            //7 seconds until we should cast this agian
+            ConeOfFire_Timer = 7000;
+        }else ConeOfFire_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)

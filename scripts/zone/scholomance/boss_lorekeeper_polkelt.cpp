@@ -20,7 +20,7 @@
 #define SPELL_DARKPLAGUE             18270 
 #define SPELL_CORROSIVEACID               23313
 #define SPELL_NOXIOUSCATALYST             18151
-           
+
 struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
 {
     boss_lorekeeperpolkeltAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -78,55 +78,50 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //VolatileInfection_Timer
+        if (VolatileInfection_Timer < diff)
         {
-            
-            //VolatileInfection_Timer
-            if (VolatileInfection_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_VOLATILEINFECTION);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VOLATILEINFECTION);
 
-                //32 seconds
-                VolatileInfection_Timer = 32000;
-            }else VolatileInfection_Timer -= diff;
+            //32 seconds
+            VolatileInfection_Timer = 32000;
+        }else VolatileInfection_Timer -= diff;
 
-            //Darkplague_Timer
-            if (Darkplague_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DARKPLAGUE);
+        //Darkplague_Timer
+        if (Darkplague_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DARKPLAGUE);
 
-                //8 seconds until we should cast this agian
-                Darkplague_Timer = 8000;
-            }else Darkplague_Timer -= diff;
+            //8 seconds until we should cast this agian
+            Darkplague_Timer = 8000;
+        }else Darkplague_Timer -= diff;
 
-            //CorrosiveAcid_Timer
-            if (CorrosiveAcid_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CORROSIVEACID);
+        //CorrosiveAcid_Timer
+        if (CorrosiveAcid_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CORROSIVEACID);
 
-                //25 seconds until we should cast this agian
-                CorrosiveAcid_Timer = 25000;
-            }else CorrosiveAcid_Timer -= diff;
+            //25 seconds until we should cast this agian
+            CorrosiveAcid_Timer = 25000;
+        }else CorrosiveAcid_Timer -= diff;
 
-            //NoxiousCatalyst_Timer
-            if (NoxiousCatalyst_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_NOXIOUSCATALYST);
+        //NoxiousCatalyst_Timer
+        if (NoxiousCatalyst_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_NOXIOUSCATALYST);
 
-                //38 seconds until we should cast this agian
-                NoxiousCatalyst_Timer = 38000;
-            }else NoxiousCatalyst_Timer -= diff;
+            //38 seconds until we should cast this agian
+            NoxiousCatalyst_Timer = 38000;
+        }else NoxiousCatalyst_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_lorekeeperpolkelt(Creature *_Creature)

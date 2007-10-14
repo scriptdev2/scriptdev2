@@ -106,101 +106,97 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <50% hp cast Arcane Bubble and start casting SPECIAL Arcane Explosion
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //If we are <50% hp cast Arcane Bubble and start casting SPECIAL Arcane Explosion
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+
+            //heal_Timer
+            if (Heal_Timer < diff)
             {
-                
-                //heal_Timer
-                if (Heal_Timer < diff)
+
+                //Switch between 2 different charge methods
+                switch (rand()%2)
                 {
-                
-                    //Switch between 2 different charge methods
-                    switch (rand()%2)
-                        {
-                        case 0:
-                            DoCast(m_creature,SPELL_HOLYLIGHT6);
-                            break;
-            
-                        case 1:
-                            DoCast(m_creature,SPELL_FLASHHEAL6);
-                            break;
-                        }
-                    return;
+                case 0:
+                    DoCast(m_creature,SPELL_HOLYLIGHT6);
+                    break;
 
-                    //60 seconds until we should cast this agian
-                    Heal_Timer = 60000;
-                }else Heal_Timer -= diff;
+                case 1:
+                    DoCast(m_creature,SPELL_FLASHHEAL6);
+                    break;
+                }
+                return;
 
-            }
-            
-            //DivineShield2_Timer
-            if (DivineShield2_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_DIVINESHIELD2);
+                //60 seconds until we should cast this agian
+                Heal_Timer = 60000;
+            }else Heal_Timer -= diff;
 
-                //360 seconds until we should cast this agian
-                DivineShield2_Timer = 60000;
-            }else DivineShield2_Timer -= diff;
-
-            //CrusaderStrike5_Timer
-            if (CrusaderStrike5_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE5);
-
-                //20 seconds until we should cast this agian
-                CrusaderStrike5_Timer = 20000;
-            }else CrusaderStrike5_Timer -= diff;
-
-            //HammerOfJustice3_Timer
-            if (HammerOfJustice3_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE3);
-
-                //80 seconds until we should cast this agian
-                HammerOfJustice3_Timer = 30000;
-            }else HammerOfJustice3_Timer -= diff;
-
-            //Consecration3_Timer
-            if (Consecration3_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CONSECRATION3);
-
-                //30 seconds until we should cast this agian
-                Consecration3_Timer = 20000;
-            }else Consecration3_Timer -= diff;
-
-            //BlessingOfWisdom_Timer
-            if (BlessingOfWisdom_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_BLESSINGOFWISDOM);
-
-                //45 seconds until we should cast this agian
-                BlessingOfWisdom_Timer = 45000;
-            }else BlessingOfWisdom_Timer -= diff;
-
-            //BlessingOfProtection3_Timer
-            if (BlessingOfProtection3_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_BLESSINGOFPROTECTION3);
-
-                //345 seconds until we should cast this agian
-                BlessingOfProtection3_Timer = 50000;
-            }else BlessingOfProtection3_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+
+        //DivineShield2_Timer
+        if (DivineShield2_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_DIVINESHIELD2);
+
+            //360 seconds until we should cast this agian
+            DivineShield2_Timer = 60000;
+        }else DivineShield2_Timer -= diff;
+
+        //CrusaderStrike5_Timer
+        if (CrusaderStrike5_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE5);
+
+            //20 seconds until we should cast this agian
+            CrusaderStrike5_Timer = 20000;
+        }else CrusaderStrike5_Timer -= diff;
+
+        //HammerOfJustice3_Timer
+        if (HammerOfJustice3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE3);
+
+            //80 seconds until we should cast this agian
+            HammerOfJustice3_Timer = 30000;
+        }else HammerOfJustice3_Timer -= diff;
+
+        //Consecration3_Timer
+        if (Consecration3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CONSECRATION3);
+
+            //30 seconds until we should cast this agian
+            Consecration3_Timer = 20000;
+        }else Consecration3_Timer -= diff;
+
+        //BlessingOfWisdom_Timer
+        if (BlessingOfWisdom_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_BLESSINGOFWISDOM);
+
+            //45 seconds until we should cast this agian
+            BlessingOfWisdom_Timer = 45000;
+        }else BlessingOfWisdom_Timer -= diff;
+
+        //BlessingOfProtection3_Timer
+        if (BlessingOfProtection3_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_BLESSINGOFPROTECTION3);
+
+            //345 seconds until we should cast this agian
+            BlessingOfProtection3_Timer = 50000;
+        }else BlessingOfProtection3_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

@@ -78,38 +78,34 @@ struct MANGOS_DLL_DECL boss_hearthsinger_forrestenAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //MultiShot
+        if (MultiShot_Timer < diff)
         {
-            //MultiShot
-            if (MultiShot_Timer < diff)
+            //Cast
+            if (rand()%100 < 90) //90% chance to cast
             {
-                //Cast
-                if (rand()%100 < 90) //90% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_MULTISHOT);
-                }
-                //16 seconds until we should cast this again
-                MultiShot_Timer = 16000;
-            }else MultiShot_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_MULTISHOT);
+            }
+            //16 seconds until we should cast this again
+            MultiShot_Timer = 16000;
+        }else MultiShot_Timer -= diff;
 
-            //Shoot
-            if (Shoot_Timer < diff)
+        //Shoot
+        if (Shoot_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 90) //90% chance to cast
             {
-                //Cast
-                if (rand()%100 < 90) //90% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_SHOOT);
-                }
-                //3 seconds until we should cast this again
-                Shoot_Timer = 3000;
-            }else Shoot_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_SHOOT);
+            }
+            //3 seconds until we should cast this again
+            Shoot_Timer = 3000;
+        }else Shoot_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_hearthsinger_forresten(Creature *_Creature)

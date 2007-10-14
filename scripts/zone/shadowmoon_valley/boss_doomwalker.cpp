@@ -127,52 +127,49 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget()) return;
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-            if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if (Enrage_Timer < diff && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 20)
             {
-                if (Enrage_Timer < diff && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 20)
+                if (!InEnrage)
                 {
-                    if (!InEnrage)
-                    {
-                        DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-                        InEnrage = true;
-                    }
-                    DoCast(m_creature,SPELL_ENRAGE);
-                    Enrage_Timer = 6000;
-                }else Enrage_Timer -= diff;
+                    DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+                    InEnrage = true;
+                }
+                DoCast(m_creature,SPELL_ENRAGE);
+                Enrage_Timer = 6000;
+            }else Enrage_Timer -= diff;
 
-                if (Kick_Timer < diff)
-                {
-                    DoPlaySoundToSet(m_creature, SOUND_KICK);
-                    DoCast(m_creature->getVictim(),SPELL_KICK);
-                    Kick_Timer = (100 + rand()% 80) * 1000;
-                }else Kick_Timer -= diff;
+            if (Kick_Timer < diff)
+            {
+                DoPlaySoundToSet(m_creature, SOUND_KICK);
+                DoCast(m_creature->getVictim(),SPELL_KICK);
+                Kick_Timer = (100 + rand()% 80) * 1000;
+            }else Kick_Timer -= diff;
 
-                if (Quake_Timer < diff)
-                {
-                    DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE);
-                    DoCast(m_creature,SPELL_EARTHQUAKE);
-                    Quake_Timer = (80 + rand()% 20) * 1000;
-                }else Quake_Timer -= diff;
+            if (Quake_Timer < diff)
+            {
+                DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE);
+                DoCast(m_creature,SPELL_EARTHQUAKE);
+                Quake_Timer = (80 + rand()% 20) * 1000;
+            }else Quake_Timer -= diff;
 
-                if (Chain_Timer < diff)
-                {
-                    DoPlaySoundToSet(m_creature, SOUND_CHAIN_LIGHTNING);
-                    DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
-                    Chain_Timer = (50 + rand()% 50) * 1000;
-                }else Chain_Timer -= diff;
+            if (Chain_Timer < diff)
+            {
+                DoPlaySoundToSet(m_creature, SOUND_CHAIN_LIGHTNING);
+                DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
+                Chain_Timer = (50 + rand()% 50) * 1000;
+            }else Chain_Timer -= diff;
 
-                if (Armor_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
-                    Armor_Timer = (30 + rand()% 30) * 1000;
-                }else Armor_Timer -= diff;
+            if (Armor_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
+                Armor_Timer = (30 + rand()% 30) * 1000;
+            }else Armor_Timer -= diff;
 
-                DoMeleeAttackIfReady();
-            }
+            DoMeleeAttackIfReady();
         }
     }
 }; 

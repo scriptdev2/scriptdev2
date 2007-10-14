@@ -296,22 +296,18 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //MoonFire_Timer
+        if (MoonFire_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MOONFIRE);
 
-            //MoonFire_Timer
-            if (MoonFire_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MOONFIRE);
+            //5 seconds
+            MoonFire_Timer = 5000;
+        }else MoonFire_Timer -= diff;
 
-                //5 seconds
-                MoonFire_Timer = 5000;
-            }else MoonFire_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 

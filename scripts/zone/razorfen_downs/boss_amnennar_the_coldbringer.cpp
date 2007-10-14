@@ -62,12 +62,12 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-                if (!InCombat)
-                {
-                    DoYell(SAY_0,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                    InCombat = true;
-                }
+            if (!InCombat)
+            {
+                DoYell(SAY_0,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                InCombat = true;
+            }
         }
     }
 
@@ -128,51 +128,46 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //AmnenarsWrath_Timer
+        if (AmnenarsWrath_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_AMNENNARSWRATH);
+            //12 seconds until we should cast this again
+            AmnenarsWrath_Timer = 12000;
+        } else AmnenarsWrath_Timer -= diff;
 
-            //AmnenarsWrath_Timer
-            if (AmnenarsWrath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_AMNENNARSWRATH);
-                //12 seconds until we should cast this again
-                AmnenarsWrath_Timer = 12000;
-            } else AmnenarsWrath_Timer -= diff;
+        //FrostBolt_Timer
+        if (FrostBolt_Timer < diff)
+        {
+            //Cast FrostBolt on a Random target
+            Unit* target = NULL;
 
-            //FrostBolt_Timer
-            if (FrostBolt_Timer < diff)
-            {
-                //Cast FrostBolt on a Random target
-                Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_FROSTBOLT);
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_FROSTBOLT);
+            //8 seconds until we should cast this again
+            FrostBolt_Timer = 8000;
+        } else FrostBolt_Timer -= diff;
 
-                //8 seconds until we should cast this again
-                FrostBolt_Timer = 8000;
-            } else FrostBolt_Timer -= diff;
+        if ( !Spectrals && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
+        {
+            DoYell(SAY_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_SUMMON);
 
-            if ( !Spectrals && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
-            {
-                DoYell(SAY_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SUMMON);
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                
-                SummonSpectrals(target);
-                SummonSpectrals(target);
-                SummonSpectrals(target);
-                Spectrals = true;
-            }
-
-            DoMeleeAttackIfReady();
+            SummonSpectrals(target);
+            SummonSpectrals(target);
+            SummonSpectrals(target);
+            Spectrals = true;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 

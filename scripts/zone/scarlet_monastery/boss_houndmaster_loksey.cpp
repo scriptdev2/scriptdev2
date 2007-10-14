@@ -90,24 +90,20 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <10% hp cast healing spells at self and Mograine
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
         {
-            //If we are <10% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
-            {
-                DoCast(m_creature,SPELL_ENRAGE);
+            DoCast(m_creature,SPELL_ENRAGE);
 
-                //shouldn't cast this agian
-                Enrage_Timer = 900000;
+            //shouldn't cast this agian
+            Enrage_Timer = 900000;
 
-            }else Enrage_Timer -= diff;
-            
-            DoMeleeAttackIfReady();
-        }
+        }else Enrage_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_houndmaster_loksey(Creature *_Creature)

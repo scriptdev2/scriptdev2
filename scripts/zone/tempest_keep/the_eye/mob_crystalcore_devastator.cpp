@@ -78,44 +78,41 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            //Knockaway_Timer
-            if (Knockaway_Timer < diff)
-            {		
-                m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
+        //Knockaway_Timer
+        if (Knockaway_Timer < diff)
+        {		
+            m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
-                // current aggro target is knocked away pick new target
-                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+            // current aggro target is knocked away pick new target
+            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
 
-                if (!Target || Target == m_creature->getVictim())
-                    Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+            if (!Target || Target == m_creature->getVictim())
+                Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
 
-                if (Target)
-                    m_creature->TauntApply(Target);
+            if (Target)
+                m_creature->TauntApply(Target);
 
-                //23 seconds until we should cast this agian
-                Knockaway_Timer = 23000;
-            }
-            else Knockaway_Timer -= diff;
-
-            //Countercharge_Timer
-            if (Countercharge_Timer < diff)
-            {
-                //Cast
-                DoCast(this->m_creature,SPELL_COUNTERCHARGE);
-
-                //45 seconds until we should cast this agian
-                Countercharge_Timer = 45000;
-            }else Countercharge_Timer -= diff;
-
-
-            DoMeleeAttackIfReady();
+            //23 seconds until we should cast this agian
+            Knockaway_Timer = 23000;
         }
+        else Knockaway_Timer -= diff;
+
+        //Countercharge_Timer
+        if (Countercharge_Timer < diff)
+        {
+            //Cast
+            DoCast(this->m_creature,SPELL_COUNTERCHARGE);
+
+            //45 seconds until we should cast this agian
+            Countercharge_Timer = 45000;
+        }else Countercharge_Timer -= diff;
+
+
+        DoMeleeAttackIfReady();
     }
 };
 

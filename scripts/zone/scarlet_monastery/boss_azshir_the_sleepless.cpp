@@ -80,49 +80,45 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //If we are <50% hp cast Soul Siphon rank 1
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            //If we are <50% hp cast Soul Siphon rank 1
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+            //SoulSiphon_Timer
+            if (SoulSiphon_Timer < diff)
             {
-                //SoulSiphon_Timer
-                if (SoulSiphon_Timer < diff)
-                {
 
-                    DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
-                    return;
-    
-                    //180 seconds until we should cast this agian
-                    SoulSiphon_Timer = 20000;
-                }else SoulSiphon_Timer -= diff;
-            }
+                DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
+                return;
 
-            //CallOfTheGrave_Timer
-            if (CallOftheGrave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
-
-                //70 seconds until we should cast this agian
-                CallOftheGrave_Timer = 30000;
-            }else CallOftheGrave_Timer -= diff;
-
-            //Terrify_Timer
-            if (Terrify_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_TERRIFY);
-
-                //45 seconds until we should cast this agian
-                Terrify_Timer = 20000;
-            }else Terrify_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+                //180 seconds until we should cast this agian
+                SoulSiphon_Timer = 20000;
+            }else SoulSiphon_Timer -= diff;
         }
+
+        //CallOfTheGrave_Timer
+        if (CallOftheGrave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
+
+            //70 seconds until we should cast this agian
+            CallOftheGrave_Timer = 30000;
+        }else CallOftheGrave_Timer -= diff;
+
+        //Terrify_Timer
+        if (Terrify_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_TERRIFY);
+
+            //45 seconds until we should cast this agian
+            Terrify_Timer = 20000;
+        }else Terrify_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 

@@ -90,9 +90,9 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
 
     void SummonFreedSoul(Unit* victim)
     {
-    int Rand;
-    int RandX;
-    int RandY;
+        int Rand;
+        int RandX;
+        int RandY;
 
         Rand = rand()%1;
         switch (rand()%2)
@@ -180,9 +180,9 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
 
     void SummonRestlessSoul(Unit* victim)
     {
-    int Rand;
-    int RandX;
-    int RandY;
+        int Rand;
+        int RandX;
+        int RandY;
 
         Rand = rand()%7;
         switch (rand()%2)
@@ -239,14 +239,10 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
         else Die_Timer -= diff;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_mobs_spectral_ghostly_citizen(Creature *_Creature)
@@ -815,10 +811,10 @@ CreatureAI* GetAI_mob_eye_of_naxxramas(Creature *_Creature)
 
     //say
     ai->Aggro_Text[0] = SAY_LIVING;
-    
+
     //FlyIn sound
     ai->Aggro_Sound[0] = 6596;
-        
+
     //summon rockwing gargoyle
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 16381;
@@ -830,7 +826,7 @@ CreatureAI* GetAI_mob_eye_of_naxxramas(Creature *_Creature)
 
     //super invis
     //ai->m_creature->CastSpell(m_creature,8149,true);
-    
+
     return ai;
 }
 
@@ -848,21 +844,21 @@ CreatureAI* GetAI_mob_fleshflayer_ghoul(Creature *_Creature)
     ai->Spell[0].Cooldown = 20000; 
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //dazed
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = 13496;
     ai->Spell[1].Cooldown = 20000; 
     ai->Spell[1].First_Cast = 8000;
     ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //head crack
     ai->Spell[2].Enabled = true;
     ai->Spell[2].Spell_Id = 9791;
     ai->Spell[2].Cooldown = 5000; 
     ai->Spell[2].First_Cast = 5000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //ghoul plague
     ai->Spell[3].Enabled = true;
     ai->Spell[3].Spell_Id = 16458;
@@ -889,21 +885,21 @@ CreatureAI* GetAI_mob_ghoul_ravener(Creature *_Creature)
     ai->Spell[0].Cooldown = 20000; 
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //ravenous claw
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = 15608;
     ai->Spell[1].Cooldown = 8000; 
     ai->Spell[1].First_Cast = 7000;
     ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //head crack
     ai->Spell[2].Enabled = true;
     ai->Spell[2].Spell_Id = 9791;
     ai->Spell[2].Cooldown = 5000; 
     ai->Spell[2].First_Cast = 5000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //ghoul plague
     ai->Spell[3].Enabled = true;
     ai->Spell[3].Spell_Id = 16458;
@@ -930,7 +926,7 @@ CreatureAI* GetAI_mob_mangled_cadaver(Creature *_Creature)
     ai->Spell[0].Cooldown = 15000; 
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //cadaver worms
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = 16458;
@@ -957,7 +953,7 @@ CreatureAI* GetAI_mob_mindless_skeleton(Creature *_Creature)
     ai->Spell[0].Cooldown = 15000; 
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     ai->EnterEvadeMode();
 
     return ai;
@@ -977,7 +973,7 @@ CreatureAI* GetAI_mob_patchwork_horror(Creature *_Creature)
     ai->Spell[0].Cooldown = -1; 
     ai->Spell[0].First_Cast = 100;
     ai->Spell[0].Cast_Target_Type = CAST_SELF;
-    
+
     //knock away
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = 10101;
@@ -991,7 +987,7 @@ CreatureAI* GetAI_mob_patchwork_horror(Creature *_Creature)
     ai->Spell[2].Cooldown = 15000; 
     ai->Spell[2].First_Cast = 3000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     ai->EnterEvadeMode();
 
     return ai;
@@ -1011,21 +1007,21 @@ CreatureAI* GetAI_mob_plague_ghoul(Creature *_Creature)
     ai->Spell[0].Cooldown = 20000; 
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //cleave
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = 15584;
     ai->Spell[1].Cooldown = 8000; 
     ai->Spell[1].First_Cast = 7000;
     ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //head crack
     ai->Spell[2].Enabled = true;
     ai->Spell[2].Spell_Id = 9791;
     ai->Spell[2].Cooldown = 5000; 
     ai->Spell[2].First_Cast = 5000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     //ghoul plague
     ai->Spell[3].Enabled = true;
     ai->Spell[3].Spell_Id = 16458;

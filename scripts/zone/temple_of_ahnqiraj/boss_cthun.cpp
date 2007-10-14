@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     float DarkGlareAngle;
     uint32 i;
 
-    
+
     void EnterEvadeMode()
     {
         //One random wisper every 90 - 300 seconds
@@ -119,14 +119,14 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
     }
-    
+
     void AttackStart(Unit *who)
     {
         /*if (!who)
-            return;
+        return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
-            DoStartRangedAttack(who);*/
+        DoStartRangedAttack(who);*/
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
         {
             //No target so we'll use this section to do our random wispers instance wide
             //WisperTimer
@@ -155,28 +155,28 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 //Play random sound to the zone
                 switch (rand()%8)
                 {
-                    case 0:
+                case 0:
                     DoPlaySoundToSet(m_creature,RND_WISPER_1);
                     break;
-                    case 1:
+                case 1:
                     DoPlaySoundToSet(m_creature,RND_WISPER_2);
                     break;
-                    case 2:
+                case 2:
                     DoPlaySoundToSet(m_creature,RND_WISPER_3);
                     break;
-                    case 3:
+                case 3:
                     DoPlaySoundToSet(m_creature,RND_WISPER_4);
                     break;
-                    case 4:
+                case 4:
                     DoPlaySoundToSet(m_creature,RND_WISPER_5);
                     break;
-                    case 5:
+                case 5:
                     DoPlaySoundToSet(m_creature,RND_WISPER_6);
                     break;
-                    case 6:
+                case 6:
                     DoPlaySoundToSet(m_creature,RND_WISPER_7);
                     break;
-                    case 7:
+                case 7:
                     DoPlaySoundToSet(m_creature,RND_WISPER_8);
                     break;
                 }
@@ -187,155 +187,150 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 
             return;
         }
-        
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //Eye Beam phase
+        if (Phase == 0)
         {
-
-            //Eye Beam phase
-            if (Phase == 0)
+            //BeamTimer
+            if (BeamTimer < diff)
             {
-                //BeamTimer
-                if (BeamTimer < diff)
+                //SPELL_GREEN_BEAM
+
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)
                 {
-                    //SPELL_GREEN_BEAM
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    DoCast(target,SPELL_GREEN_BEAM);
 
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if (target)
-                    {
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                        DoCast(target,SPELL_GREEN_BEAM);
+                    //Correctly update our target
+                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+                }
 
-                        //Correctly update our target
-                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
-                    }
+                //Beam every 3 seconds
+                BeamTimer = 3000;
+            }else BeamTimer -= diff;
 
-                    //Beam every 3 seconds
-                    BeamTimer = 3000;
-                }else BeamTimer -= diff;
-
-                //ClawTentacleTimer
-                if (ClawTentacleTimer < diff)
+            //ClawTentacleTimer
+            if (ClawTentacleTimer < diff)
+            {
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)
                 {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if (target)
-                    {
-                        Unit* Spawned = NULL;
-
-                        //Spawn claw tentacle on the random target
-                        Spawned = m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
-                        
-                        if (Spawned)
-                            Spawned->AddThreat(target,1.0f);
-                    }
-
-                    //One claw tentacle every 12.5 seconds
-                    ClawTentacleTimer = 12500;
-                }else ClawTentacleTimer -= diff;
-
-                //EyeTentacleTimer
-                if (EyeTentacleTimer < diff)
-                {
-                    //Spawn the 8 Eye Tentacles in the corret spots
-                    Unit* target = NULL;
                     Unit* Spawned = NULL;
 
-                    //1
-                    Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+10,m_creature->GetPositionY()-10,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                    //Spawn claw tentacle on the random target
+                    Spawned = m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+
                     if (Spawned)
-                    {
-                        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                        if (target)
-                            Spawned->AddThreat(target,1.0f);
-                    }
+                        Spawned->AddThreat(target,1.0f);
+                }
 
-                    //No point actually putting a timer here since
-                    //These shouldn't trigger agian until after phase shifts
-                    EyeTentacleTimer = 45000;
-                }else EyeTentacleTimer -= diff;
+                //One claw tentacle every 12.5 seconds
+                ClawTentacleTimer = 12500;
+            }else ClawTentacleTimer -= diff;
 
-                //PhaseTimer
-                if (PhaseTimer < diff)
-                {
-                    //Switch to Dark Beam
-                    Phase = 1;
-
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-
-                    //Select random target for dark beam to start on
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                    if (target)
-                    {
-                        //Correctly update our target
-                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
-
-                        //Face our target
-                        DarkGlareAngle = m_creature->GetAngle(target);
-                        DarkGlareTickTimer = 1000;
-                        DarkGlareTick = 0;
-                    }
-
-                    //Add red coloration to C'thun
-                    DoCast(m_creature,SPELL_RED_COLORATION);
-
-                    //Set emote state
-                    m_creature->setEmoteState(i);
-                    i++;
-                    
-                    //Darkbeam for 35 seconds
-                    PhaseTimer = 35000;
-                }else PhaseTimer -= diff;
-                    
-            }
-            //Dark Beam phase
-            else if (Phase == 1)
+            //EyeTentacleTimer
+            if (EyeTentacleTimer < diff)
             {
-                //EyeTentacleTimer
-                if (DarkGlareTick < 35)
-                    if (DarkGlareTickTimer < diff)
-                    {
+                //Spawn the 8 Eye Tentacles in the corret spots
+                Unit* target = NULL;
+                Unit* Spawned = NULL;
 
-                        //SPELL_DARK_GLARE
-                        DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
-
-                        //Remove any target
-                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
-
-                        //Set angle and cast
-                        m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
-
-                        //
-                        DoCast(NULL, SPELL_DARK_GLARE);
-
-                        //Increase tick
-                        DarkGlareTick++;
-
-                        //1 second per tick
-                        DarkGlareTickTimer = 1000;
-                    }else DarkGlareTickTimer -= diff;
-
-                //PhaseTimer
-                if (PhaseTimer < diff)
+                //1
+                Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+10,m_creature->GetPositionY()-10,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                if (Spawned)
                 {
-                    //Switch to Eye Beam
-                    Phase = 0;
-                    BeamTimer = 3000;
-                    EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
-                    ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)
+                        Spawned->AddThreat(target,1.0f);
+                }
 
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                //No point actually putting a timer here since
+                //These shouldn't trigger agian until after phase shifts
+                EyeTentacleTimer = 45000;
+            }else EyeTentacleTimer -= diff;
 
-                    //Remove Red coloration from c'thun
-                    m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
+            //PhaseTimer
+            if (PhaseTimer < diff)
+            {
+                //Switch to Dark Beam
+                Phase = 1;
 
-                    //Eye Beam for 50 seconds
-                    PhaseTimer = 50000;
-                }else PhaseTimer -= diff;
-            }
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+
+                //Select random target for dark beam to start on
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+                if (target)
+                {
+                    //Correctly update our target
+                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+
+                    //Face our target
+                    DarkGlareAngle = m_creature->GetAngle(target);
+                    DarkGlareTickTimer = 1000;
+                    DarkGlareTick = 0;
+                }
+
+                //Add red coloration to C'thun
+                DoCast(m_creature,SPELL_RED_COLORATION);
+
+                //Set emote state
+                m_creature->setEmoteState(i);
+                i++;
+
+                //Darkbeam for 35 seconds
+                PhaseTimer = 35000;
+            }else PhaseTimer -= diff;
+
+        }
+        //Dark Beam phase
+        else if (Phase == 1)
+        {
+            //EyeTentacleTimer
+            if (DarkGlareTick < 35)
+                if (DarkGlareTickTimer < diff)
+                {
+
+                    //SPELL_DARK_GLARE
+                    DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
+
+                    //Remove any target
+                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+
+                    //Set angle and cast
+                    m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+
+                    //
+                    DoCast(NULL, SPELL_DARK_GLARE);
+
+                    //Increase tick
+                    DarkGlareTick++;
+
+                    //1 second per tick
+                    DarkGlareTickTimer = 1000;
+                }else DarkGlareTickTimer -= diff;
+
+            //PhaseTimer
+            if (PhaseTimer < diff)
+            {
+                //Switch to Eye Beam
+                Phase = 0;
+                BeamTimer = 3000;
+                EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
+                ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
+
+                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+
+                //Remove Red coloration from c'thun
+                m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
+
+                //Eye Beam for 50 seconds
+                PhaseTimer = 50000;
+            }else PhaseTimer -= diff;
         }
     }
 };
@@ -345,7 +340,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
     eye_tentacleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 MindflayTimer; 
-    
+
     void EnterEvadeMode()
     {
         //Mind flay half a second after we spawn
@@ -356,7 +351,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
     }
-    
+
     void AttackStart(Unit *who)
     {
         if (!who)
@@ -380,24 +375,20 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-        
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
-        {
-            //MindflayTimer
-            if (MindflayTimer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)
-                    DoCast(target,SPELL_MIND_FLAY);
 
-                //Mindflay every 5 seconds
-                MindflayTimer = 5000;
-            }else MindflayTimer -= diff;
-        }
+        //MindflayTimer
+        if (MindflayTimer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+                DoCast(target,SPELL_MIND_FLAY);
+
+            //Mindflay every 5 seconds
+            MindflayTimer = 5000;
+        }else MindflayTimer -= diff;
     }
 };
 
@@ -408,7 +399,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
     uint32 GroundRuptureTimer; 
     uint32 HamstringTimer;
     uint32 EvadeTimer;
-    
+
     void EnterEvadeMode()
     {
         //First rupture should happen half a second after we spawn
@@ -421,7 +412,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
     }
-    
+
     void AttackStart(Unit *who)
     {
         if (!who)
@@ -445,42 +436,38 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check if we have a target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-        
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //EvadeTimer
+        if (m_creature->GetDistanceSq(m_creature->getVictim()) > ATTACK_DISTANCE)
+            if (EvadeTimer < diff)
+            {
+                //Since we can't move auto evade if the players is to far away from us for to long
+                EnterEvadeMode();
+
+                return;
+            }else EvadeTimer -= diff;
+
+        //GroundRuptureTimer
+        if (GroundRuptureTimer < diff)
         {
-            //EvadeTimer
-            if (m_creature->GetDistanceSq(m_creature->getVictim()) > ATTACK_DISTANCE)
-                if (EvadeTimer < diff)
-                {
-                    //Since we can't move auto evade if the players is to far away from us for to long
-                    EnterEvadeMode();
+            DoCast(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
 
-                    return;
-                }else EvadeTimer -= diff;
+            //Ground rupture every 30 seconds
+            GroundRuptureTimer = 30000;
+        }else GroundRuptureTimer -= diff;
 
-            //GroundRuptureTimer
-            if (GroundRuptureTimer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
+        //HamstringTimer
+        if (HamstringTimer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
 
-                //Ground rupture every 30 seconds
-                GroundRuptureTimer = 30000;
-            }else GroundRuptureTimer -= diff;
+            //Hamstring every 5 seconds
+            HamstringTimer = 5000;
+        }else HamstringTimer -= diff;
 
-            //HamstringTimer
-            if (HamstringTimer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
-
-                //Hamstring every 5 seconds
-                HamstringTimer = 5000;
-            }else HamstringTimer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 };
 

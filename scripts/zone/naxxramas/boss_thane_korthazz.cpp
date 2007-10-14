@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-			InitialYell();
+            InitialYell();
             InCombat = true;
         }
     }
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-				InitialYell();
+                InitialYell();
                 InCombat = true;
 
             }
@@ -125,46 +125,42 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        // Mark of Korthazz
+        if(Mark_Timer < diff)
         {
-            // Mark of Korthazz
-            if(Mark_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_MARK_OF_KORTHAZZ);
-                Mark_Timer = 12000;
-            }else Mark_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_MARK_OF_KORTHAZZ);
+            Mark_Timer = 12000;
+        }else Mark_Timer -= diff;
 
-            // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
-            if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
+        {
+            if(ShieldWall1)
             {
-                if(ShieldWall1)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall1 = false;
-                }
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall1 = false;
             }
-            if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
-            {
-                if(ShieldWall2)
-                {
-                    DoCast(m_creature,SPELL_SHIELDWALL);
-                    ShieldWall2 = false;
-                }
-            }
-
-            // Meteor
-            if(Meteor_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_METEOR);
-                Meteor_Timer = 20000; // wrong
-            }else Meteor_Timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+        if(ShieldWall2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20)
+        {
+            if(ShieldWall2)
+            {
+                DoCast(m_creature,SPELL_SHIELDWALL);
+                ShieldWall2 = false;
+            }
+        }
+
+        // Meteor
+        if(Meteor_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_METEOR);
+            Meteor_Timer = 20000; // wrong
+        }else Meteor_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_thane_korthazz(Creature *_Creature)

@@ -84,54 +84,50 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //DrainingBlow
+        if (DrainingBlow_Timer < diff)
         {
-            //DrainingBlow
-            if (DrainingBlow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DRAININGBLOW);
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DRAININGBLOW);
 
-                //4 seconds until we should cast this again
-                DrainingBlow_Timer = 4000;
-            }else DrainingBlow_Timer -= diff;
+            //4 seconds until we should cast this again
+            DrainingBlow_Timer = 4000;
+        }else DrainingBlow_Timer -= diff;
 
-            //CrowdPummel
-            if (CrowdPummel_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
+        //CrowdPummel
+        if (CrowdPummel_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CROWDPUMMEL);
 
-                //13 seconds until we should cast this agian
-                CrowdPummel_Timer = 13000;
-            }else CrowdPummel_Timer -= diff;
+            //13 seconds until we should cast this agian
+            CrowdPummel_Timer = 13000;
+        }else CrowdPummel_Timer -= diff;
 
-            //MightyBlow
-            if (MightyBlow_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+        //MightyBlow
+        if (MightyBlow_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
 
-                //11 seconds until we should cast this again
-                MightyBlow_Timer = 11000;
-            }else MightyBlow_Timer -= diff;
+            //11 seconds until we should cast this again
+            MightyBlow_Timer = 11000;
+        }else MightyBlow_Timer -= diff;
 
-            //Dazed
-            if (Dazed_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_DAZED);
+        //Dazed
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_DAZED);
 
-                //20 seconds until we should cast this again
-                Dazed_Timer = 20000;
-            }else Dazed_Timer -= diff;
+            //20 seconds until we should cast this again
+            Dazed_Timer = 20000;
+        }else Dazed_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_magistrate_barthilas(Creature *_Creature)

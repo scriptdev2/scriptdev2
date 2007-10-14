@@ -81,48 +81,44 @@ struct MANGOS_DLL_DECL boss_stonespineAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //ViciousRend
+        if (ViciousRend_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_VICIOUSREND);
+            //21 seconds until we should cast this again
+            ViciousRend_Timer = 21000;
+        }else ViciousRend_Timer -= diff;
 
-            //ViciousRend
-            if (ViciousRend_Timer < diff)
+        //Dazed
+        if (Dazed_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 20) //20% chance to cast
+            {
+                DoCast(m_creature->getVictim(),SPELL_DAZED);
+            }
+            //11 seconds until we should try cast this again
+            Dazed_Timer = 11000;
+        }else Dazed_Timer -= diff;
+
+        //DeafeningScreech
+        if (DeafeningScreech_Timer < diff)
+        {
+            if (rand()%100 < 65) //65% chance to cast
             {
                 //Cast
-                DoCast(m_creature->getVictim(),SPELL_VICIOUSREND);
-                //21 seconds until we should cast this again
-                ViciousRend_Timer = 21000;
-            }else ViciousRend_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_DEAFENINGSCREECH);
+            }
+            //18 seconds until we should try cast this again
+            DeafeningScreech_Timer = 18000;
+        }else DeafeningScreech_Timer -= diff;
 
-            //Dazed
-            if (Dazed_Timer < diff)
-            {
-                //Cast
-                if (rand()%100 < 20) //20% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_DAZED);
-                }
-                //11 seconds until we should try cast this again
-                Dazed_Timer = 11000;
-            }else Dazed_Timer -= diff;
-
-            //DeafeningScreech
-            if (DeafeningScreech_Timer < diff)
-            {
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_DEAFENINGSCREECH);
-                }
-                //18 seconds until we should try cast this again
-                DeafeningScreech_Timer = 18000;
-            }else DeafeningScreech_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_stonespine(Creature *_Creature)

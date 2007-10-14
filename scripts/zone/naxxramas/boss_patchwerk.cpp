@@ -137,56 +137,51 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //HatefullStrike_Timer
+        if (HatefullStrike_Timer < diff)
         {
-            
-            //HatefullStrike_Timer
-            if (HatefullStrike_Timer < diff)
-            {
-                //Cast Hateful strike on the player with the highest
-                //amount of HP within melee distance
-                //Currently target selection not supported by the core
-                DoCast(m_creature->getVictim(),SPELL_HATEFULSTRIKE);
+            //Cast Hateful strike on the player with the highest
+            //amount of HP within melee distance
+            //Currently target selection not supported by the core
+            DoCast(m_creature->getVictim(),SPELL_HATEFULSTRIKE);
 
-                //1.2 seconds until we should cast this agian
-                HatefullStrike_Timer = 1200;
-            }else HatefullStrike_Timer -= diff;
+            //1.2 seconds until we should cast this agian
+            HatefullStrike_Timer = 1200;
+        }else HatefullStrike_Timer -= diff;
 
-            //Enrage_Timer
-            if (Enrage_Timer < diff)
-            {
-                //Cast Berserker Rage
-                DoCast(m_creature, SPELL_BERSERK);
-                DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
+        //Enrage_Timer
+        if (Enrage_Timer < diff)
+        {
+            //Cast Berserker Rage
+            DoCast(m_creature, SPELL_BERSERK);
+            DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
 
-                //5 minutes until we should cast this agian
-                Enrage_Timer = 300000;
-            }else Enrage_Timer -= diff;
+            //5 minutes until we should cast this agian
+            Enrage_Timer = 300000;
+        }else Enrage_Timer -= diff;
 
-            //Slimebolt_Timer
-            if (Slimebolt_Timer < diff)
-            {
-                //Cast Slime bolt
-                DoCast(m_creature->getVictim(),SPELL_SLIMEBOLT);
+        //Slimebolt_Timer
+        if (Slimebolt_Timer < diff)
+        {
+            //Cast Slime bolt
+            DoCast(m_creature->getVictim(),SPELL_SLIMEBOLT);
 
-                //5 seconds until we should cast this agian
-                Slimebolt_Timer = 5000;
-            }else Slimebolt_Timer -= diff;
+            //5 seconds until we should cast this agian
+            Slimebolt_Timer = 5000;
+        }else Slimebolt_Timer -= diff;
 
-            //Enrage if not already enraged and below 5%
-            if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
-            {
-                DoCast(m_creature,SPELL_ENRAGE);
-                DoTextEmote(EMOTE_ENRAGE,NULL);
-                Enraged = true;
-            }
-
-            DoMeleeAttackIfReady();
+        //Enrage if not already enraged and below 5%
+        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
+        {
+            DoCast(m_creature,SPELL_ENRAGE);
+            DoTextEmote(EMOTE_ENRAGE,NULL);
+            Enraged = true;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_patchwerk(Creature *_Creature)

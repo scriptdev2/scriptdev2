@@ -89,44 +89,40 @@ struct MANGOS_DLL_DECL mob_flamewakerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //FistOfRagnaros_Timer
+        if (FistOfRagnaros_Timer < diff)
         {
-            
-            //FistOfRagnaros_Timer
-            if (FistOfRagnaros_Timer < diff)
-            {
 
-                    DoCast(m_creature->getVictim(),SPELL_FISTOFRAGNAROS);
+            DoCast(m_creature->getVictim(),SPELL_FISTOFRAGNAROS);
 
-                //12 seconds until we should cast this again
-                FistOfRagnaros_Timer = 12000;
-            }else FistOfRagnaros_Timer -= diff;
+            //12 seconds until we should cast this again
+            FistOfRagnaros_Timer = 12000;
+        }else FistOfRagnaros_Timer -= diff;
 
 
-            //SunderArmor_Timer
-            if (SunderArmor_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
-                //14 seconds until we should cast this agian
-                SunderArmor_Timer = 10000 + rand()%8000;
-            }else SunderArmor_Timer -= diff;
+        //SunderArmor_Timer
+        if (SunderArmor_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_SUNDERARMOR);
+            //14 seconds until we should cast this agian
+            SunderArmor_Timer = 10000 + rand()%8000;
+        }else SunderArmor_Timer -= diff;
 
-            //Strike_Timer
-            if (Strike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_STRIKE);
-                //7-12 seconds until we should cast this again
-                Strike_Timer = 7000 + rand()%5000;
-            }else Strike_Timer -= diff;
+        //Strike_Timer
+        if (Strike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_STRIKE);
+            //7-12 seconds until we should cast this again
+            Strike_Timer = 7000 + rand()%5000;
+        }else Strike_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_flamewaker(Creature *_Creature)

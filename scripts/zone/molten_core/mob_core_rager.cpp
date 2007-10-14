@@ -18,9 +18,9 @@
 
 #define SPELL_MANGLE                19820	
 #define SPELL_AEGIS                 20620       //This is self casted whenever we are below 50%
-                  
+
 #define SAY_AEGIS        "Core Rager refuses to die while its master is in trouble"
-    
+
 
 struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
 {
@@ -86,34 +86,29 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Cast Ageis if less than 50% hp
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
         {
-       
-            //Cast Ageis if less than 50% hp
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
-            {
-        	DoYell(SAY_AEGIS,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_AEGIS);
-            }
-     
-            //Mangle_Timer
-            if (Mangle_Timer < diff)
-            {
-                //Cast
-                if (rand()%100 < 65) //65% chance to cast
-                {
-                    DoCast(m_creature->getVictim(),SPELL_MANGLE);
-                }
-                //12 seconds until we should cast this again
-                Mangle_Timer = 12000;
-            }else Mangle_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            DoYell(SAY_AEGIS,LANG_UNIVERSAL,NULL);
+            DoCast(m_creature,SPELL_AEGIS);
         }
+
+        //Mangle_Timer
+        if (Mangle_Timer < diff)
+        {
+            //Cast
+            if (rand()%100 < 65) //65% chance to cast
+            {
+                DoCast(m_creature->getVictim(),SPELL_MANGLE);
+            }
+            //12 seconds until we should cast this again
+            Mangle_Timer = 12000;
+        }else Mangle_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_mob_core_rager(Creature *_Creature)

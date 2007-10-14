@@ -82,60 +82,56 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //If we are <2% hp cast Armageddom
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-
-            //If we are <2% hp cast Armageddom
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 2 && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-                DoCast(m_creature,SPELL_ARMAGEDDOM);
-                DoTextEmote("performs one last service for Ragnaros.",NULL);
-                return;
-            }
-            
-            //Inferno_Timer
-            if (Inferno_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_INFERNO);
-
-                //7 seconds until we should cast this agian
-                Inferno_Timer = 45000;
-            }else Inferno_Timer -= diff;
-
-            //IgniteMana_Timer
-            if (IgniteMana_Timer < diff)
-            {
-                //Cast
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)DoCast(target,SPELL_IGNITEMANA);
-
-                //35 seconds until we should cast this agian
-                IgniteMana_Timer = 30000;
-            }else IgniteMana_Timer -= diff;
-
-            //LivingBomb_Timer
-            if (LivingBomb_Timer < diff)
-            {
-                //Cast
-                Unit* target = NULL;
-
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)DoCast(target,SPELL_LIVINGBOMB);
-
-                //30 seconds until we should cast this agian
-                LivingBomb_Timer = 35000;
-            }else LivingBomb_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            DoCast(m_creature,SPELL_ARMAGEDDOM);
+            DoTextEmote("performs one last service for Ragnaros.",NULL);
+            return;
         }
+
+        //Inferno_Timer
+        if (Inferno_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_INFERNO);
+
+            //7 seconds until we should cast this agian
+            Inferno_Timer = 45000;
+        }else Inferno_Timer -= diff;
+
+        //IgniteMana_Timer
+        if (IgniteMana_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)DoCast(target,SPELL_IGNITEMANA);
+
+            //35 seconds until we should cast this agian
+            IgniteMana_Timer = 30000;
+        }else IgniteMana_Timer -= diff;
+
+        //LivingBomb_Timer
+        if (LivingBomb_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_LIVINGBOMB);
+
+            //30 seconds until we should cast this agian
+            LivingBomb_Timer = 35000;
+        }else LivingBomb_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_baron_geddon(Creature *_Creature)

@@ -88,61 +88,56 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Frenzy_Timer
+        if (Frenzy_Timer < diff)
         {
-            
-            //Frenzy_Timer
-            if (Frenzy_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote("goes into a killing frenzy!",NULL);
+            //Cast
+            DoCast(m_creature,SPELL_FRENZY);
+            DoTextEmote("goes into a killing frenzy!",NULL);
 
-                //45 seconds
-                Frenzy_Timer = 45000;
-            }else Frenzy_Timer -= diff;
+            //45 seconds
+            Frenzy_Timer = 45000;
+        }else Frenzy_Timer -= diff;
 
-            //LavaBreath_Timer
-            if (LavaBreath_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_LAVABREATH);
+        //LavaBreath_Timer
+        if (LavaBreath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_LAVABREATH);
 
-                //7 seconds until we should cast this agian
-                LavaBreath_Timer = 7000;
-            }else LavaBreath_Timer -= diff;
+            //7 seconds until we should cast this agian
+            LavaBreath_Timer = 7000;
+        }else LavaBreath_Timer -= diff;
 
-            //Panic_Timer
-            if (Panic_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_PANIC);
+        //Panic_Timer
+        if (Panic_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_PANIC);
 
-                //30 seconds until we should cast this agian
-                Panic_Timer = 30000;
-            }else Panic_Timer -= diff;
+            //30 seconds until we should cast this agian
+            Panic_Timer = 30000;
+        }else Panic_Timer -= diff;
 
-            //Lavabomb_Timer
-            if (Lavabomb_Timer < diff)
-            {
-                //Cast on random target
-                Unit* target = NULL;
+        //Lavabomb_Timer
+        if (Lavabomb_Timer < diff)
+        {
+            //Cast on random target
+            Unit* target = NULL;
 
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                
-                //Casting Alt lava bomb since normal one isn't supported
-                if (target)DoCast(target,SPELL_LAVABOMB_ALT);
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                //12 seconds until we should cast this agian
-                Lavabomb_Timer = 12000;
-            }else Lavabomb_Timer -= diff;
+            //Casting Alt lava bomb since normal one isn't supported
+            if (target)DoCast(target,SPELL_LAVABOMB_ALT);
 
-            DoMeleeAttackIfReady();
-        }
+            //12 seconds until we should cast this agian
+            Lavabomb_Timer = 12000;
+        }else Lavabomb_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_magmadar(Creature *_Creature)

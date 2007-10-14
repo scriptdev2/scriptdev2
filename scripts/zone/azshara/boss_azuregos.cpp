@@ -89,64 +89,60 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //MarkOfFrost_Timer
+        if (MarkOfFrost_Timer < diff)
         {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MARKOFFROST);
 
-            //MarkOfFrost_Timer
-            if (MarkOfFrost_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MARKOFFROST);
+            //30 seconds
+            MarkOfFrost_Timer = 30000;
+        }else MarkOfFrost_Timer -= diff;
 
-                //30 seconds
-                MarkOfFrost_Timer = 30000;
-            }else MarkOfFrost_Timer -= diff;
+        //ManaStorm_Timer
+        if (ManaStorm_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MANASTORM);
 
-            //ManaStorm_Timer
-            if (ManaStorm_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MANASTORM);
-
-                //15 seconds until we should cast this agian
-                ManaStorm_Timer = 15000;
-            }else ManaStorm_Timer -= diff;
+            //15 seconds until we should cast this agian
+            ManaStorm_Timer = 15000;
+        }else ManaStorm_Timer -= diff;
 
 
-            //Reflect_Timer
-            if (Reflect_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_REFLECT);
+        //Reflect_Timer
+        if (Reflect_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_REFLECT);
 
-                //45 seconds until we should cast this agian
-                Reflect_Timer = 45000;
-            }else Reflect_Timer -= diff;
+            //45 seconds until we should cast this agian
+            Reflect_Timer = 45000;
+        }else Reflect_Timer -= diff;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-                //12 seconds until we should cast this agian
-                Cleave_Timer = 12000;
-            }else Cleave_Timer -= diff;
+            //12 seconds until we should cast this agian
+            Cleave_Timer = 12000;
+        }else Cleave_Timer -= diff;
 
 
-            //Enrage_Timer
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
-            {
-                //Cast
-                DoCast(m_creature,SPELL_ENRAGE);                    
+        //Enrage_Timer
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_ENRAGE);                    
 
-                //22 seconds until we should cast this agian
-                Enrage_Timer = 30000;  
-            }else Enrage_Timer -= diff;
+            //22 seconds until we should cast this agian
+            Enrage_Timer = 30000;  
+        }else Enrage_Timer -= diff;
 
-            DoMeleeAttackIfReady();
-        }
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_azuregos(Creature *_Creature)

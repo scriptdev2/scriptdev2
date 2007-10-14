@@ -323,10 +323,14 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_gruul' WHERE `entry`= 19044;
 /*  */
 
 /* BLOOD FURNACE */
-/* The Maker */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17381);
-/* Laughing Skull Legionnaire, Laughing Skull Warden, Laughing Skull Rogue, Hellfire Imp, Shadowmoon Channeler, Fel Orc Neophyte, Shadowmoon Technician, Shadowmoon Adept, Hellfire Familiar, Felguard Brute, Shadowmoon Summoner, Shadowmoon Warlock, Keli'dan the Breaker, Broggok */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17626, 17624, 17491, 17477, 17653, 17429, 17414, 17397, 19016, 18894, 17395, 17371, 17377, 17380);
+/* The Maker, Broggok, Kelidan, Broggok's cloud */
+UPDATE `creature_template` SET `ScriptName` = 'boss_the_maker' WHERE `entry` = 17381;
+UPDATE `creature_template` SET `ScriptName` = 'boss_broggok' WHERE `entry` = 17380;
+UPDATE `creature_template` SET `ScriptName` = 'boss_kelidan_the_breaker' WHERE `entry` = 17377;
+UPDATE `creature_template` SET `ScriptName` = 'mob_broggok_poisoncloud' WHERE `entry` = 17662;
+
+/* Laughing Skull Legionnaire, Laughing Skull Warden, Laughing Skull Rogue, Hellfire Imp, Shadowmoon Channeler, Fel Orc Neophyte, Shadowmoon Technician, Shadowmoon Adept, Hellfire Familiar, Felguard Brute, Shadowmoon Summoner, Shadowmoon Warlock */
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17626, 17624, 17491, 17477, 17653, 17429, 17414, 17397, 19016, 18894, 17395, 17371);
 
 /* HELLFIRE RAMPARTS */
 /* Vazruden, Omor the Unscarred, Watchkeeper Gargolmar */

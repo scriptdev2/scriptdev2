@@ -114,118 +114,114 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         /*
         //This is going to be a routine to make the resurrection event...
         if (m_creature->isAlive && m_creature->isAlive)
         {
-            m_creature->Relocate(1163.113370,1398.856812,32.527786,3.171014);
+        m_creature->Relocate(1163.113370,1398.856812,32.527786,3.171014);
 
-            DoYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SPAWN);
-            DoCast(m_creature->getVictim(),SPELL_DEEPSLEEP);
-            DoCast(m-creature->GetGUID(51117),SPELL_SCARLETRESURRECTION)
+        DoYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_SPAWN);
+        DoCast(m_creature->getVictim(),SPELL_DEEPSLEEP);
+        DoCast(m-creature->GetGUID(51117),SPELL_SCARLETRESURRECTION)
         }
         */
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+
+        //If we are <75% hp cast healing spells at self and Mograine
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
         {
 
-            //If we are <75% hp cast healing spells at self and Mograine
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
+            //Healing_Timer
+            if (Healing_Timer < diff)
             {
-                
-                //Healing_Timer
-                if (Healing_Timer < diff)
-                {
 
-                    DoCast(m_creature,SPELL_FLASHHEAL6);
-                    return;
-    
-                    //22-32 seconds until we should cast this agian
-                    Healing_Timer = 22000 + rand()%10000;
-                }else Healing_Timer -= diff;    
-            }  
-                
-                if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
-                {
+                DoCast(m_creature,SPELL_FLASHHEAL6);
+                return;
 
-                    if (Renew_Timer < diff)
-                    {
-    
-                        DoCast(m_creature,SPELL_RENEW);
+                //22-32 seconds until we should cast this agian
+                Healing_Timer = 22000 + rand()%10000;
+            }else Healing_Timer -= diff;    
+        }  
 
-                        //30 seconds until we should cast this agian
-                        Renew_Timer = 30000;
-                    }else Renew_Timer -= diff;      
-                }
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
+        {
 
-            
-            //PowerWordShield_Timer
-            if (PowerWordShield_Timer < diff)
+            if (Renew_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature,SPELL_POWERWORDSHIELD);
+
+                DoCast(m_creature,SPELL_RENEW);
 
                 //30 seconds until we should cast this agian
-                PowerWordShield_Timer = 25000;
-            }else PowerWordShield_Timer -= diff;
-
-            //CrusaderStrike_Timer
-            if (CrusaderStrike_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
-
-                //15 seconds until we should cast this agian
-                CrusaderStrike_Timer = 15000;
-            }else CrusaderStrike_Timer -= diff;
-
-            //HammerOfJustice_Timer
-            if (HammerOfJustice_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
-
-                //12 seconds until we should cast this agian
-                HammerOfJustice_Timer = 12000;
-            }else HammerOfJustice_Timer -= diff;
-
-            //HolySmite6_Timer
-            if (HolySmite6_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HOLYSMITE6);
-
-                //10 seconds until we should cast this agian
-                HolySmite6_Timer = 10000;
-            }else HolySmite6_Timer -= diff;
-
-            //HolyFire5_Timer
-            if (HolyFire5_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_HOLYFIRE5);
-
-                //15 seconds until we should cast this agian
-                HolyFire5_Timer = 15000;
-            }else HolyFire5_Timer -= diff;
-
-            //MindBlast6_Timer
-            if (MindBlast6_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_MINDBLAST6);
-
-                //8 seconds until we should cast this agian
-                MindBlast6_Timer = 8000;
-            }else MindBlast6_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+                Renew_Timer = 30000;
+            }else Renew_Timer -= diff;      
         }
+
+
+        //PowerWordShield_Timer
+        if (PowerWordShield_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_POWERWORDSHIELD);
+
+            //30 seconds until we should cast this agian
+            PowerWordShield_Timer = 25000;
+        }else PowerWordShield_Timer -= diff;
+
+        //CrusaderStrike_Timer
+        if (CrusaderStrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CRUSADERSTRIKE);
+
+            //15 seconds until we should cast this agian
+            CrusaderStrike_Timer = 15000;
+        }else CrusaderStrike_Timer -= diff;
+
+        //HammerOfJustice_Timer
+        if (HammerOfJustice_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HAMMEROFJUSTICE);
+
+            //12 seconds until we should cast this agian
+            HammerOfJustice_Timer = 12000;
+        }else HammerOfJustice_Timer -= diff;
+
+        //HolySmite6_Timer
+        if (HolySmite6_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HOLYSMITE6);
+
+            //10 seconds until we should cast this agian
+            HolySmite6_Timer = 10000;
+        }else HolySmite6_Timer -= diff;
+
+        //HolyFire5_Timer
+        if (HolyFire5_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_HOLYFIRE5);
+
+            //15 seconds until we should cast this agian
+            HolyFire5_Timer = 15000;
+        }else HolyFire5_Timer -= diff;
+
+        //MindBlast6_Timer
+        if (MindBlast6_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MINDBLAST6);
+
+            //8 seconds until we should cast this agian
+            MindBlast6_Timer = 8000;
+        }else MindBlast6_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature *_Creature)

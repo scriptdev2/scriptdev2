@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-		if (!HasAura)
+                if (!HasAura)
                 {
                     m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
                     HasAura = true;
@@ -202,162 +202,158 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             WasBanished = false;
         } else if (WasBanished)
-               {
-                  Attack_Timer -= diff;
-                  //Do nothing while banished
-                  return;
-               }
+        {
+            Attack_Timer -= diff;
+            //Do nothing while banished
+            return;
+        }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //WrathOfRagnaros_Timer
+        if (WrathOfRagnaros_Timer < diff)
         {
-            //WrathOfRagnaros_Timer
-            if (WrathOfRagnaros_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_WRATHOFRAGNAROS);
+
+            if (rand()%2 == 0)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_WRATHOFRAGNAROS);
+                //Say our dialog
+                DoYell(SAY_WRATH,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_WRATH);
+            }
 
-                if (rand()%2 == 0)
-                {
-                    //Say our dialog
-                    DoYell(SAY_WRATH,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_WRATH);
-                }
+            //60 seconds until we should cast this agian
+            WrathOfRagnaros_Timer = 30000;
+        }else WrathOfRagnaros_Timer -= diff;
 
-                //60 seconds until we should cast this agian
-                WrathOfRagnaros_Timer = 30000;
-            }else WrathOfRagnaros_Timer -= diff;
+        //HandOfRagnaros_Timer
+        if (HandOfRagnaros_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature,SPELL_HANDOFRAGNAROS);
 
-            //HandOfRagnaros_Timer
-            if (HandOfRagnaros_Timer < diff)
+            if (rand()%2==0)
             {
-                //Cast
-                DoCast(m_creature,SPELL_HANDOFRAGNAROS);
+                //Say our dialog
+                DoYell(SAY_HAND,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_HAND);
+            }
 
-                if (rand()%2==0)
-                {
-                    //Say our dialog
-                    DoYell(SAY_HAND,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_HAND);
-                }
+            //60 seconds until we should cast this agian
+            HandOfRagnaros_Timer = 25000;
+        }else HandOfRagnaros_Timer -= diff;
 
-                //60 seconds until we should cast this agian
-                HandOfRagnaros_Timer = 25000;
-            }else HandOfRagnaros_Timer -= diff;
+        //LavaBurst_Timer
+        if (LavaBurst_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_LAVABURST);
 
-            //LavaBurst_Timer
-            if (LavaBurst_Timer < diff)
+            //10 seconds until we should cast this agian
+            LavaBurst_Timer = 10000;
+        }else LavaBurst_Timer -= diff;
+
+        //Submerge_Timer
+        if (!WasBanished && Submerge_Timer < diff)
+        {
+            //Creature spawning and ragnaros becomming unattackable
+            //is not very well supported in the core
+            //so added normaly spawning and banish workaround and attack again after 90 secs.
+
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            //Root self
+            DoCast(m_creature,23973);
+            m_creature->setFaction(35);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (!HasSubmergedOnce)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_LAVABURST);
+                //Say our dialog
+                DoYell(SAY_REINFORCEMENTS1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS1);
+                Summoned = m_creature->SummonCreature(12143,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_7X,ADD_7Y,ADD_7Z,ADD_7O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_8X,ADD_8Y,ADD_8Z,ADD_8O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                HasSubmergedOnce = true;
+                WasBanished = true;
+                Attack_Timer = 90000;
 
-                //10 seconds until we should cast this agian
-                LavaBurst_Timer = 10000;
-            }else LavaBurst_Timer -= diff;
-
-            //Submerge_Timer
-            if (!WasBanished && Submerge_Timer < diff)
-            {
-                //Creature spawning and ragnaros becomming unattackable
-                //is not very well supported in the core
-                //so added normaly spawning and banish workaround and attack again after 90 secs.
-
-                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                //Root self
-                DoCast(m_creature,23973);
-                m_creature->setFaction(35);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (!HasSubmergedOnce)
-                {
-                    //Say our dialog
-                    DoYell(SAY_REINFORCEMENTS1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS1);
-                    Summoned = m_creature->SummonCreature(12143,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_7X,ADD_7Y,ADD_7Z,ADD_7O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_8X,ADD_8Y,ADD_8Z,ADD_8O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    HasSubmergedOnce = true;
-                    WasBanished = true;
-                    Attack_Timer = 90000;
-
-                }else
-                {
-                    //Say our dialog
-                    DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
-                    Summoned = m_creature->SummonCreature(12143,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_7X,ADD_7Y,ADD_7Z,ADD_7O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    Summoned = m_creature->SummonCreature(12143,ADD_8X,ADD_8Y,ADD_8Z,ADD_8O,TEMPSUMMON_TIMED_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                    WasBanished = true;
-                    Attack_Timer = 90000;
-                }
-
-                //3 minutes until we should cast this agian
-                Submerge_Timer = 180000;
-            }else Submerge_Timer -= diff;
-
-            //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Make sure our attack is ready and we arn't currently casting
-                if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
-                {
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-                }
             }else
             {
-                //MagmaBurst_Timer
-                if (MagmaBurst_Timer < diff)
-                {
-                    //Cast
-                    DoCast(m_creature->getVictim(),SPELL_MAGMABURST);
-
-                    if (!HasYelledMagmaBurst)
-                    {
-                        //Say our dialog
-                        DoYell(SAY_MAGMABURST,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_MAGMABURST);
-                        HasYelledMagmaBurst = true;
-                    }
-
-                    //8 seconds until we should cast this agian
-                    MagmaBurst_Timer = 8000;
-                }else MagmaBurst_Timer -= diff;
+                //Say our dialog
+                DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
+                Summoned = m_creature->SummonCreature(12143,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_4X,ADD_4Y,ADD_4Z,ADD_4O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_5X,ADD_5Y,ADD_5Z,ADD_5O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_6X,ADD_6Y,ADD_6Z,ADD_6O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_7X,ADD_7Y,ADD_7Z,ADD_7O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                Summoned = m_creature->SummonCreature(12143,ADD_8X,ADD_8Y,ADD_8Z,ADD_8O,TEMPSUMMON_TIMED_DESPAWN,900000);
+                ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                WasBanished = true;
+                Attack_Timer = 90000;
             }
+
+            //3 minutes until we should cast this agian
+            Submerge_Timer = 180000;
+        }else Submerge_Timer -= diff;
+
+        //If we are within range melee the target
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        {
+            //Make sure our attack is ready and we arn't currently casting
+            if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+            {
+                m_creature->AttackerStateUpdate(m_creature->getVictim());
+                m_creature->resetAttackTimer();
+            }
+        }else
+        {
+            //MagmaBurst_Timer
+            if (MagmaBurst_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_MAGMABURST);
+
+                if (!HasYelledMagmaBurst)
+                {
+                    //Say our dialog
+                    DoYell(SAY_MAGMABURST,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_MAGMABURST);
+                    HasYelledMagmaBurst = true;
+                }
+
+                //8 seconds until we should cast this agian
+                MagmaBurst_Timer = 8000;
+            }else MagmaBurst_Timer -= diff;
         }
     }
 }; 

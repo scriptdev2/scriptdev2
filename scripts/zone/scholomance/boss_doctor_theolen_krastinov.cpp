@@ -19,9 +19,9 @@
 #define SPELL_REND                18106            
 #define SPELL_CLEAVE            15584
 #define SPELL_FRENZY                28371
-     
 
-      
+
+
 struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
 {
     boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -80,48 +80,43 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Rend_Timer
+        if (Rend_Timer < diff)
         {
-            
-            //Rend_Timer
-            if (Rend_Timer < diff)
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_REND);
+
+            //10 seconds
+            Rend_Timer = 10000;
+        }else Rend_Timer -= diff;
+
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+
+            //10 seconds until we should cast this agian
+            Cleave_Timer = 10000;
+        }else Cleave_Timer -= diff;
+
+        //Frenzy_Timer
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 )
+        {
+            if (Frenzy_Timer < diff)
             {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_REND);
-
-                //10 seconds
-               Rend_Timer = 10000;
-            }else Rend_Timer -= diff;
-
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                //10 seconds until we should cast this agian
-                Cleave_Timer = 10000;
-            }else Cleave_Timer -= diff;
-
-            //Frenzy_Timer
-            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 )
-            {
-		if (Frenzy_Timer < diff)
-	        {
                 DoCast(m_creature,SPELL_FRENZY);
                 DoTextEmote("goes into a killing frenzy!",NULL);
 
                 //8 seconds
                 Frenzy_Timer = 8000;
-                }else Frenzy_Timer -= diff;
-            }
-
-            DoMeleeAttackIfReady();
+            }else Frenzy_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_theolenkrastinov(Creature *_Creature)

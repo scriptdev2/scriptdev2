@@ -87,52 +87,47 @@ struct MANGOS_DLL_DECL mob_firelordAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //SoulBurn
+        if (SoulBurn_Timer < diff)
         {
-
-            //SoulBurn
-            if (SoulBurn_Timer < diff)
+            //Cast
+            if (rand()%100 < 70) //70% chance to cast
             {
-                //Cast
-                if (rand()%100 < 70) //70% chance to cast
-                {
-                    Unit* target = NULL;
+                Unit* target = NULL;
 
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if (target)DoCast(target,SPELL_SOULBURN);
-                }
-                //15-22 seconds until we should cast this again
-                SoulBurn_Timer = 15000 + rand()%7000;
-            }else SoulBurn_Timer -= diff;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)DoCast(target,SPELL_SOULBURN);
+            }
+            //15-22 seconds until we should cast this again
+            SoulBurn_Timer = 15000 + rand()%7000;
+        }else SoulBurn_Timer -= diff;
 
-//            //SummonLavaSpawn
-//            if (SummonLavaSpawn_Timer < diff)
-//            {
-//                //Cast
-//                DoCast(m_creature,SPELL_SUMMONLAVASPAWN);
-//                //30 seconds until we should cast this again
-//                SummonLavaSpawn_Timer = 30000;
-//            }else SummonLavaSpawn_Timer -= diff;
+        //            //SummonLavaSpawn
+        //            if (SummonLavaSpawn_Timer < diff)
+        //            {
+        //                //Cast
+        //                DoCast(m_creature,SPELL_SUMMONLAVASPAWN);
+        //                //30 seconds until we should cast this again
+        //                SummonLavaSpawn_Timer = 30000;
+        //            }else SummonLavaSpawn_Timer -= diff;
 
-            //SummonLavaSpawn
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
+        //SummonLavaSpawn
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 0)
+        {
+            if (SummonLavaSpawn_Timer < diff)
             {
-                if (SummonLavaSpawn_Timer < diff)
-                {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
                 Summoned = m_creature->SummonCreature(12265, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
                 SummonLavaSpawn_Timer = 30000;
-                }else SummonLavaSpawn_Timer -= diff;
-            }
-            DoMeleeAttackIfReady();
+            }else SummonLavaSpawn_Timer -= diff;
         }
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_mob_firelord(Creature *_Creature)
