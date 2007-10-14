@@ -155,34 +155,32 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(m_creature->GetPower(POWER_MANA) <= 0)
+        if(m_creature->GetPower(POWER_MANA) <= 0 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
             DoCast(m_creature, SPELL_EVOCATION);
-            m_creature->DeleteThreatList();
         }
 
         if(phase == 1)
         {
             if(AddTimer < diff)
             {
-                uint32 LocX = m_creature->GetPositionX();
-                uint32 LocY = m_creature->GetPositionY();
-                uint32 LocZ = m_creature->GetPositionZ();
                 //Summon Astral Flare
-                Creature* AstralFlare = DoSpawnCreature(17096, LocX, LocY, LocZ, 5.000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                Creature* AstralFlare = DoSpawnCreature(17096, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                 if (AstralFlare && target)
+                {
+                    AstralFlare->CastSpell(AstralFlare, SPELL_ASTRAL_FLARE_PASSIVE, false);
                     AstralFlare->AI()->AttackStart(target);
+                }
 
                 //Reduce Mana by 10%
-                uint32 mana = ((m_creature->GetMaxPower(POWER_MANA) / (m_creature->GetMaxPower(POWER_MANA) / 10)) - m_creature->GetPower(POWER_MANA));                
-                m_creature->SetPower(POWER_MANA, mana);
-                switch(rand()%3)
+                int32 mana = (0.1*(m_creature->GetMaxPower(POWER_MANA)));               
+                m_creature->ModifyPower(POWER_MANA, -mana);
+                switch(rand()%4)
                 {
                 case 0:
                     DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
@@ -191,15 +189,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 case 1:
                     DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                    break;
-                case 2:
-                    DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
-                    break;
-                case 3:
-                    DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                    break;                            
+                    break;                    
                 }
                 AddTimer = 10000;
             }else AddTimer -= diff;

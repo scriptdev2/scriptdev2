@@ -180,6 +180,8 @@ extern void AddSC_boss_rokmar_the_crackler();
 extern void AddSC_boss_warlord_kalithresh();
 
 //--Underbog
+extern void AddSC_boss_hungarfen();
+
 //Darkshore
 extern void AddSC_mobs_darkshore();
 
@@ -215,6 +217,13 @@ extern void AddSC_boss_high_king_maulgar();
 extern void AddSC_instance_gruuls_lair();
 
 //Hellfire Citadel
+//--Blood Furnace
+//--Magtheridon's Lair
+//--Shattered Halls
+//--Ramparts
+extern void AddSC_boss_watchkeeper_gargolmar();
+extern void AddSC_boss_omor_the_unscarred();
+
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
 extern void AddSC_mobs_bonechewer_orc();
@@ -386,6 +395,7 @@ extern void AddSC_npcs_tanaris();
 //--Botanica
 //--The Eye
 extern void AddSC_boss_kaelthas();
+extern void AddSC_boss_void_reaver();
 extern void AddSC_instance_the_eye();
 extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
@@ -587,6 +597,8 @@ void ScriptsInit()
     AddSC_boss_warlord_kalithresh();
 
     //--Underbog
+    AddSC_boss_hungarfen();
+
     //Darkshore
     AddSC_mobs_darkshore();
 
@@ -622,6 +634,13 @@ void ScriptsInit()
     AddSC_instance_gruuls_lair();
 
     //Hellfire Citadel
+    //--Blood Furnace
+    //--Magtheridon's Lair
+    //--Shattered Halls
+    //--Ramparts
+    AddSC_boss_watchkeeper_gargolmar();
+    AddSC_boss_omor_the_unscarred();
+
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();
     AddSC_mobs_bonechewer_orc();
@@ -793,6 +812,7 @@ void ScriptsInit()
     //--Botanica
     //--The Eye
     AddSC_boss_kaelthas();
+    AddSC_boss_void_reaver();
     AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
     AddSC_mob_the_eye();

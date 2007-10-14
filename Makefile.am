@@ -121,6 +121,7 @@ scripts/zone/coilfang_resevoir/serpent_shrine/boss_leotheras_the_blind.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
+scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/dustwallow_marsh/npc_lady_jaina_proudmoore.cpp \
@@ -135,6 +136,8 @@ scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_channeler.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
+scripts/zone/hellfire_citadel/ramparts/boss_omor_the_unscarred.cpp \
+scripts/zone/hellfire_citadel/ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_bonechewer_orc.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
@@ -271,6 +274,7 @@ scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
+scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
@@ -307,6 +311,7 @@ scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
 system.cpp
+
 
 ## libtool settings
 # API versioning

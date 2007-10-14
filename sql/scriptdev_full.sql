@@ -233,6 +233,8 @@ UPDATE creature_template SET ScriptName='boss_rokmar_the_crackler' WHERE entry=1
 UPDATE creature_template SET ScriptName='boss_warlord_kalithresh' WHERE entry=17798;
 
 /* THE UNDERBOG */
+UPDATE `creature_template` SET `ScriptName` = 'boss_hungarfen' WHERE `entry` = 17770;
+UPDATE `creature_template` SET `ScriptName` = 'mob_underbog_mushroom' WHERE `entry` = 17990;
 
 /* THE STEAMVAULT */
 
@@ -329,6 +331,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* HELLFIRE RAMPARTS */
 /* Vazruden, Omor the Unscarred, Watchkeeper Gargolmar */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17537, 17308, 17306);
+UPDATE `creature_template` SET `ScriptName` = 'boss_omor_the_unscarred' WHERE `entry` = 17308;
+UPDATE `creature_template` SET `ScriptName` = 'boss_watchkeeper_gargolmar' WHERE `entry` = 17306;
 /* Hellfire Watcher <Watchkeeper's Subordinate>, Bonechewer Hungerer, Bonechewer Beastmaster, Bonechewer Ravener, Bonechewer Ripper, Bonechewer Destroyer, Bleeding Hollow Archer, Bleeding Hollow Darkcaster, Hellfire Sentry <Herald's Sentry>, Bleeding Hollow Scryer */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17309, 17259, 17455, 17264, 17281, 17271, 17270, 17269, 17517, 17478);
 
@@ -670,6 +674,9 @@ UPDATE `instance_template` SET `script` = 'instance_the_eye' WHERE `map`= 550;
 /* The Eye Trash Mobs */
 UPDATE `creature_template` SET `scriptname`='mob_the_eye' WHERE `entry` IN (20031,20032,20033,20034,20035,20039,20041,20043,20046,20052);
 UPDATE `creature_template` SET `scriptname`='mob_crystalcore_devastator' WHERE `entry`='20040';
+/* VoidReaver and Arcane orb Target */
+UPDATE `creature_template` SET `ScriptName` = 'boss_void_reaver' WHERE `entry` = 19516;
+UPDATE `creature_template` SET `ScriptName` = 'mob_arcane_orb_target' WHERE `entry` = 19577;
 
 
 /* TEMPLE OF AHN'QIRAJ */

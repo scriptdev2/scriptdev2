@@ -1397,6 +1397,14 @@
 					<Filter
 						Name="The Ramparts"
 						>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\ramparts\boss_omor_the_unscarred.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\ramparts\boss_watchkeeper_gargolmar.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Shattered Halls"
@@ -1515,6 +1523,10 @@
 						>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_kaelthas.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_void_reaver.cpp"
 							>
 						</File>
 						<File
@@ -1657,6 +1669,10 @@
 					<Filter
 						Name="Underbog"
 						>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_hungarfen.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

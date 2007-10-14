@@ -302,6 +302,9 @@ void SimpleAI::UpdateAI(const uint32 diff)
                 //Target is ok, cast a spell on it and then do our random yell
                 if (target)
                 {
+                    if (m_creature->IsNonMeleeSpellCasted(false))
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+
                     DoCast(target, Spell[i].Spell_Id);
 
                     //Yell and sound use the same number so that you can make
