@@ -231,6 +231,7 @@ extern void AddSC_mobs_bonechewer_orc();
 //Hillsbrad Foothills
 //Hinterlands
 //Karazhan
+extern void AddSC_boss_attumen();
 extern void AddSC_boss_curator();
 extern void AddSC_boss_maiden_of_virtue();
 extern void AddSC_boss_malchezaar();
@@ -648,6 +649,7 @@ void ScriptsInit()
     //Hillsbrad Foothills
     //Hinterlands
     //Karazhan
+    AddSC_boss_attumen();
     AddSC_boss_curator();
     AddSC_boss_maiden_of_virtue();
     AddSC_boss_malchezaar();

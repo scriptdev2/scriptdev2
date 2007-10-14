@@ -148,8 +148,19 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         // Arcane Orb
         if(ArcaneOrb_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit *target;
+            std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+            std::vector<Unit *> target_list;
+            for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            {
+                target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                if(target && target->GetDistance2dSq(m_creature) > 225)     //15 yard radius minimum
+                    target_list.push_back(target);
+                target = NULL;
+            }
+            if(target_list.size())
+                target = *(target_list.begin()+rand()%target_list.size());
+
             if (target)
             {
                 Unit* Spawn = NULL;
@@ -201,7 +212,6 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
         DoGoHome();
         DeathTime = 5000;
         KillSelf = false;
-        m_creature->SetVisibility(VISIBILITY_OFF);
     }
 
     void AttackStart(Unit *who)
@@ -217,7 +227,8 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
         if (KillSelf)
             if (DeathTime < diff)
             {
-                m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL ,0, false);
+                m_creature->setDeathState(JUST_DIED);
+                m_creature->RemoveCorpse();
                 m_creature->setFaction(35);
                 KillSelf = false; 
             }else DeathTime -= diff;
@@ -231,7 +242,7 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
 
         //Cast arcane orb
         m_creature->setFaction(14);
-        m_creature->CastSpell(m_creature, SPELL_ARCANE_ORB, true);
+        m_creature->CastSpell(m_creature, SPELL_ARCANE_ORB, false);
         KillSelf = true;
     }
 }; 

@@ -50,7 +50,7 @@
 //Curator spell info
 #define SPELL_HATEFUL_BOLT              30383
 #define SPELL_EVOCATION                 30254
-#define SPELL_ENRAGE                    19953
+#define SPELL_ENRAGE                    28131
 #define SPELL_BERSERK                   26662
 
 
@@ -61,16 +61,16 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     uint32 AddTimer;
     uint32 HatefulBoltTimer;
     uint32 BerserkTimer;
-    uint32 phase;
 
     bool InCombat;
+    bool Enraged;
 
     void EnterEvadeMode()
     {
         AddTimer = 10000;
         HatefulBoltTimer = 15000; // This time is probably wrong
         BerserkTimer = 720000; //12 minutes
-        phase = 1;
+        Enraged = false;
 
         InCombat = false;
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_ARCANE, true);
@@ -155,14 +155,14 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(m_creature->GetPower(POWER_MANA) <= 0 && !m_creature->IsNonMeleeSpellCasted(false))
+        if(m_creature->GetPower(POWER_MANA) <= 0 && !m_creature->HasAura(SPELL_EVOCATION,0))
         {
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
             DoCast(m_creature, SPELL_EVOCATION);
         }
 
-        if(phase == 1)
+        if(!Enraged)
         {
             if(AddTimer < diff)
             {
@@ -202,23 +202,22 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
                 HatefulBoltTimer = 15000;
             }else HatefulBoltTimer -= diff;
-        }
 
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
-        {
-            phase = 2;
-            DoCast(m_creature, SPELL_ENRAGE);
-            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
+            {
+                Enraged = true;
+                DoCast(m_creature, SPELL_ENRAGE);
+                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            }
         }
 
         if(BerserkTimer < diff)
         {
-            phase = 2;
             DoCast(m_creature, SPELL_BERSERK);
             DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-        }
+        }else BerserkTimer -= diff; 
 
         DoMeleeAttackIfReady();
     }
