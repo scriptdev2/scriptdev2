@@ -176,6 +176,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if(KnockAway_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCK_AWAY);
+
             //Drop 20% aggro
             m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-20);
 
@@ -201,17 +202,12 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
 {
     arcane_orb_targetAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    uint32 DeathTime;
-    bool KillSelf;
-
     void EnterEvadeMode()
     {       
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        DeathTime = 5000;
-        KillSelf = false;
     }
 
     void AttackStart(Unit *who)
@@ -224,15 +220,6 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (KillSelf)
-            if (DeathTime < diff)
-            {
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->RemoveCorpse();
-                m_creature->setFaction(35);
-                KillSelf = false; 
-            }else DeathTime -= diff;
-
     }
 
     void SpellHit(Unit *Attacker, const SpellEntry *Spellkind)
@@ -242,8 +229,11 @@ struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
 
         //Cast arcane orb
         m_creature->setFaction(14);
-        m_creature->CastSpell(m_creature, SPELL_ARCANE_ORB, false);
-        KillSelf = true;
+        m_creature->CastSpell(m_creature, SPELL_ARCANE_ORB, true);
+
+        m_creature->setDeathState(JUST_DIED);
+        m_creature->RemoveCorpse();
+        m_creature->setFaction(35);
     }
 }; 
 

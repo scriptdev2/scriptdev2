@@ -86,10 +86,12 @@
 #define SPELL_BLINK_CENTER  29967
 #define SPELL_ELEMENTALS    29962
 #define SPELL_CONJURE       29975
+#define SPELL_DRINK         30024
+#define SPELL_POTION        32453
 #define SPELL_AOE_PYROBLAST 29978
 
 //Creature Spells
-#define SPELL_CIRCULAR_BLIZZARD     29952
+#define SPELL_CIRCULAR_BLIZZARD     29951 //29952 is the REAL circular blizzard that leaves persistant blizzards that last for 10 seconds
 #define SPELL_WATERBOLT             31012
 #define SPELL_SHADOW_PYRO           29978
 
@@ -116,11 +118,16 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     uint8 LastSuperSpell;
 
+    uint32 FlameWreathTimer; 
+    uint32 FlameWreathCheckTime;
+    uint64 FlameWreathTarget[3];
+    float FWTargPosX[3];
+    float FWTargPosY[3];
+
     uint32 CurrentNormalSpell;
     uint32 ArcaneCooldown;
     uint32 FireCooldown;
     uint32 FrostCooldown;
-
 
     uint32 DrinkInturruptTimer;
 
@@ -138,6 +145,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         BerserkTimer = 720000;
 
         LastSuperSpell = rand()%3;
+
+        FlameWreathTimer = 0;
+        FlameWreathCheckTime = 0;
 
         CurrentNormalSpell = 0;
         ArcaneCooldown = 0;
@@ -259,6 +269,39 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         }
     }
 
+    void FlameWreathEffect()
+    {
+        std::vector<Unit*> targets;
+        std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+
+        if(!t_list.size())
+            return;
+
+        for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr) //store the threat list in a different container
+        {
+            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+                targets.push_back( target);
+        }
+        
+        while(targets.size() > 3)
+            targets.erase(targets.begin()+rand()%targets.size()); //cut down to size if we have more than 3 targets
+
+        uint32 i = 0;
+        for(std::vector<Unit*>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
+        {
+            if(*itr)
+            {
+                FlameWreathTarget[i] = (*itr)->GetGUID();
+                FWTargPosX[i] = (*itr)->GetPositionX();
+                FWTargPosY[i] = (*itr)->GetPositionY();
+                m_creature->CastSpell((*itr), SPELL_FLAME_WREATH, true);
+                i++;
+            }
+        }
+
+    }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
@@ -297,25 +340,34 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 m_creature->CastSpell(m_creature, SPELL_MASS_POLY, true);
                 m_creature->CastSpell(m_creature, SPELL_CONJURE, false);  
+                m_creature->CastSpell(m_creature, SPELL_DRINK, false);
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1);  //Sitting down
                 DrinkInturruptTimer = 10000;
             }
         }
 
-        //Drink Inturrupt Timer
-        if (Drinking && !DrinkInturrupted)
-            if (DrinkInturruptTimer >= diff)
-                DrinkInturruptTimer -= diff;
-            else DrinkInturrupted = true;
-        
         //Drink Inturrupt
         if (Drinking && DrinkInturrupted)
         {
             Drinking = false;
-            m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA));
-            m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
+            m_creature->RemoveAurasDueToSpell(SPELL_DRINK);
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+            m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA)-32000);
+            m_creature->CastSpell(m_creature, SPELL_POTION, false);
         }
+        
+        //Drink Inturrupt Timer
+        if (Drinking && !DrinkInturrupted)
+            if (DrinkInturruptTimer >= diff)
+                DrinkInturruptTimer -= diff;
+            else 
+            {
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                m_creature->CastSpell(m_creature, SPELL_POTION, true);
+                m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
+                DrinkInturrupted = true;
+                Drinking = false;
+            }
 
         //Don't execute any more code if we are drinking
         if (Drinking)
@@ -324,43 +376,43 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         //Normal casts
         if(NormalCastTimer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if (!target)
-                return;
-
-            uint32 Spells[3];
-            uint8 AvailableSpells = 0;
-
-            //Check for what spells are not on cooldown
-            if (!ArcaneCooldown)
+            if (!m_creature->IsNonMeleeSpellCasted(false))
             {
-                Spells[AvailableSpells] = SPELL_ARCMISSLE;
-                AvailableSpells++;
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (!target)
+                    return;
+
+                uint32 Spells[3];
+                uint8 AvailableSpells = 0;
+
+                //Check for what spells are not on cooldown
+                if (!ArcaneCooldown)
+                {
+                    Spells[AvailableSpells] = SPELL_ARCMISSLE;
+                    AvailableSpells++;
+                }
+                if (!FireCooldown)
+                {
+                    Spells[AvailableSpells] = SPELL_FIREBALL;
+                    AvailableSpells++;
+                }
+                if (!FrostCooldown)
+                {
+                    Spells[AvailableSpells] = SPELL_FROSTBOLT;
+                    AvailableSpells++;
+                }
+
+                //If no available spells wait 1 second and try again
+                if (AvailableSpells)
+                {
+                    CurrentNormalSpell = Spells[rand() % AvailableSpells];
+                    DoCast(target, CurrentNormalSpell);
+                }
+
             }
-            if (!FireCooldown)
-            {
-                Spells[AvailableSpells] = SPELL_FIREBALL;
-                AvailableSpells++;
-            }
-            if (!FrostCooldown)
-            {
-                Spells[AvailableSpells] = SPELL_FROSTBOLT;
-                AvailableSpells++;
-            }
 
-            //If no available spells wait 1 second and try again
-            if (AvailableSpells)
-            {
-                CurrentNormalSpell = Spells[rand() % AvailableSpells];
-                DoCast(target, CurrentNormalSpell);
-
-                if (CurrentNormalSpell == SPELL_ARCMISSLE)
-                    NormalCastTimer = 5000;
-                else NormalCastTimer = 2000;
-
-            }else NormalCastTimer = 1000;
-
+            NormalCastTimer = 1000;
         }else NormalCastTimer -= diff;
 
         if(SecondarySpellTimer < diff)
@@ -437,8 +489,14 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH2);
                 }
 
-                DoTextEmote("FLAME WREATH NYI!", NULL);
-                m_creature->CastSpell(m_creature->getVictim(), SPELL_FLAME_WREATH, false);
+                FlameWreathTimer = 20000; 
+                FlameWreathCheckTime = 500;
+    
+                FlameWreathTarget[0] = 0;
+                FlameWreathTarget[1] = 0;
+                FlameWreathTarget[2] = 0;
+
+                FlameWreathEffect();
                 break;
 
             case SUPER_BLIZZARD:
@@ -454,11 +512,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 }
 
                 Unit* Spawn = NULL;
-                Spawn = m_creature->SummonCreature(CREATURE_ARAN_BLIZZARD, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
+                Spawn = m_creature->SummonCreature(CREATURE_ARAN_BLIZZARD, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
                 if (Spawn)
                 {
                     Spawn->setFaction(m_creature->getFaction());
-                    Spawn->CastSpell(Spawn, SPELL_CIRCULAR_BLIZZARD, true);
+                    Spawn->CastSpell(Spawn, SPELL_CIRCULAR_BLIZZARD, false);
                 }
                 break;
             };
@@ -466,13 +524,13 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             SuperCastTimer = 35000 + (rand()%5000);
         }else SuperCastTimer -= diff;
 
-        if(!ElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
+        if(!ElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
         {
             ElementalsSpawned = true;
 
             for (uint32 i = 0; i < 4; i++)
             {
-                Creature* pUnit = DoSpawnCreature(CREATURE_WATER_ELEMENTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+                Creature* pUnit = DoSpawnCreature(CREATURE_WATER_ELEMENTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 90000);
                 if (pUnit)
                 {
                     pUnit->Attack(m_creature->getVictim());
@@ -502,7 +560,35 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             BerserkTimer = 60000;
         }else BerserkTimer -= diff; 
 
-        DoMeleeAttackIfReady();
+        //Flame Wreath check
+        if (FlameWreathTimer)
+        {
+            if (FlameWreathTimer >= diff)
+                FlameWreathTimer -= diff;
+            else FlameWreathTimer = 0;
+
+            if (FlameWreathCheckTime < diff)
+            {
+                for (uint32 i = 0; i < 3; i++)
+                {
+                    if (!FlameWreathTarget[i])
+                        continue;
+
+                    Unit* pUnit = Unit::GetUnit(*m_creature, FlameWreathTarget[i]);
+                    if (pUnit && pUnit->GetDistance2d(FWTargPosX[i], FWTargPosY[i]) > 3)
+                    {
+                        pUnit->CastSpell(pUnit, 20476, true, 0, 0, m_creature->GetGUID());
+                        pUnit->CastSpell(pUnit, 11027, true);
+                        FlameWreathTarget[i] = 0;
+                    }
+                }
+
+                FlameWreathCheckTime = 500;
+            }else FlameWreathCheckTime -= diff; 
+        }
+
+        if (ArcaneCooldown && FireCooldown && FrostCooldown)
+            DoMeleeAttackIfReady();
     }
 
     void DamageTaken(Unit* pAttacker, uint32 &damage)
@@ -541,6 +627,38 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
 };
 
+struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
+{
+    water_elementalAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 CastTimer;
+
+    void EnterEvadeMode()
+    {
+        CastTimer = 2000 + (rand()%3000);
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        if(CastTimer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_WATERBOLT);
+            CastTimer = 2000 + (rand()%3000);
+
+        }else CastTimer -= diff; 
+    }
+};
+
 
 CreatureAI* GetAI_boss_aran(Creature *_Creature)
 {
@@ -550,17 +668,7 @@ CreatureAI* GetAI_boss_aran(Creature *_Creature)
 
 CreatureAI* GetAI_water_elemental(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = SPELL_WATERBOLT;
-    ai->Spell[0].Cooldown = 1500;
-    ai->Spell[0].First_Cast = 500;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new water_elementalAI (_Creature);
 }
 
 CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
@@ -569,7 +677,7 @@ CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;
-    ai->Spell[0].Cooldown = -1;
+    ai->Spell[0].Cooldown = 5000;
     ai->Spell[0].First_Cast = 1000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 

@@ -20,7 +20,7 @@
 
 #define ITEM_THRORIUM_BROTHERHOOD_CONTRACT               18628
 #define ITEM_SULFURON_INGOT                              17203
-#define QUEST_A_BINDING_CONTRACT                         7487
+#define QUEST_A_BINDING_CONTRACT                         7604
 #define SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND    23059
 
 bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
