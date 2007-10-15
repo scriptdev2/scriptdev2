@@ -17,11 +17,11 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_SLIME_SPRAY	30913
+#define SPELL_SLIME_SPRAY    30913
 #define SPELL_POISON_CLOUD  30916
-#define SPELL_POISON_BOLT	30917	
+#define SPELL_POISON_BOLT    30917    
 
-#define SPELL_POISON		30914
+#define SPELL_POISON        30914
 
 #define SAY_AGGRO "Come intruders...."
 
@@ -125,24 +125,24 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
     mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
 
-	bool Start;
+    bool Start;
 
-	void EnterEvadeMode()
+    void EnterEvadeMode()
     {   
-		Start = false;
+        Start = false;
     }
 
-	void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff)
     {
-		if(!Start)
-		{
-			m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
-			m_creature->setFaction(45);
-			m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-			Start = true;
-			DoCast(m_creature,SPELL_POISON);
-		}
-	}
+        if(!Start)
+        {
+            m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
+            m_creature->setFaction(45);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            Start = true;
+            DoCast(m_creature,SPELL_POISON);
+        }
+    }
 };
 
 CreatureAI* GetAI_boss_broggokAI(Creature *_Creature)

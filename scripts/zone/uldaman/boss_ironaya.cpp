@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 
         //If we are <50% hp do knockaway ONCE
         if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
-        {		
+        {        
             m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
             // current aggro target is knocked away pick new target

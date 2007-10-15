@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_PUTRIDBREATH             21080    	
+#define SPELL_PUTRIDBREATH             21080        
 #define SPELL_SMOKEBOMB                  8817              
 
 struct MANGOS_DLL_DECL boss_lord_vyletongueAI : public ScriptedAI

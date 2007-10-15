@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_FIRENOVA                23462	
+#define SPELL_FIRENOVA                23462    
 #define SPELL_FLAMEBUFFET             23341               
 #define SPELL_PYROBLAST            17274
 

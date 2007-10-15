@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_UNHOLYAURA                17466	//Workaround cause right spell would be 17467
+#define SPELL_UNHOLYAURA                17466    //Workaround cause right spell would be 17467
 #define SPELL_IMMOLATE             20294        // Old ID  was 15570       
 #define SPELL_VEILOFSHADOW            17820
 

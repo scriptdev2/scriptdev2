@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_WARSTOMP             21080    	
+#define SPELL_WARSTOMP             21080        
 #define SPELL_STRIKE                  8817              
 
 struct MANGOS_DLL_DECL meshlok_the_harvesterAI : public ScriptedAI

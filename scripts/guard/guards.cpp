@@ -1715,7 +1715,7 @@ bool GossipHello_guard_orgrimmar(Player *player, Creature *_Creature)
 }
 
 /*******************************************************
- *				Start of GOSSIP_MENU
+ *                Start of GOSSIP_MENU
  *******************************************************/
 
 void SendDefaultMenu_guard_orgrimmar(Player *player, Creature *_Creature, uint32 action)
@@ -2480,9 +2480,9 @@ CreatureAI* GetAI_guard_silvermoon(Creature *_Creature)
 
 bool GossipHello_guard_stormwind(Player *player, Creature *_Creature)
 {
-    player->ADD_GOSSIP_ITEM( 1, GOSSIP_TEXT_AUCTIONHOUSE	  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);  //added
+    player->ADD_GOSSIP_ITEM( 1, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);  //added
     player->ADD_GOSSIP_ITEM( 6, GOSSIP_TEXT_STORMWIND_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_DEEPRUNTRAM		  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);  //added
+    player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_DEEPRUNTRAM          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);  //added
     player->ADD_GOSSIP_ITEM( 1, GOSSIP_TEXT_INN               , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
     player->ADD_GOSSIP_ITEM( 2, GOSSIP_TEXT_GRYPHON           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);    
     player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_GUILDMASTER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);

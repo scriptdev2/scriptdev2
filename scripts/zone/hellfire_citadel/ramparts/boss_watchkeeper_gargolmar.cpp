@@ -20,28 +20,28 @@
 //Missing Sound IDs
 //Adds NYI
 
-#define SPELL_MORTAL_WOUND		30641
-#define SPELL_SURGE				25787
-#define SPELL_RETALIATION		40546
+#define SPELL_MORTAL_WOUND        30641
+#define SPELL_SURGE                25787
+#define SPELL_RETALIATION        40546
 
-#define SAY_TAUNT				"Do you smell that? Fresh meat has somehow breached our citadel. Be wary of any intruders." 
-#define SOUND_TAUNT			    
+#define SAY_TAUNT                "Do you smell that? Fresh meat has somehow breached our citadel. Be wary of any intruders." 
+#define SOUND_TAUNT                
 
-#define SAY_AGGRO_1				"Heh... this may hurt a little."
-#define SOUND_AGGRO_1			10332
-#define SAY_AGGRO_2				"What do we have here? ..." 
-#define SOUND_AGGRO_2			10331
-#define SAY_AGGRO_3				"" 
-#define SOUND_AGGRO_3			10333
+#define SAY_AGGRO_1                "Heh... this may hurt a little."
+#define SOUND_AGGRO_1            10332
+#define SAY_AGGRO_2                "What do we have here? ..." 
+#define SOUND_AGGRO_2            10331
+#define SAY_AGGRO_3                "" 
+#define SOUND_AGGRO_3            10333
 
 
-#define SAY_SURGE				"Back off, pup!" 
-#define SOUND_SURGE				10330	
+#define SAY_SURGE                "Back off, pup!" 
+#define SOUND_SURGE                10330    
 
-#define SAY_HEAL				"Heal me! QUICKLY!" 
-#define SOUND_HEAL				10329
+#define SAY_HEAL                "Heal me! QUICKLY!" 
+#define SOUND_HEAL                10329
 
-#define SOUND_DIE				10336
+#define SOUND_DIE                10336
 
 struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature,SOUND_HEAL);
 
                 //m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth()*0.3);
-                YelledForHeal = true;		
+                YelledForHeal = true;        
             }
 
         DoMeleeAttackIfReady();

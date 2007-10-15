@@ -16,26 +16,26 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_ACID_SPRAY		38153 // heroic 38973 ??? 38153
-#define SPELL_EXPLODING_BREAKER	30925 
-#define SPELL_KNOCKDOWN			20276
-#define SPELL_DOMINATION		25772 // ???
+#define SPELL_ACID_SPRAY        38153 // heroic 38973 ??? 38153
+#define SPELL_EXPLODING_BREAKER    30925 
+#define SPELL_KNOCKDOWN            20276
+#define SPELL_DOMINATION        25772 // ???
 
 
-#define SAY_KILL_1				"Let's see what I can make of you." 
-#define SOUND_KILL_1			10289
-#define SAY_KILL_2				"It is pointless to resist."
-#define SOUND_KILL_2			10290
+#define SAY_KILL_1                "Let's see what I can make of you." 
+#define SOUND_KILL_1            10289
+#define SAY_KILL_2                "It is pointless to resist."
+#define SOUND_KILL_2            10290
 
-#define SAY_AGGRO_1				"My work must not be interrupted."
-#define SOUND_AGGRO_1			10286
-#define SAY_AGGRO_2				"Perhaps I can find a use for you." 
-#define SOUND_AGGRO_2			10287
-#define SAY_AGGRO_3				"Anger... Hate... These are tools I can use."	
-#define SOUND_AGGRO_3			10288			
+#define SAY_AGGRO_1                "My work must not be interrupted."
+#define SOUND_AGGRO_1            10286
+#define SAY_AGGRO_2                "Perhaps I can find a use for you." 
+#define SOUND_AGGRO_2            10287
+#define SAY_AGGRO_3                "Anger... Hate... These are tools I can use."    
+#define SOUND_AGGRO_3            10288            
 
-#define SAY_DIE					"Stay away from... me." 
-#define SOUND_DIE				10291				
+#define SAY_DIE                    "Stay away from... me." 
+#define SOUND_DIE                10291                
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
 
-        AcidSpray_Timer = 2000;
+        AcidSpray_Timer = 10000;
         ExplodingBreaker_Timer = 4000;
         Domination_Timer = 120000;
-        Knockdown_Timer	= 6000;
+        Knockdown_Timer    = 6000;
 
         InCombat = false;
 
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         if(AcidSpray_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ACID_SPRAY);
-            AcidSpray_Timer = 4000+rand()%8000;
+            AcidSpray_Timer = 16000+rand()%8000;
         }else AcidSpray_Timer -=diff;
 
         if(ExplodingBreaker_Timer < diff)

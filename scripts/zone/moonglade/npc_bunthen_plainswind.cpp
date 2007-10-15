@@ -31,7 +31,7 @@ bool GossipHello_bunthen_plainswind(Player *player, Creature *_Creature)
 }
 
 /*******************************************************
- *				Start of GOSSIP_MENU
+ *                Start of GOSSIP_MENU
  *******************************************************/
 
 void SendDefaultMenu_bunthen_plainswind(Player *player, Creature *_Creature, uint32 action)
@@ -56,7 +56,7 @@ bool GossipSelect_bunthen_plainswind(Player *player, Creature *_Creature, uint32
 }
 
 /*******************************************************
- *				End of GOSSIP_MENU
+ *                End of GOSSIP_MENU
  *******************************************************/
 
 void AddSC_bunthen_plainswind()

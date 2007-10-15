@@ -19,12 +19,12 @@
 // **** This script is still under Developement ****
 // http://www.mangosproject.org/forum/index.php?showtopic=10314
 
-#define SAY_0	"Intruders! More pawns of the Argent Dawn, no doubt. I already count one of their number among my prisoners. Withdraw from my domain before she is executed!"
-#define SAY_1	"You're still here? Your foolishness is amusing! The Argent Dawn wench needn't suffer in vain. Leave at once and she shall be spared!"
-#define SAY_2	"I shall take great pleasure in taking this poor wretch's life! It's not too late, she needn't suffer in vain. Turn back and her death shall be merciful!"
-#define SAY_3	"May this prisoner's death serve as a warning. None shall defy the Scourge and live!"
-#define SAY_4	"So you see fit to toy with the Lich King's creations? Ramstein, be sure to give the intruders a proper greeting."
-#define SAY_5	"Time to take matters into my own hands. Come. Enter my domain and challenge the might of the Scourge!"
+#define SAY_0    "Intruders! More pawns of the Argent Dawn, no doubt. I already count one of their number among my prisoners. Withdraw from my domain before she is executed!"
+#define SAY_1    "You're still here? Your foolishness is amusing! The Argent Dawn wench needn't suffer in vain. Leave at once and she shall be spared!"
+#define SAY_2    "I shall take great pleasure in taking this poor wretch's life! It's not too late, she needn't suffer in vain. Turn back and her death shall be merciful!"
+#define SAY_3    "May this prisoner's death serve as a warning. None shall defy the Scourge and live!"
+#define SAY_4    "So you see fit to toy with the Lich King's creations? Ramstein, be sure to give the intruders a proper greeting."
+#define SAY_5    "Time to take matters into my own hands. Come. Enter my domain and challenge the might of the Scourge!"
 
 #define ADD_1X 4017.403809
 #define ADD_1Y -3339.703369
@@ -56,17 +56,17 @@
 #define ADD_6Z 115.055222
 #define ADD_6O 2.457497
 
-#define SPELL_UNHOLYAURA_AURA	17467
-#define SPELL_UNHOLYAURA	17466
-#define SPELL_SHADOWBOLT	18164
-#define SPELL_CLEAVE	15584
-#define SPELL_MORTALSTRIKE	13737
+#define SPELL_UNHOLYAURA_AURA    17467
+#define SPELL_UNHOLYAURA    17466
+#define SPELL_SHADOWBOLT    18164
+#define SPELL_CLEAVE    15584
+#define SPELL_MORTALSTRIKE    13737
 
 // spell 17473 should trigger -> 17471
 
-//#define SPELL_RAISEDEAD	17475
+//#define SPELL_RAISEDEAD    17475
 //#define SPELL_DEATHPACT 17698
-//#define SPELL_SUMMONSKELETONS	17274
+//#define SPELL_SUMMONSKELETONS    17274
 
 struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 {
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
     uint32 ShadowBolt_Timer;
     uint32 Cleave_Timer;
     uint32 MortalStrike_Timer;
-    //	uint32 RaiseDead_Timer;
+    //    uint32 RaiseDead_Timer;
     uint32 SummonSkeletons_Timer;
     Creature *Summoned;
     bool HasYelled;
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         ShadowBolt_Timer = 5000;
         Cleave_Timer = 8000;
         MortalStrike_Timer = 12000;
-        //		RaiseDead_Timer = 30000;
+        //        RaiseDead_Timer = 30000;
         SummonSkeletons_Timer = 34000;
         HasYelled = false;
         HasAura = false;
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         //            {
         //Cast
         //                DoCast(m_creature,SPELL_RAISEDEAD);
-        //				DoSay("summon triggered",LANG_UNIVERSAL,NULL); //just a checkpoint
+        //                DoSay("summon triggered",LANG_UNIVERSAL,NULL); //just a checkpoint
         //45 seconds until we should cast this again
         //                RaiseDead_Timer = 45000;
         //            }else RaiseDead_Timer -= diff;

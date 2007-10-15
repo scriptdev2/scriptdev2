@@ -17,7 +17,7 @@
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-// 	  ****  made by NuRRi ****
+//       ****  made by NuRRi ****
 
 #define SPELL_FLAMESHOCK                10448            
 #define SPELL_EARTHSHOCK            10414

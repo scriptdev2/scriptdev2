@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_FLAMEBREAK                16785	
+#define SPELL_FLAMEBREAK                16785    
 #define SPELL_IMMOLATE             20294              
 #define SPELL_TERRIFYINGROAR            14100
 

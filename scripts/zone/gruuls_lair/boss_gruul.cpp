@@ -19,7 +19,7 @@
 #define SPELL_GROWTH            36300
 #define SPELL_CAVEIN            36240
 #define SPELL_GROUNDSLAM        33525 // AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
-#define SPELL_SHATTER           33671
+#define SPELL_SHATTER_EFFECT    33671
 #define SPELL_HURTFULSTRIKE     33813 
 #define SPELL_REVERBERATION     36297 //AoE Silence
 //#define SPELL_GRONNLORDSGRASP   33572 //Already handled in GroundSlam

@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
         spellHit = false;
-	}
+    }
 
     void AttackStart(Unit *who)
     {
@@ -57,8 +57,8 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
                 m_creature->AI()->EnterEvadeMode();
             else 
                 lifeTimer -= diff;
-		}
-	}
+        }
+    }
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
@@ -70,8 +70,8 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
             m_creature->RemoveAllAuras();
             DoSay(SAY_HEAL,LANG_COMMON,NULL);
             spellHit = true;
-		}
-	}
+        }
+    }
 
 };
 

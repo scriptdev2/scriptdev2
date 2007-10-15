@@ -18,18 +18,18 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
     boss_ayamissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     Unit *pTarget;
-	uint32 STINGERSPRAY_Timer;
+    uint32 STINGERSPRAY_Timer;
     uint32 POISONSTINGER_Timer;
-	uint32 SUMMONSWARMER_Timer;
-	uint32 phase;
+    uint32 SUMMONSWARMER_Timer;
+    uint32 phase;
 
     void EnterEvadeMode()
     {
-	    pTarget = NULL;
-		STINGERSPRAY_Timer = 30000;
-		POISONSTINGER_Timer = 30000;
-		SUMMONSWARMER_Timer = 60000;
-		phase=1;
+        pTarget = NULL;
+        STINGERSPRAY_Timer = 30000;
+        POISONSTINGER_Timer = 30000;
+        SUMMONSWARMER_Timer = 60000;
+        phase=1;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -46,10 +46,10 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-			
-			pTarget = who;
+            
+            pTarget = who;
         }
     }
 

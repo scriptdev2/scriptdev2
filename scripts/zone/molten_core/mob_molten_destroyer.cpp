@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_TRAMPLE                15550	
+#define SPELL_TRAMPLE                15550    
 #define SPELL_KNOCKBACK                    19813                     
 
 

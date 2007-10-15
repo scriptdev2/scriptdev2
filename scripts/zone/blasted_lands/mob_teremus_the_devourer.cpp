@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_FLAMEBREATH                20712  	
+#define SPELL_FLAMEBREATH                20712      
 #define SPELL_SOULCONSUMPTION             12667  
 #define SPELL_RESISTALL            18114            //Not Sure needs test.
 

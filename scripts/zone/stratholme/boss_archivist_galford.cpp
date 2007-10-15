@@ -20,9 +20,9 @@
 
 //Status: check for timers
 
-#define SPELL_FIRENOVA	23462
-#define SPELL_BURNINGWINDS	17293
-#define SPELL_PYROBLAST	17274
+#define SPELL_FIRENOVA    23462
+#define SPELL_BURNINGWINDS    17293
+#define SPELL_PYROBLAST    17274
 
 struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
 {

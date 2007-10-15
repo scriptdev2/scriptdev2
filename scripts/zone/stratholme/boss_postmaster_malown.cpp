@@ -23,7 +23,7 @@
 //Spell ID to summon this guy is 24627 "Summon Postmaster Malown"
 //He should be spawned along with three other elites once the third postbox has been opened
 
-#define SAY_MALOWNED	"You just got MALOWNED!"
+#define SAY_MALOWNED    "You just got MALOWNED!"
 
 #define SPELL_WAILINGDEAD    7713
 #define SPELL_BACKHAND    6253

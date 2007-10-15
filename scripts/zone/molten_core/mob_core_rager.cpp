@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_MANGLE                19820	
+#define SPELL_MANGLE                19820    
 #define SPELL_AEGIS                 20620       //This is self casted whenever we are below 50%
 
 #define SAY_AEGIS        "Core Rager refuses to die while its master is in trouble"

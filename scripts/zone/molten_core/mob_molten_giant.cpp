@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_KNOCKBACK                19813	
+#define SPELL_KNOCKBACK                19813    
 #define SPELL_STOMP                    15593                     
 
 

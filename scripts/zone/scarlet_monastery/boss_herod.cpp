@@ -21,26 +21,26 @@
 #define SPELL_RUSHINGCHARGE         32021
 #define SPELL_RUSHINGCHARGE1        6268
 
-#define SPELL_CLEAVE	            11608
-#define SPELL_WHIRLWIND	            8989
-#define SPELL_SUNDERARMOR	        16145
-#define SPELL_REND			        21949
+#define SPELL_CLEAVE                11608
+#define SPELL_WHIRLWIND                8989
+#define SPELL_SUNDERARMOR            16145
+#define SPELL_REND                    21949
 #define SPELL_THUNDERCLAP           15588
-#define SPELL_SLAM		            11430
+#define SPELL_SLAM                    11430
 #define SPELL_BERSERKERSTANCE       2458
-#define SPELL_ENRAGE	            28747
+#define SPELL_ENRAGE                28747
 #define SPELL_FIREBALL11            10151
 #define SPELL_CONEOFCOLD5           10161
 
-#define SAY_AGGRO			"Ah, I have been waiting for a real challenge!"
-#define SAY_WHIRLWIND	    "Blades of Light!"
-#define SAY_ENRAGE		    "Light, give me strength!"
-#define SAY_DEATH		    "Hah, is that all?"
+#define SAY_AGGRO            "Ah, I have been waiting for a real challenge!"
+#define SAY_WHIRLWIND        "Blades of Light!"
+#define SAY_ENRAGE            "Light, give me strength!"
+#define SAY_DEATH            "Hah, is that all?"
 
-#define SOUND_AGGRO			5830
-#define SOUND_WHIRLWIND		5832
-#define SOUND_ENRAGE		5833
-#define SOUND_DEATH			5831
+#define SOUND_AGGRO            5830
+#define SOUND_WHIRLWIND        5832
+#define SOUND_ENRAGE        5833
+#define SOUND_DEATH            5831
 
 struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 {

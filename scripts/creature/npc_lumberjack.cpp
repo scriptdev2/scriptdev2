@@ -28,8 +28,8 @@ struct MANGOS_DLL_DECL LumberjackAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-		m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 234);
-		//update to start chopping when loaded, and this will also make it if anyone of them reset they will chop after going home
+        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 234);
+        //update to start chopping when loaded, and this will also make it if anyone of them reset they will chop after going home
     }
 
 };

@@ -3,21 +3,21 @@
 // **** This script is still under Developement ****
 
 //Dathrohan spells
-#define SPELL_CRUSADERSHAMMER	17286 //AOE stun
-#define SPELL_CRUSADERSTRIKE	17281
-#define SPELL_MINDBLAST	20830 //98-112dmg...isn't it a bit low?
-#define SPELL_HOLYSTRIKE	17284 //weapon dmg +3
-#define SPELL_DAZED	1604
+#define SPELL_CRUSADERSHAMMER    17286 //AOE stun
+#define SPELL_CRUSADERSTRIKE    17281
+#define SPELL_MINDBLAST    20830 //98-112dmg...isn't it a bit low?
+#define SPELL_HOLYSTRIKE    17284 //weapon dmg +3
+#define SPELL_DAZED    1604
 
 //Transform
-#define SPELL_BALNAZZARTRANSFORM	17288 //restore full HP/mana, trigger spell Balnazzar Transform Stun
+#define SPELL_BALNAZZARTRANSFORM    17288 //restore full HP/mana, trigger spell Balnazzar Transform Stun
 
 //Balnazzar spells
-#define SPELL_SHADOWSHOCK	20603 //AOE 740-860dmg
-#define SPELL_PSYCHICSCREAM	15398 //One target, might want to make a code selecting random target
-#define SPELL_DEEPSLEEP	24777 //AOE, ten sec
-#define SPELL_SHADOWBOLTVOLLEY	20741 //AOE, 255-345dmg
-//#define SPELL_MINDCONTROL	15690 //core support needed
+#define SPELL_SHADOWSHOCK    20603 //AOE 740-860dmg
+#define SPELL_PSYCHICSCREAM    15398 //One target, might want to make a code selecting random target
+#define SPELL_DEEPSLEEP    24777 //AOE, ten sec
+#define SPELL_SHADOWBOLTVOLLEY    20741 //AOE, 255-345dmg
+//#define SPELL_MINDCONTROL    15690 //core support needed
 
 //Summon
 //G1 front, left
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
     uint32 PsychicScream_Timer;
     uint32 DeepSleep_Timer;
     uint32 ShadowBoltVolley_Timer;
-    //	uint32 MindControl_Timer;
+    //    uint32 MindControl_Timer;
     bool Transformed;
     bool InCombat;
 
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         PsychicScream_Timer = 10000;
         DeepSleep_Timer = 10000;
         ShadowBoltVolley_Timer = 10000;
-        //		MindControl_Timer = 10000;
+        //        MindControl_Timer = 10000;
         Transformed = false;
         InCombat = false;
 
@@ -279,15 +279,15 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             //            if (MindControl_Timer < diff && !m_creature->IsNonMeleeSpellCasted(false))
             //            {
             //Cast
-            //				if (rand()%100 < 50) //50% chance to cast
+            //                if (rand()%100 < 50) //50% chance to cast
             //                {
             //                DoCast(m_creature->getVictim(),SPELL_MINDCONTROL);
-            //				}
+            //                }
             //15 seconds until we should cast this again
             //                MindControl_Timer = 15000;
             //            }else MindControl_Timer -= diff;
 
-            //END ELSE TRANSFORMED			
+            //END ELSE TRANSFORMED            
         }
 
         DoMeleeAttackIfReady();

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_INCITEFLAMES                19635	
+#define SPELL_INCITEFLAMES                19635    
 #define SPELL_MELTARMOR                    19631                     
 
 

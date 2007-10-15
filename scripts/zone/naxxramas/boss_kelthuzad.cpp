@@ -44,112 +44,112 @@ I also don't know the emotes
 //8818
 
 //common needed defines
-#define NAXXRAMAS_MAP				533
+#define NAXXRAMAS_MAP                533
 //Positional defines
-#define ADDX_LEFT_FAR				3783.272705
-#define ADDY_LEFT_FAR				-5062.697266
-#define ADDZ_LEFT_FAR				143.711203
-#define ADDO_LEFT_FAR				3.617599
-#define ADDX_LEFT_MIDDLE			3730.291260
-#define ADDY_LEFT_MIDDLE			-5027.239258
-#define ADDZ_LEFT_MIDDLE			143.956909
-#define ADDO_LEFT_MIDDLE			4.461900
-#define ADDX_LEFT_NEAR				3683.868652
-#define ADDY_LEFT_NEAR				-5057.281250
-#define ADDZ_LEFT_NEAR				143.183884
-#define ADDO_LEFT_NEAR				5.237086
-#define ADDX_RIGHT_FAR				3759.355225
-#define ADDY_RIGHT_FAR				-5174.128418
-#define ADDZ_RIGHT_FAR				143.802383
-#define ADDO_RIGHT_FAR				2.170104
-#define ADDX_RIGHT_MIDDLE			370.724365	
-#define ADDY_RIGHT_MIDDLE			-5185.123047	
-#define ADDZ_RIGHT_MIDDLE			143.928024	
-#define ADDO_RIGHT_MIDDLE			1.309310	
-#define ADDX_RIGHT_NEAR				3665.121094
-#define ADDY_RIGHT_NEAR				-5138.679199
-#define ADDZ_RIGHT_NEAR				143.183212
-#define ADDO_RIGHT_NEAR				0.604023
-#define WALKX_LEFT_FAR				3754.431396
-#define WALKY_LEFT_FAR				-5080.727734
-#define WALKZ_LEFT_FAR				142.036316
-#define WALKO_LEFT_FAR				3.736189
-#define WALKX_LEFT_MIDDLE			3724.396484
-#define WALKY_LEFT_MIDDLE			-5061.330566
-#define WALKZ_LEFT_MIDDLE			142.032700
-#define WALKO_LEFT_MIDDLE			4.564785
-#define WALKX_LEFT_NEAR				3687.158424
-#define WALKY_LEFT_NEAR				-5076.834473
-#define WALKZ_LEFT_NEAR				142.017319
-#define WALKO_LEFT_NEAR				5.237086
-#define WALKX_RIGHT_FAR				3687.571777
-#define WALKY_RIGHT_FAR				-5126.831055
-#define WALKZ_RIGHT_FAR				142.017807
-#define WALKO_RIGHT_FAR				0.604023
-#define WALKX_RIGHT_MIDDLE			3707.990733
-#define WALKY_RIGHT_MIDDLE			-5151.450195
-#define WALKZ_RIGHT_MIDDLE			142.032562
-#define WALKO_RIGHT_MIDDLE			1.376855
-#define WALKX_RIGHT_NEAR			3739.500000	
-#define WALKY_RIGHT_NEAR			-5141.883989
-#define WALKZ_RIGHT_NEAR			142.0141130
-#define WALKO_RIGHT_NEAR			2.121412
+#define ADDX_LEFT_FAR                3783.272705
+#define ADDY_LEFT_FAR                -5062.697266
+#define ADDZ_LEFT_FAR                143.711203
+#define ADDO_LEFT_FAR                3.617599
+#define ADDX_LEFT_MIDDLE            3730.291260
+#define ADDY_LEFT_MIDDLE            -5027.239258
+#define ADDZ_LEFT_MIDDLE            143.956909
+#define ADDO_LEFT_MIDDLE            4.461900
+#define ADDX_LEFT_NEAR                3683.868652
+#define ADDY_LEFT_NEAR                -5057.281250
+#define ADDZ_LEFT_NEAR                143.183884
+#define ADDO_LEFT_NEAR                5.237086
+#define ADDX_RIGHT_FAR                3759.355225
+#define ADDY_RIGHT_FAR                -5174.128418
+#define ADDZ_RIGHT_FAR                143.802383
+#define ADDO_RIGHT_FAR                2.170104
+#define ADDX_RIGHT_MIDDLE            370.724365    
+#define ADDY_RIGHT_MIDDLE            -5185.123047    
+#define ADDZ_RIGHT_MIDDLE            143.928024    
+#define ADDO_RIGHT_MIDDLE            1.309310    
+#define ADDX_RIGHT_NEAR                3665.121094
+#define ADDY_RIGHT_NEAR                -5138.679199
+#define ADDZ_RIGHT_NEAR                143.183212
+#define ADDO_RIGHT_NEAR                0.604023
+#define WALKX_LEFT_FAR                3754.431396
+#define WALKY_LEFT_FAR                -5080.727734
+#define WALKZ_LEFT_FAR                142.036316
+#define WALKO_LEFT_FAR                3.736189
+#define WALKX_LEFT_MIDDLE            3724.396484
+#define WALKY_LEFT_MIDDLE            -5061.330566
+#define WALKZ_LEFT_MIDDLE            142.032700
+#define WALKO_LEFT_MIDDLE            4.564785
+#define WALKX_LEFT_NEAR                3687.158424
+#define WALKY_LEFT_NEAR                -5076.834473
+#define WALKZ_LEFT_NEAR                142.017319
+#define WALKO_LEFT_NEAR                5.237086
+#define WALKX_RIGHT_FAR                3687.571777
+#define WALKY_RIGHT_FAR                -5126.831055
+#define WALKZ_RIGHT_FAR                142.017807
+#define WALKO_RIGHT_FAR                0.604023
+#define WALKX_RIGHT_MIDDLE            3707.990733
+#define WALKY_RIGHT_MIDDLE            -5151.450195
+#define WALKZ_RIGHT_MIDDLE            142.032562
+#define WALKO_RIGHT_MIDDLE            1.376855
+#define WALKX_RIGHT_NEAR            3739.500000    
+#define WALKY_RIGHT_NEAR            -5141.883989
+#define WALKZ_RIGHT_NEAR            142.0141130
+#define WALKO_RIGHT_NEAR            2.121412
 
 //spells to be casted
-#define SPELL_FROST_BOLT			28478
-#define SPELL_FROST_BOLT_NOVA		28479
-#define SPELL_CHAINS_OF_KELTHUZAD	28410
-#define SPELL_MANA_DETONATION		27819
-#define SPELL_SHADOW_FISURE			27810
-#define SPELL_FROST_BLAST			27808
+#define SPELL_FROST_BOLT            28478
+#define SPELL_FROST_BOLT_NOVA        28479
+#define SPELL_CHAINS_OF_KELTHUZAD    28410
+#define SPELL_MANA_DETONATION        27819
+#define SPELL_SHADOW_FISURE            27810
+#define SPELL_FROST_BLAST            27808
 
 //On Aggro
-#define SAY_ARRIVAL1			"PRAY FOR MERCY!"
-#define SOUND_ARRIVAL1			8809
-#define SAY_ARRIVAL3			"SCREAM YOR DYING BREATH!"
-#define SOUND_ARRIVAL3			8810
-#define SAY_ARRIVAL5			"THE END IS UPON YOU!"
-#define SOUND_ARRIVAL5			8811
+#define SAY_ARRIVAL1            "PRAY FOR MERCY!"
+#define SOUND_ARRIVAL1            8809
+#define SAY_ARRIVAL3            "SCREAM YOR DYING BREATH!"
+#define SOUND_ARRIVAL3            8810
+#define SAY_ARRIVAL5            "THE END IS UPON YOU!"
+#define SOUND_ARRIVAL5            8811
 
 //On Summon
-#define SAY_REINFORCEMENTS1		"MINIONS, SERVANTS, SOLDIERS OF THE COLD DARK, OBEY THE CALL OF KEL'THUZAD!"
-#define SOUND_REINFORCEMENTS1	8819
-#define SAY_REINFORCEMENTS2		"MASTER, I REQUIRE AID!"
-#define SOUND_REINFORCEMENTS2	8816
-#define SAY_LICH_NAXX_SUMMON	"VERY WELL. WARRIORS OF THE FROZEN WASTES RISE UP!. I COMMAND YOU TO FIGHT, KILL AND DIE AND DIE FOR YOUR MASTER! LET NONE SURVIVE!"
-#define SOUND_LICH_NAXX_SUMMON	8824
+#define SAY_REINFORCEMENTS1        "MINIONS, SERVANTS, SOLDIERS OF THE COLD DARK, OBEY THE CALL OF KEL'THUZAD!"
+#define SOUND_REINFORCEMENTS1    8819
+#define SAY_REINFORCEMENTS2        "MASTER, I REQUIRE AID!"
+#define SOUND_REINFORCEMENTS2    8816
+#define SAY_LICH_NAXX_SUMMON    "VERY WELL. WARRIORS OF THE FROZEN WASTES RISE UP!. I COMMAND YOU TO FIGHT, KILL AND DIE AND DIE FOR YOUR MASTER! LET NONE SURVIVE!"
+#define SOUND_LICH_NAXX_SUMMON    8824
 
 //Random 1/4 taunt said when player enters 300 yards
-#define SAY_TAUNT01				"WHO DARES VIOLATE THE SACTITY OF MY DOMAIN? BE WARNED, ALL WHO TRASPASS HERE ARE DOOMED"
-#define SOUND_TAUNT01			8820
-#define SAY_TAUNT02				"FOOLS, YOU THINK YOURSELVES TRIUMPHANT? YOU HAVE ONLY TAKEN ONE STEP CLOSER TO THE ABYSS!"
-#define SOUND_TAUNT02			8821
-#define SAY_TAUNT03				"I GROW TIRED OF THESE GAMES. PROCEED, AND I WILL BANISH YOUR SOULS TO OBLIVION!"
-#define SOUND_TAUNT03			8822
-#define SAY_TAUNT04				"YOU HAVE NO IDEA WHAT HORRORS LIE AHEAD. YOU HAVE SEEN NOTHING! THE FROZEN HEART OF NAXXRAMAS AWAITS YOU!"
-#define SOUND_TAUNT04			8823
+#define SAY_TAUNT01                "WHO DARES VIOLATE THE SACTITY OF MY DOMAIN? BE WARNED, ALL WHO TRASPASS HERE ARE DOOMED"
+#define SOUND_TAUNT01            8820
+#define SAY_TAUNT02                "FOOLS, YOU THINK YOURSELVES TRIUMPHANT? YOU HAVE ONLY TAKEN ONE STEP CLOSER TO THE ABYSS!"
+#define SOUND_TAUNT02            8821
+#define SAY_TAUNT03                "I GROW TIRED OF THESE GAMES. PROCEED, AND I WILL BANISH YOUR SOULS TO OBLIVION!"
+#define SOUND_TAUNT03            8822
+#define SAY_TAUNT04                "YOU HAVE NO IDEA WHAT HORRORS LIE AHEAD. YOU HAVE SEEN NOTHING! THE FROZEN HEART OF NAXXRAMAS AWAITS YOU!"
+#define SOUND_TAUNT04            8823
 
 //On kill unit
-#define SAY_SLAY				"THE DARK VOID AWAITS YOU!"
-#define SOUND_SLAY				8817
+#define SAY_SLAY                "THE DARK VOID AWAITS YOU!"
+#define SOUND_SLAY                8817
 
 //Specials
-#define SAY_FROST				"I WILL FREEZE THE BLOOD IN YOUR VEINS!"
-#define SOUND_FROST				8815
-#define SAY_CHAIN1				"YOUR SOUL IS BOUND TO ME NOW!"
-#define SOUND_CHAIN1			8812
-#define SAY_CHAIN2				"THERE WILL BE NO ESCAPE!"
-#define SOUND_CHAIN2			8813
-#define SAY_SPECIAL1			"YOUR PETTY MAGICS ARE NO CHALLENGE TO THE MIGTH OF THE SCOURGE"
-#define SOUND_SPECIAL1			9088
-#define SAY_SPECIAL2			"ENOUGH! I GROW TIRED OF THESE DISTRACTIONS!"
-#define SOUND_SPECIAL2			9090
-#define SAY_DISPEL				"FOOLS, YOU HAVE SPREAD YOUR POWERS TOO THIN. BE FREE, MY MINIONS!"
-#define SOUND_DISPEL			9089
+#define SAY_FROST                "I WILL FREEZE THE BLOOD IN YOUR VEINS!"
+#define SOUND_FROST                8815
+#define SAY_CHAIN1                "YOUR SOUL IS BOUND TO ME NOW!"
+#define SOUND_CHAIN1            8812
+#define SAY_CHAIN2                "THERE WILL BE NO ESCAPE!"
+#define SOUND_CHAIN2            8813
+#define SAY_SPECIAL1            "YOUR PETTY MAGICS ARE NO CHALLENGE TO THE MIGTH OF THE SCOURGE"
+#define SOUND_SPECIAL1            9088
+#define SAY_SPECIAL2            "ENOUGH! I GROW TIRED OF THESE DISTRACTIONS!"
+#define SOUND_SPECIAL2            9090
+#define SAY_DISPEL                "FOOLS, YOU HAVE SPREAD YOUR POWERS TOO THIN. BE FREE, MY MINIONS!"
+#define SOUND_DISPEL            9089
 
 //On death
-#define SAY_DEATH				"DO NOT REJOICE... YOUR VICTORY IS A HOLLOW ONE... FOR I SHALL RETURN WITH POWERS BEYOND YOUR IMAGINING!"
-#define SOUND_DEATH				8814
+#define SAY_DEATH                "DO NOT REJOICE... YOUR VICTORY IS A HOLLOW ONE... FOR I SHALL RETURN WITH POWERS BEYOND YOUR IMAGINING!"
+#define SOUND_DEATH                8814
 
 struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 {
@@ -164,7 +164,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         EnterEvadeMode();
     }
 
-    uint64 GuardiansOfIcecrown[5];	
+    uint64 GuardiansOfIcecrown[5];    
     uint32 GuardiansOfIcecrown_Count;
     uint32 GuardiansOfIcecrown_Timer;
     uint32 FrostBolt_Timer;
@@ -202,7 +202,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         Phase1_Timer = 310000; //Phase 1 lasts 5 minutes and 10 seconds
         Phase2 = false;
         Phase3 = false;
-        InCombat = false;		
+        InCombat = false;        
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -239,32 +239,32 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     case 0: 
                      Walk_Pos_X = ADDX_LEFT_FAR;
                      Walk_Pos_Y = ADDY_LEFT_FAR;
-                     Walk_Pos_Z = ADDZ_LEFT_FAR;						 
+                     Walk_Pos_Z = ADDZ_LEFT_FAR;                         
                      break;
                     case 1:
                      Walk_Pos_X = ADDX_LEFT_MIDDLE;
                      Walk_Pos_Y = ADDY_LEFT_MIDDLE;
-                     Walk_Pos_Z = ADDZ_LEFT_MIDDLE;						 
+                     Walk_Pos_Z = ADDZ_LEFT_MIDDLE;                         
                      break;
                     case 2:
                      Walk_Pos_X = ADDX_LEFT_NEAR;
                      Walk_Pos_Y = ADDY_LEFT_NEAR;
-                     Walk_Pos_Z = ADDZ_LEFT_NEAR;						 
+                     Walk_Pos_Z = ADDZ_LEFT_NEAR;                         
                      break;
                     case 3:
                      Walk_Pos_X = ADDX_RIGHT_FAR;
                      Walk_Pos_Y = ADDY_RIGHT_FAR;
-                     Walk_Pos_Z = ADDZ_RIGHT_FAR;						 
+                     Walk_Pos_Z = ADDZ_RIGHT_FAR;                         
                      break;
                     case 4:
                      Walk_Pos_X = ADDX_RIGHT_MIDDLE;
                      Walk_Pos_Y = ADDY_RIGHT_MIDDLE;
-                     Walk_Pos_Z = ADDZ_RIGHT_MIDDLE;						 
+                     Walk_Pos_Z = ADDZ_RIGHT_MIDDLE;                         
                      break;
                     case 5:
                      Walk_Pos_X = ADDX_RIGHT_NEAR;
                      Walk_Pos_Y = ADDY_RIGHT_NEAR;
-                     Walk_Pos_Z = ADDZ_RIGHT_NEAR;						 
+                     Walk_Pos_Z = ADDZ_RIGHT_NEAR;                         
                      break;
                 }
                 pUnit->SendMoveToPacket(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z,true);
@@ -275,13 +275,13 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     {
         switch(rand()%3)
             {
-                case 0:	DoYell(SAY_ARRIVAL1,LANG_UNIVERSAL,NULL);
+                case 0:    DoYell(SAY_ARRIVAL1,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL1);
                         break;
-                case 1:	DoYell(SAY_ARRIVAL3,LANG_UNIVERSAL,NULL);
+                case 1:    DoYell(SAY_ARRIVAL3,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL3);
                         break;
-                case 2:	DoYell(SAY_ARRIVAL5,LANG_UNIVERSAL,NULL);
+                case 2:    DoYell(SAY_ARRIVAL5,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL5);
             }
     }
@@ -300,18 +300,18 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
             {
                 switch(rand()%3)
                 {
-                case 0:	DoYell(SAY_ARRIVAL1,LANG_UNIVERSAL,NULL);
+                case 0:    DoYell(SAY_ARRIVAL1,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL1);
                         break;
-                case 1:	DoYell(SAY_ARRIVAL3,LANG_UNIVERSAL,NULL);
+                case 1:    DoYell(SAY_ARRIVAL3,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL3);
                         break;
-                case 2:	DoYell(SAY_ARRIVAL5,LANG_UNIVERSAL,NULL);
+                case 2:    DoYell(SAY_ARRIVAL5,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL5);
                 }
 
                 InCombat = true;
-            }		
+            }        
         }
     }
 
@@ -335,20 +335,20 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-                    case 0:	
+                    case 0:    
                         DoYell(SAY_ARRIVAL1,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL1);
                         break;
-                    case 1:	
+                    case 1:    
                         DoYell(SAY_ARRIVAL3,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL3);
                         break;
-                    case 2:	
+                    case 2:    
                         DoYell(SAY_ARRIVAL5,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_ARRIVAL5);
                     }
                     InCombat = true;
-                }	              
+                }                  
             }
         }
     }
@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_FROST);
                 }
                 //Cast again on time
-                FrostBolt_Timer = (rand()%60)*1000;		
+                FrostBolt_Timer = (rand()%60)*1000;        
             }
             else FrostBolt_Timer -= diff;
 
@@ -388,7 +388,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_FROST);
                 }
                 //cast again in 15 seconds
-                FrostBoltNova_Timer = 15000;	
+                FrostBoltNova_Timer = 15000;    
             }
             else FrostBoltNova_Timer -= diff;
             
@@ -411,7 +411,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     }
 
                 //cast again on time
-                ChainsOfKelthuzad_Timer = (rand()%30+30)*1000;		
+                ChainsOfKelthuzad_Timer = (rand()%30+30)*1000;        
             }
             else ChainsOfKelthuzad_Timer -= diff;
 
@@ -443,7 +443,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_SPECIAL2);
                 }
                 //cast again when it's time
-                ShadowFisure_Timer = 25000;	
+                ShadowFisure_Timer = 25000;    
             }
             else ShadowFisure_Timer -= diff;
 
@@ -479,7 +479,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                         break;
                 }
                 //here Lich King should respond to KelThuzad but I don't know which creature to make talk
-                //so for now just make Kelthuzad says it.				
+                //so for now just make Kelthuzad says it.                
                 DoPlaySoundToSet(m_creature,SOUND_LICH_NAXX_SUMMON);
             }
 
@@ -499,21 +499,21 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                          //Setting walk position
                          Walk_Pos_X = WALKX_LEFT_FAR;
                          Walk_Pos_Y = WALKY_LEFT_FAR;
-                         Walk_Pos_Z = WALKZ_LEFT_FAR;						 
+                         Walk_Pos_Z = WALKZ_LEFT_FAR;                         
                          break;
                         case 1:
                          pUnit = m_creature->SummonCreature(16441,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_LEFT_MIDDLE;
                          Walk_Pos_Y = WALKY_LEFT_MIDDLE;
-                         Walk_Pos_Z = WALKZ_LEFT_MIDDLE;						 
+                         Walk_Pos_Z = WALKZ_LEFT_MIDDLE;                         
                          break;
                         case 2:
                          pUnit = m_creature->SummonCreature(16441,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_LEFT_NEAR;
                          Walk_Pos_Y = WALKY_LEFT_NEAR;
-                         Walk_Pos_Z = WALKZ_LEFT_NEAR;						 
+                         Walk_Pos_Z = WALKZ_LEFT_NEAR;                         
                          break;
                         case 3:
 
@@ -521,23 +521,23 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_FAR;
                          Walk_Pos_Y = WALKY_RIGHT_FAR;
-                         Walk_Pos_Z = WALKZ_RIGHT_FAR;						 
+                         Walk_Pos_Z = WALKZ_RIGHT_FAR;                         
                          break;
                         case 4:
                          pUnit = m_creature->SummonCreature(16441,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_MIDDLE;
                          Walk_Pos_Y = WALKY_RIGHT_MIDDLE;
-                         Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;						 
+                         Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;                         
                          break;
                         case 5:
                          pUnit = m_creature->SummonCreature(16441,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
                          //Start moving guardian towards the center of the room
                          Walk_Pos_X = WALKX_RIGHT_NEAR;
                          Walk_Pos_Y = WALKY_RIGHT_NEAR;
-                         Walk_Pos_Z = WALKZ_RIGHT_NEAR;						 
+                         Walk_Pos_Z = WALKZ_RIGHT_NEAR;                         
                          break;
-                    }					
+                    }                    
 
                     if (pUnit)
                     {

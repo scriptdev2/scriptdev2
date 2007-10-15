@@ -29,7 +29,7 @@
 
 //Spells of Shades of Taerar
 
-#define SPELL_POSIONCLOUD                24840  	
+#define SPELL_POSIONCLOUD                24840      
 #define SPELL_POSIONBREATH             20667   
 
 struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI

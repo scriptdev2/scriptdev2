@@ -28,16 +28,16 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
     boss_kurinnaxxAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     Unit *pTarget;
-	uint32 MORTALWOUND_Timer;
+    uint32 MORTALWOUND_Timer;
     uint32 SANDTRAP_Timer;
-	uint32 i;
+    uint32 i;
 
     void EnterEvadeMode()
     {
-		i=0;
+        i=0;
         pTarget = NULL;
-		MORTALWOUND_Timer = 30000;
-		SANDTRAP_Timer = 30000;
+        MORTALWOUND_Timer = 30000;
+        SANDTRAP_Timer = 30000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -54,10 +54,10 @@ struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-			
-			pTarget = who;
+            
+            pTarget = who;
         }
     }
 

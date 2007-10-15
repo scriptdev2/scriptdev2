@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_GOBLINGUN             21910   // NOt sure about right id! 	
+#define SPELL_GOBLINGUN             21910   // NOt sure about right id!     
 #define SPELL_BOMB                  22334              
 
 #define SAY_AGGRO1      "Mine! Mine! Mine! Gizlock is the ruler of this domain! You shall never reveal my presence!"    

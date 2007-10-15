@@ -36,14 +36,14 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 40099;		// VILESLIME
+        ai->Spell[1].Spell_Id = 40099;        // VILESLIME
         ai->Spell[1].Cooldown = 45000;
         ai->Spell[1].First_Cast = 55000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 40099;		// VILESLIME
+        ai->Spell[2].Spell_Id = 40099;        // VILESLIME
         ai->Spell[2].Cooldown = 10000;
         ai->Spell[2].First_Cast = 55000;
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
@@ -81,7 +81,7 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 22945;		// FORKEDLIGHTNING
+        ai->Spell[1].Spell_Id = 22945;        // FORKEDLIGHTNING
         ai->Spell[1].Cooldown = 30000;
         ai->Spell[1].First_Cast = 45000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -104,21 +104,21 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 38260;		// CLEAVE
+        ai->Spell[1].Spell_Id = 38260;        // CLEAVE
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 35000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 35392;		// POISONSPIT
+        ai->Spell[2].Spell_Id = 35392;        // POISONSPIT
         ai->Spell[2].Cooldown = 39000;
         ai->Spell[2].First_Cast = 15000;
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
 
         ai->Spell[3].Enabled = true;
-        ai->Spell[3].Spell_Id = 40079;		// DEBILITATINGSPRAY
+        ai->Spell[3].Spell_Id = 40079;        // DEBILITATINGSPRAY
         ai->Spell[3].Cooldown = 46000;
         ai->Spell[3].First_Cast = 66000;
         ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -141,7 +141,7 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 11713;		// Curse of Agony Rank 6
+        ai->Spell[1].Spell_Id = 11713;        // Curse of Agony Rank 6
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 25000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM;
@@ -155,13 +155,13 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 41534;		// War Stomp
+        ai->Spell[1].Spell_Id = 41534;        // War Stomp
         ai->Spell[1].Cooldown = 45000;
         ai->Spell[1].First_Cast = 17000;
         ai->Spell[1].Cast_Target_Type = CAST_SELF;
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 40938;		// Illidari Flames
+        ai->Spell[2].Spell_Id = 40938;        // Illidari Flames
         ai->Spell[2].Cooldown = 49000;
         ai->Spell[2].First_Cast = 25000;
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -175,7 +175,7 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_RANDOM; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 39645;		// Shadow Inferno
+        ai->Spell[1].Spell_Id = 39645;        // Shadow Inferno
         ai->Spell[1].Cooldown = 10000;
         ai->Spell[1].First_Cast = 27000;
         ai->Spell[1].Cast_Target_Type = CAST_SELF;
@@ -211,13 +211,13 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_RANDOM; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 41171;		// Skeleton Shot
+        ai->Spell[1].Spell_Id = 41171;        // Skeleton Shot
         ai->Spell[1].Cooldown = 65000;
         ai->Spell[1].First_Cast = 45000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 41093;		// Shoot
+        ai->Spell[2].Spell_Id = 41093;        // Shoot
         ai->Spell[2].Cooldown = 35000;
         ai->Spell[2].First_Cast = 25000;
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
@@ -231,13 +231,13 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 25442;		// Chain Lightning Rank 6
+        ai->Spell[1].Spell_Id = 25442;        // Chain Lightning Rank 6
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 25000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM;
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 25449;		// Lightning Bolt Rank 12
+        ai->Spell[2].Spell_Id = 25449;        // Lightning Bolt Rank 12
         ai->Spell[2].Cooldown = 22000;
         ai->Spell[2].First_Cast = 15000;
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -259,7 +259,7 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 25464;		// Frost Shock Rank 5
+        ai->Spell[1].Spell_Id = 25464;        // Frost Shock Rank 5
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 25000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM;

@@ -17,7 +17,7 @@
 #include "../../../sc_defines.h"
 
 #define SPELL_COUNTERCHARGE         35035
-#define SPELL_KNOCKAWAY	            22893
+#define SPELL_KNOCKAWAY                22893
 
 struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 {
@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
         //Check if we have a current target
         //Knockaway_Timer
         if (Knockaway_Timer < diff)
-        {		
+        {        
             m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
             // current aggro target is knocked away pick new target

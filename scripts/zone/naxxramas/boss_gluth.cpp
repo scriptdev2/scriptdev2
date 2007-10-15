@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_MORTALWOUND                25646	
+#define SPELL_MORTALWOUND                25646    
 #define SPELL_DECIMATE             28374              
 #define SPELL_TERRIFYINGROAR            29685
 #define SPELL_FRENZY            19812

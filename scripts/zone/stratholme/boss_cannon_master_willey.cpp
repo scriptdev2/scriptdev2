@@ -64,10 +64,10 @@
 #define ADD_9Z 125.001015
 #define ADD_9O 0.592007
 
-#define SPELL_KNOCKAWAY	10101
-#define SPELL_PUMMEL	15615
-#define SPELL_SHOOT	20463
-//#define SPELL_SUMMONCRIMSONRIFLEMAN	17279
+#define SPELL_KNOCKAWAY    10101
+#define SPELL_PUMMEL    15615
+#define SPELL_SHOOT    20463
+//#define SPELL_SUMMONCRIMSONRIFLEMAN    17279
 
 struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
 {
@@ -226,7 +226,7 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
                 m_creature->SummonCreature(11054,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,240000);
                 m_creature->SummonCreature(11054,ADD_3X,ADD_3Y,ADD_3Z,ADD_3O,TEMPSUMMON_TIMED_DESPAWN,240000);
                 break;
-            }			
+            }            
             //30 seconds until we should cast this again
             SummonRifleman_Timer = 30000;
         }else SummonRifleman_Timer -= diff;

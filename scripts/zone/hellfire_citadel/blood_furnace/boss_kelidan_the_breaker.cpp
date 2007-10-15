@@ -17,29 +17,29 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_SHADOW_BOLT_VOLLEY		29924
-#define SPELL_BURNING_NOVA				30940
-#define SPELL_FIRE_NOVA					30941 // ?????
-#define SPELL_CORRUPTION				30938
+#define SPELL_SHADOW_BOLT_VOLLEY        29924
+#define SPELL_BURNING_NOVA                30940
+#define SPELL_FIRE_NOVA                    30941 // ?????
+#define SPELL_CORRUPTION                30938
 
 
-#define SAY_KILL_1				"Just as you deserve!" 
-#define SOUND_KILL_1			10169
-#define SAY_KILL_2				"Your friends will soon be joining you."
-#define SOUND_KILL_2			10170		
+#define SAY_KILL_1                "Just as you deserve!" 
+#define SOUND_KILL_1            10169
+#define SAY_KILL_2                "Your friends will soon be joining you."
+#define SOUND_KILL_2            10170        
 
-#define SAY_AGGRO_1				"You mustn't let him loose!"
-#define SOUND_AGGRO_1			10166
-#define SAY_AGGRO_2				"Ignorant whelps!" 
-#define SOUND_AGGRO_2			10167
-#define SAY_AGGRO_3				"You fools! He'll kill us all!"	
-#define SOUND_AGGRO_3			10168
+#define SAY_AGGRO_1                "You mustn't let him loose!"
+#define SOUND_AGGRO_1            10166
+#define SAY_AGGRO_2                "Ignorant whelps!" 
+#define SOUND_AGGRO_2            10167
+#define SAY_AGGRO_3                "You fools! He'll kill us all!"    
+#define SOUND_AGGRO_3            10168
 
-#define SAY_NOVA				"Closer... Come closer.. and burn!"
-#define SOUND_BURN				10165
+#define SAY_NOVA                "Closer... Come closer.. and burn!"
+#define SOUND_BURN                10165
 
-#define SAY_DIE					"Good luck... you'll need it.." 
-#define SOUND_DIE				10171
+#define SAY_DIE                    "Good luck... you'll need it.." 
+#define SOUND_DIE                10171
 
 
 // 10164,10 "A_HELL_Keli_Wake01"
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
                 DoYell(SAY_NOVA, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_BURN);
 
-                DoCast(m_creature,SPELL_BURNING_NOVA);	
+                DoCast(m_creature,SPELL_BURNING_NOVA);    
 
                 BurningNova_Timer = 10000+rand()%8000;
                 Firenova_Timer= 5000;

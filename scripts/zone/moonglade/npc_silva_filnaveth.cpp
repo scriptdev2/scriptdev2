@@ -31,7 +31,7 @@ bool GossipHello_silva_filnaveth(Player *player, Creature *_Creature)
 }
 
 /*******************************************************
- *				Start of GOSSIP_MENU
+ *                Start of GOSSIP_MENU
  *******************************************************/
 
 void SendDefaultMenu_silva_filnaveth(Player *player, Creature *_Creature, uint32 action)
@@ -56,7 +56,7 @@ bool GossipSelect_silva_filnaveth(Player *player, Creature *_Creature, uint32 se
 }
 
 /*******************************************************
- *				End of GOSSIP_MENU
+ *                End of GOSSIP_MENU
  *******************************************************/
 
 void AddSC_silva_filnaveth()

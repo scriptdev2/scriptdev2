@@ -81,6 +81,7 @@
 #define SPELL_MASSSLOW      30035
 #define SPELL_FLAME_WREATH  29946
 #define SPELL_AOE_CS        29961
+#define SPELL_PLAYERPULL    32265
 #define SPELL_AEXPLOSION    29973
 #define SPELL_MASS_POLY     29963
 #define SPELL_BLINK_CENTER  29967
@@ -474,6 +475,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 }
 
                 m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
+                m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
                 m_creature->CastSpell(m_creature, SPELL_MASSSLOW, true);
                 m_creature->CastSpell(m_creature, SPELL_AEXPLOSION, false);
                 break;

@@ -25,7 +25,7 @@
 
 bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
 {
-	if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
+    if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
             !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1) &&
             player->GetBankItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT) < 1 &&
             player->HasItemCount(ITEM_SULFURON_INGOT, 1))

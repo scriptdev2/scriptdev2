@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_CLEAVE                20691	
+#define SPELL_CLEAVE                20691    
 #define SPELL_DOMINATEMIND                    20740                     
 
 

@@ -28,8 +28,8 @@ struct MANGOS_DLL_DECL MinerAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-		m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 233);
-		//update to start mining when loaded, and this will also make it if anyone of them reset they will mine after going home
+        m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, 233);
+        //update to start mining when loaded, and this will also make it if anyone of them reset they will mine after going home
     }
 
 };

@@ -23,26 +23,26 @@
 #define SPELL_ARCANEERUPTION 25672 
 #define SPELL_SUMMONMANA 25681
 #define SPELL_GRDRSLEEP 24360 //Greater Dreamless Sleep  
-#define SAY_MANA	    "moam bristles with energy!"
+#define SAY_MANA        "moam bristles with energy!"
 
 struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 {
     boss_moamAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     Unit *pTarget;
-	uint32 TRAMPLE_Timer;
+    uint32 TRAMPLE_Timer;
     uint32 DRAINMANA_Timer;
-	uint32 SUMMONMANA_Timer;
-	uint32 i;
-	uint32 j;
+    uint32 SUMMONMANA_Timer;
+    uint32 i;
+    uint32 j;
 
     void EnterEvadeMode()
     {
-		i=0;
-		j=0;
+        i=0;
+        j=0;
         pTarget = NULL;
-		TRAMPLE_Timer = 30000;
-		DRAINMANA_Timer = 30000;
+        TRAMPLE_Timer = 30000;
+        DRAINMANA_Timer = 30000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-				DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
             else DoStartRangedAttack(who);
-			
-			pTarget = who;
+            
+            pTarget = who;
         }
     }
 

@@ -46,12 +46,12 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
     {
         UnSpawnTimer = 2500;
         ResetlifeTimer= 60000;
-        SayingTimer	= 5000;
+        SayingTimer    = 5000;
         HealSayTimer = 6000;
         say = false;
         isRun = false;
         isMove = false;
-        UnSpawn	= false;
+        UnSpawn    = false;
         HealSay = false;
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
             case 2: DoSay(HEAL3, LANG_UNIVERSAL, Hitter); break;
             case 3: DoSay(HEAL4, LANG_UNIVERSAL, Hitter); break;
             }
-            HealSay	= true;
+            HealSay    = true;
         }
         return;
     }

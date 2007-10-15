@@ -34,7 +34,7 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;  
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 27082;		//Arcane Explosion
+        ai->Spell[1].Spell_Id = 27082;        //Arcane Explosion
         ai->Spell[1].Cooldown = 19000;
         ai->Spell[1].First_Cast = 17000;
         ai->Spell[1].Cast_Target_Type = CAST_SELF;
@@ -56,13 +56,13 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 29922;		// Fireball Volley
+        ai->Spell[1].Spell_Id = 29922;        // Fireball Volley
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 19000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 33933;		// Blast Wave
+        ai->Spell[2].Spell_Id = 33933;        // Blast Wave
         ai->Spell[2].Cooldown = 22000;
         ai->Spell[2].First_Cast = 15000;
         ai->Spell[2].Cast_Target_Type = CAST_SELF;
@@ -76,19 +76,19 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 29922;		// Fireball Volley
+        ai->Spell[1].Spell_Id = 29922;        // Fireball Volley
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 19000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[2].Enabled = true;
-        ai->Spell[2].Spell_Id = 33933;		// Blast Wave
+        ai->Spell[2].Spell_Id = 33933;        // Blast Wave
         ai->Spell[2].Cooldown = 22000;
         ai->Spell[2].First_Cast = 15000;
         ai->Spell[2].Cast_Target_Type = CAST_SELF;
 
         ai->Spell[3].Enabled = true;
-        ai->Spell[3].Spell_Id = 33043;		// Dragon's Breath
+        ai->Spell[3].Spell_Id = 33043;        // Dragon's Breath
         ai->Spell[3].Cooldown = 29000;
         ai->Spell[3].First_Cast = 22000;
         ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -110,7 +110,7 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 26350;		// Cleave
+        ai->Spell[1].Spell_Id = 26350;        // Cleave
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 20000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -124,7 +124,7 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 26007;		// Uppercut
+        ai->Spell[1].Spell_Id = 26007;        // Uppercut
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 20000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -138,7 +138,7 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_RANDOM; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 38110;		// Wing Buffet
+        ai->Spell[1].Spell_Id = 38110;        // Wing Buffet
         ai->Spell[1].Cooldown = 25000;
         ai->Spell[1].First_Cast = 20000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -152,7 +152,7 @@ CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 37106;		// Charged Arcane Explosion
+        ai->Spell[1].Spell_Id = 37106;        // Charged Arcane Explosion
         ai->Spell[1].Cooldown = 45000;
         ai->Spell[1].First_Cast = 25000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;

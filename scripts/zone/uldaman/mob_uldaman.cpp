@@ -48,7 +48,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 11306;	// Fire Nova
+        ai->Spell[1].Spell_Id = 11306;    // Fire Nova
         ai->Spell[1].Cooldown = 30000;
         ai->Spell[1].First_Cast = 11000;
         ai->Spell[1].Cast_Target_Type = CAST_SELF;
@@ -60,7 +60,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[3].Enabled = true;
-        ai->Spell[3].Spell_Id = 9482;	// Amplify Flames
+        ai->Spell[3].Spell_Id = 9482;    // Amplify Flames
         ai->Spell[3].Cooldown = 30000;
         ai->Spell[3].First_Cast = 1000;
         ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -74,7 +74,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 930;	// Chain Lightning
+        ai->Spell[1].Spell_Id = 930;    // Chain Lightning
         ai->Spell[1].Cooldown = 31000;
         ai->Spell[1].First_Cast = 8000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -88,7 +88,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 930;	// Chain Lightning
+        ai->Spell[1].Spell_Id = 930;    // Chain Lightning
         ai->Spell[1].Cooldown = 31000;
         ai->Spell[1].First_Cast = 8000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -118,7 +118,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF;  
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 9574;	// Flame Buffet
+        ai->Spell[1].Spell_Id = 9574;    // Flame Buffet
         ai->Spell[1].Cooldown = 17000;
         ai->Spell[1].First_Cast = 8000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -132,7 +132,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;  
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 18958;		// Flame Lash
+        ai->Spell[1].Spell_Id = 18958;        // Flame Lash
         ai->Spell[1].Cooldown = 17000;
         ai->Spell[1].First_Cast = 8000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -170,7 +170,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;  
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 9574;		// Flame Buffet
+        ai->Spell[1].Spell_Id = 9574;        // Flame Buffet
         ai->Spell[1].Cooldown = 35000;
         ai->Spell[1].First_Cast = 2000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
@@ -184,7 +184,7 @@ CreatureAI* GetAI_mob_uldaman(Creature *_Creature)
         ai->Spell[0].Cast_Target_Type = CAST_SELF;  
 
         ai->Spell[1].Enabled = true;
-        ai->Spell[1].Spell_Id = 10392;		// Lightning Bolt
+        ai->Spell[1].Spell_Id = 10392;        // Lightning Bolt
         ai->Spell[1].Cooldown = 19000;
         ai->Spell[1].First_Cast = 3000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;

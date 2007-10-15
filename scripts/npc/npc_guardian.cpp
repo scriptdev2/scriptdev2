@@ -16,8 +16,8 @@
 
 #include "../sc_defines.h"
 
-#define SPELL_DEATHTOUCH	            5
-#define SAY_AGGRO			            "This area is closed!"
+#define SPELL_DEATHTOUCH                5
+#define SAY_AGGRO                        "This area is closed!"
 
 struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 {

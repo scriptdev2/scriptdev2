@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_GROUNDSTOMP                19364	
+#define SPELL_GROUNDSTOMP                19364    
 #define SPELL_ANCIENTDREAD                   19365                     
 #define SPELL_CAUTERIZINGFLAMES                   19366 
 #define SPELL_WITHERINGHEAT                   19367 

@@ -325,8 +325,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         //damage
         const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
         m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, cinfo->mindmg);
-		m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, cinfo->maxdmg);
-		m_creature->UpdateDamagePhysical(BASE_ATTACK);
+        m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, cinfo->maxdmg);
+        m_creature->UpdateDamagePhysical(BASE_ATTACK);
     }
 
     void EnfeebleHealthEffect()
@@ -465,8 +465,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 //damage
                 const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                 m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, 2*cinfo->mindmg);
-				m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, 2*cinfo->maxdmg);
-				m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, 2*cinfo->maxdmg);
+                m_creature->UpdateDamagePhysical(BASE_ATTACK);
             }
 
         }

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_FISTOFRAGNAROS               20277  	
+#define SPELL_FISTOFRAGNAROS               20277      
 #define SPELL_SUNDERARMOR                  21081                     
 #define SPELL_STRIKE                   19730
 

@@ -16,7 +16,7 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_FIRESHIELD                19626	
+#define SPELL_FIRESHIELD                19626    
 #define SPELL_FLAME                     19628                     
 #define SPELL_CONEOFFIRE                19630
 

@@ -16,41 +16,40 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_SHADOW_WHIP		30638
-#define SPELL_TREACHEROUS_AURA	30695
-#define SPELL_REFLECT			23920
+#define SPELL_SHADOW_WHIP        30638
+#define SPELL_TREACHEROUS_AURA    30695
+#define SPELL_REFLECT            23920
 
-#define SAY_AGGRO_1				"You dare challenge me?!" 
-#define SOUND_AGGRO_1			10280
-#define SAY_AGGRO_2				"I will not be defeated!"
-#define SOUND_AGGRO_2			10279
+#define SAY_AGGRO_1                "You dare challenge me?!" 
+#define SOUND_AGGRO_1            10280
+#define SAY_AGGRO_2                "I will not be defeated!"
+#define SOUND_AGGRO_2            10279
 #define SAY_AGGRO_3             ""
-#define SOUND_AGGRO_3			10281
+#define SOUND_AGGRO_3            10281
 
 
-#define SAY_SUMMON				"Achor-she-ki! Feast my pet! Eat your fill!"
-#define SOUND_SUMMON			10277
+#define SAY_SUMMON                "Achor-she-ki! Feast my pet! Eat your fill!"
+#define SOUND_SUMMON            10277
 
-#define SAY_CURSE				"A-Kreesh!"	
-#define SOUND_CURSE				10278
+#define SAY_CURSE                "A-Kreesh!"    
+#define SOUND_CURSE                10278
 
-#define SAY_KILL_1				"Die, weakling!"
-#define SOUND_KILL_1			10282			
+#define SAY_KILL_1                "Die, weakling!"
+#define SOUND_KILL_1            10282            
 
-#define SAY_DIE					"It is... not over." 
-#define SOUND_DIE				10284
+#define SAY_DIE                    "It is... not over." 
+#define SOUND_DIE                10284
 
-#define SAY_WIPE				"I am victorious!" 	
-#define SOUND_WIPE				10283	
+#define SAY_WIPE                "I am victorious!"     
+#define SOUND_WIPE                10283    
 
 
-#define ADD_X1			-1133.756
-#define ADD_Y1			 1720.647
+#define ADD_X1            -1133.756
+#define ADD_Y1             1720.647
 #define ADD_Z1             89.671
 #define ADD_X2          -1125.418
 #define ADD_Y2           1704.123
 #define ADD_Z2             89.867
-
 
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
@@ -61,6 +60,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     uint32 TreacherousAura_Timer;
     uint32 Reflect_Timer;
     uint32 Summon_Timer;
+    bool Summoned;
 
     bool InCombat;
 
@@ -83,6 +83,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         Reflect_Timer = 1000;
         TreacherousAura_Timer = 2000;
         Summon_Timer = 10000;
+        Summoned = false;
     }
 
     void JustDied(Unit* Killer)
@@ -200,28 +201,29 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             TreacherousAura_Timer = 5000+rand()%8000;
         }else TreacherousAura_Timer -= diff;
 
-        if(Summon_Timer < diff)
-        {
-            DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SUMMON);
+        if(!Summoned)
+            if (Summon_Timer < diff)
+            {
+                DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SUMMON);
 
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            Creature* Summoned = NULL;
+                Creature* pSummoned = NULL;
 
-            //Summoned = m_creature->SummonCreature(17540,ADD_X1,ADD_Y1,ADD_Z1,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-            Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-            if (Summoned && target)
-                Summoned->AI()->AttackStart(target);
+                //Summoned = m_creature->SummonCreature(17540,ADD_X1,ADD_Y1,ADD_Z1,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+                pSummoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+                if (pSummoned && target)
+                    pSummoned->AI()->AttackStart(target);
 
-            Summoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-            if (Summoned && target)
-                Summoned->AI()->AttackStart(target);
+                pSummoned = DoSpawnCreature(17540, 0,0,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+                if (pSummoned && target)
+                    pSummoned->AI()->AttackStart(target);
 
-            Summon_Timer = 15000;
+                Summoned = true;
 
-        }else Summon_Timer -= diff;
+            }else Summon_Timer -= diff;
     }   
 };
 
