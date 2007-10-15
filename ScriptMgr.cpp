@@ -1276,7 +1276,7 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
     switch (target)
     {
     case SELECT_TARGET_RANDOM:
-        advance ( i , rand()%m_threatlist.size());
+        advance ( i , position +  (rand() % (m_threatlist.size() - position ) ));
         return Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
         break;
 

@@ -20,94 +20,143 @@
 #define SOUND_DEATH         9221
 
 // 19 Coordinates for Infernal spawns
-#define ADDZ  275.5
+struct InfernalPoint
+{
+    float x,y;
+};
 
-#define ADDX1 -10922.8
-#define ADDY1 -1985.2
+#define INFERNAL_Z  275.5
 
-#define ADDX2 -10916.2
-#define ADDY2 -1996.2
+static InfernalPoint InfernalPoints[] =
+{
+    {-10922.8, -1985.2},
+    {-10916.2, -1996.2},
+    {-10932.2, -2008.1},
+    {-10948.8, -2022.1},
+    {-10958.7, -1997.7},
+    {-10971.5, -1997.5},
+    {-10990.8, -1995.1},
+    {-10989.8, -1976.5},
+    {-10971.6, -1973.0},
+    {-10955.5, -1974.0},
+    {-10939.6, -1969.8},
+    {-10958.0, -1952.2},
+    {-10941.7, -1954.8},
+    {-10943.1, -1988.5},
+    {-10948.8, -2005.1},
+    {-10984.0, -2019.3},
+    {-10932.8, -1979.6},
+    {-10932.8, -1979.6},
+    {-10935.7, -1996.0}
+};
 
-#define ADDX3 -10932.2
-#define ADDY3 -2008.1
-
-#define ADDX4 -10948.8
-#define ADDY4 -2022.1
-
-#define ADDX5 -10958.7
-#define ADDY5 -1997.7
-
-#define ADDX6 -10971.5
-#define ADDY6 -1997.5
-
-#define ADDX7 -10990.8
-#define ADDY7 -1995.1
-
-#define ADDX8 -10989.8
-#define ADDY8 -1976.5
-
-#define ADDX9 -10971.6
-#define ADDY9 -1973.0
-
-#define ADDX10 -10955.5
-#define ADDY10 -1974.0
-
-#define ADDX11 -10939.6
-#define ADDY11 -1969.8
-
-#define ADDX12 -10958.0
-#define ADDY12 -1952.2
-
-#define ADDX13 -10941.7
-#define ADDY13 -1954.8
-
-#define ADDX14 -10943.1
-#define ADDY14 -1988.5
-
-#define ADDX15 -10948.8
-#define ADDY15 -2005.1
-
-#define ADDX16 -10984.0
-#define ADDY16 -2019.3
-
-#define ADDX17 -10932.8
-#define ADDY17 -1979.6
-
-#define ADDX18 -10932.8
-#define ADDY18 -1979.6
-
-#define ADDX19 -10935.7
-#define ADDY19 -1996
-
-/*
-SPECIAL?
-9223
-9320
-
-AXETOSS2?
-9317*/
+#define TOTAL_INFERNAL_POINTS 19
 
 //Enfeeble is supposed to reduce hp to 1 and then heal player back to full when it ends
 //Along with reducing healing and regen while enfeebled to 0%
 //This spell effect will only reduce healing
-#define SPELL_ENFEEBLE          30843
 
+//Enfeeble during phase 1 and 2
+#define SPELL_ENFEEBLE          30843
+#define SPELL_ENFEEBLE_EFFECT   41624
+
+//Shadownova used during all phases
 #define SPELL_SHADOWNOVA        30852
 
+//Shadow word pain during phase 1 and 3 (different targeting rules though)
 #define SPELL_SW_PAIN           30854
+
+//Extra attack chance during phase 2
 #define SPELL_THRASH_PASSIVE    12787
 
+//Sunder armor during phase 2
 #define SPELL_SUNDER_ARMOR      25225
-#define SPELL_CLEAVE            15663
 
-//Axe's use this spell
-#define SPELL_AMPLIFY_DAMAGE    12738
+//Passive proc chance for thrash
+#define SPELL_THRASH_AURA       3417
 
-//Infernals cast this once every 3 seconds and they do not move
-#define SPELL_INFERNAL_EFFECT   23056
-#define SPELL_HELLFIRE          39132
+//Visual for axe equiping
+#define SPELL_EQUIP_AXES        30857
 
+//Amplifiy during phase 3
+#define SPELL_AMPLIFY_DAMAGE    39095
+
+//Infenals' hellfire aura
+#define SPELL_HELLFIRE          30859
+
+//The netherspite infernal creature
 #define NETHERSPITE_INFERNAL    17646
+
+//Malchezar's axes (creatures), summoned during phase 3
+#define MALCHEZARS_AXE          17650
+
+//Infernal Effects (NYI)
+#define INFERNAL_RELAY          17645
+#define SPELL_INFERNAL_RELAY    30834
+
+
+//---------Infernal code first
+struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
+{
+    netherspite_infernalAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    uint32 HellfireTimer;
+    uint32 CleanupTimer;
+    uint32 malchezaar;
+    InfernalPoint *point;
+
+    void EnterEvadeMode()
+    {
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        HellfireTimer = 4000;
+        CleanupTimer = 175000;
+
+    }
+
+    void AttackStart(Unit *who)
+    {        
+
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(HellfireTimer)
+            if(HellfireTimer <= diff)
+            {
+                DoCast(m_creature, SPELL_HELLFIRE);
+                HellfireTimer = 0;
+            }
+            else HellfireTimer -= diff;
+
+        if(CleanupTimer)
+            if(CleanupTimer <= diff)
+            {
+                Cleanup();
+                CleanupTimer = 0;
+            } else CleanupTimer -= diff;
+    }
+
+    void Cleanup(); //below ...
+};
+
+
+CreatureAI* GetAI_netherspite_infernal(Creature *_Creature)
+{
+    return new netherspite_infernalAI (_Creature);
+}
+
+void AddSC_netherspite_infernal()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="netherspite_infernal";
+    newscript->GetAI = GetAI_netherspite_infernal;
+
+    m_scripts[nrscripts++] = newscript;
+}
 
 struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 {
@@ -118,44 +167,42 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     uint32 ShadowNovaTimer;
     uint32 SWPainTimer;
     uint32 SunderArmorTimer;
-    uint32 CleaveTimer;
     uint32 AmplifyDamageTimer;
+    uint32 InfernalTimer;
+    uint32 AxesTargetSwitchTimer;
+    uint32 InfernalCleanupTimer;
 
-    Unit* target1;
-    Unit* target2;
-    Unit* target3;
-    Unit* target4;
-    Unit* target5;
-
-    uint32 AddTimer;
-    Creature* Invisible;
-    Creature* Infernal;
-    Creature* Axe;
-    int Rand;
-    int RandX;
-    int RandY;
-
+    std::vector<uint64> targets;
+    std::vector<uint64> infernals;
+    std::vector<InfernalPoint*> positions;
+    
+    uint64 axes[2];
+    
     uint32 phase;
-
-    bool Enfeebled;
     bool InCombat;
-    bool HasSummonedAxes;
 
     void EnterEvadeMode()
     {
+        AxesCleanup();
+        ClearWeapons();
+        InfernalCleanup();
+        positions.clear();
+
+        for(int i = 0; i < TOTAL_INFERNAL_POINTS; ++i)
+            positions.push_back(&InfernalPoints[i]);
+
         EnfeebleTimer = 30000;
         EnfeebleResetTimer = 38000;
         ShadowNovaTimer = 35000;
         SWPainTimer = 20000;
-        CleaveTimer = 5000;
-        SunderArmorTimer = 15000;
         AmplifyDamageTimer = 10000;
-        AddTimer = 45000;
+        InfernalTimer = 45000;
+        InfernalCleanupTimer = 47000;
+        AxesTargetSwitchTimer = 7500 + rand()%12500;
         phase = 1;
 
         InCombat = false;
-        Enfeebled = false;
-        HasSummonedAxes = false;
+        
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -185,6 +232,15 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        AxesCleanup();
+        ClearWeapons();
+        InfernalCleanup();
+        positions.clear();
+
+        for(int i = 0; i < TOTAL_INFERNAL_POINTS; ++i)
+            positions.push_back(&InfernalPoints[i]);
+
     }
 
     void AttackStart(Unit *who)
@@ -232,199 +288,124 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         }
     }
 
+    void InfernalCleanup()
+    {
+         //Infernal Cleanup
+        for(std::vector<uint64>::iterator itr = infernals.begin(); itr!= infernals.end(); ++itr)
+        {
+            Unit *pInfernal = Unit::GetUnit(*m_creature, *itr);
+            if(pInfernal && pInfernal->isAlive())
+            {
+                pInfernal->SetVisibility(VISIBILITY_OFF);
+                pInfernal->DealDamage(pInfernal, pInfernal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            }
+        }
+        infernals.clear();
+    }
+
+    void AxesCleanup()
+    {
+        for(int i=0; i<2;++i)
+        {
+            Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
+            if(axe && axe->isAlive())
+                axe->DealDamage(axe, axe->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            axes[i] = 0;
+        }
+    }
+            
+    void ClearWeapons()
+    {
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
+
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
+
+        //damage
+        const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+        m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, cinfo->mindmg);
+		m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, cinfo->maxdmg);
+		m_creature->UpdateDamagePhysical(BASE_ATTACK);
+    }
+
     void EnfeebleHealthEffect()
     {
-        target1 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-        if (target1 && (target1 != m_creature->getVictim()))
+        std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+
+        if(!t_list.size())
+            return;
+
+        //begin + 1 , so we don't target the one with the highest threat
+        std::list<HostilReference *>::iterator itr = t_list.begin();
+        std::advance(itr, 1);
+        for( ; itr!= t_list.end(); ++itr) //store the threat list in a different container
         {
-            DoCast(target1, SPELL_ENFEEBLE);
-            target1->SetHealth(1);
+            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+                targets.push_back( target->GetGUID());
+        }
+        
+        while(targets.size() > 5)
+            targets.erase(targets.begin()+rand()%targets.size()); //cut down to size if we have more than 5 targets
+
+        for(std::vector<uint64>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
+        {
+            Unit *target = Unit::GetUnit(*m_creature, *itr);
+            if(target)
+            {
+                m_creature->CastSpell(target, SPELL_ENFEEBLE, true);
+                target->SetHealth(1);
+            }
         }
 
-        target2 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-        if (target2 && (target2 != m_creature->getVictim()))
-        {
-            DoCast(target2, SPELL_ENFEEBLE);
-            target2->SetHealth(1);
-        }
-
-        target3 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-        if (target3 && (target3 != m_creature->getVictim()))
-        {
-            DoCast(target3, SPELL_ENFEEBLE);
-            target3->SetHealth(1);
-        }
-
-        target4 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-        if (target4 && (target4 != m_creature->getVictim()))
-        {
-            DoCast(target4, SPELL_ENFEEBLE);
-            target4->SetHealth(1);
-        }
-
-        target5 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-        if (target5 && (target5 != m_creature->getVictim()))
-        {
-            DoCast(target5, SPELL_ENFEEBLE);
-            target5->SetHealth(1);
-        }
-        Enfeebled = true;
     }
 
     void EnfeebleResetHealth()
     {
-        if(target1 && target1->isAlive())    target1->SetHealth(target1->GetMaxHealth());
-        if(target2 && target2->isAlive())    target2->SetHealth(target2->GetMaxHealth());
-        if(target3 && target3->isAlive())    target3->SetHealth(target3->GetMaxHealth());
-        if(target4 && target4->isAlive())    target4->SetHealth(target4->GetMaxHealth());
-        if(target5 && target5->isAlive())    target5->SetHealth(target5->GetMaxHealth());
-        Enfeebled = false;
-    }
-
-    float DoCalculateRandomLocation(float Pos)
-    {
-        float Loc;
-        float Rand = rand()%31;
-
-        switch(rand()%2)
+        for(std::vector<uint64>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
         {
-        case 0:
-            Loc = Pos + Rand;
-            break;
-        case 1:
-            Loc = Pos -Rand;
-            break;
+            Unit *target = Unit::GetUnit(*m_creature, *itr);
+            if(target && target->isAlive())
+                target->SetHealth(target->GetMaxHealth());
         }
-        return Loc;
-    }
-
-    void SummonInfernalKarazhan()
-    {
-        Invisible = NULL;
-        Infernal = NULL;
-
-        switch(rand()%19)
-        {
-        case 0:
-            Invisible = m_creature->SummonCreature(12999, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX1, ADDY1, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 1:
-            Invisible = m_creature->SummonCreature(12999, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX2, ADDY2, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 2:
-            Invisible = m_creature->SummonCreature(12999, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX3, ADDY4, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 3:
-            Invisible = m_creature->SummonCreature(12999, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX5, ADDY5, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 4:
-            Invisible = m_creature->SummonCreature(12999, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX6, ADDY6, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 5:
-            Invisible = m_creature->SummonCreature(12999, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX7, ADDY7, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 6:
-            Invisible = m_creature->SummonCreature(12999, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX8, ADDY8, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 7:
-            Invisible = m_creature->SummonCreature(12999, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX9, ADDY9, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 8:
-            Invisible = m_creature->SummonCreature(12999, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX10, ADDY10, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 9:
-            Invisible = m_creature->SummonCreature(12999, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX11, ADDY11, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 10:
-            Invisible = m_creature->SummonCreature(12999, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX12, ADDY12, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 12:
-            Invisible = m_creature->SummonCreature(12999, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX13, ADDY13, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 13:
-            Invisible = m_creature->SummonCreature(12999, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX14, ADDY14, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 14:
-            Invisible = m_creature->SummonCreature(12999, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX15, ADDY15, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 15:
-            Invisible = m_creature->SummonCreature(12999, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX16, ADDY16, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 16:
-            Invisible = m_creature->SummonCreature(12999, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX17, ADDY17, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 17:
-            Invisible = m_creature->SummonCreature(12999, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX18, ADDY18, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        case 18:
-            Invisible = m_creature->SummonCreature(12999, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, ADDX19, ADDY19, ADDZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-            break;
-        }
-
-        if (Invisible)
-        {
-            Invisible->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            DoCast(Invisible, SPELL_INFERNAL_EFFECT);    
-        }
-
-        if (Infernal)
-        {
-            Infernal->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            //((netherspite_infernalAI*)Infernal)->SetMalchezzarTarget(m_creature);
-        }
+        targets.clear();
     }
 
     void SummonInfernal(const uint32 diff)
     {
-        if(m_creature->GetMapId() != 532)
+        InfernalPoint *point = NULL;
+        float posX,posY,posZ;
+        if( (m_creature->GetMapId() != 532) || positions.empty())
         {
-            float PosX = m_creature->GetPositionX();
-            float PosY = m_creature->GetPositionY();
-            float PosZ = m_creature->GetPositionZ();
-
-            float LocX = DoCalculateRandomLocation(PosX);
-            float LocY = DoCalculateRandomLocation(PosY);
-
-            Invisible = NULL;
-            Infernal = NULL;
-
-            Invisible = m_creature->SummonCreature(12999, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
-            Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, LocX, LocY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-
-            if (Invisible)
-            {
-                Invisible->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                DoCast(Invisible, SPELL_INFERNAL_EFFECT);    
-            }
-
-            if (Infernal)
-            {
-                Infernal->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                //((netherspite_infernalAI*)Infernal)->SetMalchezzarTarget(m_creature);
-            }
-
+            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 60, posX, posY, posZ);
         }
-        else SummonInfernalKarazhan();
+        else
+        {
+            std::vector<InfernalPoint*>::iterator itr = positions.begin()+rand()%positions.size();
+            point = *itr;
+            positions.erase(itr);
 
-        switch(rand()%3)
+            posX = point->x;
+            posY = point->y;
+            posZ = INFERNAL_Z;
+        }
+
+        
+        Creature *Infernal = m_creature->SummonCreature(NETHERSPITE_INFERNAL, posX, posY, posZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
+
+        if (Infernal)
+        {
+            Infernal->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            Infernal->setFaction(m_creature->getFaction());
+            if(point)
+                ((netherspite_infernalAI*)Infernal->AI())->point=point;
+            ((netherspite_infernalAI*)Infernal->AI())->malchezaar=m_creature->GetGUID();
+
+            infernals.push_back(Infernal->GetGUID());
+        }
+
+        switch(rand()%2)
         {
         case 0:
             DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
@@ -434,25 +415,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
             break;
-        case 2:
-            break;
         }
-        if (Infernal)
-            Infernal->AI()->UpdateAI(diff);
-    }
-
-    void SummonAxe()
-    {
-        uint32 MapID = m_creature->GetMapId();
-        float PosX = m_creature->GetPositionX();
-        float PosY = m_creature->GetPositionY();
-        float PosZ = m_creature->GetPositionZ();
-
-        Axe = m_creature->SummonCreature(17650, PosX, PosY, PosZ, 0, TEMPSUMMON_TIMED_DESPAWN, 180000);
-        Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-        if(Axe && target)
-            Axe->AI()->AttackStart(target);
     }
 
     void UpdateAI(const uint32 diff)
@@ -461,115 +424,194 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 60)
-            phase = 1;
-
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (phase == 1))
-        {
-            phase = 2;
-            DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-            HasSummonedAxes = false;
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 40066);
-        }
-
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && (phase == 2))
-        {
-            AddTimer = 20000;
-            phase = 3;
-            DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_PHASE3);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-        }
-
-        if(phase == 1 || phase == 3)
-        {
-            if(SWPainTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_SW_PAIN);
-                SWPainTimer = 20000;
-            }else SWPainTimer -= diff;
-
-            if(ShadowNovaTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
-                ShadowNovaTimer = 35000;
-            }else ShadowNovaTimer -= diff;
-        }
-
-        if(phase == 1 || phase == 2)
-        {
-            if(AddTimer < diff)
-            {
-                SummonInfernal(diff);
-                AddTimer = 45000;
-            }else AddTimer -= diff;
-
-            if(EnfeebleTimer < diff)
-            {
-                EnfeebleHealthEffect();
-                EnfeebleTimer = 30000;
-                EnfeebleResetTimer = 8000;
-            }else EnfeebleTimer -= diff;
-
-            if((EnfeebleResetTimer < diff) && Enfeebled)
+        if(EnfeebleResetTimer)
+            if(EnfeebleResetTimer <= diff) //Let's not forget to reset that
             {
                 EnfeebleResetHealth();
+                EnfeebleResetTimer=0;
             }else EnfeebleResetTimer -= diff;
 
-            if(ShadowNovaTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
-                ShadowNovaTimer = 35000;
-            }else ShadowNovaTimer -= diff;
-        }
+        if(m_creature->hasUnitState(UNIT_STAT_STUNDED)) //While shifting to phase 2 malchezaar stuns himself
+            return; 
 
-        if(phase == 2)
+        if(m_creature->GetUInt64Value(UNIT_FIELD_TARGET)!=m_creature->getVictim()->GetGUID())
+            m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
+
+        if(phase == 1)
         {
-            if(CleaveTimer < diff)
+            if( (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 60)
             {
-                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
-                CleaveTimer = 5000;
-            }else CleaveTimer -= diff;
+                m_creature->InterruptNonMeleeSpells(false);
 
+                phase = 2;
+
+                //animation
+                DoCast(m_creature, SPELL_EQUIP_AXES);
+            
+                //text
+                DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_PHASE2);
+
+                //passive thrash aura
+                m_creature->CastSpell(m_creature, SPELL_THRASH_AURA, true);
+            
+                //models
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 33488898);
+
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 40066);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 33488898);
+
+                //damage
+                const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, 2*cinfo->mindmg);
+				m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, 2*cinfo->maxdmg);
+				m_creature->UpdateDamagePhysical(BASE_ATTACK);
+            }
+
+        }
+        else if(phase == 2)
+        {
+            if( (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
+            {
+                InfernalTimer = 15000;
+                
+                phase = 3;
+
+                ClearWeapons();
+
+                //remove thrash
+                m_creature->RemoveAurasDueToSpell(SPELL_THRASH_AURA);
+                
+                DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_PHASE3);
+
+                Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                for(uint32 i=0; i<2; ++i)
+                {
+                    Creature *axe = m_creature->SummonCreature(MALCHEZARS_AXE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
+                    if(axe)
+                    {
+                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 40066);
+                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 33488898);
+
+                        axe->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        axe->setFaction(m_creature->getFaction());
+                        axes[i] = axe->GetGUID();
+                        axe->AI()->AttackStart(target);
+                        axe->getThreatManager().tauntApply(target);
+                    }
+                }
+
+                return;
+
+            }
+           
             if(SunderArmorTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_SUNDER_ARMOR);
                 SunderArmorTimer = 15000;
+                
             }else SunderArmorTimer -= diff;
+
         }
-
-        if(phase == 3)
+        else
         {
-            if(!HasSummonedAxes)
-            {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                SummonAxe();
-                SummonAxe();
-                HasSummonedAxes = true;
-            }
 
+            if(AxesTargetSwitchTimer < diff)
+            {
+                AxesTargetSwitchTimer = 7500 + rand()%12500 ;
+
+                Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if(target)
+                {
+                    for(int i = 0; i < 2; ++i)
+                    {
+                        Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
+                        if(axe)
+                        {
+                            axe->getThreatManager().tauntFadeOut(axe->getVictim());
+                            axe->getThreatManager().tauntApply(target);
+                        }
+                    }
+                }
+            } else AxesTargetSwitchTimer -= diff;
+        
+            
             if(AmplifyDamageTimer < diff)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                DoCast(target, SPELL_AMPLIFY_DAMAGE);
-                AmplifyDamageTimer = 10000;
+                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_AMPLIFY_DAMAGE);
+                AmplifyDamageTimer = 10000 + rand()%10000;
+                
             }else AmplifyDamageTimer -= diff;
 
-            if(AddTimer < diff)
-            {
-                SummonInfernal(diff);
-                AddTimer = 20000;
-            }else AddTimer -= diff;
+        }
 
+
+        //Time for global and double timers
+        if(InfernalTimer < diff)
+        {
+            SummonInfernal(diff);
+            InfernalTimer =  phase == 3 ? 15000 : 45000; //15 secs in phase 3, 45 otherwise
+        }else InfernalTimer -= diff;
+
+        if(ShadowNovaTimer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_SHADOWNOVA);
+            ShadowNovaTimer = 35000;
+        }else ShadowNovaTimer -= diff;
+
+        if(phase != 2)
+        {
+            if(SWPainTimer < diff)
+            {
+                Unit *target;
+                if(phase == 1)
+                    target = m_creature->getVictim(); // the tank
+                else
+                    target = SelectUnit(SELECT_TARGET_RANDOM, 1); //anyone but the tank
+
+                DoCast(target, SPELL_SW_PAIN);
+                SWPainTimer = 20000;
+                
+            }else SWPainTimer -= diff;
+
+        }
+
+        if(phase != 3)
+        {   
+            if(EnfeebleTimer < diff)
+            {
+                EnfeebleHealthEffect();
+                EnfeebleTimer = 30000;
+                EnfeebleResetTimer = 9000;
+            }else EnfeebleTimer -= diff;
         }
 
         DoMeleeAttackIfReady();
     }
+
+    void Cleanup(Creature *infernal, InfernalPoint *point)
+    {
+        for(std::vector<uint64>::iterator itr = infernals.begin(); itr!= infernals.end(); ++itr)
+            if(*itr == infernal->GetGUID())
+            {
+                infernals.erase(itr);
+                break;
+            }
+
+        positions.push_back(point);
+    }
+
 };
+
+void netherspite_infernalAI::Cleanup()
+{
+    Unit *pMalchezaar = Unit::GetUnit(*m_creature, malchezaar);
+
+    if(pMalchezaar && pMalchezaar->isAlive())
+        ((boss_malchezaarAI*)((Creature*)pMalchezaar)->AI())->Cleanup(m_creature, point);
+}
 
 CreatureAI* GetAI_boss_malchezaar(Creature *_Creature)
 {

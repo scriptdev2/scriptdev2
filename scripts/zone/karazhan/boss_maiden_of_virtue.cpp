@@ -18,23 +18,23 @@
 
 #define SPELL_REPENTANCE          29511
 #define SPELL_HOLYFIRE            29522
-#define SPELL_DIVINEWRATH         28883
-#define SPELL_HOLYGROUNDAURA      29512 // old 29523 - doesn't work
+#define SPELL_HOLYWRATH           32445
+#define SPELL_HOLYGROUND          29512
 
 #define SAY_AGGRO               "Your behavior will not be tolerated!"
-#define SAY_SLAY1               "Anh ah ah..."
+#define SAY_SLAY1               "Ah ah ah..."
 #define SAY_SLAY2               "This is for the best."
 #define SAY_SLAY3               "Impure thoughts lead to profane actions."
-#define SAY_REPENTANCE1         "Cast out your corrupt thoughts"
+#define SAY_REPENTANCE1         "Cast out your corrupt thoughts."
 #define SAY_REPENTANCE2         "Your impurity must be cleansed."
 #define SAY_DEATH               "Death comes. Will your conscience be clear?"
 
 #define SOUND_AGGRO             9204
 #define SOUND_SLAY1             9207
-#define SOUND_SLAY2             9311 
-#define SOUND_SLAY3             9312
-#define SOUND_REPENTANCE1       9208
-#define SOUND_REPENTANCE2       9313
+#define SOUND_SLAY2             9312 
+#define SOUND_SLAY3             9311
+#define SOUND_REPENTANCE1       9313
+#define SOUND_REPENTANCE2       9208
 #define SOUND_DEATH             9206
 
 struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
@@ -43,18 +43,16 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     uint32 Repentance_Timer;
     uint32 Holyfire_Timer;
-    uint32 Divinewrath_Timer;
+    uint32 Holywrath_Timer;
     uint32 Holyground_Timer;
 
     bool InCombat;
 
-    int RandTime(int time) {return ((rand()%time)*1000);}
-
     void EnterEvadeMode()
     {
-        Repentance_Timer    = 45000;
-        Holyfire_Timer      = 20000;
-        Divinewrath_Timer   = 15000;
+        Repentance_Timer    = 30000+(rand()%15000);
+        Holyfire_Timer      = 8000+(rand()%17000);
+        Holywrath_Timer   = 20000+(rand()%10000);
         Holyground_Timer    = 3000;
 
         InCombat = false;
@@ -142,8 +140,8 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         if (Holyground_Timer < diff)
         {
-            DoCast(m_creature,SPELL_HOLYGROUNDAURA);
-            Holyground_Timer = 4000;
+            m_creature->CastSpell(m_creature, SPELL_HOLYGROUND, true); //Triggered so it doesn't interrupt her at all
+            Holyground_Timer = 3000;
         }else Holyground_Timer -= diff;
 
         if (Repentance_Timer < diff)
@@ -161,32 +159,41 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
                 break;
             }
-            Repentance_Timer = 45000;
+            Repentance_Timer = 30000 + rand()%15000; //A little randomness on that spell
         }else Repentance_Timer -= diff;
 
         if (Holyfire_Timer < diff)
+        {
+            //Time for an omgwtfpwn code to make maiden cast holy fire only on units outside the holy ground's 18 yard range
+            Unit* target = NULL;
+            std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+            std::vector<Unit *> target_list;
+            for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            {
+                target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                if(target && target->GetDistance2dSq(m_creature) > 144 ) // checking if > 144 is faster than doing a square root and checking if > 12
+                    target_list.push_back(target);
+                target = NULL;
+            }
+            if(target_list.size())
+                target = *(target_list.begin()+rand()%target_list.size());
+            
+            DoCast(target,SPELL_HOLYFIRE);
+            
+            Holyfire_Timer = 8000 + rand()%17000; //Anywhere from 8 to 25 seconds, good luck having several of those in a row!
+        }else Holyfire_Timer -= diff;
+
+        if (Holywrath_Timer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             if (target)
-                DoCast(target,SPELL_HOLYFIRE);
+                DoCast(target,SPELL_HOLYWRATH);
             else
-                DoCast(m_creature->getVictim(),SPELL_HOLYFIRE); 
-            Holyfire_Timer = RandTime(50);
-        }else Holyfire_Timer -= diff;
-
-        if (Divinewrath_Timer < diff)
-        { 
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            if (target)
-                DoCast(target,SPELL_DIVINEWRATH);
-            else
-                DoCast(m_creature->getVictim(),SPELL_DIVINEWRATH); 
-            Divinewrath_Timer = RandTime(50);
-        }else Divinewrath_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_HOLYWRATH); 
+            Holywrath_Timer = 20000+(rand()%10000); //20-30 secs sounds nice
+        }else Holywrath_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
