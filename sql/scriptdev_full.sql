@@ -388,6 +388,10 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_netherspite' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'boss_malchezaar' WHERE `entry` = 15690;
 UPDATE `creature_template` SET `ScriptName` = 'boss_nightbane' WHERE `entry` = 17225;
 
+UPDATE `creature_template` SET `ScriptName` = 'mob_shadow_of_aran' WHERE `entry` = 18254;
+UPDATE `creature_template` SET `ScriptName` = 'mob_aran_elemental' WHERE `entry` = 17167;
+UPDATE `creature_template` SET `ScriptName` = 'mob_aran_blizzard' WHERE `entry` = 17161;
+
 UPDATE `creature_template` SET `ScriptName` = 'mob_homunculus' WHERE `entry` = 16539;
 UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229;
 UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;

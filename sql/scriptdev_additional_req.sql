@@ -33,7 +33,7 @@ UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 18197;
 /* mob_broggok_poisoncloud */
 UPDATE `creature_template` SET minlevel = 63, maxlevel = 63 WHERE `entry` = 17662;
 /* Arcane Orb Target */
-REPLACE INTO `creature_template` (`entry`, `modelid_A`, `modelid_H`, `minlevel`, `maxlevel`) VALUES (19577, 16946, 16946, 70, 70);
+UPDATE `creature_template` SET modelid_A = 16946, modelid_H = 16946, minlevel = 70, maxlevel = 70 WHERE 'entry'=19577;
 
 /* Beaten Corpse*/
 UPDATE creature_template SET npcflag=1 WHERE entry=10668;

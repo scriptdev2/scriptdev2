@@ -238,6 +238,7 @@ extern void AddSC_mobs_bonechewer_orc();
 extern void AddSC_boss_attumen();
 extern void AddSC_boss_curator();
 extern void AddSC_boss_maiden_of_virtue();
+extern void AddSC_boss_shade_of_aran();
 extern void AddSC_boss_malchezaar();
 extern void AddSC_boss_terestian_illhoof();
 extern void AddSC_mob_homunculus();
@@ -660,6 +661,7 @@ void ScriptsInit()
     AddSC_boss_attumen();
     AddSC_boss_curator();
     AddSC_boss_maiden_of_virtue();
+    AddSC_boss_shade_of_aran();
     AddSC_boss_malchezaar();
     AddSC_boss_terestian_illhoof();
     AddSC_mob_homunculus();

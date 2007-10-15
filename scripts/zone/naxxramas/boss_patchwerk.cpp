@@ -145,8 +145,23 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         {
             //Cast Hateful strike on the player with the highest
             //amount of HP within melee distance
-            //Currently target selection not supported by the core
-            DoCast(m_creature->getVictim(),SPELL_HATEFULSTRIKE);
+            uint32 MostHP = 0;
+            Unit* pMostHPTarget = NULL;
+            Unit* pTemp = NULL;
+            std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+
+            for (i = m_creature->getThreatManager().getThreatList().begin(); i!=m_creature->getThreatManager().getThreatList().end(); ++i)
+            {
+                pTemp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+                if (pTemp && pTemp->isAlive() && pTemp->GetHealth() > MostHP && m_creature->GetDistance2dSq(pTemp) < 25)
+                {
+                    MostHP = pTemp->GetHealth();
+                    pMostHPTarget = pTemp;
+                }
+            }
+
+            if (pMostHPTarget)
+                DoCast(pMostHPTarget, SPELL_HATEFULSTRIKE);
 
             //1.2 seconds until we should cast this agian
             HatefullStrike_Timer = 1200;

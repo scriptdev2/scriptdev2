@@ -1,3 +1,21 @@
+/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#include "../../sc_defines.h"
+#include "../../creature/simple_ai.h"
 
 //Aggro
 #define SAY_AGGRO1 "Please, no more. My son... he's gone mad!"
@@ -14,7 +32,7 @@
 #define SOUND_FLAMEWREATH1 9245
 #define SAY_FLAMEWREATH2 "Burn you hellish fiends!"
 #define SOUND_FLAMEWREATH2 9326
- 
+
 //Blizzard
 #define SAY_BLIZZARD1 "I'll freeze you all!" 
 #define SOUND_BLIZZARD1 9246
@@ -43,12 +61,12 @@
 #define SOUND_KILL2 9328
 
 //Time over
-#define SAY_TIMEROVER "You've wasted enough of my time. Let these games be finished!"
+#define SAY_TIMEOVER "You've wasted enough of my time. Let these games be finished!"
 #define SOUND_TIMEOVER 9247
 
 //Aran's death
 #define SAY_DEATH "At last... The nightmare is.. over..."
-#define SOUND_DEATH9244
+#define SOUND_DEATH 9244
 
 //Atiesh is equipped by a raid member
 #define SAY_ATIESH "Where did you get that?! Did HE send you?!" 
@@ -70,3 +88,516 @@
 #define SPELL_CONJURE       29975
 #define SPELL_AOE_PYROBLAST 29978
 
+//Creature Spells
+#define SPELL_CIRCULAR_BLIZZARD     29952
+#define SPELL_WATERBOLT             31012
+#define SPELL_SHADOW_PYRO           29978
+
+//Creatures
+#define CREATURE_WATER_ELEMENTAL    17167
+#define CREATURE_SHADOW_OF_ARAN     18254
+#define CREATURE_ARAN_BLIZZARD      17161
+
+enum SuperSpell
+{
+    SUPER_FLAME = 0,
+    SUPER_BLIZZARD,
+    SUPER_AE,
+};
+
+struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
+{
+    boss_aranAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 SecondarySpellTimer;
+    uint32 NormalCastTimer;
+    uint32 SuperCastTimer;
+    uint32 BerserkTimer;
+
+    uint8 LastSuperSpell;
+
+    uint32 CurrentNormalSpell;
+    uint32 ArcaneCooldown;
+    uint32 FireCooldown;
+    uint32 FrostCooldown;
+
+
+    uint32 DrinkInturruptTimer;
+
+    bool ElementalsSpawned;
+    bool Drinking;
+    bool DrinkInturrupted;
+
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        SecondarySpellTimer = 5000;
+        NormalCastTimer = 0;
+        SuperCastTimer = 35000;
+        BerserkTimer = 720000;
+
+        LastSuperSpell = rand()%3;
+
+        CurrentNormalSpell = 0;
+        ArcaneCooldown = 0;
+        FireCooldown = 0;
+        FrostCooldown = 0;
+
+        DrinkInturruptTimer = 10000;
+
+        ElementalsSpawned = false;
+        Drinking = false;
+        DrinkInturrupted = false;
+
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        switch(rand()%2)
+        {
+        case 0:
+            DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(victim, SOUND_KILL1);
+            break;
+        case 1:
+            DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(victim, SOUND_KILL2);
+            break;
+        }
+    }
+
+    void JustDied(Unit *victim)
+    {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(NULL, SOUND_DEATH);
+    }
+
+    void AttackStart(Unit *who)
+    {        
+        if(!who && who != m_creature)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+
+            //Say our dialog
+            if (!InCombat)
+            {
+                switch(rand()%3)
+                {
+
+                case 0:
+                    DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                    break;
+
+                case 1:
+                    DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                    break;
+
+                case 2:
+                    DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                    break;
+                }
+
+                InCombat = true;
+            }
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Say our dialog
+                if (!InCombat)
+                {
+                    switch(rand()%3)
+                    {
+
+                    case 0:
+                        DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                        break;
+
+                    case 1:
+                        DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                        break;
+
+                    case 2:
+                        DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                        break;
+                    }
+
+                    InCombat = true;
+                }
+
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //Prevent Movement while casting
+        if (m_creature->IsNonMeleeSpellCasted(false))
+            m_creature->StopMoving();
+
+        //Cooldowns for casts
+        if (ArcaneCooldown)
+            if (ArcaneCooldown >= diff)
+                ArcaneCooldown -= diff;
+            else ArcaneCooldown = 0;
+
+        if (FireCooldown)
+            if (FireCooldown >= diff)
+                FireCooldown -= diff;
+            else FireCooldown = 0;
+
+        if (FrostCooldown)
+            if (FrostCooldown >= diff)
+                FrostCooldown -= diff;
+            else FrostCooldown = 0;
+
+        if(!Drinking && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
+        {
+            Drinking = true;
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+
+            DoYell(SAY_DRINK, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_DRINK);
+
+            if (!DrinkInturrupted)
+            {
+                m_creature->CastSpell(m_creature, SPELL_MASS_POLY, true);
+                m_creature->CastSpell(m_creature, SPELL_CONJURE, false);  
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1);  //Sitting down
+                DrinkInturruptTimer = 10000;
+            }
+        }
+
+        //Drink Inturrupt Timer
+        if (Drinking && !DrinkInturrupted)
+            if (DrinkInturruptTimer >= diff)
+                DrinkInturruptTimer -= diff;
+            else DrinkInturrupted = true;
+        
+        //Drink Inturrupt
+        if (Drinking && DrinkInturrupted)
+        {
+            Drinking = false;
+            m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA));
+            m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+        }
+
+        //Don't execute any more code if we are drinking
+        if (Drinking)
+            return;
+
+        //Normal casts
+        if(NormalCastTimer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if (!target)
+                return;
+
+            uint32 Spells[3];
+            uint8 AvailableSpells = 0;
+
+            //Check for what spells are not on cooldown
+            if (!ArcaneCooldown)
+            {
+                Spells[AvailableSpells] = SPELL_ARCMISSLE;
+                AvailableSpells++;
+            }
+            if (!FireCooldown)
+            {
+                Spells[AvailableSpells] = SPELL_FIREBALL;
+                AvailableSpells++;
+            }
+            if (!FrostCooldown)
+            {
+                Spells[AvailableSpells] = SPELL_FROSTBOLT;
+                AvailableSpells++;
+            }
+
+            //If no available spells wait 1 second and try again
+            if (AvailableSpells)
+            {
+                CurrentNormalSpell = Spells[rand() % AvailableSpells];
+                DoCast(target, CurrentNormalSpell);
+
+                if (CurrentNormalSpell == SPELL_ARCMISSLE)
+                    NormalCastTimer = 5000;
+                else NormalCastTimer = 2000;
+
+            }else NormalCastTimer = 1000;
+
+        }else NormalCastTimer -= diff;
+
+        if(SecondarySpellTimer < diff)
+        {
+            switch (rand()%2)
+            {
+
+            case 0:
+                DoCast(m_creature, SPELL_AOE_CS);
+                break;
+            case 1:
+                Unit* pUnit;
+                pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (pUnit)
+                    DoCast(pUnit, SPELL_CHAINSOFICE);
+                break;
+            }
+
+            SecondarySpellTimer = 5000 + (rand()%15000);
+        }else SecondarySpellTimer -= diff;
+
+        if(SuperCastTimer < diff)
+        {
+
+            uint8 Available[2];
+
+            switch (LastSuperSpell)
+            {
+            case SUPER_AE:
+                Available[0] = SUPER_FLAME;
+                Available[1] = SUPER_BLIZZARD;
+                break;
+
+            case SUPER_FLAME:
+                Available[0] = SUPER_AE;
+                Available[1] = SUPER_BLIZZARD;
+                break;
+
+            case SUPER_BLIZZARD:
+                Available[0] = SUPER_FLAME;
+                Available[1] = SUPER_AE;
+                break;
+            };
+
+            LastSuperSpell = Available[rand()%2];
+
+            switch (LastSuperSpell)
+            {
+            case SUPER_AE:
+
+                if (rand()%2)
+                {
+                    DoYell(SAY_EXPLOSION1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_EXPLOSION1);
+                }else
+                {
+                    DoYell(SAY_EXPLOSION2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_EXPLOSION2);
+                }
+
+                m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
+                m_creature->CastSpell(m_creature, SPELL_MASSSLOW, true);
+                m_creature->CastSpell(m_creature, SPELL_AEXPLOSION, false);
+                break;
+
+            case SUPER_FLAME:
+                if (rand()%2)
+                {
+                    DoYell(SAY_FLAMEWREATH1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH1);
+                }else
+                {
+                    DoYell(SAY_FLAMEWREATH2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH2);
+                }
+
+                DoTextEmote("FLAME WREATH NYI!", NULL);
+                m_creature->CastSpell(m_creature->getVictim(), SPELL_FLAME_WREATH, false);
+                break;
+
+            case SUPER_BLIZZARD:
+
+                if (rand()%2)
+                {
+                    DoYell(SAY_BLIZZARD1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_BLIZZARD1);
+                }else
+                {
+                    DoYell(SAY_BLIZZARD2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_BLIZZARD2);
+                }
+
+                Unit* Spawn = NULL;
+                Spawn = m_creature->SummonCreature(CREATURE_ARAN_BLIZZARD, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
+                if (Spawn)
+                {
+                    Spawn->setFaction(m_creature->getFaction());
+                    Spawn->CastSpell(Spawn, SPELL_CIRCULAR_BLIZZARD, true);
+                }
+                break;
+            };
+
+            SuperCastTimer = 35000 + (rand()%5000);
+        }else SuperCastTimer -= diff;
+
+        if(!ElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
+        {
+            ElementalsSpawned = true;
+
+            for (uint32 i = 0; i < 4; i++)
+            {
+                Creature* pUnit = DoSpawnCreature(CREATURE_WATER_ELEMENTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
+                if (pUnit)
+                {
+                    pUnit->Attack(m_creature->getVictim());
+                    pUnit->setFaction(m_creature->getFaction());
+                }
+            }
+
+            DoYell(SAY_ELEMENTALS, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ELEMENTALS);
+        }
+
+        if(BerserkTimer < diff)
+        {
+            for (uint32 i = 0; i < 5; i++)
+            {
+                Creature* pUnit = DoSpawnCreature(CREATURE_SHADOW_OF_ARAN, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                if (pUnit)
+                {
+                    pUnit->Attack(m_creature->getVictim());
+                    pUnit->setFaction(m_creature->getFaction());
+                }
+            }
+
+            DoYell(SAY_TIMEOVER, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_TIMEOVER);
+
+            BerserkTimer = 60000;
+        }else BerserkTimer -= diff; 
+
+        DoMeleeAttackIfReady();
+    }
+
+    void DamageTaken(Unit* pAttacker, uint32 &damage)
+    {
+        if (!DrinkInturrupted && Drinking && damage > 0)
+            DrinkInturrupted = true;
+    }
+
+    void SpellHit(Unit* pAttacker, const SpellEntry* Spell)
+    {
+        //We only care about inturrupt effects and only if they are durring a spell currently being casted
+        if ((Spell->Effect[0]!=SPELL_EFFECT_INTERRUPT_CAST && 
+            Spell->Effect[1]!=SPELL_EFFECT_INTERRUPT_CAST &&
+            Spell->Effect[2]!=SPELL_EFFECT_INTERRUPT_CAST) || !m_creature->IsNonMeleeSpellCasted(false))
+            return;
+
+        //Inturrupt effect
+        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+
+        //Normally we would set the cooldown equal to the spell duration
+        //but we do not have access to the DurationStore
+
+        switch (CurrentNormalSpell)
+        {
+        case SPELL_ARCMISSLE:
+            ArcaneCooldown = 5000;
+            break;
+        case SPELL_FIREBALL:
+            FireCooldown = 5000;
+            break;
+        case SPELL_FROSTBOLT:
+            FrostCooldown = 5000;
+            break;
+        }
+    }
+
+};
+
+
+CreatureAI* GetAI_boss_aran(Creature *_Creature)
+{
+    return new boss_aranAI (_Creature);
+}
+
+
+CreatureAI* GetAI_water_elemental(Creature *_Creature)
+{
+    SimpleAI* ai = new SimpleAI (_Creature);
+
+    ai->Spell[0].Enabled = true;
+    ai->Spell[0].Spell_Id = SPELL_WATERBOLT;
+    ai->Spell[0].Cooldown = 1500;
+    ai->Spell[0].First_Cast = 500;
+    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+    ai->EnterEvadeMode();
+
+    return ai;
+}
+
+CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
+{
+    SimpleAI* ai = new SimpleAI (_Creature);
+
+    ai->Spell[0].Enabled = true;
+    ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;
+    ai->Spell[0].Cooldown = -1;
+    ai->Spell[0].First_Cast = 1000;
+    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+    ai->EnterEvadeMode();
+
+    return ai;
+}
+
+void AddSC_boss_shade_of_aran()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="boss_shade_of_aran";
+    newscript->GetAI = GetAI_boss_aran;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_shadow_of_aran";
+    newscript->GetAI = GetAI_shadow_of_aran;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_aran_elemental";
+    newscript->GetAI = GetAI_water_elemental;
+    m_scripts[nrscripts++] = newscript;
+
+    //newscript = new Script;
+    //newscript->Name="mob_aran_blizzard";
+    //newscript->GetAI = GetAI_boss_aran;
+    //m_scripts[nrscripts++] = newscript;
+}
