@@ -1486,10 +1486,6 @@
 						RelativePath="..\scripts\zone\karazhan\mob_kilrek.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\scripts\zone\karazhan\mob_netherspite_infernal.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Nagrand"
