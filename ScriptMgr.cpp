@@ -73,6 +73,7 @@ extern void AddSC_item_test();
 extern void AddSC_area_52_special();
 extern void AddSC_nether_wraith_beacon();
 extern void AddSC_purification_mixture();
+extern void AddSC_vorenthals_presence();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -87,6 +88,13 @@ extern void AddSC_npc_guardian();
 //Arathi Highlands
 //Ashenvale Forest
 //Aunchindoun
+//--Auchenai Crypts
+//--Mana Tombs
+extern void AddSC_boss_nexusprince_shaffar();
+extern void AddSC_boss_pandemonius();
+extern void AddSC_boss_tavarok();
+//--Sekketh Halls
+//--Shadow Labyrinth
 //Azshara
 extern void AddSC_boss_azuregos();
 extern void AddSC_mobs_spitelashes();
@@ -178,8 +186,10 @@ extern void AddSC_boss_rokmar_the_crackler();
 
 //--Steam Vault
 extern void AddSC_boss_warlord_kalithresh();
+extern void AddSC_boss_hydromancer_thespia();
 
 //--Underbog
+extern void AddSC_boss_ghazan();
 extern void AddSC_boss_hungarfen();
 
 //Darkshore
@@ -224,6 +234,8 @@ extern void AddSC_boss_the_maker();
 
 //--Magtheridon's Lair
 //--Shattered Halls
+extern void AddSC_boss_grand_warlock_nethekurse();
+
 //--Ramparts
 extern void AddSC_boss_watchkeeper_gargolmar();
 extern void AddSC_boss_omor_the_unscarred();
@@ -405,6 +417,7 @@ extern void AddSC_boss_void_reaver();
 extern void AddSC_instance_the_eye();
 extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
+extern void AddSC_mob_phoenix();
 
 //--The Mechanar
 //Temple of ahn'qiraj
@@ -496,6 +509,7 @@ void ScriptsInit()
     AddSC_area_52_special();
     AddSC_nether_wraith_beacon();
     AddSC_purification_mixture();
+    AddSC_vorenthals_presence();
 
     // -- NPC --
     AddSC_not_selectable();
@@ -510,6 +524,13 @@ void ScriptsInit()
     //Arathi Highlands
     //Ashenvale Forest
     //Aunchindoun
+    //--Auchenai Crypts
+    //--Mana Tombs
+    AddSC_boss_nexusprince_shaffar();
+    AddSC_boss_pandemonius();
+    AddSC_boss_tavarok();
+    //--Sekketh Halls
+    //--Shadow Labyrinth
     //Azshara
     AddSC_boss_azuregos();
     AddSC_mobs_spitelashes();
@@ -601,8 +622,10 @@ void ScriptsInit()
 
     //--Steam Vault
     AddSC_boss_warlord_kalithresh();
+    AddSC_boss_hydromancer_thespia();
 
     //--Underbog
+    AddSC_boss_ghazan();
     AddSC_boss_hungarfen();
 
     //Darkshore
@@ -647,6 +670,8 @@ void ScriptsInit()
 
     //--Magtheridon's Lair
     //--Shattered Halls
+    AddSC_boss_grand_warlock_nethekurse();
+
     //--Ramparts
     AddSC_boss_watchkeeper_gargolmar();
     AddSC_boss_omor_the_unscarred();
@@ -828,6 +853,7 @@ void ScriptsInit()
     AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
     AddSC_mob_the_eye();
+    AddSC_mob_phoenix();
 
     //--The Mechanar
     //Temple of ahn'qiraj

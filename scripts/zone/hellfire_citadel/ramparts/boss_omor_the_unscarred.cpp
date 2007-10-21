@@ -19,6 +19,7 @@
 #define SPELL_SHADOW_WHIP        30638
 #define SPELL_TREACHEROUS_AURA    30695
 #define SPELL_REFLECT            23920
+#define SPELL_ORBITAL_STRIKE     30637
 
 #define SAY_AGGRO_1                "You dare challenge me?!" 
 #define SOUND_AGGRO_1            10280
@@ -60,6 +61,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     uint32 TreacherousAura_Timer;
     uint32 Reflect_Timer;
     uint32 Summon_Timer;
+    uint32 OrbitalStrike_Timer;
     bool Summoned;
 
     bool InCombat;
@@ -83,6 +85,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         Reflect_Timer = 1000;
         TreacherousAura_Timer = 2000;
         Summon_Timer = 10000;
+        OrbitalStrike_Timer = 5000;
         Summoned = false;
     }
 
@@ -199,6 +202,17 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             DoCast(target,SPELL_TREACHEROUS_AURA);
 
             TreacherousAura_Timer = 5000+rand()%8000;
+        }else TreacherousAura_Timer -= diff;
+
+        if(OrbitalStrike_Timer < diff)
+        {   
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if(target)
+            {
+                DoCast(target,SPELL_ORBITAL_STRIKE);
+                OrbitalStrike_Timer = 15000+rand()%5000;
+            }
         }else TreacherousAura_Timer -= diff;
 
         if(!Summoned)

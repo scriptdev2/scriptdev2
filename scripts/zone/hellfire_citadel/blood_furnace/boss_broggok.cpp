@@ -17,11 +17,11 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_SLIME_SPRAY    30913
-#define SPELL_POISON_CLOUD  30916
-#define SPELL_POISON_BOLT    30917    
+#define SPELL_SLIME_SPRAY       30913
+#define SPELL_POISON_CLOUD      30916
+#define SPELL_POISON_BOLT       30917    
 
-#define SPELL_POISON        30914
+#define SPELL_POISON            30914
 
 #define SAY_AGGRO "Come intruders...."
 
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
         if(PoisonSpawn_Timer < diff)
         {
-            m_creature->SummonCreature(17662,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,60000);
+            DoCast(m_creature,SPELL_POISON_CLOUD);
             PoisonSpawn_Timer = 20000;
         }else PoisonSpawn_Timer -=diff;
 

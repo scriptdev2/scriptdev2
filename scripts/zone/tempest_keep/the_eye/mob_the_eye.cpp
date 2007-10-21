@@ -17,6 +17,148 @@
 #include "../../../sc_defines.h"
 #include "../../../creature/simple_ai.h"
 
+#define SPELL_BURN                             36721
+#define PHOENIX                                21362
+#define PHOENIX_EGG                            21364
+
+struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
+{
+    mob_phoenixAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 Burn_Timer;
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        Burn_Timer = 1000;
+
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            if(!InCombat)
+            {
+                InCombat = true;
+            }
+
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //Check if we have a current target
+        if (Burn_Timer < diff)
+        {        
+            if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+            {
+                m_creature->setDeathState(JUST_DIED);
+                DoSpawnCreature(PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 300000);
+            }
+            else
+                m_creature->SetHealth(m_creature->GetHealth() - m_creature->GetMaxHealth() * 0.05);
+            DoCast(m_creature->getVictim(), SPELL_BURN);
+            Burn_Timer = 1000;
+        }else Burn_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+struct MANGOS_DLL_DECL mob_phoenix_eggAI : public ScriptedAI
+{
+    mob_phoenix_eggAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 RebirthTimer;
+
+    void EnterEvadeMode()
+    {
+        RebirthTimer = 15000;
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        return; //ignore all
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        return; //ignore all
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (RebirthTimer < diff)
+        {        
+            DoSpawnCreature(PHOENIX, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 300000);
+            m_creature->setDeathState(JUST_DIED);
+        }else RebirthTimer -= diff;
+    }
+};
+
+CreatureAI* GetAI_mob_phoenix_egg(Creature *_Creature)
+{
+    return new mob_phoenix_eggAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_phoenix(Creature *_Creature)
+{
+    return new mob_phoenixAI (_Creature);
+}
+
+void AddSC_mob_phoenix()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="mob_phoenix";
+    newscript->GetAI = GetAI_mob_phoenix;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_phoenix_egg";
+    newscript->GetAI = GetAI_mob_phoenix_egg;
+    m_scripts[nrscripts++] = newscript;
+}
+
+
 CreatureAI* GetAI_mob_the_eye(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);

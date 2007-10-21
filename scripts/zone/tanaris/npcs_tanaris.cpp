@@ -18,6 +18,7 @@
 #include "../../../../../game/Player.h"
 #include "../../../../../game/QuestDef.h"
 #include "../../../../../game/GossipDef.h"
+#include "../../../../../shared/WorldPacket.h"
 
 // **** This script is still under Developement ****
 
@@ -25,16 +26,74 @@
 ## npc_steward_of_time
 ######*/
 
+#define GOSSIP_FLIGHT "Give me a flight. <Real gossip missing>"
+
+bool GossipHello_npc_steward_of_time(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(10279) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10279) == QUEST_STATUS_COMPLETE)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->SEND_GOSSIP_MENU(9978,_Creature->GetGUID());
+    }
+    else
+    {
+        _Creature->prepareGossipMenu( player,0 );
+        _Creature->sendPreparedGossip( player );
+    }
+    return true;
+}
+
 bool QuestAccept_npc_steward_of_time(Player *player, Creature *creature, Quest const *quest )
 {
-        std::vector<uint32> nodes;                          //To The Master's Lair, q-id 10279
+    if(quest->GetQuestId() == 10279) //Quest: To The Master's Lair
+    {
+        std::vector<uint32> nodes;
 
-        nodes.resize(2);
-        nodes[0] = 144;                                     //from top of cave
-        nodes[1] = 143;                                     //end at bottom of cave
+        nodes.resize(2);// Creature No.20142
+        nodes[0] = 144; // Quest - Caverns of Time (Intro Flight Path) (Start)
+        nodes[1] = 143; // Quest - Caverns of Time (Intro Flight Path) (End)
         player->ActivateTaxiPathTo(nodes);
+    }
+    return false;
+}
 
-        return true;
+void SendDefaultMenu_npc_steward_of_time(Player *player, Creature *_Creature, uint32 action)
+{
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+    {
+        std::vector<uint32> nodes;
+
+        nodes.resize(2);// Creature No.20142
+        nodes[0] = 144; // Quest - Caverns of Time (Intro Flight Path) (Start)
+        nodes[1] = 143; // Quest - Caverns of Time (Intro Flight Path) (End)
+        player->ActivateTaxiPathTo(nodes);
+    }
+}
+
+bool GossipSelect_npc_steward_of_time(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (sender == GOSSIP_SENDER_MAIN)
+        SendDefaultMenu_npc_steward_of_time(player, _Creature, action);
+
+    return true;
+}
+
+struct MANGOS_DLL_DECL npc_steward_of_timeAI : public ScriptedAI
+{
+    npc_steward_of_timeAI(Creature *c) : ScriptedAI(c) {}
+
+    void UpdateAI(const uint32 diff)
+    {
+        WorldPacket data;
+        data.Initialize(SMSG_MOVE_SET_HOVER, 8+4);
+        data.append(m_creature->GetPackGUID());
+        data << uint32(0);
+        m_creature->SendMessageToSet(&data,true);
+    }
+}; 
+CreatureAI* GetAI_npc_steward_of_time(Creature *_Creature)
+{
+    return new npc_steward_of_timeAI (_Creature);
 }
 
 /*######
@@ -47,6 +106,10 @@ void AddSC_npcs_tanaris()
 
     newscript = new Script;
     newscript->Name="npc_steward_of_time";
-    newscript->pQuestAccept =   &QuestAccept_npc_steward_of_time;
+    newscript->GetAI = GetAI_npc_steward_of_time;
+    newscript->pGossipHello          = &GossipHello_npc_steward_of_time;
+    newscript->pGossipSelect         = &GossipSelect_npc_steward_of_time;
+    newscript->pQuestAccept          = &QuestAccept_npc_steward_of_time;
+
     m_scripts[nrscripts++] = newscript;
 }

@@ -267,6 +267,10 @@
 					RelativePath="..\scripts\item\purification_mixture.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\item\vorenthals_presence.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="zone"
@@ -1309,6 +1313,18 @@
 					<Filter
 						Name="Mana Tombs"
 						>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_nexusprince_shaffar.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_pandemonius.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_tavarok.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Sekketh Halls"
@@ -1421,6 +1437,10 @@
 					<Filter
 						Name="Shattered Halls"
 						>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_nethekurse.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -1670,6 +1690,10 @@
 						Name="Steam Vault"
 						>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_hydromancer_thespia.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
 							>
 						</File>
@@ -1677,6 +1701,10 @@
 					<Filter
 						Name="Underbog"
 						>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_ghazan.cpp"
+							>
+						</File>
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_hungarfen.cpp"
 							>

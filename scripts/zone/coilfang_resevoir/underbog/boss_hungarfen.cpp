@@ -86,12 +86,17 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 
             if (Mushroom_timer < diff) {
                 Unit* target = NULL;
+                Unit* pSummon = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
                 if (target)     // spawn a mushroom around random player
-                    m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%3), target->GetPositionY()+(rand()%3), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
+                    pSummon = m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%3), target->GetPositionY()+(rand()%3), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
                 else            // if player not found, spawn around boss
-                    m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
+                    pSummon = m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
+                
+                if (pSummon)
+                    pSummon->setFaction(m_creature->getFaction());
+
                 Mushroom_timer = 10000;
             }else Mushroom_timer -= diff;
 

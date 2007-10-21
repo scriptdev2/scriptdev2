@@ -325,7 +325,10 @@ void SimpleAI::UpdateAI(const uint32 diff)
             }
 
             //Spell will cast agian when the cooldown is up
-            Spell_Timer[i] = Spell[i].Cooldown;
+            if (Spell[i].CooldownRandomAddition)
+                Spell_Timer[i] = Spell[i].Cooldown + (rand() % Spell[i].CooldownRandomAddition);
+            else Spell_Timer[i] = Spell[i].Cooldown;
+
         }else Spell_Timer[i] -= diff;
 
     }

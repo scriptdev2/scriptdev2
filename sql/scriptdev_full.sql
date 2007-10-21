@@ -50,6 +50,7 @@ UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (4
 UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry`= 23268;
 UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` = 31742;
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
+UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry`= 30259;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -90,6 +91,11 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* BONE WASTES (area around entrance to the four instances) */
 
 /* MANA TOMBS */
+UPDATE `creature_template` SET `ScriptName` = 'boss_tavarok' WHERE `entry` = 18343;
+UPDATE `creature_template` SET `ScriptName` = 'boss_pandemonius' WHERE `entry` = 18341;
+UPDATE `creature_template` SET `ScriptName` = 'boss_nexusprince_shaffar' WHERE `entry` = 18344;
+UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_beacon' WHERE `entry` = 18431;
+UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_apprentice' WHERE `entry` = 18430;
 
 /* AUCHENAI CRYPTS */
 
@@ -230,13 +236,16 @@ UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map`= 534;
 
 /* THE SLAVE PENS */
 UPDATE creature_template SET ScriptName='boss_rokmar_the_crackler' WHERE entry=17991;
-UPDATE creature_template SET ScriptName='boss_warlord_kalithresh' WHERE entry=17798;
 
 /* THE UNDERBOG */
-UPDATE `creature_template` SET `ScriptName` = 'boss_hungarfen' WHERE `entry` = 17770;
+UPDATE `creature_template` SET `ScriptName` = 'boss_ghazan' WHERE `entry` = 18105;
 UPDATE `creature_template` SET `ScriptName` = 'mob_underbog_mushroom' WHERE `entry` = 17990;
+UPDATE `creature_template` SET `ScriptName` = 'boss_hungarfen' WHERE `entry` = 17770;
 
 /* THE STEAMVAULT */
+UPDATE creature_template SET ScriptName='boss_warlord_kalithresh' WHERE entry=17798;
+UPDATE `creature_template` SET `ScriptName` = 'boss_hydromancer_thespia' WHERE `entry` = 17797;
+UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_waterelemental' WHERE `entry` = 17917;
 
 /* SERPENTSHRINE CAVERN */
 UPDATE `instance_template` SET `script` = 'instance_serpent_shrine' WHERE `map`= 548;
@@ -343,6 +352,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* SHATTERED HALLS */
 /* Warchief Kargath Bladefist */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (16808);
+/* Nethekurse and his spawned shadowfissure */
+UPDATE `creature_template` SET `ScriptName` = 'boss_grand_warlock_nethekurse' WHERE `entry` = 16807;
+UPDATE `creature_template` SET `ScriptName` = 'mob_nethe_shadowfissure' WHERE `entry` = 17471;
 /* Shattered Hand Centurion, Shadowmoon Darkcaster, Shattered Hand Champion, Sharpshooter Guard, Shattered Hand Assassin, Warbringer O'mrogg, Grand Warlock Nethekurse, Shattered Hand Sharpshooter, Shattered Hand Legionnaire, Shattered Hand Reaver, Shattered Hand Brawler */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17465, 17694, 17671, 17622, 17695, 16809, 16807, 16704, 16700, 16699, 16593);
 
@@ -685,6 +697,9 @@ UPDATE `creature_template` SET `scriptname`='mob_crystalcore_devastator' WHERE `
 /* VoidReaver and Arcane orb Target */
 UPDATE `creature_template` SET `ScriptName` = 'boss_void_reaver' WHERE `entry` = 19516;
 UPDATE `creature_template` SET `ScriptName` = 'mob_arcane_orb_target' WHERE `entry` = 19577;
+/* Kael'thas Phoenix and egg */
+UPDATE `creature_template` SET `scriptname`='mob_phoenix' WHERE `entry`='21362';
+UPDATE `creature_template` SET `scriptname`='mob_phoenix_egg' WHERE `entry`='21364';
 
 
 /* TEMPLE OF AHN'QIRAJ */
