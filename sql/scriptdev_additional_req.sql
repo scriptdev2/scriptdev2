@@ -89,7 +89,7 @@ UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 18716, `Re
 /* */
 
 /*Infernal Relay*/
-INSERT INTO `spell_script_target` VALUES (30834, 1, 17646);
+REPLACE INTO `spell_script_target` VALUES (30834, 1, 17646);
 
 
 
