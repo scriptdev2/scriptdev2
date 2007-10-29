@@ -16,29 +16,29 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_DEATH_COIL	30500 // fear you only 2 meters in the air (core bug but better than fear under the map)
-#define SPELL_DARK_SPIN 	30502 // core bug spell attack caster :D
-#define SPELL_SHADOW_FISSURE		30496 //Summon the ShadowFissure NPC 
-#define SPELL_CONSUMPTION		30497 // 100% right	
+#define SPELL_DEATH_COIL    30500 // fear you only 2 meters in the air (core bug but better than fear under the map)
+#define SPELL_DARK_SPIN     30502 // core bug spell attack caster :D
+#define SPELL_SHADOW_FISSURE        30496 //Summon the ShadowFissure NPC 
+#define SPELL_CONSUMPTION        30497 // 100% right    
 
-#define SOUND_TAUNT_1	10259
-#define SAY_TAUNT_1		"Make for your pittyfull life!"
-#define SOUND_TAUNT_2	10260
-#define SAY_TAUNT_2		""
-#define SOUND_TAUNT_3	10261
-#define SAY_TAUNT_3		"Your pain amuses me."
-#define SOUND_AGGRO_1	10271	
-#define SAY_AGGRO_1		"I'm already bored."
-#define SOUND_AGGRO_2	10272
-#define SAY_AGGRO_2		"Come on! ... Show me a real fight."
-#define SOUND_AGGRO_3	10273
-#define SAY_AGGRO_3		"I had more fun torturing the peons."
-#define SOUND_SLAY_1	10274
-#define SAY_SLAY_1		"You Loose."
-#define SOUND_SLAY_2	10275	
-#define SAY_SLAY_2		"Ohh! Just die."
-#define SOUND_DIE	    10276
-#define SAY_DIE			"What a ... a shame."
+#define SOUND_TAUNT_1    10259
+#define SAY_TAUNT_1        "Make for your pittyfull life!"
+#define SOUND_TAUNT_2    10260
+#define SAY_TAUNT_2        ""
+#define SOUND_TAUNT_3    10261
+#define SAY_TAUNT_3        "Your pain amuses me."
+#define SOUND_AGGRO_1    10271    
+#define SAY_AGGRO_1        "I'm already bored."
+#define SOUND_AGGRO_2    10272
+#define SAY_AGGRO_2        "Come on! ... Show me a real fight."
+#define SOUND_AGGRO_3    10273
+#define SAY_AGGRO_3        "I had more fun torturing the peons."
+#define SOUND_SLAY_1    10274
+#define SAY_SLAY_1        "You Loose."
+#define SOUND_SLAY_2    10275    
+#define SAY_SLAY_2        "Ohh! Just die."
+#define SOUND_DIE        10276
+#define SAY_DIE            "What a ... a shame."
 
 /* // Sounds for Killing Servants (StartEvent)
 10262,"A_HELL_Neth_PlyrAttack01"
@@ -71,8 +71,17 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);  
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
 
         InCombat = false;
 
@@ -94,7 +103,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             return;
 
         switch(rand()%2)
-        {		
+        {        
         case 0:
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
             DoYell(SAY_SLAY_1,LANG_UNIVERSAL,NULL);
@@ -136,7 +145,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
                     DoYell(SAY_AGGRO_3,LANG_UNIVERSAL,NULL);
 
-                    break;					
+                    break;                    
                 }
                 InCombat = true;
             }
@@ -229,7 +238,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
                     {
                         Unit* target = NULL;
                         target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                        DoCast(target,SPELL_SHADOW_FISSURE);	
+                        DoCast(target,SPELL_SHADOW_FISSURE);    
                         shadowfissure_timer = 8000;
                     }else shadowfissure_timer -= diff;
 
@@ -246,7 +255,7 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
                 {
                     DoCast(m_creature,SPELL_DARK_SPIN);
                     onlyonce = true;
-                }				
+                }                
             }
         }
     }
@@ -273,7 +282,7 @@ struct MANGOS_DLL_DECL mob_shadowfissureAI : public ScriptedAI
             m_creature->setFaction(45);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             start = true;
-            DoCast(m_creature,SPELL_CONSUMPTION);			
+            DoCast(m_creature,SPELL_CONSUMPTION);            
         }
         if(stop_timer < diff)
         {

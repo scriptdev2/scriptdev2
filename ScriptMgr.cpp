@@ -93,7 +93,11 @@ extern void AddSC_npc_guardian();
 extern void AddSC_boss_nexusprince_shaffar();
 extern void AddSC_boss_pandemonius();
 extern void AddSC_boss_tavarok();
+
 //--Sekketh Halls
+extern void AddSC_boss_darkweaver_syth();
+extern void AddSC_boss_tailonking_ikiss();
+
 //--Shadow Labyrinth
 //Azshara
 extern void AddSC_boss_azuregos();
@@ -195,6 +199,7 @@ extern void AddSC_boss_hungarfen();
 //Darkshore
 extern void AddSC_mobs_darkshore();
 
+//Darnassus
 //Deadmines
 //Deadwind pass
 //Desolace
@@ -210,6 +215,7 @@ extern void AddSC_npc_lady_jaina_proudmoore();
 //Eversong Woods
 extern void AddSC_mobs_mana_tapped();
 
+//Exodar
 //Eastern Plaguelands
 extern void AddSC_mobs_ghoul_flayer();
 extern void AddSC_npc_darrowshire_spirit();
@@ -246,6 +252,7 @@ extern void AddSC_mobs_bonechewer_orc();
 
 //Hillsbrad Foothills
 //Hinterlands
+//Ironforge
 //Karazhan
 extern void AddSC_boss_attumen();
 extern void AddSC_boss_curator();
@@ -326,6 +333,7 @@ extern void AddSC_boss_gluth();
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
 
+//Orgrimmar
 //Ragefire Chasm
 //Razorfen Downs
 extern void AddSC_boss_amnennar_the_coldbringer();
@@ -364,6 +372,9 @@ extern void AddSC_npc_lothos_riftwalker();
 //Shadowfang keep
 //Shadowmoon Valley
 extern void AddSC_neltharaku();
+
+//Shattrath
+extern void AddSC_npc_shattrathflaskvendors();
 
 //Silithus
 extern void AddSC_npcs_captains_blackanvil_and_skullsplit();
@@ -430,12 +441,14 @@ extern void AddSC_boss_cthun();
 extern void AddSC_mobs_terokkar_forest();
 
 //Thousand Needles
+//Thunder Bluff
 //Tirisfal Glades
 //Uldaman
 extern void AddSC_boss_ironaya();
 extern void AddSC_mob_jadespine_basilisk();
 extern void AddSC_mob_uldaman();
 
+//Undercity
 //Un'Goro Crater
 //Upper blackrock spire
 //Wailing caverns
@@ -529,7 +542,11 @@ void ScriptsInit()
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
     AddSC_boss_tavarok();
+
     //--Sekketh Halls
+    AddSC_boss_darkweaver_syth();
+    AddSC_boss_tailonking_ikiss();
+
     //--Shadow Labyrinth
     //Azshara
     AddSC_boss_azuregos();
@@ -631,6 +648,7 @@ void ScriptsInit()
     //Darkshore
     AddSC_mobs_darkshore();
 
+    //Darnassus
     //Deadmines
     //Deadwind pass
     //Desolace
@@ -646,6 +664,7 @@ void ScriptsInit()
     //Eversong Woods
     AddSC_mobs_mana_tapped();
 
+    //Exodar
     //Eastern Plaguelands
     AddSC_mobs_ghoul_flayer();
     AddSC_npc_darrowshire_spirit();
@@ -682,6 +701,7 @@ void ScriptsInit()
 
     //Hillsbrad Foothills
     //Hinterlands
+    //Ironforge
     //Karazhan
     AddSC_boss_attumen();
     AddSC_boss_curator();
@@ -762,6 +782,7 @@ void ScriptsInit()
     //Onyxia's Lair
     AddSC_boss_onyxia();
 
+    //Orgrimmar
     //Ragefire Chasm
     //Razorfen Downs
     AddSC_boss_amnennar_the_coldbringer();
@@ -800,6 +821,9 @@ void ScriptsInit()
     //Shadowfang keep
     //Shadowmoon Valley
     AddSC_neltharaku();
+
+    //Shattrath
+    AddSC_npc_shattrathflaskvendors();
 
     //Silithus
     AddSC_npcs_captains_blackanvil_and_skullsplit();
@@ -866,12 +890,14 @@ void ScriptsInit()
     AddSC_mobs_terokkar_forest();
 
     //Thousand Needles
+    //Thunder Bluff
     //Tirisfal Glades
     //Uldaman
     AddSC_boss_ironaya();
     AddSC_mob_jadespine_basilisk();
     AddSC_mob_uldaman();
 
+    //Undercity
     //Un'Goro Crater
     //Upper blackrock spire
     //Wailing caverns

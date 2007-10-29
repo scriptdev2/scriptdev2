@@ -54,12 +54,15 @@ scripts/item/nether_wraith_beacon.cpp \
 scripts/item/purification_mixture.cpp \
 scripts/item/vorenthals_presence.cpp \
 scripts/npc/npc_guardian.cpp \
+scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
+scripts/zone/aunchindoun/sekketh_halls/boss_darkweaver_syth.cpp \
+scripts/zone/aunchindoun/sekketh_halls/boss_tailonking_ikiss.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
@@ -255,6 +258,7 @@ scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
+scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \

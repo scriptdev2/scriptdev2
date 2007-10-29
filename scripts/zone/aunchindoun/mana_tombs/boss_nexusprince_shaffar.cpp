@@ -22,8 +22,7 @@
 #define SPELL_FROSTNOVA                 32365
 
 //Spells for Beacon
-#define SPELL_ARCANE_MISSILE            29955
-#define SPELL_ARCANE_BLAST              34793 // 22920 35314
+#define SPELL_ARCANE_BOLT              36712
 #define SPELL_ETHEREAL_APPRENTICE       32372 // Summon 18430
 #define SPELL_VISUAL_EFFECT             32368
 
@@ -34,23 +33,23 @@
 #define SAY_INTRO       "What is this? You must forgive me, but I was not expecting company. As you can see, we are somewhat preoccupied right now. But no matter. As I am a gracious host, I will tend to you... personally."     
 #define SOUND_INTRO     10539
 
-#define SAY_AGGRO_1		"We have not yet been properly introduced."
-#define SOUND_AGGRO_1	10541
-#define SAY_AGGRO_2		"An epic battle. How exciting!"
-#define	SOUND_AGGRO_2	10542
-#define SAY_AGGRO_3		"I have longed for a good adventure."
-#define	SOUND_AGGRO_3	10543		
+#define SAY_AGGRO_1        "We have not yet been properly introduced."
+#define SOUND_AGGRO_1    10541
+#define SAY_AGGRO_2        "An epic battle. How exciting!"
+#define    SOUND_AGGRO_2    10542
+#define SAY_AGGRO_3        "I have longed for a good adventure."
+#define    SOUND_AGGRO_3    10543        
 
-#define SAY_SLAY_1		"It has been... entertaining."
-#define SOUND_SLAY_1	10544	
-#define SAY_SLAY_2		"And now we part company."
-#define SOUND_SLAY_2	10545		
+#define SAY_SLAY_1        "It has been... entertaining."
+#define SOUND_SLAY_1    10544    
+#define SAY_SLAY_2        "And now we part company."
+#define SOUND_SLAY_2    10545        
 
-#define SAY_SUMMON		"I have such fascinating things to show you."
-#define SOUND_SUMMON	10540
+#define SAY_SUMMON        "I have such fascinating things to show you."
+#define SOUND_SUMMON    10540
 
-#define SAY_DEAD		"I must bid you... farewell."
-#define SOUND_DEAD		10546
+#define SAY_DEAD        "I must bid you... farewell."
+#define SOUND_DEAD        10546
 
 
 struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
@@ -72,6 +71,19 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+
 
         beacon_timer = 10000;
         firebolt_timer = 8000;
@@ -94,7 +106,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
             return;
 
         switch(rand()%2)
-        {		
+        {        
         case 0:
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
@@ -227,7 +239,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             Creature* Summoned = NULL;
-            Summoned = DoSpawnCreature(18431, 0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 31000);
+            Summoned = DoSpawnCreature(18431, 0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 21000);
             if (Summoned && target)
                 Summoned->AI()->AttackStart(target);
 
@@ -252,8 +264,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
     mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
 
     uint32 apprentice_timer;
-    uint32 arcanemissile_timer;
-    uint32 arcaneblast_timer;
+    uint32 arcanebolt_timer;
 
     bool onlyonce;
     bool apprentice;
@@ -264,9 +275,8 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
 
-        apprentice_timer = 30000;
-        arcanemissile_timer = 5000;
-        arcaneblast_timer = 3000;
+        apprentice_timer = 20000;
+        arcanebolt_timer = 3000;
         onlyonce = true;
         apprentice = false;
     }
@@ -324,17 +334,11 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
                     Summoned->AI()->AttackStart(target);
             }else apprentice_timer -= diff;
 
-            if(arcanemissile_timer < diff)
+            if(arcanebolt_timer < diff)
             {   
-                DoCast(m_creature->getVictim(),SPELL_ARCANE_MISSILE );
-                arcanemissile_timer = 2000 + rand()%5000;
-            }else arcanemissile_timer -= diff;
-
-            if(arcaneblast_timer < diff)
-            {   
-                DoCast(m_creature->getVictim(),SPELL_ARCANE_BLAST);
-                arcaneblast_timer = 2000 + rand()%5000;
-            }else arcaneblast_timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_ARCANE_BOLT);
+                arcanebolt_timer = 2000 + rand()%5000;
+            }else arcanebolt_timer -= diff;
 
             DoMeleeAttackIfReady();
         }

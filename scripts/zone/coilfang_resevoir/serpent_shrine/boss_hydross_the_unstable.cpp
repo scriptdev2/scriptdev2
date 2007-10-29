@@ -62,6 +62,15 @@
 #define ADDS_CLEAN                22035
 #define ADDS_CORRUPT              22036
 
+#define SPAWN_X_DIFF1             6.934003
+#define SPAWN_Y_DIFF1             -11.255012
+#define SPAWN_X_DIFF2             -6.934003
+#define SPAWN_Y_DIFF2             11.255012
+#define SPAWN_X_DIFF3             -12.577011
+#define SPAWN_Y_DIFF3             -4.72702
+#define SPAWN_X_DIFF4             12.577011
+#define SPAWN_Y_DIFF4             4.72702
+
 struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 {
     boss_hydross_the_unstableAI(Creature *c) : ScriptedAI(c) 
@@ -96,7 +105,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         WaterTomb_Timer = 7000;
         VileSludge_Timer = 15000;
         Invisible_Timer = 2000;
-
         MarkOfHydross_Count = 0;
         MarkOfCorruption_Count = 0;
 
@@ -119,6 +127,8 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FROST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, false); // disabled
     }
 
     void StartEvent()
@@ -180,25 +190,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
         // despawn invisible trigger
         DespawnCreatureIfExists(Invisible);
-    }
-
-    float DoCalculateRandomLocation()
-    {
-        float Loc;
-        float Rand = rand()%6;
-
-        switch(rand()%2)
-        {
-            case 0:
-            Loc = 0 + Rand;
-            break;
-
-            case 1:
-            Loc = 0 - Rand;
-            break;
-        }
-
-        return Loc;
     }
 
     void AttackStart(Unit *who)
@@ -324,16 +315,20 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     // switch to clean form
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CLEAN);
                     CorruptedForm = false;
+                    MarkOfHydross_Count = 0;
 
                     DoYell(SAY_SWITCH_TO_CLEAN, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_CLEAN);
 
                     // spawn 4 adds
                     Creature *Adds;
-                    Adds = DoSpawnCreature(ADDS_CLEAN, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FROST, true);
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, false); // disabled
                 }
 
                 PosCheck_Timer = 5000;
@@ -396,6 +391,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 {
                     // switch to corrupted form
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CORRUPT);
+                    MarkOfCorruption_Count = 0;
                     CorruptedForm = true;
 
                     DoYell(SAY_SWITCH_TO_CORRUPT, LANG_UNIVERSAL, NULL);
@@ -403,10 +399,13 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     // spawn 4 adds
                     Creature *Adds;
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FROST, false); // disabled
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, true);
                 }
 
                 PosCheck_Timer = 5000;

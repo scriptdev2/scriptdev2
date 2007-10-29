@@ -177,8 +177,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCK_AWAY);
 
-            //Drop 20% aggro
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-20);
+            //Drop 25% aggro
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-25);
 
             KnockAway_Timer = 30000;
         }else KnockAway_Timer -= diff;

@@ -16,29 +16,29 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_LIGHTNING_CLOUD		25033
-#define SPELL_LUNG_BURST			31481 
-#define SPELL_ENVELOPING_WINDS		31718
+#define SPELL_LIGHTNING_CLOUD        25033
+#define SPELL_LUNG_BURST            31481 
+#define SPELL_ENVELOPING_WINDS        31718
 
 #define SPELL_FROST_BOLT_VOLLEY     36741
 
-#define SAY_AGGRO_1		"The depths will consume you!"
-#define SOUND_AGGRO_1	10361
-#define SAY_AGGRO_2		"Meet your doom, surface dwellers!"
-#define	SOUND_AGGRO_2	10362
-#define SAY_AGGRO_3		"You will drown in blood!"
-#define	SOUND_AGGRO_3	10363		
+#define SAY_AGGRO_1        "The depths will consume you!"
+#define SOUND_AGGRO_1    10361
+#define SAY_AGGRO_2        "Meet your doom, surface dwellers!"
+#define    SOUND_AGGRO_2    10362
+#define SAY_AGGRO_3        "You will drown in blood!"
+#define    SOUND_AGGRO_3    10363        
 
-#define SAY_SLAY_1		"To the depths of oblivion with you!"
-#define SOUND_SLAY_1	10364	
-#define SAY_SLAY_2		"For my lady and master!"
-#define SOUND_SLAY_2	10365		
+#define SAY_SLAY_1        "To the depths of oblivion with you!"
+#define SOUND_SLAY_1    10364    
+#define SAY_SLAY_2        "For my lady and master!"
+#define SOUND_SLAY_2    10365        
 
-#define SAY_SUMMON		"Surge forth my pets!"
-#define SOUND_SUMMON	10360
+#define SAY_SUMMON        "Surge forth my pets!"
+#define SOUND_SUMMON    10360
 
-#define SAY_DEAD		"Our matron will be.. the end of.. you.."
-#define SOUND_DEAD		10366
+#define SAY_DEAD        "Our matron will be.. the end of.. you.."
+#define SOUND_DEAD        10366
 
 struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 {
@@ -58,8 +58,17 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
 
         InCombat = false;
 
@@ -80,7 +89,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             return;
 
         switch(rand()%2)
-        {		
+        {        
         case 0:
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
@@ -119,7 +128,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
                 case 2:
                     DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;					
+                    break;                    
                 }
                 InCombat = true;
             }
@@ -157,10 +166,10 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
                     case 2:
                         DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;					
+                        break;                    
                     }
                     InCombat = true;
-                }				
+                }                
             }
         }
     }  
@@ -198,7 +207,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             envelopingwinds_timer = 10000+rand()%5000;
         }else (envelopingwinds_timer -=diff);
 
-        DoMeleeAttackIfReady();		
+        DoMeleeAttackIfReady();        
     }
 };
 
@@ -215,7 +224,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
 
-        frostbolt_timer = 10000;		
+        frostbolt_timer = 10000;        
     }
 
     void AttackStart(Unit *who)
@@ -249,7 +258,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;	
+            return;    
 
         if (frostbolt_timer < diff)
         {

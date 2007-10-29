@@ -41,6 +41,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     uint32 voidblast_timer;
     uint32 darkshell_timer;
+    uint32 voidblast_counter;
 
     bool InCombat;
 
@@ -51,9 +52,23 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
 
         voidblast_timer = 10000;
         darkshell_timer = 15000;
+        voidblast_counter = 0;
 
         InCombat = false;
     }
@@ -70,7 +85,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
             return;
 
         switch(rand()%2)
-        {		
+        {        
         case 0:
             DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_KILL_1);
@@ -166,9 +181,16 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             DoCast(target,SPELL_VOID_BLAST);
-            voidblast_timer = 10000 + rand()%5000;
-        }else voidblast_timer -= diff;
-
+            voidblast_timer = 500;
+            voidblast_counter++;
+            if(voidblast_counter == 5)
+            {
+                voidblast_timer = 25000+rand()%10000;
+                voidblast_counter = 0;
+            }
+           }else voidblast_timer -= diff;
+ 
+        if(voidblast_counter == 0)
         if(darkshell_timer < diff)
         {                   
             DoCast(m_creature,SPELL_DARK_SHELL);

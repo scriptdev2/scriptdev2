@@ -58,6 +58,8 @@ UPDATE `creature_template` SET `ScriptName` = 'silva_filnaveth' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 UPDATE `creature_template` SET `ScriptName` = 'bunthen_plainswind' WHERE `entry` = 11798;
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry`='5764';
+/* inkeepers for halloween event */
+UPDATE `creature_template` SET ScriptName='innkeeper' WHERE `npcflag` & 128<>0;
 
 /* SERVERS */
 UPDATE `creature_template` SET `ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);
@@ -100,6 +102,13 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_apprentice' WHERE `e
 /* AUCHENAI CRYPTS */
 
 /* SETHEKK HALLS */
+UPDATE `creature_template` SET `ScriptName` = 'mob_syth_fire' WHERE `entry` = 19203;
+UPDATE `creature_template` SET `ScriptName` = 'mob_syth_arcane' WHERE `entry` = 19205;
+UPDATE `creature_template` SET `ScriptName` = 'mob_syth_frost' WHERE `entry` = 19204;
+UPDATE `creature_template` SET `ScriptName` = 'mob_syth_shadow' WHERE `entry` = 19206;
+ 
+UPDATE `creature_template` SET `ScriptName` = 'boss_tailonking_ikiss' WHERE `entry` = 18473;
+UPDATE `creature_template` SET `ScriptName` = 'boss_darkweaver_syth' WHERE `entry` = 18472;
 
 /* SHADOW LABYRINTH */
 
@@ -564,6 +573,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* SHADOWMOON VALLEY */
 UPDATE `creature_template` SET `ScriptName`='neltharaku' WHERE (`entry`='21657');
 
+/* SHATTRATH */
+UPDATE creature_template SET ScriptName = 'npc_shattrathflaskvendors' WHERE entry = '23483';
+UPDATE creature_template SET ScriptName = 'npc_shattrathflaskvendors' WHERE entry = '23484';
 
 /* SILITHUS */
 /* Orgrimmar Legion Axe Thrower, Stormwind Archmage */

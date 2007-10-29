@@ -276,6 +276,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\npc\npc_innkeeper.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\npc\npc_not_selectable.cpp"
 					>
 				</File>
@@ -1393,6 +1397,14 @@
 					<Filter
 						Name="Sekketh Halls"
 						>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\sekketh_halls\boss_darkweaver_syth.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\sekketh_halls\boss_tailonking_ikiss.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Shadow Labyrinth"
@@ -1796,12 +1808,44 @@
 					</Filter>
 				</Filter>
 				<Filter
-					Name="Silvermoon"
+					Name="Silvermoon City"
 					>
 					<File
 						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Darnassus"
+					>
+				</Filter>
+				<Filter
+					Name="Exodar"
+					>
+				</Filter>
+				<Filter
+					Name="Iron Forge"
+					>
+				</Filter>
+				<Filter
+					Name="Orgrimmar"
+					>
+				</Filter>
+				<Filter
+					Name="Shattrath City"
+					>
+					<File
+						RelativePath="..\scripts\zone\shattrath\npc_shattrathflaskvendors.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Thunder Bluff"
+					>
+				</Filter>
+				<Filter
+					Name="Undercity"
+					>
 				</Filter>
 			</Filter>
 		</Filter>
