@@ -71,6 +71,7 @@ extern void AddSC_Honor_Vendor();
 // -- Item --
 extern void AddSC_item_test();
 extern void AddSC_area_52_special();
+extern void AddSC_draenei_fishing_net();
 extern void AddSC_nether_wraith_beacon();
 extern void AddSC_purification_mixture();
 extern void AddSC_vorenthals_presence();
@@ -89,6 +90,7 @@ extern void AddSC_npc_guardian();
 //Ashenvale Forest
 //Aunchindoun
 //--Auchenai Crypts
+extern void AddSC_boss_shirrak_the_dead_watcher();
 //--Mana Tombs
 extern void AddSC_boss_nexusprince_shaffar();
 extern void AddSC_boss_pandemonius();
@@ -179,7 +181,15 @@ extern void AddSC_instance_serpentshrine_cavern();
 //Caverns of Time
 //--Battle for Mt. Hyjal
 //--Old Hillsbrad
+extern void AddSC_boss_captain_skarloc();
+extern void AddSC_boss_epoch_hunter();
+extern void AddSC_boss_lieutenant_drake();
+
 //--The Dark Portal
+extern void AddSC_boss_aeonus();
+extern void AddSC_boss_chrono_lord_deja();
+extern void AddSC_boss_temporus();
+
 //Coilfang Resevoir
 //--Serpent Shrine Cavern
 extern void AddSC_boss_hydross_the_unstable();
@@ -201,6 +211,8 @@ extern void AddSC_mobs_darkshore();
 
 //Darnassus
 //Deadmines
+extern void AddSC_boss_deadmines();
+
 //Deadwind pass
 //Desolace
 //Dire Maul
@@ -452,6 +464,8 @@ extern void AddSC_mob_uldaman();
 //Un'Goro Crater
 //Upper blackrock spire
 //Wailing caverns
+extern void AddSC_boss_wailing_caverns();
+
 //Western plaguelands
 //Westfall
 //Wetlands
@@ -520,6 +534,7 @@ void ScriptsInit()
     // -- Item --
     AddSC_item_test();
     AddSC_area_52_special();
+    AddSC_draenei_fishing_net();
     AddSC_nether_wraith_beacon();
     AddSC_purification_mixture();
     AddSC_vorenthals_presence();
@@ -538,6 +553,7 @@ void ScriptsInit()
     //Ashenvale Forest
     //Aunchindoun
     //--Auchenai Crypts
+    AddSC_boss_shirrak_the_dead_watcher();
     //--Mana Tombs
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
@@ -628,7 +644,15 @@ void ScriptsInit()
     //Caverns of Time
     //--Battle for Mt. Hyjal
     //--Old Hillsbrad
+    AddSC_boss_captain_skarloc();
+    AddSC_boss_epoch_hunter();
+    AddSC_boss_lieutenant_drake();
+
     //--The Dark Portal
+    AddSC_boss_aeonus();
+    AddSC_boss_chrono_lord_deja();
+    AddSC_boss_temporus();
+
     //Coilfang Resevoir
     //--Serpent Shrine Cavern
     AddSC_boss_hydross_the_unstable();
@@ -650,6 +674,8 @@ void ScriptsInit()
 
     //Darnassus
     //Deadmines
+    AddSC_boss_deadmines();
+
     //Deadwind pass
     //Desolace
     //Dire Maul
@@ -901,6 +927,8 @@ void ScriptsInit()
     //Un'Goro Crater
     //Upper blackrock spire
     //Wailing caverns
+    AddSC_boss_wailing_caverns();
+
     //Western plaguelands
     //Westfall
     //Wetlands
@@ -1245,22 +1273,22 @@ void ScriptedAI::DoStopAttack()
     }
 }
 
-void ScriptedAI::DoCast(Unit* victim, uint32 spelId)
+void ScriptedAI::DoCast(Unit* victim, uint32 spelId, bool triggered)
 {
     if (!victim || m_creature->IsNonMeleeSpellCasted(false))
         return;
 
     m_creature->StopMoving();
-    m_creature->CastSpell(victim, spelId, false);
+    m_creature->CastSpell(victim, spelId, triggered);
 }
 
-void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo)
+void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool triggered)
 {
     if (!who || m_creature->IsNonMeleeSpellCasted(false))
         return;
 
     m_creature->StopMoving();
-    m_creature->CastSpell(who, spellInfo, false);
+    m_creature->CastSpell(who, spellInfo, triggered);
 }
 
 void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)

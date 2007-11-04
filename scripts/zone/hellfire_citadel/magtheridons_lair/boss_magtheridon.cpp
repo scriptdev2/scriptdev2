@@ -1,0 +1,402 @@
+/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#include "../../../sc_defines.h"
+
+
+#define SPELL_QUAKE                 30571
+#define SPELL_BLASTNOVA             30616        
+#define SPELL_CAMERA_SHAKE          36455
+
+#define SPELL_ENRAGE                23537
+#define SPELL_BANISH                40825
+
+
+#define SAY_AGGRO                   "Thank you for releasing me. Now...die!"
+#define SOUND_AGGRO                 10254
+
+#define SAY_BANISH                  "Not again...NOT AGAIN!"
+#define SOUND_BANISH                10256
+
+#define SAY_FREED                   "I...am...UNLEASHED!!!"
+#define SOUND_FREED                 10253
+
+#define SAY_EARTHQUAKE              "I will not be taken so easily. Let the walls of this prison tremble...and FALL!!!"
+#define SOUND_EARTHQUAKE            10257
+
+#define SAY_PLAYER_KILLED           "Did you think me weak? Soft? Who is the weak one now?!"
+#define SOUND_PLAYER_KILLED         10255
+
+#define SAY_DEATH                   "The Legion...will consume you...all...."
+#define SOUND_DEATH                 10258 
+
+
+//Spawned objects
+#define SPELL_COLLAPSE              34233   //This spell casted by the "cave in" type object
+
+#define SPELL_CONFLAGERATION        35840       //Actually casted by a creature or object spawned on the ground
+
+
+//Channeler spells
+//#define MOB_HELLFIRE_CHANNELLER    17256
+
+#define SPELL_SOUL_TRANSFER         30531
+#define SPELL_SHADOW_BOLT_VOLLEY    39175
+#define SPELL_DARK_MENDING          30528
+#define SPELL_HELLFIRE_CHANNELING   31059
+#define SPELL_HELLFIRE_CAST_VISUAL  24207
+#define SPELL_FEAR                  39176
+
+#define SPELL_BURNING_ABYSSAL       30511
+
+/*
+
+// Unkown sounds
+
+ProgressSounds[0] = 10247;
+ProgressSounds[1] = 10248;
+ProgressSounds[2] = 10249;
+ProgressSounds[3] = 10250;
+ProgressSounds[4] = 10251;
+ProgressSounds[5] = 10252;
+*/
+/*
+struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
+{
+    boss_magtheridonAI(Creature *c) : ScriptedAI(c) 
+    {
+        EnterEvadeMode();
+    }
+
+    uint32 Phase1_Timer;
+    uint32 BlastNova_Timer;
+    uint32 Quake_Timer;
+    uint32 Collapse_Timer;
+    uint32 Enrage_Timer;
+    
+    bool Phase3;
+
+    void EnterEvadeMode()
+    {
+        Phase1_Timer = 120000;      //2 minutes
+        Enrage_Timer = 600000;      //10 minutes, not sure if this is correct
+        BlastNova_Timer = 60000;
+        Quake_timer = 40000;
+        CaveIn_Timer = 0;
+        Enrage_Timer = 600000; 
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+
+        DoGoHome();
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        DoYell(SAY_PLAYER_KILLED, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_PLAYER_KILLED);
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        DoYell(SAY_DEATH,LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (Phase == 1)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature && Phase > 1)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (Phase == 1)
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who) && Phase > 1)
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+
+        //REPLACE WITH EVENT CHECK!!!
+        if (false)
+            return;
+
+        //Phase timer
+        if (Phase1_Timer < diff)
+        {
+
+            m_creature->setFaction(35);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+
+            m_creature->setFaction(14);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+            DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+            m_creature->RemoveAllAuras();
+        }else Phase1_Timer -= diff;
+
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //Enrage_Timer
+        if (Enrage_Timer < diff)
+        {
+            //Cast Berserker Rage
+            DoCast(m_creature, SPELL_BERSERK);
+            DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
+
+            //5 minutes until we should cast this agian
+            Enrage_Timer = 300000;
+        }else Enrage_Timer -= diff;
+
+        //Slimebolt_Timer
+        if (Slimebolt_Timer < diff)
+        {
+            //Cast Slime bolt
+            DoCast(m_creature->getVictim(),SPELL_SLIMEBOLT);
+
+            //5 seconds until we should cast this agian
+            Slimebolt_Timer = 5000;
+        }else Slimebolt_Timer -= diff;
+
+        //Enrage if not already enraged and below 5%
+        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
+        {
+            DoCast(m_creature,SPELL_ENRAGE);
+            DoTextEmote(EMOTE_ENRAGE,NULL);
+            Enraged = true;
+        }
+
+        //Melee
+        DoMeleeAttackIfReady();
+    }
+}; 
+
+struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
+{
+    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 ShadowBoltVolley_Timer;
+    uint32 DarkMending_Timer;
+    uint32 Fear_Timer;
+    uint32 Infernal_Timer;
+    std::list<uint64> FriendlyList;
+
+    bool InfernalSpawned;
+
+    void EnterEvadeMode()
+    {
+        ShadowBoltVolley_Timer = 10000;
+        DarkMending_Timer = 30000;
+        Fear_Timer = 20000;
+        Infernal_Timer = 30000;
+
+        InfernalSpawned = false;
+
+        FriendlyList.clear();
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+
+        DoGoHome();
+
+        // Must be scripted - don't know how.....
+        //DoCast(m_creature,SPELL_HELLFIRE_CHANNELING);
+        //DoCast(m_creature,SPELL_HELLFIRE_CAST_VISUAL);
+    }
+
+    bool ListContains(std::list<uint64> &plist, uint64 element)
+    {
+        if (plist.empty())
+            return false;
+
+        std::list<uint64>::iterator i;
+        for (i = plist.begin(); i!=plist.end(); ++i)
+        {
+            if ((*i) == element)
+                return true;
+        }
+
+        return false;
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who) return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim()) return;
+
+        if (m_creature->IsFriendlyTo(who) && !ListContains(FriendlyList, who->GetGUID()))
+            FriendlyList.push_back(who->GetGUID());
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura()) who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //Shadow bolt volley
+        if (ShadowBoltVolley_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
+
+            ShadowBoltVolley_Timer = 10000 + (rand()%10000);
+        }else ShadowBoltVolley_Timer -= diff;
+
+        //Dark Mending
+        if (DarkMending_Timer < diff)
+        {
+
+            //If no friends then heal self
+            if (FriendlyList.empty())
+                DoCast(m_creature, SPELL_DARK_MENDING);
+
+            //Cast Dark Mending on the target with the lowest
+            //amount of HP within 30 yards (cast range)
+            uint32 LowestHP = 0;
+            Unit* pLowestHPTarget = NULL;
+            Unit* pTemp = NULL;
+
+            std::list<uint64>::iterator i;
+
+            for (i = FriendlyList.begin(); i!=FriendlyList.end(); ++i)
+            {
+                pTemp = Unit::GetUnit((*m_creature),(*i));
+                if (pTemp && pTemp->isAlive() && pTemp->GetHealth() < LowestHP && m_creature->GetDistance2dSq(pTemp) < 900)
+                {
+                    LowestHP = pTemp->GetHealth();
+                    pLowestHPTarget = pTemp;
+                }
+            }
+
+            //Cast on ourselves if we are lower then lowest hp friendly unit
+            if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
+                DoCast(pLowestHPTarget, SPELL_DARK_MENDING);
+            else DoCast(m_creature, SPELL_DARK_MENDING);
+
+            DarkMending_Timer = 10000 + (rand() % 10000);
+        }else DarkMending_Timer -= diff;
+
+        //Fear
+        if (Fear_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
+            if (target)
+                DoCast(target,SPELL_FEAR);
+
+            Fear_Timer = 25000 + (rand()%15000);
+        }else Fear_Timer -= diff;
+
+        //Infernal spawning
+        if (!InfernalSpawned && Infernal_Timer < diff)
+        {
+            Creature* Infernal = m_creature->SummonCreature(CREATURE_INFERNAL, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 60000);
+
+            if (Infernal)
+            {
+                Infernal->setFaction(m_creature->getFaction());
+
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+                if (target)
+                    Infernal->AI()->AttackStart(target);
+            }
+
+            InfernalSpawned = true;
+        }else Infernal_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+
+};
+
+CreatureAI* GetAI_boss_magtheridon(Creature *_Creature)
+{
+    return new boss_magtheridonAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_hellfire_channeler(Creature *_Creature)
+{
+    return new mob_hellfire_channelerAI (_Creature);
+}
+
+void AddSC_boss_magtheridon()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="boss_magtheridon";
+    newscript->GetAI = GetAI_boss_magtheridon;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_hellfire_channeler";
+    newscript->GetAI = GetAI_mob_hellfire_channeler;
+    m_scripts[nrscripts++] = newscript;
+}*/

@@ -26,12 +26,21 @@
 #define SPELL_STONED            33652 //-- Spell is self cast
 #define SPELL_SHATTER           33654
 
+#define SPELL_AOEKNOCKBACK      24199   //Knockback spell until correct implementation is made
+
 #define EMOTE_GROW              "grows in size!"
 #define SAY_AGGRO               "Come.... and die."
 
 struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 {
-    boss_gruulAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_gruulAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+    ScriptedInstance *pInstance;
+
     uint32 Growth_Timer;
     uint32 GrowthCounter;
     uint32 CaveIn_Timer;
@@ -47,17 +56,30 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         Growth_Timer= 30000;
         GrowthCounter= 0;
         CaveIn_Timer= 40000;
-        GroundSlam_Timer= 35000;;
+        GroundSlam_Timer= 35000;
         GroundSlamPhase= 0;
         IsInGroundSlam= false;
         HurtfulStrike_Timer= 8000;
         Reverberation_Timer= 60000+45000;
         InCombat = false;
 
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        if(pInstance)
+            pInstance->SetData("GruulEvent", 0);
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        if(pInstance)
+            pInstance->SetData("GruulEvent", 1);
     }
 
     void AttackStart(Unit *who)
@@ -74,6 +96,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 InCombat = true;
+
+                if(pInstance)
+                    pInstance->SetData("GruulEvent", 1);
             }
         }
     }
@@ -98,6 +123,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 {
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     InCombat = true;
+
+                    if(pInstance)
+                        pInstance->SetData("GruulEvent", 1);
                 }
             }
         }
@@ -136,17 +164,10 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         // Reverberation
         if (Reverberation_Timer < diff && !IsInGroundSlam)
         {
-            //Modify reverberation to cast on all creatures within 200 yards
-            //On official a dummy spell does this but we don't have that luxury
+            //Cast
+            m_creature->CastSpell(m_creature->getVictim(), SPELL_REVERBERATION, true);
 
-            // This hack now not supported by core
-            //SpellEntry i =(*GetSpellStore()->LookupEntry(SPELL_REVERBERATION));
-            //i.EffectRadiusIndex[0] = 22;    //Index 22 = 200 yard radius
-            //i.rangeIndex = 13;              // Index 13 = 50,000 yard range
-            //m_creature->CastSpell(m_creature->getVictim(),&i ,true);
-            m_creature->CastSpell(m_creature->getVictim(),SPELL_REVERBERATION,true);
-
-            Reverberation_Timer = 45000;
+            Reverberation_Timer = 30000;
         }else Reverberation_Timer -= diff;
 
         // Cave In
@@ -185,7 +206,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     //spell.EffectImplicitTargetA[0] = TARGET_ALL_ENEMY_IN_AREA;
                     //spell.EffectImplicitTargetB[0] = TARGET_ALL_ENEMY_IN_AREA;
                     //m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
-                    m_creature->CastSpell(m_creature->getVictim(),24199,true);
+                    m_creature->CastSpell(m_creature->getVictim(), SPELL_AOEKNOCKBACK,true);
 
                     // Seconds before next phase
                     GroundSlam_Timer =2000;
@@ -237,7 +258,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     //spell.EffectImplicitTargetA[0] = 22;
                     //spell.EffectImplicitTargetB[0] = 22;
                     //m_creature->CastSpell(m_creature->getVictim(),&spell ,true);
-                    m_creature->CastSpell(m_creature->getVictim(),SPELL_STONED,true);
+                    //m_creature->CastSpell(m_creature->getVictim(),SPELL_STONED,true);
 
                     // Seconds before next phase
                     GroundSlam_Timer =8000;

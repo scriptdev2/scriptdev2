@@ -16,119 +16,71 @@
  
 #include "../../sc_defines.h"
 
+#define ENCOUNTERS 2
+
+/* Gruuls Lair encounters:
+1 - High King Maulgar event
+2 - Gruul event
+*/
+
 struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 {
     instance_gruuls_lair(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    bool MaulgarInProgress;
-    bool GruulInProgress;
+    bool Encounters[ENCOUNTERS];
 
-    uint64 Kiggler;
-    uint64 Blindeye;
-    uint64 Olm;
-    uint64 Krosh;
-    uint64 Maulgar;
-    uint64 Gruul;
-
-    uint64 Maulgar_Event_Starter;
+    uint64 MaulgarEvent_Starter;
 
     void Initialize()
     {
-        MaulgarInProgress = false;
-        GruulInProgress = false;
+        MaulgarEvent_Starter = 0;
 
-        Kiggler = 0;
-        Blindeye = 0;
-        Olm = 0;
-        Krosh = 0;
-        Maulgar = 0;
-        Gruul = 0;
-
-        Maulgar_Event_Starter = 0;
+        for(uint8 i = 0; i < ENCOUNTERS; i++)
+            Encounters[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
-        if (MaulgarInProgress || GruulInProgress)
-            return true;
+        for(uint8 i = 0; i < ENCOUNTERS; i++)
+            if(Encounters[i]) return true;
 
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
-    {
-        switch(creature_entry)
-        {
-            case 18835:
-            Kiggler = creature->GetGUID();
-            break;
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry) { }
 
-            case 18836:
-            Blindeye = creature->GetGUID();
-            break;
-
-            case 18834:
-            Olm = creature->GetGUID();
-            break;
-
-            case 18832:
-            Krosh = creature->GetGUID();
-            break;
-
-            case 18831:
-            Maulgar = creature->GetGUID();
-            break;
-
-            case 19044:
-            Gruul = creature->GetGUID();
-            break;
-        }
-    }
     uint64 GetUnitGUID(char *identifier)
     {
-        if (identifier == "Kiggler")
-            return Kiggler;
-        else if (identifier == "Blindeye")
-            return Blindeye;
-        else if (identifier == "Olm")
-            return Olm;
-        else if (identifier == "Krosh")
-            return Krosh;
-        else if (identifier == "High")
-            return Maulgar;
-        else if (identifier == "Maulgar_Event_Starter")
-            return Maulgar_Event_Starter;
-        else if (identifier == "Gruul")
-            return Gruul;
+        if(identifier == "MaulgarEvent_Starter")
+            return MaulgarEvent_Starter;
 
         return 0;
     }
 
     void SetData(char *type, uint32 data)
     {
-        if(type == "Event_Maulgar_Started")
+        if(type == "MaulgarEvent_Starter")
         {
-            MaulgarInProgress = true;
-            Maulgar_Event_Starter = data;
+            MaulgarEvent_Starter = data;
         }
-        else if(type == "Event_Maulgar_Started_data2")
+        else if(type == "MaulgarEvent_Starter2")
         {
-            Maulgar_Event_Starter += (uint64(data) << 32);
+            //not tested
+            //MaulgarEvent_Starter += (uint64(data) << 32);
+        }
 
-        }else if(type == "Event_Gruul_Started")
-            GruulInProgress = true;
-        else if(type == "Event_Maulgar_Ended")
-            MaulgarInProgress = false;
-        else if(type == "Event_Gruul_Ended")
-            GruulInProgress = false;
+        else if(type == "MaulgarEvent")
+            Encounters[0] = (data) ? true : false;
+        else if(type == "GruulEvent")
+            Encounters[1] = (data) ? true : false;
     }
 
-    virtual uint32 GetData(char *type) 
+    uint32 GetData(char *type) 
     { 
-        if(type == "Event_Maulgar_Status")
-            return MaulgarInProgress;
-        else if(type == "Event_Gruul_Status")
-            return GruulInProgress;
+        if(type == "MaulgarEvent")
+            return Encounters[0];
+        else if(type =="GruulEvent")
+            return Encounters[1];
 
         return 0;
     }
@@ -143,7 +95,7 @@ void AddSC_instance_gruuls_lair()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name = "raid_gruuls_lair";
+    newscript->Name = "instance_gruuls_lair";
     newscript->GetInstanceData = GetInstanceData_instance_gruuls_lair;
     m_scripts[nrscripts++] = newscript;
 }

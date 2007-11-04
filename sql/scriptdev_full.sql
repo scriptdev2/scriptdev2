@@ -51,6 +51,7 @@ UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry`= 
 UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` = 31742;
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry`= 30259;
+UPDATE item_template SET ScriptName = 'draenei_fishing_net' WHERE entry = 23654;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -100,6 +101,8 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_beacon' WHERE `entry
 UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_apprentice' WHERE `entry` = 18430;
 
 /* AUCHENAI CRYPTS */
+UPDATE `creature_template` set `scriptname` = 'boss_shirrak_the_dead_watcher' where `entry` = '18371';
+UPDATE `creature_template` set `scriptname` = 'boss_shirrak_the_dead_watcher' where `entry` = '20318';
 
 /* SETHEKK HALLS */
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_fire' WHERE `entry` = 19203;
@@ -234,8 +237,14 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map`= 534;
 
 /* OLD HILLSBRAD */
+UPDATE `creature_template` set `scriptname` = 'mob_lieutenant_drake' where `entry` = '17848';
+UPDATE `creature_template` set `scriptname` = 'mob_epoch_hunter' where `entry` = '18096';
+UPDATE `creature_template` SET `ScriptName` = 'boss_captain_skarloc' WHERE `entry`=17862;
 
 /* THE DARK PORTAL */
+UPDATE `creature_template` set `ScriptName` = 'boss_chrono_lord_deja' where `entry` = '17879';
+UPDATE `creature_template` SET `ScriptName` = 'boss_aeonus' WHERE `entry`=17881;
+UPDATE `creature_template` set `ScriptName` = 'boss_temporus' where `entry` = '17880';
 
 
 
@@ -269,6 +278,10 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* DEADMINES */
 /* Defias Squallshaper, Defias Magician, Defias Conjurer, Defias Overseer, Defias Watchman, Defias Wizard, Defias Evoker, Defias Pirate, Defias Taskmaster, Defias Miner, Defias Strip Miner, Defias Henchman,  */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1732, 1726, 619, 634, 1725, 4418, 1729, 657, 4417, 598, 4416, 594);
+UPDATE `creature_template` SET `ScriptName` = 'boss_deadmines' WHERE `entry`=645;
+UPDATE `creature_template` SET `ScriptName` = 'boss_deadmines' WHERE `entry`=1763;
+UPDATE `creature_template` SET `ScriptName` = 'boss_deadmines' WHERE `entry`=599;
+UPDATE `creature_template` SET `ScriptName` = 'boss_deadmines' WHERE `entry`=3586;
 
 /* DEADWIND PASS */
 /* Deadwind Ogre Mage */
@@ -331,10 +344,16 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6206, 6208, 6209, 6215, 6219, 6229, 6228, 6235, 7361, 6407, 6220, 6218, 7603, 6223, 6222, 6234, 6233, 6226, 6227, 6225, 6230, 7079);
 
 /* GRUUL'S LAIR */
-UPDATE `instance_template` SET `script` = 'instance_gruuls_lair' WHERE `map`= 565;
+UPDATE `instance_template` SET `script`="instance_gruuls_lair" WHERE `map`=565;
+
 /* Gruul the Dragonkiller */
 UPDATE `creature_template` SET `ScriptName` = 'boss_gruul' WHERE `entry`= 19044;
-
+/* Maulgar and Event */
+UPDATE `creature_template` SET `ScriptName` = 'boss_high_king_maulgar' WHERE `entry`=18831;
+UPDATE `creature_template` SET `ScriptName` = 'boss_kiggler_the_crazed' WHERE `entry`=18835;
+UPDATE `creature_template` SET `ScriptName` = 'boss_blindeye_the_seer' WHERE `entry`=18836;
+UPDATE `creature_template` SET `ScriptName` = 'boss_olm_the_summoner' WHERE `entry`=18834;
+UPDATE `creature_template` SET `ScriptName` = 'boss_krosh_firehand' WHERE `entry`=18832;
 
 /*  */
 /* HELLFIRE CITADEL */
@@ -773,6 +792,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* WAILING CAVERNS */
 /* Deviate Creeper */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3632);
+UPDATE `creature_template` SET `ScriptName` = 'boss_wailing_caverns' WHERE `entry`=3654;
 
 /* WESTERN PLAGUELANDS */
 /* Skeletal Acolyte, Skeletal Flayer, Skeletal Sorcerer, Scarlet Mage, Araj the Summoner */

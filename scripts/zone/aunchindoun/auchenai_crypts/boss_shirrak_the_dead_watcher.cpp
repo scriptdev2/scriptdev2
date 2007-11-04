@@ -16,19 +16,26 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_EARTHQUAKE                33919
-#define SPELL_CRYSTAL_PRISON            32361
-#define SPELL_ARCING_SMASH              38761 //heroic only
+#define SPELL_INHABITMAGIC          32264            
+#define SPELL_ATTRACTMAGIC          32265
+#define SPELL_CARNIVOROUSBITE       41092
 
-struct MANGOS_DLL_DECL boss_tavarokAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_shirrak_the_dead_watcherAI : public ScriptedAI
 {
-    boss_tavarokAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_shirrak_the_dead_watcherAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    uint32 earthquake_timer;
-    uint32 crystalprison_timer;
+    uint32 Inhabitmagic_Timer;
+    uint32 Attractmagic_Timer;
+    uint32 Carnivorousbite_Timer;
+    bool InCombat;
 
     void EnterEvadeMode()
-    {   
+    {       
+        Inhabitmagic_Timer = 2000;
+        Attractmagic_Timer = 10000;
+        Carnivorousbite_Timer = 11000;
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -36,20 +43,17 @@ struct MANGOS_DLL_DECL boss_tavarokAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-
-        earthquake_timer = 10000;
-        crystalprison_timer = 12000;
-
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void AttackStart(Unit *who)
@@ -59,12 +63,14 @@ struct MANGOS_DLL_DECL boss_tavarokAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            InCombat = true;
         }
     }
 
     void MoveInLineOfSight(Unit *who)
-    {  
+    {
         if (!who || m_creature->getVictim())
             return;
 
@@ -74,49 +80,65 @@ struct MANGOS_DLL_DECL boss_tavarokAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
                 DoStartMeleeAttack(who);
+                InCombat = true;
+
             }
         }
-    }  
+    }
 
     void UpdateAI(const uint32 diff)
     {
-
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(earthquake_timer < diff)
-        {     
-            DoCast(m_creature,SPELL_EARTHQUAKE);
-            earthquake_timer = 20000 + rand()%5000;
-        }else earthquake_timer -= diff;
+        //Inhabitmagic_Timer
+        if (Inhabitmagic_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_INHABITMAGIC);
 
-        if(crystalprison_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,1);
-            if(target) 
-            {
-                DoCast(target,SPELL_CRYSTAL_PRISON);
-                crystalprison_timer = 13000+rand()%4000;
-            }
-        }else crystalprison_timer -= diff;
+            //30 seconds
+            Inhabitmagic_Timer = 2000;
+        }else Inhabitmagic_Timer -= diff;
+
+        //Attractmagic_Timer
+        if (Attractmagic_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ATTRACTMAGIC);
+
+            //15 seconds until we should cast this agian
+            Attractmagic_Timer = 10000;
+        }else Attractmagic_Timer -= diff;
+
+        //Carnivorousbite_Timer
+        if (Carnivorousbite_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_CARNIVOROUSBITE);
+
+            //15 seconds until we should cast this agian
+            Carnivorousbite_Timer = 11000;
+        }else Carnivorousbite_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-};
-
-CreatureAI* GetAI_boss_tavarokAI(Creature *_Creature)
+}; 
+CreatureAI* GetAI_boss_shirrak_the_dead_watcher(Creature *_Creature)
 {
-    return new boss_tavarokAI (_Creature);
+    return new boss_shirrak_the_dead_watcherAI (_Creature);
 }
 
-void AddSC_boss_tavarok()
+
+void AddSC_boss_shirrak_the_dead_watcher()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_tavarok";
-    newscript->GetAI = GetAI_boss_tavarokAI;
+    newscript->Name="boss_shirrak_the_dead_watcher";
+    newscript->GetAI = GetAI_boss_shirrak_the_dead_watcher;
     m_scripts[nrscripts++] = newscript;
 }

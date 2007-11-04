@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
 
 #define SPELL_WEBTRAP           28622   //Spell is normally used by the webtrap on the wall NOT by Maexxna
 #define SPELL_WEBSPRAY          29484
@@ -23,9 +24,72 @@
 #define SPELL_ENRAGE            28747
 #define SPELL_SUMMON_SPIDERLING 29434
 
+#define LOC_X1    3546.796
+#define LOC_Y1    -3869.082
+#define LOC_Z1    296.450
+
+#define LOC_X2    3531.271
+#define LOC_Y2    -3847.424
+#define LOC_Z2    299.450
+
+#define LOC_X3    3497.067
+#define LOC_Y3    -3843.384
+#define LOC_Z3    302.384
+
+struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
+{
+    mob_webwrapAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+
+
+    uint64 victimGUID;
+
+    void SetVariables()
+    {
+        victimGUID = 0;
+    }
+
+    void SetVictim(Unit* victim)
+    {
+        if(victim)
+        {
+            victimGUID = victim->GetGUID();
+            victim->CastSpell(victim, SPELL_WEBTRAP, true);
+        }
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if(damage > m_creature->GetHealth())
+        {
+            if(victimGUID)
+            {
+                Unit* victim = NULL;
+                victim = Unit::GetUnit((*m_creature), victimGUID);
+                victim->RemoveAurasDueToSpell(SPELL_WEBTRAP);
+            }
+        }
+    }
+
+    void AttackStart(Unit *who)
+    {
+
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+
+    }
+};
+
+
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 {
-    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {SetVariables();}
 
     uint32 WebTrap_Timer;
     uint32 WebSpray_Timer;
@@ -35,15 +99,19 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void SetVariables()
     {
         WebTrap_Timer = 20000;          //20 sec init, 40 sec normal
         WebSpray_Timer = 40000;         //40 seconds
         PoisonShock_Timer = 20000;      //20 seconds
         NecroticPoison_Timer = 30000;   //30 seconds
         SummonSpiderling_Timer = 30000; //30 sec init, 40 sec normal
-        InCombat = false;
         Enraged = false;
+    }
+
+    void EnterEvadeMode()
+    {
+        InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -85,6 +153,61 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
             }
         }
     }
+    void DoCastWebWrap()
+    {
+        std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+        std::vector<Unit *> targets;
+
+        //This spell doesn't work if we only have 1 player on threat list
+        if(t_list.size() < 2)
+            return;
+
+        //begin + 1 , so we don't target the one with the highest threat
+        std::list<HostilReference *>::iterator itr = t_list.begin();
+        std::advance(itr, 1);
+        for( ; itr!= t_list.end(); ++itr) //store the threat list in a different container
+        {
+            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+                targets.push_back( target);
+        }
+
+        while(targets.size() > 3)
+            targets.erase(targets.begin()+rand()%targets.size()); //cut down to size if we have more than 3 targets
+
+        int i = 0;
+        for(std::vector<Unit *>::iterator itr = targets.begin(); itr!= targets.end(); ++itr, ++i)
+        {
+            // Teleport the 3 targets to a location on the wall and summon a Web Wrap on them
+            Unit *target = *itr;
+            Creature* Wrap = NULL;
+            if(target)
+            {
+                switch(i)
+                {
+                case 0:
+                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
+                    Wrap = DoSpawnCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    break;
+                case 1:
+                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
+                    Wrap = DoSpawnCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    break;
+                case 2:
+                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
+                    Wrap = DoSpawnCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    break;
+                }
+                if(Wrap)
+                {
+                    Wrap->setFaction(m_creature->getFaction());
+                    ((mob_webwrapAI*)Wrap->AI())->SetVictim(target);
+                }
+            }
+        }
+
+    }
+
 
     void UpdateAI(const uint32 diff)
     {
@@ -95,14 +218,8 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         //WebTrap_Timer
         if (WebTrap_Timer < diff)
         {
-            //Cast WebTrap on a Random target
-            Unit* target = NULL;
-
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_WEBTRAP);
-
-            //40 seconds until we should cast this agian
-            WebTrap_Timer = 40000;
+            DoCastWebWrap();
+            WebTrap_Timer = 40000;			//40 seconds until we should cast this again
         }else WebTrap_Timer -= diff;
 
         //WebSpray_Timer
@@ -155,6 +272,12 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+CreatureAI* GetAI_mob_webwrap(Creature* _Creature)
+{
+    return new mob_webwrapAI (_Creature);
+}
+
 CreatureAI* GetAI_boss_maexxna(Creature *_Creature)
 {
     return new boss_maexxnaAI (_Creature);
@@ -167,5 +290,10 @@ void AddSC_boss_maexxna()
     newscript = new Script;
     newscript->Name="boss_maexxna";
     newscript->GetAI = GetAI_boss_maexxna;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_webwrap";
+    newscript->GetAI = GetAI_mob_webwrap;
     m_scripts[nrscripts++] = newscript;
 }

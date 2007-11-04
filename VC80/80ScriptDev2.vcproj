@@ -320,7 +320,19 @@
 				Name="item"
 				>
 				<File
-					RelativePath="..\scripts\item\area_52_special.cpp"
+					RelativePath="..\scripts\item\item_area_52_special.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\item\item_draenei_fishing_net.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\item\item_nether_wraith_beacon.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\item\item_purification_mixture.cpp"
 					>
 				</File>
 				<File
@@ -328,15 +340,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\item\nether_wraith_beacon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\purification_mixture.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\vorenthals_presence.cpp"
+					RelativePath="..\scripts\item\item_vorenthals_presence.cpp"
 					>
 				</File>
 			</Filter>
@@ -498,6 +502,10 @@
 				<Filter
 					Name="Deadmines"
 					>
+					<File
+						RelativePath="..\scripts\zone\deadmines\boss_deadmines.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Deadwind Pass"
@@ -1270,6 +1278,10 @@
 				<Filter
 					Name="Wailing Caverns"
 					>
+					<File
+						RelativePath="..\scripts\zone\wailing_caverns\boss_wailing_caverns.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Western Plaguelands"
@@ -1377,6 +1389,10 @@
 					<Filter
 						Name="Auchenai Crypts"
 						>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_shirrak_the_dead_watcher.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Mana Tombs"
@@ -1487,10 +1503,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\mob_hellfire_channeler.cpp"
 							>
 						</File>
 						<File
@@ -1793,6 +1805,18 @@
 					<Filter
 						Name="The Dark Portal"
 						>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_aeonus.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_chrono_lord_deja.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\dark_portal\boss_temporus.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Battle for Mt. Hyjal"
@@ -1805,6 +1829,18 @@
 					<Filter
 						Name="Old Hillsbrad"
 						>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_captain_skarloc.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_epoch_hunter.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_leutenant_drake.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
