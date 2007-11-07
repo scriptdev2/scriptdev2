@@ -175,7 +175,6 @@ extern void AddSC_boss_victor_nefarius();
 //Blasted lands
 extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
-extern void AddSC_instance_serpentshrine_cavern();
 
 //Burning steppes
 //Caverns of Time
@@ -194,6 +193,7 @@ extern void AddSC_boss_temporus();
 //--Serpent Shrine Cavern
 extern void AddSC_boss_hydross_the_unstable();
 extern void AddSC_boss_leotheras_the_blind();
+extern void AddSC_instance_serpentshrine_cavern();
 
 //--Slave Pens
 extern void AddSC_boss_rokmar_the_crackler();
@@ -440,7 +440,6 @@ extern void AddSC_boss_void_reaver();
 extern void AddSC_instance_the_eye();
 extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
-extern void AddSC_mob_phoenix();
 
 //--The Mechanar
 //Temple of ahn'qiraj
@@ -638,7 +637,6 @@ void ScriptsInit()
     //Blasted lands
     AddSC_boss_kruul();
     AddSC_boss_teremusthedevourer();
-    AddSC_instance_serpentshrine_cavern();
 
     //Burning steppes
     //Caverns of Time
@@ -657,6 +655,7 @@ void ScriptsInit()
     //--Serpent Shrine Cavern
     AddSC_boss_hydross_the_unstable();
     AddSC_boss_leotheras_the_blind();
+    AddSC_instance_serpentshrine_cavern();
 
     //--Slave Pens
     AddSC_boss_rokmar_the_crackler();
@@ -903,7 +902,6 @@ void ScriptsInit()
     AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
     AddSC_mob_the_eye();
-    AddSC_mob_phoenix();
 
     //--The Mechanar
     //Temple of ahn'qiraj

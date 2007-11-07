@@ -16,15 +16,7 @@
  
 #include "../../../sc_defines.h"
 
-#define ENCOUNTERS     5
-
-enum EncounterState
-{
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
+#define ENCOUNTERS 5
 
 /* The Eye encounters:
 0 - Kael'thas event
@@ -42,7 +34,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     uint64 GrandAstromancerCapernian;
     uint64 MasterEngineerTelonicus;
 
-    uint32 Encounters[ENCOUNTERS];
+    bool Encounters[ENCOUNTERS];
 
     void Initialize()
     {
@@ -52,13 +44,13 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         MasterEngineerTelonicus = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+            Encounters[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS) return true;
+            if(Encounters[i]) return true;
 
         return false;
     }
@@ -110,13 +102,13 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     void SetData(char *type, uint32 data)
     {
         if(type == "KaelThasEvent")
-            Encounters[0] = data;
+			Encounters[0] = (data) ? true : false;
         else if(type == "AlArEvent")
-            Encounters[1] = data;
+            Encounters[1] = (data) ? true : false;
         else if(type == "SolarianEvent")
-            Encounters[2] = data;
+            Encounters[2] = (data) ? true : false;
         else if(type == "VoidReaverEvent")
-            Encounters[3] = data;
+            Encounters[3] = (data) ? true : false;
     }
 
     uint32 GetData(char *type)
@@ -143,7 +135,7 @@ void AddSC_instance_the_eye()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name = "raid_the_eye";
+    newscript->Name = "instance_the_eye";
     newscript->GetInstanceData = GetInstanceData_instance_the_eye;
     m_scripts[nrscripts++] = newscript;
 }

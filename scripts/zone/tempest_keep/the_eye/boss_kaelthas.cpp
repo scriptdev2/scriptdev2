@@ -17,16 +17,20 @@
 #include "../../../sc_defines.h"
 #include "../../../../../../game/Player.h"
 
+//kaelthas spells
 #define SPELL_PYROBLAST                   38535
 #define SPELL_FLAME_STRIKE                36735
 #define SPELL_ARCANE_DISRUPTION           36834
 #define SPELL_SHOCK_BARRIER               36815
 #define SPELL_PHOENIX_ANIMATION           36723
-// phase 5 spells
+//phase 5 spells
 #define SPELL_KNOCKBACK                   11027
 #define SPELL_GRAVITY_LAPSE               39432
 #define SPELL_NETHER_BEAM                 35873
+//nether vapor spell
 #define SPELL_NETHER_VAPOR                35859
+//phoenix spell
+#define SPELL_BURN                        36721
 
 #define SAY_INTRO                         "Energy. Power. My people are addicted to it. Their dependence made manifest after the Sunwell was destroyed. Welcome to the future...a pity you're too late to stop it. No one can stop me now. Selama ashal'anore."
 #define SAY_ASTROMANCER_CAPERNIAN         "Capernian will see to it that your stay here is a short one."
@@ -43,34 +47,35 @@
 #define SAY_SUMMON_PHOENIX1               "Having trouble staying grounded?"
 #define SAY_SUMMON_PHOENIX2               "By the power of the sun!"
 #define SAY_ENRAGE                        "I have not come this far to be stopped! The future I have planned will not be jeopardized! Now, you will taste true power!"
-#define SAY_DEATH                          "For...Quel...thalas!"
+#define SAY_DEATH                         "For...Quel...thalas!"
 
-#define SOUND_INTRO                        11256
-#define SOUND_ASTROMANCER_CAPERNIAN        11257
-#define SOUND_ENGINEER_TELONICUS           11258
-#define SOUND_THALADRED_THE_DARKENER       11259
-#define SOUND_LORD_SANGUINAR               11260
-#define SOUND_SUMMON_ADVISORS              11262
-#define SOUND_SLAY1                        11270
-#define SOUND_SLAY2                        11271
-#define SOUND_MINDCONTROL1                 11268
-#define SOUND_MINDCONTROL2                 11269
-#define SOUND_GRAVITYLAPSE1                11264
-#define SOUND_GRAVITYLAPSE2                11265
-#define SOUND_SUMMON_PHOENIX1              11266
-#define SOUND_SUMMON_PHOENIX2              11267
-#define SOUND_ENRAGE                       11273
-#define SOUND_DEATH                        11274
+#define SOUND_INTRO                       11256
+#define SOUND_ASTROMANCER_CAPERNIAN       11257
+#define SOUND_ENGINEER_TELONICUS          11258
+#define SOUND_THALADRED_THE_DARKENER      11259
+#define SOUND_LORD_SANGUINAR              11260
+#define SOUND_SUMMON_ADVISORS             11262
+#define SOUND_SLAY1                       11270
+#define SOUND_SLAY2                       11271
+#define SOUND_MINDCONTROL1                11268
+#define SOUND_MINDCONTROL2                11269
+#define SOUND_GRAVITYLAPSE1               11264
+#define SOUND_GRAVITYLAPSE2               11265
+#define SOUND_SUMMON_PHOENIX1             11266
+#define SOUND_SUMMON_PHOENIX2             11267
+#define SOUND_ENRAGE                      11273
+#define SOUND_DEATH                       11274
 
-#define PHOENIX                            21362
-#define NETHER_VAPOR                       21002
+#define PHOENIX                           21362
+#define NETHER_VAPOR                      21002
+#define PHOENIX_EGG                       21364
 
-// kaelthas AI
+//Kael'thas AI
 struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature *c) : ScriptedAI(c)
     {
-        if (c->GetInstanceData()) pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         Advisor[0] = 0;
         Advisor[1] = 0;
         Advisor[2] = 0;
@@ -124,10 +129,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     ((Creature*)pUnit)->AI()->EnterEvadeMode();
                 }
             }
-
-            if(pInstance)
-                pInstance->SetData("KaelThasEvent", 0); // 0 = NOT_STARTED
         }
+
+        if(pInstance)
+            pInstance->SetData("KaelThasEvent", 0);
 
         InCombat = false;
 
@@ -156,7 +161,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_INTRO);
 
-        pInstance->SetData("KaelThasEvent", 1); // 1 = IN_PROGRESS
+        pInstance->SetData("KaelThasEvent", 1);
 
         Phase1Subphase = 0;
         Phase_Timer = 23000;
@@ -185,7 +190,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData("KaelThasEvent", 3); // 3 = DONE
+            pInstance->SetData("KaelThasEvent", 0);
     }
 
     void AttackStart(Unit *who)
@@ -218,7 +223,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
             }
-            else if (!Phase && m_creature->IsWithinDistInMap(who, 60.0f) && pInstance && !pInstance->GetData("KaelThasEvent")) // 0 = NOT STARTED
+            else if (!Phase && m_creature->IsWithinDistInMap(who, 60.0f) && pInstance && !pInstance->GetData("KaelThasEvent"))
                 StartEvent();
         }
     }
@@ -380,7 +385,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 if(ShockBarrier_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_SHOCK_BARRIER);
-                    DoCast(m_creature, SPELL_PYROBLAST);
+
+                    if(Phase < 5)
+                        DoCast(m_creature, SPELL_PYROBLAST);
 
                     ShockBarrier_Timer = 60000;
                 }else ShockBarrier_Timer -= diff;
@@ -416,10 +423,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                 //Start Phase 5
                 if(Phase == 4 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
-                {
                     Phase = 5;
-                }
-                
+
                 //Phase 5
                 if(Phase == 5)
                 {
@@ -508,7 +513,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     }
 };
 
-// nether vapor AI
+//Nether Vapor AI
 struct MANGOS_DLL_DECL mob_nether_vaporAI : public ScriptedAI
 {
     mob_nether_vaporAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -536,8 +541,129 @@ struct MANGOS_DLL_DECL mob_nether_vaporAI : public ScriptedAI
             DoCast(who, SPELL_NETHER_VAPOR);
         }
     }
-}; 
+};
 
+//Phoenix AI
+struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
+{
+    mob_phoenixAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 Burn_Timer;
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        Burn_Timer = 1000;
+
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            if(!InCombat)
+            {
+                InCombat = true;
+            }
+
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //Check if we have a current target
+        if (Burn_Timer < diff)
+        {        
+            if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+            {
+                m_creature->setDeathState(JUST_DIED);
+                DoSpawnCreature(PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 300000);
+            }
+            else
+                m_creature->SetHealth(m_creature->GetHealth() - m_creature->GetMaxHealth() * 0.05);
+            DoCast(m_creature->getVictim(), SPELL_BURN);
+            Burn_Timer = 1000;
+        }else Burn_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+//Phoenix Egg
+struct MANGOS_DLL_DECL mob_phoenix_eggAI : public ScriptedAI
+{
+    mob_phoenix_eggAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    uint32 RebirthTimer;
+    bool Rebirth;
+
+    void EnterEvadeMode()
+    {
+        RebirthTimer = 15000;
+        Rebirth = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void AttackStart(Unit *who) { return; }
+
+    void MoveInLineOfSight(Unit *who) { return; }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!Rebirth && RebirthTimer < diff)
+        {        
+            DoSpawnCreature(PHOENIX, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 300000);
+            m_creature->setDeathState(JUST_DIED);
+            Rebirth = true;
+        }else RebirthTimer -= diff;
+    }
+};
+
+CreatureAI* GetAI_mob_phoenix_egg(Creature *_Creature)
+{
+    return new mob_phoenix_eggAI (_Creature);
+}
+CreatureAI* GetAI_mob_phoenix(Creature *_Creature)
+{
+    return new mob_phoenixAI (_Creature);
+}
 CreatureAI* GetAI_boss_kaelthas(Creature *_Creature)
 {
     return new boss_kaelthasAI (_Creature);
@@ -559,5 +685,15 @@ void AddSC_boss_kaelthas()
     newscript = new Script;
     newscript->Name="mob_nether_vapor";
     newscript->GetAI = GetAI_mob_nether_vapor;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_phoenix";
+    newscript->GetAI = GetAI_mob_phoenix;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_phoenix_egg";
+    newscript->GetAI = GetAI_mob_phoenix_egg;
     m_scripts[nrscripts++] = newscript;
 }

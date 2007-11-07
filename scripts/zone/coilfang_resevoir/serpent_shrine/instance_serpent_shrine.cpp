@@ -16,15 +16,7 @@
  
 #include "../../../sc_defines.h"
 
-#define ENCOUNTERS     6
-
-enum EncounterState
-{
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
+#define ENCOUNTERS 6
 
 /* Serpentshrine cavern encounters:
 0 - Hydross The Unstable event
@@ -45,7 +37,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     uint64 LadyVashj;
     uint64 TaintedElemental;
 
-    uint32 Encounters[ENCOUNTERS];
+    bool Encounters[ENCOUNTERS];
 
     void Initialize()
     {
@@ -56,13 +48,13 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         TaintedElemental = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+            Encounters[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS) return true; 
+            if(Encounters[i]) return true; 
 
         return false;
     }
@@ -111,17 +103,17 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     void SetData(char *type, uint32 data)
     {
         if(type == "HydrossTheUnstableEvent")
-            Encounters[0] = data;
+            Encounters[0] = (data) ? true : false;
         else if(type == "LeotherasTheBlindEvent")
-            Encounters[1] = data;
+            Encounters[1] = (data) ? true : false;
         else if(type == "TheLurkerBelowEvent")
-            Encounters[2] = data;
+            Encounters[2] = (data) ? true : false;
         else if(type == "FathomLordKarathressEvent")
-            Encounters[3] = data;
+            Encounters[3] = (data) ? true : false;
         else if(type == "MorogrimTidewalkerEvent")
-            Encounters[4] = data;
+            Encounters[4] = (data) ? true : false;
         else if(type == "LadyVashjEvent")
-            Encounters[5] = data;
+            Encounters[5] = (data) ? true : false;
     }
 
     uint32 GetData(char *type)
@@ -152,7 +144,7 @@ void AddSC_instance_serpentshrine_cavern()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name = "raid_serpentshrine_cavern";
+    newscript->Name = "instance_serpent_shrine";
     newscript->GetInstanceData = GetInstanceData_instance_serpentshrine_cavern;
     m_scripts[nrscripts++] = newscript;
 }

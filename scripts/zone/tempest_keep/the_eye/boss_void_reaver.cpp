@@ -38,7 +38,13 @@
 
 struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 {
-    boss_void_reaverAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_void_reaverAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 Pounding_Timer;
     uint32 ArcaneOrb_Timer;
@@ -58,6 +64,9 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        if(pInstance)
+            pInstance->SetData("VoidReaverEvent", 0);
     }
 
     void KilledUnit(Unit *victim)
@@ -85,6 +94,9 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        if(pInstance)
+            pInstance->SetData("VoidReaverEvent", 0);
     }
 
     void AttackStart(Unit *who)
@@ -103,6 +115,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
+                if(pInstance)
+                    pInstance->SetData("VoidReaverEvent", 1);
             }
         }
     }
@@ -125,6 +139,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
+                    if(pInstance)
+                        pInstance->SetData("VoidReaverEvent", 1);
                 }
 
                 DoStartMeleeAttack(who);
