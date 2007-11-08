@@ -276,7 +276,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
                 continue;
 
             //Check Current spell
-            if (!(Spell[i].InturruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
+            if (!(Spell[i].InterruptPreviousCast && m_creature->IsNonMeleeSpellCasted(false)))
             {
                 Unit* target = NULL;
 

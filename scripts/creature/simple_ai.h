@@ -55,7 +55,7 @@ public:
         uint32 Cooldown;                //Cooldown between casts
         uint32 CooldownRandomAddition;  //Random addition to cooldown (in range from 0 - CooldownRandomAddition)
         uint32 Cast_Target_Type;        //Target type (note that certain spells may ignore this)
-        bool InturruptPreviousCast;     //Inturrupt a previous cast if this spell needs to be cast
+        bool InterruptPreviousCast;     //Interrupt a previous cast if this spell needs to be cast
         bool Enabled;                   //Spell enabled or disabled (default: false)
 
         //3 texts to many?
