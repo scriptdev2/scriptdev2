@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 {
     boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c)
     {
-        if (c->GetInstanceData()) pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         EnterEvadeMode();
     }
 

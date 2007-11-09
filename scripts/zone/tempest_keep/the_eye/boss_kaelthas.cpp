@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Advisor[0] = 0;
         Advisor[1] = 0;
         Advisor[2] = 0;
@@ -117,16 +117,16 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if(InCombat)
         {
             //respawn if died & apply flags
-            Unit *pUnit;
+            Creature *pCreature;
             for(uint8 i = 0; i < 4; i++)
             {
-                pUnit = Unit::GetUnit((*m_creature), Advisor[i]);
-                if(pUnit)
+                pCreature = (Creature*)(Unit::GetUnit((*m_creature), Advisor[i]));
+                if(pCreature)
                 {
-                    ((Creature*)pUnit)->Respawn();
-                    ((Creature*)pUnit)->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    ((Creature*)pUnit)->setFaction(35);
-                    ((Creature*)pUnit)->AI()->EnterEvadeMode();
+                    pCreature->Respawn();
+                    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pCreature->setFaction(35);
+                    pCreature->AI()->EnterEvadeMode();
                 }
             }
         }

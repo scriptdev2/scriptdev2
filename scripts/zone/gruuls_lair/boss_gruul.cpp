@@ -35,7 +35,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 {
     boss_gruulAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         EnterEvadeMode();
     }
 

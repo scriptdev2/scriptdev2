@@ -29,11 +29,11 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     bool Encounters[ENCOUNTERS];
 
-    uint64 MaulgarEvent_Starter;
+    uint64 MaulgarEvent_Tank;
 
     void Initialize()
     {
-        MaulgarEvent_Starter = 0;
+        MaulgarEvent_Tank = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -51,22 +51,22 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     uint64 GetUnitGUID(char *identifier)
     {
-        if(identifier == "MaulgarEvent_Starter")
-            return MaulgarEvent_Starter;
+        if(identifier == "MaulgarEvent_Tank")
+            return MaulgarEvent_Tank;
 
         return 0;
     }
 
     void SetData(char *type, uint32 data)
     {
-        if(type == "MaulgarEvent_Starter")
+        if(type == "MaulgarEvent_Tank")
         {
-            MaulgarEvent_Starter = data;
+            MaulgarEvent_Tank = data;
         }
-        else if(type == "MaulgarEvent_Starter2")
+        else if(type == "MaulgarEvent_Tank2")
         {
             //not tested
-            //MaulgarEvent_Starter += (uint64(data) << 32);
+            //MaulgarEvent_Tank += (uint64(data) << 32);
         }
 
         else if(type == "MaulgarEvent")
