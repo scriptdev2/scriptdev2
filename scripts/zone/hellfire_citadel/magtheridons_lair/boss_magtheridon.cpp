@@ -15,16 +15,21 @@
 */
 
 #include "../../../sc_defines.h"
+#include "../../../../../../game/Player.h"
+#include "../../../../../../game/GameObject.h"
 
-
+//Spells
 #define SPELL_QUAKE                 30571
 #define SPELL_BLASTNOVA             30616        
-#define SPELL_CAMERA_SHAKE          36455
 
-#define SPELL_ENRAGE                23537
+#define SPELL_CLEAVE                29561
+
+#define SPELL_BERSERK               27680
 #define SPELL_BANISH                40825
 
+#define SPELL_CAMERA_SHAKE          36455
 
+//Dialog
 #define SAY_AGGRO                   "Thank you for releasing me. Now...die!"
 #define SOUND_AGGRO                 10254
 
@@ -34,8 +39,8 @@
 #define SAY_FREED                   "I...am...UNLEASHED!!!"
 #define SOUND_FREED                 10253
 
-#define SAY_EARTHQUAKE              "I will not be taken so easily. Let the walls of this prison tremble...and FALL!!!"
-#define SOUND_EARTHQUAKE            10257
+#define SAY_CHAMBER_DESTROY         "I will not be taken so easily. Let the walls of this prison tremble...and FALL!!!"
+#define SOUND_CHAMBER_DESTROY       10257
 
 #define SAY_PLAYER_KILLED           "Did you think me weak? Soft? Who is the weak one now?!"
 #define SOUND_PLAYER_KILLED         10255
@@ -43,12 +48,15 @@
 #define SAY_DEATH                   "The Legion...will consume you...all...."
 #define SOUND_DEATH                 10258 
 
+#define EMOTE_BERSERK               "becomes enraged!"
 
 //Spawned objects
 #define SPELL_COLLAPSE              34233   //This spell casted by the "cave in" type object
 
 #define SPELL_CONFLAGERATION        35840       //Actually casted by a creature or object spawned on the ground
 
+//Cubes
+#define SPELL_MIND_EXHAUSTIOIN      30509   //Casted by the cubes when channeling ends
 
 //Channeler spells
 //#define MOB_HELLFIRE_CHANNELLER    17256
@@ -73,7 +81,7 @@ ProgressSounds[3] = 10250;
 ProgressSounds[4] = 10251;
 ProgressSounds[5] = 10252;
 */
-/*
+
 struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 {
     boss_magtheridonAI(Creature *c) : ScriptedAI(c) 
@@ -82,27 +90,32 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     }
 
     uint32 Phase1_Timer;
+    uint32 Cleave_Timer;
     uint32 BlastNova_Timer;
     uint32 Quake_Timer;
+    uint32 QuakePhase;
     uint32 Collapse_Timer;
-    uint32 Enrage_Timer;
-    
+    uint32 Berserk_Timer;
+
     bool Phase3;
 
     void EnterEvadeMode()
     {
-        Phase1_Timer = 120000;      //2 minutes
-        Enrage_Timer = 600000;      //10 minutes, not sure if this is correct
+        Phase1_Timer = 1000;      //120000 - 2 minutes
+        Cleave_Timer = 15000;
+        Berserk_Timer = 1200000;     //20 minutes
         BlastNova_Timer = 60000;
-        Quake_timer = 40000;
-        CaveIn_Timer = 0;
-        Enrage_Timer = 600000; 
+        Quake_Timer = 40000;
+        QuakePhase = 0;
+        Collapse_Timer = 0;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-
         DoGoHome();
+
+        //m_creature->setFaction(35);
+        //m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
     void KilledUnit(Unit* victim)
@@ -122,14 +135,13 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         if (!who)
             return;
 
-        if (Phase == 1)
+        if (Phase1_Timer)
             return;
 
-        if (who->isTargetableForAttack() && who!= m_creature && Phase > 1)
+        if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-            InCombat = true;
         }
     }
 
@@ -138,10 +150,10 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         if (!who || m_creature->getVictim())
             return;
 
-        if (Phase == 1)
+        if (Phase1_Timer)
             return;
 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who) && Phase > 1)
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
@@ -158,56 +170,89 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     {
 
         //REPLACE WITH EVENT CHECK!!!
-        if (false)
-            return;
+        //if (false)
+        //    return;
 
         //Phase timer
-        if (Phase1_Timer < diff)
-        {
+        if (Phase1_Timer)
+            if (Phase1_Timer < diff)
+            {
+                m_creature->setFaction(14);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-            m_creature->setFaction(35);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                m_creature->RemoveAllAuras();
 
-
-            m_creature->setFaction(14);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-            DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-            m_creature->RemoveAllAuras();
-        }else Phase1_Timer -= diff;
+                Phase1_Timer = 0;
+            }else 
+            {
+                Phase1_Timer -= diff;
+                return;
+            }
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Enrage_Timer
-        if (Enrage_Timer < diff)
+        //Berserk_Timer
+        if (Berserk_Timer < diff)
         {
-            //Cast Berserker Rage
             DoCast(m_creature, SPELL_BERSERK);
-            DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
+            DoTextEmote(EMOTE_BERSERK, NULL);
 
-            //5 minutes until we should cast this agian
-            Enrage_Timer = 300000;
-        }else Enrage_Timer -= diff;
+            Berserk_Timer = 300000;
+        }else Berserk_Timer -= diff;
 
-        //Slimebolt_Timer
-        if (Slimebolt_Timer < diff)
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
         {
-            //Cast Slime bolt
-            DoCast(m_creature->getVictim(),SPELL_SLIMEBOLT);
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //5 seconds until we should cast this agian
-            Slimebolt_Timer = 5000;
-        }else Slimebolt_Timer -= diff;
+            Cleave_Timer = 10000;
+        }else Cleave_Timer -= diff;
 
-        //Enrage if not already enraged and below 5%
-        if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 5)
+        //Quake_Timer
+        if (Quake_Timer < diff)
         {
-            DoCast(m_creature,SPELL_ENRAGE);
-            DoTextEmote(EMOTE_ENRAGE,NULL);
-            Enraged = true;
+            switch (QuakePhase)
+            {
+
+            case 8:
+            case 9:
+                QuakePhase = 0;
+                Quake_Timer = 40000;
+                break;
+
+            default:
+                DoCast(m_creature, SPELL_QUAKE);
+                Quake_Timer = 1200;
+                QuakePhase++;
+                break;
+            }
+
+        }else Quake_Timer -= diff;
+
+        //BlastNova_Timer
+        if (BlastNova_Timer < diff)
+        {
+            //Inturrupt Quake if it is casting
+            m_creature->InterruptNonMeleeSpells(false);
+            if (QuakePhase)
+                QuakePhase = 8;
+
+            DoCast(m_creature, SPELL_BLASTNOVA);
+
+            BlastNova_Timer = 40000;
+        }else BlastNova_Timer -= diff;
+
+        //Phase3 if not already enraged and below 30%
+        if (!Phase3 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30)
+        {
+            Phase3 = true;
+
+            DoYell(SAY_CHAMBER_DESTROY, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_CHAMBER_DESTROY);
         }
 
         //Melee
@@ -276,10 +321,13 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim()) return;
+        if (!who) return;
 
-        if (m_creature->IsFriendlyTo(who) && !ListContains(FriendlyList, who->GetGUID()))
+        if (!m_creature->IsHostileTo(who) && !ListContains(FriendlyList, who->GetGUID()))
             FriendlyList.push_back(who->GetGUID());
+
+        if (m_creature->getVictim())
+            return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -310,33 +358,35 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Dark Mending
         if (DarkMending_Timer < diff)
         {
-
-            //If no friends then heal self
-            if (FriendlyList.empty())
-                DoCast(m_creature, SPELL_DARK_MENDING);
-
-            //Cast Dark Mending on the target with the lowest
-            //amount of HP within 30 yards (cast range)
-            uint32 LowestHP = 0;
-            Unit* pLowestHPTarget = NULL;
-            Unit* pTemp = NULL;
-
-            std::list<uint64>::iterator i;
-
-            for (i = FriendlyList.begin(); i!=FriendlyList.end(); ++i)
+            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
             {
-                pTemp = Unit::GetUnit((*m_creature),(*i));
-                if (pTemp && pTemp->isAlive() && pTemp->GetHealth() < LowestHP && m_creature->GetDistance2dSq(pTemp) < 900)
-                {
-                    LowestHP = pTemp->GetHealth();
-                    pLowestHPTarget = pTemp;
-                }
-            }
+                //If no friends then heal self
+                if (FriendlyList.empty())
+                    DoCast(m_creature, SPELL_DARK_MENDING);
 
-            //Cast on ourselves if we are lower then lowest hp friendly unit
-            if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
-                DoCast(pLowestHPTarget, SPELL_DARK_MENDING);
-            else DoCast(m_creature, SPELL_DARK_MENDING);
+                //Cast Dark Mending on the target with the lowest
+                //amount of HP within 30 yards (cast range)
+                uint32 LowestHP = 0;
+                Unit* pLowestHPTarget = NULL;
+                Unit* pTemp = NULL;
+
+                std::list<uint64>::iterator i;
+
+                for (i = FriendlyList.begin(); i!=FriendlyList.end(); ++i)
+                {
+                    pTemp = Unit::GetUnit((*m_creature),(*i));
+                    if (pTemp && pTemp->isAlive() && pTemp->GetHealth() < LowestHP && m_creature->GetDistance2dSq(pTemp) < 900)
+                    {
+                        LowestHP = pTemp->GetHealth();
+                        pLowestHPTarget = pTemp;
+                    }
+                }
+
+                //Cast on ourselves if we are lower then lowest hp friendly unit
+                if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
+                    DoCast(pLowestHPTarget, SPELL_DARK_MENDING);
+                else DoCast(m_creature, SPELL_DARK_MENDING);
+            }
 
             DarkMending_Timer = 10000 + (rand() % 10000);
         }else DarkMending_Timer -= diff;
@@ -356,7 +406,13 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         //Infernal spawning
         if (!InfernalSpawned && Infernal_Timer < diff)
         {
-            Creature* Infernal = m_creature->SummonCreature(CREATURE_INFERNAL, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 60000);
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+            if (target)
+                DoCast(target, SPELL_BURNING_ABYSSAL);
+
+            /*Creature* Infernal = m_creature->SummonCreature(CREATURE_INFERNAL, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 60000);
 
             if (Infernal)
             {
@@ -367,7 +423,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
                 if (target)
                     Infernal->AI()->AttackStart(target);
-            }
+            }*/
 
             InfernalSpawned = true;
         }else Infernal_Timer -= diff;
@@ -376,6 +432,13 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     }
 
 };
+
+//Manticron Cube
+bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
+{
+    _GO->Say("Mantricon Cube Clicked", LANG_UNIVERSAL, 0);
+    return true;
+}
 
 CreatureAI* GetAI_boss_magtheridon(Creature *_Creature)
 {
@@ -399,4 +462,9 @@ void AddSC_boss_magtheridon()
     newscript->Name="mob_hellfire_channeler";
     newscript->GetAI = GetAI_mob_hellfire_channeler;
     m_scripts[nrscripts++] = newscript;
-}*/
+
+    newscript = new Script;
+    newscript->Name="go_manticron_cube";
+    newscript->pGOHello = &GOHello_go_Manticron_Cube;
+    m_scripts[nrscripts++] = newscript;
+}

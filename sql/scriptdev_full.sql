@@ -22,7 +22,6 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName`='go_orb_of_command' WHERE `entry`='179879';
 
-
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
 UPDATE `creature_template` SET `ScriptName` = 'guard_stormwind' WHERE `entry` IN (68, 1976);
@@ -267,8 +266,8 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_waterelemental' WHER
 
 /* SERPENTSHRINE CAVERN */
 UPDATE `instance_template` SET `script` = 'instance_serpent_shrine' WHERE `map`= 548;
-
-
+UPDATE `creature_template` SET `ScriptName` = 'boss_hydross_the_unstable' WHERE `entry`=21216;
+UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind' WHERE `entry`=21215;
 
 /* DARKSHORE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_lunaclaw' WHERE `entry` = 12138;
@@ -388,7 +387,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* MAGTHERIDON'S LAIR */
 UPDATE `instance_template` SET `script` = 'instance_magtheridons_lair' WHERE `map`= 544;
-
+UPDATE `gameobject_template` SET `ScriptName`='go_manticron_cube' WHERE `entry`='181713';
+UPDATE `creature_template` SET `ScriptName` = 'boss_magtheridon' WHERE `entry`=17257;
+UPDATE `creature_template` SET `ScriptName` = 'mob_hellfire_channeler' WHERE `entry`=17256;
 
 
 /* HELLFIRE PENINSULA */

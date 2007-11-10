@@ -219,7 +219,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         if (WebTrap_Timer < diff)
         {
             DoCastWebWrap();
-            WebTrap_Timer = 40000;			//40 seconds until we should cast this again
+            WebTrap_Timer = 40000;            //40 seconds until we should cast this again
         }else WebTrap_Timer -= diff;
 
         //WebSpray_Timer

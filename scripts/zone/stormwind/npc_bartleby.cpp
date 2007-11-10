@@ -37,6 +37,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 
     void JustDied(Unit *who)
     {
+        m_creature->setFaction(11);
         PlayerHolder = NULL;
     }
 

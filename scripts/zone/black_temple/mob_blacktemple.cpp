@@ -324,6 +324,34 @@ CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)
         ai->Spell[1].First_Cast = 20000;             
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET; 
         break;
+    case 23216:
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = 41178;         // Debilitating Strike
+        ai->Spell[0].Cooldown = 18000;
+        ai->Spell[0].First_Cast = 10000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+        break;
+    case 23523:
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = 42023;         // Rain of Fire
+        ai->Spell[0].Cooldown = 20000;
+        ai->Spell[0].First_Cast = 18000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+        break;
+    case 23524:
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = 42027;         // Chain Heal
+        ai->Spell[0].Cooldown = 18000;
+        ai->Spell[0].First_Cast = 8000;
+        ai->Spell[0].Cast_Target_Type = CAST_SELF;
+        break;
+    case 23318:
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = 41978;         // Debilitating Poison
+        ai->Spell[0].Cooldown = 22000;
+        ai->Spell[0].First_Cast = 15000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+        break;
     }
     ai->EnterEvadeMode();
 

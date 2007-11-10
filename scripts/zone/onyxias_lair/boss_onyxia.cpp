@@ -187,7 +187,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 //Only cast if we are behind
                 if (!m_creature->HasInArc( M_PI, target))
                     DoCast(target,SPELL_TAILSWEEP);
-                tailsweep_timer = 2000;
+                tailsweep_timer = 20000;
 
             }else tailsweep_timer -= diff;
         }

@@ -70,6 +70,15 @@ scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
 scripts/zone/barrens/npc_beaten_corpse.cpp \
+scripts/zone/black_temple/boss_bloodboil.cpp \
+scripts/zone/black_temple/boss_illidan.cpp \
+scripts/zone/black_temple/boss_mother_shahraz.cpp \
+scripts/zone/black_temple/boss_reliquary_of_souls.cpp \
+scripts/zone/black_temple/boss_shade_of_akama.cpp \
+scripts/zone/black_temple/boss_supremus.cpp \
+scripts/zone/black_temple/boss_teron_gorefiend.cpp \
+scripts/zone/black_temple/boss_warlord_najentus.cpp \
+scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/mob_blacktemple.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \

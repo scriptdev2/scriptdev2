@@ -19,7 +19,7 @@
 #define SPELL_SHADOWVOLLEY                32963            
 #define SPELL_CLEAVE           27794             //Not sure if right ID
 #define SPELL_THUNDERCLAP            23931
-#define SPELL_VOIDBOLT              33047
+#define SPELL_VOIDBOLT              21066
 #define SPELL_MARKOFKAZZAK            21056   // We need to cast 21058 on a Player that dont have any mana.
 #define SPELL_RAGE           32964
 #define SPELL_CAPTURESOUL               32966   

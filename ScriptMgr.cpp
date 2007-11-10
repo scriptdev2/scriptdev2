@@ -115,6 +115,16 @@ extern void AddSC_npc_beaten_corpse();
 
 //Black Temple
 extern void AddSC_mob_blacktemple();
+extern void AddSC_boss_illidan();
+extern void AddSC_boss_shade_of_akama();
+extern void AddSC_boss_supremus();
+extern void AddSC_boss_gurtogg_bloodboil();
+extern void AddSC_boss_mother_shahraz();
+extern void AddSC_boss_reliquary_of_souls();
+extern void AddSC_boss_teron_gorefiend();
+extern void AddSC_boss_najentus();
+extern void AddSC_boss_illidari_council();
+extern void AddSC_instance_black_temple();
 
 //Blackfathom Depths
 //Blackrock Depths
@@ -251,6 +261,8 @@ extern void AddSC_boss_kelidan_the_breaker();
 extern void AddSC_boss_the_maker();
 
 //--Magtheridon's Lair
+extern void AddSC_boss_magtheridon();
+
 //--Shattered Halls
 extern void AddSC_boss_grand_warlock_nethekurse();
 
@@ -577,7 +589,17 @@ void ScriptsInit()
 
     //Black Temple
     AddSC_mob_blacktemple();
-
+    AddSC_boss_illidan();
+    AddSC_boss_shade_of_akama();
+    AddSC_boss_supremus();
+    AddSC_boss_gurtogg_bloodboil();
+    AddSC_boss_mother_shahraz();
+    AddSC_boss_reliquary_of_souls();
+    AddSC_boss_teron_gorefiend();
+    AddSC_boss_najentus();
+    AddSC_boss_illidari_council();
+    AddSC_instance_black_temple();
+ 
     //Blackfathom Depths
     //Blackrock Depths
     AddSC_boss_ambassador_flamelash();
@@ -713,6 +735,8 @@ void ScriptsInit()
     AddSC_boss_the_maker();
 
     //--Magtheridon's Lair
+    AddSC_boss_magtheridon();
+
     //--Shattered Halls
     AddSC_boss_grand_warlock_nethekurse();
 

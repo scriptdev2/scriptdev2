@@ -16,19 +16,39 @@
 
 #include "../../sc_defines.h"
 
-#define SPELL_GROUNDSTOMP                19364    
-#define SPELL_ANCIENTDREAD                   19365                     
-#define SPELL_CAUTERIZINGFLAMES                   19366 
-#define SPELL_WITHERINGHEAT                   19367 
-#define SPELL_ANCIENTDESPAIR                   19369 
-#define SPELL_CONEOFFIRE                   19630                
-
-
+#define SPELL_GROUNDSTOMP           19364    
+#define SPELL_ANCIENTDREAD          19365                     
+#define SPELL_CAUTERIZINGFLAMES     19366 
+#define SPELL_WITHERINGHEAT         19367 
+#define SPELL_ANCIENTDESPAIR        19369 
+#define SPELL_CONEOFFIRE            19630                
 
 struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
 {
-    mob_ancient_core_houndAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_ancient_core_houndAI(Creature *c) : ScriptedAI(c) {
 
+        switch(rand()%5)
+        {
+        case 0:
+            Cast_Debuff = SPELL_GROUNDSTOMP;
+            break;
+        case 1:
+            Cast_Debuff = SPELL_ANCIENTDREAD;
+            break;
+        case 2:
+            Cast_Debuff = SPELL_CAUTERIZINGFLAMES;
+            break;
+        case 3:
+            Cast_Debuff = SPELL_WITHERINGHEAT;
+            break;
+        case 4:
+            Cast_Debuff = SPELL_ANCIENTDESPAIR;
+            break;
+        }
+        EnterEvadeMode();
+    }
+
+    uint32 Cast_Debuff;
     uint32 Debuff_Timer;
     uint32 ConeOfFire_Timer;
     bool InCombat;
@@ -43,7 +63,6 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
@@ -52,7 +71,6 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -94,27 +112,10 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-
+        //Debuff
         if (Debuff_Timer < diff)
         {
-            switch(rand()%5)
-            {
-            case 0:
-                DoCast(m_creature->getVictim(),SPELL_GROUNDSTOMP);
-                break;
-            case 1:
-                DoCast(m_creature->getVictim(),SPELL_ANCIENTDREAD);
-                break;
-            case 2:
-                DoCast(m_creature->getVictim(),SPELL_CAUTERIZINGFLAMES);
-                break;
-            case 3:
-                DoCast(m_creature->getVictim(),SPELL_WITHERINGHEAT);
-                break;
-            case 4:
-                DoCast(m_creature->getVictim(),SPELL_ANCIENTDESPAIR);
-                break;
-            }
+            DoCast(m_creature->getVictim(),Cast_Debuff);
             Debuff_Timer = 24000;
         }else Debuff_Timer -= diff;
 
@@ -122,7 +123,6 @@ struct MANGOS_DLL_DECL mob_ancient_core_houndAI : public ScriptedAI
         //ConeOfFire_Timer
         if (ConeOfFire_Timer < diff)
         {
-
             DoCast(m_creature->getVictim(),SPELL_CONEOFFIRE);
 
             //7 seconds until we should cast this agian

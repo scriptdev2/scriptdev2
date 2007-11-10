@@ -31,14 +31,14 @@ bool ItemUse_draenei_fishing_net(Player *player, Item* _Item, SpellCastTargets c
             Murloc = player->SummonCreature(17102,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
             if (Murloc)
                 ((CreatureAI*)Murloc->AI())->AttackStart(player);
-        }	
+        }    
         else
-        {	
+        {    
             uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1, false);
             if(msg == EQUIP_ERR_OK)
             {
                 item = player->StoreNewItem(dest, 23614, 1, true);
-                player->SendNewItem(item, 1, true, false);	
+                player->SendNewItem(item, 1, true, false);    
 
             }
 

@@ -64,7 +64,6 @@ bool GossipSelect_npc_lothos_riftwalker(Player *player, Creature *_Creature, uin
     {
         player->CLOSE_GOSSIP_MENU();
         player->TeleportTo(409, 1096, -467, -104.6, 3.64);
-
     }
 
     return true;

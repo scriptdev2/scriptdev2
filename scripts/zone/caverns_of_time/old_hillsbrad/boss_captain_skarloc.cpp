@@ -162,8 +162,8 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
                         break;
                     }
                 }
-            }	
-        }		
+            }    
+        }        
     }
 
     void UpdateAI(const uint32 diff)
@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
             //Cleanse
             if(Cleanse_Timer  < diff)
             {
-                DoCast(m_creature, CLEANSE);	
+                DoCast(m_creature, CLEANSE);    
                 Cleanse_Timer = 10000 ;
             } else Cleanse_Timer -= diff;
 
@@ -193,7 +193,7 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
                 Hammer_of_Justice_Timer = 60000;
             }else Hammer_of_Justice_Timer -= diff;
 
-            //Holy Shield		   
+            //Holy Shield           
             if (Holy_Shield_Timer < diff)
             {
                 DoCast(m_creature,HOLY_SHIELD);
