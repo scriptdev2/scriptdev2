@@ -30,10 +30,18 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     bool Encounters[ENCOUNTERS];
 
     uint64 MaulgarEvent_Tank;
+    uint64 KigglerTheCrazed;
+    uint64 BlindeyeTheSeer;
+    uint64 OlmTheSummoner;
+    uint64 KroshFirehand;
 
     void Initialize()
     {
         MaulgarEvent_Tank = 0;
+        KigglerTheCrazed = 0;
+        BlindeyeTheSeer = 0;
+        OlmTheSummoner = 0;
+        KroshFirehand = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -47,12 +55,40 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry) { }
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch(creature_entry)
+        {
+            case 18835:
+            KigglerTheCrazed = creature->GetGUID();
+            break;
+
+            case 18836:
+            BlindeyeTheSeer = creature->GetGUID();
+            break;
+
+            case 18834:
+            OlmTheSummoner = creature->GetGUID();
+            break;
+
+            case 18832:
+            KroshFirehand = creature->GetGUID();
+            break;
+        }
+    }
 
     uint64 GetUnitGUID(char *identifier)
     {
         if(identifier == "MaulgarEvent_Tank")
             return MaulgarEvent_Tank;
+        else if(identifier == "KigglerTheCrazed")
+            return KigglerTheCrazed;
+        else if(identifier == "BlindeyeTheSeer")
+            return BlindeyeTheSeer;
+        else if(identifier == "OlmTheSummoner")
+            return OlmTheSummoner;
+        else if(identifier == "KroshFirehand")
+            return KroshFirehand;
 
         return 0;
     }

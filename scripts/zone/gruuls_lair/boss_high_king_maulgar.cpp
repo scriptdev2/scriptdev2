@@ -32,7 +32,7 @@
 #define SPELL_WHIRLWIND          33239
 #define SPELL_ENRAGE             34970     
 
-//High King Maulgar AI (normal AI)
+//High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
     boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c) 
@@ -120,28 +120,41 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
             if(!InCombat)
-            {
-                InCombat = true;
-                DoStartMeleeAttack(who);
-                pInstance->SetData("MaulgarEvent_Tank", who->GetGUIDLow());
-                pInstance->SetData("MaulgarEvent_Tank2", who->GetGUIDHigh());
-                pInstance->SetData("MaulgarEvent", 1);
-
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-            }
+                StartEvent(who);
         }
+    }
+
+    void StartEvent(Unit *who)
+    {
+        if(!pInstance)
+            return;
+
+        //get council member's guid to respawn them
+        Council[0] = pInstance->GetUnitGUID("KigglerTheCrazed");
+        Council[1] = pInstance->GetUnitGUID("BlindeyeTheSeer");
+        Council[2] = pInstance->GetUnitGUID("OlmTheSummoner");
+        Council[3] = pInstance->GetUnitGUID("KroshFirehand");
+
+        InCombat = true;
+
+        pInstance->SetData("MaulgarEvent_Tank", who->GetGUIDLow());
+        pInstance->SetData("MaulgarEvent_Tank2", who->GetGUIDHigh());
+        pInstance->SetData("MaulgarEvent", 1);
+
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || m_creature->getVictim() || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -152,27 +165,18 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if(!InCombat)
-                {
-                    InCombat = true;
-                    DoStartMeleeAttack(who);
-                    pInstance->SetData("MaulgarEvent_Tank", who->GetGUIDLow());
-                    pInstance->SetData("MaulgarEvent_Tank2", who->GetGUIDHigh());
-                    pInstance->SetData("MaulgarEvent", 1);
+                DoStartMeleeAttack(who);
 
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                }
+                if(!InCombat)
+                    StartEvent(who);
             }
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if(!pInstance)
-            return;
-
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("MaulgarEvent_Tank"));
 
@@ -190,7 +194,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(!pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData("MaulgarEvent"))
             EnterEvadeMode();
 
         //ArcingSmash_Timer
@@ -239,7 +243,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     }
 };
 
-//Olm The Summoner AI (normal AI)
+//Olm The Summoner AI
 struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 {
     boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) 
@@ -274,7 +278,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -293,7 +297,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || m_creature->getVictim() || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -338,11 +342,8 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!pInstance)
-            return;
-
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("MaulgarEvent_Tank"));
 
@@ -358,7 +359,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(!pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData("MaulgarEvent"))
             EnterEvadeMode();
 
         //DarkDecay_Timer
@@ -419,7 +420,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -437,7 +438,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || m_creature->getVictim() || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -462,11 +463,8 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!pInstance)
-            return;
-
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("MaulgarEvent_Tank"));
 
@@ -482,7 +480,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(!pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData("MaulgarEvent"))
             EnterEvadeMode();
 
         //GreatherPolymorph_Timer / disabled: it makes you fall under the texture / if you've got vmaps feel free to uncomment this
@@ -555,7 +553,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -574,7 +572,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || m_creature->getVictim() || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -599,11 +597,8 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!pInstance)
-            return;
-
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("MaulgarEvent_Tank"));
 
@@ -619,7 +614,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(!pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData("MaulgarEvent"))
             EnterEvadeMode();
 
         //GreaterPowerWordShield_Timer
@@ -677,7 +672,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -696,7 +691,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || m_creature->getVictim() || !pInstance)
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -721,11 +716,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!pInstance)
-            return;
-
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetUnitGUID("MaulgarEvent_Tank"));
 
@@ -741,7 +733,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(!pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData("MaulgarEvent"))
             EnterEvadeMode();
 
         //GreaterFireball_Timer
