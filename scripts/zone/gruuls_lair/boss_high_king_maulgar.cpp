@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if(!pInstance)
             return;
 
-        //get council member's guid to respawn them
+        //get council member's guid to respawn them if needed
         Council[0] = pInstance->GetUnitGUID("KigglerTheCrazed");
         Council[1] = pInstance->GetUnitGUID("BlindeyeTheSeer");
         Council[2] = pInstance->GetUnitGUID("OlmTheSummoner");
@@ -184,6 +184,12 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             {
                 DoStartMeleeAttack(target);
                 InCombat = true;
+
+                //get council member's guid to respawn them if needed
+                Council[0] = pInstance->GetUnitGUID("KigglerTheCrazed");
+                Council[1] = pInstance->GetUnitGUID("BlindeyeTheSeer");
+                Council[2] = pInstance->GetUnitGUID("OlmTheSummoner");
+                Council[3] = pInstance->GetUnitGUID("KroshFirehand");
 
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
             }
