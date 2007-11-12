@@ -201,6 +201,7 @@ extern void AddSC_boss_temporus();
 
 //Coilfang Resevoir
 //--Serpent Shrine Cavern
+extern void AddSC_boss_fathomlord_karathress();
 extern void AddSC_boss_hydross_the_unstable();
 extern void AddSC_boss_leotheras_the_blind();
 extern void AddSC_instance_serpentshrine_cavern();
@@ -675,6 +676,7 @@ void ScriptsInit()
 
     //Coilfang Resevoir
     //--Serpent Shrine Cavern
+    AddSC_boss_fathomlord_karathress();
     AddSC_boss_hydross_the_unstable();
     AddSC_boss_leotheras_the_blind();
     AddSC_instance_serpentshrine_cavern();

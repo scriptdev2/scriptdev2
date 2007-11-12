@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 0); // 0 = NOT_STARTED
+            pInstance->SetData("HydrossTheUnstableEvent", 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 1); // 1 = IN_PROGRESS
+            pInstance->SetData("HydrossTheUnstableEvent", 1);
 
         InCombat = true;
     }
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         }
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 3); // 3 = DONE
+            pInstance->SetData("HydrossTheUnstableEvent", 0);
 
         // despawn invisible trigger
         DespawnCreatureIfExists(Invisible);

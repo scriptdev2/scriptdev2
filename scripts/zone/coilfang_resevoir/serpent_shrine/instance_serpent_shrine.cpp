@@ -36,6 +36,8 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     uint64 Caribdis;
     uint64 LadyVashj;
     uint64 TaintedElemental;
+    uint64 Karathress;
+    uint64 KarathressEvent_Starter;
 
     bool Encounters[ENCOUNTERS];
 
@@ -46,6 +48,8 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         Caribdis = 0;
         LadyVashj = 0;
         TaintedElemental = 0;
+        Karathress = 0;
+        KarathressEvent_Starter = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -72,6 +76,10 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             TaintedElemental = creature->GetGUID();
             break;
 
+            case 21214:
+            Karathress = creature->GetGUID();
+            break;
+
             case 21966:
             Sharkkis = creature->GetGUID();
             break;
@@ -96,6 +104,10 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             return Caribdis;
         else if(identifier == "LadyVashj")
             return LadyVashj;
+        else if(identifier == "Karathress")
+            return Karathress;
+        else if(identifier == "KarathressEvent_Starter")
+            return KarathressEvent_Starter;
 
         return NULL;
     }
@@ -108,12 +120,16 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             Encounters[1] = (data) ? true : false;
         else if(type == "TheLurkerBelowEvent")
             Encounters[2] = (data) ? true : false;
-        else if(type == "FathomLordKarathressEvent")
+        else if(type == "KarathressEvent")
             Encounters[3] = (data) ? true : false;
         else if(type == "MorogrimTidewalkerEvent")
             Encounters[4] = (data) ? true : false;
         else if(type == "LadyVashjEvent")
             Encounters[5] = (data) ? true : false;
+        else if(type == "KarathressEvent_Starter")
+            KarathressEvent_Starter = data;
+        else if(type == "KarathressEvent_Starter2")
+            KarathressEvent_Starter += (uint64(data) << 32);
     }
 
     uint32 GetData(char *type)
@@ -124,7 +140,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             return Encounters[1];
         else if(type == "TheLurkerBelowEvent")
             return Encounters[2];
-        else if(type == "FathomLordKarathressEvent")
+        else if(type == "KarathressEvent")
             return Encounters[3];
         else if(type == "MorogrimTidewalkerEvent")
             return Encounters[4];

@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 0); // 0 = NOT_STARTED
+            pInstance->SetData("LeotherasTheBlindEvent", 0);
     }
 
     void SetDemonFinalForm(Unit *target)
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 1); // 1 = IN_PROGRESS
+            pInstance->SetData("LeotherasTheBlindEvent", 1);
 
         InCombat = true;
     }
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         }
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 3); // 3 = DONE
+            pInstance->SetData("LeotherasTheBlindEvent", 0);
     }
 
     void AttackStart(Unit *who)

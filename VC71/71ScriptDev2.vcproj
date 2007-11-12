@@ -1726,6 +1726,10 @@
 						Name="Serpent Shrine Cavern"
 						>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_fathomlord_karathress.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_hydross_the_unstable.cpp"
 							>
 						</File>

@@ -95,20 +95,14 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     void SetData(char *type, uint32 data)
     {
-        if(type == "MaulgarEvent_Tank")
-        {
-            MaulgarEvent_Tank = data;
-        }
-        else if(type == "MaulgarEvent_Tank2")
-        {
-            //not tested
-            //MaulgarEvent_Tank += (uint64(data) << 32);
-        }
-
-        else if(type == "MaulgarEvent")
+        if(type == "MaulgarEvent")
             Encounters[0] = (data) ? true : false;
         else if(type == "GruulEvent")
             Encounters[1] = (data) ? true : false;
+        else if(type == "MaulgarEvent_Tank")
+            MaulgarEvent_Tank = data;
+        else if(type == "MaulgarEvent_Tank2")
+            MaulgarEvent_Tank += (uint64(data) << 32);
     }
 
     uint32 GetData(char *type) 

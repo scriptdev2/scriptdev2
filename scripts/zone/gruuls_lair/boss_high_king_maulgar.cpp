@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         Charging_Timer = 0;
         Phase2 = false;
 
-        //respawn if died & apply flags
+        //respawn if died
         if(InCombat)
         {
             Creature *pCreature;
@@ -132,16 +132,21 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         }
     }
 
-    void StartEvent(Unit *who)
+    void GetCouncil()
     {
-        if(!pInstance)
-            return;
-
         //get council member's guid to respawn them if needed
         Council[0] = pInstance->GetUnitGUID("KigglerTheCrazed");
         Council[1] = pInstance->GetUnitGUID("BlindeyeTheSeer");
         Council[2] = pInstance->GetUnitGUID("OlmTheSummoner");
         Council[3] = pInstance->GetUnitGUID("KroshFirehand");
+    }
+
+    void StartEvent(Unit *who)
+    {
+        if(!pInstance)
+            return;
+
+        GetCouncil();
 
         InCombat = true;
 
@@ -185,11 +190,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 DoStartMeleeAttack(target);
                 InCombat = true;
 
-                //get council member's guid to respawn them if needed
-                Council[0] = pInstance->GetUnitGUID("KigglerTheCrazed");
-                Council[1] = pInstance->GetUnitGUID("BlindeyeTheSeer");
-                Council[2] = pInstance->GetUnitGUID("OlmTheSummoner");
-                Council[3] = pInstance->GetUnitGUID("KroshFirehand");
+                GetCouncil();
 
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
             }
