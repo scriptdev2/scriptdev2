@@ -152,11 +152,11 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
 
+        InCombat = true;
+
         pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
         pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
         pInstance->SetData("KarathressEvent", 1);
-
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -323,6 +323,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            if(!InCombat)
+            {
+                InCombat = true;
+
+                if(pInstance)
+                {
+                    pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                    pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                    pInstance->SetData("KarathressEvent", 1);
+                }
+            }
         }
     }
 
@@ -340,6 +351,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                if(!InCombat)
+                {
+                    InCombat = true;
+
+                    if(pInstance)
+                    {
+                        pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                        pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                        pInstance->SetData("KarathressEvent", 1);
+                    }
+                }
             }
         }
     }
@@ -435,6 +457,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            if(!InCombat)
+            {
+                InCombat = true;
+
+                if(pInstance)
+                {
+                    pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                    pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                    pInstance->SetData("KarathressEvent", 1);
+                }
+            }
         }
     }
 
@@ -452,6 +485,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                if(!InCombat)
+                {
+                    InCombat = true;
+
+                    if(pInstance)
+                    {
+                        pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                        pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                        pInstance->SetData("KarathressEvent", 1);
+                    }
+                }
             }
         }
     }
@@ -544,6 +588,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
+            if(!InCombat)
+            {
+                InCombat = true;
+
+                if(pInstance)
+                {
+                    pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                    pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                    pInstance->SetData("KarathressEvent", 1);
+                }
+            }
         }
     }
 
@@ -561,6 +616,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
+                if(!InCombat)
+                {
+                    InCombat = true;
+
+                    if(pInstance)
+                    {
+                        pInstance->SetData("KarathressEvent_Starter", who->GetGUIDLow());
+                        pInstance->SetData("KarathressEvent_Starter2", who->GetGUIDHigh());
+                        pInstance->SetData("KarathressEvent", 1);
+                    }
+                }
             }
         }
     }

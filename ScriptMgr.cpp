@@ -101,6 +101,12 @@ extern void AddSC_boss_darkweaver_syth();
 extern void AddSC_boss_tailonking_ikiss();
 
 //--Shadow Labyrinth
+extern void AddSC_boss_ambassador_hellmaw();
+extern void AddSC_boss_blackheart_the_inciter();
+extern void AddSC_boss_grandmaster_vorpil();
+extern void AddSC_boss_murmur();
+extern void AddSC_instance_shadow_labyrinth();
+
 //Azshara
 extern void AddSC_boss_azuregos();
 extern void AddSC_mobs_spitelashes();
@@ -576,6 +582,12 @@ void ScriptsInit()
     AddSC_boss_tailonking_ikiss();
 
     //--Shadow Labyrinth
+    AddSC_boss_ambassador_hellmaw();
+    AddSC_boss_blackheart_the_inciter();
+    AddSC_boss_grandmaster_vorpil();
+    AddSC_boss_murmur();
+    AddSC_instance_shadow_labyrinth();
+
     //Azshara
     AddSC_boss_azuregos();
     AddSC_mobs_spitelashes();

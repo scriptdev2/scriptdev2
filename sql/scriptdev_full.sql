@@ -113,7 +113,11 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_tailonking_ikiss' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'boss_darkweaver_syth' WHERE `entry` = 18472;
 
 /* SHADOW LABYRINTH */
-
+UPDATE `instance_template` SET `script` = 'instance_shadow_labyrinth' WHERE `map`= 555;
+UPDATE `creature_template` SET `ScriptName` = 'boss_murmur' WHERE `entry` = 18708;
+UPDATE `creature_template` SET `ScriptName` = 'boss_ambassador_hellmaw' WHERE `entry` = 18731;
+UPDATE `creature_template` SET `ScriptName` = 'boss_grandmaster_vorpil' WHERE `entry` = 18732;
+UPDATE `creature_template` SET `ScriptName` = 'boss_blackheart_the_inciter' WHERE `entry` = 18667;
 
 
 /* AZSHARA */
@@ -268,6 +272,11 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_waterelemental' WHER
 UPDATE `instance_template` SET `script` = 'instance_serpent_shrine' WHERE `map`= 548;
 UPDATE `creature_template` SET `ScriptName` = 'boss_hydross_the_unstable' WHERE `entry`=21216;
 UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind' WHERE `entry`=21215;
+UPDATE `creature_template` SET `ScriptName` = 'boss_fathomlord_karathress' WHERE `entry`=21214;
+UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_sharkkis' WHERE `entry`=21966;
+UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_tidalvess' WHERE `entry`=21965;
+UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_caribdis' WHERE `entry`=21964;
+
 
 /* DARKSHORE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_lunaclaw' WHERE `entry` = 12138;

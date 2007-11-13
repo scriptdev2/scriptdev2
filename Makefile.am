@@ -65,6 +65,11 @@ scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
 scripts/zone/aunchindoun/sekketh_halls/boss_darkweaver_syth.cpp \
 scripts/zone/aunchindoun/sekketh_halls/boss_tailonking_ikiss.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \

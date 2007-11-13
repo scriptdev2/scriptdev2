@@ -1425,6 +1425,30 @@
 					<Filter
 						Name="Shadow Labyrinth"
 						>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp"
+							>
+						</File>
+
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp"
+							>
+						</File>
+
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_grandmaster_vorpil.cpp"
+							>
+						</File>
+
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_murmur.cpp"
+							>
+						</File>
+
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
