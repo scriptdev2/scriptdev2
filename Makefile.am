@@ -148,6 +148,7 @@ scripts/zone/caverns_of_time/old_hillsbrad/boss_leutenant_drake.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_fathomlord_karathress.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_hydross_the_unstable.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_leotheras_the_blind.cpp \
+scripts/zone/coilfang_resevoir/serpent_shrine/boss_morogrim_tidewalker.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_hydromancer_thespia.cpp \

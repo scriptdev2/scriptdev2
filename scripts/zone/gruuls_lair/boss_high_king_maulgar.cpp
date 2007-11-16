@@ -380,7 +380,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         if(Summon_Timer < diff)
         {
             Creature *Add = NULL;
-            Add = DoSpawnCreature(18847, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
+            Add = DoSpawnCreature(18847, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
             Summon_Timer = 30000;
         }else Summon_Timer -= diff;
 

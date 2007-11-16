@@ -1826,6 +1826,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_morogrim_tidewalker.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
