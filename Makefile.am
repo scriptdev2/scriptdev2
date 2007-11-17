@@ -36,12 +36,11 @@ scripts/boss/boss_ysondre.cpp \
 scripts/creature/mob_defias.cpp \
 scripts/creature/mob_generic_creature.cpp \
 scripts/creature/mob_kobold.cpp \
-scripts/creature/npc_lumberjack.cpp \
-scripts/creature/npc_miner.cpp \
 scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
 scripts/custom/test.cpp \
+scripts/go/go_jandice_barov_journal.cpp \
 scripts/go/go_orb_of_command.cpp \
 scripts/go/go_teleporter.cpp \
 scripts/guard/guard_ai.cpp \
@@ -329,6 +328,7 @@ scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_yauj.cpp \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
+scripts/zone/thunder_bluff/npc_cairne_bloodhoof.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \

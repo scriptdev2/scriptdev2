@@ -21,6 +21,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName`='go_orb_of_command' WHERE `entry`='179879';
+UPDATE `gameobject_template` SET `ScriptName`='go_barov_journal' WHERE `entry`=180794;
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -780,7 +781,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_shadow_council_covert' WHERE
 
 
 /* THUNDER BLUFF */
-
+UPDATE creature_template SET ScriptName='npc_cairne_bloodhoof' WHERE entry=3057;
 
 /* TIRISFAL GLADES */
 /* Scarlet Neophyte, Rot Hide Gnoll, Young Night Web Spider, Night Web Spider, Vicious Night Web Spider */

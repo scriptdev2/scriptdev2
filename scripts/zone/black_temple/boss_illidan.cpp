@@ -1085,7 +1085,7 @@ struct MANGOS_DLL_DECL akamaAI : public ScriptedAI
         if(!pInstance)
             return;
 
-        IllidanGUID = pInstance->GetUnitGUID("IllidanStormrage");
+        IllidanGUID = pInstance->GetData64("IllidanStormrage");
         Creature* Illidan = ((Creature*)Unit::GetUnit((*m_creature), IllidanGUID));
 
         if(Illidan && Illidan->isAlive())

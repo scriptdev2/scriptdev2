@@ -16,6 +16,7 @@
 
 #include "../../../sc_defines.h"
 #include "../../../../../../game/Player.h"
+#include "../../../../../../game/Map.h"
 #include "../../../../../../game/GameObject.h"
 
 //Spells
@@ -27,6 +28,7 @@
 #define SPELL_BERSERK               27680
 #define SPELL_BANISH                40825
 
+#define SPELL_DEBRIS                30631
 #define SPELL_CAMERA_SHAKE          36455
 
 //Dialog
@@ -436,6 +438,26 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 //Manticron Cube
 bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
 {
+    //Can't use this here
+    if (!_GO->GetMap()->GetInstanceData())
+    {
+        _GO->TextEmote("Mantricon Cube: NO INSTANCE", 0);
+        return true;
+    }
+
+    ScriptedInstance* pInst = (ScriptedInstance*)_GO->GetMap()->GetInstanceData();
+
+    Unit* pUnit = Unit::GetUnit(*_GO, pInst->GetData64("Magtheridon"));
+
+    if (!pUnit || !pUnit->isAlive() || !player)
+    {
+        _GO->TextEmote("Mantricon Cube: NO TARGET", 0);
+        return true;
+    }
+
+    player->InterruptNonMeleeSpells(false);
+    //player->CastSpell(pUnit, ?, false);
+
     _GO->Say("Mantricon Cube Clicked", LANG_UNIVERSAL, 0);
     return true;
 }

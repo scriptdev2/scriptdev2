@@ -592,7 +592,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         /*          if(!pInstance)
         return;
 
-        ShadeGUID = pInstance->GetUnitGUID("ShadeOfAkama");*/
+        ShadeGUID = pInstance->GetData64("ShadeOfAkama");*/
         if(!ShadeGUID) return;
 
         Creature* Shade = ((Creature*)Unit::GetUnit((*m_creature), ShadeGUID));

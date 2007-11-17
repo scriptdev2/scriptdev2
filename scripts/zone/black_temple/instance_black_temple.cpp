@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
     }
 
-    uint64 GetUnitGUID(char *identifier)
+    uint64 GetData64(char *identifier)
     {
         if(identifier == "ShadeOfAkama" && ShadeOfAkama)
             return ShadeOfAkama;

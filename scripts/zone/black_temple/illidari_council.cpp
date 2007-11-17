@@ -227,10 +227,10 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         if(!pInstance) return;
         if(target)
         {
-            Council[0] = pInstance->GetUnitGUID("GathiosTheShatterer");
-            Council[1] = pInstance->GetUnitGUID("HighNethermancerZerevor");
-            Council[2] = pInstance->GetUnitGUID("LadyMalande");
-            Council[3] = pInstance->GetUnitGUID("VerasDarkshadow");
+            Council[0] = pInstance->GetData64("GathiosTheShatterer");
+            Council[1] = pInstance->GetData64("HighNethermancerZerevor");
+            Council[2] = pInstance->GetData64("LadyMalande");
+            Council[3] = pInstance->GetData64("VerasDarkshadow");
 
             if(!Council[0] || !Council[1] || !Council[2] || !Council[3])
                 return;
@@ -465,9 +465,9 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetUnitGUID("HighNethermancerZerevor");
-                Council[1] = pInstance->GetUnitGUID("LadyMalande");
-                Council[2] = pInstance->GetUnitGUID("VerasDarkshadow");
+                Council[0] = pInstance->GetData64("HighNethermancerZerevor");
+                Council[1] = pInstance->GetData64("LadyMalande");
+                Council[2] = pInstance->GetData64("VerasDarkshadow");
             }
             AcquiredGUIDs = true;
         }
@@ -643,9 +643,9 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetUnitGUID("GathiosTheShatterer");
-                Council[1] = pInstance->GetUnitGUID("LadyMalande");
-                Council[2] = pInstance->GetUnitGUID("VerasDarkshadow");
+                Council[0] = pInstance->GetData64("GathiosTheShatterer");
+                Council[1] = pInstance->GetData64("LadyMalande");
+                Council[2] = pInstance->GetData64("VerasDarkshadow");
             }
             AcquiredGUIDs = true;
         }
@@ -817,9 +817,9 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetUnitGUID("GathiosTheShatterer");
-                Council[1] = pInstance->GetUnitGUID("HighNethermancerZerevor");
-                Council[2] = pInstance->GetUnitGUID("VerasDarkshadow");
+                Council[0] = pInstance->GetData64("GathiosTheShatterer");
+                Council[1] = pInstance->GetData64("HighNethermancerZerevor");
+                Council[2] = pInstance->GetData64("VerasDarkshadow");
             }
             AcquiredGUIDs = true;
         }
@@ -1017,9 +1017,9 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetUnitGUID("GathiosTheShatterer");
-                Council[1] = pInstance->GetUnitGUID("HighNethermancerZerevor");
-                Council[2] = pInstance->GetUnitGUID("VerasDarkshadow");
+                Council[0] = pInstance->GetData64("GathiosTheShatterer");
+                Council[1] = pInstance->GetData64("HighNethermancerZerevor");
+                Council[2] = pInstance->GetData64("VerasDarkshadow");
             }
             AcquiredGUIDs = true;
         }

@@ -56,4 +56,6 @@ pkgdata_DATA = \
 	r150.sql \
 	r152.sql \
 	r153.sql \
-	r157.sql
+	r157.sql \
+	r161.sql \
+	r163.sql

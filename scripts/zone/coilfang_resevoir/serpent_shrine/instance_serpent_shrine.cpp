@@ -94,7 +94,13 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         }
     }
 
-    uint64 GetUnitGUID(char *identifier)
+    void SetData64(char* type, uint64 data)
+    {
+        if(type == "KarathressEvent_Starter")
+            KarathressEvent_Starter = data;
+    }
+
+    uint64 GetData64(char *identifier)
     {
         if(identifier == "Sharkkis")
             return Sharkkis;
@@ -126,10 +132,6 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             Encounters[4] = (data) ? true : false;
         else if(type == "LadyVashjEvent")
             Encounters[5] = (data) ? true : false;
-        else if(type == "KarathressEvent_Starter")
-            KarathressEvent_Starter = data;
-        else if(type == "KarathressEvent_Starter2")
-            KarathressEvent_Starter += (uint64(data) << 32);
     }
 
     uint32 GetData(char *type)

@@ -164,14 +164,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\creature\npc_lumberjack.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\creature\npc_miner.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\creature\simple_ai.cpp"
 					>
 				</File>
@@ -243,6 +235,10 @@
 			<Filter
 				Name="go"
 				>
+				<File
+					RelativePath="..\scripts\go\go_jandice_barov_journal.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\scripts\go\go_orb_of_command.cpp"
 					>
@@ -1365,22 +1361,18 @@
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp"
 							>
 						</File>
-
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp"
 							>
 						</File>
-
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_grandmaster_vorpil.cpp"
 							>
 						</File>
-
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_murmur.cpp"
 							>
 						</File>
-
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
 							>
@@ -1882,6 +1874,10 @@
 				<Filter
 					Name="Thunder Bluff"
 					>
+					<File
+						RelativePath="..\scripts\zone\thunder_bluff\npc_cairne_bloodhoof.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Undercity"

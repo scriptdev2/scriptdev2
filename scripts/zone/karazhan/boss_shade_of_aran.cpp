@@ -310,8 +310,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             return;
 
         //Prevent Movement while casting
-        if (m_creature->IsNonMeleeSpellCasted(false))
-            m_creature->StopMoving();
+        if (m_creature->IsNonMeleeSpellCasted(false) && !m_creature->GetMotionMaster()->empty())
+            m_creature->GetMotionMaster()->Clear();
 
         //Cooldowns for casts
         if (ArcaneCooldown)

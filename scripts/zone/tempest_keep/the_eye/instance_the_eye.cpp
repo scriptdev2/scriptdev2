@@ -85,15 +85,15 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         }
     }
 
-    uint64 GetUnitGUID(char *identifier)
+    uint64 GetData64(char *identifier)
     {
-        if(identifier == "ThaladredTheDarkener" && ThaladredTheDarkener)
+        if(identifier == "ThaladredTheDarkener")
             return ThaladredTheDarkener;
-        else if(identifier == "LordSanguinar" && LordSanguinar)
+        else if(identifier == "LordSanguinar")
             return LordSanguinar;
-        else if(identifier == "GrandAstromancerCapernian" && GrandAstromancerCapernian)
+        else if(identifier == "GrandAstromancerCapernian")
             return GrandAstromancerCapernian;
-        else if(identifier == "MasterEngineerTelonicus" && MasterEngineerTelonicus)
+        else if(identifier == "MasterEngineerTelonicus")
             return MasterEngineerTelonicus;
 
         return NULL;

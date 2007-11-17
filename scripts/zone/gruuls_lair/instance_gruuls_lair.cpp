@@ -77,7 +77,13 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         }
     }
 
-    uint64 GetUnitGUID(char *identifier)
+    void SetData64(char *type, uint64 data)
+    {
+        if(type == "MaulgarEvent_Tank")
+            MaulgarEvent_Tank = data;
+    }
+
+    uint64 GetData64(char *identifier)
     {
         if(identifier == "MaulgarEvent_Tank")
             return MaulgarEvent_Tank;
@@ -99,10 +105,6 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             Encounters[0] = (data) ? true : false;
         else if(type == "GruulEvent")
             Encounters[1] = (data) ? true : false;
-        else if(type == "MaulgarEvent_Tank")
-            MaulgarEvent_Tank = data;
-        else if(type == "MaulgarEvent_Tank2")
-            MaulgarEvent_Tank += (uint64(data) << 32);
     }
 
     uint32 GetData(char *type) 

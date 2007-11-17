@@ -51,8 +51,6 @@ extern void AddSC_boss_ysondre();
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
 extern void AddSC_defias();
-extern void AddSC_lumberjack();
-extern void AddSC_miner();
 
 // -- Custom --
 extern void AddSC_custom_example();
@@ -473,6 +471,8 @@ extern void AddSC_mobs_terokkar_forest();
 
 //Thousand Needles
 //Thunder Bluff
+extern void AddSC_npc_cairne_bloodhoof();
+
 //Tirisfal Glades
 //Uldaman
 extern void AddSC_boss_ironaya();
@@ -533,8 +533,6 @@ void ScriptsInit()
     AddSC_kobold();
     AddSC_generic_creature();
     AddSC_defias();
-    AddSC_lumberjack();
-    AddSC_miner();
 
     // -- Custom --
     AddSC_custom_example();
@@ -955,6 +953,8 @@ void ScriptsInit()
 
     //Thousand Needles
     //Thunder Bluff
+    AddSC_npc_cairne_bloodhoof();
+
     //Tirisfal Glades
     //Uldaman
     AddSC_boss_ironaya();

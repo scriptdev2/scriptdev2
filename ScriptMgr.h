@@ -210,10 +210,11 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         ScriptedInstance(Map *map) : InstanceData(map) {}
         ~ScriptedInstance() {}
 
-        //Retrevial of unit guids
-        virtual uint64 GetUnitGUID(char *identifier) {return 0; }
+        //All-purpose data storage 64 bit
+        virtual uint64 GetData64(char *) {return 0; }
+        virtual void SetData64(char *, uint64) { }
 
-        //All-purpose data storage
+        //All-purpose data storage 32 bit
         virtual uint32 GetData(char *type) { return 0; }
         virtual void SetData(char *type, uint32 data) {}
 };

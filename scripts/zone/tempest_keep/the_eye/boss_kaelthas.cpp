@@ -150,10 +150,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if(!pInstance)
             return;
 
-        Advisor[0] = pInstance->GetUnitGUID("ThaladredTheDarkener");
-        Advisor[1] = pInstance->GetUnitGUID("LordSanguinar");
-        Advisor[2] = pInstance->GetUnitGUID("GrandAstromancerCapernian");
-        Advisor[3] = pInstance->GetUnitGUID("MasterEngineerTelonicus");
+        Advisor[0] = pInstance->GetData64("ThaladredTheDarkener");
+        Advisor[1] = pInstance->GetData64("LordSanguinar");
+        Advisor[2] = pInstance->GetData64("GrandAstromancerCapernian");
+        Advisor[3] = pInstance->GetData64("MasterEngineerTelonicus");
 
         if(!Advisor[0] || !Advisor[1] || !Advisor[2] || !Advisor[3])
             return;
