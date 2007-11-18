@@ -14,13 +14,6 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* TODO
-
-Nether Vapor
- - It doesn't deal any damage when it's near a player.
-
-*/
-
 #include "../../../sc_defines.h"
 #include "../../../../../../game/Player.h"
 
@@ -231,14 +224,28 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     void SummonMurloc(float x, float y, float z)
     {
         Creature *Summoned;
-        Unit *target;
 
         Summoned = m_creature->SummonCreature(Murloc_entries[rand()%6], x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
         if(Summoned)
         {
+            Unit *target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
                 Summoned->AI()->AttackStart(target);
+        }
+    }
+
+    void SummonWaterGlobule(float x, float y, float z)
+    {
+        Creature *Globule;
+
+        Globule = m_creature->SummonCreature(WATER_GLOBULE, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 30000); //they despawn after 30 seconds
+        if(Globule)
+        {
+            Unit *target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(target)
+                Globule->AI()->AttackStart(target);
         }
     }
 
@@ -342,12 +349,10 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             //WateryGlobules_Timer
             if(WateryGlobules_Timer < diff)
             {
-                Creature *Summoned;
-                //they despawn after 30 seconds
-                Summoned = m_creature->SummonCreature(WATER_GLOBULE, WATERY_GRAVE_X1, WATERY_GRAVE_Y1, WATERY_GRAVE_Z1, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                Summoned = m_creature->SummonCreature(WATER_GLOBULE, WATERY_GRAVE_X2, WATERY_GRAVE_Y2, WATERY_GRAVE_Z2, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                Summoned = m_creature->SummonCreature(WATER_GLOBULE, WATERY_GRAVE_X3, WATERY_GRAVE_Y3, WATERY_GRAVE_Z3, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                Summoned = m_creature->SummonCreature(WATER_GLOBULE, WATERY_GRAVE_X4, WATERY_GRAVE_Y4, WATERY_GRAVE_Z4, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
+                SummonWaterGlobule(WATERY_GRAVE_X1, WATERY_GRAVE_Y1, WATERY_GRAVE_Z1);
+                SummonWaterGlobule(WATERY_GRAVE_X2, WATERY_GRAVE_Y2, WATERY_GRAVE_Z2);
+                SummonWaterGlobule(WATERY_GRAVE_X3, WATERY_GRAVE_Y3, WATERY_GRAVE_Z3);
+                SummonWaterGlobule(WATERY_GRAVE_X4, WATERY_GRAVE_Y4, WATERY_GRAVE_Z4);
 
                 WateryGlobules_Timer = 25000;
             }else WateryGlobules_Timer -= diff;
@@ -357,7 +362,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     }
 };
 
-//Nether Globule AI
+//Water Globule AI
 struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 {
     mob_water_globuleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -415,7 +420,8 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
         {
             if(m_creature->IsWithinDistInMap(m_creature->getVictim(), 5))
             {
-                DoCast(m_creature->getVictim(), SPELL_WATERY_GRAVE_EXPLOSION);
+                uint32 damage = 4000+rand()%2000;
+                m_creature->DealDamage(m_creature->getVictim(), damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_FROST, NULL, 0, false);
 
                 //despawn
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);

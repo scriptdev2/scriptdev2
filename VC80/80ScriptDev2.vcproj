@@ -598,6 +598,10 @@
 						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\gruuls_lair\mob_gruuls_lair.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Burning Steppes"
@@ -1823,6 +1827,10 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\mob_serpent_shrine.cpp"
 							>
 						</File>
 					</Filter>

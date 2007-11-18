@@ -210,6 +210,7 @@ extern void AddSC_boss_hydross_the_unstable();
 extern void AddSC_boss_leotheras_the_blind();
 extern void AddSC_boss_morogrim_tidewalker();
 extern void AddSC_instance_serpentshrine_cavern();
+extern void AddSC_mob_serpentshrine_cavern();
 
 //--Slave Pens
 extern void AddSC_boss_rokmar_the_crackler();
@@ -259,6 +260,7 @@ extern void AddSC_npc_henze_faulk();
 extern void AddSC_boss_gruul();
 extern void AddSC_boss_high_king_maulgar();
 extern void AddSC_instance_gruuls_lair();
+extern void AddSC_mob_gruuls_lair();
 
 //Hellfire Citadel
 //--Blood Furnace
@@ -692,6 +694,7 @@ void ScriptsInit()
     AddSC_boss_leotheras_the_blind();
     AddSC_boss_morogrim_tidewalker();
     AddSC_instance_serpentshrine_cavern();
+    AddSC_mob_serpentshrine_cavern();
 
     //--Slave Pens
     AddSC_boss_rokmar_the_crackler();
@@ -741,6 +744,7 @@ void ScriptsInit()
     AddSC_boss_gruul();
     AddSC_boss_high_king_maulgar();
     AddSC_instance_gruuls_lair();
+    AddSC_mob_gruuls_lair();
 
     //Hellfire Citadel
     //--Blood Furnace

@@ -15,6 +15,8 @@
 */
 
 #include "../../../sc_defines.h"
+#include "../../../../../../game/Player.h"
+#include "../../../../../../game/Group.h"
 
 /* TODO
 
@@ -61,6 +63,15 @@ Sharkkis
 #define SOUND_SLAY2                11283
 #define SOUND_SLAY3                11284
 #define SOUND_DEATH                11285
+
+//entry and position for Seer Olum
+#define SEER_OLUM                  22820
+#define OLUM_X                     446.78f
+#define OLUM_Y                     -542.76f
+#define OLUM_Z                     -7.54773f
+#define OLUM_O                     0.401581f
+#define OLUM_QUEST                 10944
+#define OLUM_PRE_QUEST             10708
 
 //Fathom-Lord Karathress AI
 struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
@@ -177,13 +188,48 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit *victim)
+    void JustDied(Unit *killer)
     {
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
             pInstance->SetData("FathomLordKarathressEvent", 0);
+
+        //support for quest 10944
+        if(killer && (killer->GetTypeId() == TYPEID_PLAYER))
+        {
+            //need to spawn if only pre quest done
+            bool needspawn = false;
+
+            //if killer don't need quest search for player in group who can take quest
+            if(((Player*)killer)->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE && ((Player*)killer)->GetQuestRewardStatus(OLUM_PRE_QUEST))
+            {
+                needspawn = true;
+            }
+            else
+            {
+                Group *KillerGroup = ((Player*)killer)->GetGroup();
+
+                if(KillerGroup)
+                {
+                    Player *GroupMember;
+                    const Group::MemberSlotList members = KillerGroup->GetMemberSlots();
+                    for(Group::member_citerator itr = members.begin(); itr!= members.end(); itr ++)
+                    {
+                        GroupMember = (Player*)(Unit::GetUnit((*m_creature),itr->guid));
+
+                        if(GroupMember && GroupMember->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE && GroupMember->GetQuestRewardStatus(OLUM_PRE_QUEST) && m_creature->IsWithinLOSInMap(GroupMember))
+                        {
+                            needspawn = true;
+                            break; //stop itteration
+                        }
+                    }
+                }
+            }
+            if(needspawn)
+                m_creature->SummonCreature(SEER_OLUM, OLUM_X, OLUM_Y, OLUM_Z, OLUM_O, TEMPSUMMON_TIMED_DESPAWN, 180000);
+        }
     }
 
     void AttackStart(Unit *who)
