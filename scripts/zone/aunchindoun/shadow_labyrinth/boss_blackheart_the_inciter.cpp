@@ -17,9 +17,11 @@
 #include "../../../sc_defines.h"
 #include "../../../creature/simple_ai.h"
 
-/* TODO
- - Incite Chaos: requires mind control core support.
- */
+/* ScriptData
+SDName: Boss_Blackheart_the_Inciter
+SD%Complete: 75
+SDComment: Incite Chaos NYI since core lacks Mind Control support
+EndScriptData */
 
 //#define SPELL_INCITE_CHAOS    33684
 #define SPELL_CHARGE          24408

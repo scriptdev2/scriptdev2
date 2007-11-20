@@ -15,6 +15,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: GO_teleporter
+SD%Complete: 0
+SDComment: Unsure what this is used for
+EndScriptData */
+
 
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"

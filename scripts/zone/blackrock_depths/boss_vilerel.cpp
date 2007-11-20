@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Vilerel
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
@@ -23,10 +29,6 @@
 #define SPELL_HEAL                15586 
 #define SPELL_PRAYEROFHEALING                15585            
 #define SPELL_SHIELD                10901
-
-
-
-
 
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 {

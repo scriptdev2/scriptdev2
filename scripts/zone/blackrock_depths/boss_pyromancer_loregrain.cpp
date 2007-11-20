@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Pyromancer_Loregrain
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
@@ -22,9 +28,6 @@
 #define SPELL_MOLTENBLAST            15095
 #define SPELL_FIREWARD               15041
 #define SPELL_SEARINGTOTEM               10438
-
-
-
 
 struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
 {

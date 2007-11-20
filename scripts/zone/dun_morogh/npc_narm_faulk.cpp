@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: NPC_Narm_Faulk
+SD%Complete: 50
+SDComment: Core keeps breaking support for this quest
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 

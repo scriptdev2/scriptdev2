@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Moroes
+SD%Complete: 0
+SDComment: Place Holder
+EndScriptData */
+
 /*-- Moroes
 Aggro 
 9211 Hmm, unannounced visitors? Preparations must be made.

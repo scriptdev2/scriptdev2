@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Sulfuron_Harbringer
+SD%Complete: 80
+SDComment: Adds NYI
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 

@@ -14,6 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Guard_AI
+SD%Complete: 100
+SDComment: Base Class for Guard AI
+EndScriptData */
 
 #include "guard_ai.h"
 #include "../../../../game/TargetedMovementGenerator.h"

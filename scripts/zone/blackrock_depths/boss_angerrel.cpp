@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Angerrel
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
@@ -21,8 +27,6 @@
 #define SPELL_SUNDERARMOR                24317                   
 #define SPELL_SHIELDBLOCK            12169
 #define SPELL_STRIKE               15580
-
-
 
 
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI

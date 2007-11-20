@@ -14,6 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Kelidan_The_Breaker
+SD%Complete: 60
+SDComment: 
+EndScriptData */
 
 #include "../../../sc_defines.h"
 

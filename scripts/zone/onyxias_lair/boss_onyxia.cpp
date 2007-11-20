@@ -14,6 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Onyxia
+SD%Complete: 50
+SDComment: Phase 2 has many errors. Recommend Rewrite of entire script.
+EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/TargetedMovementGenerator.h"

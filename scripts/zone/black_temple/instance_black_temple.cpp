@@ -13,7 +13,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
- 
+
+/* ScriptData
+SDName: Instance_Black_Temple
+SD%Complete: 0
+SDComment: VERIFY SCRIPT
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define ENCOUNTERS     8

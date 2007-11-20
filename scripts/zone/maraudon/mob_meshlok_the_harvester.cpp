@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Mob_Meshlok_The_Harvester
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
+
 #include "../../sc_defines.h"
 
 #define SPELL_WARSTOMP             21080        

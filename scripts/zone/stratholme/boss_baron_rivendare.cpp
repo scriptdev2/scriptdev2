@@ -14,10 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_baron_rivendare
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-// http://www.mangosproject.org/forum/index.php?showtopic=10314
 
 #define SAY_0    "Intruders! More pawns of the Argent Dawn, no doubt. I already count one of their number among my prisoners. Withdraw from my domain before she is executed!"
 #define SAY_1    "You're still here? Your foolishness is amusing! The Argent Dawn wench needn't suffer in vain. Leave at once and she shall be spared!"

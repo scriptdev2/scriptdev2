@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: mob_defias
+SD%Complete: 90
+SDComment: No SQL queries to use this script
+EndScriptData */
+
 //*** Generic Defias script ***
 
 #include "../sc_defines.h"

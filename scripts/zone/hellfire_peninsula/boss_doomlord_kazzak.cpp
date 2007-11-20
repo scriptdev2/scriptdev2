@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Doomlord_Kazzak
+SD%Complete: 70
+SDComment: Using incorrect spell for Mark of Kazzak
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_SHADOWVOLLEY                32963            

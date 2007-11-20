@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Supremus
+SD%Complete: 90
+SDComment: Using incorrect summon ids that are not official creature ids
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 

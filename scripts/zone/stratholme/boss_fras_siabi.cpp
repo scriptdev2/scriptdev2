@@ -14,11 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_fras_siabi
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-
-//Status.: send to SVN
 
 #define SPELL_SMOKEBOMB    7964
 #define SPELL_DAZED    1604

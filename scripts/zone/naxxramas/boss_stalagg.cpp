@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Stalagg
+SD%Complete: 0
+SDComment: Merge with Thaddius
+EndScriptData */
+
 //Stalagg
 //8864 aggro - Stalagg crush you!
 //8866 slay - Stalagg Kill!

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_kri
+SD%Complete: 100
+SDComment: Loot and creatures not linked
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../creature/simple_ai.h"
 

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Moira_Bronzbeard
+SD%Complete: 90
+SDComment: Healing of Emperor NYI
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_HEAL       10917
@@ -22,10 +28,6 @@
 #define SPELL_MINDBLAST       10947
 #define SPELL_SHADOWWORDPAIN       10894
 #define SPELL_SMITE       10934
-
-
-
-
 
 struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 {

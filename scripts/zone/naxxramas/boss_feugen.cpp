@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Feugen
+SD%Complete: 0
+SDComment: Merge with Thaddius
+EndScriptData */
+
 //Feugen
 //8801 aggro Feed you to master!
 //8804 slay Feugen make master happy!

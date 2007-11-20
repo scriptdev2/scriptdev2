@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Heigan
+SD%Complete: 0
+SDComment: Place Holder
+EndScriptData */
+
 //Lotheb or Heigan?
 //8825 aggro1 - You are mine now!
 //8826 aggro2 - I see you!

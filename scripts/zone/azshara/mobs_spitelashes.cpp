@@ -13,10 +13,16 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+/* ScriptData
+SDName: Mob_Spitelashes
+SD%Complete: 100
+SDComment: For quest 9364
+EndScriptData */
  
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
- 
+
 struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {
     uint32 morphtimer;

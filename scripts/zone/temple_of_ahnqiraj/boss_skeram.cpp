@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: boss_skeram
+SD%Complete: 0
+SDComment: place holder
+EndScriptData */
+
 //Skeram - no text only sound
 //8615 Are you so eager to die? I would be happy to accomodate you.
 //8616 Cower mortals! The age of darkness is at hand.

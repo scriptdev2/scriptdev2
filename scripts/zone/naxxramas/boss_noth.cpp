@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Noth
+SD%Complete: 40
+SDComment: Missing Balcony stage
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SAY_AGGRO1 "Glory to the master!"

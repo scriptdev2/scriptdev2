@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Mother_Shahraz
+SD%Complete: 80
+SDComment: Prismatic shields randomly applied instead of correct "based on damage taken"
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/TargetedMovementGenerator.h"

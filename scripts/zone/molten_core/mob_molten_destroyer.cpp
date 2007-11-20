@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Mobs_MoltenCore
+SD%Complete: 50
+SDComment: MERGE SCRIPTS
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_TRAMPLE                15550    

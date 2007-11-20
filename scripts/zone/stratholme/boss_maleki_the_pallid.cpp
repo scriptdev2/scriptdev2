@@ -14,11 +14,16 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_maleki_the_pallid
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
 
-//Status: ready for SVN
 
 #define SPELL_FROSTNOVA    22645
 #define SPELL_FROSTBOLT    17503

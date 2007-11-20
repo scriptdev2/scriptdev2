@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Scarlet_Commander_Mograine
+SD%Complete: 100
+SDComment: Missing revive
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_DIVINESHIELD2         1020

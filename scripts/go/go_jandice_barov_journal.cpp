@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: GO_Jandice_Barov_Journal
+SD%Complete: 100
+SDComment: Teaches spell 26089
+EndScriptData */
+
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
 

@@ -14,11 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_crimson_hammersmith
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-
-// Status: send to SVN
 
 // Unique NPC, only summoned after attempt to open item "Blacksmithing Plans" (found...where...?), not a regular mob always around in instance
 

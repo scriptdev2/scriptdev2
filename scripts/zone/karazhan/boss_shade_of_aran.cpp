@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Shade_of_Aran
+SD%Complete: 95
+SDComment: Flame wreath missing cast animation, mods won't triggere. Drinking may cause client crash (core related)
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../creature/simple_ai.h"
 

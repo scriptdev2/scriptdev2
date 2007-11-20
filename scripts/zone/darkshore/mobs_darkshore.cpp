@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Mobs_Darkshore
+SD%Complete: 100
+SDComment: All nomal mobs in darkshore
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 /*######

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Bloodboil
+SD%Complete: 80
+SDComment: Bloodboil not working correctly
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../shared/WorldPacket.h"
 #include "../../../../../game/TargetedMovementGenerator.h"

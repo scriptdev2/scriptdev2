@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Azuregos
+SD%Complete: 90
+SDComment: Teleport not included, spell reflect not effecting dots (Core problem)
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_MARKOFFROST                23183            

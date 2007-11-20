@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Instance_Shadow_Labyrinth
+SD%Complete: 99
+SDComment: VERIFY SCRIPT
+EndScriptData */
+
 #include "../../../sc_defines.h"
 #include "../../../../../../game/GameObject.h"
 

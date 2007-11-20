@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: GO_orb_of_command
+SD%Complete: 100
+SDComment: Teleports players to BWL
+EndScriptData */
+
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
 

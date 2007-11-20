@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_High_King_Maulgar
+SD%Complete: 80
+SDComment: Verify that the script is working properly
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SOUND_AGGRO              11367

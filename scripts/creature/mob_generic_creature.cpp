@@ -14,9 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Generic_Creature
+SD%Complete: 80
+SDComment: Should be replaced with core based AI
+EndScriptData */
 
 #include "../sc_defines.h"
-
 
 
 #define GENERIC_CREATURE_COOLDOWN   5000

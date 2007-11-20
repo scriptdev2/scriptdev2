@@ -14,10 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Lord_Roccor
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
-//       ****  made by NuRRi ****
 
 #define SPELL_FLAMESHOCK                10448            
 #define SPELL_EARTHSHOCK            10414

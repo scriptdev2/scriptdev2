@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Vaelastrasz
+SD%Complete: 75
+SDComment: Burning Adrenaline not correctly implemented in core
+EndScriptData */
+
 //*** NEEDS ADDITIOINAL REVIEW ***
 
 #include "../../sc_defines.h"

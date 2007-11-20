@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: boss_veklor
+SD%Complete: 0
+SDComment: place holder
+EndScriptData */
+
 //8657 - Aggro - To Late
 //8658 - Kill - You will not
 //8659 - Death

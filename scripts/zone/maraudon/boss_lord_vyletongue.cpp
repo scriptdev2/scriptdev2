@@ -14,6 +14,14 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+
+/* ScriptData
+SDName: Boss_Lord_Vyletogue
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
+
 #include "../../sc_defines.h"
 
 #define SPELL_PUTRIDBREATH             21080        

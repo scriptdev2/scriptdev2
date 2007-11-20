@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Patchwerk
+SD%Complete: 100
+SDComment: Some issues with hateful strike inturrupting the melee swing timer. Probably core issue.
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SAY_AGGRO1      "Patchwerk want to play!"

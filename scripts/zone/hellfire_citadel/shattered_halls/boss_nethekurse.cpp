@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Nethekurse
+SD%Complete: 90
+SDComment: Using wrong death coil spell
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SPELL_DEATH_COIL    30500 // fear you only 2 meters in the air (core bug but better than fear under the map)

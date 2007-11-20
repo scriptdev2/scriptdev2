@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_NexusPrince_Shaffar
+SD%Complete: 50
+SDComment: Missing some spells
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SPELL_ETHEREAL_BEACON           32371 // Summon 18431

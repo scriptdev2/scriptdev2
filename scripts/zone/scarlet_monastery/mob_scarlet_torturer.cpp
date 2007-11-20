@@ -14,8 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
+/* ScriptData
+SDName: Mob_Scarlet_Torturer
+SD%Complete: 100
+SDComment: 
+EndScriptData */
 
+#include "../../sc_defines.h"
 
 
 #define SPELL_IMMOLATE           37668

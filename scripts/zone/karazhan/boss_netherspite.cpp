@@ -1,4 +1,10 @@
 
+/* ScriptData
+SDName: Boss_Netherspite
+SD%Complete: 0
+SDComment: Place Holder
+EndScriptData */
+
 //Casts
 #define SPELL_NETHERBURN_AURA       30522
 #define SPELL_VOIDZONE              37014 //Probably won't work

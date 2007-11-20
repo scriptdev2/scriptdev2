@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Npc_Victor_Nefarius
+SD%Complete: 75
+SDComment: Missing some text, Vael beginning event, and spawns Nef in wrong place
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"

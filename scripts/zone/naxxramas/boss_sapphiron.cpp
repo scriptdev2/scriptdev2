@@ -1,4 +1,10 @@
 
+/* ScriptData
+SDName: Boss_Sapphiron
+SD%Complete: 0
+SDComment: Place Holder
+EndScriptData */
+
 #define SPELL_BESERK        26662
 
 #define SPELL_ICEBOLT       28522

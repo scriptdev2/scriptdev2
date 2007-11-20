@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Magtheridon
+SD%Complete: 60
+SDComment: In Development
+EndScriptData */
+
 #include "../../../sc_defines.h"
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Map.h"

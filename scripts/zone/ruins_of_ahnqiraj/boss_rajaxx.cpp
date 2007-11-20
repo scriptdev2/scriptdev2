@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Rajaxx
+SD%Complete: 0
+SDComment: Place Holder
+EndScriptData */
+
 //Rajaxx
 //8603 Attack and make them pay dearly!
 //8604 Breath your last!

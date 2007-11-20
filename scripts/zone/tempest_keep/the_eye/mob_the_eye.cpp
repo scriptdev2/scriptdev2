@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: mob_the_eye
+SD%Complete: 100
+SDComment: Trash mobs for TK: The Eye
+EndScriptData */
+
 #include "../../../sc_defines.h"
 #include "../../../creature/simple_ai.h"
 

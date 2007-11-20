@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Curator
+SD%Complete: 100
+SDComment: Evocation may cause client crash (Core related)
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SAY_AGGRO           "The Menagerie is for guests only."

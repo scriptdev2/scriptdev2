@@ -14,11 +14,16 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: boss_heartsinger_forresten
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
 
-//Satatus: send to SVN
 
 #define SPELL_SHOOT    20463
 #define SPELL_MULTISHOT    21390

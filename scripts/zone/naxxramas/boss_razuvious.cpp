@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Razuvious
+SD%Complete: 50
+SDComment: Missing adds and event is impossible without Mind Control
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 //Razuvious - NO TEXT sound only

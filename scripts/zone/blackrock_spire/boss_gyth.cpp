@@ -14,13 +14,17 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Gyth
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_CORROSIVEACID      20667
 #define SPELL_FREEZE             18763
 #define SPELL_FLAMEBREATH        20712
-
-
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 {

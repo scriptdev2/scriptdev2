@@ -14,6 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Npc_darrowshire_spirit
+SD%Complete: 100
+SDComment: For quest 5211
+EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"

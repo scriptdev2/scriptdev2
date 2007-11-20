@@ -14,8 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
+/* ScriptData
+SDName: Boss_Magmadar
+SD%Complete: 75
+SDComment: Conflag on ground nyi, fear causes issues without VMAPs
+EndScriptData */
 
+#include "../../sc_defines.h"
 
 
 #define SPELL_FRENZY                28371

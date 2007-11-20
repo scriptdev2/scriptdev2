@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Mob_Phalanx
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 // **** This script is still under Developement ****
@@ -22,8 +28,6 @@
 #define SPELL_THUNDERCLAP                8732              
 #define SPELL_FIREBALLVOLLEY                22425
 #define SPELL_MIGHTYBLOW                14099
-
-
 
 
 struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI

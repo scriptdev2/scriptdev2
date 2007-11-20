@@ -14,8 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
+/* ScriptData
+SDName: Boss_Lucifron
+SD%Complete: 100
+SDComment: 
+EndScriptData */
 
+#include "../../sc_defines.h"
 
 
 #define SPELL_IMPENDINGDOOM 19702

@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Ossirian
+SD%Complete: 0
+SDComment: Place holder
+EndScriptData */
+
 //Ossirian
 //8593 I am rejuvinated!
 //8594 I have... failed

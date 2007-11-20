@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Hydross_The_Unstable
+SD%Complete: 90
+SDComment: Needs some corrections to switch radius and location
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SWITCH_RADIUS             15

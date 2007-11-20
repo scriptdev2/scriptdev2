@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Warlord_Kalithres
+SD%Complete: 50
+SDComment: Missing connection to containers, making fight impossible
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SPELL_SPELL_REFLECTION  23920

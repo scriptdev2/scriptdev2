@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Ysondre
+SD%Complete: 90
+SDComment: Mark of Nature & Teleport missing
+EndScriptData */
+
 #include "../sc_defines.h"
 
 #define SPELL_SLEEP                24777

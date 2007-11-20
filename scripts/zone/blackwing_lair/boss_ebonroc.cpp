@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Ebonroc
+SD%Complete: 50
+SDComment: Shadow of Ebonroc needs core support
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_SHADOWFLAME           22539

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Mob_Kilrek
+SD%Complete: 90
+SDComment: Please merge with Illhoof script
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_BROKEN_PACT           30065 // All damage taken increased by 25%.

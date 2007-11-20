@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: NPC_Not_Selectable
+SD%Complete: 100
+SDComment: No Longer Required
+EndScriptData */
+
+
 #include "../sc_defines.h"
 
 struct MANGOS_DLL_DECL not_selectableAI : public ScriptedAI

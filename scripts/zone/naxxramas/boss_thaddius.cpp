@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Thaddius
+SD%Complete: 0
+SDComment: Merge Feugen & Stalagg with this script
+EndScriptData */
+
 //Thaddus
 //8873 Lamnt01 - Pleeease!
 //8874 Lamnt02 - Stop, make it stop!

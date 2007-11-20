@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Emeriss
+SD%Complete: 90
+SDComment: Teleport function & Mark of Nature missing
+EndScriptData */
+
 #include "../sc_defines.h"
 
 

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Guards.cpp
+SD%Complete: 100
+SDComment: All Guard data
+EndScriptData */
+
 /********************* CONTENT *************************
  * guard_bluffwatcher
  * guard_contested

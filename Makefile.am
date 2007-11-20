@@ -336,7 +336,7 @@ scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
-scripts/zone/zangramarsh/npcs_zangarmarsh.cpp \
+scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
 scripts/zone/zulgurub/boss_grilek.cpp \

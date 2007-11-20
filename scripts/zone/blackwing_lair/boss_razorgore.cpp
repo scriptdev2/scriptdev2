@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Razorgore
+SD%Complete: 50
+SDComment: Phase 1 NYI
+EndScriptData */
+
 //*** NEEDS ADDITIOINAL REVIEW ***
 
 //Razorgore Phase 2 Script

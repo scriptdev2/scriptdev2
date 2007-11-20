@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_The_Maker
+SD%Complete: 80
+SDComment: Mind control no support
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SPELL_ACID_SPRAY        38153 // heroic 38973 ??? 38153

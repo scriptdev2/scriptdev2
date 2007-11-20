@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: Boss_Ayamiss
+SD%Complete: 50
+SDComment: VERIFY SCRIPT
+EndScriptData */
+
 /*
 To do:
 make him fly from 70-100%

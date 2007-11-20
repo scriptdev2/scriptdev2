@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Npc_Lokhtos_Darkbargainer
+SD%Complete: 100
+SDComment: Gives Thorium Brotherhood Contract
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
@@ -30,7 +36,7 @@ bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
             player->GetBankItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT) < 1 &&
             player->HasItemCount(ITEM_SULFURON_INGOT, 1))
     {
-        player->ADD_GOSSIP_ITEM(7, "Get Thorium Brotherhood Contract Contract",
+        player->ADD_GOSSIP_ITEM(7, "Get Thorium Brotherhood Contract",
             GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         player->SEND_GOSSIP_MENU(384,_Creature->GetGUID());
         return true;

@@ -17,7 +17,12 @@
 #include "../../../sc_defines.h"
 
 
-//Missing Sound IDs
+/* ScriptData
+SDName: Boss_Watchkeeper_Gargolmar
+SD%Complete: 70
+SDComment: Missing adds to heal him
+EndScriptData */
+
 //Adds NYI
 
 #define SPELL_MORTAL_WOUND        30641

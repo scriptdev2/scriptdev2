@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: boss_veknilash
+SD%Complete: 0
+SDComment: place holder
+EndScriptData */
+
 //8660 - Death - Feel
 //8661 - Aggro - Let none
 //8661 - Kill - your fate

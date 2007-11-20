@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Item_Nether_Wraith_Beacon
+SD%Complete: 100
+SDComment: Summons creatures
+EndScriptData */
+
 
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"

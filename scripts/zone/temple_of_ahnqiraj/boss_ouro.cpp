@@ -1,3 +1,9 @@
+/* ScriptData
+SDName: boss_ouro
+SD%Complete: 100
+SDComment: place holder
+EndScriptData */
+
 #define SPELL_SWEEP             26103
 #define SPELL_SANDBLAST         26102
 #define SPELL_GROUND_RUPTURE    26100

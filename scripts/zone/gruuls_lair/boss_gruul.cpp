@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Gruul
+SD%Complete: 25
+SDComment: Ground Slam seriously messed up due to core problem
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_GROWTH            36300

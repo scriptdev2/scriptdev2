@@ -14,6 +14,11 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: mob_kobold
+SD%Complete: 10
+SDComment: No longer in Development
+EndScriptData */
 
 #include "../sc_defines.h"
 #include "../../../../game/TargetedMovementGenerator.h"

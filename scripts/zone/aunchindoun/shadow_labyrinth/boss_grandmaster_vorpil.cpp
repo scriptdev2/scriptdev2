@@ -16,12 +16,12 @@
 
 #include "../../../sc_defines.h"
 
-/* TODO
+/* ScriptData
+SDName: Boss_Grandmaster_Vorpil
+SD%Complete: 50
+SDComment: Missing Void Rifts, Void Traveler, and Draw Shadows
+EndScriptData */
 
- - Void Rifts & Void Traveler
- - Draw Shadows
-
-*/
 
 #define SPELL_DRAW_SHADOW_VISUAL       33563 // right but only animation works / too complex, it's useless implement it
 #define SPELL_SHADOW_BOLT_VOLLEY       32963

@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_High_Inquistor_Whitmane
+SD%Complete: 50
+SDComment: Missing connection with commander mograine
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 
