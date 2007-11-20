@@ -153,6 +153,7 @@ scripts/zone/coilfang_resevoir/serpent_shrine/mob_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_hydromancer_thespia.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
+scripts/zone/coilfang_resevoir/steam_vault/instance_steam_vault.cpp \
 scripts/zone/coilfang_resevoir/underbog/boss_ghazan.cpp \
 scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \

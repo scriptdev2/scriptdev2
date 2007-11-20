@@ -16,51 +16,49 @@
 
 #include "../../../sc_defines.h"
 
-//Spells
+#define HOLY_LIGHT          29562
+#define CLEANSE             39078
+#define HAMMER_OF_JUSTICE   13005
+#define HOLY_SHIELD         31904
+#define DEVOTION_AURA       41452
+#define CONSECRATION        41541
 
-#define     HOLY_LIGHT                29562
-#define     CLEANSE                   39078
-#define     HAMMER_OF_JUSTICE         13005
-#define     HOLY_SHIELD               31904
-#define     DEVOTION_AURA             41452
-#define     CONSECRATION              41541
+#define SAY_ENTER           "Thrall! You didn't really think you would escape did you? You and your allies shall answer to Blackmoore - after I've had my fun!"
+#define SAY_AGGRO1          "You're a slave. That's all you'll ever be.'" 
+#define SAY_AGGRO2          "I don't know what Blackmoore sees in you. For my money, you're just another ignorant savage!" 
+#define SAY_SLAY1           "Thrall will never be free!" 
+#define SAY_SLAY2           "Did you really think you would leave here alive?"
+#define SAY_DEATH           "Guards! Urgh..Guards..!'"
 
-//Yells & Sounds
-#define  SAY_ENTER           "Thrall! You didn't really think you would escape did you? You and your allies shall answer to Blackmoore - after I've had my fun!"
-#define  SOUND_ENTER         10406
-
-#define  SAY_AGGRO1          "You're a slave. That's all you'll ever be.'" 
-#define  SOUND_AGGRO1        10407
-#define  SAY_AGGRO2          "I don't know what Blackmoore sees in you. For my money, you're just another ignorant savage!" 
-#define  SOUND_AGGRO2        10408
-
-#define  SAY_SLAY1           "Thrall will never be free!" 
-#define  SOUND_SLAY1         10409
-#define  SAY_SLAY2           "Did you really think you would leave here alive?"
-#define  SOUND_SLAY2         10410
-
-#define  SAY_DIE             "Guards! Urgh..Guards..!'"
-#define  SOUND_DIE           10411
+#define SOUND_ENTER         10406
+#define SOUND_AGGRO1        10407
+#define SOUND_AGGRO2        10408
+#define SOUND_SLAY1         10409
+#define SOUND_SLAY2         10410
+#define SOUND_DEATH         10411
 
 struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 {
     boss_captain_skarlocAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
     uint32 Holy_Light_Timer;
     uint32 Cleanse_Timer;   
-    uint32 Hammer_of_Justice_Timer;
-    uint32 Holy_Shield_Timer;
-    uint32 Devotion_Aura_Timer;
+    uint32 HammerOfJustice_Timer;
+    uint32 HolyShield_Timer;
+    uint32 DevotionAura_Timer;
     uint32 Consecration_Timer;
+
     bool InCombat;
 
     void EnterEvadeMode()
     { 
         Holy_Light_Timer = 30000;
         Cleanse_Timer = 10000;
-        Hammer_of_Justice_Timer = 60000;
-        Holy_Shield_Timer = 240000;
-        Devotion_Aura_Timer = 60000;
+        HammerOfJustice_Timer = 60000;
+        HolyShield_Timer = 240000;
+        DevotionAura_Timer = 60000;
         Consecration_Timer = 8000;
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -89,8 +87,7 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
             return;
 
         if (who->isTargetableForAttack() && who != m_creature)
-        {  
-
+        {
             DoStartMeleeAttack(who);
 
             //Boss Aggro Yells
@@ -129,8 +126,8 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DIE);
+        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -162,7 +159,7 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
                         break;
                     }
                 }
-            }    
+            }
         }        
     }
 
@@ -172,52 +169,49 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-            //Holy_Light
-            if (Holy_Light_Timer < diff)
-            {
-                DoCast(m_creature,HOLY_LIGHT);
-                Holy_Light_Timer = 30000;
-            }else Holy_Light_Timer -= diff;
+        //Holy_Light
+        if (Holy_Light_Timer < diff)
+        {
+            DoCast(m_creature, HOLY_LIGHT);
+            Holy_Light_Timer = 30000;
+        }else Holy_Light_Timer -= diff;
 
-            //Cleanse
-            if(Cleanse_Timer  < diff)
-            {
-                DoCast(m_creature, CLEANSE);    
-                Cleanse_Timer = 10000 ;
-            } else Cleanse_Timer -= diff;
+        //Cleanse
+        if(Cleanse_Timer  < diff)
+        {
+            DoCast(m_creature, CLEANSE);    
+            Cleanse_Timer = 10000 ;
+        } else Cleanse_Timer -= diff;
 
-            //Hammer of Justice
-            if (Hammer_of_Justice_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),HAMMER_OF_JUSTICE);
-                Hammer_of_Justice_Timer = 60000;
-            }else Hammer_of_Justice_Timer -= diff;
+        //Hammer of Justice
+        if (HammerOfJustice_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), HAMMER_OF_JUSTICE);
+            HammerOfJustice_Timer = 60000;
+        }else HammerOfJustice_Timer -= diff;
 
-            //Holy Shield           
-            if (Holy_Shield_Timer < diff)
-            {
-                DoCast(m_creature,HOLY_SHIELD);
-                Holy_Shield_Timer = 240000;
-            }else Holy_Shield_Timer -= diff;
+        //Holy Shield           
+        if (HolyShield_Timer < diff)
+        {
+            DoCast(m_creature,HOLY_SHIELD);
+            HolyShield_Timer = 240000;
+        }else HolyShield_Timer -= diff;
 
-            //Devotion_Aura
-            if (Devotion_Aura_Timer < diff)
-            {
-                DoCast(m_creature,DEVOTION_AURA);
-                Devotion_Aura_Timer = 60000;
-            }else Devotion_Aura_Timer -= diff;
+        //Devotion_Aura
+        if (DevotionAura_Timer < diff)
+        {
+            DoCast(m_creature,DEVOTION_AURA);
+            DevotionAura_Timer = 60000;
+        }else DevotionAura_Timer -= diff;
 
+        //Consecration
+        if (Consecration_Timer < diff)
+        {
+            //DoCast(m_creature->getVictim(),CONSECRATION);
+            Consecration_Timer = 8000;
+        }else Consecration_Timer -= diff;
 
-            //Consecration
-            if (Consecration_Timer < diff)
-            {
-                //DoCast(m_creature->getVictim(),CONSECRATION);
-                Consecration_Timer = 8000;
-            }else Consecration_Timer -= diff;
-
-
-            DoMeleeAttackIfReady();
-
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -225,7 +219,6 @@ CreatureAI* GetAI_boss_captain_skarloc(Creature *_Creature)
 {
     return new boss_captain_skarlocAI (_Creature);
 }
-
 
 void AddSC_boss_captain_skarloc()
 {

@@ -296,10 +296,15 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         //CataclysmicBolt_Timer
         if(CataclysmicBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_CATACLYSMIC_BOLT);
+            //select a random unit other than the main tank
+            Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
-            //will damage one single target for 50% of their total HP - MaNGOS doesn't support yet this
-            m_creature->DealDamage(m_creature->getVictim(), (m_creature->GetMaxHealth()/2), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_SHADOW, NULL, 0, false);
+            //if there aren't other units, cast on the tank
+            if(!target)
+                target = m_creature->getVictim();
+
+            int32 dmg = target->GetMaxHealth() / 2;
+            m_creature->CastCustomSpell(target, SPELL_CATACLYSMIC_BOLT, &dmg, NULL, NULL, false, NULL, NULL, m_creature->GetGUID());
 
             CataclysmicBolt_Timer = 10000;
         }else CataclysmicBolt_Timer -= diff;

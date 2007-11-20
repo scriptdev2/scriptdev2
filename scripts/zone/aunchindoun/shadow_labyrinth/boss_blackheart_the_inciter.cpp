@@ -53,12 +53,14 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 
     uint32 Charge_Timer;
     uint32 Knockback_Timer;
+
     bool InCombat;
 
     void EnterEvadeMode()
     {
         Charge_Timer = 20000;
         Knockback_Timer = 15000;
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -111,10 +113,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-        {
-            pInstance->SetData("BlackheartTheInciterEvent", 0);
-            pInstance->SetData("BlackheartTheInciter_Death", 0);
-        }
+            pInstance->SetData("BlackheartTheInciterEvent", 2);
     }
 
     void StartEvent()

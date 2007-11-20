@@ -138,7 +138,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* Kolkar Stormer, Razormane Geomancer, Razormane Seer, Razormane Mystic, Razormane Hunter, Razormane Warfrenzy, Razormane Water Seeker, Silithid Creeper, Elder Mystic Razorsnout, Horde Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3273, 3269, 3458, 3271, 3265, 3459, 3267, 3250, 3270, 9458);
 /* Beaten corpse */
-UPDATE creature_template SET `ScriptName` = 'npc_beaten_corpse' WHERE `entry` = 10668;
+UPDATE `creature_template` SET `ScriptName` = 'npc_beaten_corpse' WHERE `entry` = 10668;
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script` = 'instance_black_temple' WHERE `map` = 564;
@@ -241,8 +241,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map` = 534;
 
 /* OLD HILLSBRAD */
-UPDATE `creature_template` SET `ScriptName` = 'mob_lieutenant_drake' WHERE `entry` = 17848;
-UPDATE `creature_template` SET `ScriptName` = 'mob_epoch_hunter' WHERE `entry` = 18096;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lieutenant_drake' WHERE `entry` = 17848;
+UPDATE `creature_template` SET `ScriptName` = 'boss_epoch_hunter' WHERE `entry` = 18096;
 UPDATE `creature_template` SET `ScriptName` = 'boss_captain_skarloc' WHERE `entry` = 17862;
 
 /* THE DARK PORTAL */
@@ -257,7 +257,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_temporus' WHERE `entry` = 17
 /*  */
 
 /* THE SLAVE PENS */
-UPDATE creature_template SET `ScriptName` = 'boss_rokmar_the_crackler' WHERE `entry` = 17991;
+UPDATE `creature_template` SET `ScriptName` = 'boss_rokmar_the_crackler' WHERE `entry` = 17991;
 
 /* THE UNDERBOG */
 UPDATE `creature_template` SET `ScriptName` = 'boss_ghazan' WHERE `entry` = 18105;
@@ -265,7 +265,8 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_underbog_mushroom' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'boss_hungarfen' WHERE `entry` = 17770;
 
 /* THE STEAMVAULT */
-UPDATE creature_template SET `ScriptName` = 'boss_warlord_kalithresh' WHERE `entry` = 17798;
+UPDATE `instance_template` SET `script` = 'instance_steam_vault' WHERE `map` = 545;
+UPDATE `creature_template` SET `ScriptName` = 'boss_warlord_kalithresh' WHERE `entry` = 17798;
 UPDATE `creature_template` SET `ScriptName` = 'boss_hydromancer_thespia' WHERE `entry` = 17797;
 UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_waterelemental' WHERE `entry` = 17917;
 
@@ -325,7 +326,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* Mirefin Murloc, Darkmist Spider, Withervine Creeper, Darkfang Creeper, Darkfang Spider, Giant Darkfang Spider, Archmage Tervosh */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4359, 4376, 4382, 4412, 4413, 4415, 4967);
 /* Lady Jaina Proudmoore */
-UPDATE creature_template SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
+UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
@@ -608,8 +609,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'neltharaku' WHERE `entry` = 21657;
 
 /* SHATTRATH */
-UPDATE creature_template SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23483;
-UPDATE creature_template SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23484;
+UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23483;
+UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23484;
 
 /* SILITHUS */
 /* Orgrimmar Legion Axe Thrower, Stormwind Archmage */
@@ -785,7 +786,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_shadow_council_covert' WHERE
 
 
 /* THUNDER BLUFF */
-UPDATE creature_template SET ScriptName='npc_cairne_bloodhoof' WHERE entry=3057;
+UPDATE `creature_template` SET `ScriptName` = 'npc_cairne_bloodhoof' WHERE `entry` = 3057;
 
 /* TIRISFAL GLADES */
 /* Scarlet Neophyte, Rot Hide Gnoll, Young Night Web Spider, Night Web Spider, Vicious Night Web Spider */

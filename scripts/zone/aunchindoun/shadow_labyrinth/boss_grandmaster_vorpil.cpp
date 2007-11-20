@@ -59,12 +59,14 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     ScriptedInstance *pInstance;
 
     uint32 ShadowBoltVolley_Timer;
-    bool InCombat;
     bool Intro;
+
+    bool InCombat;
 
     void EnterEvadeMode()
     {
         ShadowBoltVolley_Timer = 15000;
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -112,10 +114,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-        {
-            pInstance->SetData("GrandmasterVorpilEvent", 0);
-            pInstance->SetData("GrandmasterVorpil_Death", 0);
-        }
+            pInstance->SetData("GrandmasterVorpilEvent", 2);
     }
 
     void StartEvent()

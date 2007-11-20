@@ -16,42 +16,51 @@
 
 #include "../../../sc_defines.h"
 
-#define SPELL_LIGHTNING_CLOUD        25033
+#define SPELL_LIGHTNING_CLOUD       25033
 #define SPELL_LUNG_BURST            31481 
-#define SPELL_ENVELOPING_WINDS        31718
-
+#define SPELL_ENVELOPING_WINDS      31718
 #define SPELL_FROST_BOLT_VOLLEY     36741
 
-#define SAY_AGGRO_1        "The depths will consume you!"
-#define SOUND_AGGRO_1    10361
-#define SAY_AGGRO_2        "Meet your doom, surface dwellers!"
-#define    SOUND_AGGRO_2    10362
-#define SAY_AGGRO_3        "You will drown in blood!"
-#define    SOUND_AGGRO_3    10363        
+#define SAY_AGGRO_1                 "The depths will consume you!"
+#define SAY_AGGRO_2                 "Meet your doom, surface dwellers!"
+#define SAY_AGGRO_3                 "You will drown in blood!"
+#define SAY_SLAY_1                  "To the depths of oblivion with you!"
+#define SAY_SLAY_2                  "For my lady and master!"
+#define SAY_SUMMON                  "Surge forth my pets!"
+#define SAY_DEAD                    "Our matron will be.. the end of.. you.."
 
-#define SAY_SLAY_1        "To the depths of oblivion with you!"
-#define SOUND_SLAY_1    10364    
-#define SAY_SLAY_2        "For my lady and master!"
-#define SOUND_SLAY_2    10365        
-
-#define SAY_SUMMON        "Surge forth my pets!"
-#define SOUND_SUMMON    10360
-
-#define SAY_DEAD        "Our matron will be.. the end of.. you.."
-#define SOUND_DEAD        10366
+#define SOUND_AGGRO_1               10361
+#define SOUND_AGGRO_2               10362
+#define SOUND_AGGRO_3               10363
+#define SOUND_SLAY_1                10364
+#define SOUND_SLAY_2                10365
+#define SOUND_SUMMON                10360
+#define SOUND_DEAD                  10366
 
 struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 {
-    boss_thespiaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    boss_thespiaAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
 
-    uint32 lightningcloud_timer;
-    uint32 lungburst_timer;
-    uint32 envelopingwinds_timer;
+    ScriptedInstance *pInstance;
+
+    uint32 LightningCloud_Timer;
+    uint32 LungBurst_Timer;
+    uint32 EnvelopingWinds_Timer;
 
     bool InCombat;
 
     void EnterEvadeMode()
-    {   
+    {
+        LightningCloud_Timer = 28000;
+        LungBurst_Timer = 7000;
+        EnvelopingWinds_Timer = 9000;
+
+        InCombat = false;
+
         m_creature->RemoveAllAuras(); 
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -70,17 +79,17 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
 
-        InCombat = false;
-
-        lightningcloud_timer = 28000;
-        lungburst_timer = 7000;
-        envelopingwinds_timer = 9000;
+        if(pInstance)
+            pInstance->SetData("HydromancerThespiaEvent", 0);
     }
 
     void JustDied(Unit* Killer)
     { 
         DoYell(SAY_DEAD, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEAD);
+
+        if(pInstance)
+            pInstance->SetData("HydromancerThespiaEvent", 2);
     }
 
     void KilledUnit(Unit* victim)
@@ -102,6 +111,32 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         }
     }
 
+    void StartEvent()
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+            break;
+
+        case 1:
+            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+            break; 
+
+        case 2:
+            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+            break;   
+        }
+
+        InCombat = true;
+
+        if(pInstance)
+            pInstance->SetData("HydromancerThespiaEvent", 1);
+    }
+
     void AttackStart(Unit *who)
     {
         if (!who)
@@ -110,28 +145,8 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-
             if (!InCombat)
-            {
-                switch(rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break; 
-
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;                    
-                }
-                InCombat = true;
-            }
+                StartEvent();
         }
     }
 
@@ -147,29 +162,10 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
+
                 DoStartMeleeAttack(who);
-
                 if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break; 
-
-                    case 2:
-                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;                    
-                    }
-                    InCombat = true;
-                }                
+                    StartEvent();            
             }
         }
     }  
@@ -180,32 +176,35 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget())
             return;
 
-        if (lightningcloud_timer < diff)
+        //LightningCloud_Timer
+        if (LightningCloud_Timer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoCast(target,SPELL_LIGHTNING_CLOUD);
-            lightningcloud_timer = 28000;
-        }else (lightningcloud_timer -=diff);
+            DoCast(target, SPELL_LIGHTNING_CLOUD);
+            LightningCloud_Timer = 28000;
+        }else (LightningCloud_Timer -=diff);
 
-        if (lungburst_timer < diff)
+        //LungBurst_Timer
+        if (LungBurst_Timer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoCast(target,SPELL_LUNG_BURST);
-            lungburst_timer = 10000+rand()%5000;
-        }else (lungburst_timer -=diff);
+            DoCast(target, SPELL_LUNG_BURST);
+            LungBurst_Timer = 10000+rand()%5000;
+        }else (LungBurst_Timer -=diff);
 
-        if (envelopingwinds_timer < diff)
+        //EnvelopingWinds_Timer
+        if (EnvelopingWinds_Timer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoCast(target,SPELL_ENVELOPING_WINDS);
-            envelopingwinds_timer = 10000+rand()%5000;
-        }else (envelopingwinds_timer -=diff);
+            DoCast(target, SPELL_ENVELOPING_WINDS);
+            EnvelopingWinds_Timer = 10000+rand()%5000;
+        }else (EnvelopingWinds_Timer -=diff);
 
         DoMeleeAttackIfReady();        
     }
@@ -215,16 +214,15 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
     mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
 
-    uint32 frostbolt_timer;
+    uint32 FrostBolt_Timer;
 
     void EnterEvadeMode()
-    {   
-        m_creature->RemoveAllAuras(); 
+    {
+        FrostBolt_Timer = 10000;
+        m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-
-        frostbolt_timer = 10000;        
     }
 
     void AttackStart(Unit *who)
@@ -239,7 +237,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who)
-    {  
+    {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -260,11 +258,11 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;    
 
-        if (frostbolt_timer < diff)
+        if (FrostBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_BOLT_VOLLEY);
-            frostbolt_timer = 10000+rand()%5000;
-        }else (frostbolt_timer -= diff);
+            FrostBolt_Timer = 10000+rand()%5000;
+        }else (FrostBolt_Timer -= diff);
 
         DoMeleeAttackIfReady();
     }
@@ -274,7 +272,6 @@ CreatureAI* GetAI_boss_thespiaAI(Creature *_Creature)
 {
     return new boss_thespiaAI (_Creature);
 }
-
 CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature *_Creature)
 {
     return new mob_coilfang_waterelementalAI (_Creature);

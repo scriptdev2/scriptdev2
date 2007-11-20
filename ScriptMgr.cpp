@@ -218,6 +218,7 @@ extern void AddSC_boss_rokmar_the_crackler();
 //--Steam Vault
 extern void AddSC_boss_warlord_kalithresh();
 extern void AddSC_boss_hydromancer_thespia();
+extern void AddSC_instance_steam_vault();
 
 //--Underbog
 extern void AddSC_boss_ghazan();
@@ -702,6 +703,7 @@ void ScriptsInit()
     //--Steam Vault
     AddSC_boss_warlord_kalithresh();
     AddSC_boss_hydromancer_thespia();
+    AddSC_instance_steam_vault();
 
     //--Underbog
     AddSC_boss_ghazan();

@@ -16,41 +16,39 @@
 
 #include "../../../sc_defines.h"
 
-//Spells
-#define    ARCANE_BLAST    24857
-#define    TIME_LAPSE      31467
-#define    MAGNETIC_PULL   28337 //Not Implantened (Heroic mod)
+#define ARCANE_BLAST        24857
+#define TIME_LAPSE          31467
+#define MAGNETIC_PULL       28337 //Not Implemented (Heroic mod)
 
-#define SAY_ENTER             "Why do you aid the Magus? Just think of how many lives could be saved if the portal is never opened, if the resulting wars could be erased ..."
-#define SOUND_ENTER           10412
+#define SAY_ENTER           "Why do you aid the Magus? Just think of how many lives could be saved if the portal is never opened, if the resulting wars could be erased ..."
+#define SAY_AGGRO           "If you will not cease this foolish quest, then you will die!"
+#define SAY_BANISH          "You have outstayed your welcome, Timekeeper. Begone!"
+#define SAY_SLAY1           "I told you it was a fool's quest!"
+#define SAY_SLAY2           "Leaving so soon?"
+#define SAY_DEATH           "Time ... is on our side."
 
-#define SAY_AGGRO             "If you will not cease this foolish quest, then you will die!"
-#define SOUND_AGGRO           10414
-
-#define SAY_BANISH            "You have outstayed your welcome, Timekeeper. Begone!"
-#define SOUND_BANISH          10413
-
-#define SAY_DIE               "Time ... is on our side."
-#define SOUND_DIE             10417
-
-#define SAY_SLAY1             "I told you it was a fool's quest!"
-#define SOUND_SLAY1           10415
-#define SAY_SLAY2             "Leaving so soon?"
-#define SOUND_SLAY2           10416
+#define SOUND_ENTER         10412
+#define SOUND_AGGRO         10414
+#define SOUND_BANISH        10413
+#define SOUND_SLAY1         10415
+#define SOUND_SLAY2         10416
+#define SOUND_DEATH         10417
 
 struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 {
     boss_chrono_lord_dejaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-    uint32 Arcane_Blast_Timer;
-    uint32 Time_Lapse_Timer;
+
+    uint32 ArcaneBlast_Timer;
+    uint32 TimeLapse_Timer;
+
     bool InCombat;
 
     void EnterEvadeMode()
     { 
-        Arcane_Blast_Timer = 20000;
-        Time_Lapse_Timer = 15000;
-        InCombat = false;
+        ArcaneBlast_Timer = 20000;
+        TimeLapse_Timer = 15000;
 
+        InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -108,8 +106,8 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DIE);
+        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -143,20 +141,20 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
             return;
 
         //Arcane Blast
-        if (Arcane_Blast_Timer < diff)
+        if (ArcaneBlast_Timer < diff)
         {
             DoCast(m_creature->getVictim(), ARCANE_BLAST);
-            Arcane_Blast_Timer = 20000+rand()%5000;
-        }else Arcane_Blast_Timer -= diff;
+            ArcaneBlast_Timer = 20000+rand()%5000;
+        }else ArcaneBlast_Timer -= diff;
 
         //Time Lapse
-        if (Time_Lapse_Timer < diff)
+        if (TimeLapse_Timer < diff)
         {
             DoYell(SAY_BANISH, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_BANISH);
-            DoCast(m_creature,TIME_LAPSE);
-            Time_Lapse_Timer = 15000+rand()%10000;
-        }else Time_Lapse_Timer -= diff;
+            DoCast(m_creature, TIME_LAPSE);
+            TimeLapse_Timer = 15000+rand()%10000;
+        }else TimeLapse_Timer -= diff;
 
         DoMeleeAttackIfReady();
 
@@ -167,7 +165,6 @@ CreatureAI* GetAI_boss_chrono_lord_deja(Creature *_Creature)
 {
     return new boss_chrono_lord_dejaAI (_Creature);
 }
-
 
 void AddSC_boss_chrono_lord_deja()
 {

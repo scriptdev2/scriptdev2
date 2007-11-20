@@ -16,51 +16,48 @@
 
 #include "../../../sc_defines.h"
 
-//Spells
-#define SAND_BREATH         20717
-#define IMPENDING_DOOM      19702
-#define KNOCKBACK           26027
-#define MDA                 33834
+#define SPELL_SAND_BREATH       20717
+#define SPELL_IMPENDING_DOOM    19702
+#define SPELL_KNOCKBACK         26027
+#define SPELL_MDA               33834
 
-//Yells
-#define  SAY_ENTER1           "Thrall! Come outside and face your fate!"
-#define  SOUND_ENTER1         10418
-#define  SAY_ENTER2           "Taretha's life hangs in the balance. Surely you care for her. Surely you wish to save her..."
-#define  SOUND_ENTER2         10419
-#define  SAY_ENTER3           "Ah, there you are. I had hoped to accomplish this with a bit of subtlety, but I suppose direct confrontation was inevitable. Your future, Thrall, must not come to pass and so...you and your troublesome friends must die!"
-#define  SOUND_ENTER3         10420
+#define SAY_ENTER1              "Thrall! Come outside and face your fate!"
+#define SAY_ENTER2              "Taretha's life hangs in the balance. Surely you care for her. Surely you wish to save her..."
+#define SAY_ENTER3              "Ah, there you are. I had hoped to accomplish this with a bit of subtlety, but I suppose direct confrontation was inevitable. Your future, Thrall, must not come to pass and so...you and your troublesome friends must die!"
+#define SAY_AGGRO1              "Enough! I will erase your very existence!"
+#define SAY_AGGRO2              "You cannot fight fate!"
+#define SAY_SLAY1               "You are...irrelevant."
+#define SAY_SLAY2               "Thrall will remain a slave. Taretha will die. You have failed."
+#define SAY_BREATH1             "Not so fast!" 
+#define SAY_BREATH2             "Struggle as much as you like!"
+#define SAY_DEATH               "No!...The master... will not... be pleased."
 
-#define  SAY_AGGRO1           "Enough! I will erase your very existence!"
-#define  SOUND_AGGRO1         10421
-#define  SAY_AGGRO2           "You cannot fight fate!"
-#define  SOUND_AGGRO2         10422
-
-#define  SAY_SLAY1            "You are...irrelevant."
-#define  SOUND_SLAY1          10425
-#define  SAY_SLAY2            "Thrall will remain a slave. Taretha will die. You have failed."
-#define  SOUND_SLAY2          10426
-
-#define  SAY_DIE              "No!...The master... will not... be pleased."
-#define  SOUND_DIE            10427
-
-#define  SAY_BREATH1          "Not so fast!" 
-#define  SOUND_BREATH1        10423
-#define  SAY_BREATH2          "Struggle as much as you like!"
-#define  SOUND_BREATH2        10424
+#define SOUND_ENTER1            10418
+#define SOUND_ENTER2            10419
+#define SOUND_ENTER3            10420
+#define SOUND_AGGRO1            10421
+#define SOUND_AGGRO2            10422
+#define SOUND_SLAY1             10425
+#define SOUND_SLAY2             10426
+#define SOUND_BREATH1           10423
+#define SOUND_BREATH2           10424
+#define SOUND_DEATH             10427
 
 struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 {
     boss_epoch_hunterAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-    uint32 Sand_Breath_Timer;
-    uint32 Impending_Doom_Timer;
+
+    uint32 SandBreath_Timer;
+    uint32 ImpendingDoom_Timerr;
     uint32 Knockback_Timer;
     uint32 Mda_Timer;
+
     bool InCombat;
 
     void EnterEvadeMode()
     {
-        Sand_Breath_Timer = 25000;
-        Impending_Doom_Timer = 30000;
+        SandBreath_Timer = 25000;
+        ImpendingDoom_Timerr = 30000;
         Knockback_Timer = 35000;
         Mda_Timer = 40000;
 
@@ -131,8 +128,8 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DIE);
+        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -177,13 +174,13 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
             return;
 
             //Sand Breath
-            if (Sand_Breath_Timer < diff)
+            if (SandBreath_Timer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
                 {
-                    DoCast(target,SAND_BREATH);
+                    DoCast(target,SPELL_SAND_BREATH);
                     switch(rand()%2)
                     {
                     case 0:
@@ -196,18 +193,18 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
                         break;
                     }
                 }
-                Sand_Breath_Timer = 25000+rand()%5000;
-            }else Sand_Breath_Timer -= diff;
+                SandBreath_Timer = 25000+rand()%5000;
+            }else SandBreath_Timer -= diff;
 
             //Impending Doom
-            if (Impending_Doom_Timer < diff)
+            if (ImpendingDoom_Timerr < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
-                    DoCast(target,IMPENDING_DOOM);
-                Impending_Doom_Timer = 30000+rand()%5000;
-            }else Impending_Doom_Timer -= diff;
+                    DoCast(target,SPELL_IMPENDING_DOOM);
+                ImpendingDoom_Timerr = 30000+rand()%5000;
+            }else ImpendingDoom_Timerr -= diff;
 
             //Knockback
             if (Knockback_Timer < diff)
@@ -215,7 +212,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
-                    DoCast(target,KNOCKBACK);
+                    DoCast(target,SPELL_KNOCKBACK);
                 Knockback_Timer = 35000+rand()%10000;
             }else Knockback_Timer -= diff;
 
@@ -225,7 +222,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
-                    DoCast(target,MDA);
+                    DoCast(target,SPELL_MDA);
 
                 Mda_Timer = 40000+rand()%10000;
             }else Mda_Timer -= diff;
@@ -238,7 +235,6 @@ CreatureAI* GetAI_boss_epoch_hunter(Creature *_Creature)
 {
     return new boss_epoch_hunterAI (_Creature);
 }
-
 
 void AddSC_boss_epoch_hunter()
 {

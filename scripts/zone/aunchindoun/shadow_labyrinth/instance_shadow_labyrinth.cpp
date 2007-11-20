@@ -37,11 +37,13 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
     GameObject *RefectoryDoor;
     GameObject *ScreamingHallDoor;
+    uint64 GrandmasterVorpil;
 
     void Initialize()
     {
         RefectoryDoor = NULL;
         ScreamingHallDoor = NULL;
+        GrandmasterVorpil = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -69,6 +71,24 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch(creature_entry)
+        {
+            case 18732:
+            GrandmasterVorpil = creature->GetGUID();
+            break;
+        }
+    }
+
+    uint64 GetUnitGUID(char *identifier)
+    {
+        if(identifier == "GrandmasterVorpil")
+            return GrandmasterVorpil;
+
+        return 0;
+    }
+
     void OpenDoor(GameObject *go)
     {
         //open the door
@@ -81,21 +101,29 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         if(type == "AmbassadorHellmawEvent")
             Encounters[0] = (data) ? true : false;
         else if(type == "BlackheartTheInciterEvent")
-            Encounters[1] = (data) ? true : false;
+        {
+            if(data == 2)
+            {
+                Encounters[1] = false;
+                if(RefectoryDoor)
+                    OpenDoor(RefectoryDoor);
+            }
+            else
+                Encounters[1] = (data) ? true : false;
+        }
         else if(type == "GrandmasterVorpilEvent")
-            Encounters[2] = (data) ? true : false;
+        {
+            if(data == 2)
+            {
+                Encounters[2] = false;
+                if(ScreamingHallDoor)
+                    OpenDoor(ScreamingHallDoor);
+            }
+            else
+                Encounters[2] = (data) ? true : false;
+        }
         else if(type == "MurmurEvent")
             Encounters[3] = (data) ? true : false;
-        else if(type == "BlackheartTheInciter_Death")
-        {
-            if(RefectoryDoor)
-            OpenDoor(RefectoryDoor);
-        }
-        else if(type == "GrandmasterVorpil_Death")
-        {
-            if(ScreamingHallDoor)
-                OpenDoor(ScreamingHallDoor);
-        }
     }
 };
 

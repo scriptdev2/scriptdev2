@@ -28,16 +28,18 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
     uint32 Resonance_Timer;
-    bool InCombat;
     bool SonicBoomVisual;
+
+    bool InCombat;
 
     void EnterEvadeMode()
     {
         SonicBoom_Timer = 30000;
         MurmursTouch_Timer = 20000;
         Resonance_Timer = 10000;
-        InCombat = false;
         SonicBoomVisual = false;
+
+        InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();

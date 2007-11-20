@@ -31,15 +31,20 @@
 
 struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 {
-    boss_warlord_kalithreshAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_warlord_kalithreshAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 Reflection_Timer;
     uint32 Impale_Timer;
     uint32 Rage_Timer;
+    int RandTime(int time) { return ((rand()%time)*1000); }
 
     bool InCombat;
-
-    int RandTime(int time) { return ((rand()%time)*1000); }
 
     void EnterEvadeMode()
     {
@@ -52,8 +57,10 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-
         DoGoHome();
+
+        if(pInstance)
+            pInstance->SetData("WarlordKalithreshEvent", 0);
     }
 
     void KilledUnit(Unit* victim)
@@ -72,6 +79,30 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        if(pInstance)
+            pInstance->SetData("WarlordKalithreshEvent", 0);
+    }
+
+    void StartEvent()
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+            break;
+        case 1:
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+            break;
+        case 2:
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+            break;
+        }
+
+        InCombat = true;
+
+        if(pInstance)
+            pInstance->SetData("WarlordKalithreshEvent", 1);
     }
 
     void AttackStart(Unit *who)
@@ -80,23 +111,9 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            if (!InCombat)
-            {
-                switch(rand()%3)
-                {
-                case 0:
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                    break;
-                case 2:
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                    break;
-                }
-                InCombat = true;
-            }
             DoStartMeleeAttack(who);
+            if (!InCombat)
+            StartEvent();
         }
     }
 
@@ -111,23 +128,9 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             {
                 if(who->HasStealthAura()) who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                    case 0:
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                        break;
-                    case 1:
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                        break;
-                    case 2:
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                        break;
-                    }
-                    InCombat = true;
-                }
                 DoStartMeleeAttack(who);
+                if (!InCombat)
+                    StartEvent();
             }
         }
     }
@@ -138,16 +141,18 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
+        //Reflection_Timer
         if (Reflection_Timer < diff)
         {
-            DoCast(m_creature,SPELL_SPELL_REFLECTION);
+            DoCast(m_creature, SPELL_SPELL_REFLECTION);
             Reflection_Timer = RandTime(60);
         }else Reflection_Timer -= diff;
 
+        //Impale_Timer
         if (Impale_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if (target)
             {
@@ -157,14 +162,15 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             else
             {
                 DoFaceTarget(m_creature->getVictim());
-                DoCast(m_creature->getVictim(),SPELL_IMPALE);
+                DoCast(m_creature->getVictim(), SPELL_IMPALE);
             }
             Impale_Timer = RandTime(40);
         }else Impale_Timer -= diff;
 
+        //Rage_Timer
         if (Rage_Timer < diff)
         {
-            DoCast(m_creature,SPELL_WARLORDS_RAGE);
+            DoCast(m_creature, SPELL_WARLORDS_RAGE);
             Rage_Timer = 600000;
         }else Rage_Timer -= diff;
 
