@@ -1664,7 +1664,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Zangramarsh"
+					Name="Zangarmarsh"
 					>
 					<File
 						RelativePath="..\scripts\zone\zangarmarsh\npcs_zangarmarsh.cpp"

@@ -492,7 +492,7 @@ extern void AddSC_boss_wailing_caverns();
 //Westfall
 //Wetlands
 //Winterspring
-//Zangramarsh
+//Zangarmarsh
 extern void AddSC_npcs_zangarmarsh();
 
 //Zul'Farrak
@@ -977,7 +977,7 @@ void ScriptsInit()
     //Westfall
     //Wetlands
     //Winterspring
-    //Zangramarsh
+    //Zangarmarsh
     AddSC_npcs_zangarmarsh();
 
     //Zul'Farrak

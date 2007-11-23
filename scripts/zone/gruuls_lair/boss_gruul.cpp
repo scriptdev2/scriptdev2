@@ -297,22 +297,26 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     std::list<HostilReference*>::iterator i = m_threatlist.begin();
 
                     //If you have to do a loop over all units in threat list do it this way
-                    for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
-                    {
-                        Unit* pCastUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                        if (pCastUnit)
+                    if (m_threatlist.size())
+                        for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
                         {
-                            //Force player to cast 22890 -- Dispels all slowing and stun effects
-                            pCastUnit->CastSpell(pCastUnit,22890,true);
+                            Unit* pCastUnit = NULL;
+                            if (*i)
+                                pCastUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
 
-                            //Force player to cast the AoE dmg spell
-                            //pCastUnit->CastSpell(pCastUnit,&spell ,true);
-                            pCastUnit->CastSpell(pCastUnit,33671,true);
+                            if (pCastUnit)
+                            {
+                                //Force player to cast 22890 -- Dispels all slowing and stun effects
+                                pCastUnit->CastSpell(pCastUnit,22890,true);
 
-                            //as shatter doesnt cancel stoned aura we need to do it by hand
-                            pCastUnit->RemoveAurasDueToSpell(SPELL_STONED);
+                                //Force player to cast the AoE dmg spell
+                                //pCastUnit->CastSpell(pCastUnit,&spell ,true);
+                                pCastUnit->CastSpell(pCastUnit,33671,true);
+
+                                //as shatter doesnt cancel stoned aura we need to do it by hand
+                                pCastUnit->RemoveAurasDueToSpell(SPELL_STONED);
+                            }
                         }
-                    }
 
                     // resets everything
                     //m_creature->m_canMove = true;
