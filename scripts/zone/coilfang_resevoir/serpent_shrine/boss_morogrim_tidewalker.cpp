@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Morogrim_Tidewalker
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 90
+SDComment: Water globules don't explode properly
 EndScriptData */
 
 #include "../../../sc_defines.h"

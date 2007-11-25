@@ -59,6 +59,7 @@ extern void AddSC_test();
 // -- GO --
 extern void AddSC_go_teleporter();
 extern void AddSC_go_orb_of_command();
+extern void AddSC_go_barov_journal();
 
 // -- Guard --
 extern void AddSC_guards();
@@ -544,6 +545,7 @@ void ScriptsInit()
     // -- GO --
     AddSC_go_teleporter();
     AddSC_go_orb_of_command();
+    AddSC_go_barov_journal();
 
     // -- Guard --
     AddSC_guards();

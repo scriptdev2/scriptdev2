@@ -194,8 +194,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
-            if(!DemonForm && !InWhirlwind)
-                DoStartMeleeAttack(who);
+            DoStartMeleeAttack(who);
+
             if(!InCombat && !IsFinalForm)
                 StartEvent();
         }
@@ -214,8 +214,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if(!DemonForm && !InWhirlwind)
-                    DoStartMeleeAttack(who);
+                DoStartMeleeAttack(who);
+
                 if(!InCombat && !IsFinalForm)
                     StartEvent();
             }
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             //Switch_Timer
             if(!IsFinalForm && Switch_Timer < diff)
             {
-                // switch to demon form
+                //switch to demon form
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
                 DoYell(SAY_SWITCH_TO_DEMON, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_DEMON);
@@ -259,6 +259,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
                 Switch_Timer = 60000;
 
             }else Switch_Timer -= diff;
+
+            DoMeleeAttackIfReady();
         }
         else
         {
@@ -266,13 +268,13 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             if(ChaosBlast_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CHAOS_BLAST);
-                ChaosBlast_Timer = 1000;
+                ChaosBlast_Timer = 1500;
             }else ChaosBlast_Timer -= diff;
 
             //Switch_Timer
             if(!IsFinalForm && Switch_Timer < diff)
             {
-                // switch to nightelf form
+                //switch to nightelf form
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
                 DemonForm = false;
 
@@ -283,18 +285,17 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         if(!IsFinalForm && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
         {
-            // at this point he divides himself in two parts
-            Creature *DemonForm = DoSpawnCreature(21215, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+            //at this point he divides himself in two parts
+            Creature *DemonForm = DoSpawnCreature(21215, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
             if(DemonForm)
                 ((boss_leotheras_the_blindAI*)DemonForm->AI())->SetDemonFinalForm(m_creature->getVictim());
 
             SetNightelfFinalForm();
         }
-
-        DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_leotheras_the_blind(Creature *_Creature)
 {
     return new boss_leotheras_the_blindAI (_Creature);

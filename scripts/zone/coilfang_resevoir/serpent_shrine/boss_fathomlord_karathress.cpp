@@ -24,19 +24,6 @@ EndScriptData */
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Group.h"
 
-/* TODO
-
-Sharkkis
- - Multishot & summon pet
-
- Tidalvess
- - Totems
- - Shaman spells including SPELL_WINDFURY
-
- Caribdis
-  - The Whirlwind
-*/
-
 //Karathress spells
 #define SPELL_CATACLYSMIC_BOLT     38441
 #define SPELL_POWER_OF_SHARKKIS    38455
