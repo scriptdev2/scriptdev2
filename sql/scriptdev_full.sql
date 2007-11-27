@@ -538,6 +538,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_kelthuzad' WHERE `entry` = 1
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (15974, 16381);
 
 /* NETHERSTORM */
+UPDATE `creature_template` SET `ScriptName` = 'npc_protectorate_nether_drake' WHERE `entry` = 20903;
 
 
 /* ONYXIA'S LAIR */

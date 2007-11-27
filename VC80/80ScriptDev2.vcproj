@@ -1670,6 +1670,10 @@
 				<Filter
 					Name="Netherstorm"
 					>
+					<File
+						RelativePath="..\scripts\zone\netherstorm\npcs_netherstorm.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Shadowmoon Valley"

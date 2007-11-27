@@ -365,6 +365,8 @@ extern void AddSC_boss_noth();
 extern void AddSC_boss_gluth();
 
 //Netherstorm
+extern void AddSC_npcs_netherstorm();
+
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
 
@@ -852,6 +854,8 @@ void ScriptsInit()
     AddSC_boss_gluth();
 
     //Netherstorm
+    AddSC_npcs_netherstorm();
+
     //Onyxia's Lair
     AddSC_boss_onyxia();
 
