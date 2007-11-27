@@ -179,6 +179,7 @@ scripts/zone/hellfire_citadel/ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_bonechewer_orc.cpp \
+scripts/zone/hellfire_peninsula/npcs_hellfire_peninsula.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
 scripts/zone/karazhan/boss_midnight.cpp \
