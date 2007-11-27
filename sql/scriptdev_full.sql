@@ -410,6 +410,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_hellfire_channeler' WHERE `en
 /* HELLFIRE PENINSULA */
 UPDATE `creature_template` SET `ScriptName` = 'boss_doomlord_kazzak' WHERE `entry` = 18728;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bonechewer_orc' WHERE `entry` IN (16876, 16925, 18952, 19701);
+UPDATE `creature_template` SET `ScriptName` = 'mobs_shattered_hand_orc' WHERE `entry` IN (19411, 19410, 19413, 19414, 16867, 19295, 16870, 16878, 19415);
 UPDATE `creature_template` SET `ScriptName` = 'npc_wing_commander_brack' WHERE `entry` = 19401;
 UPDATE `creature_template` SET `ScriptName` = 'npc_wing_commander_dabiree' WHERE `entry` = 19409;
 UPDATE `creature_template` SET `ScriptName` = 'npc_gryphoneer_windbellow' WHERE `entry` = 20235;

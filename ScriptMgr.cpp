@@ -282,7 +282,7 @@ extern void AddSC_boss_omor_the_unscarred();
 
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
-extern void AddSC_mobs_bonechewer_orc();
+extern void AddSC_mobs_hellfire_peninsula();
 extern void AddSC_npcs_hellfire_peninsula();
 
 //Hillsbrad Foothills
@@ -771,7 +771,7 @@ void ScriptsInit()
 
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();
-    AddSC_mobs_bonechewer_orc();
+    AddSC_mobs_hellfire_peninsula();
     AddSC_npcs_hellfire_peninsula();
 
     //Hillsbrad Foothills

@@ -1531,7 +1531,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_bonechewer_orc.cpp"
+						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_hellfire_peninsula.cpp"
 						>
 					</File>
 					<File
