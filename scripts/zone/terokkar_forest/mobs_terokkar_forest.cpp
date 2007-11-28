@@ -26,6 +26,44 @@ EndScriptData */
 #include "../../../../../game/QuestDef.h"
 
 /*######
+## mobs_gordunni_ogre
+######*/
+
+struct MANGOS_DLL_DECL mobs_gordunni_ogreAI : public ScriptedAI
+{
+    mobs_gordunni_ogreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    void JustDied(Unit* Killer)
+    {
+        if (Killer->GetTypeId() == TYPEID_PLAYER)
+            ((Player*)Killer)->KilledMonster(23450, m_creature->GetGUID());
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+};
+CreatureAI* GetAI_mobs_gordunni_ogre(Creature *_Creature)
+{
+    return new mobs_gordunni_ogreAI (_Creature);
+}
+
+/*######
 ## mob_infested_root_walker
 ######*/
 
@@ -303,6 +341,11 @@ bool GossipSelect_mobs_shadow_council_covert(Player *player, Creature *_Creature
 void AddSC_mobs_terokkar_forest()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_gordunni_ogre";
+    newscript->GetAI = GetAI_mobs_gordunni_ogre;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="mob_infested_root_walker";

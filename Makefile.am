@@ -286,7 +286,9 @@ scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
+scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
+scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp
 scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
@@ -339,6 +341,7 @@ scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
+scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \

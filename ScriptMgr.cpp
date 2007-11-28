@@ -412,6 +412,8 @@ extern void AddSC_npc_lothos_riftwalker();
 //Shadowfang keep
 //Shadowmoon Valley
 extern void AddSC_neltharaku();
+extern void AddSC_mobs_shadowmoon_valley();
+extern void AddSC_npcs_shadowmoon_valley();
 
 //Shattrath
 extern void AddSC_npc_shattrathflaskvendors();
@@ -499,6 +501,8 @@ extern void AddSC_boss_wailing_caverns();
 //Westfall
 //Wetlands
 //Winterspring
+extern void AddSC_npcs_winterspring();
+
 //Zangarmarsh
 extern void AddSC_npcs_zangarmarsh();
 
@@ -904,6 +908,8 @@ void ScriptsInit()
     //Shadowfang keep
     //Shadowmoon Valley
     AddSC_neltharaku();
+    AddSC_mobs_shadowmoon_valley();
+    AddSC_npcs_shadowmoon_valley();
 
     //Shattrath
     AddSC_npc_shattrathflaskvendors();
@@ -991,6 +997,8 @@ void ScriptsInit()
     //Westfall
     //Wetlands
     //Winterspring
+    AddSC_npcs_winterspring();
+
     //Zangarmarsh
     AddSC_npcs_zangarmarsh();
 

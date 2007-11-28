@@ -1234,6 +1234,10 @@
 				<Filter
 					Name="Winterspring"
 					>
+					<File
+						RelativePath="..\scripts\zone\winterspring\npcs_winterspring.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Zul&apos;Farrak"
@@ -1627,7 +1631,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\shadowmoon_valley\mobs_shadowmoon_valley.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\shadowmoon_valley\npc_neltharaku.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowmoon_valley\npcs_shadowmoon_valley.cpp"
 						>
 					</File>
 				</Filter>

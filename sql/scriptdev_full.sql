@@ -617,6 +617,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* SHADOWMOON VALLEY */
 UPDATE `creature_template` SET `ScriptName` = 'neltharaku' WHERE `entry` = 21657;
+UPDATE `creature_template` SET `ScriptName` = 'npc_drake_dealer_hurlunk' WHERE `entry` = 23489;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_dragonmaw_orc' WHERE `entry` IN (21717, 21718, 21719, 21720, 22331);
+UPDATE `creature_template` SET `ScriptName` = 'mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878, 21879);
 
 /* SHATTRATH */
 UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23483;
@@ -787,6 +790,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_giant_flesh_tentacle' WHERE `
 
 
 /* TEROKKAR FOREST */
+UPDATE `creature_template` SET `ScriptName` = 'mobs_gordunni_ogre' WHERE `entry` IN (22143, 22144, 22148, 23022);
 UPDATE `creature_template` SET `ScriptName` = 'mob_infested_root_walker' WHERE `entry` = 22095;
 UPDATE `creature_template` SET `ScriptName` = 'mob_netherweb_victim' WHERE `entry` = 22355;
 UPDATE `creature_template` SET `ScriptName` = 'mob_rotting_forest_rager' WHERE `entry` = 22307;
@@ -833,6 +837,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1026, 1024, 1028, 1418, 1027, 1029, 1009, 1013, 1011, 1008, 1007, 1040, 1042, 1043, 1044, 1069);
 
 /* WINTERSPRING */
+UPDATE `creature_template` SET `ScriptName` = 'npc_rivern_frostwind' WHERE `entry` = 10618;
 /* Cobalt Mageweaver, Chillwind Chimaera */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7437, 7448);
 
