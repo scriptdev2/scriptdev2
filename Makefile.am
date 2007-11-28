@@ -288,7 +288,7 @@ scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
-scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp
+scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
 scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
