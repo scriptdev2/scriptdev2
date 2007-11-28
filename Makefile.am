@@ -135,6 +135,7 @@ scripts/zone/blackwing_lair/boss_razorgore.cpp \
 scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
+scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \

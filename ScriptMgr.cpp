@@ -187,6 +187,9 @@ extern void AddSC_boss_chromaggus();
 extern void AddSC_boss_nefarian();
 extern void AddSC_boss_victor_nefarius();
 
+//Blade's Edge Mountains
+extern void AddSC_mobs_blades_edge_mountains();
+
 //Blasted lands
 extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
@@ -675,6 +678,9 @@ void ScriptsInit()
     AddSC_boss_chromaggus();
     AddSC_boss_nefarian();
     AddSC_boss_victor_nefarius();
+
+    //Blade's Edge Mountains
+    AddSC_mobs_blades_edge_mountains();
 
     //Blasted lands
     AddSC_boss_kruul();
