@@ -362,6 +362,10 @@
 						RelativePath="..\scripts\zone\azshara\mobs_spitelashes.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\azshara\npcs_azshara.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Badlands"
@@ -623,7 +627,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\npc_darrowshire_spirit.cpp"
+						RelativePath="..\scripts\zone\eastern_plaguelands\npcs_eastern_plaguelands.cpp"
 						>
 					</File>
 				</Filter>
@@ -1540,6 +1544,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blasted_lands\mob_teremus_the_devourer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blasted_lands\npcs_blasted_lands.cpp"
 						>
 					</File>
 				</Filter>

@@ -109,6 +109,7 @@ extern void AddSC_instance_shadow_labyrinth();
 //Azshara
 extern void AddSC_boss_azuregos();
 extern void AddSC_mobs_spitelashes();
+extern void AddSC_npcs_azshara();
 
 //Azuremyst Isle
 extern void AddSC_injured_draenei();
@@ -193,6 +194,7 @@ extern void AddSC_mobs_blades_edge_mountains();
 //Blasted lands
 extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
+extern void AddSC_npcs_blasted_lands();
 
 //Burning steppes
 //Caverns of Time
@@ -252,7 +254,7 @@ extern void AddSC_mobs_mana_tapped();
 //Exodar
 //Eastern Plaguelands
 extern void AddSC_mobs_ghoul_flayer();
-extern void AddSC_npc_darrowshire_spirit();
+extern void AddSC_npcs_eastern_plaguelands();
 
 //Elwynn Forest
 extern void AddSC_npc_henze_faulk();
@@ -605,6 +607,7 @@ void ScriptsInit()
     //Azshara
     AddSC_boss_azuregos();
     AddSC_mobs_spitelashes();
+    AddSC_npcs_azshara();
 
     //Azuremyst Isle
     AddSC_injured_draenei();
@@ -689,6 +692,7 @@ void ScriptsInit()
     //Blasted lands
     AddSC_boss_kruul();
     AddSC_boss_teremusthedevourer();
+    AddSC_npcs_blasted_lands();
 
     //Burning steppes
     //Caverns of Time
@@ -748,7 +752,7 @@ void ScriptsInit()
     //Exodar
     //Eastern Plaguelands
     AddSC_mobs_ghoul_flayer();
-    AddSC_npc_darrowshire_spirit();
+    AddSC_npcs_eastern_plaguelands();
 
     //Elwynn Forest
     AddSC_npc_henze_faulk();

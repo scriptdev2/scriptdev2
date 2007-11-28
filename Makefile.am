@@ -71,6 +71,7 @@ scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
+scripts/zone/azshara/npcs_azshara.cpp \
 scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
 scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
 scripts/zone/barrens/npc_beaten_corpse.cpp \
@@ -138,6 +139,7 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
+scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \
@@ -162,7 +164,7 @@ scripts/zone/deadmines/boss_deadmines.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/dustwallow_marsh/npc_lady_jaina_proudmoore.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
-scripts/zone/eastern_plaguelands/npc_darrowshire_spirit.cpp \
+scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \

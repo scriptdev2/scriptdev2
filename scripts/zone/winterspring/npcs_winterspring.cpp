@@ -16,14 +16,63 @@
 
 /* ScriptData
 SDName: npcs_winterspring
-SD%Complete: 100
-SDComment: misc npcs, mostly vendor/quest
+SD%Complete: 95
+SDComment: misc npcs, mostly vendor/quest. Lorax tale could use some better text for gossip items
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/QuestDef.h"
 #include "../../../../../game/GossipDef.h"
+
+/*######
+## npc_lorax
+######*/
+
+bool GossipHello_npc_lorax(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestStatus(5126) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "Talk to me", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_lorax(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, "What do you do here?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(3759, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "I can help you", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            player->SEND_GOSSIP_MENU(3760, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, "What deal?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            player->SEND_GOSSIP_MENU(3761, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM( 0, "Then what happened?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            player->SEND_GOSSIP_MENU(3762, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM( 0, "He is not safe, i'll make sure of that.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+            player->SEND_GOSSIP_MENU(3763, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->PlayerTalkClass->CloseGossip();
+            player->CompleteQuest(5126);
+            break;
+    }
+    return true;
+}
 
 /*######
 ## npc_rivern_frostwind
@@ -40,7 +89,6 @@ bool GossipHello_npc_rivern_frostwind(Player *player, Creature *_Creature)
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
-
 }
 
 bool GossipSelect_npc_rivern_frostwind(Player *player, Creature *_Creature, uint32 sender, uint32 action)
@@ -57,9 +105,14 @@ void AddSC_npcs_winterspring()
     Script *newscript;
 
     newscript = new Script;
+    newscript->Name="npc_lorax";
+    newscript->pGossipHello =  &GossipHello_npc_lorax;
+    newscript->pGossipSelect = &GossipSelect_npc_lorax;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="npc_rivern_frostwind";
     newscript->pGossipHello =  &GossipHello_npc_rivern_frostwind;
     newscript->pGossipSelect = &GossipSelect_npc_rivern_frostwind;
     m_scripts[nrscripts++] = newscript;
-
 }

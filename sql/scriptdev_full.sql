@@ -126,6 +126,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_blackheart_the_inciter' WHER
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6129, 6131, 8379);
 /* Spitelashes for polymorph quest */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_spitelashes' WHERE entry IN (6190,6193,6194,6195,6196,7885,7886,12204,12205);
+UPDATE `creature_template` SET `ScriptName` = 'npc_loramus_thalipedes' WHERE `entry` = 7783;
 
 /* AZUREMYST ISLE */
 UPDATE `creature_template` SET `ScriptName` = 'injured_draenei' WHERE `entry` = 16971;
@@ -229,6 +230,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_bladespire_ogre' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bloodmaul_ogre' WHERE `entry` IN (19948, 19952, 19957);
 
 /* BLASTED LANDS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `entry` = 7572;
 /* Dreadmaul Ogre Mage, Bloodmage Drazial, Bloodmage Lynnore, Archmage Allistarj */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5975, 7505, 7506, 7666);
 
@@ -335,6 +337,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
 UPDATE `creature_template` SET `ScriptName` = 'npc_darrowshire_spirit' WHERE `entry` = 11064;
+UPDATE `creature_template` SET `ScriptName` = 'npc_tirion_fordring' WHERE `entry` = 1855;
 /* Crimson Bodyguard, Crimson Courier, Crypt Walker, Hate Shrieker, Cursed Mage, Shadowmage, Dark Summoner, Scarlet Archmage, Archmage Angela Dosantos */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (13118, 12337, 8556, 8541, 8524, 8550, 8551, 9451, 16116);
 
@@ -837,6 +840,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1026, 1024, 1028, 1418, 1027, 1029, 1009, 1013, 1011, 1008, 1007, 1040, 1042, 1043, 1044, 1069);
 
 /* WINTERSPRING */
+UPDATE `creature_template` SET `ScriptName` = 'npc_lorax' WHERE `entry` = 10918;
 UPDATE `creature_template` SET `ScriptName` = 'npc_rivern_frostwind' WHERE `entry` = 10618;
 /* Cobalt Mageweaver, Chillwind Chimaera */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7437, 7448);
