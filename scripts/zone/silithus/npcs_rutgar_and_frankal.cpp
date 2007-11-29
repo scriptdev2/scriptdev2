@@ -24,8 +24,6 @@ EndScriptData */
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
 
-// **** This script is still under Developement ****
-
 //gossip item text best guess
 #define GOSSIP_ITEM1 "I seek information about Natalia"
 
@@ -42,8 +40,6 @@ EndScriptData */
 #define GOSSIP_ITEM14 "I should ask the monkey about this"
 #define GOSSIP_ITEM15 "Then what..."
 
-#define GOSSIP_ACTION_WHATEVER 500
-
 //trigger creatures to kill
 #define TRIGGER_RUTGAR 15222
 #define TRIGGER_FRANKAL 15221
@@ -54,15 +50,19 @@ EndScriptData */
 
 bool GossipHello_npcs_rutgar_and_frankal(Player *player, Creature *_Creature)
 {
-    uint64 guid = _Creature->GetGUID();
     if (_Creature->isQuestGiver())
-    player->PrepareQuestMenu( guid );
-    player->SendPreparedQuest( guid );
+        player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_WHATEVER);
-    }
+    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE && 
+        _Creature->GetEntry() == 15170 &&
+        !player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR ))
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE && 
+        _Creature->GetEntry() == 15171 &&
+        player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR ))
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
+
     player->SEND_GOSSIP_MENU(7754, _Creature->GetGUID());
 
     return true;
@@ -74,25 +74,12 @@ bool GossipHello_npcs_rutgar_and_frankal(Player *player, Creature *_Creature)
 
 bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == 0)                                        //appears GossipHello will always send action 0 when quest menu is in use
-    {
-                                                            //if attempt talking to rutgar and not completed frankal
-        if ( _Creature->GetEntry() == 15170 && !player->GetReqKillOrCastCurrentCount(8304, TRIGGER_FRANKAL ) )
-        {
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(7755, _Creature->GetGUID());
-        }
-                                                            //if already completed talking to rutgar
-        else if ( player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR ) )
-        {
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-            player->SEND_GOSSIP_MENU(7762, _Creature->GetGUID());
-        }
-    }                                                       //if none of the above, script will return, sending no menu/item
-
-
     switch (action)
     {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(7755, _Creature->GetGUID());
+            break;
         case GOSSIP_ACTION_INFO_DEF + 1:
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
             player->SEND_GOSSIP_MENU(7756, _Creature->GetGUID());
@@ -118,6 +105,10 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, u
             player->KilledMonster( TRIGGER_RUTGAR, _Creature->GetGUID() );//'kill' our trigger to update quest status
             break;
 
+        case GOSSIP_ACTION_INFO_DEF + 9:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+            player->SEND_GOSSIP_MENU(7762, _Creature->GetGUID());
+            break;
         case GOSSIP_ACTION_INFO_DEF + 10:
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM12, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
             player->SEND_GOSSIP_MENU(7763, _Creature->GetGUID());

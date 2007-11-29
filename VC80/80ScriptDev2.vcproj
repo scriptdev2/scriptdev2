@@ -272,6 +272,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\npc\npc_mount_vendor.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\npc\npc_not_selectable.cpp"
 					>
 				</File>
@@ -791,7 +795,7 @@
 					Name="Searing Gorge"
 					>
 					<File
-						RelativePath="..\scripts\zone\searing_gorge\npc_lothos_riftwalker.cpp"
+						RelativePath="..\scripts\zone\searing_gorge\npcs_searing_gorge.cpp"
 						>
 					</File>
 				</Filter>

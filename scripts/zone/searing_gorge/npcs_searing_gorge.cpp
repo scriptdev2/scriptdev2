@@ -15,15 +15,56 @@
 */
 
 /* ScriptData
-SDName: Npc_Lothos_Riftwalker
-SD%Complete: 100
-SDComment: Provides quest and portal to Molten Core
+SDName: npcs_searing_gorge
+SD%Complete: 90
+SDComment: Provides quest and portal to Molten Core + misc other quest. More accurate info on Kalaran needed.
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
 #include "../../../../../game/QuestDef.h"
+
+/*######
+## npc_kalaran_windblade
+######*/
+
+bool GossipHello_npc_kalaran_windblade(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestStatus(3441) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "Tell me what drives this vengance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_kalaran_windblade(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, "Please continue", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(1954, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "I will avenge your loss", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            player->SEND_GOSSIP_MENU(1955, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->PlayerTalkClass->CloseGossip();
+            player->CompleteQuest(3441);
+            break;
+    }
+    return true;
+}
+
+/*######
+## npc_lothos_riftwalker
+######*/
 
 struct MANGOS_DLL_DECL npc_lothos_riftwalkerAI : public ScriptedAI
 {
@@ -47,7 +88,6 @@ CreatureAI* GetAI_npc_lothos_riftwalker(Creature *_Creature)
 {
     return new npc_lothos_riftwalkerAI (_Creature);
 }
-
 
 bool GossipHello_npc_lothos_riftwalker(Player *player, Creature *_Creature)
 {
@@ -75,9 +115,20 @@ bool GossipSelect_npc_lothos_riftwalker(Player *player, Creature *_Creature, uin
     return true;
 }
 
-void AddSC_npc_lothos_riftwalker()
+/*######
+## 
+######*/
+
+void AddSC_npcs_searing_gorge()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_kalaran_windblade";
+    newscript->pGossipHello =  &GossipHello_npc_kalaran_windblade;
+    newscript->pGossipSelect = &GossipSelect_npc_kalaran_windblade;
+    m_scripts[nrscripts++] = newscript;
+
     newscript = new Script;
     newscript->Name="npc_lothos_riftwalker";
     newscript->pGossipHello          = &GossipHello_npc_lothos_riftwalker;

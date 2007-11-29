@@ -56,6 +56,7 @@ scripts/item/item_vorenthals_presence.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_not_selectable.cpp \
+scripts/npc/npc_mount_vendor.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
@@ -286,7 +287,7 @@ scripts/zone/scholomance/boss_lorekeeper_polkelt.cpp \
 scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
-scripts/zone/searing_gorge/npc_lothos_riftwalker.cpp \
+scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \

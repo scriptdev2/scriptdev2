@@ -51,7 +51,7 @@ UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry` =
 UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` = 31742;
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry` = 30259;
-UPDATE item_template SET ScriptName = 'draenei_fishing_net' WHERE entry = 23654;
+UPDATE `item_template` SET `ScriptName` = 'draenei_fishing_net' WHERE `entry` = 23654;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -609,8 +609,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 
 /* SEARING GORGE */
-/* Lothos Riftwalker */
 UPDATE `creature_template` SET `ScriptName` = 'npc_lothos_riftwalker' WHERE `entry` = 14387;
+UPDATE `creature_template` SET `ScriptName` = 'npc_kalaran_windblade' WHERE `entry` = 8479;
 /* Glassweb Spider, Searing Lava Spider, Greater Lava Spider */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5856, 5857, 5858);
 

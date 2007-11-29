@@ -78,6 +78,7 @@ extern void AddSC_vorenthals_presence();
 // -- NPC --
 extern void AddSC_not_selectable();
 extern void AddSC_npc_guardian();
+extern void AddSC_npc_mount_vendor();
 
 // -- Servers --
 
@@ -409,7 +410,7 @@ extern void AddSC_boss_theravenian();
 extern void AddSC_boss_vectus();
 
 //Searing gorge
-extern void AddSC_npc_lothos_riftwalker();
+extern void AddSC_npcs_searing_gorge();
 
 //Shadowfang keep
 //Shadowmoon Valley
@@ -576,6 +577,7 @@ void ScriptsInit()
     // -- NPC --
     AddSC_not_selectable();
     AddSC_npc_guardian();
+    AddSC_npc_mount_vendor();
 
     // -- Servers --
 
@@ -907,7 +909,7 @@ void ScriptsInit()
     AddSC_boss_vectus();
 
     //Searing gorge
-    AddSC_npc_lothos_riftwalker();
+    AddSC_npcs_searing_gorge();
 
     //Shadowfang keep
     //Shadowmoon Valley
