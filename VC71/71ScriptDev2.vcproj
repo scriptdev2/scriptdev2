@@ -435,7 +435,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\npc_lokhtos_darkbargainer.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\npcs_blackrock_depths.cpp"
 						>
 					</File>
 				</Filter>

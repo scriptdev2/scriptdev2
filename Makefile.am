@@ -113,7 +113,7 @@ scripts/zone/blackrock_depths/boss_vilerel.cpp \
 scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
 scripts/zone/blackrock_depths/mob_overmaster_pyron.cpp \
 scripts/zone/blackrock_depths/mob_phalanx.cpp \
-scripts/zone/blackrock_depths/npc_lokhtos_darkbargainer.cpp \
+scripts/zone/blackrock_depths/npcs_blackrock_depths.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
 scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \

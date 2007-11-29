@@ -178,6 +178,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_warder_stilgiss' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'overmaster_pyron' WHERE `entry` = 9026;
 UPDATE `creature_template` SET `ScriptName` = 'phalanx' WHERE `entry` = 9502;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lokhtos_darkbargainer' WHERE `entry` = 12944;
+UPDATE `creature_template` SET `ScriptName` = 'npc_kharan_mighthammer' WHERE `entry` = 9021;
 
 /* Hedrum the Creeper, Dark Keeper Zimrel */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9032, 9441);

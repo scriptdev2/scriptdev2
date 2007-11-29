@@ -161,7 +161,7 @@ extern void AddSC_boss_vilerel();
 extern void AddSC_boss_warder_stilgiss();
 extern void AddSC_overmaster_pyron();
 extern void AddSC_phalanx();
-extern void AddSC_npc_lokhtos_darkbargainer();
+extern void AddSC_npcs_blackrock_depths();
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -660,7 +660,7 @@ void ScriptsInit()
     AddSC_boss_warder_stilgiss();
     AddSC_overmaster_pyron();
     AddSC_phalanx();
-    AddSC_npc_lokhtos_darkbargainer();
+    AddSC_npcs_blackrock_depths();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();

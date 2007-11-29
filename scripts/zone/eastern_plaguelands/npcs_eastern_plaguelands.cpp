@@ -139,6 +139,7 @@ void AddSC_npcs_eastern_plaguelands()
     newscript->GetAI = GetAI_npc_darrowshire_spirit;
     newscript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
     newscript->pGossipSelect = &GossipSelect_npc_darrowshire_spirit;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_tirion_fordring";
