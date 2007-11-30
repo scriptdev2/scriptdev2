@@ -40,6 +40,7 @@ scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
 scripts/custom/test.cpp \
+scripts/go/go_field_repair_bot.cpp \
 scripts/go/go_jandice_barov_journal.cpp \
 scripts/go/go_orb_of_command.cpp \
 scripts/go/go_teleporter.cpp \
@@ -55,10 +56,11 @@ scripts/item/item_test.cpp \
 scripts/item/item_vorenthals_presence.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
-scripts/npc/npc_not_selectable.cpp \
 scripts/npc/npc_mount_vendor.cpp \
+scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
+scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \

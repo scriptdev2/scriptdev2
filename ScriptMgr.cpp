@@ -57,6 +57,7 @@ extern void AddSC_custom_example();
 extern void AddSC_test();
 
 // -- GO --
+extern void AddSC_go_field_repair_bot_74A();
 extern void AddSC_go_teleporter();
 extern void AddSC_go_orb_of_command();
 extern void AddSC_go_barov_journal();
@@ -415,6 +416,7 @@ extern void AddSC_npcs_searing_gorge();
 //Shadowfang keep
 //Shadowmoon Valley
 extern void AddSC_neltharaku();
+extern void AddSC_boss_doomwalker();
 extern void AddSC_mobs_shadowmoon_valley();
 extern void AddSC_npcs_shadowmoon_valley();
 
@@ -556,6 +558,7 @@ void ScriptsInit()
     AddSC_test();
 
     // -- GO --
+    AddSC_go_field_repair_bot_74A();
     AddSC_go_teleporter();
     AddSC_go_orb_of_command();
     AddSC_go_barov_journal();
@@ -590,7 +593,7 @@ void ScriptsInit()
     //Aunchindoun
     //--Auchenai Crypts
     AddSC_boss_shirrak_the_dead_watcher();
-    //--Mana Tombs
+	//--Mana Tombs
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
     AddSC_boss_tavarok();
@@ -914,6 +917,7 @@ void ScriptsInit()
     //Shadowfang keep
     //Shadowmoon Valley
     AddSC_neltharaku();
+    AddSC_boss_doomwalker();
     AddSC_mobs_shadowmoon_valley();
     AddSC_npcs_shadowmoon_valley();
 

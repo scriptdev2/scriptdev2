@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="ScriptDev2"
 	ProjectGUID="{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	RootNamespace="ScriptDev2"
@@ -303,6 +303,10 @@
 			<Filter
 				Name="go"
 				>
+				<File
+					RelativePath="..\scripts\go\go_field_repair_bot.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\scripts\go\go_jandice_barov_journal.cpp"
 					>
@@ -1401,6 +1405,10 @@
 					<Filter
 						Name="Auchenai Crypts"
 						>
+						<File
+							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_exarch_maladaar.cpp"
+							>
+						</File>
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_shirrak_the_dead_watcher.cpp"
 							>

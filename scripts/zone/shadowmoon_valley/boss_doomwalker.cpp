@@ -21,37 +21,54 @@ SDComment:
 EndScriptData */
 
 #include "../../sc_defines.h"
-
+//--------------------------------------
+//Spells
 #define SPELL_MARK_DEATH            37128
 #define SPELL_SUNDER_ARMOR          30901
 
 #define SPELL_CHAIN_LIGHTNING       33665
-#define SOUND_CHAIN_LIGHTNING       11346
 
-#define SPELL_KICK                  32637
-#define SOUND_KICK                  11347
+#define SPELL_OVERRUN               32636
+#define SAY_OVERRUN_1               "Trajectory locked."
+#define SOUND_OVERRUN_1             11347
+#define SAY_OVERRUN_2               "Engage maximum speed."
+#define SOUND_OVERRUN_2             11348
 
 #define SPELL_ENRAGE                34624
-#define SOUND_ENRAGE                11348
 
 #define SPELL_EARTHQUAKE            32686
-#define SOUND_EARTHQUAKE            11345
-
+#define SAY_EARTHQUAKE_1            "Tectonic disruption commencing."
+#define SOUND_EARTHQUAKE_1          11345
+#define SAY_EARTHQUAKE_2            "Magnitude set. Release."
+#define SOUND_EARTHQUAKE_2          11346
+//---------------------------------------
+//Aggro
+#define SAY_AGGRO                   "Do not proceed. You will be eliminated!"
 #define SOUND_AGGRO                 11344
-
-#define SOUND_DIED1                 11349
-#define SOUND_DIED2                 11350
-#define SOUND_DIED3                 11351
-
+//---------------------------------------
+//Slay
+#define SAY_SLAY_1                  "Threat level zero."
+#define SOUND_SLAY_1                11349
+#define SAY_SLAY_2                  "Directive accomplished."
+#define SOUND_SLAY_2                11350
+#define SAY_SLAY_3                  "Target exterminated."
+#define SOUND_SLAY_3                11351
+//---------------------------------------
+//Death
+#define SAY_DEATH                   "System failure in five... four..."
 #define SOUND_DEATH                 11352
 
 struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 {
     boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    uint32 Chain_Timer, Enrage_Timer, Kick_Timer, Quake_Timer, Armor_Timer;
+    uint32 Chain_Timer;
+    uint32 Enrage_Timer; 
+    uint32 Overrun_Timer;
+    uint32 Quake_Timer; 
+    uint32 Armor_Timer;
 
-    bool InCombat, InEnrage;
+    bool InCombat;
 
     void EnterEvadeMode()
     {
@@ -59,10 +76,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         Armor_Timer     = 10000;
         Chain_Timer     = 20000;
         Quake_Timer     = 60000;
-        Kick_Timer      = 120000;
+        Overrun_Timer   = 120000;
 
         InCombat = false;
-        InEnrage = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -76,20 +92,24 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         switch(rand()%3)
         {
         case 0:
-            DoPlaySoundToSet(Victim, SOUND_DIED1);
+            DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(Victim, SOUND_SLAY_1);
             break;
         case 1:
-            DoPlaySoundToSet(Victim, SOUND_DIED2);
+            DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(Victim, SOUND_SLAY_2);
             break;
         case 2:
-            DoPlaySoundToSet(Victim, SOUND_DIED3);
+            DoYell(SAY_SLAY_3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(Victim, SOUND_SLAY_3);
             break;
         }
-        if (InEnrage) DoCast(Victim,SPELL_MARK_DEATH);
+        DoCast(m_creature->getVictim(),SPELL_MARK_DEATH);
     }
 
     void JustDied(Unit* Killer)
     {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
@@ -102,6 +122,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             if (!InCombat)
             {
                 DoFaceTarget(m_creature->getVictim());
+                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
             }
@@ -123,6 +144,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
                 if (!InCombat)
                 {
                     DoFaceTarget(m_creature->getVictim());
+                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
                 }
@@ -133,38 +155,63 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
-
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
         if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-            if (Enrage_Timer < diff && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) <= 20)
-            {
-                if (!InEnrage)
-                {
-                    DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-                    InEnrage = true;
-                }
-                DoCast(m_creature,SPELL_ENRAGE);
-                Enrage_Timer = 6000;
-            }else Enrage_Timer -= diff;
 
-            if (Kick_Timer < diff)
-            {
-                DoPlaySoundToSet(m_creature, SOUND_KICK);
-                DoCast(m_creature->getVictim(),SPELL_KICK);
-                Kick_Timer = (100 + rand()% 80) * 1000;
-            }else Kick_Timer -= diff;
+            if (((m_creature->GetHealth()*100)/ m_creature->GetMaxHealth()) <= 20)//when hp <= 20% gain enrage
+            {   
+                if(Enrage_Timer < diff)
+                {
+                    DoCast(m_creature,SPELL_ENRAGE);
+                    Enrage_Timer = 6000;
+
+                }else Enrage_Timer -= diff;
+            }
+
+            if (Overrun_Timer < diff)
+            {   
+                switch(rand()%2)
+                {
+                case 0:
+                    DoYell(SAY_OVERRUN_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_OVERRUN_1);
+                    break;
+                case 1:
+                    DoYell(SAY_OVERRUN_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_OVERRUN_2);
+                    break;
+                }
+                DoCast(m_creature->getVictim(),SPELL_OVERRUN);
+                Overrun_Timer = (100 + rand()% 80) * 1000;
+
+            }else Overrun_Timer -= diff;
 
             if (Quake_Timer < diff)
             {
-                DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE);
+                if (rand()%2)
+                    return;
+
+                switch(rand()%2)
+                {
+                case 0:
+                    DoYell(SAY_EARTHQUAKE_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE_1);
+                    break;
+                case 1:
+                    DoYell(SAY_EARTHQUAKE_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE_2);
+                    break;
+                }
+                m_creature->RemoveAura(SPELL_ENRAGE, NULL);//remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
                 DoCast(m_creature,SPELL_EARTHQUAKE);
                 Quake_Timer = (80 + rand()% 20) * 1000;
+
             }else Quake_Timer -= diff;
 
             if (Chain_Timer < diff)
             {
-                DoPlaySoundToSet(m_creature, SOUND_CHAIN_LIGHTNING);
                 DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
                 Chain_Timer = (50 + rand()% 50) * 1000;
             }else Chain_Timer -= diff;
@@ -172,7 +219,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             if (Armor_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
-                Armor_Timer = (30 + rand()% 30) * 1000;
+                Armor_Timer = (30 + rand()% 10) * 1000;
             }else Armor_Timer -= diff;
 
             DoMeleeAttackIfReady();
