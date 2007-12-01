@@ -837,6 +837,10 @@
 				<Filter
 					Name="Loch Modan"
 					>
+					<File
+						RelativePath="..\scripts\zone\loch_modan\npcs_loch_modan.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Maraudon"

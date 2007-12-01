@@ -284,57 +284,6 @@ CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
 }
 
 /*######
-## mobs_shadow_council_covert
-######*/
-
-#define GOSSIP_ITEM_SHA "Speak"
-
-bool GossipHello_mobs_shadow_council_covert(Player *player, Creature *_Creature )
-{
-    if (player->GetTeam() == ALLIANCE)
-    {
-        if ( _Creature->GetEntry() == 18716 && !player->GetReqKillOrCastCurrentCount(10040, 18716) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-        if ( _Creature->GetEntry() == 18717 && !player->GetReqKillOrCastCurrentCount(10040, 18717) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        if ( _Creature->GetEntry() == 18719 && !player->GetReqKillOrCastCurrentCount(10040, 18719) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    }
-    if (player->GetTeam() == HORDE)
-    {
-        if ( _Creature->GetEntry() == 18716 && !player->GetReqKillOrCastCurrentCount(10041, 18716) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-        if ( _Creature->GetEntry() == 18717 && !player->GetReqKillOrCastCurrentCount(10041, 18717) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        if ( _Creature->GetEntry() == 18719 && !player->GetReqKillOrCastCurrentCount(10041, 18719) )
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_SHA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    }
-
-    player->SEND_GOSSIP_MENU(384,_Creature->GetGUID());
-
-    return true;
-}
-bool GossipSelect_mobs_shadow_council_covert(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-    switch (action)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            player->SEND_GOSSIP_MENU(384, _Creature->GetGUID());
-            player->KilledMonster(18716, _Creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            player->SEND_GOSSIP_MENU(384, _Creature->GetGUID());
-            player->KilledMonster(18717, _Creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            player->SEND_GOSSIP_MENU(384, _Creature->GetGUID());
-            player->KilledMonster(18719, _Creature->GetGUID());
-            break;
-    }
-    return true;
-}
-
-/*######
 ## AddSC
 ######*/
 
@@ -360,11 +309,5 @@ void AddSC_mobs_terokkar_forest()
     newscript = new Script;
     newscript->Name="mob_netherweb_victim";
     newscript->GetAI = GetAI_mob_netherweb_victim;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mobs_shadow_council_covert";
-    newscript->pGossipHello =  &GossipHello_mobs_shadow_council_covert;
-    newscript->pGossipSelect = &GossipSelect_mobs_shadow_council_covert;
     m_scripts[nrscripts++] = newscript;
 }

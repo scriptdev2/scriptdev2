@@ -309,6 +309,8 @@ extern void AddSC_mob_kilrek();
 extern void AddSC_netherspite_infernal();
 
 //Loch Modan
+extern void AddSC_npcs_loch_modan();
+
 //Lower Blackrock Spire
 //Magtheridon's Lair
 //Maraudon
@@ -812,6 +814,8 @@ void ScriptsInit()
     AddSC_netherspite_infernal();
 
     //Loch Modan
+    AddSC_npcs_loch_modan();
+
     //Lower Blackrock Spire
     //Magtheridon's Lair
     //Maraudon

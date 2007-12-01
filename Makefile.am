@@ -199,6 +199,7 @@ scripts/zone/karazhan/boss_terestian_illhoof.cpp \
 scripts/zone/karazhan/instance_karazhan.cpp \
 scripts/zone/karazhan/mob_homunculus.cpp \
 scripts/zone/karazhan/mob_kilrek.cpp \
+scripts/zone/loch_modan/npcs_loch_modan.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_lord_vyletongue.cpp \
 scripts/zone/maraudon/boss_noxxion.cpp \

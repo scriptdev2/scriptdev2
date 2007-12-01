@@ -468,6 +468,7 @@ UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entr
 
 
 /* LOCH MODAN */
+UPDATE `creature_template` SET `ScriptName` = 'npc_mountaineer_pebblebitty' WHERE `entry` = 3836;
 /* Mo'grosh Mystic, Tunnel Rat Geomancer, Magosh <Stonesplinter Tribal Shaman>, Stonesplinter Scout, Stonesplinter Seer, Stonesplinter Geomancer, Stonesplinter Skullthumper, Stonesplinter Bonesnapper, Stonesplinter Shaman, Stonesplinter Digger,  */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1183, 1174, 1399, 1162, 1166, 1165, 1163, 1164, 1197, 1167);
 
@@ -800,7 +801,6 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_gordunni_ogre' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'mob_infested_root_walker' WHERE `entry` = 22095;
 UPDATE `creature_template` SET `ScriptName` = 'mob_netherweb_victim' WHERE `entry` = 22355;
 UPDATE `creature_template` SET `ScriptName` = 'mob_rotting_forest_rager' WHERE `entry` = 22307;
-UPDATE `creature_template` SET `ScriptName` = 'mobs_shadow_council_covert' WHERE `entry` IN (18716, 18717, 18719);
 
 /* THOUSAND NEEDLES */
 
