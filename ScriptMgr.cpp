@@ -199,6 +199,8 @@ extern void AddSC_boss_teremusthedevourer();
 extern void AddSC_npcs_blasted_lands();
 
 //Burning steppes
+extern void AddSC_npcs_burning_steppes();
+
 //Caverns of Time
 //--Battle for Mt. Hyjal
 //--Old Hillsbrad
@@ -700,6 +702,8 @@ void ScriptsInit()
     AddSC_npcs_blasted_lands();
 
     //Burning steppes
+    AddSC_npcs_burning_steppes();
+
     //Caverns of Time
     //--Battle for Mt. Hyjal
     //--Old Hillsbrad

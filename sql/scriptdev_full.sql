@@ -236,6 +236,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5975, 7505, 7506, 7666);
 
 /* BURNING STEPPES */
+UPDATE `creature_template` SET `ScriptName` = 'npc_ragged_john' WHERE `entry` = 9563;
 /* Blackrock Sorcerer, Blackrock Warlock, Scalding Broodling, Thaurissan Agent, Firegut Ogre Mage */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7026, 7028, 7048, 7038, 7034);
 

@@ -143,6 +143,7 @@ scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
+scripts/zone/burning_steppes/npcs_burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \

@@ -617,6 +617,10 @@
 				<Filter
 					Name="Burning Steppes"
 					>
+					<File
+						RelativePath="..\scripts\zone\burning_steppes\npcs_burning_steppes.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Darkshore"
