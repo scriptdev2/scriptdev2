@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npc_Skorn_Whitecloud
 SD%Complete: 100
-SDComment: Allows quest to be completed?
+SDComment: Just a story if not rewarded for quest
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,12 +26,12 @@ EndScriptData */
 
 bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
 {
-    uint64 guid = _Creature->GetGUID();
     if (_Creature->isQuestGiver())
-    player->PrepareQuestMenu( guid );
-    player->SendPreparedQuest( guid );
+        player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    player->ADD_GOSSIP_ITEM( 0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
+    if (!player->GetQuestRewardStatus(770) == 1)
+        player->ADD_GOSSIP_ITEM( 0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF );
+
     player->SEND_GOSSIP_MENU(522,_Creature->GetGUID());     // Skorn Whitecloud message
 
     return true;
@@ -39,16 +39,10 @@ bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
 
 bool GossipSelect_skorn_whitecloud(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-
-    if (action == GOSSIP_SENDER_INFO)
+    if (action == GOSSIP_ACTION_INFO_DEF)
         player->SEND_GOSSIP_MENU(523,_Creature->GetGUID());
 
     return true;
-}
-
-uint32 NPCDialogStatus_skorn_whitecloud(Player *player, Creature *_Creature )
-{
-    return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
 }
 
 void AddSC_skorn_whitecloud()
@@ -59,6 +53,5 @@ void AddSC_skorn_whitecloud()
     newscript->Name="skorn_whitecloud";
     newscript->pGossipHello          = &GossipHello_skorn_whitecloud;
     newscript->pGossipSelect         = &GossipSelect_skorn_whitecloud;
-    newscript->pNPCDialogStatus      = &NPCDialogStatus_skorn_whitecloud;
     m_scripts[nrscripts++] = newscript;
 }
