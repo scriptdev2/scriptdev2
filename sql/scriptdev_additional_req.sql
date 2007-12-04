@@ -72,8 +72,6 @@ UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 21161, `Re
 UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 15221, `ReqCreatureOrGOId2` = 15222, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8304;
 /* Blessings of the Ancients */
 UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 17900, `ReqCreatureOrGOId2` = 17901, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` =9785;
-/* Great Bear Spirit */
-UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 11956, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 0, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` IN (5929, 5930);
 
 
 /* */

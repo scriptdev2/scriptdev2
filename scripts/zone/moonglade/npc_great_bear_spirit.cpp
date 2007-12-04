@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npc_Great_Bear_Spirit
 SD%Complete: 100
-SDComment: For Quest 5929
+SDComment: For Quest 5929, 5930
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -70,15 +70,10 @@ bool GossipSelect_npc_great_bear_spirit(Player *player, Creature *_Creature, uin
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
             player->SEND_GOSSIP_MENU(4735, _Creature->GetGUID());
-
-            if (player->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(5929, _Creature->GetEntry()) )//ally
-            {
-                player->KilledMonster( 11956,_Creature->GetGUID() );
-            }
-            if (player->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(5930, _Creature->GetEntry()) )//horde
-            {
-                player->KilledMonster( 11956,_Creature->GetGUID() );
-            }
+            if (player->GetQuestStatus(5929)==QUEST_STATUS_INCOMPLETE)
+                player->CompleteQuest(5929);
+            if (player->GetQuestStatus(5930)==QUEST_STATUS_INCOMPLETE)
+                player->CompleteQuest(5930);
             break;
     }
     return true;

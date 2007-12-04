@@ -69,4 +69,5 @@ pkgdata_DATA = \
 	r178.sql \
 	r181.sql \
 	r182.sql \
-	r183.sql
+	r183.sql \
+	r184.sql
