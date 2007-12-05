@@ -1038,6 +1038,10 @@
 				<Filter
 					Name="Stonetalon Mountains"
 					>
+					<File
+						RelativePath="..\scripts\zone\stonetalon_mountains\npcs_stonetalon_mountains.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Stranglethorn Vale"
@@ -1488,6 +1492,10 @@
 					>
 					<File
 						RelativePath="..\scripts\zone\blades_edge_mountains\mobs_blades_edge_mountains.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blades_edge_mountains\npcs_blades_edge_mountains.cpp"
 						>
 					</File>
 				</Filter>
@@ -1950,6 +1958,10 @@
 				<Filter
 					Name="Undercity"
 					>
+					<File
+						RelativePath="..\scripts\zone\undercity\npcs_undercity.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

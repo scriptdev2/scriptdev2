@@ -29,11 +29,6 @@ EndScriptData */
 ## npc_mount_vendor
 ######*/
 
-/*
-UPDATE `creature_template` SET `ScriptName` = 'npc_mount_vendor' WHERE `entry` IN (384, 1261, 1460, 2357, 3362, 3685, 4730, 4731, 4885, 7952, 7955, 16264, 17584);
-UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` IN (384, 1261, 1460, 2357, 3362, 3685, 4730, 4731, 4885, 7952, 7955, 16264, 17584);
-*/
-
 #define GOSSIP_ITEM_GOODS "I'd like to browse your goods."
 
 bool GossipHello_npc_mount_vendor(Player *player, Creature *_Creature)

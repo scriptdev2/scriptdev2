@@ -192,6 +192,7 @@ extern void AddSC_boss_victor_nefarius();
 
 //Blade's Edge Mountains
 extern void AddSC_mobs_blades_edge_mountains();
+extern void AddSC_npcs_blades_edge_mountains();
 
 //Blasted lands
 extern void AddSC_boss_kruul();
@@ -437,6 +438,8 @@ extern void AddSC_npc_blood_knight_stillblade();
 //Silverpine forest
 //Stockade
 //Stonetalon mountains
+extern void AddSC_npcs_stonetalon_mountains();
+
 //Stormwind City
 extern void AddSC_npc_bartleby();
 extern void AddSC_npc_dashel_stonefist();
@@ -501,6 +504,8 @@ extern void AddSC_mob_jadespine_basilisk();
 extern void AddSC_mob_uldaman();
 
 //Undercity
+extern void AddSC_npcs_undercity();
+
 //Un'Goro Crater
 //Upper blackrock spire
 //Wailing caverns
@@ -697,6 +702,7 @@ void ScriptsInit()
 
     //Blade's Edge Mountains
     AddSC_mobs_blades_edge_mountains();
+    AddSC_npcs_blades_edge_mountains();
 
     //Blasted lands
     AddSC_boss_kruul();
@@ -942,6 +948,8 @@ void ScriptsInit()
     //Silverpine forest
     //Stockade
     //Stonetalon mountains
+    AddSC_npcs_stonetalon_mountains();
+
     //Stormwind City
     AddSC_npc_bartleby();
     AddSC_npc_dashel_stonefist();
@@ -1006,6 +1014,8 @@ void ScriptsInit()
     AddSC_mob_uldaman();
 
     //Undercity
+    AddSC_npcs_undercity();
+
     //Un'Goro Crater
     //Upper blackrock spire
     //Wailing caverns

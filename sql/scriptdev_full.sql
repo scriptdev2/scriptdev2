@@ -61,6 +61,8 @@ UPDATE `creature_template` SET `ScriptName` = 'bunthen_plainswind' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry` = 5764;
 /* inkeepers for halloween event */
 UPDATE `creature_template` SET `ScriptName` = 'innkeeper' WHERE `npcflag` & 128<>0;
+/* regular mount vendors */
+UPDATE `creature_template` SET `ScriptName` = 'npc_mount_vendor' WHERE `entry` IN (384, 1261, 1460, 2357, 3362, 3685, 4730, 4731, 4885, 7952, 7955, 16264, 17584);
 
 /* SERVERS */
 UPDATE `creature_template` SET `ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);
@@ -229,6 +231,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* BLADE'S EDGE MOUNTAINS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bladespire_ogre' WHERE `entry` IN (19998, 20334, 21296, 21975);
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bloodmaul_ogre' WHERE `entry` IN (19948, 19952, 19957);
+UPDATE `creature_template` SET `ScriptName` = 'npc_daranelle' WHERE `entry` = 21469;
 
 /* BLASTED LANDS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `entry` = 7572;
@@ -651,6 +654,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1707, 1711, 1708, 1715, 1706);
 
 /* STONETALON MOUNTAINS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_braug_dimspirit' WHERE `entry` = 4489;
 /* Deepmoss Creeper */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4005);
 
@@ -825,6 +829,10 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_ironaya' WHERE `entry` = 722
 /* UN'GORO CRATER */
 /* Tar Creeper */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6527);
+
+/* UNDERCITY */
+UPDATE `creature_template` SET `ScriptName` = 'npc_parqual_fintallas' WHERE `entry` = 4488;
+
 
 /* WAILING CAVERNS */
 /* Deviate Creeper */

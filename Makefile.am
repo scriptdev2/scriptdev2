@@ -140,6 +140,7 @@ scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
+scripts/zone/blades_edge_mountains/npcs_blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
@@ -300,6 +301,7 @@ scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
+scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \
 scripts/zone/stormwind/npc_bartleby.cpp \
 scripts/zone/stormwind/npc_dashel_stonefist.cpp \
 scripts/zone/stranglethorn_vale/mobs_stranglethorn_vale.cpp \
@@ -347,6 +349,7 @@ scripts/zone/thunder_bluff/npc_cairne_bloodhoof.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
+scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
