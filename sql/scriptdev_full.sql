@@ -22,6 +22,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_barov_journal' WHERE `entry` = 180794;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot' where `entry`=179552;
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -105,6 +106,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_ethereal_apprentice' WHERE `e
 /* AUCHENAI CRYPTS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_shirrak_the_dead_watcher' WHERE `entry` = 18371;
 UPDATE `creature_template` SET `ScriptName` = 'boss_shirrak_the_dead_watcher' WHERE `entry` = 20318;
+UPDATE `creature_template` SET `ScriptName` = 'boss_exarch_maladaar' WHERE `entry` = 18373;
 
 /* SETHEKK HALLS */
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_fire' WHERE `entry` = 19203;
@@ -631,6 +633,8 @@ UPDATE `creature_template` SET `ScriptName` = 'neltharaku' WHERE `entry` = 21657
 UPDATE `creature_template` SET `ScriptName` = 'npc_drake_dealer_hurlunk' WHERE `entry` = 23489;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_dragonmaw_orc' WHERE `entry` IN (21717, 21718, 21719, 21720, 22331);
 UPDATE `creature_template` SET `ScriptName` = 'mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878, 21879);
+/* Doomwalker */
+UPDATE `creature_template` SET `ScriptName` = 'boss_doomwalker' WHERE `entry` = 17711;
 
 /* SHATTRATH */
 UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23483;
