@@ -285,6 +285,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_serpentshrine_cavern' WHERE `
 /* Serpentshrine Cavern Bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_hydross_the_unstable' WHERE `entry` = 21216;
 UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind' WHERE `entry` = 21215;
+UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind_demonform' WHERE `entry` = 21845;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomlord_karathress' WHERE `entry` = 21214;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_sharkkis' WHERE `entry` = 21966;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_tidalvess' WHERE `entry` = 21965;

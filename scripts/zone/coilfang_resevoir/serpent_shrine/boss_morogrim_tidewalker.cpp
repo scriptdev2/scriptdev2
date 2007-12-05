@@ -113,7 +113,6 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData("MorogrimTidewalkerEvent", 0);
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
 
@@ -223,7 +222,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             break;
         }
 
-        player->TeleportTo(548, x, y, z, player->GetOrientation());
+        player->TeleportTo(548, x, y, z+1, player->GetOrientation());
         DoCast(player, SPELL_WATERY_GRAVE);
     }
 

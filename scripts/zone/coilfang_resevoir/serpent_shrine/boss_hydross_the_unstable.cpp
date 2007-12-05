@@ -131,7 +131,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData("HydrossTheUnstableEvent", 0);
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FROST, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, false); // disabled
@@ -297,10 +296,12 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
-                    MarkOfCorruption_Count++;
+
+                    if(MarkOfCorruption_Count < 4)
+                        MarkOfCorruption_Count++;
                 }
 
-                MarkOfCorruption_Timer = 20000;
+                MarkOfCorruption_Timer = 10000+rand()%5000;
             }else MarkOfCorruption_Timer -= diff;
 
             //VileSludge_Timer
@@ -374,10 +375,12 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
-                    MarkOfHydross_Count++;
+
+                    if(MarkOfHydross_Count < 4)
+                        MarkOfHydross_Count++;
                 }
 
-                MarkOfHydross_Timer = 20000;
+                MarkOfHydross_Timer = 10000+rand()%5000;
             }else MarkOfHydross_Timer -= diff;
 
             //WaterTomb_Timer

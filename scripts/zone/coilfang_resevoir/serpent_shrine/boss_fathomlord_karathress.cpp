@@ -116,6 +116,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData("KarathressEvent", 0);
+
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
 
     void EventSharkkisDeath()

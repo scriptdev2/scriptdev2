@@ -55,11 +55,15 @@ EndScriptData */
 #define MODEL_DEMON             14555
 #define MODEL_NIGHTELF          20514
 
+#define DEMON_FORM              21845
+
+//Original Leotheras the Blind AI
 struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 {
     boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        Demon = 0;
         EnterEvadeMode();
     }
 
@@ -70,11 +74,10 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     uint32 Switch_Timer;
 
     bool DemonForm;
-    bool InWhirlwind;
-    bool InCombat;
     bool IsFinalForm;
+    bool InCombat;
 
-    Creature *Invisible;
+    uint64 Demon;
 
     void EnterEvadeMode()
     {
@@ -83,9 +86,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         Switch_Timer = 45000;
 
         DemonForm = false;
-        InWhirlwind = false;
-        InCombat = false;
         IsFinalForm = false;
+        InCombat = false;
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
 
@@ -96,31 +98,8 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData("LeotherasTheBlindEvent", 0);
-    }
 
-    void SetDemonFinalForm(Unit *target)
-    {
-        IsFinalForm = true;
-        DemonForm = true;
-        InWhirlwind = false;
-
-        DoYell(SAY_FREE, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_FREE);
-
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
-
-        DoStartMeleeAttack(target);
-    }
-
-    void SetNightelfFinalForm()
-    {
-        IsFinalForm = true;
-        DemonForm = false;
-
-        DoYell(SAY_FINAL_FORM, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_FINAL_FORM);
-
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
 
     void StartEvent()
@@ -136,6 +115,9 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
+        if(victim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
         if(DemonForm)
             switch(rand()%3)
             {
@@ -176,10 +158,17 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if(!DemonForm)
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        //despawn copy
+        if(Demon)
         {
-            DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_DEATH);
+            Unit *pUnit = NULL;
+            pUnit = Unit::GetUnit((*m_creature), Demon);
+
+            if(pUnit)
+                pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
         }
 
         if(pInstance)
@@ -196,7 +185,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
 
-            if(!InCombat && !IsFinalForm)
+            if(!InCombat)
                 StartEvent();
         }
     }
@@ -216,7 +205,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
                 DoStartMeleeAttack(who);
 
-                if(!InCombat && !IsFinalForm)
+                if(!InCombat)
                     StartEvent();
             }
         }
@@ -233,32 +222,22 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             //Whirlwind_Timer
             if(Whirlwind_Timer < diff)
             {
-                if(!InWhirlwind)
-                {
-                    DoCast(m_creature, SPELL_WHIRLWIND);
-                    InWhirlwind = true;
-                    Whirlwind_Timer = 15000;
-                }
-                else
-                {
-                    InWhirlwind = false;
-                    Whirlwind_Timer = 10000;
-                }
+                DoCast(m_creature, SPELL_WHIRLWIND);
+                Whirlwind_Timer = 25000;
             }else Whirlwind_Timer -= diff;
 
             //Switch_Timer
-            if(!IsFinalForm && Switch_Timer < diff)
-            {
-                //switch to demon form
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
-                DoYell(SAY_SWITCH_TO_DEMON, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_DEMON);
-                DemonForm = true;
-                InWhirlwind = false;
+            if(!IsFinalForm)
+                if(Switch_Timer < diff)
+                {
+                    //switch to demon form
+                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
+                    DoYell(SAY_SWITCH_TO_DEMON, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_DEMON);
+                    DemonForm = true;
 
-                Switch_Timer = 60000;
-
-            }else Switch_Timer -= diff;
+                    Switch_Timer = 60000;
+                }else Switch_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -272,33 +251,163 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             }else ChaosBlast_Timer -= diff;
 
             //Switch_Timer
-            if(!IsFinalForm && Switch_Timer < diff)
+            if(Switch_Timer < diff)
             {
                 //switch to nightelf form
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
                 DemonForm = false;
 
                 Switch_Timer = 45000;
-
             }else Switch_Timer -= diff;
         }
 
         if(!IsFinalForm && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
         {
             //at this point he divides himself in two parts
-            Creature *DemonForm = DoSpawnCreature(21215, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+            Creature *Copy = NULL;
+            Copy = DoSpawnCreature(DEMON_FORM, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
-            if(DemonForm)
-                ((boss_leotheras_the_blindAI*)DemonForm->AI())->SetDemonFinalForm(m_creature->getVictim());
+            if(Copy)
+            {
+                Demon = Copy->GetGUID();
+                Copy->AI()->AttackStart(m_creature->getVictim());
+            }
 
-            SetNightelfFinalForm();
+            //set nightelf final form
+            IsFinalForm = true;
+            DemonForm = false;
+
+            DoYell(SAY_FINAL_FORM, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_FINAL_FORM);
+
+            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
         }
+    }
+};
+
+//Leotheras the Blind Demon Form AI
+struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
+{
+    boss_leotheras_the_blind_demonformAI(Creature *c) : ScriptedAI(c)
+    {
+        InCombat = false;
+        EnterEvadeMode();
+    }
+
+    uint32 ChaosBlast_Timer;
+
+    bool InCombat;
+
+    void EnterEvadeMode()
+    {
+        ChaosBlast_Timer = 1000;
+
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
+    void StartEvent()
+    {
+        DoYell(SAY_FREE, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_FREE);
+
+        InCombat = true;
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        if(victim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_DEMON_SLAY1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY1);
+            break;
+
+        case 1:
+            DoYell(SAY_DEMON_SLAY2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY2);
+            break;
+
+        case 2:
+            DoYell(SAY_DEMON_SLAY3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY3);
+            break;
+        }
+    }
+
+    void JustDied(Unit *victim)
+    {
+        //invisibility (blizzlike, at the end of the fight he doesn't die, he disappears)
+        m_creature->CastSpell(m_creature, 8149, true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if(!who && who != m_creature)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+
+            if(!InCombat)
+                StartEvent();
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+
+                if(!InCombat)
+                    StartEvent();
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //ChaosBlast_Timer
+        if(ChaosBlast_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_CHAOS_BLAST);
+            ChaosBlast_Timer = 1500;
+        }else ChaosBlast_Timer -= diff;
+
+        //Do NOT deal any melee damage to the target.
     }
 };
 
 CreatureAI* GetAI_boss_leotheras_the_blind(Creature *_Creature)
 {
     return new boss_leotheras_the_blindAI (_Creature);
+}
+CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature *_Creature)
+{
+    return new boss_leotheras_the_blind_demonformAI (_Creature);
 }
 
 void AddSC_boss_leotheras_the_blind()
@@ -307,5 +416,10 @@ void AddSC_boss_leotheras_the_blind()
     newscript = new Script;
     newscript->Name="boss_leotheras_the_blind";
     newscript->GetAI = GetAI_boss_leotheras_the_blind;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="boss_leotheras_the_blind_demonform";
+    newscript->GetAI = GetAI_boss_leotheras_the_blind_demonform;
     m_scripts[nrscripts++] = newscript;
 }
