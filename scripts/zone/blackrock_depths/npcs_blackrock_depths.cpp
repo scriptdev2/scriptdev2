@@ -93,17 +93,26 @@ bool GossipSelect_npc_kharan_mighthammer(Player *player, Creature *_Creature, ui
 
 bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
 {
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetReputationRank(59) >= REP_FRIENDLY)
+        player->ADD_GOSSIP_ITEM( 1, "Show me what I have access to, Lothos.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
     if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
-            !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1) &&
-            player->GetBankItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT) < 1 &&
-            player->HasItemCount(ITEM_SULFURON_INGOT, 1))
+        !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1) &&
+        player->GetBankItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT) < 1 &&
+        player->HasItemCount(ITEM_SULFURON_INGOT, 1))
     {
-        player->ADD_GOSSIP_ITEM(7, "Get Thorium Brotherhood Contract",
-            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(384,_Creature->GetGUID());
-        return true;
+        player->ADD_GOSSIP_ITEM(0, "Get Thorium Brotherhood Contract", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
-    return false;
+
+    if (player->GetReputationRank(59) < REP_FRIENDLY)
+        player->PlayerTalkClass->SendGossipMenu(3673, _Creature->GetGUID());
+    else
+        player->PlayerTalkClass->SendGossipMenu(3677, _Creature->GetGUID());
+
+    return true;
 }
 
 bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature, uint32 sender, uint32 action )
@@ -113,7 +122,10 @@ bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature,
         player->CLOSE_GOSSIP_MENU();
         player->CastSpell(player, SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND, false);
     }
-
+    if (action == GOSSIP_ACTION_TRADE)
+    {
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    }
     return true;
 }
 
