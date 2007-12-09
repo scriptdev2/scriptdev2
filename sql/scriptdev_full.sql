@@ -22,7 +22,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_barov_journal' WHERE `entry` = 180794;
-UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot' where `entry`=179552;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot' where `entry`= 179552;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_shield_generator' WHERE `entry` IN (185052, 185053, 185051, 185054);
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -296,6 +297,12 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_sharkkis' WHERE 
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_tidalvess' WHERE `entry` = 21965;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_caribdis' WHERE `entry` = 21964;
 UPDATE `creature_template` SET `ScriptName` = 'boss_morogrim_tidewalker' WHERE `entry`=21213;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lady_vashj' WHERE `entry` = 21212;
+UPDATE `creature_template` SET `ScriptName` = 'mob_enchanted_elemental' WHERE `entry` = 21958;
+UPDATE `creature_template` SET `ScriptName` = 'mob_tainted_elemental' WHERE `entry` = 22009;
+UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_elite' WHERE `entry` = 22055;
+UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_strider' WHERE `entry` = 22056;
+UPDATE `creature_template` SET `ScriptName` = 'mob_fathom_sporebat' WHERE `entry` = 22120;
 /* Water Globule */
 UPDATE `creature_template` SET `ScriptName` = 'mob_water_globule' WHERE `entry`=21913;
 
