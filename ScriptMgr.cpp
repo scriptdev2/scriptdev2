@@ -282,6 +282,7 @@ extern void AddSC_boss_the_maker();
 
 //--Magtheridon's Lair
 extern void AddSC_boss_magtheridon();
+extern void AddSC_instance_magtheridons_lair();
 
 //--Shattered Halls
 extern void AddSC_boss_grand_warlock_nethekurse();
@@ -313,7 +314,6 @@ extern void AddSC_netherspite_infernal();
 extern void AddSC_npcs_loch_modan();
 
 //Lower Blackrock Spire
-//Magtheridon's Lair
 //Maraudon
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_lord_vyletongue();
@@ -484,6 +484,9 @@ extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
 
 //--The Mechanar
+extern void AddSC_boss_gatewatcher_iron_hand();
+extern void AddSC_boss_nethermancer_sepethrea();
+
 //Temple of ahn'qiraj
 extern void AddSC_Yauj();
 extern void AddSC_Kri();
@@ -602,7 +605,7 @@ void ScriptsInit()
     //Aunchindoun
     //--Auchenai Crypts
     AddSC_boss_shirrak_the_dead_watcher();
-	//--Mana Tombs
+    //--Mana Tombs
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
     AddSC_boss_tavarok();
@@ -643,7 +646,7 @@ void ScriptsInit()
     AddSC_boss_najentus();
     AddSC_boss_illidari_council();
     AddSC_instance_black_temple();
- 
+
     //Blackfathom Depths
     //Blackrock Depths
     AddSC_boss_ambassador_flamelash();
@@ -792,6 +795,7 @@ void ScriptsInit()
 
     //--Magtheridon's Lair
     AddSC_boss_magtheridon();
+    AddSC_instance_magtheridons_lair();
 
     //--Shattered Halls
     AddSC_boss_grand_warlock_nethekurse();
@@ -823,7 +827,6 @@ void ScriptsInit()
     AddSC_npcs_loch_modan();
 
     //Lower Blackrock Spire
-    //Magtheridon's Lair
     //Maraudon
     AddSC_boss_landslide();
     AddSC_boss_lord_vyletongue();
@@ -994,6 +997,9 @@ void ScriptsInit()
     AddSC_mob_the_eye();
 
     //--The Mechanar
+    AddSC_boss_gatewatcher_iron_hand();
+    AddSC_boss_nethermancer_sepethrea();
+
     //Temple of ahn'qiraj
     AddSC_Yauj();
     AddSC_Kri();
@@ -1035,7 +1041,6 @@ void ScriptsInit()
 
 
     // -------------------
-
 
 }
 

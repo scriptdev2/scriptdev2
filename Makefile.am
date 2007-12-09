@@ -331,6 +331,9 @@ scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
+scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_gyrokill.cpp \
+scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_ironhand.cpp \
+scripts/zone/tempest_keep/the_mechanar/boss_nethermancer_sepethrea.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_cthun.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_fankriss.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_huhuran.cpp \

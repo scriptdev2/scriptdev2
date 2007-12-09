@@ -52,6 +52,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         LeashCheck_Timer = 2000;
         InCombat = false;
 
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();

@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Guard_AI
-SD%Complete: 100
-SDComment: Base Class for Guard AI
+SD%Complete: 90
+SDComment: Core problems with Guards not helping dotted players
 EndScriptData */
 
 #include "guard_ai.h"

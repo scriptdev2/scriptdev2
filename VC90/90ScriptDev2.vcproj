@@ -1780,6 +1780,18 @@
 					<Filter
 						Name="The Mechanar"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_gatewatcher_gyrokill.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_gatewatcher_ironhand.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_mechanar\boss_nethermancer_sepethrea.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

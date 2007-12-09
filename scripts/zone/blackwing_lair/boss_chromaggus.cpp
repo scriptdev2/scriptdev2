@@ -216,6 +216,8 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
     }
 
     void AttackStart(Unit *who)
