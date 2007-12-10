@@ -41,9 +41,10 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     uint64 Tidalvess;
     uint64 Caribdis;
     uint64 LadyVashj;
-    uint64 TaintedElemental;
     uint64 Karathress;
     uint64 KarathressEvent_Starter;
+
+    bool ShieldGeneratorDeactivated[4];
 
     bool Encounters[ENCOUNTERS];
 
@@ -53,9 +54,13 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         Tidalvess = 0;
         Caribdis = 0;
         LadyVashj = 0;
-        TaintedElemental = 0;
         Karathress = 0;
         KarathressEvent_Starter = 0;
+
+        ShieldGeneratorDeactivated[0] = false;
+        ShieldGeneratorDeactivated[1] = false;
+        ShieldGeneratorDeactivated[2] = false;
+        ShieldGeneratorDeactivated[3] = false;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -75,11 +80,6 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         {
             case 21212:
             LadyVashj = creature->GetGUID();
-            break;
- 
-            case 22009:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
-            TaintedElemental = creature->GetGUID();
             break;
 
             case 21214:
@@ -136,8 +136,27 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             Encounters[3] = (data) ? true : false;
         else if(type == "MorogrimTidewalkerEvent")
             Encounters[4] = (data) ? true : false;
+
+        //Lady Vashj
         else if(type == "LadyVashjEvent")
+        {
+            if(data == 0)
+            {
+                ShieldGeneratorDeactivated[0] = false;
+                ShieldGeneratorDeactivated[1] = false;
+                ShieldGeneratorDeactivated[2] = false;
+                ShieldGeneratorDeactivated[3] = false;
+            }
             Encounters[5] = (data) ? true : false;
+        }
+        else if(type == "ShieldGenerator1")
+            ShieldGeneratorDeactivated[0] = (data) ? true : false;
+        else if(type == "ShieldGenerator2")
+            ShieldGeneratorDeactivated[1] = (data) ? true : false;
+        else if(type == "ShieldGenerator3")
+            ShieldGeneratorDeactivated[2] = (data) ? true : false;
+        else if(type == "ShieldGenerator4")
+            ShieldGeneratorDeactivated[3] = (data) ? true : false;
     }
 
     uint32 GetData(char *type)
@@ -152,8 +171,23 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             return Encounters[3];
         else if(type == "MorogrimTidewalkerEvent")
             return Encounters[4];
+
+        //Lady Vashj
         else if(type == "LadyVashjEvent")
             return Encounters[5];
+        else if(type == "ShieldGenerator1")
+            return ShieldGeneratorDeactivated[0];
+        else if(type == "ShieldGenerator2")
+            return ShieldGeneratorDeactivated[1];
+        else if(type == "ShieldGenerator3")
+            return ShieldGeneratorDeactivated[2];
+        else if(type == "ShieldGenerator4")
+            return ShieldGeneratorDeactivated[3];
+        else if(type == "CanStartPhase3")
+        {
+            if(ShieldGeneratorDeactivated[0] && ShieldGeneratorDeactivated[1] && ShieldGeneratorDeactivated[2] && ShieldGeneratorDeactivated[3])
+                return 1;
+        }
 
         return 0;
     }
