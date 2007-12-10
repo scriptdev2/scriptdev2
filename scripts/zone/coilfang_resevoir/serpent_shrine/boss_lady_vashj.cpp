@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Lady_Vashj
-SD%Complete: 90
-SDComment: Missing visual spell chain through Lady Vashj and shield generators, increase Vashj damage when an enchanted elemental reaches her
+SD%Complete: 95
+SDComment: Missing visual spell chain through Lady Vashj and shield generators
 EndScriptData */
 
 #include "../../../sc_defines.h"
@@ -143,8 +143,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         TaintedElemental_Timer = 50000;
         CoilfangElite_Timer = 45000+rand()%5000;
         CoilfangStrider_Timer = 60000+rand()%10000;
-        SummonSporebat_Timer = 20000;
-        SummonSporebat_StaticTimer = 20000;
+        SummonSporebat_Timer = 10000;
+        SummonSporebat_StaticTimer = 30000;
         EnchantedElemental_Pos = 0;
         Phase = 0;
 
@@ -366,11 +366,14 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 {
                     //Phase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
                     Phase = 2;
+
                     m_creature->GetMotionMaster()->Clear();
                     m_creature->Relocate(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
-                    m_creature->SendMoveToPacket(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, true);
+                    m_creature->SendMoveToPacket(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, false, 0);
 
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                    m_creature->RemoveAllAuras();
 
                     DoPlaySoundToSet(m_creature, SOUND_PHASE2);
                     DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
@@ -394,7 +397,9 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     }
 
                     //summon sporebats faster and faster
-                    SummonSporebat_StaticTimer -= 1000;
+                    if(SummonSporebat_StaticTimer > 1000)
+                        SummonSporebat_StaticTimer -= 1000;
+
                     SummonSporebat_Timer = SummonSporebat_StaticTimer;
                 }else SummonSporebat_Timer -= diff;
             }
@@ -441,7 +446,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
                 DoCast(target, SPELL_FORKED_LIGHTNING);
 
-                ForkedLightning_Timer = 2000+rand()%8000; //blizzlike
+                ForkedLightning_Timer = 2000+rand()%6000; //blizzlike
             }else ForkedLightning_Timer -= diff;
 
             //EnchantedElemental_Timer
@@ -449,12 +454,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             {
                 Creature *Elemental;
                 Elemental = m_creature->SummonCreature(ENCHANTED_ELEMENTAL, ElementPos[EnchantedElemental_Pos][0], ElementPos[EnchantedElemental_Pos][1], ElementPos[EnchantedElemental_Pos][2], ElementPos[EnchantedElemental_Pos][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
-
-                if(Elemental)
-                {
-                    Elemental->GetMotionMaster()->Clear();
-                    Elemental->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
-                }
 
                 if(EnchantedElemental_Pos == 7)
                     EnchantedElemental_Pos = 0;
@@ -546,10 +545,12 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     ScriptedInstance *pInstance;
 
     uint32 Check_Timer;
+    uint32 Movement_Timer;
 
     void EnterEvadeMode()
     {
-        Check_Timer = 1000;
+        Check_Timer = 5000;
+        Movement_Timer = 500;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -563,23 +564,38 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        //Movement_Timer
+        if(Movement_Timer < diff)
+        {
+            Unit *Vashj = NULL;
+            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+            if(Vashj)
+            {
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*Vashj));
+            }
+
+            //if first movement doesn't work, apply the same movement after 10 seconds
+            Movement_Timer = 5000;
+        }else Movement_Timer -= diff;
+
         //Check_Timer
         if(Check_Timer < diff)
         {
             if(pInstance)
             {
-                Unit *Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+                Unit *Vashj = NULL;
+                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
                 if(Vashj && Vashj->IsWithinDistInMap(m_creature, 5))
                 {
-                    //increase lady vashj damage
-                    /*float mindmg = cInfo->mindmg;
-                    float maxdmg = cInfo->maxdmg;
-                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (mindmg +((mindmg/100) * 5 * times)));
-                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (maxdmg +((maxdmg/100) * 5 * times)));*/
+                    //increase lady vashj damage (+5%)
+                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 5)));
+                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 5)));
+                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
 
-                    //die
-                    //todo: try SetState(JUST_DIED)
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                    //remove
+                    m_creature->setDeathState(JUST_DIED);
                 }
             }
             Check_Timer = 1000;
@@ -671,12 +687,8 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
         //Despawn_Timer
         if(Despawn_Timer < diff)
         {
-            //Make super invis
-            m_creature->CastSpell(m_creature, 8149, true);
-
-            //die
-            //todo: try SetState(JUST_DIED)
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            //die - this state will call Unsummon() in TempSummon class
+            m_creature->setDeathState(DEAD);
 
             //to prevent crashes
             Despawn_Timer = 1000;
@@ -702,7 +714,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
     void EnterEvadeMode()
     {
         m_creature->setFaction(14);
-        ToxicSpore_Timer = 20000; //each sporebat will cast it every 20 sec, if someone can check how fast its being casted on official
+        ToxicSpore_Timer = 5000;
         Check_Timer = 1000;
 
         m_creature->RemoveAllAuras();
@@ -755,7 +767,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
             //The Spores will hit you anywhere in the instance: underwater, at the elevator, at the entrance, wherever.
             if(target)
                 DoCast(target, SPELL_TOXIC_SPORES);
-             
+
             ToxicSpore_Timer = 20000+rand()%5000;
         }else ToxicSpore_Timer -= diff;
 
@@ -769,12 +781,10 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
                 Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
                 if(!Vashj || (Vashj && !Vashj->isAlive()))
                 {
-                    //Make super invis
-                    m_creature->CastSpell(m_creature, 8149, true);
-
-                    //die
-                    //todo: try SetState(JUST_DIED)
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                    //remove
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->RemoveCorpse();
+                    m_creature->setFaction(35);
                 }
             }
 
