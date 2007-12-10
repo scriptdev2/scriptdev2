@@ -16,17 +16,20 @@
 
 /* ScriptData
 SDName: Boss_Gloomrel
-SD%Complete: 100
-SDComment: 
+SD%Complete: 80
+SDComment: Learning Smelt Dark Iron if tribute quest rewarded. Missing event and re-spawn GO Spectral Chalice
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../../../../game/QuestDef.h"
+#include "../../../../../game/GossipDef.h"
 
 // **** This script is still under Developement ****
 
-#define SPELL_HAMSTRING                9080
-#define SPELL_CLEAVE             15579  
-#define SPELL_MORTALSTRIKE            15708
+#define SPELL_HAMSTRING             9080
+#define SPELL_CLEAVE                15579
+#define SPELL_MORTALSTRIKE          15708
 
 struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 {
@@ -43,6 +46,8 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
         Cleave_Timer = 6000;
         MortalStrike_Timer = 10000;
         InCombat = false;
+
+        m_creature->setFaction(734);
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -127,6 +132,52 @@ CreatureAI* GetAI_boss_gloomrel(Creature *_Creature)
     return new boss_gloomrelAI (_Creature);
 }
 
+bool GossipHello_boss_gloomrel(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestRewardStatus(4083) == 1 && player->GetSkillValue(SKILL_MINING) >= 230 && !player->HasSpell(14891) )
+        player->ADD_GOSSIP_ITEM(0, "Teach me the art of smelting dark iron", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    if (player->GetQuestRewardStatus(4083) == 0 && player->GetSkillValue(SKILL_MINING) >= 230)
+        player->ADD_GOSSIP_ITEM(0, "I want to pay tribute", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
+    player->ADD_GOSSIP_ITEM(0, "Challenge", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+    player->SEND_GOSSIP_MENU(2602, _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_boss_gloomrel(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+            player->SEND_GOSSIP_MENU(2606, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+11:
+            player->CLOSE_GOSSIP_MENU();
+            _Creature->CastSpell(player, 14894, false);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
+            player->SEND_GOSSIP_MENU(2604, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+22:
+            player->CLOSE_GOSSIP_MENU();
+            //re-spawn object here
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM( 0, "[PH] Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 33);
+            player->SEND_GOSSIP_MENU(2605, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+33:
+            player->CLOSE_GOSSIP_MENU();
+            //start event here, below code just temporary
+            _Creature->setFaction(754);
+            break;
+    }
+    return true;
+}
 
 void AddSC_boss_gloomrel()
 {
@@ -134,5 +185,7 @@ void AddSC_boss_gloomrel()
     newscript = new Script;
     newscript->Name="boss_gloomrel";
     newscript->GetAI = GetAI_boss_gloomrel;
+    newscript->pGossipHello = &GossipHello_boss_gloomrel;
+    newscript->pGossipSelect = &GossipSelect_boss_gloomrel;
     m_scripts[nrscripts++] = newscript;
 }
