@@ -22,10 +22,10 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 
-#define SPELL_VOLATILEINFECTION                24928     
-#define SPELL_DARKPLAGUE             18270 
-#define SPELL_CORROSIVEACID               23313
-#define SPELL_NOXIOUSCATALYST             18151
+#define SPELL_VOLATILEINFECTION      24928
+#define SPELL_DARKPLAGUE             18270
+#define SPELL_CORROSIVEACID          23313
+#define SPELL_NOXIOUSCATALYST        18151
 
 struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
 {
@@ -49,6 +49,21 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+    }
+
+    void JustDied(Unit *killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+        {
+            pInstance->SetData("LorekeeperPolkelt_Death", 0);
+
+            if(pInstance->GetData("CanSpawnGandling"))
+            {
+                Unit *gandling = NULL;
+                gandling = m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
     }
 
     void AttackStart(Unit *who)

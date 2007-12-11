@@ -55,6 +55,21 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
         DoGoHome();
     }
 
+    void JustDied(Unit *killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+        {
+            pInstance->SetData("TheRavenian_Death", 0);
+
+            if(pInstance->GetData("CanSpawnGandling"))
+            {
+                Unit *gandling = NULL;
+                gandling = m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
+    }
+
     void AttackStart(Unit *who)
     {
         if (!who)

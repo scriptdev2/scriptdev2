@@ -608,6 +608,7 @@ UPDATE `creature_template` SET `ScriptName` = 'scarlet_torturer' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6488, 4299, 4296, 4300);
 
 /* SCHOLOMANCE */
+UPDATE `instance_template` SET `script` = 'instance_scholomance' WHERE `map` = 289;
 UPDATE `creature_template` SET `ScriptName` = 'boss_death_knight_darkreaver' WHERE `entry` = 14516;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lord_alexei_barov' WHERE `entry` = 10504;
 UPDATE `creature_template` SET `ScriptName` = 'boss_instructor_malicia' WHERE `entry` = 10505;
@@ -774,6 +775,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_ragin_flames' WHERE `entry` =
 /* THE BOTANICA */
 
 /* THE ARCATRAZ */
+UPDATE `instance_template` SET `script` = 'instance_arcatraz' WHERE `map` = 552;
 
 /* THE EYE */
 UPDATE `instance_template` SET `script` = 'instance_the_eye' WHERE `map` = 550;

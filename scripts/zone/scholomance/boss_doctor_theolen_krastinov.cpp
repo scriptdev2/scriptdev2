@@ -22,11 +22,9 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 
-#define SPELL_REND                18106            
+#define SPELL_REND              18106
 #define SPELL_CLEAVE            15584
-#define SPELL_FRENZY                28371
-
-
+#define SPELL_FRENZY            28371
 
 struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
 {
@@ -48,6 +46,21 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+    }
+
+    void JustDied(Unit *killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+        {
+            pInstance->SetData("DoctorTheolenKrastinov_Death", 0);
+
+            if(pInstance->GetData("CanSpawnGandling"))
+            {
+                Unit *gandling = NULL;
+                gandling = m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
     }
 
     void AttackStart(Unit *who)

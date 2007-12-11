@@ -22,13 +22,11 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 
-#define SPELL_CALLOFGRAVES                17831
-#define SPELL_CORRUPTION             11672  
+#define SPELL_CALLOFGRAVES         17831
+#define SPELL_CORRUPTION           11672
 #define SPELL_FLASHHEAL            10917
-#define SPELL_RENEW                 10929
-#define SPELL_HEALINGTOUCH              9889       
-
-
+#define SPELL_RENEW                10929
+#define SPELL_HEALINGTOUCH         9889
 
 struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 {
@@ -59,6 +57,21 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+    }
+
+    void JustDied(Unit *killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+        {
+            pInstance->SetData("InstructorMalicia_Death", 0);
+
+            if(pInstance->GetData("CanSpawnGandling"))
+            {
+                Unit *gandling = NULL;
+                gandling = m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
     }
 
     void AttackStart(Unit *who)

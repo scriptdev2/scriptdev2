@@ -797,6 +797,10 @@
 						RelativePath="..\scripts\zone\scholomance\boss_vectus.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\scholomance\instance_scholomance.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Searing Gorge"
@@ -1748,6 +1752,10 @@
 					<Filter
 						Name="Arcatraz"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Botanica"

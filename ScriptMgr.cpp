@@ -415,6 +415,7 @@ extern void AddSC_boss_lorekeeperpolkelt();
 extern void AddSC_boss_rasfrost();
 extern void AddSC_boss_theravenian();
 extern void AddSC_boss_vectus();
+extern void AddSC_instance_scholomance();
 
 //Searing gorge
 extern void AddSC_npcs_searing_gorge();
@@ -476,6 +477,8 @@ extern void AddSC_npcs_tanaris();
 //Teldrassil
 //Tempest Keep
 //--Arcatraz
+extern void AddSC_instance_arcatraz();
+
 //--Botanica
 //--The Eye
 extern void AddSC_boss_kaelthas();
@@ -929,6 +932,7 @@ void ScriptsInit()
     AddSC_boss_rasfrost();
     AddSC_boss_theravenian();
     AddSC_boss_vectus();
+    AddSC_instance_scholomance();
 
     //Searing gorge
     AddSC_npcs_searing_gorge();
@@ -990,6 +994,8 @@ void ScriptsInit()
     //Teldrassil
     //Tempest Keep
     //--Arcatraz
+    AddSC_instance_arcatraz();
+
     //--Botanica
     //--The Eye
     AddSC_boss_kaelthas();

@@ -293,6 +293,7 @@ scripts/zone/scholomance/boss_lorekeeper_polkelt.cpp \
 scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
+scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
@@ -327,6 +328,7 @@ scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
+scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
