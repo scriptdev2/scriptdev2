@@ -11,32 +11,30 @@
 /* */
 /* CREATURE_TEMPLATE */
 /* */
-/* UPDATE  `creature_template` SET `faction` = 0, `npcflag` = 0 WHERE `entry`= xxxxx ; */
+/* UPDATE  `creature_template` SET `faction` = 0, `npcflag` = `npcflag`|0 WHERE `entry`= xxxxx ; */
 
 /* Lothos Riftwaker */
-UPDATE `creature_template` SET `npcflag`= 3 WHERE `entry` = 14387;
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 14387;
 /* Darrowshire Spirit */
-UPDATE `creature_template` SET `npcflag`= 1 WHERE `entry` = 11064;
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 11064;
 /* Skorn Whitecloud */
-UPDATE `creature_template` SET `npcflag`= 3 WHERE `entry` = 3052;
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 3052;
 /* Ashyen and Keleth */
-UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` IN (17900,17901);
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` IN (17900,17901);
 /* Great Bear Spirit */
-UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 11956;
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 11956;
 /* Captain Blackanvil and Captain Skullsplit */
-UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` IN (15440, 15612);
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` IN (15440, 15612);
 /* Elder Kuruti */
-UPDATE `creature_template` SET `npcflag` = 1 WHERE `entry` = 18197;
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 18197;
 
 /* mob_broggok_poisoncloud */
-UPDATE `creature_template` SET minlevel = 63, maxlevel = 63 WHERE `entry` = 17662;
+UPDATE `creature_template` SET `minlevel` = 63, `maxlevel` = 63 WHERE `entry` = 17662;
 /* Arcane Orb Target */
-UPDATE `creature_template` SET modelid_A = 16946, modelid_H = 16946, minlevel = 70, maxlevel = 70 WHERE 'entry'=19577;
+UPDATE `creature_template` SET `modelid_A` = 16946, `modelid_H` = 16946, `minlevel` = 70, `maxlevel` = 70 WHERE `entry` = 19577;
 
 /* Beaten Corpse*/
-UPDATE creature_template SET npcflag=1 WHERE entry=10668;
-UPDATE quest_template  SET SpecialFlags=8, ReqCreatureOrGOId1=10668, ReqCreatureOrGOCount1=1  WHERE entry=4921;
-
+UPDATE `creature_template` SET `npcflag` = `npcflag`|1 WHERE `entry` = 10668;
 
 
 /* */
@@ -72,7 +70,8 @@ UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 21161, `ReqCreatureOrGOId2` =
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 15221, `ReqCreatureOrGOId2` = 15222, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8304;
 /* Blessings of the Ancients */
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 17900, `ReqCreatureOrGOId2` = 17901, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` =9785;
-
+/* Lost in Battle */
+UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 10668, `ReqCreatureOrGOCount1` = 1 WHERE `entry` = 4921;
 
 /* */
 /* ITEM_TEMPLATE */
