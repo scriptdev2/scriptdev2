@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "../../sc_defines.h"
 
 struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
 {
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
     bool IsEncounterInProgress() const 
     {
         //not active in scholomance
-        return true;
+        return false;
     }
 
     uint32 GetData(char *type)

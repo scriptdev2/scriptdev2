@@ -59,10 +59,7 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
             pInstance->SetData("LadyIlluciaBarov_Death", 0);
 
             if(pInstance->GetData("CanSpawnGandling"))
-            {
-                Unit *gandling = NULL;
-                gandling = m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
-            }
+                m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }
 
