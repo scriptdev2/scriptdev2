@@ -62,16 +62,16 @@ DELETE FROM `creature` WHERE `id` = 11583;
 /* */
 /* QUEST_TEMPLATE */
 /* */
-/* UPDATE `quest_template` SET `SpecialFlags`= 0, `ReqCreatureOrGOId1` = 0, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 0, `ReqCreatureOrGOCount2` = 0, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`=  0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= xxxxx;*/
+/* UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 0, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 0, `ReqCreatureOrGOCount2` = 0, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`=  0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= xxxxx;*/
 
 /* Thirst Unending */
-UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 15274, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1`= 6, `ReqCreatureOrGOCount2`= 0, `ReqCreatureOrGOCount3`= 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 28734, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8346;
+UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 15274, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1`= 6, `ReqCreatureOrGOCount2`= 0, `ReqCreatureOrGOCount3`= 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 28734, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8346;
 /* Fel Orc Scavengers */
-UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 21161, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1`= 20, `ReqCreatureOrGOCount2`= 0, `ReqCreatureOrGOCount3`= 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 10482;
+UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 21161, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1`= 20, `ReqCreatureOrGOCount2`= 0, `ReqCreatureOrGOCount3`= 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 10482;
 /* Dearest Natalia */
-UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 15221, `ReqCreatureOrGOId2` = 15222, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8304;
+UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 15221, `ReqCreatureOrGOId2` = 15222, `ReqCreatureOrGOId3` = 0, `ReqCreatureOrGOId4` = 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry`= 8304;
 /* Blessings of the Ancients */
-UPDATE `quest_template` SET `SpecialFlags`= 8, `ReqCreatureOrGOId1` = 17900, `ReqCreatureOrGOId2` = 17901, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` =9785;
+UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 17900, `ReqCreatureOrGOId2` = 17901, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` =9785;
 
 
 /* */
