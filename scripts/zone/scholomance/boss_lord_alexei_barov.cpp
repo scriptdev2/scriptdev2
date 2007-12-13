@@ -17,12 +17,11 @@
 /* ScriptData
 SDName: Boss_Lord_Alexei_Barov
 SD%Complete: 100
-SDComment: 
+SDComment: aura applied/defined in database
 EndScriptData */
 
 #include "../../sc_defines.h"
 
-#define SPELL_UNHOLYAURA           17466    //Workaround cause right spell would be 17467
 #define SPELL_IMMOLATE             20294        // Old ID  was 15570       
 #define SPELL_VEILOFSHADOW         17820
 
@@ -30,14 +29,12 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 {
     boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    uint32 UnholyAura_Timer;
     uint32 Immolate_Timer;
     uint32 VeilofShadow_Timer;
     bool InCombat;
 
     void EnterEvadeMode()
     {       
-        UnholyAura_Timer = 2500;
         Immolate_Timer = 9000;
         VeilofShadow_Timer = 16000;
         InCombat = false;
@@ -46,6 +43,8 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        m_creature->LoadCreaturesAddon();
     }
 
     void JustDied(Unit *killer)
@@ -99,21 +98,9 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //UnholyAura
-        if (UnholyAura_Timer < diff)
-        {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_UNHOLYAURA);
-            //2.5 seconds until we should cast this again
-            UnholyAura_Timer = 2500;
-        }else UnholyAura_Timer -= diff;
-
-
         //Immolate_Timer
         if (Immolate_Timer < diff)
         {
-
-
             //Cast Immolate on a Random target
             Unit* target = NULL;
 

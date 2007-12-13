@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_baron_rivendare
 SD%Complete: 100
-SDComment: 
+SDComment: aura applied/defined in database
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -61,11 +61,9 @@ EndScriptData */
 #define ADD_6Z 115.055222
 #define ADD_6O 2.457497
 
-#define SPELL_UNHOLYAURA_AURA    17467
-#define SPELL_UNHOLYAURA    17466
 #define SPELL_SHADOWBOLT    18164
-#define SPELL_CLEAVE    15584
-#define SPELL_MORTALSTRIKE    13737
+#define SPELL_CLEAVE        15584
+#define SPELL_MORTALSTRIKE  13737
 
 // spell 17473 should trigger -> 17471
 
@@ -77,44 +75,64 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 {
     boss_baron_rivendareAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    uint32 UnholyAura_Timer;
     uint32 ShadowBolt_Timer;
     uint32 Cleave_Timer;
     uint32 MortalStrike_Timer;
     //    uint32 RaiseDead_Timer;
     uint32 SummonSkeletons_Timer;
     Creature *Summoned;
-    bool HasYelled;
-    bool HasAura;
     bool InCombat;
 
     void EnterEvadeMode()
     {
-        UnholyAura_Timer = 1500;
         ShadowBolt_Timer = 5000;
         Cleave_Timer = 8000;
         MortalStrike_Timer = 12000;
         //        RaiseDead_Timer = 30000;
         SummonSkeletons_Timer = 34000;
-        HasYelled = false;
-        HasAura = false;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+
+        m_creature->LoadCreaturesAddon();
     }
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if(!who && who != m_creature)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
+            if(!InCombat)
+            {
+                switch (rand()%6)
+                {
+                case 0:
+                    DoYell(SAY_0,LANG_UNIVERSAL,NULL);
+                    break;
+                case 1:
+                    DoYell(SAY_1,LANG_UNIVERSAL,NULL);
+                    break;
+                case 2:
+                    DoYell(SAY_2,LANG_UNIVERSAL,NULL);
+                    break;
+                case 3:
+                    DoYell(SAY_3,LANG_UNIVERSAL,NULL);
+                    break;
+                case 4:
+                    DoYell(SAY_4,LANG_UNIVERSAL,NULL);
+                    break;
+                case 5:
+                    DoYell(SAY_5,LANG_UNIVERSAL,NULL);
+                    break;
+                }
+                InCombat = true;
+            }
             DoStartMeleeAttack(who);
-            InCombat = true;
         }
     }
 
@@ -128,44 +146,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(!HasYelled)
-                {
-                    switch (rand()%6)
-                    {
-                    case 0:
-                        DoYell(SAY_0,LANG_UNIVERSAL,NULL);
-                        break;
-                    case 1:
-                        DoYell(SAY_1,LANG_UNIVERSAL,NULL);
-                        break;
-                    case 2:
-                        DoYell(SAY_2,LANG_UNIVERSAL,NULL);
-                        break;
-                    case 3:
-                        DoYell(SAY_3,LANG_UNIVERSAL,NULL);
-                        break;
-                    case 4:
-                        DoYell(SAY_4,LANG_UNIVERSAL,NULL);
-                        break;
-                    case 5:
-                        DoYell(SAY_5,LANG_UNIVERSAL,NULL);
-                        break;
-                    }
-                    HasYelled = true;
-                }
-
-                if (!HasAura)
-                {
-                    DoCast(m_creature,SPELL_UNHOLYAURA_AURA);
-                    HasAura = true;
-                }
-
-                //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }
@@ -175,15 +156,6 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-
-        //UnholyAura
-        if (UnholyAura_Timer < diff)
-        {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_UNHOLYAURA);
-            //2.5 seconds until we should cast this again
-            UnholyAura_Timer = 2500;
-        }else UnholyAura_Timer -= diff;
 
         //ShadowBolt
         if (ShadowBolt_Timer < diff)
