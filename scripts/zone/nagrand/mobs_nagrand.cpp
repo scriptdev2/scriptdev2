@@ -61,6 +61,7 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
         Spawn = false;
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
+        m_creature->CombatStop();
         DoGoHome();
     }
 
@@ -222,11 +223,11 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 damage = 0;
 
                 ((Player*)done_by)->AttackStop();
+                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveAllAuras();
                 m_creature->DeleteThreatList();
                 m_creature->CombatStop();
                 m_creature->setFaction(friendlyFaction);
-                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
                 m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, NULL);
 
