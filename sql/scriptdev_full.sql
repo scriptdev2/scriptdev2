@@ -23,7 +23,6 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_barov_journal' WHERE `entry` = 180794;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot' where `entry`= 179552;
-UPDATE `gameobject_template` SET `ScriptName` = 'go_shield_generator' WHERE `entry` IN (185052, 185053, 185051, 185054);
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -54,6 +53,7 @@ UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` =
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry` = 30259;
 UPDATE `item_template` SET `ScriptName` = 'draenei_fishing_net' WHERE `entry` = 23654;
+UPDATE `item_template` SET `ScriptName` = 'item_tainted_core' WHERE `entry` = 31088;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -114,7 +114,6 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_syth_fire' WHERE `entry` = 19
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_arcane' WHERE `entry` = 19205;
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_frost' WHERE `entry` = 19204;
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_shadow' WHERE `entry` = 19206;
- 
 UPDATE `creature_template` SET `ScriptName` = 'boss_tailonking_ikiss' WHERE `entry` = 18473;
 UPDATE `creature_template` SET `ScriptName` = 'boss_darkweaver_syth' WHERE `entry` = 18472;
 
@@ -124,7 +123,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_murmur' WHERE `entry` = 1870
 UPDATE `creature_template` SET `ScriptName` = 'boss_ambassador_hellmaw' WHERE `entry` = 18731;
 UPDATE `creature_template` SET `ScriptName` = 'boss_grandmaster_vorpil' WHERE `entry` = 18732;
 UPDATE `creature_template` SET `ScriptName` = 'boss_blackheart_the_inciter' WHERE `entry` = 18667;
-
 
 /* AZSHARA */
 /* Draconic Magelord, Draconic Mageweaver, Archmage Xylem */
@@ -219,6 +217,10 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN
 
 /* BLACKWING LAIR */
 UPDATE `instance_template` SET `script` = 'instance_blackwing_lair' WHERE `map` = 469;
+/* Trash Mobs */
+UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264);
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (12420);
+/* Bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
 UPDATE `creature_template` SET `ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
 UPDATE `creature_template` SET `ScriptName` = 'boss_broodlord' WHERE `entry` = 12017;
@@ -228,8 +230,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_flamegor' WHERE `entry` = 11
 UPDATE `creature_template` SET `ScriptName` = 'boss_chromaggus' WHERE `entry` = 14020;
 UPDATE `creature_template` SET `ScriptName` = 'boss_victor_nefarius' WHERE `entry` = 10162;
 UPDATE `creature_template` SET `ScriptName` = 'boss_nefarian' WHERE `entry` = 11583;
-/* Blackwing Mage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (12420);
 
 /* BLADE'S EDGE MOUNTAINS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bladespire_ogre' WHERE `entry` IN (19998, 20334, 21296, 21975);
@@ -288,23 +288,27 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_waterelemental' WHER
 UPDATE `instance_template` SET `script` = 'instance_serpent_shrine' WHERE `map` = 548;
 /* Serpentshrine Cavern Trash Mobs */
 UPDATE `creature_template` SET `ScriptName` = 'mob_serpentshrine_cavern' WHERE `entry` IN (21246, 21339, 21221, 21224, 21227, 21228, 21226, 21225, 21298, 21299);
-/* Serpentshrine Cavern Bosses */
+/* Hydross the Unstable */
 UPDATE `creature_template` SET `ScriptName` = 'boss_hydross_the_unstable' WHERE `entry` = 21216;
+/* Leotheras the Blind event */
 UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind' WHERE `entry` = 21215;
 UPDATE `creature_template` SET `ScriptName` = 'boss_leotheras_the_blind_demonform' WHERE `entry` = 21845;
+/* Fathom-lord Karathress event */
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomlord_karathress' WHERE `entry` = 21214;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_sharkkis' WHERE `entry` = 21966;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_tidalvess' WHERE `entry` = 21965;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fathomguard_caribdis' WHERE `entry` = 21964;
+/* Morogrim Tidewalker event */
 UPDATE `creature_template` SET `ScriptName` = 'boss_morogrim_tidewalker' WHERE `entry`=21213;
+UPDATE `creature_template` SET `ScriptName` = 'mob_water_globule' WHERE `entry`=21913;
+/* Lady Vashj event */
 UPDATE `creature_template` SET `ScriptName` = 'boss_lady_vashj' WHERE `entry` = 21212;
 UPDATE `creature_template` SET `ScriptName` = 'mob_enchanted_elemental' WHERE `entry` = 21958;
 UPDATE `creature_template` SET `ScriptName` = 'mob_tainted_elemental' WHERE `entry` = 22009;
 UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_elite' WHERE `entry` = 22055;
 UPDATE `creature_template` SET `ScriptName` = 'mob_coilfang_strider' WHERE `entry` = 22056;
 UPDATE `creature_template` SET `ScriptName` = 'mob_fathom_sporebat' WHERE `entry` = 22120;
-/* Water Globule */
-UPDATE `creature_template` SET `ScriptName` = 'mob_water_globule' WHERE `entry`=21913;
+UPDATE `creature_template` SET `ScriptName` = 'mob_shield_generator_channel' WHERE `entry` = 19870;
 
 
 /* DARKSHORE */

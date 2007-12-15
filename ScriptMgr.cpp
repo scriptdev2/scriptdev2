@@ -189,6 +189,7 @@ extern void AddSC_boss_flamegor();
 extern void AddSC_boss_chromaggus();
 extern void AddSC_boss_nefarian();
 extern void AddSC_boss_victor_nefarius();
+extern void AddSC_mob_blackwing_lair();
 
 //Blade's Edge Mountains
 extern void AddSC_mobs_blades_edge_mountains();
@@ -706,6 +707,7 @@ void ScriptsInit()
     AddSC_boss_chromaggus();
     AddSC_boss_nefarian();
     AddSC_boss_victor_nefarius();
+    AddSC_mob_blackwing_lair();
 
     //Blade's Edge Mountains
     AddSC_mobs_blades_edge_mountains();
@@ -1380,13 +1382,13 @@ void ScriptedAI::DoStopAttack()
     }
 }
 
-void ScriptedAI::DoCast(Unit* victim, uint32 spelId, bool triggered)
+void ScriptedAI::DoCast(Unit* victim, uint32 spellId, bool triggered)
 {
     if (!victim || m_creature->IsNonMeleeSpellCasted(false))
         return;
 
     m_creature->StopMoving();
-    m_creature->CastSpell(victim, spelId, triggered);
+    m_creature->CastSpell(victim, spellId, triggered);
 }
 
 void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool triggered)

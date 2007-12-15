@@ -138,6 +138,7 @@ scripts/zone/blackwing_lair/boss_nefarian.cpp \
 scripts/zone/blackwing_lair/boss_razorgore.cpp \
 scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
+scripts/zone/blackwing_lair/mob_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
 scripts/zone/blades_edge_mountains/npcs_blades_edge_mountains.cpp \

@@ -16,14 +16,16 @@
 
 /* ScriptData
 SDName: Boss_Lady_Vashj
-SD%Complete: 95
-SDComment: Missing visual spell chain through Lady Vashj and shield generators
+SD%Complete: 99
+SDComment: Missing blizzlike Shield Generators coords
 EndScriptData */
 
 #include "../../../sc_defines.h"
 #include "../../../creature/simple_ai.h"
 #include "../../../../../../game/GameObject.h"
 #include "../../../../../../game/Player.h"
+#include "../../../../../../game/Spell.h"
+#include "../../../../../../game/Item.h"
 #include "../../../../../../game/TargetedMovementGenerator.h"
 
 #define SPELL_MULTI_SHOT              38310
@@ -34,6 +36,7 @@ EndScriptData */
 #define SPELL_SHOOT                   40873
 #define SPELL_POISON_BOLT             40095
 #define SPELL_TOXIC_SPORES            38575
+#define SPELL_MAGIC_BARRIER           38112
 
 #define SAY_INTRO                     "Water is life. It has become a rare commodity here in Outland. A commodity that we alone shall control. We are the Highborne, and the time has come at last for us to retake our rightful place in the world!"
 #define SAY_AGGRO1                    "I'll split you from stem to stern! "
@@ -72,6 +75,7 @@ EndScriptData */
 #define SPOREBAT_Z                    77.176567
 #define SPOREBAT_O                    5.223932
 
+#define SHIED_GENERATOR_CHANNEL       19870
 #define ENCHANTED_ELEMENTAL           21958
 #define TAINTED_ELEMENTAL             22009
 #define COILFANG_STRIDER              22056
@@ -104,6 +108,14 @@ float CoilfangStriderPos[3][4] =
     {-12.843201, -907.798401, 41.239620, 6.087094}
 };
 
+float ShieldGeneratorChannelPos[4][4] =
+{
+    {49.6262, -902.181, 43.0975, 3.95683},
+    {10.988, -901.616, 42.5371, 5.4373},
+    {10.3859, -944.036, 42.5446, 0.779888},
+    {49.3126, -943.398, 42.5501, 2.40174}
+};
+
 //Lady Vashj AI
 struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 {
@@ -114,6 +126,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     }
 
     ScriptedInstance *pInstance;
+
+    uint64 ShieldGeneratorChannel[3];
 
     uint32 ShockBlast_Timer;
     uint32 Entangle_Timer;
@@ -160,6 +174,11 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData("LadyVashjEvent", 0);
+
+        ShieldGeneratorChannel[0] = 0;
+        ShieldGeneratorChannel[1] = 0;
+        ShieldGeneratorChannel[2] = 0;
+        ShieldGeneratorChannel[3] = 0;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, true);
@@ -375,6 +394,14 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
                     m_creature->RemoveAllAuras();
 
+                    Creature *pCreature;
+                    for(uint8 i = 0; i < 4; i++)
+                    {
+                        pCreature = m_creature->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0],  ShieldGeneratorChannelPos[i][1],  ShieldGeneratorChannelPos[i][2],  ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        if (pCreature)
+                            ShieldGeneratorChannel[i] = pCreature->GetGUID();
+                    }
+
                     DoPlaySoundToSet(m_creature, SOUND_PHASE2);
                     DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
                 }
@@ -586,16 +613,24 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
             {
                 Unit *Vashj = NULL;
                 Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
-                if(Vashj && Vashj->IsWithinDistInMap(m_creature, 5))
+                if(Vashj)
                 {
-                    //increase lady vashj damage (+5%)
-                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 5)));
-                    Vashj->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 5)));
-                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                    if(Vashj->IsWithinDistInMap(m_creature, 5))
+                    {
+                        //increase lady vashj damage (+5%)
+                        const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                        Vashj->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 5)));
+                        Vashj->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 5)));
+                        m_creature->UpdateDamagePhysical(BASE_ATTACK);
 
-                    //remove
-                    m_creature->setDeathState(JUST_DIED);
+                        //call Unsummon()
+                        m_creature->setDeathState(JUST_DIED);
+                    }
+                    else if(((boss_lady_vashjAI*)((Creature*)Vashj)->AI())->InCombat == false)
+                    {
+                        //call Unsummon()
+                        m_creature->setDeathState(JUST_DIED);
+                    }
                 }
             }
             Check_Timer = 1000;
@@ -687,7 +722,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
         //Despawn_Timer
         if(Despawn_Timer < diff)
         {
-            //die - this state will call Unsummon() in TempSummon class
+            //call Unsummon()
             m_creature->setDeathState(DEAD);
 
             //to prevent crashes
@@ -782,7 +817,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
                 if(!Vashj || (Vashj && !Vashj->isAlive()))
                 {
                     //remove
-                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->setDeathState(DEAD);
                     m_creature->RemoveCorpse();
                     m_creature->setFaction(35);
                 }
@@ -835,57 +870,124 @@ CreatureAI* GetAI_mob_coilfang_strider(Creature *_Creature)
     return ai;
 }
 
-bool GOHello_go_shield_generator(Player *player, GameObject* _GO)
+struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
 {
-    if(!_GO->GetInstanceData())
+    mob_shield_generator_channelAI(Creature *c) : ScriptedAI(c)
     {
-        _GO->Say("Error: instance data not initialized", LANG_UNIVERSAL, NULL);
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+    ScriptedInstance *pInstance;
+
+    uint32 Check_Timer;
+    bool Channeled;
+ 
+    void EnterEvadeMode()
+    {
+        Check_Timer = 1000;
+        Channeled = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    }
+
+    void AttackStart(Unit *who) { return; }
+
+    void MoveInLineOfSight(Unit *who) { return; }
+ 
+    void UpdateAI (const uint32 diff)
+    {
+        if(!pInstance)
+            return;
+
+        if(!Channeled)
+        {
+            Unit *Vashj = NULL;
+            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+            
+            if(Vashj && Vashj->isAlive())
+            {
+                //start visual channel
+                m_creature->SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, Vashj->GetGUID());
+                m_creature->SetUInt32Value(UNIT_CHANNEL_SPELL, SPELL_MAGIC_BARRIER);
+                Channeled = true;
+            }
+        }
+    }
+};
+
+bool ItemUse_item_tainted_core(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    ScriptedInstance *pInstance = (player->GetInstanceData()) ? ((ScriptedInstance*)player->GetInstanceData()) : NULL;
+    
+    if(!pInstance)
+    {
+        player->GetSession()->SendNotification("Instance script not initialized");
         return true;
     }
 
-    ScriptedInstance* pInstance = (ScriptedInstance*)(_GO->GetInstanceData());
-
-    //get identifier
-    char *identifier;
-    switch(_GO->GetEntry())
+    Creature *Vashj = NULL;
+    Vashj = (Creature*)(Unit::GetUnit((*player), pInstance->GetData64("LadyVashj")));
+    if(Vashj && ((boss_lady_vashjAI*)Vashj->AI())->Phase == 2)
     {
-        case 185052:
-        identifier = "ShieldGenerator1";
-        break;
+        if(targets.getGOTarget() && targets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
+        {
+            char *identifier;
+            uint8 channel_identifier;
+            switch(targets.getGOTarget()->GetEntry())
+            {
+            case 185052:
+                identifier = "ShieldGenerator1";
+                channel_identifier = 0;
+                break;
 
-        case 185053:
-        identifier = "ShieldGenerator2";
-        break;
+            case 185053:
+                identifier = "ShieldGenerator2";
+                channel_identifier = 1;
+                break;
 
-        case 185051:
-        identifier = "ShieldGenerator3";
-        break;
+            case 185051:
+                identifier = "ShieldGenerator3";
+                channel_identifier = 2;
+                break;
 
-        case 185054:
-        identifier = "ShieldGenerator4";
-        break;
+            case 185054:
+                identifier = "ShieldGenerator4";
+                channel_identifier = 3;
+                break;
+
+            default:
+                return true;
+                break;
+            }
+
+            if(pInstance->GetData(identifier))
+            {
+                player->GetSession()->SendNotification("Already deactivated");
+                return true;
+            }
+
+            //get and remove channel
+            Unit *Channel = NULL;
+            Channel = Unit::GetUnit((*Vashj), ((boss_lady_vashjAI*)Vashj->AI())->ShieldGeneratorChannel[channel_identifier]);
+            if(Channel)
+            {
+                //call Unsummon()
+                Channel->setDeathState(JUST_DIED);
+            }
+
+            pInstance->SetData(identifier, 1);
+
+            //remove this item
+            player->RemoveItemCount(31088, 1, true);
+        }
     }
-
-    //if player doesn't have Taunted Core
-    if(!player->HasItemCount(31088, 1))
-    {
-        player->GetSession()->SendNotification("Requires Tainted Core");
-        return true;
-    }
-
-    //if this gameobject is already deactivated
-    if(pInstance->GetData(identifier))
-    {
-        player->GetSession()->SendNotification("Already deactivated");
-        return true;
-    }
-
-    //remove the item
-    player->RemoveItemCount(31088, 1, true);
-
-    //send this to instance script
-    pInstance->SetData(identifier, 1);
-
     return true;
 }
 
@@ -904,6 +1006,10 @@ CreatureAI* GetAI_mob_tainted_elemental(Creature *_Creature)
 CreatureAI* GetAI_mob_fathom_sporebat(Creature *_Creature)
 {
     return new mob_fathom_sporebatAI (_Creature);
+}
+CreatureAI* GetAI_mob_shield_generator_channel(Creature *_Creature)
+{
+    return new mob_shield_generator_channelAI (_Creature);
 }
 
 void AddSC_boss_lady_vashj()
@@ -940,7 +1046,12 @@ void AddSC_boss_lady_vashj()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="go_shield_generator";
-    newscript->pGOHello = &GOHello_go_shield_generator;
+    newscript->Name="mob_shield_generator_channel";
+    newscript->GetAI = GetAI_mob_shield_generator_channel;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_tainted_core";
+    newscript->pItemUse = ItemUse_item_tainted_core;
     m_scripts[nrscripts++] = newscript;
 }

@@ -591,6 +591,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackwing_lair\mob_blackwing_lair.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackwing_lair\npc_victor_nefarius.cpp"
 						>
 					</File>

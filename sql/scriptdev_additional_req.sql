@@ -55,6 +55,8 @@ DELETE FROM `creature` WHERE `id` = 11583;
 /* DELETE FROM `creature` WHERE `id` = 11064; */
 /* Undead Postman */
 /* DELETE FROM `creature` WHERE `id` = 11142; */
+/* Darkmaster Gandling */
+DELETE FROM `creature` WHERE `id` = 1853;
 
 
 /* */
@@ -72,6 +74,7 @@ UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 15221, `ReqCreatureOrGOId2` =
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 17900, `ReqCreatureOrGOId2` = 17901, `ReqCreatureOrGOId3`= 0, `ReqCreatureOrGOId4`= 0, `ReqCreatureOrGOCount1` = 1, `ReqCreatureOrGOCount2` = 1, `ReqCreatureOrGOCount3` = 0, `ReqCreatureOrGOCount4`= 0, `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` =9785;
 /* Lost in Battle */
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 10668, `ReqCreatureOrGOCount1` = 1 WHERE `entry` = 4921;
+
 
 /* */
 /* ITEM_TEMPLATE */
