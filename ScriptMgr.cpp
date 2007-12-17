@@ -338,7 +338,7 @@ extern void AddSC_boss_golemagg();
 extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
-extern void AddSC_mobs_moltencore();
+extern void AddSC_mobs_molten_core();
 
 //Moonglade
 extern void AddSC_silva_filnaveth();
