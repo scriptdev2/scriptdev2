@@ -65,8 +65,8 @@ scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
-scripts/zone/aunchindoun/sekketh_halls/boss_darkweaver_syth.cpp \
-scripts/zone/aunchindoun/sekketh_halls/boss_tailonking_ikiss.cpp \
+scripts/zone/aunchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
+scripts/zone/aunchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
@@ -184,8 +184,8 @@ scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
-scripts/zone/hellfire_citadel/ramparts/boss_omor_the_unscarred.cpp \
-scripts/zone/hellfire_citadel/ramparts/boss_watchkeeper_gargolmar.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \

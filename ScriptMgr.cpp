@@ -530,6 +530,7 @@ extern void AddSC_npcs_zangarmarsh();
 
 //Zul'Farrak
 //Zul'Gurub
+//Zul'Aman
 
 
 // -------------------
@@ -1048,6 +1049,7 @@ void ScriptsInit()
 
     //Zul'Farrak
     //Zul'Gurub
+    //Zul'Aman
 
 
     // -------------------

@@ -1450,14 +1450,14 @@
 						</File>
 					</Filter>
 					<Filter
-						Name="Sekketh Halls"
+						Name="Sethekk Halls"
 						>
 						<File
-							RelativePath="..\scripts\zone\aunchindoun\sekketh_halls\boss_darkweaver_syth.cpp"
+							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\boss_darkweaver_syth.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\zone\aunchindoun\sekketh_halls\boss_tailonking_ikiss.cpp"
+							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\boss_tailonking_ikiss.cpp"
 							>
 						</File>
 					</Filter>
@@ -1622,14 +1622,14 @@
 						</File>
 					</Filter>
 					<Filter
-						Name="The Ramparts"
+						Name="Hellfire Ramparts"
 						>
 						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\ramparts\boss_omor_the_unscarred.cpp"
+							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_omor_the_unscarred.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\ramparts\boss_watchkeeper_gargolmar.cpp"
+							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_watchkeeper_gargolmar.cpp"
 							>
 						</File>
 					</Filter>
@@ -2053,6 +2053,10 @@
 						RelativePath="..\scripts\zone\undercity\npcs_undercity.cpp"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Zul'Aman"
+					>
 				</Filter>
 			</Filter>
 		</Filter>

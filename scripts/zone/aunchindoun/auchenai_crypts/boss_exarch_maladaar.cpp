@@ -14,18 +14,19 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Exarch_maladaar
+SD%Complete: 100
+SDComment: 
+EndScriptData */
+
 #include "../../../sc_defines.h"
 
 #define SPELL_RIBBON_OF_SOULS       32422
 #define SPELL_FEAR                  32421
-
-
 #define SPELL_SUMMON_DARK_SIDE      32346 
 #define SPELL_SOUL_STEAL            32395 
 #define SPELL_AVATAR_OF_MARTYRED    32424
-
-
-
 #define SPELL_MORTAL_STRIKE         32736
 
 #define SAY_INTRO                   "You have defiled the resting place of our ancestors. For this offense, there can be but one punishment. It is fitting that you have come to a place of the dead... for you will soon be joining them."
@@ -52,7 +53,6 @@
 
 #define SAY_DEATH                   "This is... where.. I belong..."
 #define SOUND_DEATH                 10518
-
 
 //Exarch Maladaar
 struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
