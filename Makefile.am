@@ -223,18 +223,7 @@ scripts/zone/molten_core/boss_ragnaros.cpp \
 scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/instance_molten_core.cpp \
-scripts/zone/molten_core/mob_ancient_core_hound.cpp \
-scripts/zone/molten_core/mob_core_rager.cpp \
-scripts/zone/molten_core/mob_firelord.cpp \
-scripts/zone/molten_core/mob_firewalker.cpp \
-scripts/zone/molten_core/mob_flame_guard.cpp \
-scripts/zone/molten_core/mob_flamewaker.cpp \
-scripts/zone/molten_core/mob_flamewaker_elite.cpp \
-scripts/zone/molten_core/mob_flamewaker_healer.cpp \
-scripts/zone/molten_core/mob_flamewaker_protector.cpp \
-scripts/zone/molten_core/mob_lavaspawn.cpp \
-scripts/zone/molten_core/mob_molten_destroyer.cpp \
-scripts/zone/molten_core/mob_molten_giant.cpp \
+scripts/zone/molten_core/mobs_molten_core.cpp \
 scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
 scripts/zone/moonglade/npc_great_bear_spirit.cpp \
 scripts/zone/moonglade/npc_silva_filnaveth.cpp \
@@ -283,6 +272,7 @@ scripts/zone/scarlet_monastery/boss_interrogator_vishas.cpp \
 scripts/zone/scarlet_monastery/boss_scarlet_commander_mograine.cpp \
 scripts/zone/scarlet_monastery/boss_scorn.cpp \
 scripts/zone/scarlet_monastery/mob_scarlet_torturer.cpp \
+scripts/zone/scholomance/boss_darkmaster_gandling.cpp \
 scripts/zone/scholomance/boss_death_knight_darkreaver.cpp \
 scripts/zone/scholomance/boss_doctor_theolen_krastinov.cpp \
 scripts/zone/scholomance/boss_illucia_barov.cpp \

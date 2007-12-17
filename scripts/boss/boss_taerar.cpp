@@ -241,6 +241,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 SummonShades(target);
                 SummonShades(target);
                 Summon1_Timer = 120000;
+                Shades = true;
+                Shades_Timer = 60000;
             } else Summon1_Timer -= diff;
         }
 
@@ -264,6 +266,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 SummonShades(target);
                 SummonShades(target);
                 Summon2_Timer = 120000;
+                Shades = true;
+                Shades_Timer = 60000;
             } else Summon2_Timer -= diff;
         }
 
@@ -285,6 +289,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
                 SummonShades(target);
                 SummonShades(target);
                 Summon3_Timer = 120000;
+                Shades = true;
+                Shades_Timer = 60000;
             } else Summon3_Timer -= diff;
         }
 

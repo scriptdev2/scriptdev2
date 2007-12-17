@@ -26,10 +26,10 @@ EndScriptData */
 
 #define SPELL_WINGBUFFET 18500
 #define SPELL_FLAMEBREATH 18435
-#define SPELL_CLEAVE 26350
+#define SPELL_CLEAVE 19983
 #define SPELL_TAILSWEEP 25653
 #define SPELL_ENGULFINGFLAMES 20019                  
-#define SPELL_DEEPBREATH 18596
+#define SPELL_DEEPBREATH 23461
 #define SPELL_BELLOWINGROAR 18431
 
 //These spells below arn't supported in the core yet
@@ -269,7 +269,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if ( rand() % 10 <= 4 )
                     DoCast(target,SPELL_ENGULFINGFLAMES);
                 engulfingflames_timer = 8000;
             }else engulfingflames_timer -= diff;
@@ -283,29 +282,29 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_DESPAWN,900000);
+                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
 
 

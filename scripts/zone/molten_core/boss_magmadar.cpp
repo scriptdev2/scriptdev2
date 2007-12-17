@@ -26,7 +26,7 @@ EndScriptData */
 #define SPELL_FRENZY                28371
 #define SPELL_MAGMASPIT             19449       //This is actually a buff he gives himself
 #define SPELL_LAVABREATH            19272
-#define SPELL_PANIC                 19408
+#define SPELL_PANIC                 33547       // Changed from 19408. Cause this spell (Panic) is lagging the server to hell.
 #define SPELL_LAVABOMB              19411       //This calls a dummy server side effect that isn't implemented yet
 #define SPELL_LAVABOMB_ALT          19428       //This is the spell that the lava bomb casts
 
@@ -42,9 +42,9 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        Frenzy_Timer = 45000;       //Just a guess, been to long since I've killed Magmadar
+        Frenzy_Timer = 30000;       
         LavaBreath_Timer = 7000;
-        Panic_Timer = 30000;
+        Panic_Timer = 20000;
         Lavabomb_Timer = 12000;
         InCombat = false;
 
@@ -54,7 +54,20 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void AttackStart(Unit *who)
@@ -103,8 +116,8 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
             DoCast(m_creature,SPELL_FRENZY);
             DoTextEmote("goes into a killing frenzy!",NULL);
 
-            //45 seconds
-            Frenzy_Timer = 45000;
+            //30 seconds
+            Frenzy_Timer = 30000;
         }else Frenzy_Timer -= diff;
 
         //LavaBreath_Timer

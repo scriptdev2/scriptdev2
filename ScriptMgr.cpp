@@ -338,18 +338,7 @@ extern void AddSC_boss_golemagg();
 extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
-extern void AddSC_mob_firelord();
-extern void AddSC_mob_molten_giant();
-extern void AddSC_mob_ancient_core_hound();
-extern void AddSC_mob_molten_destroyer();
-extern void AddSC_mob_firewalker();
-extern void AddSC_mob_flame_guard();
-extern void AddSC_mob_flamewaker();
-extern void AddSC_mob_flamewaker_elite();
-extern void AddSC_mob_flamewaker_healer();
-extern void AddSC_mob_flamewaker_protector();
-extern void AddSC_mob_core_rager();
-extern void AddSC_mob_lavaspawn();
+extern void AddSC_mobs_moltencore();
 
 //Moonglade
 extern void AddSC_silva_filnaveth();
@@ -377,6 +366,7 @@ extern void AddSC_boss_faerlina();
 extern void AddSC_boss_loatheb();
 extern void AddSC_boss_noth();
 extern void AddSC_boss_gluth();
+extern void AddSC_boss_sapphiron();
 
 //Netherstorm
 extern void AddSC_npcs_netherstorm();
@@ -405,6 +395,7 @@ extern void AddSC_boss_scorn();
 extern void AddSC_scarlet_torturer();
 
 //Scholomance
+extern void AddSC_boss_darkmaster_gandling();
 extern void AddSC_boss_death_knight_darkreaver();
 extern void AddSC_boss_theolenkrastinov();
 extern void AddSC_boss_illuciabarov();
@@ -530,6 +521,13 @@ extern void AddSC_npcs_zangarmarsh();
 
 //Zul'Farrak
 //Zul'Gurub
+extern void AddSC_boss_jeklik();
+extern void AddSC_boss_venoxis();
+extern void AddSC_boss_marli();
+extern void AddSC_boss_mandokir();
+extern void AddSC_boss_gahzranka();
+extern void AddSC_boss_jindo();
+extern void AddSC_instance_zulgurub();
 //Zul'Aman
 
 
@@ -857,18 +855,8 @@ void ScriptsInit()
     AddSC_boss_sulfuron();
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
-    AddSC_mob_firelord();
-    AddSC_mob_molten_giant();
-    AddSC_mob_ancient_core_hound();
-    AddSC_mob_molten_destroyer();
-    AddSC_mob_firewalker();
-    AddSC_mob_flame_guard();
-    AddSC_mob_flamewaker();
-    AddSC_mob_flamewaker_elite();
-    AddSC_mob_flamewaker_healer();
-    AddSC_mob_flamewaker_protector();
-    AddSC_mob_core_rager();
-    AddSC_mob_lavaspawn();
+    AddSC_mobs_molten_core();
+
 
     //Moonglade
     AddSC_silva_filnaveth();
@@ -896,6 +884,7 @@ void ScriptsInit()
     AddSC_boss_loatheb();
     AddSC_boss_noth();
     AddSC_boss_gluth();
+    AddSC_boss_sapphiron();
 
     //Netherstorm
     AddSC_npcs_netherstorm();
@@ -924,6 +913,7 @@ void ScriptsInit()
     AddSC_scarlet_torturer();
 
     //Scholomance
+    AddSC_boss_darkmaster_gandling();
     AddSC_boss_death_knight_darkreaver();
     AddSC_boss_theolenkrastinov();
     AddSC_boss_illuciabarov();
@@ -1049,6 +1039,14 @@ void ScriptsInit()
 
     //Zul'Farrak
     //Zul'Gurub
+    AddSC_boss_jeklik();
+    AddSC_boss_venoxis();
+    AddSC_boss_marli();
+    AddSC_boss_mandokir();
+    AddSC_boss_gahzranka();
+    AddSC_boss_jindo();
+    AddSC_instance_zulgurub();
+
     //Zul'Aman
 
 

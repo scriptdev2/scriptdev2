@@ -28,6 +28,7 @@ EndScriptData */
 #define SPELL_MAGMASPLASH               13879      
 #define SPELL_PYROBLAST                 20228
 #define SPELL_EARTHQUAKE                19798
+#define SPELL_ENRAGE                    19953
 
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
@@ -35,21 +36,37 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
     uint32 Pyroblast_Timer;
     uint32 EarthQuake_Timer;
+    uint32 Enrage_Timer;
     bool InCombat;
     bool HasAura;
 
     void EnterEvadeMode()
     {
         Pyroblast_Timer = 7000;      //These times are probably wrong
-        EarthQuake_Timer = 0;     
+        EarthQuake_Timer = 3000; 
+        Enrage_Timer = 0;     
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
         HasAura = true;
     }
 
@@ -112,6 +129,19 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             Pyroblast_Timer = 7000;
         }else Pyroblast_Timer -= diff;
 
+
+            //Enrage_Timer
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
+            {
+                if (Enrage_Timer < diff)
+                {
+                    DoCast(m_creature,SPELL_ENRAGE);
+
+                    //12 seconds
+                    Enrage_Timer = 62000;
+                }else Enrage_Timer -= diff;
+            }
+
         //EarthQuake_Timer
         if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
         {
@@ -119,8 +149,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             {
                 DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
 
-                //12 seconds
-                EarthQuake_Timer = 12000;
+                //5 seconds
+                EarthQuake_Timer = 5000;
             }else EarthQuake_Timer -= diff;
         }
 

@@ -21,14 +21,13 @@ SDComment: Teleport not included, spell reflect not effecting dots (Core problem
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
 
-#define SPELL_MARKOFFROST                23183            
-#define SPELL_MANASTORM            21097
+#define SPELL_MARKOFFROST        23182            
+#define SPELL_MANASTORM          21097
 #define SPELL_REFLECT            30969               //Works fine but not for Dot Spells
-#define SPELL_CLEAVE           8255                //Perhaps not right ID
-#define SPELL_ENRAGE             23537
-
-// TELEPORT SPELL NOT INCLUDED
+#define SPELL_CLEAVE              8255                //Perhaps not right ID
+#define SPELL_ENRAGE             28747
 
 struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 {
@@ -36,6 +35,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 
     uint32 MarkOfFrost_Timer;
     uint32 ManaStorm_Timer;
+    uint32 Teleport_Timer;
     uint32 Reflect_Timer;
     uint32 Cleave_Timer;
     uint32 Enrage_Timer;
@@ -43,10 +43,11 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        MarkOfFrost_Timer = 45000;
-        ManaStorm_Timer = 25000;
-        Reflect_Timer = 30000;
-        Cleave_Timer = 15000;
+        MarkOfFrost_Timer = 35000;
+        ManaStorm_Timer = 10000;
+        Teleport_Timer = 30000;
+        Reflect_Timer = 25000;
+        Cleave_Timer = 7000;
         Enrage_Timer = 0;
         InCombat = false;
 
@@ -54,6 +55,16 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
     }
 
     void AttackStart(Unit *who)
@@ -68,6 +79,19 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             InCombat = true;
         }
     }
+
+  void ResetThreat()
+  {
+    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+ 
+    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
+    {
+      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
+      if(pUnit)
+        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
+    }
+ 
+  }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -96,6 +120,23 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             return;
 
 
+          if(Teleport_Timer < diff)
+          {
+             std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+             std::list<HostilReference*>::iterator i = m_threatlist.begin();
+             for (i = m_threatlist.begin(); i!= m_threatlist.end();++i)
+             {
+                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                 if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+                 {
+                 ((Player*)pUnit)->TeleportTo(1, m_creature->GetPositionX(), m_creature->GetPositionY()+5, m_creature->GetPositionZ(), pUnit->GetOrientation());
+                 }
+             }
+
+             ResetThreat();
+             Teleport_Timer = 30000;
+        }else Teleport_Timer -= diff;
+
         //MarkOfFrost_Timer
         if (MarkOfFrost_Timer < diff)
         {
@@ -103,7 +144,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_MARKOFFROST);
 
             //30 seconds
-            MarkOfFrost_Timer = 30000;
+            MarkOfFrost_Timer = 25000;
         }else MarkOfFrost_Timer -= diff;
 
         //ManaStorm_Timer
@@ -113,7 +154,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_MANASTORM);
 
             //15 seconds until we should cast this agian
-            ManaStorm_Timer = 15000;
+            ManaStorm_Timer = 10000;
         }else ManaStorm_Timer -= diff;
 
 
@@ -134,7 +175,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
             //12 seconds until we should cast this agian
-            Cleave_Timer = 12000;
+            Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
 

@@ -42,10 +42,10 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        DemoralizingShout_Timer = 8000;      //These times are probably wrong
-        Inspire_Timer = 30000;
-        Knockdown_Timer = 16000;
-        Flamespear_Timer = 12000;
+        DemoralizingShout_Timer = 15000;      //These times are probably wrong
+        Inspire_Timer = 13000;
+        Knockdown_Timer = 6000;
+        Flamespear_Timer = 2000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -53,7 +53,20 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void AttackStart(Unit *who)
@@ -102,7 +115,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_DEMORALIZINGSHOUT);
 
             //20-25 seconds until we should cast this agian
-            DemoralizingShout_Timer = 20000 + rand()%5000;
+            DemoralizingShout_Timer = 15000 + rand()%5000;
         }else DemoralizingShout_Timer -= diff;
 
         //Inspire_Timer
@@ -112,7 +125,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             DoCast(m_creature,SPELL_INSPIRE);
 
             //28-32 seconds until we should cast this agian
-            Inspire_Timer = 28000 + rand()%4000;
+            Inspire_Timer = 20000 + rand()%6000;
         }else Inspire_Timer -= diff;
 
         //Knockdown_Timer
@@ -122,7 +135,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
 
             //17-20 seconds until we should cast this agian
-            Knockdown_Timer = 17000 + rand()%3000;
+            Knockdown_Timer = 12000 + rand()%3000;
         }else Knockdown_Timer -= diff;
 
         //Flamespear_Timer

@@ -35,16 +35,34 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 
     void EnterEvadeMode()
     {       
-        Immolate_Timer = 9000;
-        VeilofShadow_Timer = 16000;
+
+        Immolate_Timer = 7000;
+        VeilofShadow_Timer = 15000;
+
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-
         m_creature->LoadCreaturesAddon();
+
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SHACKLE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);     
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+
     }
 
     void JustDied(Unit *killer)
@@ -107,8 +125,8 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)DoCast(target,SPELL_IMMOLATE);
 
-            //24 seconds until we should cast this agian
-            Immolate_Timer = 24000;
+            //12 seconds until we should cast this agian
+            Immolate_Timer = 12000;
         }else Immolate_Timer -= diff;
 
         //VeilofShadow_Timer
@@ -118,7 +136,7 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
 
             //25 seconds until we should cast this agian
-            VeilofShadow_Timer = 25000;
+            VeilofShadow_Timer = 20000;
         }else VeilofShadow_Timer -= diff;
 
         DoMeleeAttackIfReady();

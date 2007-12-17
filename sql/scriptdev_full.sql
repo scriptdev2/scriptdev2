@@ -613,6 +613,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* SCHOLOMANCE */
 UPDATE `instance_template` SET `script` = 'instance_scholomance' WHERE `map` = 289;
+UPDATE `creature_template` SET `ScriptName` = 'boss_darkmaster_gandling' WHERE `entry` = 1853;
 UPDATE `creature_template` SET `ScriptName` = 'boss_death_knight_darkreaver' WHERE `entry` = 14516;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lord_alexei_barov' WHERE `entry` = 10504;
 UPDATE `creature_template` SET `ScriptName` = 'boss_instructor_malicia' WHERE `entry` = 10505;
@@ -625,8 +626,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_jandice_barov' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'boss_lorekeeper_polkelt' WHERE `entry` = 10901;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kormok' WHERE `entry` = 16118;
 UPDATE `creature_template` SET `ScriptName` = 'mob_illusionofjandicebarov' WHERE `entry` = 11439;
-/* Darkmaster Gandling, Kirtonos the Herald, Rattlegore, Marduk Blackpool, Risen Guard, Risen Bonewarder, Risen Lackey, Risen Aberration, Risen Warrior, Risen Protector, Risen Construct, Risen Guardian, Diseased Ghoul, Ragged Ghoul, Spectral Projection, Spectral Teacher, Necrofiend, Scholomance Neophyte, Scholomance Acolyte, Scholomance Occultist */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1853, 10506, 11622, 10433, 10489, 10491, 10482, 10485, 10486, 10487, 10488, 11598, 10495, 10497, 11263, 10500, 11551, 10470, 10471, 10472);
+/* Kirtonos the Herald, Rattlegore, Marduk Blackpool, Risen Guard, Risen Bonewarder, Risen Lackey, Risen Aberration, Risen Warrior, Risen Protector, Risen Construct, Risen Guardian, Diseased Ghoul, Ragged Ghoul, Spectral Projection, Spectral Teacher, Necrofiend, Scholomance Neophyte, Scholomance Acolyte, Scholomance Occultist */
+UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10506, 11622, 10433, 10489, 10491, 10482, 10485, 10486, 10487, 10488, 11598, 10495, 10497, 11263, 10500, 11551, 10470, 10471, 10472);
 /* Scholomance Student, Scholomance Necromancer, Scholomance Adept, Scholomance Handler, Splintered Skeleton, Skulking Corpse, Unstable Corpse, Reanimated Corpse, Aspect of Banality, Aspect of Corruption, Aspect of Malice, Aspect of Shadow, Blood Steward of Kirtonos, Spectral Tutor, Dark Shade, Corrupted Spirit, Malicious Spirit, Banal Spirit, Scholomance Dark Summoner */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 
@@ -885,9 +886,19 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` =
 
 
 /* ZUL'GURUB */
+UPDATE `creature_template` SET `ScriptName` = 'boss_jeklik' WHERE `entry` = 14517;
+UPDATE `creature_template` SET `ScriptName` = 'boss_venoxis' WHERE `entry` = 14607;
+UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510;
+UPDATE `creature_template` SET `ScriptName` = 'boss_mandokir' WHERE `entry` = 11382;
+UPDATE `creature_template` SET `ScriptName` = 'boss_gahzranka' WHERE `entry` = 15114;
+UPDATE `creature_template` SET `ScriptName` = 'boss_jindo' WHERE `entry` = 11380;
 UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
 /* Gurubashi Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11350);
+/* Spawn of Marli */
+UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
+/* Jeklik Batrider */
+UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
 
 
 

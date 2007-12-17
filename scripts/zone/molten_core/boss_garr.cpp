@@ -58,6 +58,20 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void AttackStart(Unit *who)
@@ -166,25 +180,6 @@ CreatureAI* GetAI_boss_garr(Creature *_Creature)
 }
 
 
-CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
-{
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //Cast eruption upon death
-    ai->Death_Spell = SPELL_ERUPTION;
-    ai->Death_Target_Type = CAST_SELF;  //Self
-
-    //Cast eruption upon death
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    ai->Spell[0].Cooldown = 7000;
-    ai->Spell[0].First_Cast = 7000;
-    ai->Spell[0].Spell_Id = SPELL_IMMOLATE;
-
-    ai->EnterEvadeMode();
-
-    return ai;
-}
 
 void AddSC_boss_garr()
 {
@@ -194,8 +189,4 @@ void AddSC_boss_garr()
     newscript->GetAI = GetAI_boss_garr;
     m_scripts[nrscripts++] = newscript;
 
-    newscript = new Script;
-    newscript->Name="mob_firesworn";
-    newscript->GetAI = GetAI_mob_firesworn;
-    m_scripts[nrscripts++] = newscript;
 }

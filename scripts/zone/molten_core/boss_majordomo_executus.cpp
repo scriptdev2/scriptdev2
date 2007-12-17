@@ -62,8 +62,8 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        MagicReflection_Timer = 60000;      //Damage reflection first so we alternate
-        DamageReflection_Timer = 30000;
+        MagicReflection_Timer =  30000;      //Damage reflection first so we alternate
+        DamageReflection_Timer = 15000;
         Blastwave_Timer = 10000;
         InCombat = false;
 
@@ -140,19 +140,19 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         //MagicReflection_Timer
         if (MagicReflection_Timer < diff)
         {
-            DoCast(m_creature,SPELL_MAGICREFLECTION);
+            DoCast(m_creature->getVictim(),SPELL_MAGICREFLECTION);
 
             //60 seconds until we should cast this agian
-            MagicReflection_Timer = 60000;
+            MagicReflection_Timer = 30000;
         }else MagicReflection_Timer -= diff;
 
         //DamageReflection_Timer
         if (DamageReflection_Timer < diff)
         {
-            DoCast(m_creature,SPELL_DAMAGEREFLECTION);
+            DoCast(m_creature->getVictim(),SPELL_DAMAGEREFLECTION);
 
             //60 seconds until we should cast this agian
-            DamageReflection_Timer = 60000;
+            DamageReflection_Timer = 30000;
         }else DamageReflection_Timer -= diff;
 
         //Blastwave_Timer
