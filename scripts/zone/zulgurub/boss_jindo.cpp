@@ -21,7 +21,7 @@ SDComment: Mind Control not working because of core bug. Heal function missing.
 EndScriptData */
 
 #include "../../sc_defines.h"
-#include "../../game/Player.h"
+#include "../../../../../game/Player.h"
 
 
 

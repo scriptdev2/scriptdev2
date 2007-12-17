@@ -21,7 +21,7 @@ SDComment: Doors missing in instance script.
 EndScriptData */
 
 #include "../../sc_defines.h"
-#include "../../game/Player.h"
+#include "../../../../../game/Player.h"
 
 #define SPELL_ARCANEMISSILES           22272    
 #define SPELL_SHADOWSHIELD             22417    //Not right ID. But 12040 is wrong either.      
