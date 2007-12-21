@@ -18,6 +18,7 @@
 SDName: Mob_Blacktemple
 SD%Complete: 100
 SDComment: All trash mobs for BT
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

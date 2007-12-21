@@ -18,6 +18,7 @@
 SDName: mob_kobold
 SD%Complete: 10
 SDComment: No longer in Development
+SDCategory: Creatures
 EndScriptData */
 
 #include "../sc_defines.h"

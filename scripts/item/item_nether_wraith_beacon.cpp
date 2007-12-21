@@ -18,6 +18,7 @@
 SDName: Item_Nether_Wraith_Beacon
 SD%Complete: 100
 SDComment: Summons creatures
+SDCategory: Items
 EndScriptData */
 
 

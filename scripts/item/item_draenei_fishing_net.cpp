@@ -18,6 +18,7 @@
 SDName: Item_Draenei_Fishing_Net
 SD%Complete: 100
 SDComment: Correctly implements chance to spawn item or creature
+SDCategory: Items
 EndScriptData */
 
 

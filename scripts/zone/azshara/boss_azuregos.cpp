@@ -18,6 +18,7 @@
 SDName: Boss_Azuregos
 SD%Complete: 90
 SDComment: Teleport not included, spell reflect not effecting dots (Core problem)
+SDCategory: Azshara
 EndScriptData */
 
 #include "../../sc_defines.h"

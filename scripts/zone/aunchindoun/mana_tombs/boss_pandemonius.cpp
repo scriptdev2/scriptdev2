@@ -18,6 +18,7 @@
 SDName: Boss_Pandemonius
 SD%Complete: 100
 SDComment: Small chance of 1 player being hit by all 5 blasts (1/num_players^5)
+SDCategory: Auchindoun / Mana Tombs
 EndScriptData */
 
 #include "../../../sc_defines.h"

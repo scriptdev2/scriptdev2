@@ -18,6 +18,7 @@
 SDName: npcs_burning_steppes
 SD%Complete: 100
 SDComment: npcs burning steppes, quest related.
+SDCategory: Burning Steppes
 EndScriptData */
 
 #include "../../sc_defines.h"

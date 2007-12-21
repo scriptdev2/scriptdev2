@@ -18,6 +18,7 @@
 SDName: Item_Area52_Special
 SD%Complete: 100
 SDComment: Prevents abuse of this item
+SDCategory: Items
 EndScriptData */
 
 

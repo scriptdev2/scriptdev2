@@ -18,6 +18,7 @@
 SDName: Boss_Flamegor
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "../../sc_defines.h"

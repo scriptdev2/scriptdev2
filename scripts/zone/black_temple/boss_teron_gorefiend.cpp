@@ -20,6 +20,7 @@
 SDName: Boss_Teron_Gorefiend
 SD%Complete: 100
 SDComment: 
+SDCategory: Black Temple
 EndScriptData */
 
 //Spells

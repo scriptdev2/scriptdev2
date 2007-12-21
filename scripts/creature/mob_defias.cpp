@@ -18,6 +18,7 @@
 SDName: mob_defias
 SD%Complete: 90
 SDComment: No SQL queries to use this script
+SDCategory: Creatures
 EndScriptData */
 
 //*** Generic Defias script ***

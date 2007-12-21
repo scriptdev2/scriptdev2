@@ -18,6 +18,7 @@
 SDName: Boss_Vaelastrasz
 SD%Complete: 75
 SDComment: Burning Adrenaline not correctly implemented in core
+SDCategory: Blackwing Lair
 EndScriptData */
 
 //*** NEEDS ADDITIOINAL REVIEW ***

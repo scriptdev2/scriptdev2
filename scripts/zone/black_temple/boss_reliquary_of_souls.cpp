@@ -18,6 +18,7 @@
 SDName: Boss_Reliquary_of_Souls
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

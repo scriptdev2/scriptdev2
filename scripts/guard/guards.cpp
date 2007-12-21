@@ -18,6 +18,7 @@
 SDName: Guards.cpp
 SD%Complete: 100
 SDComment: All Guard data
+SDCategory: Guards
 EndScriptData */
 
 /********************* CONTENT *************************

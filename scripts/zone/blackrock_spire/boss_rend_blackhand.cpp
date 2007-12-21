@@ -18,6 +18,7 @@
 SDName: Boss_Rend_Blackhand
 SD%Complete: 100
 SDComment: Intro event NYI
+SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "../../sc_defines.h"

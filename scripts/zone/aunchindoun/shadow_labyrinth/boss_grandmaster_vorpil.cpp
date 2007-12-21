@@ -20,6 +20,7 @@
 SDName: Boss_Grandmaster_Vorpil
 SD%Complete: 50
 SDComment: Missing Void Rifts, Void Traveler, and Draw Shadows
+SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
 

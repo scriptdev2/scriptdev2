@@ -18,6 +18,7 @@
 SDName: NPC_InnKeeper
 SD%Complete: 50
 SDComment: EventSystem cannot be used on Windows build of SD2
+SDCategory: NPCs
 EndScriptData */
 
  

@@ -18,6 +18,7 @@
 SDName: Boss_TailonKing_Ikiss
 SD%Complete: 100
 SDComment: 
+SDCategory: Auchindoun / Sethekk Halls
 EndScriptData */
 
 #include "../../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Npcs_Blades_Edge_Mountains
 SD%Complete: 95
 SDComment: Daranelle analyze for quest 10556, unknown text id's
+SDCategory: Blade's Edge Mountains
 EndScriptData */
 
 #include "../../sc_defines.h"

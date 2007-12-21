@@ -18,6 +18,7 @@
 SDName: Boss_Moira_Bronzbeard
 SD%Complete: 90
 SDComment: Healing of Emperor NYI
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -147,4 +148,5 @@ void AddSC_boss_moira_bronzebeard()
     newscript->GetAI = GetAI_boss_moira_bronzebeard;
     m_scripts[nrscripts++] = newscript;
 }
+
 

@@ -18,6 +18,7 @@
 SDName: npc_mount_vendor
 SD%Complete: 80
 SDComment: regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
+SDCategory: NPCs
 EndScriptData */
 
 #include "../sc_defines.h"

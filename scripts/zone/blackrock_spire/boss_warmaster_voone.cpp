@@ -18,6 +18,7 @@
 SDName: Boss_Warmaster_Voone
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "../../sc_defines.h"

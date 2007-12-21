@@ -18,6 +18,7 @@
 SDName: Guard_AI
 SD%Complete: 90
 SDComment: Core problems with Guards not helping dotted players
+SDCategory: Guards
 EndScriptData */
 
 #include "guard_ai.h"

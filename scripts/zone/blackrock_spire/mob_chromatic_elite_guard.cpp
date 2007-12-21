@@ -18,6 +18,7 @@
 SDName: Mob_Chromatic_Elite_Guard
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "../../sc_defines.h"

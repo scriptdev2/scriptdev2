@@ -18,6 +18,7 @@
 SDName: npc_draenei_survivor
 SD%Complete: 100
 SDComment: For quest 9283
+SDCategory: Azuremyst Isle
 EndScriptData */
 
 #include "../../sc_defines.h"

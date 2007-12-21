@@ -18,6 +18,7 @@
 SDName: NPC_Not_Selectable
 SD%Complete: 100
 SDComment: No Longer Required
+SDCategory: NPCs
 EndScriptData */
 
 

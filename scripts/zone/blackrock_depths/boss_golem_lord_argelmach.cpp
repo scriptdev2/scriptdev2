@@ -18,6 +18,7 @@
 SDName: Boss_Golem_Lord_Argelmach
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"

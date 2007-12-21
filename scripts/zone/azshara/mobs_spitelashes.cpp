@@ -18,6 +18,7 @@
 SDName: Mob_Spitelashes
 SD%Complete: 100
 SDComment: For quest 9364
+SDCategory: Azshara
 EndScriptData */
  
 #include "../../sc_defines.h"

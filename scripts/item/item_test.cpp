@@ -18,6 +18,7 @@
 SDName: Item_Test
 SD%Complete: 100
 SDComment: Used for Testing Item Scripts
+SDCategory: Items
 EndScriptData */
 
 #include "../sc_defines.h"

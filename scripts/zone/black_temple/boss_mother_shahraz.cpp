@@ -18,6 +18,7 @@
 SDName: Boss_Mother_Shahraz
 SD%Complete: 80
 SDComment: Prismatic shields randomly applied instead of correct "based on damage taken"
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

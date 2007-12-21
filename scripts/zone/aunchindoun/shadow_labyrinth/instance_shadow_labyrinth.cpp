@@ -18,6 +18,7 @@
 SDName: Instance_Shadow_Labyrinth
 SD%Complete: 99
 SDComment: VERIFY SCRIPT
+SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
 #include "../../../sc_defines.h"

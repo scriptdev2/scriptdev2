@@ -18,6 +18,7 @@
 SDName: Boss_Ambassador_Hellmaw
 SD%Complete: 100
 SDComment: 
+SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
 #include "../../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Warlord_Najentus
 SD%Complete: 100
 SDComment: 
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

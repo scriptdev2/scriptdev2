@@ -18,6 +18,7 @@
 SDName: Boss_Tavarok
 SD%Complete: 100
 SDComment: 
+SDCategory: Auchindoun / Mana Tombs
 EndScriptData */
 
 #include "../../../sc_defines.h"

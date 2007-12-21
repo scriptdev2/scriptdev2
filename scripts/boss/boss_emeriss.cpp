@@ -18,6 +18,7 @@
 SDName: Emeriss
 SD%Complete: 90
 SDComment: Teleport function & Mark of Nature missing
+SDCategory: Bosses
 EndScriptData */
 
 #include "../sc_defines.h"

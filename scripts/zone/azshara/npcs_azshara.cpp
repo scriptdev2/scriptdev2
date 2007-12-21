@@ -18,6 +18,7 @@
 SDName: npcs_azshara
 SD%Complete: 90
 SDComment: npcs azshara, mostly quest related. Unknown relation between quest 2744 and 3141, wdb data suggest they both should have gossip before questComplete
+SDCategory: Azshara
 EndScriptData */
 
 #include "../../sc_defines.h"

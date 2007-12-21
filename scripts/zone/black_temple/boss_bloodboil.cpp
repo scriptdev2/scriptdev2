@@ -18,6 +18,7 @@
 SDName: Boss_Bloodboil
 SD%Complete: 80
 SDComment: Bloodboil not working correctly
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

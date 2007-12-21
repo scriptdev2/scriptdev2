@@ -18,6 +18,7 @@
 SDName: Taerar
 SD%Complete: 90
 SDComment: Mark of Nature & Teleport NYI
+SDCategory: Bosses
 EndScriptData */
 
 #include "../sc_defines.h"

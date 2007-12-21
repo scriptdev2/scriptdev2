@@ -18,6 +18,7 @@
 SDName: Boss_Supremus
 SD%Complete: 90
 SDComment: Using incorrect summon ids that are not official creature ids
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

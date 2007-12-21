@@ -18,6 +18,7 @@
 SDName: npc_Guardian
 SD%Complete: 100
 SDComment: GuardianAI used to prevent players from accessing off-limits areas
+SDCategory: NPCs
 EndScriptData */
 
 #include "../sc_defines.h"

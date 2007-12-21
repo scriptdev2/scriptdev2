@@ -19,6 +19,7 @@
 SDName: GO_teleporter
 SD%Complete: 0
 SDComment: Unsure what this is used for
+SDCategory: Game Objects
 EndScriptData */
 
 

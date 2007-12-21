@@ -18,6 +18,7 @@
 SDName: npcs_blackrock_depths
 SD%Complete: 95
 SDComment: npcs inside blackrock depths, mostly quest related, includes creation of thorium brotherhood contract
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"

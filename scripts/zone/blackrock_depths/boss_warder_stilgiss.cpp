@@ -18,6 +18,7 @@
 SDName: Boss_Wander_Stigiss
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Item_Vorenthals_Prense
 SD%Complete: 100
 SDComment: Prevents abuse of this item
+SDCategory: Items
 EndScriptData */
 
 #include "../sc_defines.h"

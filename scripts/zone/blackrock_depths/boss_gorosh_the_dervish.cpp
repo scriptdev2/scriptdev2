@@ -18,6 +18,7 @@
 SDName: Boss_Gorosh_the_Dervish
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"

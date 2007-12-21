@@ -18,6 +18,7 @@
 SDName: Item_Purification_Mixture
 SD%Complete: 100
 SDComment: Correctly implements random item creation
+SDCategory: Items
 EndScriptData */
 
 

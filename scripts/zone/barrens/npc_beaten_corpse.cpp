@@ -18,6 +18,7 @@
 SDName: npc_beaten_corpse
 SD%Complete: 100
 SDComment: For Quest 4921
+SDCategory: Barrens
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -81,4 +82,5 @@ void AddSC_npc_beaten_corpse()
     newscript->pGossipSelect = &GossipSelect_npc_beaten_corpse;
     m_scripts[nrscripts++] = newscript;
 }
+
 

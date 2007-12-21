@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: mob_teremus_the_decourer
+SD%Complete: 100
+SDComment: 
+SDCategory: Blasted Lands
+EndScriptData */
+
 #include "../../sc_defines.h"
 
 #define SPELL_FLAMEBREATH                20712      

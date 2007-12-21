@@ -18,6 +18,7 @@
 SDName: Mob_Blackwing_Lair
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "../../sc_defines.h"

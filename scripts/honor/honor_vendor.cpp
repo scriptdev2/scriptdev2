@@ -18,6 +18,7 @@
 SDName: Honor_Vendor
 SD%Complete: 100
 SDComment: No longer required
+SDCategory: Honor
 EndScriptData */
 
 

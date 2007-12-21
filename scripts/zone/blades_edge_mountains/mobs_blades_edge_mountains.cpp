@@ -18,6 +18,7 @@
 SDName: mobs_blades_edge_mountains
 SD%Complete: 100
 SDComment: misc mobs, mostly related to quest
+SDCategory: Blade's Edge Mountains
 EndScriptData */
 
 #include "../../sc_defines.h"

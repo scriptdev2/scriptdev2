@@ -18,6 +18,7 @@
 SDName: Boss_Shade_of_Akama
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Ysondre
 SD%Complete: 90
 SDComment: Mark of Nature & Teleport missing
+SDCategory: Bosses
 EndScriptData */
 
 #include "../sc_defines.h"

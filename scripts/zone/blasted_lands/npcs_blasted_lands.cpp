@@ -18,6 +18,7 @@
 SDName: npcs_blasted_lands
 SD%Complete: 98
 SDComment: npcs blasted lands, mostly quest related. Fallen hero of horde is as close as it gets without first hand knowledge.
+SDCategory: Blasted Lands
 EndScriptData */
 
 #include "../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Illidari_Council
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"

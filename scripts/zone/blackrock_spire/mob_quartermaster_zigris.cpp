@@ -18,6 +18,7 @@
 SDName: Mob_Quartmaster_Zigris
 SD%Complete: 100
 SDComment: 
+SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "../../sc_defines.h"

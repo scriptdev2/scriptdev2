@@ -18,6 +18,7 @@
 SDName: Custom_Example
 SD%Complete: 100
 SDComment: Short custom scripting example
+SDCategory: Custom
 EndScriptData */
 
 #include "../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Nefarian
 SD%Complete: 100
 SDComment: Some issues with class calls effecting more than one class
+SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "../../sc_defines.h"

@@ -18,6 +18,7 @@
 SDName: Test.cpp
 SD%Complete: 100
 SDComment: Script used for testing
+SDCategory: Custom
 EndScriptData */
 
 #include "../sc_defines.h"

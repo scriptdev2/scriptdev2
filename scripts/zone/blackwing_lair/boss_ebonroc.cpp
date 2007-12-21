@@ -18,6 +18,7 @@
 SDName: Boss_Ebonroc
 SD%Complete: 50
 SDComment: Shadow of Ebonroc needs core support
+SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "../../sc_defines.h"

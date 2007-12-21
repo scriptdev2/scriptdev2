@@ -18,6 +18,7 @@
 SDName: Boss_Gloomrel
 SD%Complete: 80
 SDComment: Learning Smelt Dark Iron if tribute quest rewarded. Missing event and re-spawn GO Spectral Chalice
+SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "../../sc_defines.h"

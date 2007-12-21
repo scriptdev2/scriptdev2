@@ -18,6 +18,7 @@
 SDName: Boss_Razorgore
 SD%Complete: 50
 SDComment: Phase 1 NYI
+SDCategory: Blackwing Lair
 EndScriptData */
 
 //*** NEEDS ADDITIOINAL REVIEW ***

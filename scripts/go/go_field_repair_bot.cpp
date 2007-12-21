@@ -18,6 +18,7 @@
 SDName: GO_Field_Repair_Bot_74A
 SD%Complete: 100
 SDComment: Teaches spell 22704
+SDCategory: Game Objects
 EndScriptData */
  
 #include "../sc_defines.h"

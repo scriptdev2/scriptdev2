@@ -18,6 +18,7 @@
 SDName: GO_Jandice_Barov_Journal
 SD%Complete: 100
 SDComment: Teaches spell 26089
+SDCategory: Game Objects
 EndScriptData */
 
 #include "../sc_defines.h"

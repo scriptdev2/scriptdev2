@@ -18,6 +18,7 @@
 SDName: Boss_NexusPrince_Shaffar
 SD%Complete: 50
 SDComment: Missing some spells
+SDCategory: Auchindoun / Mana Tombs
 EndScriptData */
 
 #include "../../../sc_defines.h"

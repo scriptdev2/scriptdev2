@@ -18,6 +18,7 @@
 SDName: GO_orb_of_command
 SD%Complete: 100
 SDComment: Teleports players to BWL
+SDCategory: Game Objects
 EndScriptData */
 
 #include "../sc_defines.h"

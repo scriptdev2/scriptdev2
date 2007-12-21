@@ -18,6 +18,7 @@
 SDName: Npc_Victor_Nefarius
 SD%Complete: 75
 SDComment: Missing some text, Vael beginning event, and spawns Nef in wrong place
+SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "../../sc_defines.h"

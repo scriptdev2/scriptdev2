@@ -18,6 +18,7 @@
 SDName: npc_injured_draenei
 SD%Complete: 100
 SDComment: Cosmetic only
+SDCategory: Azuremyst Isle
 EndScriptData */
 
 #include "../../sc_defines.h"
