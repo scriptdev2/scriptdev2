@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                 if (!pUnit || !pUnit->isAlive())
                     continue;
 
-                pUnit->CombatStop(true);
+                pUnit->CombatStop();
                 float Walk_Pos_X;
                 float Walk_Pos_Y;
                 float Walk_Pos_Z;
