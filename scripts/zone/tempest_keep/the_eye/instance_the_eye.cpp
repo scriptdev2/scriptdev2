@@ -39,6 +39,9 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     uint64 LordSanguinar;
     uint64 GrandAstromancerCapernian;
     uint64 MasterEngineerTelonicus;
+    uint64 Kaelthas;
+
+    uint8 KaelthasEventPhase;
 
     bool Encounters[ENCOUNTERS];
 
@@ -48,6 +51,9 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         LordSanguinar = 0;
         GrandAstromancerCapernian = 0;
         MasterEngineerTelonicus = 0;
+        Kaelthas = 0;
+
+        KaelthasEventPhase = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -88,6 +94,10 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             creature->setFaction(35);
             LordSanguinar = creature->GetGUID();
             break;
+
+            case 19622:
+            Kaelthas = creature->GetGUID();
+            break;
         }
     }
 
@@ -101,32 +111,41 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             return GrandAstromancerCapernian;
         else if(identifier == "MasterEngineerTelonicus")
             return MasterEngineerTelonicus;
+        else if(identifier == "Kaelthas")
+            return Kaelthas;
 
         return NULL;
     }
 
     void SetData(char *type, uint32 data)
     {
-        if(type == "KaelThasEvent")
-			Encounters[0] = (data) ? true : false;
-        else if(type == "AlArEvent")
-            Encounters[1] = (data) ? true : false;
+        if(type == "AlArEvent")
+            Encounters[0] = (data) ? true : false;
         else if(type == "SolarianEvent")
-            Encounters[2] = (data) ? true : false;
+            Encounters[1] = (data) ? true : false;
         else if(type == "VoidReaverEvent")
+            Encounters[2] = (data) ? true : false;
+
+        //Kael'thas
+        else if(type == "KaelThasEvent")
+        {
+            KaelthasEventPhase = data;
             Encounters[3] = (data) ? true : false;
+        }
     }
 
     uint32 GetData(char *type)
     {
-        if(type == "KaelThasEvent")
+        if(type == "AlArEvent")
             return Encounters[0];
-        else if(type == "AlArEvent")
-            return Encounters[1];
         else if(type == "SolarianEvent")
-            return Encounters[2];
+            return Encounters[1];
         else if(type == "VoidReaverEvent")
-            return Encounters[3];
+            return Encounters[2];
+
+        //Kael'thas
+        else if(type == "KaelThasEvent")
+            return KaelthasEventPhase;
 
         return 0;
     }

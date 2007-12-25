@@ -787,12 +787,15 @@ UPDATE `instance_template` SET `script` = 'instance_the_eye' WHERE `map` = 550;
 /* The Eye Trash Mobs */
 UPDATE `creature_template` SET `ScriptName` = 'mob_the_eye' WHERE `entry` IN (20031,20032,20033,20034,20035,20039,20041,20043,20046,20052);
 UPDATE `creature_template` SET `ScriptName` = 'mob_crystalcore_devastator' WHERE `entry` = 20040;
-/* VoidReaver and Arcane orb Target */
+/* Void Reaver event */
 UPDATE `creature_template` SET `ScriptName` = 'boss_void_reaver' WHERE `entry` = 19516;
 UPDATE `creature_template` SET `ScriptName` = 'mob_arcane_orb_target' WHERE `entry` = 19577;
-/* Kael'thas Phoenix and egg */
-UPDATE `creature_template` SET `ScriptName` = 'mob_phoenix' WHERE `entry` = 21362;
-UPDATE `creature_template` SET `ScriptName` = 'mob_phoenix_egg' WHERE `entry` = 21364;
+/* Kael'thas event */
+UPDATE `creature_template` SET `ScriptName` = 'boss_kaelthas' WHERE `entry` = 19622;
+UPDATE `creature_template` SET `ScriptName` = 'boss_thaladred_the_darkener' WHERE `entry` = 20064;
+UPDATE `creature_template` SET `ScriptName` = 'boss_lord_sanguinar' WHERE `entry` = 20060;
+UPDATE `creature_template` SET `ScriptName` = 'boss_grand_astromancer_capernian' WHERE `entry` = 20062;
+UPDATE `creature_template` SET `ScriptName` = 'boss_master_engineer_telonicus' WHERE `entry` = 20063;
 
 
 /* TEMPLE OF AHN'QIRAJ */

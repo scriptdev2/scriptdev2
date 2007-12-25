@@ -28,7 +28,7 @@ EndScriptData */
 #define SPELL_EARTHQUAKE             37764
 #define SPELL_WATERY_GRAVE_EXPLOSION 37852
 
-#define SAY_AGGRO                    "Flood of the Deep, take you!"
+#define SAY_AGGRO                    "Flood of the deep, take you!"
 #define SAY_SUMMON1                  "By the Tides, kill them at once!"
 #define SAY_SUMMON2                  "Destroy them my subjects!"
 #define SAY_SLAY1                    "It is done!"
@@ -61,9 +61,9 @@ EndScriptData */
 #define WATERY_GRAVE_Y4              -690.96
 #define WATERY_GRAVE_Z4              -14.44
 
-#define EMOTE_WATERY_GRAVE         "Morogrim Tidewalker sends his enemies to their watery graves!"
+#define EMOTE_WATERY_GRAVE         "sends his enemies to their watery graves!"
 #define EMOTE_EARTHQUAKE           "The violent earthquake has alerted nearby murlocs!"
-#define EMOTE_WATERY_GLOBULES      "Morogrim Tidewalker summons Watery Globules!"
+#define EMOTE_WATERY_GLOBULES      "summons Watery Globules!"
 
 #define WATER_GLOBULE              21913
 
@@ -300,6 +300,8 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 SummonMurloc(296.82, -726.33, -10.82);
                 SummonMurloc(293.64, -726.64, -9.81);
 
+                DoTextEmote(EMOTE_EARTHQUAKE, NULL);
+
                 Earthquake = false;
                 Earthquake_Timer = 30000+rand()%5000;
             }
@@ -328,19 +330,21 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 
                 switch(rand()%2)
                 {
-                    case 0:
+                case 0:
                     DoPlaySoundToSet(m_creature, SOUND_SUMMON_BUBL1);
                     DoYell(SAY_SUMMON_BUBL1, LANG_UNIVERSAL, NULL);
                     break;
 
-                    case 1:
+                case 1:
                     DoPlaySoundToSet(m_creature, SOUND_SUMMON_BUBL2);
                     DoYell(SAY_SUMMON_BUBL2, LANG_UNIVERSAL, NULL);
                     break;
 
-                    case 2:
+                case 2:
                     break;
                 }
+
+                DoTextEmote(EMOTE_WATERY_GRAVE, NULL);
 
                 WateryGrave_Timer = 25000;
             }else WateryGrave_Timer -= diff;
@@ -358,6 +362,8 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 SummonWaterGlobule(WATERY_GRAVE_X2, WATERY_GRAVE_Y2, WATERY_GRAVE_Z2);
                 SummonWaterGlobule(WATERY_GRAVE_X3, WATERY_GRAVE_Y3, WATERY_GRAVE_Z3);
                 SummonWaterGlobule(WATERY_GRAVE_X4, WATERY_GRAVE_Y4, WATERY_GRAVE_Z4);
+
+                DoTextEmote(EMOTE_WATERY_GLOBULES, NULL);
 
                 WateryGlobules_Timer = 25000;
             }else WateryGlobules_Timer -= diff;
