@@ -33,6 +33,7 @@ EndScriptData */
 
 #define SPELL_SONSOFFLAME_DUMMY     21108       //Server side effect
 #define SPELL_RAGSUBMERGE           21107       //Stealth aura
+#define SPELL_RAGEMERGE		    20568
 #define SPELL_MELTWEAPON            21388
 
 #define SAY_ARRIVAL_1       "TOO SOON! YOU HAVE AWAKENED ME TOO SOON, EXECUTUS! WHAT IS THE MEANING OF THIS INTRUSION?"
@@ -221,6 +222,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             //Become unbanished again 
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            DoCast(m_creature,SPELL_RAGEMERGE);
             WasBanished = false;
         } else if (WasBanished)
         {
@@ -289,66 +291,49 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             DoCast(m_creature,23973);
             m_creature->setFaction(35);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SUBMERGE);
 
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            
+            
 
             if (!HasSubmergedOnce)
             {
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                //Say our dialog
                 DoYell(SAY_REINFORCEMENTS1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS1);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                HasSubmergedOnce = true;
-                WasBanished = true;
-                Attack_Timer = 90000;
+                
+                // summon 10 druids 
+                Unit* target = NULL;
+                for(int i = 0; i < 9;i++)
+                {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
+               }
+
+            HasSubmergedOnce = true;
+            WasBanished = true;
+            DoCast(m_creature,SPELL_RAGSUBMERGE);
+            Attack_Timer = 90000;
 
             }else
             {
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
                 //Say our dialog
                 DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                WasBanished = true;
-                Attack_Timer = 90000;
+                
+                Unit* target = NULL;
+                for(int i = 0; i < 9;i++)
+                {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                }
+
+            WasBanished = true;
+            DoCast(m_creature,SPELL_RAGSUBMERGE);
+            Attack_Timer = 90000;
             }
 
             //3 minutes until we should cast this agian

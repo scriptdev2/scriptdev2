@@ -149,8 +149,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             {
                 DoCast(m_creature->getVictim(),SPELL_EARTHQUAKE);
 
-                //5 seconds
-                EarthQuake_Timer = 5000;
+                //3 seconds
+                EarthQuake_Timer = 3000;
             }else EarthQuake_Timer -= diff;
         }
 

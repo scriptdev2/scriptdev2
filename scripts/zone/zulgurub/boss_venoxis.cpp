@@ -29,7 +29,7 @@ EndScriptData */
 #define SPELL_POISON_CLOUD  24840
 #define SPELL_SNAKE_FORM    23849
 #define SPELL_RENEW         23895
-#define SPELL_BERSERK         41924
+#define SPELL_BERSERK       23537
 
 #define SAY_AGGRO         "Let the coils of hate unfurl!"
 
@@ -209,8 +209,8 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 {
                     DoCast(m_creature,SPELL_SNAKE_FORM);
           const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 40)));
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
           m_creature->UpdateDamagePhysical(BASE_ATTACK);
           ResetThreat();
           PhaseTwo = true;

@@ -895,13 +895,16 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510
 UPDATE `creature_template` SET `ScriptName` = 'boss_mandokir' WHERE `entry` = 11382;
 UPDATE `creature_template` SET `ScriptName` = 'boss_gahzranka' WHERE `entry` = 15114;
 UPDATE `creature_template` SET `ScriptName` = 'boss_jindo' WHERE `entry` = 11380;
-UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
-/* Gurubashi Axe Thrower */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11350);
-/* Spawn of Marli */
+UPDATE `creature_template` SET `ScriptName` = "boss_hakkar" WHERE  `creature_template`.`entry` = 15295;
+UPDATE `creature_template` SET `ScriptName` = "boss_thekal" WHERE  `creature_template`.`entry` = 14509;
+UPDATE `creature_template` SET `ScriptName` = "boss_arlokk" WHERE  `creature_template`.`entry` = 14515;
+UPDATE `creature_template` SET `ScriptName` = "mob_zealot_lorkhan" WHERE  `creature_template`.`entry` = 11347;
+UPDATE `creature_template` SET `ScriptName` = "mob_zealot_zath" WHERE  `creature_template`.`entry` = 11348;
+UPDATE `creature_template` SET `ScriptName` = "mob_healing_ward" WHERE  `creature_template`.`entry` = 14987;
 UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
-/* Jeklik Batrider */
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
+UPDATE `creature_template` SET `Scriptname` = "mobs_zulgurub" WHERE `creature_template`.`entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
+UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
 
 
 

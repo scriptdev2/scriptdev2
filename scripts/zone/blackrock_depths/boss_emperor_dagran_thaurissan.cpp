@@ -13,62 +13,73 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+ 
 /* ScriptData
 SDName: Boss_Emperor_Dagran_Thaurissan
-SD%Complete: 100
-SDComment: 
+SD%Complete: 99
+SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
-
+ 
 #include "../../sc_defines.h"
-
-#define SPELL_HANDOFTHAURISSAN                17492            
-#define SPELL_CLEAVE            20691
-#define SPELL_MORTALSTRIKE               24573
-
+ 
+// Spells
+#define SPELL_HANDOFTHAURISSAN              17492            
+#define SPELL_AVATAROFFLAME					15636
+ 
+// Speech
+#define	SAY_AGGRO			"Come to aid the Throne!"
+#define SAY_SLAY	"Hail to the king, baby!"
+ 
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {
     boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-
+ 
     uint32 HandOfThaurissan_Timer;
-    uint32 Cleave_Timer;
-    uint32 MortalStrike_Timer;
-    uint32 Counter;
+    uint32 AvatarOfFlame_Timer;
+//    uint32 Counter;
     bool InCombat;
-
+ 
     void EnterEvadeMode()
     {       
-        HandOfThaurissan_Timer = 3000;
-        Cleave_Timer = 12000;
-        MortalStrike_Timer = 18000;
-        Counter= 0;
+        HandOfThaurissan_Timer = 4000;
+        AvatarOfFlame_Timer = 25000;
+//        Counter= 0;
         InCombat = false;
-
+ 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
     }
-
+ 
     void AttackStart(Unit *who)
     {
         if (!who)
             return;
-
+ 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin melee attack if we are within range
             DoStartMeleeAttack(who);
-            InCombat = true;
+            if (!InCombat)
+            {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                InCombat = true;
+            }
         }
     }
-
+ 
+    void KilledUnit(Unit* victim)
+    {
+        DoYell(SAY_SLAY, LANG_UNIVERSAL, NULL);
+    }
+ 
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
             return;
-
+ 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
@@ -76,65 +87,60 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
+ 
                 DoStartMeleeAttack(who);
+                if (!InCombat)
+                {
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 InCombat = true;
-
+                }
+ 
             }
         }
     }
-
+ 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
+ 
         if (HandOfThaurissan_Timer < diff)
         {
-
+ 
             //Cast Hand of Thaurissan on a Random target
             Unit* target = NULL;
-
+ 
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target)DoCast(target,SPELL_HANDOFTHAURISSAN);
-
-
+ 
+ 
             //3 Hands of Thaurissan will be casted
-            if (Counter < 3)
-            {
-                HandOfThaurissan_Timer = 1000;
-                Counter++;
+//           if (Counter < 3)
+//            {
+//                HandOfThaurissan_Timer = 1000;
+//                Counter++;
+//            }
+//            else 
+			{
+ 
+                // seconds until we should cast this again
+                HandOfThaurissan_Timer = 5000;
+//                Counter=0;
             }
-            else {
-
-                //20 seconds until we should cast this again
-                HandOfThaurissan_Timer = 20000;
-                Counter=0;
-            }
-
+ 
         }else HandOfThaurissan_Timer -= diff;
-
-        //Cleave_Timer
-        if (Cleave_Timer < diff)
+ 
+        //AvatarOfFlame_Timer
+        if (AvatarOfFlame_Timer < diff)
         {
             //Cast
-            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //10 seconds until we should cast this agian
-            Cleave_Timer = 14000;
-        }else Cleave_Timer -= diff;
-
-        //MortalStrike_Timer
-        if (MortalStrike_Timer < diff)
-        {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-
-            //16 seconds
-            MortalStrike_Timer = 16000;
-        }else MortalStrike_Timer -= diff;
-
+            DoCast(m_creature->getVictim(),SPELL_AVATAROFFLAME);
+ 
+            //seconds until we should cast this agian
+            AvatarOfFlame_Timer = 18000;
+        }else AvatarOfFlame_Timer -= diff;
+ 
         DoMeleeAttackIfReady();
     }
 }; 
@@ -142,8 +148,8 @@ CreatureAI* GetAI_boss_draganthaurissan(Creature *_Creature)
 {
     return new boss_draganthaurissanAI (_Creature);
 }
-
-
+ 
+ 
 void AddSC_boss_draganthaurissan()
 {
     Script *newscript;
@@ -152,3 +158,4 @@ void AddSC_boss_draganthaurissan()
     newscript->GetAI = GetAI_boss_draganthaurissan;
     m_scripts[nrscripts++] = newscript;
 }
+ 

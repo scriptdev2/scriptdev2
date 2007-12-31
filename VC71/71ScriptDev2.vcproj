@@ -1291,6 +1291,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>

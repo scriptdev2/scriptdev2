@@ -159,7 +159,10 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
         }else Curse_Timer -= diff;
 
 
-          // Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer
+        // Teleporting Random Target to one of the six pre boss rooms and spawn 3-4 skeletons near the gamer.
+        //We will only telport if gandling has more than 3% of hp so teleported gamers can always loot.
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3 )
+        {
           if(Teleport_Timer < diff)
           {
 
@@ -229,9 +232,9 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,115.3945,-1.5555,75.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                        Summoned = m_creature->SummonCreature(16119,257.7133,1.8066,70.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
+                        Summoned = m_creature->SummonCreature(16119,257.7133,1.8066,75.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                        Summoned = m_creature->SummonCreature(16119,258.6702,-5.1001,70.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
+                        Summoned = m_creature->SummonCreature(16119,258.6702,-5.1001,75.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                     }
@@ -240,6 +243,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
             } 
             Teleport_Timer = 20000 + rand()%15000;
         }else Teleport_Timer -= diff;
+     }
 
 
         DoMeleeAttackIfReady();

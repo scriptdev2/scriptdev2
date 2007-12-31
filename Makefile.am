@@ -363,6 +363,7 @@ scripts/zone/zulgurub/boss_renataki.cpp \
 scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
+scripts/zone/zulgurub/mobs_zulgurub.cpp \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
 system.cpp
 

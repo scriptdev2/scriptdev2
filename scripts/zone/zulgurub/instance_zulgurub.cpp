@@ -26,8 +26,35 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 {
     instance_zulgurub(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    //If all High Priest bosses were killed.
-    bool IsBossDied[5];
+    //If all High Priest bosses were killed. Lorkhan and Zath too.
+    bool IsBossDied[8];
+
+    //Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for healfunction too.
+    uint64 LorKhanGUID;
+    uint64 ZathGUID;
+    uint64 ThekalGUID;
+    uint64 JindoGUID;
+
+    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
+    {
+	switch (creature_entry) {
+	    case 11347:
+		LorKhanGUID = creature->GetGUID();
+		break;
+
+	    case 11348:
+		ZathGUID = creature->GetGUID();
+		break;
+
+	    case 14509:
+		ThekalGUID = creature->GetGUID();
+		break;
+
+	    case 11380:
+		JindoGUID = creature->GetGUID();
+		break;
+	}
+    } 
 
     void Initialize()
     {
@@ -36,6 +63,10 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         IsBossDied[2] = false;
         IsBossDied[3] = false;
         IsBossDied[4] = false;
+        IsBossDied[5] = false;
+        IsBossDied[6] = false;
+
+        IsBossDied[7] = false;
     }
 
     bool IsEncounterInProgress() const 
@@ -46,9 +77,6 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
     uint32 GetData(char *type)
     {
-        if(type == "HakkarNormal")
-            if(IsBossDied[0] && IsBossDied[1] && IsBossDied[2] && IsBossDied[3] && IsBossDied[4])
-                return 1;
 
         if(type == "JeklikIsDead")
             if(IsBossDied[0])
@@ -66,14 +94,36 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             if(IsBossDied[3])
                 return 1;
 
-        if(type == "ThekalIsDead")
+        if(type == "ArlokkIsDead")
             if(IsBossDied[4])
                 return 1;
 
+        if(type == "LorKhanIsDead")
+            if(IsBossDied[5])
+                return 1;
 
+        if(type == "ZathIsDead")
+            if(IsBossDied[6])
+                return 1;
+
+        if(type == "ThekalIsFakeDead")
+            if(IsBossDied[7])
+                return 1;
 
         return 0;
     }
+
+    uint64 GetData64 (char *identifier) {
+		if (identifier == "LorKhan")
+			return LorKhanGUID;
+		if (identifier == "Zath")
+			return ZathGUID;
+		if (identifier == "Thekal")
+			return ThekalGUID;
+		if (identifier == "Jindo")
+			return JindoGUID;
+		return 0;
+    } // end GetData64
 
     void SetData(char *type, uint32 data)
     {
@@ -87,6 +137,12 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             IsBossDied[3] = true;
         else if(type == "Arlokk_Death")
             IsBossDied[4] = true;
+        else if(type == "LorKhan_Death")
+            IsBossDied[5] = true;
+        else if(type == "Zath_Death")
+            IsBossDied[6] = true;
+        else if(type == "ThekalFake_Death")
+        IsBossDied[7] = true;
     }
 };
 

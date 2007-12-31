@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         //MagicReflection_Timer
         if (MagicReflection_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_MAGICREFLECTION);
+            DoCast(m_creature, SPELL_MAGICREFLECTION);
 
             //60 seconds until we should cast this agian
             MagicReflection_Timer = 30000;
@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         //DamageReflection_Timer
         if (DamageReflection_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_DAMAGEREFLECTION);
+            DoCast(m_creature, SPELL_DAMAGEREFLECTION);
 
             //60 seconds until we should cast this agian
             DamageReflection_Timer = 30000;

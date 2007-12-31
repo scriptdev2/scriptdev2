@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_Jeklik
 SD%Complete: 85
-SDComment: Problem in finding the right flying batriders for spawning.
+SDComment: Problem in finding the right flying batriders for spawning and making them fly.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,7 +26,7 @@ EndScriptData */
 #define SPELL_ASPECT_OF_JEKLIK    24687       //This is her silence spell. 
 #define SPELL_SHADOW_WORD_PAIN    23952 
 #define SPELL_MIND_FLAY           23953
-#define SPELL_CHAIN_MIND_FLAY     23849      //Right ID unknown...
+#define SPELL_CHAIN_MIND_FLAY     23849      //Right ID unknown. So disabled
 #define SPELL_GREATERHEAL         23954
 #define SPELL_BAT_FORM            23966
 
@@ -257,10 +257,9 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                    FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+10, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                    FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && FlyingBat ) 
                     { 
-                    DoCast(FlyingBat, 23973);
                     FlyingBat ->AI()->AttackStart(target); 
                     }
 						 
@@ -297,6 +296,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
+        DoCast(m_creature, 11010);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         DoGoHome();
     }
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
                 if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartRangedAttack(who);
             }
         }
     }
@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(target)
                 DoCast(target, SPELL_BOMB);
 
-            Bomb_Timer = 15000+rand()%10000;
+            Bomb_Timer = 14000+rand()%6000;
         }else Bomb_Timer -= diff;
 
         //Check_Timer
