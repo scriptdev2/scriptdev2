@@ -340,6 +340,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\item\item_skin_of_purest_water.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\item\item_test.cpp"
 					>
 				</File>
@@ -1355,11 +1359,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
 						>
 					</File>
 				</Filter>
@@ -2020,7 +2024,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Zul'Aman"
+					Name="Zul&apos;Aman"
 					>
 				</Filter>
 			</Filter>

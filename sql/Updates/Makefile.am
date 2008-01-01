@@ -81,4 +81,5 @@ pkgdata_DATA = \
 	r206.sql \
 	r211.sql \
 	r213.sql \
-	r214.sql
+	r214.sql \
+	r215.sql

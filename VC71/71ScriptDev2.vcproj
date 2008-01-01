@@ -276,6 +276,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\item\item_skin_of_purest_water.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\item\item_test.cpp"
 					>
 				</File>

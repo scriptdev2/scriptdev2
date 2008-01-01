@@ -53,6 +53,7 @@ UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` =
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry` = 30259;
 UPDATE `item_template` SET `ScriptName` = 'draenei_fishing_net' WHERE `entry` = 23654;
+UPDATE `item_template` SET `ScriptName` = 'item_skin_of_purest_water' WHERE `entry` = 23751;
 UPDATE `item_template` SET `ScriptName` = 'item_tainted_core' WHERE `entry` = 31088;
 
 /* NPC */

@@ -75,6 +75,7 @@ extern void AddSC_draenei_fishing_net();
 extern void AddSC_nether_wraith_beacon();
 extern void AddSC_purification_mixture();
 extern void AddSC_vorenthals_presence();
+extern void AddSC_item_skin_of_purest_water();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -596,6 +597,7 @@ void ScriptsInit()
     AddSC_nether_wraith_beacon();
     AddSC_purification_mixture();
     AddSC_vorenthals_presence();
+    AddSC_item_skin_of_purest_water();
 
     // -- NPC --
     AddSC_not_selectable();
