@@ -86,11 +86,11 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             }
         }
 
+        InCombat = false;
+
         //reset encounter
         if (pInstance)
             pInstance->SetData("MaulgarEvent", 0);
-
-        InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -154,12 +154,12 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         GetCouncil();
 
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+
         InCombat = true;
 
         pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
         pInstance->SetData("MaulgarEvent", 1);
-
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -213,21 +213,21 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (ArcingSmash_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCING_SMASH);
-            ArcingSmash_Timer = 20000;
+            ArcingSmash_Timer = 10000;
         }else ArcingSmash_Timer -= diff;
 
         //Whirlwind_Timer
         if (Whirlwind_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_WHIRLWIND);
-            Whirlwind_Timer = 30000;
+            Whirlwind_Timer = 55000;
         }else Whirlwind_Timer -= diff;
 
         //MightyBlow_Timer
         if (MightyBlow_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
-            MightyBlow_Timer = 40000;
+            MightyBlow_Timer = 30000+rand()%10000;
         }else MightyBlow_Timer -= diff;
 
         //Entering Phase 2
@@ -276,6 +276,8 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         DarkDecay_Timer = 10000;
         Summon_Timer = 15000;
 
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -284,13 +286,11 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         //reset encounter
         if (pInstance)
             pInstance->SetData("MaulgarEvent", 0);
-
-        InCombat = false;
     }
 
     void AttackStart(Unit *who)
     {
-        if (!who || !pInstance)
+        if (!who)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -300,15 +300,18 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             {
                 InCombat = true;
                 DoStartMeleeAttack(who);
-                pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                pInstance->SetData("MaulgarEvent", 1);
+                if(pInstance)
+                {
+                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                    pInstance->SetData("MaulgarEvent", 1);
+                }
             }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim() || !pInstance)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -325,8 +328,11 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
                 {
                     InCombat = true;
                     DoStartMeleeAttack(who);
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    if(pInstance)
+                    {
+                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                        pInstance->SetData("MaulgarEvent", 1);
+                    }
                 }
             }
         }
@@ -416,6 +422,8 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         ArcaneShock_Timer = 20000;
         ArcaneExplosion_Timer = 30000;
 
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -424,13 +432,11 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         //reset encounter
         if (pInstance)
             pInstance->SetData("MaulgarEvent", 0);
-
-        InCombat = false;
     }
 
     void AttackStart(Unit *who)
     {
-        if (!who || !pInstance)
+        if (!who)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -439,15 +445,18 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             {
                 InCombat = true;
                 DoStartMeleeAttack(who);
-                pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                pInstance->SetData("MaulgarEvent", 1);
+                if(pInstance)
+                {
+                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                    pInstance->SetData("MaulgarEvent", 1);
+                }
             }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim() || !pInstance)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -462,8 +471,11 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
                 {
                     InCombat = true;
                     DoStartMeleeAttack(who);
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    if(pInstance)
+                    {
+                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                        pInstance->SetData("MaulgarEvent", 1);
+                    }
                 }
             }
         }
@@ -547,6 +559,8 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         GreaterPowerWordShield_Timer = 5000;
         Heal_Timer = 30000;
 
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -555,13 +569,11 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         //reset encounter
         if (pInstance)
             pInstance->SetData("MaulgarEvent", 0);
-
-        InCombat = false;
     }
 
     void AttackStart(Unit *who)
     {
-        if (!who || !pInstance)
+        if (!who)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -571,15 +583,18 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             {
                 InCombat = true;
                 DoStartMeleeAttack(who);
-                pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                pInstance->SetData("MaulgarEvent", 1);
+                if(pInstance)
+                {
+                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                    pInstance->SetData("MaulgarEvent", 1);
+                }
             }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim() || !pInstance)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -594,8 +609,11 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
                 {
                     InCombat = true;
                     DoStartMeleeAttack(who);
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    if(pInstance)
+                    {
+                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                        pInstance->SetData("MaulgarEvent", 1);
+                    }
                 }
             }
         }
@@ -664,6 +682,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         SpellShield_Timer = 5000;
         BlastWave_Timer = 20000;
 
+        InCombat = false;
+
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -672,13 +692,11 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         //reset encounter
         if (pInstance)
             pInstance->SetData("MaulgarEvent", 0);
-
-        InCombat = false;
     }
 
     void AttackStart(Unit *who)
     {
-        if (!who || !pInstance)
+        if (!who)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
@@ -688,15 +706,18 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             {
                 InCombat = true;
                 DoStartMeleeAttack(who);
-                pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                pInstance->SetData("MaulgarEvent", 1);
+                if(pInstance)
+                {
+                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                    pInstance->SetData("MaulgarEvent", 1);
+                }
             }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim() || !pInstance)
+        if (!who || m_creature->getVictim())
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -711,8 +732,11 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
                 {
                     InCombat = true;
                     DoStartMeleeAttack(who);
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    if(pInstance)
+                    {
+                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
+                        pInstance->SetData("MaulgarEvent", 1);
+                    }
                 }
             }
         }

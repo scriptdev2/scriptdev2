@@ -1410,6 +1410,34 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool trigger
     m_creature->CastSpell(who, spellInfo, triggered);
 }
 
+void ScriptedAI::DoAddAura(Unit *target, uint32 SpellId)
+{
+    if (!target)
+        return;
+
+    SpellEntry const *spellInfo = GetSpellStore()->LookupEntry(SpellId);
+    if(spellInfo)
+    {
+        for(uint32 i = 0;i<3;i++)
+        {
+            uint8 eff = spellInfo->Effect[i];
+            if (eff>=TOTAL_SPELL_EFFECTS)
+                continue;
+
+            if (eff == SPELL_EFFECT_APPLY_AREA_AURA)
+            {
+                Aura *Aur = new AreaAura(spellInfo, i, NULL, target, NULL);
+                target->AddAura(Aur);
+            }
+            else if (eff == SPELL_EFFECT_APPLY_AURA || eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
+            {
+                Aura *Aur = new Aura(spellInfo, i, NULL, target);
+                target->AddAura(Aur);
+            }
+        }
+    }
+}
+
 void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)
 {
     if (target)m_creature->Say(text, language, target->GetGUID());
