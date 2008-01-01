@@ -895,7 +895,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510
 UPDATE `creature_template` SET `ScriptName` = 'boss_mandokir' WHERE `entry` = 11382;
 UPDATE `creature_template` SET `ScriptName` = 'boss_gahzranka' WHERE `entry` = 15114;
 UPDATE `creature_template` SET `ScriptName` = 'boss_jindo' WHERE `entry` = 11380;
-UPDATE `creature_template` SET `ScriptName` = "boss_hakkar" WHERE  `creature_template`.`entry` = 15295;
+UPDATE `creature_template` SET `ScriptName` = "boss_hakkar" WHERE  `creature_template`.`entry` = 14834;
 UPDATE `creature_template` SET `ScriptName` = "boss_thekal" WHERE  `creature_template`.`entry` = 14509;
 UPDATE `creature_template` SET `ScriptName` = "boss_arlokk" WHERE  `creature_template`.`entry` = 14515;
 UPDATE `creature_template` SET `ScriptName` = "mob_zealot_lorkhan" WHERE  `creature_template`.`entry` = 11347;

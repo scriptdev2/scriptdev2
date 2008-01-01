@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_hakkar
 SD%Complete: 95
-SDComment: No spell is working... Need to be fixed. Bloodsiphon will always do dmg.
+SDComment: Spells buggy. Bloodsiphon will always do dmg no poison cloud check.
 EndScriptData */
 
 #include "../../sc_defines.h"

@@ -32,7 +32,7 @@ EndScriptData */
 
 // Batriders Spell
 
-#define SPELL_BOMB                22334      //Not right perhaps..
+#define SPELL_BOMB                35276      //Wrong I think but real visual and dmg. School dmg missing.
 
 #define SAY_AGGRO         "Lord Hireek grant me wings of vengance!"
 #define SAY_DEATH         "Hireek - Finnaly death. Curse you Hakkar! Curse you!"

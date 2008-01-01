@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_Thekal
-SD%Complete: 50
-SDComment: Resurrecting function not working! Some workarounds included for Thekal.
+SD%Complete: 99
+SDComment: Some timer improvements.
 EndScriptData */
 
 #include "../../sc_defines.h"

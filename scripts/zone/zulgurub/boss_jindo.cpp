@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Jin'do the Hexxer
 SD%Complete: 85
-SDComment: Mind Control not working because of core bug. Heal function missing.
+SDComment: Mind Control not working because of core bug.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -27,7 +27,7 @@ EndScriptData */
 
 #define SPELL_BRAINWASHTOTEM            24262
 #define SPELL_POWERFULLHEALINGWARD      24309                
-#define SPELL_HEX                       24326
+#define SPELL_HEX                       24053
 #define SPELL_DELUSIONSOFJINDO          24306
 #define SPELL_SHADEOFJINDO              24308   //We will not use this spell. We will summon a shade by script.
 
