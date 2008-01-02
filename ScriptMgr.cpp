@@ -24,6 +24,7 @@
 #include "../../game/QuestDef.h"
 #include "../../game/TargetedMovementGenerator.h"
 #include "../../game/Spell.h"
+#include "../../game/SpellAuras.h"
 #include "../../shared/Database/DBCStores.h"
 
 uint8 loglevel = 0;
