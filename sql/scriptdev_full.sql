@@ -349,10 +349,12 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (314, 533, 203, 215, 909, 531, 787, 203, 1110, 785, 48, 217, 539);
 
 /* DUSTWALLOW MARSH */
+UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
+UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `entry` = 23861;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_direhorn_grimtotem' WHERE `entry` = 23595;
+UPDATE `creature_template` SET `ScriptName` = 'mobs_risen_husk_spirit' WHERE `entry` IN (23554, 23555);
 /* Mirefin Murloc, Darkmist Spider, Withervine Creeper, Darkfang Creeper, Darkfang Spider, Giant Darkfang Spider, Archmage Tervosh */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4359, 4376, 4382, 4412, 4413, 4415, 4967);
-/* Lady Jaina Proudmoore */
-UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);

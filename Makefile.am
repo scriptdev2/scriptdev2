@@ -170,7 +170,8 @@ scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/deadmines/boss_deadmines.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
-scripts/zone/dustwallow_marsh/npc_lady_jaina_proudmoore.cpp \
+scripts/zone/dustwallow_marsh/mobs_dustwallow_marsh.cpp \
+scripts/zone/dustwallow_marsh/npcs_dustwallow_marsh.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \

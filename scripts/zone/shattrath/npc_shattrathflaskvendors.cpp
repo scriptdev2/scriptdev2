@@ -38,30 +38,27 @@ Purchase requires exalted reputation with Scryers/Aldor, Cenarion Expedition and
 
 bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature *_Creature)
 {
-
     if(_Creature->GetEntry() == 23484)
     {
         // Aldor vendor
-
         if( (player->GetReputationRank(932) == REP_EXALTED) && (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED) )
         {
             player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+            player->SEND_GOSSIP_MENU(11085, _Creature->GetGUID());
         }
         else
         {
-            player->SEND_GOSSIP_MENU(11083, _Creature->GetGUID());        
-            player->PlayerTalkClass->SendGossipMenu(11083,_Creature->GetGUID());
-        }        
+            player->SEND_GOSSIP_MENU(11083, _Creature->GetGUID());
+        }
     }
 
     if(_Creature->GetEntry() == 23483)
     {
         // Scryers vendor
-
         if( (player->GetReputationRank(934) == REP_EXALTED) && (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED) )
         {
             player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-            player->PlayerTalkClass->SendGossipMenu(11084 ,_Creature->GetGUID());
+            player->SEND_GOSSIP_MENU(11085, _Creature->GetGUID());
         }
         else
         {
@@ -70,12 +67,11 @@ bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature *_Creature)
     }
 
     return true;
-
 }
 
 bool GossipSelect_npc_shattrathflaskvendors(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
-    if(action == GOSSIP_ACTION_TRADE)
+    if (action == GOSSIP_ACTION_TRADE)
     {
         player->SEND_VENDORLIST( _Creature->GetGUID() );
     }

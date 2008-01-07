@@ -254,8 +254,9 @@ extern void AddSC_npc_narm_faulk();
 
 //Durotar
 //Duskwood
-//Duskwallow marsh
-extern void AddSC_npc_lady_jaina_proudmoore();
+//Dustwallow marsh
+extern void AddSC_npcs_dustwallow_marsh();
+extern void AddSC_mobs_dustwallow_marsh();
 
 //Eversong Woods
 extern void AddSC_mobs_mana_tapped();
@@ -776,8 +777,9 @@ void ScriptsInit()
 
     //Durotar
     //Duskwood
-    //Duskwallow marsh
-    AddSC_npc_lady_jaina_proudmoore();
+    //Dustwallow marsh
+    AddSC_npcs_dustwallow_marsh();
+    AddSC_mobs_dustwallow_marsh();
 
     //Eversong Woods
     AddSC_mobs_mana_tapped();

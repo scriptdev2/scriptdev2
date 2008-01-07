@@ -158,4 +158,3 @@ void AddSC_boss_draganthaurissan()
     newscript->GetAI = GetAI_boss_draganthaurissan;
     m_scripts[nrscripts++] = newscript;
 }
- 

@@ -487,7 +487,11 @@
 					Name="Dustwallow Marsh"
 					>
 					<File
-						RelativePath="..\scripts\zone\dustwallow_marsh\npc_lady_jaina_proudmoore.cpp"
+						RelativePath="..\scripts\zone\dustwallow_marsh\mobs_dustwallow_marsh.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\dustwallow_marsh\npcs_dustwallow_marsh.cpp"
 						>
 					</File>
 				</Filter>
