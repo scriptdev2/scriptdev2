@@ -24,6 +24,7 @@ EndScriptData */
 #include "../../sc_defines.h"
 
 #define SPELL_HOLY_FIRE     23860
+#define SPELL_HOLY_WRATH    28883               //Not sure if this or 23979
 #define SPELL_ASPECTOFVENOXIS   25053
 #define SPELL_HOLY_NOVA     23858 
 #define SPELL_POISON_CLOUD  24840
@@ -40,6 +41,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     boss_venoxisAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 HolyFire_Timer;
+    uint32 HolyWrath_Timer;
     uint32 Aspect_Timer;
     uint32 Renew_Timer;
     uint32 PoisonCloud_Timer;
@@ -53,8 +55,9 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     void EnterEvadeMode()
     {
         HolyFire_Timer = 10000;
+        HolyWrath_Timer = 60500;
         Aspect_Timer = 14000;
-        Renew_Timer = 41000;
+        Renew_Timer = 30500;
         PoisonCloud_Timer = 2000;
         HolyNova_Timer = 5000;
         TargetInRange = 0;
@@ -83,6 +86,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -162,14 +166,20 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         if (Aspect_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_ASPECTOFVENOXIS);
-                    Aspect_Timer = 18000;
+                    Aspect_Timer = 15000 + rand()%5000;
                 }else Aspect_Timer -= diff;
                 
                 if (Renew_Timer < diff)
                 {
-                    DoCast(m_creature,SPELL_RENEW);
-                    Renew_Timer = 30000;
+                    DoCast(m_creature, SPELL_RENEW);
+                    Renew_Timer = 20000 + rand()%10000;
                 }else Renew_Timer -= diff;
+
+                if (HolyWrath_Timer < diff)
+                {
+                    DoCast(m_creature->getVictim(), SPELL_HOLY_WRATH);
+                    HolyWrath_Timer = 15000 + rand()%10000;
+                }else HolyWrath_Timer -= diff;
 
                 if (HolyNova_Timer < diff)
                 {
@@ -196,7 +206,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 
         if (HolyFire_Timer < diff && TargetInRange < 3)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_HOLY_FIRE);
+
+                    Unit* targetrandom = NULL;
+                    targetrandom = SelectUnit(SELECT_TARGET_RANDOM,0);
+                        
+                    DoCast(targetrandom, SPELL_HOLY_FIRE);
                     HolyFire_Timer = 8000;
                 }else HolyFire_Timer -= diff;               
                 
@@ -207,10 +221,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             {
                 if(!PhaseTwo)
                 {
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_SNAKE_FORM);
           const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 30)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 30)));
           m_creature->UpdateDamagePhysical(BASE_ATTACK);
           ResetThreat();
           PhaseTwo = true;
@@ -222,10 +237,14 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     PoisonCloud_Timer = 16000;
                 }PoisonCloud_Timer -=diff;
 
-                if (PhaseTwo && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !InBerserk)
+                if (PhaseTwo && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11))
                 {
+                    if (!InBerserk)
+                    {
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature, SPELL_BERSERK);
                     InBerserk = true;
+                    }
                 }
             }
             DoMeleeAttackIfReady();

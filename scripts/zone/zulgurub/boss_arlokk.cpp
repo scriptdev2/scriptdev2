@@ -78,6 +78,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     m_creature->CombatStop();
     DoGoHome();
     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15218);
+    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
     m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
@@ -116,6 +117,8 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15218);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
             pInstance->SetData("Arlokk_Death", 0);
@@ -205,7 +208,9 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
           if (Vanish_Timer < diff)
           {
               m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  //Invisble Model
+              m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
               m_creature->CombatStop();
+              ResetThreat();
               VanishedOnce = true;
               Vanish_Timer = 45000;
               Visible_Timer = 6000;
@@ -218,6 +223,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
                   Unit* target = NULL;
                   target = SelectUnit(SELECT_TARGET_RANDOM,0);
                   m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15215);  //The Panther Model
+                  m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             
                   if (!PhaseTwo) 
                   {
@@ -225,12 +231,12 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
                   DoPlaySoundToSet(m_creature,SOUND_TRANSFORM);
                   }                                         
                   const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                  m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
-                  m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
+                  m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
+                  m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                   m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                  ResetThreat();
                   DoStartMeleeAttack(target);
                   m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15215);  //The Panther Model
+                  m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                   PhaseTwo = true;
               }else Visible_Timer -= diff;
          }
@@ -246,8 +252,8 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         if(PhaseTwo && Gouge_Timer < diff)
         {
 
-            DoCast(m_creature->getVictim(),SPELL_GOUGE);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+            DoCast(m_creature->getVictim(), SPELL_GOUGE);
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
             Gouge_Timer = 17000+rand()%10000;
         }else Gouge_Timer -= diff;
 

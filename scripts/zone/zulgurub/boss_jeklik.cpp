@@ -67,7 +67,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         MindFlay_Timer = 11000;
         ChainMindFlay_Timer = 26000;
         GreaterHeal_Timer = 50000;
-        SpawnFlyingBats_Timer = 45000;
+        SpawnFlyingBats_Timer = 10000;
 
         InCombat = false;
         PhaseTwo = false;
@@ -253,17 +253,18 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 
                 if(PhaseTwo && SpawnFlyingBats_Timer < diff)
                 {
-					    
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
+                    Unit *target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                        
                     FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                    if(target && FlyingBat ) 
-                    { 
-                    FlyingBat ->AI()->AttackStart(target); 
+                    if(FlyingBat)
+                    {
+                        if(target)
+                            FlyingBat->AI()->AttackStart(target);
                     }
 						 
-                    SpawnFlyingBats_Timer = 14000 + rand()%6000;
+                    SpawnFlyingBats_Timer = 12000 + rand()%8000;
                 }SpawnFlyingBats_Timer -=diff;
 
 
@@ -297,6 +298,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoCast(m_creature, 11010);
+        m_creature->SetHover(true);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         DoGoHome();
     }
@@ -308,7 +310,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-            DoStartMeleeAttack(who);
+             DoStartRangedAttack(who);
         }
     }
 
@@ -346,7 +348,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(target)
                 DoCast(target, SPELL_BOMB);
 
-            Bomb_Timer = 14000+rand()%6000;
+            Bomb_Timer = 10000+rand()%5000;
         }else Bomb_Timer -= diff;
 
         //Check_Timer
@@ -365,7 +367,8 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             Check_Timer = 1000;
         }else Check_Timer -= diff;
 
-        DoMeleeAttackIfReady();
+            DoMeleeAttackIfReady();
+
     }
 };
 

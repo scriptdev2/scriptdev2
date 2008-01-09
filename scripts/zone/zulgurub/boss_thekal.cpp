@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_Thekal
-SD%Complete: 99
-SDComment: Some timer improvements.
+SD%Complete: 90
+SDComment: Better fake death check. Need some improvements for resurrecting.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -68,6 +68,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     uint32 Enrage_Timer;
     uint32 SummonTigers_Timer;
     uint32 Check_Timer;
+    uint32 Resurrect_Timer;
 
     ScriptedInstance *pInstance;
     bool InCombat;
@@ -77,14 +78,15 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        MortalCleave_Timer = 1000;
-        Silence_Timer = 6000;
+        MortalCleave_Timer = 4000;
+        Silence_Timer = 9000;
         Frenzy_Timer = 30000;
         ForcePunch_Timer = 4000;
         Charge_Timer = 12000;
         Enrage_Timer = 32000;
         SummonTigers_Timer = 25000;
-        Check_Timer = 10000;
+        Check_Timer = 10000; 
+        Resurrect_Timer = 10000;
 
         InCombat = false;
         Enraged = false;
@@ -95,6 +97,8 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        if(pInstance)
+            pInstance->SetData("Thekal_Alive", 0);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);    
@@ -109,6 +113,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -184,11 +189,10 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         if( m_creature->getVictim() && m_creature->isAlive())
         {
 
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+               
                     
                 //Check_Timer for the death of LorKhan and Zath.
-                if(!PhaseTwo && Check_Timer < diff)
+                if(!WasDead && Check_Timer < diff)
                 {
                     if(pInstance)
                     {    
@@ -239,23 +243,29 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 WasDead=true;
         }
 
-                //Thekal will transform to Tiger if he died one time.
+                //Thekal will transform to Tiger if he died and was not resurrected after 10 seconds.
                 if(!PhaseTwo && WasDead)
                 {
-                    DoCast(m_creature,SPELL_TIGER_FORM);
-                    m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->SetHealth(int(m_creature->GetMaxHealth()*1.0));                 
-                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
-                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                    ResetThreat();
-                    PhaseTwo = true;
+                    if (Resurrect_Timer < diff)
+                    {
+                        DoCast(m_creature,SPELL_TIGER_FORM);
+                        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        m_creature->SetHealth(int(m_creature->GetMaxHealth()*1.0));                 
+                        const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                        m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 40)));
+                        m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
+                        m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                        ResetThreat();
+                        PhaseTwo = true;
+                    }else Resurrect_Timer -= diff;
                 }
                 
 
-
+                if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() == 100) && WasDead)
+                {
+                     WasDead = false;
+                }
 
                 if (PhaseTwo)
                 {
@@ -321,6 +331,8 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
     uint32 Disarm_Timer;
     uint32 Check_Timer;
     
+    bool FakeDeath;
+    
     ScriptedInstance *pInstance;
  
     void EnterEvadeMode()
@@ -330,11 +342,17 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         GreaterHeal_Timer = 32000;
         Disarm_Timer = 6000;
         Check_Timer = 10000;
+        
+        FakeDeath = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        if(pInstance)
+            pInstance->SetData("LorKhan_Alive", 0);
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);    
@@ -441,7 +459,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         }else Disarm_Timer -= diff;
         
         //Check_Timer for the death of LorKhan and Zath.
-        if(Check_Timer < diff)
+        if(!FakeDeath && Check_Timer < diff)
             {
                     if(pInstance)
                     {    
@@ -472,9 +490,11 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         {
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
+                m_creature->setFaction(35);
                 m_creature->AttackStop();
                 if(pInstance)
                 pInstance->SetData("LorKhan_Death", 0);
+                FakeDeath = true;
         }
 
         DoMeleeAttackIfReady();
@@ -497,6 +517,8 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
     uint32 Blind_Timer;
     uint32 Check_Timer;
     
+    bool FakeDeath;
+    
     ScriptedInstance *pInstance;
  
     void EnterEvadeMode()
@@ -507,11 +529,17 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         Kick_Timer = 18000;
         Blind_Timer = 5000;
         Check_Timer = 10000;
+        
+        FakeDeath = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        if(pInstance)
+            pInstance->SetData("Zath_Alive", 0);
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);    
@@ -606,7 +634,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         }else Blind_Timer -= diff;
         
         //Check_Timer for the death of LorKhan and Zath.
-        if(Check_Timer < diff)
+        if(!FakeDeath && Check_Timer < diff)
             {
                     if(pInstance)
                     {    
@@ -637,9 +665,11 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         {
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
+                m_creature->setFaction(35);
                 m_creature->AttackStop();
                 if(pInstance)
                 pInstance->SetData("Zath_Death", 0);
+                FakeDeath = true;
         }
 
         DoMeleeAttackIfReady();

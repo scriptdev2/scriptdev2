@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
                  Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                  if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                  {
-                 ((Player*)pUnit)->TeleportTo(1, m_creature->GetPositionX(), m_creature->GetPositionY()+5, m_creature->GetPositionZ(), pUnit->GetOrientation());
+                 ((Player*)pUnit)->TeleportTo(1, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+5, pUnit->GetOrientation());
                  }
              }
 

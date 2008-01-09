@@ -26,7 +26,7 @@ EndScriptData */
 #define SPELL_FRENZY                28371
 #define SPELL_MAGMASPIT             19449       //This is actually a buff he gives himself
 #define SPELL_LAVABREATH            19272
-#define SPELL_PANIC                 33547       // Changed from 19408. Cause this spell (Panic) is lagging the server to hell.
+#define SPELL_PANIC                 19408       
 #define SPELL_LAVABOMB              19411       //This calls a dummy server side effect that isn't implemented yet
 #define SPELL_LAVABOMB_ALT          19428       //This is the spell that the lava bomb casts
 
@@ -68,6 +68,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)

@@ -90,6 +90,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
 
     }
 
@@ -146,7 +147,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (BrainWashTotem_Timer < diff)
         {
             //Cast
-            DoCast(m_creature,SPELL_BRAINWASHTOTEM);
+            DoCast(m_creature, SPELL_BRAINWASHTOTEM);
 
             //16-24 seconds until we should cast this agian
             BrainWashTotem_Timer = 18000 + rand()%8000;
@@ -156,7 +157,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (HealingWard_Timer < diff)
         {
             //Cast
-            DoCast(m_creature,SPELL_POWERFULLHEALINGWARD);
+            DoCast(m_creature, SPELL_POWERFULLHEALINGWARD);
 
             //14-20 seconds until we should cast this agian
             HealingWard_Timer = 14000 + rand()%6000;
@@ -166,7 +167,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (Hex_Timer < diff)
         {
             //Cast
-            DoCast(m_creature->getVictim(),SPELL_HEX);
+            DoCast(m_creature->getVictim(), SPELL_HEX);
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
             //12-20 seconds until we should cast this agian
             Hex_Timer = 12000 + rand()%8000;
@@ -179,7 +181,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            DoCast(target,SPELL_DELUSIONSOFJINDO);
+            DoCast(target, SPELL_DELUSIONSOFJINDO);
 
             Shade = m_creature->SummonCreature(14986, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
             Shade->AI()->AttackStart(target); 
@@ -246,7 +248,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     
     void EnterEvadeMode()
     {
-        Heal_Timer = 3000;
+        Heal_Timer = 2000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -310,12 +312,12 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
             if(pInstance)
             {    
 
-            Unit *pJindo = Unit::GetUnit(*m_creature, pInstance->GetData64("Jindo"));
+            Unit *pJindo = Unit::GetUnit((*m_creature), pInstance->GetData64("Jindo"));
             DoCast(pJindo, SPELL_HEAL);
 
             }
 
-            Heal_Timer = 5000;
+            Heal_Timer = 3000;
         }else Heal_Timer -= diff;
 
         DoMeleeAttackIfReady();

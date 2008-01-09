@@ -32,6 +32,10 @@ EndScriptData */
 #define SPELL_WATCH		24314
 #define SPELL_LEVEL_UP		24312
 
+//Ohgans Spells
+
+#define SPELL_SUNDERARMOR     24317     
+
 #define SAY_AGGRO               "I'll feed your souls to Hakkar himself!" 
 #define SAY_WATCH		"I'm keeping my eye on you"
 #define SAY_KILL		"DING!"
@@ -40,7 +44,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 {
-    boss_mandokirAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_mandokirAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
  
     uint32 Watch_Timer;
     uint32 TargetInRange;
@@ -49,11 +57,13 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     uint32 Fear_Timer;
     uint32 MortalStrike_Timer;
     uint32 Check_Timer;
-    uint64 Raptor;
     float targetX;
     float targetY;
     float targetZ;
- 
+    
+    ScriptedInstance *pInstance;
+        
+    Creature *Raptor;
     Unit* watchTarget;
     Unit* target;
  
@@ -107,6 +117,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
  
    }
  
@@ -128,36 +139,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         }
     }
 
-    void SpawnRaptor()
-    {
-            Unit* pUnit = NULL; 
-      
-            pUnit = m_creature->SummonCreature(14988, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
-            if (pUnit)
-            Raptor = pUnit->GetGUID();
-           
-    }
-
-    void CheckRaptor()
-    {
-        if (!RaptorDead)
-    {
-            if (Raptor)
-            {
-                Unit* pUnit = NULL; 
-                pUnit = Unit::GetUnit((*m_creature), Raptor);
-            
-                if (pUnit && !pUnit->isAlive())
-
-                {
-                //Raptor dead so enrage.
-                DoCast(m_creature, SPELL_ENRAGE);
-                RaptorDead = true;
-                }
-            }
-             
-    } 
-    }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -181,6 +162,24 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
  
      void UpdateAI(const uint32 diff)
     {
+
+        //Checking if Ohgan is dead. If yes Mandokir will enrage.
+        if(Check_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                if (!RaptorDead)
+                {
+                    if(pInstance->GetData("OhganIsDead"))
+                    DoCast(m_creature, SPELL_ENRAGE);
+                    RaptorDead = true;
+                }
+
+            }
+
+            Check_Timer = 1000;
+        }else Check_Timer -= diff;
+
         if (!m_creature->SelectHostilTarget())
             return;
  
@@ -190,18 +189,10 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 			{
 				m_creature->Unmount();   //At combat Start Mandokir is mounted so we must unmount it first
 				//And summon his raptor
-				SpawnRaptor();
+				Raptor = m_creature->SummonCreature(14988, m_creature->getVictim()->GetPositionX(), m_creature->getVictim()->GetPositionY(), m_creature->getVictim()->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);     
 				CombatStart = true;
 			}
-
-             //Check Timer
-            if (Check_Timer < diff)
-            {
-                CheckRaptor();
-                Check_Timer = 2000;
-            } else Check_Timer -= diff;
- 
- 
+        
 			if (Watch_Timer < diff) //Every 20 Sec Mandokir will check this
 			{
 				if(watchTarget) //If someone is watched and If the Position of the watched target is different from the one stored, or are attacking, mandokir will charge him
@@ -312,12 +303,110 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 		}
 	}
 }; 
+
+
+//Ohgan
+struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
+{
+    mob_ohganAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+    
+    uint32 SunderArmor_Timer;
+    ScriptedInstance *pInstance;
+ 
+    void EnterEvadeMode()
+    {
+        SunderArmor_Timer = 5000;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if(!who && who != m_creature)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+        }
+    }
+    
+    void JustDied(Unit* Killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+            pInstance->SetData("Ohgan_Death", 0);
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+ 
+    void UpdateAI (const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+     
+        //SunderArmor_Timer
+        if(SunderArmor_Timer < diff)
+        {
+
+           DoCast(m_creature->getVictim(), SPELL_SUNDERARMOR);
+            
+            SunderArmor_Timer = 10000 + rand()%5000;
+        }else SunderArmor_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+
 CreatureAI* GetAI_boss_mandokir(Creature *_Creature)
 {
     return new boss_mandokirAI (_Creature);
 }
- 
- 
+CreatureAI* GetAI_mob_ohgan(Creature *_Creature)
+{
+    return new mob_ohganAI (_Creature);
+}
+
 void AddSC_boss_mandokir()
 {
     Script *newscript;
@@ -325,4 +414,10 @@ void AddSC_boss_mandokir()
     newscript->Name="boss_mandokir";
     newscript->GetAI = GetAI_boss_mandokir;
     m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_ohgan";
+    newscript->GetAI = GetAI_mob_ohgan;
+    m_scripts[nrscripts++] = newscript;
+
 }

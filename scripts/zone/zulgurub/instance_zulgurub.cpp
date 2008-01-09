@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_ZulGurub
-SD%Complete: 100
-SDComment: 
+SD%Complete: 80
+SDComment: Missing reset function after killing a boss for Ohgan, Thekal.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,8 +26,8 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 {
     instance_zulgurub(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    //If all High Priest bosses were killed. Lorkhan and Zath too.
-    bool IsBossDied[8];
+    //If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
+    bool IsBossDied[9];
 
     //Storing Lorkhan, Zath and Thekal because we need to cast on them later. Jindo is needed for healfunction too.
     uint64 LorKhanGUID;
@@ -67,6 +67,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         IsBossDied[6] = false;
 
         IsBossDied[7] = false;
+        IsBossDied[8] = false;
     }
 
     bool IsEncounterInProgress() const 
@@ -110,6 +111,24 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             if(IsBossDied[7])
                 return 1;
 
+        if(type == "OhganIsDead")
+            if(IsBossDied[8])
+                return 1;
+
+        //Boss is not dead. Resetting function for some bosses after killing them but whiping at the complete encounter.
+
+        if(type == "ThekalIsAlive")
+            if(IsBossDied[3])
+                return 0;
+
+        if(type == "LorKhanIsAlive")
+            if(IsBossDied[5])
+                return 0;
+
+        if(type == "ZathIsAlive")
+            if(IsBossDied[6])
+                return 0;
+
         return 0;
     }
 
@@ -143,6 +162,14 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
             IsBossDied[6] = true;
         else if(type == "ThekalFake_Death")
         IsBossDied[7] = true;
+        else if(type == "Ohgan_Death")
+            IsBossDied[8] = true;
+        else if(type == "LorKhan_Alive")
+            IsBossDied[5] = false;
+        else if(type == "Zath_Alive")
+            IsBossDied[6] = false;
+        else if(type == "Thekal_Alive")
+            IsBossDied[7] = false;
     }
 };
 

@@ -893,7 +893,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` =
 
 /* ZUL'GURUB */
 UPDATE `creature_template` SET `ScriptName` = 'boss_jeklik' WHERE `entry` = 14517;
-UPDATE `creature_template` SET `ScriptName` = 'boss_venoxis' WHERE `entry` = 14607;
+UPDATE `creature_template` SET `ScriptName` = 'boss_venoxis' WHERE `entry` = 14507;
 UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510;
 UPDATE `creature_template` SET `ScriptName` = 'boss_mandokir' WHERE `entry` = 11382;
 UPDATE `creature_template` SET `ScriptName` = 'boss_gahzranka' WHERE `entry` = 15114;
@@ -908,6 +908,11 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
 UPDATE `creature_template` SET `Scriptname` = "mobs_zulgurub" WHERE `creature_template`.`entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
 UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
+
+/* Fix for Wrong ZG Update */
+UPDATE `creature_template` SET `ScriptName` = ' ' WHERE `entry` = 14607;
+UPDATE `creature_template` SET `ScriptName` = ' ' WHERE `entry` = 15295;
+
 
 
 

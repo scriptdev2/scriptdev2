@@ -88,6 +88,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -203,7 +204,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Spider ) { Spider ->AI()->AttackStart(target); }
                                                    
-                    SpawnSpider_Timer = 20000 + rand()%5000;
+                    SpawnSpider_Timer = 15000 + rand()%5000;
                 }else SpawnSpider_Timer -= diff;
                 
            
@@ -211,12 +212,13 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 if(!PhaseTwo && Transform_Timer < diff)
                 {
                     DoCast(m_creature,SPELL_SPIDER_FORM);
-                    DoCast(m_creature,SPELL_ENVOLWINGWEB);       
+                    DoCast(m_creature,SPELL_ENVOLWINGWEB);    
+  
                     const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 20)));
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 20)));
+                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
+                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+                    ResetThreat();
                     PhaseTwo = true;
                     Transform_Timer = 35000 + rand()%25000;
                 }else Transform_Timer -= diff;
@@ -234,11 +236,10 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     
-                    DoCast(target,SPELL_CHARGE);
+                    DoCast(target, SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoStartMeleeAttack(target);
-                    ResetThreat();
-                    
+                   
                     Charge_Timer = 8000;
                 }else Charge_Timer -= diff;
 
@@ -273,7 +274,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
  
     void EnterEvadeMode()
     {
-        LevelUp_Timer = 10000;
+        LevelUp_Timer = 3000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -321,7 +322,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
         {
 
             DoCast(m_creature,SPELL_LEVELUP);
-            LevelUp_Timer = 10000;
+            LevelUp_Timer = 3000;
         }else LevelUp_Timer -= diff;
 
         DoMeleeAttackIfReady();
