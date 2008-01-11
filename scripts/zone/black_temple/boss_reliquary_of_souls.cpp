@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -27,95 +27,95 @@ EndScriptData */
 
 //Sound'n'speech
 //Suffering
-#define SUFF_SAY_FREED		"Pain and suffering are all that await you!"
-#define SUFF_SOUND_FREED	11415
+#define SUFF_SAY_FREED        "Pain and suffering are all that await you!"
+#define SUFF_SOUND_FREED    11415
 
-#define SUFF_SAY_AGGRO		"Don't leave me alone!"
-#define SUFF_SOUND_AGGRO	11416
+#define SUFF_SAY_AGGRO        "Don't leave me alone!"
+#define SUFF_SOUND_AGGRO    11416
 
-#define SUFF_SAY_SLAY1		"Look at what you make me do!"
-#define SUFF_SOUND_SLAY1	11417
+#define SUFF_SAY_SLAY1        "Look at what you make me do!"
+#define SUFF_SOUND_SLAY1    11417
 
-#define SUFF_SAY_SLAY2		"I didn't ask for this!"
-#define SUFF_SOUND_SLAY2	11418
+#define SUFF_SAY_SLAY2        "I didn't ask for this!"
+#define SUFF_SOUND_SLAY2    11418
 
-#define SUFF_SAY_SLAY3		"The pain is only beginning!"
-#define SUFF_SOUND_SLAY3	11419
+#define SUFF_SAY_SLAY3        "The pain is only beginning!"
+#define SUFF_SOUND_SLAY3    11419
 
-#define SUFF_SAY_RECAP		"I don't want to go back!"
-#define SUFF_SOUND_RECAP	11420
+#define SUFF_SAY_RECAP        "I don't want to go back!"
+#define SUFF_SOUND_RECAP    11420
 
-#define SUFF_SAY_AFTER		"Now what do I do?"
-#define SUFF_SOUND_AFTER	11421
+#define SUFF_SAY_AFTER        "Now what do I do?"
+#define SUFF_SOUND_AFTER    11421
 
 
 //Desire
-#define DESI_SAY_FREED		"You can have anything you desire... for a price."
-#define DESI_SOUND_FREED	11408
+#define DESI_SAY_FREED        "You can have anything you desire... for a price."
+#define DESI_SOUND_FREED    11408
 
-#define DESI_SAY_SLAY1		"Fulfilment is at hand!"
-#define DESI_SOUND_SLAY1	11409
+#define DESI_SAY_SLAY1        "Fulfilment is at hand!"
+#define DESI_SOUND_SLAY1    11409
 
-#define DESI_SAY_SLAY2		"Yes... you'll stay with us now..."
-#define DESI_SOUND_SLAY2	11410
+#define DESI_SAY_SLAY2        "Yes... you'll stay with us now..."
+#define DESI_SOUND_SLAY2    11410
 
-#define DESI_SAY_SLAY3		"Your reach exceeds your grasp."
-#define DESI_SOUND_SLAY3	11412
+#define DESI_SAY_SLAY3        "Your reach exceeds your grasp."
+#define DESI_SOUND_SLAY3    11412
 
-#define DESI_SAY_SPEC		"Be careful what you wish for..."
-#define DESI_SOUND_SPEC		11411
+#define DESI_SAY_SPEC        "Be careful what you wish for..."
+#define DESI_SOUND_SPEC        11411
 
-#define DESI_SAY_RECAP		"I'll be waiting..."
-#define DESI_SOUND_RECAP	11413
+#define DESI_SAY_RECAP        "I'll be waiting..."
+#define DESI_SOUND_RECAP    11413
 
-#define DESI_SAY_AFTER		"I won't be far..."
-#define DESI_SOUND_AFTER	11414
+#define DESI_SAY_AFTER        "I won't be far..."
+#define DESI_SOUND_AFTER    11414
 
 //Anger
-#define ANGER_SAY_FREED		"Beware... I live."
-#define ANGER_SOUND_FREED	11399
+#define ANGER_SAY_FREED        "Beware... I live."
+#define ANGER_SOUND_FREED    11399
 
-#define ANGER_SAY_FREED2		"So... foolish."
-#define ANGER_SOUND_FREED2	11400
+#define ANGER_SAY_FREED2        "So... foolish."
+#define ANGER_SOUND_FREED2    11400
 
-#define ANGER_SOUND_SLAY1	11401
+#define ANGER_SOUND_SLAY1    11401
 
-#define ANGER_SAY_SLAY2		"Enough. No more."
-#define ANGER_SOUND_SLAY2	11402
+#define ANGER_SAY_SLAY2        "Enough. No more."
+#define ANGER_SOUND_SLAY2    11402
 
-#define ANGER_SAY_SPEC		"On your knees!"
-#define ANGER_SOUND_SPEC		11403
+#define ANGER_SAY_SPEC        "On your knees!"
+#define ANGER_SOUND_SPEC        11403
 
-#define ANGER_SAY_BEFORE		"Beware, coward."
-#define ANGER_SOUND_BEFORE	11405
+#define ANGER_SAY_BEFORE        "Beware, coward."
+#define ANGER_SOUND_BEFORE    11405
 
-#define ANGER_SAY_DEATH		"I won't... be... ignored."
-#define ANGER_SOUND_DEATH	11404
+#define ANGER_SAY_DEATH        "I won't... be... ignored."
+#define ANGER_SOUND_DEATH    11404
 
 
 
 //Spells
-#define AURA_OF_SUFFERING	41292
+#define AURA_OF_SUFFERING    41292
 #define AURA_OF_SUFFERING_STAT     42017
 #define ESSENCE_OF_SUFFERING_PASSIVE    41296
-#define SPELL_ENRAGE		41305
-#define SPELL_SOUL_DRAIN	41303
-#define SPELL_FIXATE		41295
+#define SPELL_ENRAGE        41305
+#define SPELL_SOUL_DRAIN    41303
+#define SPELL_FIXATE        41295
 
-#define AURA_OF_DESIRE		41350
-#define SPELL_RUNE_SHIELD	41431
-#define SPELL_DEADEN		41410
-#define SPELL_SPIRIT_SHOCK	41426
+#define AURA_OF_DESIRE        41350
+#define SPELL_RUNE_SHIELD    41431
+#define SPELL_DEADEN        41410
+#define SPELL_SPIRIT_SHOCK    41426
 
-#define AURA_OF_ANGER		41337
-#define SPELL_SELF_SEETHE	41364
-#define SPELL_ENEMY_SEETHE	41520
-#define SPELL_SOUL_SCREAM	41545
-#define SPELL_SPITE		41377
+#define AURA_OF_ANGER        41337
+#define SPELL_SELF_SEETHE    41364
+#define SPELL_ENEMY_SEETHE    41520
+#define SPELL_SOUL_SCREAM    41545
+#define SPELL_SPITE        41377
 
-#define SPELL_SOUL_RELEASE	41542
-#define SPELL_RESTORE_MANA	32848
-#define SPELL_RESTORE_HEALTH	25329
+#define SPELL_SOUL_RELEASE    41542
+#define SPELL_RESTORE_MANA    32848
+#define SPELL_RESTORE_HEALTH    25329
 
 struct Position
 {
@@ -433,7 +433,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         AnimationTimer = 2200;
                         EndingPhase = true;
                     }
-                }			
+                }            
 
                 if(EndingPhase && EssenceDesire)
                 {

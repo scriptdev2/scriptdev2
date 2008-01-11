@@ -34,6 +34,8 @@ scripts/boss/boss_lethon.cpp \
 scripts/boss/boss_taerar.cpp \
 scripts/boss/boss_ysondre.cpp \
 scripts/creature/mob_defias.cpp \
+scripts/creature/mob_event_ai.cpp \
+scripts/creature/mob_event_ai.h \
 scripts/creature/mob_generic_creature.cpp \
 scripts/creature/mob_kobold.cpp \
 scripts/creature/simple_ai.cpp \
@@ -183,11 +185,11 @@ scripts/zone/gruuls_lair/mob_gruuls_lair.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_broggok.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_kelidan_the_breaker.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
-scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
-scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
@@ -365,8 +367,8 @@ scripts/zone/zulgurub/boss_renataki.cpp \
 scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
-scripts/zone/zulgurub/mobs_zulgurub.cpp \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
+scripts/zone/zulgurub/mobs_zulgurub.cpp \
 system.cpp
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ScriptDev2"
 	ProjectGUID="{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	RootNamespace="ScriptDev2"
@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib framework.lib shared.lib mangosd.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC90\zlib__Win32_Debug;..\..\..\..\win\VC90\zthread__Win32_Debug;..\..\..\..\win\VC90\mangosd__Win32_Debug"
+				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC90\zlib__Win32_Debug;..\..\..\..\win\VC90\zthread__Win32_Debug;..\..\..\..\win\VC90\mangosd__Win32_Debug;..\..\..\..\win\VC90\shared__Win32_Debug;..\..\..\..\win\VC90\framework__Win32_Debug;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -124,6 +124,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..\..\..\shared\;..\..\..\framework\;..\..\..\..\dep\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCRIPT"
+				MinimalRebuild="true"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -141,10 +142,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib framework.lib shared.lib mangosd.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC90\zlib__Win32_Release;..\..\..\..\win\VC90\zthread__Win32_Release;..\..\..\..\win\VC90\mangosd__Win32_Release"
+				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC90\zlib__Win32_Release;..\..\..\..\win\VC90\zthread__Win32_Release;..\..\..\..\win\VC90\mangosd__Win32_Release;..\..\..\..\win\VC90\framework__Win32_Release;..\..\..\..\win\VC90\shared__Win32_Release"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -216,6 +217,14 @@
 				>
 				<File
 					RelativePath="..\scripts\creature\mob_defias.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\mob_event_ai.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\mob_event_ai.h"
 					>
 				</File>
 				<File
@@ -1362,11 +1371,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
 						>
 					</File>
 				</Filter>
@@ -2027,7 +2036,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Zul'Aman"
+					Name="Zul&apos;Aman"
 					>
 				</Filter>
 			</Filter>

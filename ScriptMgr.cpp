@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -14,9 +14,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
-#include "config.h"
-#include "ScriptMgr.h"
+#include "../../shared/Config/Config.h"
 #include "../../shared/WorldPacket.h"
 #include "../../game/Player.h"
 #include "../../game/GameObject.h"
@@ -25,11 +23,31 @@
 #include "../../game/TargetedMovementGenerator.h"
 #include "../../game/Spell.h"
 #include "../../game/SpellAuras.h"
+#include "../../game/ObjectMgr.h"
+#include "../../shared/ProgressBar.h"
 #include "../../shared/Database/DBCStores.h"
+#include "../../shared/Database/DatabaseMySQL.h"
+#include "config.h"
+#include "ScriptMgr.h"
+#include "scripts/creature/mob_event_ai.h"
 
-uint8 loglevel = 0;
+//*** Global data ***
+#define SD2_REVISON         220
+#define SD2_CONF_VERSION    700102008
+
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
+Localized_Text Localized_Texts[MAX_TEXTS];
+//*** End Global data ***
+
+//*** EventAI data ***
+//Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
+EventAI_Event EventAI_Events[MAX_EVENTS];
+//*** End EventAI data ***
+
+DatabaseMysql ScriptDev2DB;
+Config SD2Config;
+uint32 Locale;
 
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {
@@ -49,6 +67,7 @@ extern void AddSC_boss_taerar();
 extern void AddSC_boss_ysondre();
 
 // -- Creature --
+extern void AddSC_mob_event();
 extern void AddSC_kobold();
 extern void AddSC_generic_creature();
 extern void AddSC_defias();
@@ -556,6 +575,122 @@ void ScriptsFree()
 MANGOS_DLL_EXPORT
 void ScriptsInit()
 {
+    //ScriptDev2 startup
+    sLog.outString("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
+
+    //Get configuration file
+    if (!SD2Config.SetSource("scriptdev2.conf", true))
+        sLog.outError("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
+    else sLog.outDetail("SD2: Using configuration file ScriptDev2.conf");
+
+    //Check config file version
+    uint32 TempVersion;
+    SD2Config.GetInt("ConfVersion", (int*)&TempVersion);
+    if (TempVersion != SD2_CONF_VERSION)
+        sLog.outErrorDb("SD2 ERROR: Configuration file out of date.");
+
+    //Get db string from file
+    std::string dbstring;
+    if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
+        sLog.outErrorDb("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
+
+    //Locale
+    if (!SD2Config.GetInt("Locale", (int*)&Locale))
+        Locale = 0;
+
+    sLog.outString("SD2: Using locale %d", Locale);
+
+    //Initilize connection to DB
+    if (!ScriptDev2DB.Initialize(dbstring.c_str()))
+        sLog.outErrorDb("SD2 ERROR: Unable to connect to Database");
+    else
+    {
+
+        //***Preform all DB queries here***
+        //Gather event data
+        QueryResult *result;
+        result = ScriptDev2DB.PQuery("SELECT `creature_id`,`event_type`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
+            "FROM `eventai_scripts`"
+            "LIMIT %u ", uint32(MAX_EVENTS));
+
+        uint32 i = 0;
+        if (result)
+        {
+            sLog.outString( "SD2: Loading EventAI_Scripts...");
+            barGoLink bar(result->GetRowCount());
+
+            do
+            {
+                bar.step();
+                Field *fields = result->Fetch();
+                EventAI_Events[i].creature_id = fields[0].GetUInt32();
+                EventAI_Events[i].event_type = fields[1].GetUInt8();
+                EventAI_Events[i].event_param1 = fields[2].GetUInt32();
+                EventAI_Events[i].event_param2 = fields[3].GetUInt32();
+                EventAI_Events[i].event_param3 = fields[4].GetUInt32();
+
+                for (uint32 j = 0; j < MAX_ACTIONS; j++)
+                {
+                    EventAI_Events[i].action[j].type = fields[5+(j*4)].GetUInt16();
+                    EventAI_Events[i].action[j].param1 = fields[6+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param2 = fields[7+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param3 = fields[8+(j*4)].GetUInt32();
+                }
+                i++;
+            }while (result->NextRow() && i < MAX_EVENTS);
+
+            delete result;
+            sLog.outString();
+            sLog.outString("SD2: >> Loaded %d EventAI_Events", i);
+
+        }else sLog.outErrorDb("SD2: >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
+
+        //Gather Localized Text Entries
+        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`"
+            "FROM `localized_texts`"
+            "LIMIT %u ", uint32(MAX_TEXTS));
+
+        if (result)
+        {
+            sLog.outString( "SD2: Loading Localized_Texts...");
+            barGoLink bar(result->GetRowCount());
+            do
+            {
+                bar.step();
+                Field *fields = result->Fetch();
+                i = fields[0].GetInt32();
+
+                if (i >= MAX_TEXTS)
+                {
+                    sLog.outErrorDb( "SD2: Localized Text ID greater than MAX_TEXTS");
+                    continue;
+                }
+
+                Localized_Texts[i].locale_0 = fields[1].GetString();
+                Localized_Texts[i].locale_1 = fields[2].GetString();
+                Localized_Texts[i].locale_2 = fields[3].GetString();
+                Localized_Texts[i].locale_3 = fields[4].GetString();
+                Localized_Texts[i].locale_4 = fields[5].GetString();
+                Localized_Texts[i].locale_5 = fields[6].GetString();
+                Localized_Texts[i].locale_6 = fields[7].GetString();
+                Localized_Texts[i].locale_7 = fields[8].GetString();
+
+                i++;
+            }while (result->NextRow() && i < MAX_TEXTS);
+
+            delete result;
+
+            sLog.outString();
+            sLog.outString("SD2: >> Loaded %d Localized_Texts", i);
+
+        }else sLog.outErrorDb("SD2: >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
+
+        //Free database thread and resources
+        ScriptDev2DB.HaltDelayThread();
+
+        //***End DB queries***
+    }
+
     nrscripts = 0;
     for(int i=0;i<MAX_SCRIPTS;i++)
         m_scripts[i]=NULL;
@@ -572,6 +707,7 @@ void ScriptsInit()
     AddSC_boss_ysondre();
 
     // -- Creature --
+    AddSC_mob_event();
     AddSC_kobold();
     AddSC_generic_creature();
     AddSC_defias();
@@ -1065,10 +1201,62 @@ void ScriptsInit()
 
     // -------------------
 
+    error_log("SD2 DEBUG: Loaded %d Scripts", nrscripts);
 }
 
 //*********************************
 //*** Functions used internally ***
+
+const char* GetLocalizedText(uint32 Entry)
+{
+    if (Entry > MAX_TEXTS)
+        return DEFAULT_TEXT;
+
+    const char* temp = NULL;
+
+    switch (Locale)
+    {
+        case 0:
+        temp =  Localized_Texts[Entry].locale_0.c_str();
+        break;
+
+        case 1:
+        temp =  Localized_Texts[Entry].locale_1.c_str();
+        break;
+
+        case 2:
+        temp =  Localized_Texts[Entry].locale_2.c_str();
+        break;
+
+        case 3:
+        temp =  Localized_Texts[Entry].locale_3.c_str();
+        break;
+
+        case 4:
+        temp =  Localized_Texts[Entry].locale_4.c_str();
+        break;
+
+        case 5:
+        temp =  Localized_Texts[Entry].locale_5.c_str();
+        break;
+
+        case 6:
+        temp =  Localized_Texts[Entry].locale_6.c_str();
+        break;
+
+        case 7:
+        temp =  Localized_Texts[Entry].locale_7.c_str();
+        break;
+    };
+
+    if (strlen(temp))
+        return temp;
+
+    if (strlen(Localized_Texts[Entry].locale_0.c_str()))
+        return Localized_Texts[Entry].locale_0.c_str();
+
+    return DEFAULT_TEXT;
+}
 
 Script* GetScriptByName(std::string Name)
 {

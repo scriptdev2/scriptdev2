@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -33,7 +33,7 @@ EndScriptData */
 #define SOUND_SPELL_JACKHAMMER_2 11113
 // On Aggro
 #define SAY_AGGRO_1          "You have approximately five seconds to live."
-#define SOUND_SAY_AGGRO_1	11109 
+#define SOUND_SAY_AGGRO_1    11109 
 
 //On Kill Unit
 #define SAY_SLAY_1            "A foregone conclusion."
@@ -46,12 +46,12 @@ EndScriptData */
 
 // Gatewatcher Iron-Hand AI
 struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
-{	
-    boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)	{ EnterEvadeMode(); } 	
+{    
+    boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)    { EnterEvadeMode(); }     
 
-    uint32 Shadow_Power_Timer;	
+    uint32 Shadow_Power_Timer;    
     uint32 Jackhammer_Timer;
-    uint32 Stream_of_Machine_Fluid_Timer;	
+    uint32 Stream_of_Machine_Fluid_Timer;    
 
     bool InCombat;     
 
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);        
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);        
 
-        Shadow_Power_Timer = 25000;		
+        Shadow_Power_Timer = 25000;        
         Jackhammer_Timer = 45000;
         Stream_of_Machine_Fluid_Timer = 55000;
 
@@ -103,15 +103,15 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))            
             {                                 
                 if (!InCombat)                
-                {					
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);					
-                    DoPlaySoundToSet(m_creature,SOUND_SAY_AGGRO_1); 					
+                {                    
+                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);                    
+                    DoPlaySoundToSet(m_creature,SOUND_SAY_AGGRO_1);                     
                     InCombat = true;                
                 }                 
                 DoStartMeleeAttack(who);            
             }        
         }    
-    } 	
+    }     
     // On Killed Unit    
     void KilledUnit(Unit* victim)    
     {
@@ -134,8 +134,8 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 
     // On Death    
     void JustDied(Unit* Killer)    
-    {		
-        DoYell(SAY_DEATH_1,LANG_UNIVERSAL,NULL);		
+    {        
+        DoYell(SAY_DEATH_1,LANG_UNIVERSAL,NULL);        
         DoPlaySoundToSet(m_creature, SOUND_DEATH_1);    
     }
 
@@ -143,23 +143,23 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
     {       
         //Return since we have no target        
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )            
-            return; 		
+            return;         
 
-        //Check for Shadow Power		
-        if(Shadow_Power_Timer < diff)		
-        {			
-            //time to cast			
+        //Check for Shadow Power        
+        if(Shadow_Power_Timer < diff)        
+        {            
+            //time to cast            
             DoCast(m_creature,SPELL_SHADOW_POWER);
 
-            //Cast again on time			
-            Shadow_Power_Timer = 25000;        		
-        }else Shadow_Power_Timer -= diff; 		
+            //Cast again on time            
+            Shadow_Power_Timer = 25000;                
+        }else Shadow_Power_Timer -= diff;         
 
-        //Check for Jack Hammer		
-        if(Jackhammer_Timer < diff)		
-        {			
-            //time to cast			
-            DoCast(m_creature->getVictim(),SPELL_JACKHAMMER); 			
+        //Check for Jack Hammer        
+        if(Jackhammer_Timer < diff)        
+        {            
+            //time to cast            
+            DoCast(m_creature->getVictim(),SPELL_JACKHAMMER);             
 
             if (rand()%2)
                 return;
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
             switch(rand()%2)
             {
             case 0:
-                DoYell(SAY_SPELL_JACKHAMMER_1, LANG_UNIVERSAL, NULL);					
+                DoYell(SAY_SPELL_JACKHAMMER_1, LANG_UNIVERSAL, NULL);                    
                 DoPlaySoundToSet(m_creature,SOUND_SPELL_JACKHAMMER_1);
                 break;
 
@@ -175,19 +175,19 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
                 DoYell(SAY_SPELL_JACKHAMMER_2, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_SPELL_JACKHAMMER_2);
                 break;
-            }		
-            //Cast again on time			
-            Jackhammer_Timer = 45000;        		
-        }else Jackhammer_Timer -= diff;  		
+            }        
+            //Cast again on time            
+            Jackhammer_Timer = 45000;                
+        }else Jackhammer_Timer -= diff;          
 
-        //Check for Stream of Machine Fluid		
-        if(Stream_of_Machine_Fluid_Timer < diff)		
-        {			
-            //time to cast			
-            DoCast(m_creature->getVictim(),SPELL_STREAM_OF_MACHINE_FLUID); 			
+        //Check for Stream of Machine Fluid        
+        if(Stream_of_Machine_Fluid_Timer < diff)        
+        {            
+            //time to cast            
+            DoCast(m_creature->getVictim(),SPELL_STREAM_OF_MACHINE_FLUID);             
 
-            //Cast again on time			
-            Stream_of_Machine_Fluid_Timer = 55000;        		
+            //Cast again on time            
+            Stream_of_Machine_Fluid_Timer = 55000;                
         }else Stream_of_Machine_Fluid_Timer -= diff;
 
         DoMeleeAttackIfReady();

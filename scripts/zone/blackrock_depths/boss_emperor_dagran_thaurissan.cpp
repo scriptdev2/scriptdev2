@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -25,11 +25,11 @@ EndScriptData */
  
 // Spells
 #define SPELL_HANDOFTHAURISSAN              17492            
-#define SPELL_AVATAROFFLAME					15636
+#define SPELL_AVATAROFFLAME                    15636
  
 // Speech
-#define	SAY_AGGRO			"Come to aid the Throne!"
-#define SAY_SLAY	"Hail to the king, baby!"
+#define    SAY_AGGRO            "Come to aid the Throne!"
+#define SAY_SLAY    "Hail to the king, baby!"
  
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {
@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 //                Counter++;
 //            }
 //            else 
-			{
+            {
  
                 // seconds until we should cast this again
                 HandOfThaurissan_Timer = 5000;

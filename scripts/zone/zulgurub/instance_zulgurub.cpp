@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -37,23 +37,23 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
     void OnCreatureCreate (Creature *creature, uint32 creature_entry)
     {
-	switch (creature_entry) {
-	    case 11347:
-		LorKhanGUID = creature->GetGUID();
-		break;
+    switch (creature_entry) {
+        case 11347:
+        LorKhanGUID = creature->GetGUID();
+        break;
 
-	    case 11348:
-		ZathGUID = creature->GetGUID();
-		break;
+        case 11348:
+        ZathGUID = creature->GetGUID();
+        break;
 
-	    case 14509:
-		ThekalGUID = creature->GetGUID();
-		break;
+        case 14509:
+        ThekalGUID = creature->GetGUID();
+        break;
 
-	    case 11380:
-		JindoGUID = creature->GetGUID();
-		break;
-	}
+        case 11380:
+        JindoGUID = creature->GetGUID();
+        break;
+    }
     } 
 
     void Initialize()
@@ -133,15 +133,15 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
     }
 
     uint64 GetData64 (char *identifier) {
-		if (identifier == "LorKhan")
-			return LorKhanGUID;
-		if (identifier == "Zath")
-			return ZathGUID;
-		if (identifier == "Thekal")
-			return ThekalGUID;
-		if (identifier == "Jindo")
-			return JindoGUID;
-		return 0;
+        if (identifier == "LorKhan")
+            return LorKhanGUID;
+        if (identifier == "Zath")
+            return ZathGUID;
+        if (identifier == "Thekal")
+            return ThekalGUID;
+        if (identifier == "Jindo")
+            return JindoGUID;
+        return 0;
     } // end GetData64
 
     void SetData(char *type, uint32 data)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -62,13 +62,13 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
     uint32 Fear_timer;
     uint32 Ribbon_of_Souls_timer;
-	uint32 Summon_Dark_Side_timer;
+    uint32 Summon_Dark_Side_timer;
    
     bool InCombat;
-	bool HasTaunted;
-	bool HasYelled;
-	bool Avatar_summoned;
-	
+    bool HasTaunted;
+    bool HasYelled;
+    bool Avatar_summoned;
+    
     void EnterEvadeMode()
     {   
         m_creature->RemoveAllAuras();
@@ -92,21 +92,21 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
         Fear_timer = 20000;
         Ribbon_of_Souls_timer = 5000;
-		Summon_Dark_Side_timer = 15000;
+        Summon_Dark_Side_timer = 15000;
        
         InCombat = false;
-		HasTaunted = false;
-		HasYelled = false;
-		Avatar_summoned = false;
-		
+        HasTaunted = false;
+        HasYelled = false;
+        Avatar_summoned = false;
+        
     }
 
     void JustDied(Unit* Killer)
     { 
-		DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
-		DoSpawnCreature(19412,0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000); //When Exarch Maladar is defeated D'ore appear.
-	}
+        DoSpawnCreature(19412,0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000); //When Exarch Maladar is defeated D'ore appear.
+    }
 
     void KilledUnit(Unit* victim)
     {
@@ -208,29 +208,29 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     }
 
    
-	void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
             
         if(((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 25) && !Avatar_summoned)
         {
-			DoYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
+            DoYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SUMMON);
-			DoCast(m_creature, SPELL_AVATAR_OF_MARTYRED);
-		     Avatar_summoned = true;
-	    }
+            DoCast(m_creature, SPELL_AVATAR_OF_MARTYRED);
+             Avatar_summoned = true;
+        }
         
         if(Ribbon_of_Souls_timer < diff)
         {    
-			if(!HasYelled)
-			{
+            if(!HasYelled)
+            {
             DoYell(SAY_ROAR, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_ROAR);
-			HasYelled = true;
-			}
+            HasYelled = true;
+            }
 
-			Unit* target = NULL;
+            Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if(target)
             {
@@ -239,28 +239,28 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
             }
         }else Ribbon_of_Souls_timer -= diff;
 
-		if(Summon_Dark_Side_timer < diff && !Avatar_summoned)//When Avatar of Martyred summoned Exarch Maladar don't cast this spell
-		{
+        if(Summon_Dark_Side_timer < diff && !Avatar_summoned)//When Avatar of Martyred summoned Exarch Maladar don't cast this spell
+        {
             DoYell(SAY_SOUL_CLEAVE, LANG_UNIVERSAL, NULL);
-			DoPlaySoundToSet(m_creature,SOUND_SOUL_CLEAVE);
+            DoPlaySoundToSet(m_creature,SOUND_SOUL_CLEAVE);
             Unit* target = NULL;
 
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if(target)
-			{
-			// DoCast(target,SPELL_SOUL_STEAL);
-			DoCast(target,SPELL_SUMMON_DARK_SIDE);
-			Summon_Dark_Side_timer = 5000 + (rand()%10 * 5000);
-			}
-			
-		}else Summon_Dark_Side_timer -= diff;
+            {
+            // DoCast(target,SPELL_SOUL_STEAL);
+            DoCast(target,SPELL_SUMMON_DARK_SIDE);
+            Summon_Dark_Side_timer = 5000 + (rand()%10 * 5000);
+            }
+            
+        }else Summon_Dark_Side_timer -= diff;
 
-		if(Fear_timer < diff)
-		{
-			DoCast(m_creature,SPELL_FEAR);
-			Fear_timer = 20000 + rand()% 10000;
+        if(Fear_timer < diff)
+        {
+            DoCast(m_creature,SPELL_FEAR);
+            Fear_timer = 20000 + rand()% 10000;
 
-		}else Fear_timer -= diff;
+        }else Fear_timer -= diff;
         
        
         DoMeleeAttackIfReady();
@@ -304,10 +304,10 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
         Mortal_Strike_timer = 10000;
-		InCombat = false;
+        InCombat = false;
      }
     
-	void AttackStart(Unit *who)
+    void AttackStart(Unit *who)
     {
         if (!who)
             return;
@@ -346,7 +346,7 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
                    
         if(Mortal_Strike_timer < diff)
         {     
-			    DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
+                DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
                 Mortal_Strike_timer = 10000 + rand()%20 * 1000;
            
         }else Mortal_Strike_timer -= diff;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -38,7 +38,7 @@ void AddSC_go_field_repair_bot_74A()
     Script *newscript;
     newscript = new Script;
     newscript->Name="go_field_repair_bot_74A";
-    newscript->pGOHello		  = &GOHello_go_field_repair_bot_74A;
+    newscript->pGOHello          = &GOHello_go_field_repair_bot_74A;
     m_scripts[nrscripts++] = newscript;
 }
  

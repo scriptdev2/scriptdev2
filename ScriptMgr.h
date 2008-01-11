@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -23,8 +23,6 @@
 #include "../../game/Creature.h"
 #include "../../game/InstanceData.h"
 
-#define MAX_SCRIPTS 5000
-
 class Player;
 class Creature;
 class Quest;
@@ -33,6 +31,48 @@ class GameObject;
 class SpellCastTargets;
 class Map;
 
+#define MAX_SCRIPTS     5000        //72 bytes each (approx 351kb)
+#define MAX_TEXTS       5000        //? bytes each
+
+#define VISIBLE_RANGE   (26.46f)
+
+#define DEFAULT_TEXT    "<ScriptDev2 Text Entry Missing!>"
+
+//Spell targets used by SelectSpell
+enum SelectTarget
+{
+    SELECT_TARGET_DONTCARE = 0,         //All target types allowed
+
+    SELECT_TARGET_SELF,                 //Only Self casting
+
+    SELECT_TARGET_SINGLE_ENEMY,         //Only Single Enemy
+    SELECT_TARGET_AOE_ENEMY,            //Only AoE Enemy
+    SELECT_TARGET_ANY_ENEMY,            //AoE or Single Enemy
+
+    SELECT_TARGET_SINGLE_FRIEND,        //Only Single Friend
+    SELECT_TARGET_AOE_FRIEND,           //Only AoE Friend
+    SELECT_TARGET_ANY_FRIEND,           //AoE or Single Friend
+};
+
+//Spell Effects used by SelectSpell
+enum SelectEffect
+{
+    SELECT_EFFECT_DONTCARE = 0,         //All spell effects allowed
+    SELECT_EFFECT_DAMAGE,               //Spell does damage
+    SELECT_EFFECT_HEALING,              //Spell does healing
+    SELECT_EFFECT_AURA,                 //Spell applies an aura
+};
+
+
+//Selection method used by SelectTarget
+enum SelectAggroTarget
+{
+    SELECT_TARGET_RANDOM = 0,           //Just selects a random target
+    SELECT_TARGET_TOPAGGRO,             //Selects targes from top aggro to bottom
+    SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
+};
+
+//
 struct Script
 {
     Script() :
@@ -64,49 +104,26 @@ bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
 
 CreatureAI* (*GetAI)(Creature*);
 InstanceData* (*GetInstanceData)(Map*);
-
 // -----------------------------------------
-
 };
+
+// Localized Text structure for storing locales. 
+struct Localized_Text
+{
+    std::string locale_0;
+    std::string locale_1;
+    std::string locale_2;
+    std::string locale_3;
+    std::string locale_4;
+    std::string locale_5;
+    std::string locale_6;
+    std::string locale_7;
+};
+
 
 extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
-
-#define VISIBLE_RANGE (26.46f)
-
-//Spell targets used by SelectSpell
-enum SelectTarget
-{
-    SELECT_TARGET_DONTCARE = 0,         //All target types allowed
-
-    SELECT_TARGET_SELF,                 //Only Self casting
-
-    SELECT_TARGET_SINGLE_ENEMY,         //Only Single Enemy
-    SELECT_TARGET_AOE_ENEMY,            //Only AoE Enemy
-    SELECT_TARGET_ANY_ENEMY,            //AoE or Single Enemy
-
-    SELECT_TARGET_SINGLE_FRIEND,        //Only Single Friend
-    SELECT_TARGET_AOE_FRIEND,           //Only AoE Friend
-    SELECT_TARGET_ANY_FRIEND,           //AoE or Single Friend
-};
-
-//Spell Effects used by SelectSpell
-enum SelectEffect
-{
-    SELECT_EFFECT_DONTCARE = 0,         //All spell effects allowed
-    SELECT_EFFECT_DAMAGE,               //Spell does damage
-    SELECT_EFFECT_HEALING,              //Spell does healing
-    SELECT_EFFECT_AURA,                 //Spell applies an aura
-};
-
-//Selection method used by SelectTarget
-enum SelectAggroTarget
-{
-    SELECT_TARGET_RANDOM = 0,           //Just selects a random target
-    SELECT_TARGET_TOPAGGRO,             //Selects targes from top aggro to bottom
-    SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
-};
-
+extern Localized_Text Localized_Texts[MAX_TEXTS];
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
@@ -222,4 +239,6 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         virtual void SetData(char *type, uint32 data) {}
 };
 
+//Localized text function
+const char* GetLocalizedText(uint32 Entry);
 #endif

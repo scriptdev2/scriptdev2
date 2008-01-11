@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);        
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);        
 
-        frost_attack_Timer = 10000;		
+        frost_attack_Timer = 10000;        
         arcane_blast_Timer = 15000;
         dragons_breath_Timer = 20000;
         knockback_Timer = 25000;
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))            
             {                                 
                 if (!InCombat)                
-                {					
+                {                    
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature,SOUND_SAY_AGGRO);
                     DoCast(m_creature,SPELL_SUMMON_RAGIN_FLAMES);
@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
                 DoStartMeleeAttack(who);            
             }        
         }    
-    } 	
+    }     
 
     // On Killed Unit    
     void KilledUnit(Unit* victim)    
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
     // On Death    
     void JustDied(Unit* Killer)    
-    {		
+    {        
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);  
     }
@@ -146,30 +146,30 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )            
             return;  
 
-        //Check for Frost Attack		
-        if(frost_attack_Timer < diff)		
-        {			
-            //time to cast			
+        //Check for Frost Attack        
+        if(frost_attack_Timer < diff)        
+        {            
+            //time to cast            
             DoCast(m_creature->getVictim(),SPELL_FROST_ATTACK);
 
-            //Cast again on time			
-            frost_attack_Timer = 10000;        		
+            //Cast again on time            
+            frost_attack_Timer = 10000;                
         }else frost_attack_Timer -= diff;
 
-        //Check for Arcane Blast		
-        if(arcane_blast_Timer < diff)		
-        {			
-            //time to cast			
+        //Check for Arcane Blast        
+        if(arcane_blast_Timer < diff)        
+        {            
+            //time to cast            
             DoCast(m_creature->getVictim(),SPELL_ARCANE_BLAST);
 
-            //Cast again on time			
-            arcane_blast_Timer = 15000;        		
+            //Cast again on time            
+            arcane_blast_Timer = 15000;                
         }else arcane_blast_Timer -= diff;
 
-        //Check for Dragons Breath		
-        if(dragons_breath_Timer < diff)		
-        {			
-            //time to cast			
+        //Check for Dragons Breath        
+        if(dragons_breath_Timer < diff)        
+        {            
+            //time to cast            
             DoCast(m_creature->getVictim(),SPELL_DRAGONS_BREATH);
 
             {
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
                 switch(rand()%2)
                 {
                 case 0:
-                    DoYell(SAY_SPELL_DRAGONS_BREATH_1, LANG_UNIVERSAL, NULL);					
+                    DoYell(SAY_SPELL_DRAGONS_BREATH_1, LANG_UNIVERSAL, NULL);                    
                     DoPlaySoundToSet(m_creature,SOUND_SPELL_DRAGONS_BREATH_1);
                     break;
 
@@ -190,33 +190,33 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
                     break;
                 }
             }
-            //Cast again on time			
-            dragons_breath_Timer = 20000;        		
+            //Cast again on time            
+            dragons_breath_Timer = 20000;                
 
-        }else dragons_breath_Timer -= diff;  		
+        }else dragons_breath_Timer -= diff;          
 
-        //Check for Knockback		
-        if(knockback_Timer < diff)		
-        {			
+        //Check for Knockback        
+        if(knockback_Timer < diff)        
+        {            
 
-            //time to cast			
-            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK); 			
+            //time to cast            
+            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);             
 
-            //Cast again on time			
-            knockback_Timer = 25000;        		
+            //Cast again on time            
+            knockback_Timer = 25000;                
 
         }else knockback_Timer -= diff;
 
-        //Check for Solarburn		
-        if(solarburn_Timer < diff)		
+        //Check for Solarburn        
+        if(solarburn_Timer < diff)        
 
-        {			
+        {            
 
-            //time to cast			
-            DoCast(m_creature->getVictim(),SPELL_SOLARBURN); 			
+            //time to cast            
+            DoCast(m_creature->getVictim(),SPELL_SOLARBURN);             
 
-            //Cast again on time			
-            solarburn_Timer = 30000;        		
+            //Cast again on time            
+            solarburn_Timer = 30000;                
 
         }else solarburn_Timer -= diff;
 

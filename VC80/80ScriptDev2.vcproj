@@ -62,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib framework.lib shared.lib mangosd.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC80\zlib__Win32_Debug;..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug"
+				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC80\zlib__Win32_Debug;..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug;..\..\..\..\win\VC80\shared__Win32_Debug;..\..\..\..\win\VC80\framework__Win32_Debug;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -144,7 +144,7 @@
 				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC80\zlib__Win32_Release;..\..\..\..\win\VC80\zthread__Win32_Release;..\..\..\..\win\VC80\mangosd__Win32_Release"
+				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC80\zlib__Win32_Release;..\..\..\..\win\VC80\zthread__Win32_Release;..\..\..\..\win\VC80\mangosd__Win32_Release;..\..\..\..\win\VC80\shared__Win32_Release;..\..\..\..\win\VC80\framework__Win32_Release"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -217,6 +217,14 @@
 				>
 				<File
 					RelativePath="..\scripts\creature\mob_defias.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\mob_event_ai.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\creature\mob_event_ai.h"
 					>
 				</File>
 				<File

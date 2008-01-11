@@ -1,4 +1,4 @@
-/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -33,7 +33,7 @@ EndScriptData */
 
 #define SPELL_SONSOFFLAME_DUMMY     21108       //Server side effect
 #define SPELL_RAGSUBMERGE           21107       //Stealth aura
-#define SPELL_RAGEMERGE		    20568
+#define SPELL_RAGEMERGE            20568
 #define SPELL_MELTWEAPON            21388
 
 #define SAY_ARRIVAL_1       "TOO SOON! YOU HAVE AWAKENED ME TOO SOON, EXECUTUS! WHAT IS THE MEANING OF THIS INTRUSION?"
