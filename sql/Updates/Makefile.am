@@ -84,4 +84,5 @@ pkgdata_DATA = \
 	r214.sql \
 	r215.sql \
 	r218.sql \
-	r219.sql
+	r219.sql \
+	r221_scriptdev2.sql

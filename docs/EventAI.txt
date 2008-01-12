@@ -1,0 +1,84 @@
+=========================================
+Event AI documentation
+=========================================
+
+Scriptdev2 Revision 220 introduces a new database defined AI named EventAI.
+This system allows users to create new creature scripts entierly within the Database.
+ScriptName must still be set to "mob_eventai" within the MaNGOS database creature_template.scriptname field.
+
+-----------------------------------------
+Basic Structure of EventAI
+-----------------------------------------
+Event AI follows a basic if (Event) then do {Action} format.
+Below is a the list of current fields within the Eventai_scripts table.
+
+(Field_Name			Discription)
+id				This value is mearly an incrementing counter of the current Event number. Required for sql queries.
+creature_id			Creature id which this event should occur on.
+
+event_type			Type of event (See Event Types below)
+event_param1		Variable for event (dependant on Event type)
+event_param2
+event_param3
+
+action1_type		First Type of Action to take when event occurs (See Action Types below)
+action1_param1          Variables used for Action1 (dependant on Action type)
+action1_param2
+action1_param3
+
+action2_type		Second Type of Action to take when event occurs (See Action Types below)
+action2_param1		Variables used for Action2 (dependant on Action type)
+action2_param2
+action2_param3
+
+action3_type		Third Type of Action to take when event occurs (See Action Types below)
+action3_param1		Variables used for Action3 (dependant on Action type)
+action3_param2
+action3_param3
+
+-----------------------------------------
+Event Types
+-----------------------------------------
+Below is the list of current Event types that EventAI can handle.
+Each event type has its own specific interpretation of the params that accompany it.
+Params are always read from Param1, then Param2, then Param3.
+
+(#	Internal Name			Pamarm usage			Discription)
+0	EVENT_T_NONE			Not Used				Does nothing(mostly for testing purposes)
+1	EVENT_T_TIMER_REPEAT		Time					Overy Param1 in milliseconds
+2	EVENT_T_TIMER_SINGLE		Time					Once Param1 in milliseconds has passed (only occurs once)
+3	EVENT_T_HP_SINGLE			HP%					Once HP% is below Param1 (does not repeat)
+4	EVENT_T_MANA_SINGLE		Mana%					Once Mana% is below Param1 (does not repeat)
+5	EVENT_T_AGGRO			Not Used				Upon initial aggro (does not repeat)
+6	EVENT_T_KILL			Not Used				Upon killing a player or creature
+7	EVENT_T_DEATH			Not Used				Upon death of self
+
+-----------------------------------------
+Action Types
+-----------------------------------------
+Below is the list of current Action types that EventAI can handle.
+Each event type has its own specific interpretation of the params that accompany it.
+Params are always read from Param1, then Param2, then Param3.
+
+(#	Internal Name			Pamarm usage			Discription)
+0	ACTION_T_NONE			Not Used				Does nothing
+1	ACTION_T_SAY                  TextId				Creature says text contained in Localized_Text
+2	ACTION_T_YELL                 TextId				Creature yells text contained in Localized_Text
+3	ACTION_T_EMOTE                TextId				Creature text emotes text contained in Localized_Text
+4	ACTION_T_SOUND                SoundId				Plays sound id to players within area
+5	ACTION_T_CAST                 SpellId, Target, Interrupt	Casts spell (param1) on target type (param2). If Inturrupt is 0 then the spell will not interrupt any previous cast. 
+6	ACTION_T_SUMMON               CreatureId, Target, Duration	Summons creature (param1) to attack target (param2) with a duration of (Param3). If duration is 0 will last until killed.
+
+-----------------------------------------
+Target Types
+-----------------------------------------
+Below is the list of current Target types that EventAI can handle.
+Target types are used by certain actions and may effect actions differently
+
+(#	Internal Name				Discription)
+0	TARGET_T_SELF				Self cast
+1	TARGET_T_HOSTILE				Our current target (ie: highest aggro)
+2	TARGET_T_HOSTILE_SECOND_AGGRO		Second highest aggro (generaly used for cleaves and some special attacks)
+3	TARGET_T_HOSTILE_LAST_AGGRO		Dead last on aggro (no idea what this could be used for)
+4	TARGET_T_HOSTILE_RANDOM			Just any random target on our threat list
+5	TARGET_T_HOSTILE_RANDOM_NOT_TOP	Any random target except top threat

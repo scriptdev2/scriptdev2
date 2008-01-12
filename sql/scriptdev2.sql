@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `eventai_Scripts`;
-CREATE TABLE `eventai_Scripts` (
+DROP TABLE IF EXISTS `eventai_scripts`;
+CREATE TABLE `eventai_scripts` (
 `id` int(11) unsigned NOT NULL default '0' COMMENT 'Used only for Table sorting',
 `creature_id` int(11) unsigned NOT NULL default '0' COMMENT 'Creature Template Identifier',
 

@@ -26,13 +26,13 @@
 #include "../../game/ObjectMgr.h"
 #include "../../shared/ProgressBar.h"
 #include "../../shared/Database/DBCStores.h"
-#include "../../shared/Database/DatabaseMySQL.h"
+#include "../../shared/Database/DatabaseMysql.h"
 #include "config.h"
 #include "ScriptMgr.h"
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***
-#define SD2_REVISON         220
+#define SD2_REVISON         221
 #define SD2_CONF_VERSION    700102008
 
 int nrscripts;
@@ -576,74 +576,41 @@ MANGOS_DLL_EXPORT
 void ScriptsInit()
 {
     //ScriptDev2 startup
-    sLog.outString("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
+    outstring_log("");
+    outstring_log("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
+    outstring_log("");
 
     //Get configuration file
     if (!SD2Config.SetSource("scriptdev2.conf", true))
-        sLog.outError("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
-    else sLog.outDetail("SD2: Using configuration file ScriptDev2.conf");
+        error_log("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
+    else outstring_log("SD2: Using configuration file ScriptDev2.conf");
 
     //Check config file version
     uint32 TempVersion;
     SD2Config.GetInt("ConfVersion", (int*)&TempVersion);
     if (TempVersion != SD2_CONF_VERSION)
-        sLog.outErrorDb("SD2 ERROR: Configuration file out of date.");
+        error_log("SD2 ERROR: Configuration file out of date.");
 
     //Get db string from file
     std::string dbstring;
     if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
-        sLog.outErrorDb("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
+        error_log("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
 
     //Locale
-    if (!SD2Config.GetInt("Locale", (int*)&Locale))
-        Locale = 0;
+    Locale = SD2Config.GetIntDefault("Locale", 0);
 
-    sLog.outString("SD2: Using locale %d", Locale);
+    outstring_log("SD2: Using locale %d", Locale);
+    outstring_log("");
 
     //Initilize connection to DB
     if (!ScriptDev2DB.Initialize(dbstring.c_str()))
-        sLog.outErrorDb("SD2 ERROR: Unable to connect to Database");
+        error_log("SD2 ERROR: Unable to connect to Database");
     else
     {
 
         //***Preform all DB queries here***
-        //Gather event data
         QueryResult *result;
-        result = ScriptDev2DB.PQuery("SELECT `creature_id`,`event_type`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
-            "FROM `eventai_scripts`"
-            "LIMIT %u ", uint32(MAX_EVENTS));
-
         uint32 i = 0;
-        if (result)
-        {
-            sLog.outString( "SD2: Loading EventAI_Scripts...");
-            barGoLink bar(result->GetRowCount());
-
-            do
-            {
-                bar.step();
-                Field *fields = result->Fetch();
-                EventAI_Events[i].creature_id = fields[0].GetUInt32();
-                EventAI_Events[i].event_type = fields[1].GetUInt8();
-                EventAI_Events[i].event_param1 = fields[2].GetUInt32();
-                EventAI_Events[i].event_param2 = fields[3].GetUInt32();
-                EventAI_Events[i].event_param3 = fields[4].GetUInt32();
-
-                for (uint32 j = 0; j < MAX_ACTIONS; j++)
-                {
-                    EventAI_Events[i].action[j].type = fields[5+(j*4)].GetUInt16();
-                    EventAI_Events[i].action[j].param1 = fields[6+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param2 = fields[7+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param3 = fields[8+(j*4)].GetUInt32();
-                }
-                i++;
-            }while (result->NextRow() && i < MAX_EVENTS);
-
-            delete result;
-            sLog.outString();
-            sLog.outString("SD2: >> Loaded %d EventAI_Events", i);
-
-        }else sLog.outErrorDb("SD2: >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
 
         //Gather Localized Text Entries
         result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`"
@@ -652,7 +619,7 @@ void ScriptsInit()
 
         if (result)
         {
-            sLog.outString( "SD2: Loading Localized_Texts...");
+            outstring_log( "SD2: Loading Localized_Texts...");
             barGoLink bar(result->GetRowCount());
             do
             {
@@ -662,7 +629,7 @@ void ScriptsInit()
 
                 if (i >= MAX_TEXTS)
                 {
-                    sLog.outErrorDb( "SD2: Localized Text ID greater than MAX_TEXTS");
+                    error_log( "SD2: Localized Text ID greater than MAX_TEXTS");
                     continue;
                 }
 
@@ -675,15 +642,105 @@ void ScriptsInit()
                 Localized_Texts[i].locale_6 = fields[7].GetString();
                 Localized_Texts[i].locale_7 = fields[8].GetString();
 
-                i++;
-            }while (result->NextRow() && i < MAX_TEXTS);
+                if (!strlen(Localized_Texts[i].locale_0.c_str()))
+                    error_log("SD2 ERROR: locale_0 for text %i is empty", i);
+
+            }while (result->NextRow());
 
             delete result;
 
-            sLog.outString();
-            sLog.outString("SD2: >> Loaded %d Localized_Texts", i);
+            outstring_log("");
+            outstring_log("SD2: >> Loaded %d Localized_Texts", i);
 
-        }else sLog.outErrorDb("SD2: >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
+        }else error_log("SD2: >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
+
+        //Gather event data
+        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
+            "FROM `eventai_scripts`"
+            "LIMIT %u ", uint32(MAX_EVENTS));
+
+        if (result)
+        {
+            outstring_log("");
+            outstring_log( "SD2: Loading EventAI_Scripts...");
+            barGoLink bar(result->GetRowCount());
+
+            do
+            {
+                bar.step();
+                Field *fields = result->Fetch();
+                i = fields[0].GetInt32();
+
+                if (i >= MAX_EVENTS)
+                {
+                    error_log( "SD2: Event ID greater than MAX_EVENTS");
+                    continue;
+                }
+
+                EventAI_Events[i].creature_id = fields[1].GetUInt32();
+                EventAI_Events[i].event_type = fields[2].GetUInt8();
+                EventAI_Events[i].event_param1 = fields[3].GetUInt32();
+                EventAI_Events[i].event_param2 = fields[4].GetUInt32();
+                EventAI_Events[i].event_param3 = fields[5].GetUInt32();
+
+                //Report any errors in event
+                if (EventAI_Events[i].event_type == EVENT_T_NONE || EventAI_Events[i].event_type >= EVENT_T_END)
+                    error_log("SD2 ERROR: Event %d has incorrect event type", i);
+
+                for (uint32 j = 0; j < MAX_ACTIONS; j++)
+                {
+                    EventAI_Events[i].action[j].type = fields[6+(j*4)].GetUInt16();
+                    EventAI_Events[i].action[j].param1 = fields[7+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param2 = fields[8+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param3 = fields[9+(j*4)].GetUInt32();
+
+                    //Report any errors in actions
+                    switch (EventAI_Events[i].action[j].type)
+                    {
+                    case ACTION_T_SAY:
+                    case ACTION_T_YELL:
+                    case ACTION_T_EMOTE:
+                        if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT)
+                            error_log("SD2 ERROR: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                        break;
+
+                    case ACTION_T_CAST:
+                        {
+                        SpellEntry const* pSpell = GetSpellStore()->LookupEntry(EventAI_Events[i].action[j].param1);
+                        if (!pSpell)
+                        {
+                            error_log("SD2 ERROR: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
+                            error_log("Spell Store Size = %d", GetSpellStore()->GetNumRows());
+                        }
+                        
+                        if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
+                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
+                        }
+                        break;
+
+                    case ACTION_T_SUMMON:
+                        //TODO: Add check for existing creature template
+                        if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
+                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
+                        break;
+
+                        //No need for checks for these actions
+                    case ACTION_T_NONE:
+                    case ACTION_T_SOUND:
+                        break;
+
+                    default:
+                        error_log("SD2 ERROR: Event %d Action %d has incorrect action type", i, j);
+                        break;
+                    }
+                }
+            }while (result->NextRow());
+
+            delete result;
+            outstring_log("");
+            outstring_log("SD2: >> Loaded %d EventAI_Events", i);
+
+        }else error_log("SD2: >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
 
         //Free database thread and resources
         ScriptDev2DB.HaltDelayThread();
@@ -1201,7 +1258,7 @@ void ScriptsInit()
 
     // -------------------
 
-    error_log("SD2 DEBUG: Loaded %d Scripts", nrscripts);
+    outstring_log("SD2: Loaded %d Scripts", nrscripts);
 }
 
 //*********************************

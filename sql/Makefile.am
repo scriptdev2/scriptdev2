@@ -27,4 +27,5 @@ pkgdatadir = $(datadir)/scriptdev2/sql
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
 	scriptdev_full.sql \
-	scriptdev_additional_req.sql
+	scriptdev_additional_req.sql \
+	scriptdev2.sql
