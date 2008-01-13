@@ -558,49 +558,12 @@ extern void AddSC_instance_zulgurub();
 
 
 // -------------------
-
-MANGOS_DLL_EXPORT
-void ScriptsFree()
-{   
-    // Free Spell Summary
-    delete []SpellSummary;
-
-    // Free resources before library unload
-    for(int i=0;i<nrscripts;i++)
-        delete m_scripts[i];
-
-    nrscripts = 0;
-}
-
-MANGOS_DLL_EXPORT
-void ScriptsInit()
+void LoadDatabase()
 {
-    //ScriptDev2 startup
-    outstring_log("");
-    outstring_log("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
-    outstring_log("");
-
-    //Get configuration file
-    if (!SD2Config.SetSource("scriptdev2.conf", true))
-        error_log("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
-    else outstring_log("SD2: Using configuration file ScriptDev2.conf");
-
-    //Check config file version
-    uint32 TempVersion;
-    SD2Config.GetInt("ConfVersion", (int*)&TempVersion);
-    if (TempVersion != SD2_CONF_VERSION)
-        error_log("SD2 ERROR: Configuration file out of date.");
-
     //Get db string from file
     std::string dbstring;
     if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
         error_log("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
-
-    //Locale
-    Locale = SD2Config.GetIntDefault("Locale", 0);
-
-    outstring_log("SD2: Using locale %d", Locale);
-    outstring_log("");
 
     //Initilize connection to DB
     if (!ScriptDev2DB.Initialize(dbstring.c_str()))
@@ -747,6 +710,49 @@ void ScriptsInit()
 
         //***End DB queries***
     }
+}
+
+MANGOS_DLL_EXPORT
+void ScriptsFree()
+{   
+    // Free Spell Summary
+    delete []SpellSummary;
+
+    // Free resources before library unload
+    for(int i=0;i<nrscripts;i++)
+        delete m_scripts[i];
+
+    nrscripts = 0;
+}
+
+MANGOS_DLL_EXPORT
+void ScriptsInit()
+{
+    //ScriptDev2 startup
+    outstring_log("");
+    outstring_log("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
+    outstring_log("");
+
+    //Get configuration file
+    if (!SD2Config.SetSource("scriptdev2.conf", true))
+        error_log("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
+    else outstring_log("SD2: Using configuration file ScriptDev2.conf");
+
+
+    //Check config file version
+    uint32 TempVersion;
+    SD2Config.GetInt("ConfVersion", (int*)&TempVersion);
+    if (TempVersion != SD2_CONF_VERSION)
+        error_log("SD2 ERROR: Configuration file out of date.");
+
+    //Locale
+    Locale = SD2Config.GetIntDefault("Locale", 0);
+
+    outstring_log("SD2: Using locale %d", Locale);
+    outstring_log("");
+
+    //Load database (must be called after SD2Config.SetSource)
+    LoadDatabase();
 
     nrscripts = 0;
     for(int i=0;i<MAX_SCRIPTS;i++)

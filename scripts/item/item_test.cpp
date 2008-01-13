@@ -23,13 +23,12 @@ EndScriptData */
 
 #include "../sc_defines.h"
 #include "../../../../game/Player.h"
+extern void LoadDatabase();
 
 bool ItemUse_item_test(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    int32 basePoints0 = 50000;
-    //i.DurationIndex = 20; If this required then must be used spellmod
-    player->CastCustomSpell(player,32739,&basePoints0, NULL, NULL, true);
-    //player->GetSession()->SendShowBank( player->GetGUID() );
+
+    LoadDatabase();
     return true;
 }
 
