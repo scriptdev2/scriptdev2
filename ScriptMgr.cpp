@@ -561,12 +561,12 @@ extern void AddSC_instance_zulgurub();
 void LoadDatabase()
 {
     //Get db string from file
-    std::string dbstring;
+    char const* dbstring = NULL;
     if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
         error_log("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
 
     //Initilize connection to DB
-    if (!ScriptDev2DB.Initialize(dbstring.c_str()))
+    if (!dbstring || !ScriptDev2DB.Initialize(dbstring))
         error_log("SD2 ERROR: Unable to connect to Database");
     else
     {
@@ -624,7 +624,6 @@ void LoadDatabase()
 
         if (result)
         {
-            outstring_log("");
             outstring_log( "SD2: Loading EventAI_Scripts...");
             barGoLink bar(result->GetRowCount());
 
@@ -1265,6 +1264,7 @@ void ScriptsInit()
     // -------------------
 
     outstring_log("SD2: Loaded %d Scripts", nrscripts);
+    outstring_log("");
 }
 
 //*********************************
