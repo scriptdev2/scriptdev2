@@ -646,7 +646,7 @@ void LoadDatabase()
                 EventAI_Events[i].event_param3 = fields[5].GetUInt32();
 
                 //Report any errors in event
-                if (EventAI_Events[i].event_type == EVENT_T_NONE || EventAI_Events[i].event_type >= EVENT_T_END)
+                if (EventAI_Events[i].event_type >= EVENT_T_END)
                     error_log("SD2 ERROR: Event %d has incorrect event type", i);
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
@@ -661,34 +661,56 @@ void LoadDatabase()
                     {
                     case ACTION_T_SAY:
                     case ACTION_T_YELL:
-                    case ACTION_T_EMOTE:
+                    case ACTION_T_TEXTEMOTE:
                         if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT)
+                            error_log("SD2 ERROR: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                        break;
+
+                    case ACTION_T_RANDOM_SAY:
+                    case ACTION_T_RANDOM_YELL:
+                    case ACTION_T_RANDOM_TEXTEMOTE:
+                        if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT ||
+                            GetLocalizedText(EventAI_Events[i].action[j].param2) == DEFAULT_TEXT ||
+                            GetLocalizedText(EventAI_Events[i].action[j].param3) == DEFAULT_TEXT)
                             error_log("SD2 ERROR: Event %d Action %d refrences missing Localized_Text entry", i, j);
                         break;
 
                     case ACTION_T_CAST:
                         {
-                        SpellEntry const* pSpell = GetSpellStore()->LookupEntry(EventAI_Events[i].action[j].param1);
-                        if (!pSpell)
-                        {
-                            error_log("SD2 ERROR: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
-                            error_log("Spell Store Size = %d", GetSpellStore()->GetNumRows());
+                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(EventAI_Events[i].action[j].param1);
+                            if (!pSpell)
+                            {
+                                error_log("SD2 ERROR: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
+                                error_log("Spell Store Size = %d", GetSpellStore()->GetNumRows());
+                            }
                         }
-                        
-                        if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
-                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
-                        }
-                        break;
+                        //Missing break on purpose here (cast uses 2nd param target)
 
+                    //2nd param target
                     case ACTION_T_SUMMON:
-                        //TODO: Add check for existing creature template
+                    case ACTION_T_THREAT_SINGLE_PCT:
+                    case ACTION_T_QUEST_COMPLETE:
+                    case ACTION_T_SET_UNIT_FLAG:
+                    case ACTION_T_REMOVE_UNIT_FLAG:
+                        //TODO: Add check for existing creature template for summon
                         if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
                             error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
                         break;
 
-                        //No need for checks for these actions
+                    //3rd param target
+                    case ACTION_T_QUEST_CASTCREATUREGO:
+                    case ACTION_T_SET_UNIT_FIELD:
+                        if (EventAI_Events[i].action[j].param3 >= TARGET_T_END)
+                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
+                        break;
+
+                    //No need for checks for these actions
                     case ACTION_T_NONE:
                     case ACTION_T_SOUND:
+                    case ACTION_T_EMOTE:
+                    case ACTION_T_RANDOM_SOUND:
+                    case ACTION_T_RANDOM_EMOTE:
+                    case ACTION_T_THREAT_ALL_PCT:
                         break;
 
                     default:

@@ -34,27 +34,43 @@ enum Target
 
 enum Event_Types
 {
-    EVENT_T_NONE = 0,               //No params
-    EVENT_T_TIMER_REPEAT,           //Param1 = Time
-    EVENT_T_TIMER_SINGLE,           //Param1 = Time
-    EVENT_T_HP_SINGLE,              //Param1 = HP%
-    EVENT_T_MANA_SINGLE,            //Param1 = Mana%
-    EVENT_T_AGGRO,                  //No Params
-    EVENT_T_KILL,                   //No Params
-    EVENT_T_DEATH,                  //No Params
+    EVENT_T_TIMER_REPEAT            = 0,    //Time
+    EVENT_T_TIMER_SINGLE            = 1,    //Time
+    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time
+    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time
+    EVENT_T_HP_SINGLE               = 4,    //HP%, TimeUntilRepeat (Never if 0)
+    EVENT_T_MANA_SINGLE             = 5,    //Mana%, TimeUntilRepeat (Never if 0)
+    EVENT_T_AGGRO                   = 6,    //No Params
+    EVENT_T_KILL                    = 7,    //TimeUntilRepeat (0 = always)
+    EVENT_T_DEATH                   = 8,    //No Params
+    EVENT_T_EVADE                   = 9,    //No params
+    EVENT_T_SPELLHIT                = 10,   //SpellID(will trigger for all spells if 0), TimeUntilRepeat (Never if 0)
 
     EVENT_T_END,
 };
 
 enum Action_Types
 {
-    ACTION_T_NONE = 0,              //No Params
-    ACTION_T_SAY,                   //Param1 = TextId
-    ACTION_T_YELL,                  //Param1 = TextId
-    ACTION_T_EMOTE,                 //Param1 = TextId
-    ACTION_T_SOUND,                 //Param1 = SoundID
-    ACTION_T_CAST,                  //Param1 = SpellId, Param2 = Target, Param3 = (false = don't inturrupt prev cast, true = intrurrupt)
-    ACTION_T_SUMMON,                //Param1 = CreatureID, Param2 = Target, Param3 = Duration in ms
+    ACTION_T_NONE                   = 0,    //No action
+    ACTION_T_SAY                    = 1,    //TextId
+    ACTION_T_YELL                   = 2,    //TextId
+    ACTION_T_TEXTEMOTE              = 3,    //TextId
+    ACTION_T_SOUND                  = 4,    //SoundId
+    ACTION_T_EMOTE                  = 5,    //EmoteId
+    ACTION_T_RANDOM_SAY             = 6,    //TextId1, TextId2, TextId3
+    ACTION_T_RANDOM_YELL            = 7,    //TextId1, TextId2, TextId3
+    ACTION_T_RANDOM_TEXTEMOTE       = 8,    //TextId1, TextId2, TextId3
+    ACTION_T_RANDOM_SOUND           = 9,    //SoundId1, SoundId2, SoundId3
+    ACTION_T_RANDOM_EMOTE           = 10,   //EmoteId1, EmoteId2, EmoteId3
+    ACTION_T_CAST                   = 11,   //SpellId, Target, (false = don't inturrupt prev cast, true = intrurrupt)
+    ACTION_T_SUMMON                 = 12,   //CreatureID, Target, Duration in ms
+    ACTION_T_THREAT_SINGLE_PCT      = 13,   //Threat%, Target
+    ACTION_T_THREAT_ALL_PCT         = 14,   //Threat%
+    ACTION_T_QUEST_COMPLETE         = 15,   //QuestID, Target
+    ACTION_T_QUEST_CASTCREATUREGO   = 16,   //QuestID, SpellId, Target
+    ACTION_T_SET_UNIT_FIELD         = 17,   //Field_Number, Value, Target
+    ACTION_T_SET_UNIT_FLAG          = 18,   //Flags (may be more than one field OR'd together), Target
+    ACTION_T_REMOVE_UNIT_FLAG       = 19,   //Flags (may be more than one field OR'd together), Target
 
     ACTION_T_END,
 };
