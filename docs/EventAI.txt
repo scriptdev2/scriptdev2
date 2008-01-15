@@ -12,30 +12,31 @@ Basic Structure of EventAI
 Event AI follows a basic if (Event) then do {Action} format.
 Below is a the list of current fields within the Eventai_scripts table.
 
-(Field_Name			Discription)
-id				This value is mearly an incrementing counter of the current Event number. Required for sql queries.
-creature_id			Creature id which this event should occur on.
+(Field_Name            Discription)
+id                     This value is mearly an incrementing counter of the current Event number. Required for sql queries.
+creature_id            Creature id which this event should occur on.
 
-event_type			Type of event (See Event Types below)
-event_param1		Variable for event (dependant on Event type)
+event_type             Type of event (See Event Types below)
+event_param1           Variable for event (dependant on Event type)
 event_param2
 event_param3
 
-action1_type		First Type of Action to take when event occurs (See Action Types below)
-action1_param1          Variables used for Action1 (dependant on Action type)
+action1_type           First Type of Action to take when event occurs (See Action Types below)
+action1_param1         Variables used for Action1 (dependant on Action type)
 action1_param2
 action1_param3
 
-action2_type		Second Type of Action to take when event occurs (See Action Types below)
-action2_param1		Variables used for Action2 (dependant on Action type)
+action2_type           Second Type of Action to take when event occurs (See Action Types below)
+action2_param1         Variables used for Action2 (dependant on Action type)
 action2_param2
 action2_param3
 
-action3_type		Third Type of Action to take when event occurs (See Action Types below)
-action3_param1		Variables used for Action3 (dependant on Action type)
+action3_type           Third Type of Action to take when event occurs (See Action Types below)
+action3_param1         Variables used for Action3 (dependant on Action type)
 action3_param2
 action3_param3
 
+All params are signed 32 bit values (+/- 2147483647). If param specifies time then time is in milliseconds. If param specifies percentage then percentages are value/100 (ex: if param = 500 then that means 500%, -50 = -50%)
 -----------------------------------------
 Event Types
 -----------------------------------------
@@ -43,18 +44,18 @@ Below is the list of current Event types that EventAI can handle.
 Each event type has its own specific interpretation of the params that accompany it.
 Params are always read from Param1, then Param2, then Param3.
 
-(#	Internal Name			Pamarm usage			Discription)
-0	EVENT_T_TIMER_REPEAT		Time					Expires every (Param1)
-1	EVENT_T_TIMER_SINGLE		Time					Expires once every (Param1) per Reset
-2	EVENT_T_TIMER_OOC_REPEAT	Time					Expires every (Param1) while not in combat
-3	EVENT_T_TIMER_OOC_SINGLE	Time					Expires once every (Param1) while not in combat per Reset
-4	EVENT_T_HP_SINGLE			HP%, TimeUntilRepeat		Expires once HP% is below (Param1). Will repeat every (Param2) or never repeat if Param2 = 0
-5	EVENT_T_MANA_SINGLE		Mana%, TimeUntilRepeat		Expires once Mana% is below (Param1). Will repeat every (Param2) or never repeat if Param2 = 0
-6	EVENT_T_AGGRO			No Params				Expires upon initial aggro (does not repeat)
-7	EVENT_T_KILL			TimeUntilRepeat			Expires upon killing a player. Will always occur unless (Param1) is not 0 in which case will only occur every (Param1) milliseconds
-8	EVENT_T_DEATH			No Params				Expires upon Death
-9	EVENT_T_EVADE			No params				Expires upon creature EnterEvadeMode()
-10	EVENT_T_SPELLHIT			SpellID, TimeUntilRepeat	Expires upon Spell hit. If (param1) is set will only expire on that spell. Will repeat every (Param2) or never repeat if Param2 = 0
+(#   Internal Name               Pamarm usage                 Discription)
+0    EVENT_T_TIMER_REPEAT        Time                         Expires every (Param1)
+1    EVENT_T_TIMER_SINGLE        Time                         Expires once every (Param1) per Reset
+2    EVENT_T_TIMER_OOC_REPEAT    Time                         Expires every (Param1) while not in combat
+3    EVENT_T_TIMER_OOC_SINGLE    Time                         Expires once every (Param1) while not in combat per Reset
+4    EVENT_T_HP_SINGLE           HP%, TimeUntilRepeat         Expires once HP% is below (Param1). Will repeat every (Param2) or never repeat if Param2 = 0
+5    EVENT_T_MANA_SINGLE         Mana%, TimeUntilRepeat       Expires once Mana% is below (Param1). Will repeat every (Param2) or never repeat if Param2 = 0
+6    EVENT_T_AGGRO               No Params                    Expires upon initial aggro (does not repeat)
+7    EVENT_T_KILL                TimeUntilRepeat              Expires upon killing a player. Will always occur unless (Param1) is not 0 in which case will only occur every (Param1) milliseconds
+8    EVENT_T_DEATH               No Params                    Expires upon Death
+9    EVENT_T_EVADE               No params                    Expires upon creature EnterEvadeMode()
+10   EVENT_T_SPELLHIT            SpellID, TimeUntilRepeat     Expires upon Spell hit. If (param1) is set will only expire on that spell. Will repeat every (Param2) or never repeat if Param2 = 0
 
 -----------------------------------------
 Action Types
@@ -63,39 +64,39 @@ Below is the list of current Action types that EventAI can handle.
 Each event type has its own specific interpretation of the params that accompany it.
 Params are always read from Param1, then Param2, then Param3.
 
-(#	Internal Name			Pamarm usage			Discription)
-0	ACTION_T_NONE			No action				Does nothign
-1	ACTION_T_SAY			TextId				Says text
-2	ACTION_T_YELL			TextId				Yellls text
-3	ACTION_T_TEXTEMOTE		TextId				Text Emotes text
-4	ACTION_T_SOUND			SoundId				Plays Sound
-5	ACTION_T_EMOTE			EmoteId				Does emote
-6	ACTION_T_RANDOM_SAY		TextId1, TextId2, TextId3	Says random text between 3 params*
-7	ACTION_T_RANDOM_YELL		TextId1, TextId2, TextId3	Yells random text between 3 params*
-8	ACTION_T_RANDOM_TEXTEMOTE	TextId1, TextId2, TextId3	Text Emotes random text between 3 params*
-9	ACTION_T_RANDOM_SOUND		SoundId1, SoundId2, SoundId3	Plays random sound between 3 params*
-10	ACTION_T_RANDOM_EMOTE		EmoteId1, EmoteId2, EmoteId3	Emotes random emote between 3 params
-11	ACTION_T_CAST			SpellId, Target, Interrupt	Casts spell (param1) on target type (param2). If Inturrupt is 0 then the spell will not interrupt any previous cast. 
-12	ACTION_T_SUMMON			CreatureID, Target, Duration	Summons creature (param1) to attack target (param2) with a duration of (Param3). If duration is 0 will last until killed or out of combat.
-13	ACTION_T_THREAT_SINGLE_PCT	Threat%, Target			Modifies threat by (param1) on target type (param2)
-14	ACTION_T_THREAT_ALL_PCT		Threat%				Modifies threat by (param1) on all targets (using -100% on all will result in full aggro dump)
-15	ACTION_T_QUEST_COMPLETE		QuestID, Target			Completes Quest (param1) for target type (Param2)
-16	ACTION_T_QUEST_CASTCREATUREGO	QuestID, SpellId, Target	Sends CastCreatureOrGo for Quest (param1) with SpellId (param2) for target (param3)
-17	ACTION_T_SET_UNIT_FIELD		Field_Number, Value, Target	Sets Unit Field (param1) to Value (param2) on target type (param3)
-18	ACTION_T_SET_UNIT_FLAG		Flags, Target			Sets flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
-19	ACTION_T_REMOVE_UNIT_FLAG	Flags, Target			Removes flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
+(#   Internal Name                     Param usage                     Discription)
+0    ACTION_T_NONE                     No action                       Does nothign
+1    ACTION_T_SAY                      TextId                          Says text
+2    ACTION_T_YELL                     TextId                          Yellls text
+3    ACTION_T_TEXTEMOTE                TextId                          Text Emotes text
+4    ACTION_T_SOUND                    SoundId                         Plays Sound
+5    ACTION_T_EMOTE                    EmoteId                         Does emote
+6    ACTION_T_RANDOM_SAY               TextId1, TextId2, TextId3       Says random text between 3 params*
+7    ACTION_T_RANDOM_YELL              TextId1, TextId2, TextId3       Yells random text between 3 params*
+8    ACTION_T_RANDOM_TEXTEMOTE         TextId1, TextId2, TextId3       Text Emotes random text between 3 params*
+9    ACTION_T_RANDOM_SOUND             SoundId1, SoundId2, SoundId3    Plays random sound between 3 params*
+10   ACTION_T_RANDOM_EMOTE             EmoteId1, EmoteId2, EmoteId3    Emotes random emote between 3 params
+11   ACTION_T_CAST                     SpellId, Target, Interrupt      Casts spell (param1) on target type (param2). If Inturrupt is 0 then the spell will not interrupt any previous cast. 
+12   ACTION_T_SUMMON                   CreatureID, Target, Duration    Summons creature (param1) to attack target (param2) with a duration of (Param3). If duration is 0 will last until killed or out of combat.
+13   ACTION_T_THREAT_SINGLE_PCT        Threat%, Target                 Modifies threat by (param1) on target type (param2)
+14   ACTION_T_THREAT_ALL_PCT           Threat%                         Modifies threat by (param1) on all targets (using -100% on all will result in full aggro dump)
+15   ACTION_T_QUEST_COMPLETE           QuestID, Target                 Completes Quest (param1) for target type (Param2)
+16   ACTION_T_QUEST_CASTCREATUREGO     QuestID, SpellId, Target        Sends CastCreatureOrGo for Quest (param1) with SpellId (param2) for target (param3)
+17   ACTION_T_SET_UNIT_FIELD           Field_Number, Value, Target     Sets Unit Field (param1) to Value (param2) on target type (param3)
+18   ACTION_T_SET_UNIT_FLAG            Flags, Target                   Sets flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
+19   ACTION_T_REMOVE_UNIT_FLAG         Flags, Target                   Removes flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
 
-* = All 3 params must be filled in. Random is constant between actions within an event. So if you have a random Yell and a random Sound they will match up (ex: param2 with param2)
+* = Use -1 to specify that if this param is picked to do nothing. Random is constant between actions within an event. So if you have a random Yell and a random Sound they will match up (ex: param2 with param2)
 -----------------------------------------
 Target Types
 -----------------------------------------
 Below is the list of current Target types that EventAI can handle.
 Target types are used by certain actions and may effect actions differently
 
-(#	Internal Name				Discription)
-0	TARGET_T_SELF				Self cast
-1	TARGET_T_HOSTILE				Our current target (ie: highest aggro)
-2	TARGET_T_HOSTILE_SECOND_AGGRO		Second highest aggro (generaly used for cleaves and some special attacks)
-3	TARGET_T_HOSTILE_LAST_AGGRO		Dead last on aggro (no idea what this could be used for)
-4	TARGET_T_HOSTILE_RANDOM			Just any random target on our threat list
-5	TARGET_T_HOSTILE_RANDOM_NOT_TOP	Any random target except top threat
+(#   Internal Name                      Discription)
+0    TARGET_T_SELF                      Self cast
+1    TARGET_T_HOSTILE                   Our current target (ie: highest aggro)
+2    TARGET_T_HOSTILE_SECOND_AGGRO      Second highest aggro (generaly used for cleaves and some special attacks)
+3    TARGET_T_HOSTILE_LAST_AGGRO        Dead last on aggro (no idea what this could be used for)
+4    TARGET_T_HOSTILE_RANDOM            Just any random target on our threat list
+5    TARGET_T_HOSTILE_RANDOM_NOT_TOP    Any random target except top threat

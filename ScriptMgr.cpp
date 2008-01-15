@@ -640,7 +640,7 @@ void LoadDatabase()
                 }
 
                 EventAI_Events[i].creature_id = fields[1].GetUInt32();
-                EventAI_Events[i].event_type = fields[2].GetUInt8();
+                EventAI_Events[i].event_type = fields[2].GetUInt16();
                 EventAI_Events[i].event_param1 = fields[3].GetUInt32();
                 EventAI_Events[i].event_param2 = fields[4].GetUInt32();
                 EventAI_Events[i].event_param3 = fields[5].GetUInt32();
@@ -1295,7 +1295,10 @@ void ScriptsInit()
 const char* GetLocalizedText(uint32 Entry)
 {
     if (Entry > MAX_TEXTS)
-        return DEFAULT_TEXT;
+    {
+        error_log("SD2: Request from script to access localized text entry > MAX_TEXTS");
+        return NULL;
+    }
 
     const char* temp = NULL;
 

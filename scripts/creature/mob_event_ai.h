@@ -38,8 +38,8 @@ enum Event_Types
     EVENT_T_TIMER_SINGLE            = 1,    //Time
     EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time
     EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time
-    EVENT_T_HP_SINGLE               = 4,    //HP%, TimeUntilRepeat (Never if 0)
-    EVENT_T_MANA_SINGLE             = 5,    //Mana%, TimeUntilRepeat (Never if 0)
+    EVENT_T_HP                      = 4,    //HP%, TimeUntilRepeat (Never if 0)
+    EVENT_T_MANA                    = 5,    //Mana%, TimeUntilRepeat (Never if 0)
     EVENT_T_AGGRO                   = 6,    //No Params
     EVENT_T_KILL                    = 7,    //TimeUntilRepeat (0 = always)
     EVENT_T_DEATH                   = 8,    //No Params
@@ -57,11 +57,11 @@ enum Action_Types
     ACTION_T_TEXTEMOTE              = 3,    //TextId
     ACTION_T_SOUND                  = 4,    //SoundId
     ACTION_T_EMOTE                  = 5,    //EmoteId
-    ACTION_T_RANDOM_SAY             = 6,    //TextId1, TextId2, TextId3
-    ACTION_T_RANDOM_YELL            = 7,    //TextId1, TextId2, TextId3
-    ACTION_T_RANDOM_TEXTEMOTE       = 8,    //TextId1, TextId2, TextId3
-    ACTION_T_RANDOM_SOUND           = 9,    //SoundId1, SoundId2, SoundId3
-    ACTION_T_RANDOM_EMOTE           = 10,   //EmoteId1, EmoteId2, EmoteId3
+    ACTION_T_RANDOM_SAY             = 6,    //TextId1, TextId2, TextId3 (-1 in any field means no output if randomed that field)
+    ACTION_T_RANDOM_YELL            = 7,    //TextId1, TextId2, TextId3 (-1 in any field means no output if randomed that field)
+    ACTION_T_RANDOM_TEXTEMOTE       = 8,    //TextId1, TextId2, TextId3 (-1 in any field means no output if randomed that field)
+    ACTION_T_RANDOM_SOUND           = 9,    //SoundId1, SoundId2, SoundId3 (-1 in any field means no output if randomed that field)
+    ACTION_T_RANDOM_EMOTE           = 10,   //EmoteId1, EmoteId2, EmoteId3 (-1 in any field means no output if randomed that field)
     ACTION_T_CAST                   = 11,   //SpellId, Target, (false = don't inturrupt prev cast, true = intrurrupt)
     ACTION_T_SUMMON                 = 12,   //CreatureID, Target, Duration in ms
     ACTION_T_THREAT_SINGLE_PCT      = 13,   //Threat%, Target
