@@ -459,7 +459,7 @@ void boss_illidanAI::UpdateAI(const uint32 diff)
                     {
                         Akama->Yell(SAY_DEATH_AKA, LANG_UNIVERSAL, m_creature->GetGUID());
                         DoPlaySoundToSet(m_creature, SOUND_DEATH_AKA);
-                        m_creature->getVictim()->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                        m_creature->getVictim()->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
                         TalkTimer = 8000;
                     }
                 }
@@ -552,14 +552,14 @@ void boss_illidanAI::UpdateAI(const uint32 diff)
                 Unit* Glaive1 = NULL;
                 Glaive1 = Unit::GetUnit((*m_creature), Glaive1GUID);
                 if(Glaive1)
-                    Glaive1->DealDamage(Glaive1, Glaive1->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                    Glaive1->DealDamage(Glaive1, Glaive1->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
             if(Glaive2GUID)
             {
                 Unit* Glaive2 = NULL;
                 Glaive2 = Unit::GetUnit((*m_creature), Glaive2GUID);
                 if(Glaive2)
-                    Glaive2->DealDamage(Glaive2, Glaive2->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                    Glaive2->DealDamage(Glaive2, Glaive2->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
 
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1258,7 +1258,7 @@ struct MANGOS_DLL_DECL akamaAI : public ScriptedAI
             {
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }else DespawnTimer -= diff;
         }
 

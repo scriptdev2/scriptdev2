@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
             }else
             {
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // invisible
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false); // kill
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false); // kill
             }
         }
     }

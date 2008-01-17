@@ -425,7 +425,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                                 Akama->SetHealth((10 - Multiplier) * 0.1 * Akama->GetMaxHealth());
                                 Multiplier++;
                                 ReduceHealthTimer = 12000;
-                            }else m_creature->DealDamage(Akama, Akama->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                            }else m_creature->DealDamage(Akama, Akama->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
                         }else ReduceHealthTimer -= diff;
                     }else
                     {
@@ -441,7 +441,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                         m_creature->RemoveAllAuras();
                         m_creature->SetVisibility(VISIBILITY_OFF);
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
 
                         if(ResetTimer < diff)
                         {

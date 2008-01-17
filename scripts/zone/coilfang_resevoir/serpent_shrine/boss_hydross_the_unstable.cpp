@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     void DespawnCreatureIfExists(Creature *pUnit)
     {
         if(pUnit && pUnit->isAlive())
-            pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
     }
 
     void UpdateAI(const uint32 diff)

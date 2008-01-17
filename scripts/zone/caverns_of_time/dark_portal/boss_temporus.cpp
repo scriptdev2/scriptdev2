@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
                 DoYell(SAY_ENTER, LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_ENTER);
 
-                m_creature->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                m_creature->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
         }
 

@@ -110,7 +110,7 @@ void molten_flameAI::UpdateAI(const uint32 diff)
                 Supremus = Unit::GetUnit((*m_creature), SupremusGUID);
                 if(Supremus && (!Supremus->isAlive()))
                 {
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
                 }
             }
             CheckTimer = 2000;
@@ -167,7 +167,7 @@ void npc_volcanoAI::UpdateAI(const uint32 diff)
             Supremus = Unit::GetUnit((*m_creature), SupremusGUID);
             if(Supremus && (!Supremus->isAlive()))
             {
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
         }
         CheckTimer = 2000;

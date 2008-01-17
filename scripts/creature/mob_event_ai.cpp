@@ -28,7 +28,7 @@ EndScriptData */
 
 struct EventHolder
 {
-    EventHolder(uint32 p) : EventId(p), Enabled(true){}
+    EventHolder(uint32 p) : EventId(p), Time(0), Enabled(true){}
     EventHolder(uint32 p, uint32 z) : EventId(p), Time(z), Enabled(true){}
 
     uint32 EventId;
@@ -286,24 +286,19 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->RemoveFlag(UNIT_FIELD_FLAGS, param1);
             }
             break;
-
-        default:
-            error_log( "SD2: Eventid %d has invalid action type for Action %d", Id, Action);
-            break;
         };
+
+        if (type >= ACTION_T_END)
+            error_log( "SD2: Eventid %d has invalid action type for Action %d", Id, Action);
+
     }
 
-    void EnterEvadeMode()
+    void Reset(Event_Types e)
     {
         InCombat = false;
 
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
 
         //Handle Evade events and reset all events to enabled
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
@@ -315,7 +310,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 //Evade
             case EVENT_T_EVADE:
-                ProcessEvent((*i).EventId);
+                if (e == EVENT_T_EVADE)
+                    ProcessEvent((*i).EventId);
+                break;
+
+                //Death
+            case EVENT_T_DEATH:
+                if (e == EVENT_T_DEATH)
+                    ProcessEvent((*i).EventId);
                 break;
 
                 //Reset all out of combat timers
@@ -328,47 +330,62 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
     }
 
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+
+        Reset(EVENT_T_EVADE);
+    }
+
+    void JustDied(Unit* killer)
+    {
+        Reset(EVENT_T_DEATH);
+    }
+
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || who == m_creature)
             return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
+        if (!InCombat)
         {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
+            //Check for on combat start events
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
-                //Check for on combat start events
-                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+                if ((*i).EventId > MAX_EVENTS)
+                    continue;
+
+                switch (EventAI_Events[(*i).EventId].event_type)
                 {
-                    if ((*i).EventId > MAX_EVENTS)
-                        continue;
+                case EVENT_T_AGGRO:
+                    ProcessEvent((*i).EventId);
+                    break;
 
-                    switch (EventAI_Events[(*i).EventId].event_type)
-                    {
-                    case EVENT_T_AGGRO:
-                        ProcessEvent((*i).EventId);
-                        break;
+                    //Reset all in combat timers
+                case EVENT_T_TIMER_REPEAT:
+                case EVENT_T_TIMER_SINGLE:
+                    (*i).Time = EventAI_Events[(*i).EventId].event_param1;
+                    (*i).Enabled = true;
+                    break;
 
-                        //Reset all in combat timers
-                    case EVENT_T_TIMER_REPEAT:
-                    case EVENT_T_TIMER_SINGLE:
-                        (*i).Time = EventAI_Events[(*i).EventId].event_param1;
-                        (*i).Enabled = true;
-                        break;
-
-                        //All normal events need to be re-enabled and their time set to 0
-                    default:
-                        (*i).Enabled = true;
-                        (*i).Time = 0;
-                        break;
-                    }
+                    //All normal events need to be re-enabled and their time set to 0
+                default:
+                    (*i).Enabled = true;
+                    (*i).Time = 0;
+                    break;
                 }
-                InCombat = true;
             }
+            InCombat = true;
+
+            EventUpdateTime = EVENT_UPDATE_TIME;
+            EventDiff = 0;
         }
+
+        //Begin melee attack if we are within range
+        DoStartMeleeAttack(who);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -384,8 +401,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                //Begin attack if we are within range
+                AttackStart(who);
             }
         }
     }
@@ -421,22 +438,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
-        {
-            if (!(*i).Enabled || (*i).EventId > MAX_EVENTS || (*i).Time)
-                continue;
-
-            switch (EventAI_Events[(*i).EventId].event_type)
-            {
-                //Death
-            case EVENT_T_DEATH:
-                {
-                    if (m_creature->GetHealth() <= damage)
-                        ProcessEvent((*i).EventId);
-                }
-                break;
-            }
-        }
     }
 
     virtual void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
@@ -472,6 +473,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     {
         //Check if we are in combat (also updates calls threat update code)
         bool Combat = InCombat ? (m_creature->SelectHostilTarget() && m_creature->getVictim()) : false;
+
+        //Must return if creature isn't alive. Normally select hostil target and get victim prevent this
+        if (!m_creature->isAlive())
+            return;
 
         //Events are only updated once every EVENT_UPDATE_TIME ms to prevent lag with large amount of events
         if (EventUpdateTime < diff)
@@ -597,13 +602,8 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
     {
         if (EventAI_Events[i].creature_id == ID)
         {
-            //Timer events need to have their timer set at creation
-            if (EventAI_Events[i].event_type == EVENT_T_TIMER_REPEAT ||
-                EventAI_Events[i].event_type == EVENT_T_TIMER_SINGLE ||
-                EventAI_Events[i].event_type == EVENT_T_TIMER_OOC_REPEAT ||
-                EventAI_Events[i].event_type == EVENT_T_TIMER_OOC_SINGLE)
-                EventList.push_back(EventHolder(i, EventAI_Events[i].event_param1));
-            else EventList.push_back(EventHolder(i));
+            //Push back event
+            EventList.push_back(EventHolder(i));
 
             if (EventAI_Events[i].event_type >= EVENT_T_END)
             {

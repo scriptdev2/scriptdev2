@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         Unit *pMidnight = Unit::GetUnit(*m_creature, Midnight);
         if(pMidnight)
         {
-            pMidnight->DealDamage(pMidnight, pMidnight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            pMidnight->DealDamage(pMidnight, pMidnight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
         }
     }
 

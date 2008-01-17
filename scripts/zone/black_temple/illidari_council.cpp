@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 if(pInstance)
                     pInstance->SetData("IllidariCouncilEvent", 3);
 
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
 
             CheckTimer = 2000;

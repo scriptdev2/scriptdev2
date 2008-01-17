@@ -717,7 +717,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
         else
         {
-            m_creature->DealDamage(done_by, damage*0.5, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, 0, false);
+            m_creature->DealDamage(done_by, damage*0.5, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
         }
     }
 
