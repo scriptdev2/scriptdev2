@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: mobs_dustwallow_marsh
+SDName: Mobs_Dustwallow_Marsh
 SD%Complete: 100
-SDComment: misc mobs, mostly related to quest
+SDComment: Quest support: 11156, 11180
+SDCategory: Dustwallow Marsh
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -62,7 +63,6 @@ CreatureAI* GetAI_mobs_direhorn_grimtotem(Creature *_Creature)
     return new mobs_direhorn_grimtotemAI (_Creature);
 }
 
-
 /*######
 ## mobs_risen_husk_spirit
 ######*/
@@ -73,12 +73,12 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
 {
     mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    void DamageTaken(Unit *done_by, uint32 &damage) 
+    void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (m_creature->GetHealth() <= damage)
         {
             if (done_by->GetTypeId() == TYPEID_PLAYER && ((Player*)done_by)->GetQuestStatus(11180) == QUEST_STATUS_INCOMPLETE)
-                m_creature->CastSpell(m_creature,SPELL_SUMMON_RESTLESS_APPARITION,true);
+                m_creature->CastSpell(m_creature->getVictim(),SPELL_SUMMON_RESTLESS_APPARITION,true);
         }
     }
 

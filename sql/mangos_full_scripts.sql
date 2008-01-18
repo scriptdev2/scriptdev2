@@ -22,7 +22,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_barov_journal' WHERE `entry` = 180794;
-UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot' where `entry`= 179552;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot_74A' where `entry`= 179552;
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_orgrimmar' WHERE `entry` = 3296;
@@ -349,6 +349,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (314, 533, 203, 215, 909, 531, 787, 203, 1110, 785, 48, 217, 539);
 
 /* DUSTWALLOW MARSH */
+UPDATE `creature_template` SET `ScriptName` = 'npc_deserter_agitator' WHERE `entry` = 23602;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
 UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `entry` = 23861;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_direhorn_grimtotem' WHERE `entry` = 23595;

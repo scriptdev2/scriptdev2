@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Npcs_Zangarmarsh
+SD%Complete: 95
+SDComment: Quest support: 9785, 9803. Mark Of ... buffs.
+SDCategory: Zangarmarsh
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
@@ -23,92 +30,81 @@
 ## npcs_ashyen_and_keleth
 ######*/
 
-#define GOSSIP_ITEM_BLESS     "I ask for your blessing"
-#define GOSSIP_REWARD_BLESS   "You have my blessing"
+#define GOSSIP_ITEM_BLESS_ASH     "Grant me your mark, wise ancient."
+#define GOSSIP_ITEM_BLESS_KEL     "Grant me your mark, mighty ancient."
+#define GOSSIP_REWARD_BLESS       "You have my blessing"
 //#define TEXT_BLESSINGS        "<You need higher standing with Cenarion Expedition to recive a blessing.>"
 
 bool GossipHello_npcs_ashyen_and_keleth(Player *player, Creature *_Creature )
 {
-    player->ADD_GOSSIP_ITEM( 7, GOSSIP_ITEM_BLESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    player->SEND_GOSSIP_MENU(8768,_Creature->GetGUID());
+    if (player->GetReputationRank(942) > REP_NEUTRAL)
+    {
+        if ( _Creature->GetEntry() == 17900)
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BLESS_ASH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        if ( _Creature->GetEntry() == 17901)
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BLESS_KEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    }
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
 
-void SendDefaultMenu_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, uint32 action )
+bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF)
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        uint32 myrep = player->GetReputationRank(942);      //lookup player current rep once, and store value
+        _Creature->setPowerType(POWER_MANA);
+        _Creature->SetMaxPower(POWER_MANA,200);             //set a "fake" mana value, we can't depend on database doing it in this case
+        _Creature->SetPower(POWER_MANA,200);
 
-        if (myrep < REP_FRIENDLY)
-            player->SEND_GOSSIP_MENU(8851,_Creature->GetGUID());
-
-        if (myrep > REP_NEUTRAL)
+        if ( _Creature->GetEntry() == 17900)                //check which creature we are dealing with
         {
-            player->CLOSE_GOSSIP_MENU();                    //close if rep high enough
-
-            _Creature->SetMaxPower(POWER_MANA,200);         //set a "fake" mana value, we can't depend on database doing it in this case
-            _Creature->SetPower(POWER_MANA,200);
-
-            if ( _Creature->GetEntry() == 17900)            //check which creature we are dealing with
-            {
-                switch (myrep)                              //our stored value to be compared
-                {                                           //mark of lores
-                    case REP_FRIENDLY:
-                        _Creature->CastSpell(player, 31808, true);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_HONORED:
-                        _Creature->CastSpell(player, 31810, true);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_REVERED:
-                        _Creature->CastSpell(player, 31811, NULL, NULL, NULL, NULL);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_EXALTED:
-                        _Creature->CastSpell(player, 31815, NULL, NULL, NULL, NULL);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                }
-                //let's run some checks to see if player is out questing and can complete this part of quest
-                if (player->GetQuestStatus(9785) == QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(8304,17900) )
-                    player->KilledMonster( 17900, _Creature->GetGUID() );//fake kill monster if check ok
-            }
-            else if ( _Creature->GetEntry() == 17901)
-            {
-                switch (myrep)                              //mark of wars
-                {
-                    case REP_FRIENDLY:
-                        _Creature->CastSpell(player, 31807, true);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_HONORED:
-                        _Creature->CastSpell(player, 31812, true);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_REVERED:
-                        _Creature->CastSpell(player, 31813, NULL, NULL, NULL, NULL);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                    case REP_EXALTED:
-                        _Creature->CastSpell(player, 31814, NULL, NULL, NULL, NULL);
-                        _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
-                        break;
-                }
-
-                if (player->GetQuestStatus(9785) == QUEST_STATUS_INCOMPLETE && !player->GetReqKillOrCastCurrentCount(8304,17901) )
-                    player->KilledMonster( 17901, _Creature->GetGUID() );
+            switch (player->GetReputationRank(942))
+            {                                               //mark of lore
+                case REP_FRIENDLY:
+                    _Creature->CastSpell(player, 31808, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_HONORED:
+                    _Creature->CastSpell(player, 31810, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_REVERED:
+                    _Creature->CastSpell(player, 31811, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_EXALTED:
+                    _Creature->CastSpell(player, 31815, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
             }
         }
-    }
-}
-bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-    if (sender == GOSSIP_SENDER_MAIN)                       //Main menu
-        SendDefaultMenu_npcs_ashyen_and_keleth(player, _Creature, action );
 
+        if ( _Creature->GetEntry() == 17901)
+        {
+            switch (player->GetReputationRank(942))         //mark of war
+            {
+                case REP_FRIENDLY:
+                    _Creature->CastSpell(player, 31807, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_HONORED:
+                    _Creature->CastSpell(player, 31812, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_REVERED:
+                    _Creature->CastSpell(player, 31813, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+                case REP_EXALTED:
+                    _Creature->CastSpell(player, 31814, true);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    break;
+            }
+        }
+        player->CLOSE_GOSSIP_MENU();
+        player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+    }
     return true;
 }
 
@@ -122,10 +118,9 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, ui
 
 bool GossipHello_npc_elder_kuruti(Player *player, Creature *_Creature )
 {
-    if ( !player->HasItemCount(24573,1))                    //only allow if player does not have message
-    {
+    if (!player->HasItemCount(24573,1))                    //only allow if player does not have message
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    }
+
     player->SEND_GOSSIP_MENU(9226,_Creature->GetGUID());
 
     return true;

@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: mobs_blades_edge_mountains
+SDName: Mobs_Blades_Edge_Mountains
 SD%Complete: 100
-SDComment: misc mobs, mostly related to quest
+SDComment: Quest support: 10502, 10503, 10504, 10505
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 

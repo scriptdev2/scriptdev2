@@ -32,7 +32,7 @@
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***
-#define SD2_REVISON         229
+#define SD2_REVISON         230
 #define SD2_CONF_VERSION    700102008
 
 int nrscripts;

@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npcs_dustwallow_marsh
+SDName: Npcs_Dustwallow_Marsh
 SD%Complete: 95
-SDComment: misc npcs dustwallow marsh, quest related
+SDComment: Quest support: 11180, 558, 11126
+SDCategory: Dustwallow Marsh
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,6 +27,43 @@ EndScriptData */
 #include "../../../../../game/GossipDef.h"
 
 // **** This script is still under Developement ****
+
+/*######
+## npc_deserter_agitator
+######*/
+
+struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
+{
+    npc_deserter_agitatorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+
+    void EnterEvadeMode()
+    {
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+
+        m_creature->setFaction(894);
+    }
+};
+
+CreatureAI* GetAI_npc_deserter_agitator(Creature *_Creature)
+{
+    return new npc_deserter_agitatorAI (_Creature);
+}
+
+bool GossipHello_npc_deserter_agitator(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(11126) == QUEST_STATUS_INCOMPLETE)
+    {
+        _Creature->setFaction(1883);
+        player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+    }
+    else
+        player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
 
 /*######
 ## npc_lady_jaina_proudmoore
@@ -63,7 +101,7 @@ bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
 {
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
-    player->KilledMonster(23861, _Creature->GetGUID());
+    player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
     _Creature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
     return true;
@@ -76,6 +114,12 @@ bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
 void AddSC_npcs_dustwallow_marsh()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_deserter_agitator";
+    newscript->GetAI = GetAI_npc_deserter_agitator;
+    newscript->pGossipHello = &GossipHello_npc_deserter_agitator;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_lady_jaina_proudmoore";

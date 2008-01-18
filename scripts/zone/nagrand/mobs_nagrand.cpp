@@ -16,8 +16,9 @@
 
 /* ScriptData
 SDName: Mobs_Nagrand
-SD%Complete: 100
-SDComment: Nagrand mobs
+SD%Complete: 90
+SDComment: Quest support: 9849, 9918, 9935, 9935. Gurok, mini outdoor boss
+SDCategory: Nagrand
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -34,12 +35,32 @@ CreatureAI* GetAI_mob_gurok_the_usurper(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
 
+    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+
     //knockback
     ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 38576;
-    ai->Spell[0].Cooldown = 20000; 
-    ai->Spell[0].First_Cast = 5000;
-    ai->Spell[0].Cast_Target_Type = CAST_SELF;
+    ai->Spell[0].Spell_Id = 24199;
+    ai->Spell[0].Cooldown = 18000;
+    ai->Spell[0].First_Cast = 12000;
+    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+    //earth shock
+    ai->Spell[1].Enabled = true;
+    ai->Spell[1].Spell_Id = 24685;
+    ai->Spell[1].Cooldown = 12000;
+    ai->Spell[1].First_Cast = 8000;
+    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+    //entangling roots
+    ai->Spell[2].Enabled = true;
+    ai->Spell[2].Spell_Id = 20699;
+    ai->Spell[2].Cooldown = 25000;
+    ai->Spell[2].First_Cast = 20000;
+    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
     ai->EnterEvadeMode();
 
@@ -114,40 +135,10 @@ struct MANGOS_DLL_DECL mobs_kilsorrow_agentAI : public ScriptedAI
 {
     mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    void EnterEvadeMode()
-    {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
-    }
-
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
-        {
-            //check quest status
-            if( ((Player*)Killer)->GetTeam() == ALLIANCE && ((Player*)Killer)->GetQuestStatus(9936) == QUEST_STATUS_INCOMPLETE && !((Player*)Killer)->GetReqKillOrCastCurrentCount(9936, m_creature->GetEntry()) )
-            {
-                ((Player*)Killer)->KilledMonster(21276, m_creature->GetGUID());
-            }
-            if( ((Player*)Killer)->GetTeam() == HORDE && ((Player*)Killer)->GetQuestStatus(9935) == QUEST_STATUS_INCOMPLETE && !((Player*)Killer)->GetReqKillOrCastCurrentCount(9935, m_creature->GetEntry()) )
-            {
-                ((Player*)Killer)->KilledMonster(21276, m_creature->GetGUID());
-            }
-        }
-    }
-
-    void AttackStart(Unit *who)
-    {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
+            ((Player*)Killer)->KilledMonster(21276, m_creature->GetGUID());
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -181,6 +172,9 @@ CreatureAI* GetAI_mobs_kilsorrow_agent(Creature *_Creature)
 /*
 UPDATE `creature_template` SET `ScriptName` = 'mob_lump' WHERE `entry` = 18351;
 */
+#define SPELL_VISUAL_SLEEP  16093
+#define SPELL_SPEAR_THROW   32248
+
 #define LUMP_SAY0 "In Nagrand, food hunt ogre!"
 #define LUMP_SAY1 "You taste good with maybe a little salt and pepper."
 
@@ -190,16 +184,15 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
     mob_lumpAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
-    static const uint32 friendlyFaction = 1080;             //not needed here, just to make it easy to change
-    static const uint32 hostileFaction = 1711;              //values can be directly in functions
-    static const uint32 resTimer = 180000;                  //
     uint32 Reset_Timer;
+    uint32 Spear_Throw_Timer;
     bool InCombat;
     bool Reset;
     
     void EnterEvadeMode()
     {
-        Reset_Timer = 0;
+        Reset_Timer = 60000;
+        Spear_Throw_Timer = 2000;
         InCombat = false;
         Reset = false;
 
@@ -209,7 +202,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         DoGoHome();
 
         m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
-        m_creature->setFaction(hostileFaction);             //
+        m_creature->setFaction(1711);                       //hostile
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
@@ -223,19 +216,17 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 damage = 0;
 
                 ((Player*)done_by)->AttackStop();
-                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveAllAuras();
                 m_creature->DeleteThreatList();
                 m_creature->CombatStop();
-                m_creature->setFaction(friendlyFaction);
+                m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
                 m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, NULL);
 
                 Reset = true;
-                Reset_Timer = resTimer;
             }
         }
-        AttackedBy(done_by);// ?
     }
 
     void AttackStart(Unit *who)
@@ -250,8 +241,8 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
             if (!InCombat)
             {
-                if (m_creature->GetUInt32Value(UNIT_FIELD_AURA) == 16093)
-                    m_creature->SetUInt32Value(UNIT_FIELD_AURA, 0);
+                if (m_creature->HasAura(SPELL_VISUAL_SLEEP,0))
+                    m_creature->RemoveAura(SPELL_VISUAL_SLEEP,0);
 
                 if (!m_creature->IsStandState())
                     m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
@@ -260,8 +251,10 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 {
                 case 0:
                     DoSay(LUMP_SAY0,LANG_UNIVERSAL,NULL);
+                    break;
                 case 1:
                     DoSay(LUMP_SAY1,LANG_UNIVERSAL,NULL);
+                    break;
                 }
                 InCombat = true;
             }
@@ -290,22 +283,25 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //check if we waiting for a reset
-        if (Reset && Reset_Timer < diff) { EnterEvadeMode(); }
-        else Reset_Timer -= diff;
+        if (Reset)
+        {
+            if (Reset_Timer < diff) { EnterEvadeMode(); }
+            else Reset_Timer -= diff;
+        }
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        //Spear_Throw_Timer
+        if (Spear_Throw_Timer < diff)
         {
-            //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady())
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
+            DoCast(m_creature->getVictim(), SPELL_SPEAR_THROW);
+
+            Spear_Throw_Timer = 20000;
+        }else Spear_Throw_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -317,7 +313,7 @@ CreatureAI* GetAI_mob_lump(Creature *_creature)
 bool GossipHello_mob_lump(Player *player, Creature *_Creature)
 {
     if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "I need answers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM( 0, "I need answers, ogre!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     player->PlayerTalkClass->SendGossipMenu(9352, _Creature->GetGUID());
 
@@ -329,24 +325,20 @@ bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, u
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM( 0, "Why did you attack me?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->ADD_GOSSIP_ITEM( 0, "Why are Boulderfist out this far? You know that this is Kurenai territory.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             player->SEND_GOSSIP_MENU(9353, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "You'd eat anything, i bet.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            player->ADD_GOSSIP_ITEM( 0, "And you think you can just eat anything you want? You're obviously trying to eat the Broken of Telaar.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
             player->SEND_GOSSIP_MENU(9354, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, "Yeah right...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            player->ADD_GOSSIP_ITEM( 0, "This means war, Lump! War I say!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
             player->SEND_GOSSIP_MENU(9355, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM( 0, "Behave Lump!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
             player->SEND_GOSSIP_MENU(9356, _Creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->PlayerTalkClass->CloseGossip();
-            player->KilledMonster(18354, _Creature->GetGUID());
+            player->TalkedToCreature(18354, _Creature->GetGUID());
             break;
     }
     return true;

@@ -26,7 +26,7 @@ EndScriptData */
  
 bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
 {
-    if (player->HasSkill(281) && player->GetSkillValue(281) >= 300 && !player->HasSpell(22704)) 
+    if (player->HasSkill(202) && player->GetSkillValue(202) >= 300 && !player->HasSpell(22704)) 
     {
         player->CastSpell(player,22705,false);
     }
