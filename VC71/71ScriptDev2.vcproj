@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\bin\debug;..\..\..\..\dep\lib\debug;..\..\..\..\win\VC71\zlib__Win32_Debug;..\..\..\..\win\VC71\zthread__Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug;"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC71\zthread__Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -82,10 +82,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mangosd.lib zlib.lib zthread.lib libmySQL.lib libeay32.lib ws2_32.lib winmm.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\bin\release;..\..\..\..\dep\lib\release;..\..\..\..\win\VC71\zlib__Win32_Release;..\..\..\..\win\VC71\zthread__Win32_Release;..\..\..\..\win\VC71\mangosd__Win32_Release;"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC71\zthread__Win32_Release;..\..\..\..\win\VC71\mangosd__Win32_Release;"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
