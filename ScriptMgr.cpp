@@ -32,9 +32,6 @@
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***
-#define SD2_REVISON         230
-#define SD2_CONF_VERSION    700102008
-
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 Localized_Text Localized_Texts[MAX_TEXTS];
@@ -563,14 +560,13 @@ void LoadDatabase()
     //Get db string from file
     char const* dbstring = NULL;
     if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
-        error_log("SD2 ERROR: Missing ScriptDev2 Database Info from configuration file");
+        error_log("SD2: Missing ScriptDev2 Database Info from configuration file");
 
     //Initilize connection to DB
     if (!dbstring || !ScriptDev2DB.Initialize(dbstring))
-        error_log("SD2 ERROR: Unable to connect to Database");
+        error_log("SD2: Unable to connect to Database");
     else
     {
-
         //***Preform all DB queries here***
         QueryResult *result;
         uint32 i = 0;
@@ -606,7 +602,7 @@ void LoadDatabase()
                 Localized_Texts[i].locale_7 = fields[8].GetString();
 
                 if (!strlen(Localized_Texts[i].locale_0.c_str()))
-                    error_log("SD2 ERROR: locale_0 for text %i is empty", i);
+                    error_log("SD2: locale_0 for text %i is empty", i);
 
             }while (result->NextRow());
 
@@ -647,7 +643,7 @@ void LoadDatabase()
 
                 //Report any errors in event
                 if (EventAI_Events[i].event_type >= EVENT_T_END)
-                    error_log("SD2 ERROR: Event %d has incorrect event type", i);
+                    error_log("SD2: Event %d has incorrect event type", i);
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
@@ -663,7 +659,7 @@ void LoadDatabase()
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
                         if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT)
-                            error_log("SD2 ERROR: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                            error_log("SD2: Event %d Action %d refrences missing Localized_Text entry", i, j);
                         break;
 
                     case ACTION_T_RANDOM_SAY:
@@ -672,7 +668,7 @@ void LoadDatabase()
                         if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT ||
                             GetLocalizedText(EventAI_Events[i].action[j].param2) == DEFAULT_TEXT ||
                             GetLocalizedText(EventAI_Events[i].action[j].param3) == DEFAULT_TEXT)
-                            error_log("SD2 ERROR: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                            error_log("SD2: Event %d Action %d refrences missing Localized_Text entry", i, j);
                         break;
 
                     case ACTION_T_CAST:
@@ -680,7 +676,7 @@ void LoadDatabase()
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(EventAI_Events[i].action[j].param1);
                             if (!pSpell)
                             {
-                                error_log("SD2 ERROR: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
+                                error_log("SD2: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
                                 error_log("Spell Store Size = %d", GetSpellStore()->GetNumRows());
                             }
                         }
@@ -694,14 +690,14 @@ void LoadDatabase()
                     case ACTION_T_REMOVE_UNIT_FLAG:
                         //TODO: Add check for existing creature template for summon
                         if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
-                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
+                            error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
                         break;
 
                     //3rd param target
                     case ACTION_T_QUEST_CASTCREATUREGO:
                     case ACTION_T_SET_UNIT_FIELD:
                         if (EventAI_Events[i].action[j].param3 >= TARGET_T_END)
-                            error_log("SD2 ERROR: Event %d Action %d uses incorrect Target type", i, j);
+                            error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
                         break;
 
                     //No need for checks for these actions
@@ -714,7 +710,7 @@ void LoadDatabase()
                         break;
 
                     default:
-                        error_log("SD2 ERROR: Event %d Action %d has incorrect action type", i, j);
+                        error_log("SD2: Event %d Action %d has incorrect action type", i, j);
                         break;
                     }
                 }
@@ -751,20 +747,18 @@ void ScriptsInit()
 {
     //ScriptDev2 startup
     outstring_log("");
-    outstring_log("SD2: ScriptDev2 initializing, revision %d", SD2_REVISON);
+    outstring_log("SD2: ScriptDev2 initializing %s", _FULLVERSION);
     outstring_log("");
 
     //Get configuration file
-    if (!SD2Config.SetSource("scriptdev2.conf", true))
-        error_log("SD2 ERROR: Unable to open configuration file, Database will be unaccessible");
+    if (!SD2Config.SetSource(_SCRIPTDEV2_CONFIG))
+        error_log("SD2: Unable to open configuration file, Database will be unaccessible");
     else outstring_log("SD2: Using configuration file ScriptDev2.conf");
 
 
     //Check config file version
-    uint32 TempVersion;
-    SD2Config.GetInt("ConfVersion", (int*)&TempVersion);
-    if (TempVersion != SD2_CONF_VERSION)
-        error_log("SD2 ERROR: Configuration file out of date.");
+    if (SD2Config.GetIntDefault("ConfVersion", 0) != SD2_CONF_VERSION)
+        error_log("SD2: Configuration file version doesn't match expected version. Some config variables may be wrong or missing.");
 
     //Locale
     Locale = SD2Config.GetIntDefault("Locale", 0);

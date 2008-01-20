@@ -20,11 +20,34 @@
 #define CONFIG_H
 #endif
 
-#ifdef WIN32
+#include "../../framework/Platform/CompilerDefs.h"
+//#include "svn_revision.h"              //Will be enabled when SVN automatic revision extraction complete
+#define SVN_REVISION        "232"
 
-#define MANGOS_DLL_EXPORT extern "C" __declspec(dllexport)
+// Format is YYYYMMDDRR where RR is the change in the conf file
+// for that day.
+#define SD2_CONF_VERSION    2008011901
+
+#ifdef WIN32
+  #define MANGOS_DLL_EXPORT extern "C" __declspec(dllexport)
 #elif defined( __GNUC__ )
-#define MANGOS_DLL_EXPORT extern "C"
+  #define MANGOS_DLL_EXPORT extern "C"
 #else
-#define MANGOS_DLL_EXPORT extern "C" export
+  #define MANGOS_DLL_EXPORT extern "C" export
+#endif
+
+#ifndef _VERSION
+  #if PLATFORM == PLATFORM_WIN32
+    #define _VERSION "(Revision " SVN_REVISION ")"
+  #else
+    #define _VERSION "(Revision " SVN_REVISION ")"
+  #endif
+#endif
+
+#if PLATFORM == PLATFORM_WIN32
+  #define _FULLVERSION _VERSION " (Win32)"
+  #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
+#else
+  #define _FULLVERSION _VERSION " (Unix)"
+  #define _SCRIPTDEV2_CONFIG  "@prefix@/etc/scriptdev2.conf"
 #endif

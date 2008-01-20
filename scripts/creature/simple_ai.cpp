@@ -69,38 +69,6 @@ void SimpleAI::EnterEvadeMode()
 {
     InCombat = false;
 
-    //Reset cast timers
-    if (Spell[0].First_Cast >= 0)
-        Spell_Timer[0] = Spell[0].First_Cast;
-    else Spell_Timer[0] = 1000;
-    if (Spell[1].First_Cast >= 0)
-        Spell_Timer[1] = Spell[1].First_Cast;
-    else Spell_Timer[1] = 1000;
-    if (Spell[2].First_Cast >= 0)
-        Spell_Timer[2] = Spell[2].First_Cast;
-    else Spell_Timer[2] = 1000;
-    if (Spell[3].First_Cast >= 0)
-        Spell_Timer[3] = Spell[3].First_Cast;
-    else Spell_Timer[3] = 1000;
-    if (Spell[4].First_Cast >= 0)
-        Spell_Timer[4] = Spell[4].First_Cast;
-    else Spell_Timer[4] = 1000;
-    if (Spell[5].First_Cast >= 0)
-        Spell_Timer[5] = Spell[5].First_Cast;
-    else Spell_Timer[5] = 1000;
-    if (Spell[6].First_Cast >= 0)
-        Spell_Timer[6] = Spell[6].First_Cast;
-    else Spell_Timer[6] = 1000;
-    if (Spell[7].First_Cast >= 0)
-        Spell_Timer[7] = Spell[7].First_Cast;
-    else Spell_Timer[7] = 1000;
-    if (Spell[8].First_Cast >= 0)
-        Spell_Timer[8] = Spell[8].First_Cast;
-    else Spell_Timer[8] = 1000;
-    if (Spell[9].First_Cast >= 0)
-        Spell_Timer[9] = Spell[9].First_Cast;
-    else Spell_Timer[9] = 1000;
-
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
     m_creature->CombatStop();
@@ -120,6 +88,39 @@ void SimpleAI::AttackStart(Unit *who)
         //Say our dialog
         if (!InCombat)
         {
+
+            //Reset cast timers
+            if (Spell[0].First_Cast >= 0)
+                Spell_Timer[0] = Spell[0].First_Cast;
+            else Spell_Timer[0] = 1000;
+            if (Spell[1].First_Cast >= 0)
+                Spell_Timer[1] = Spell[1].First_Cast;
+            else Spell_Timer[1] = 1000;
+            if (Spell[2].First_Cast >= 0)
+                Spell_Timer[2] = Spell[2].First_Cast;
+            else Spell_Timer[2] = 1000;
+            if (Spell[3].First_Cast >= 0)
+                Spell_Timer[3] = Spell[3].First_Cast;
+            else Spell_Timer[3] = 1000;
+            if (Spell[4].First_Cast >= 0)
+                Spell_Timer[4] = Spell[4].First_Cast;
+            else Spell_Timer[4] = 1000;
+            if (Spell[5].First_Cast >= 0)
+                Spell_Timer[5] = Spell[5].First_Cast;
+            else Spell_Timer[5] = 1000;
+            if (Spell[6].First_Cast >= 0)
+                Spell_Timer[6] = Spell[6].First_Cast;
+            else Spell_Timer[6] = 1000;
+            if (Spell[7].First_Cast >= 0)
+                Spell_Timer[7] = Spell[7].First_Cast;
+            else Spell_Timer[7] = 1000;
+            if (Spell[8].First_Cast >= 0)
+                Spell_Timer[8] = Spell[8].First_Cast;
+            else Spell_Timer[8] = 1000;
+            if (Spell[9].First_Cast >= 0)
+                Spell_Timer[9] = Spell[9].First_Cast;
+            else Spell_Timer[9] = 1000;
+
             uint32 random_text = rand()%3;
 
             //Random yell
@@ -139,7 +140,7 @@ void SimpleAI::AttackStart(Unit *who)
 
 void SimpleAI::MoveInLineOfSight(Unit *who)
 {
-    if (!who || m_creature->getVictim())
+    if (!who || InCombat)
         return;
 
     //In combat so check if this creature is friendly
@@ -160,25 +161,7 @@ void SimpleAI::MoveInLineOfSight(Unit *who)
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
-                //Say our dialog
-                if (!InCombat)
-                {
-                    uint32 random_text = rand()%3;
-
-                    //Random yell
-                    if (Aggro_Text[random_text])
-                        if (Aggro_Say[random_text])
-                            DoSay(Aggro_Text[random_text], LANG_UNIVERSAL, who);
-                        else DoYell(Aggro_Text[random_text], LANG_UNIVERSAL, who);
-
-                    //Random sound
-                    if (Aggro_Sound[random_text])
-                        DoPlaySoundToSet(m_creature, Aggro_Sound[random_text]);
-
-                    InCombat = true;
-                }
+                AttackStart(who);
             }
         }
 }
@@ -277,6 +260,9 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
     //Target is ok, cast a spell on it
     if (target)
         DoCast(target, Death_Spell);
+
+    //Allow reset of variables on next AttackStart
+    InCombat = false;
 }
 
 void SimpleAI::UpdateAI(const uint32 diff)

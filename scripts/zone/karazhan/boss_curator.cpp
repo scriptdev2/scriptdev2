@@ -70,6 +70,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
     bool InCombat;
     bool Enraged;
+    bool Evocating;
 
     void EnterEvadeMode()
     {
@@ -77,6 +78,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         HatefulBoltTimer = 15000; // This time is probably wrong
         BerserkTimer = 720000; //12 minutes
         Enraged = false;
+        Evocating = false;
 
         InCombat = false;
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_ARCANE, true);
@@ -166,9 +168,13 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
             DoCast(m_creature, SPELL_EVOCATION);
+            Evocating = true;
         }
 
-        if(!Enraged)
+        if (Evocating && m_creature->GetPower(POWER_MANA) == m_creature->GetMaxPower(POWER_MANA))
+            Evocating = false;
+
+        if(!Enraged && !Evocating)
         {
             if(AddTimer < diff)
             {

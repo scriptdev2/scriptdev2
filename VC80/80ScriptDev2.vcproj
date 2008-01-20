@@ -65,7 +65,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug;"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug;..\..\..\..\dep\lib\debug\"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
