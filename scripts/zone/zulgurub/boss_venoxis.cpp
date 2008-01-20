@@ -224,8 +224,8 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_SNAKE_FORM);
           const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 30)));
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 30)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
+          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
           m_creature->UpdateDamagePhysical(BASE_ATTACK);
           ResetThreat();
           PhaseTwo = true;

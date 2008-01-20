@@ -258,6 +258,9 @@ CreatureAI* GetAI_mob_firewalker(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -365,6 +368,9 @@ CreatureAI* GetAI_mob_flamewaker(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -392,6 +398,9 @@ CreatureAI* GetAI_mob_flamewaker_elite(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -417,6 +426,9 @@ CreatureAI* GetAI_mob_flamewaker_healer(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -449,6 +461,9 @@ CreatureAI* GetAI_mob_flamewaker_protector(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -515,6 +530,9 @@ CreatureAI* GetAI_mob_molten_destroyer(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  
@@ -547,6 +565,9 @@ CreatureAI* GetAI_mob_molten_giant(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
  
     ai->EnterEvadeMode();
  

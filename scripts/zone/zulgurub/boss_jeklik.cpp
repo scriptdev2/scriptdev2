@@ -291,7 +291,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     void EnterEvadeMode()
     {
         m_creature->setFaction(14);
-        Bomb_Timer = 5000;
+        Bomb_Timer = 3000;
         Check_Timer = 1000;
 
         m_creature->RemoveAllAuras();
@@ -348,7 +348,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(target)
                 DoCast(target, SPELL_BOMB);
 
-            Bomb_Timer = 10000+rand()%5000;
+            Bomb_Timer = 7000+rand()%5000;
         }else Bomb_Timer -= diff;
 
         //Check_Timer

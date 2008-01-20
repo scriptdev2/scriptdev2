@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_Thekal
-SD%Complete: 90
-SDComment: Better fake death check. Need some improvements for resurrecting.
+SD%Complete: 95
+SDComment: Almost finished.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -202,6 +202,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     //Resurrect LorKhan
                     Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64("LorKhan"));
                     pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
+                    pLorKhan->setFaction(14);
                     pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                     }
@@ -211,6 +212,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     //Resurrect Zath
                     Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64("Zath"));
                     pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
+                    pZath->setFaction(14);
                     pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
                     }
@@ -233,7 +235,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     Silence_Timer = 20000 + rand()%5000;
                 }else Silence_Timer -= diff;
 
-        if (!WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+        if (!PhaseTwo && !WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
         {
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
@@ -470,6 +472,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64("Thekal"));
                     pThekal->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pThekal->setFaction(14);
                     pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
                     }
                     
@@ -479,6 +482,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64("Zath"));
                     pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pZath->setFaction(14);
                     pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
                     }
                     }
@@ -645,6 +649,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                     Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64("LorKhan"));
                     pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pLorKhan->setFaction(14);
                     pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                     }
                     
@@ -654,6 +659,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64("Thekal"));
                     pThekal->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pThekal->setFaction(14);
                     pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
                     }
                     }
