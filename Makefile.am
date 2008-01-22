@@ -57,6 +57,7 @@ scripts/item/item_purification_mixture.cpp \
 scripts/item/item_skin_of_purest_water.cpp \
 scripts/item/item_test.cpp \
 scripts/item/item_vorenthals_presence.cpp \
+scripts/item/item_yehkinyas_bramble.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
@@ -178,6 +179,7 @@ scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
+scripts/zone/feralas/npcs_feralas.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/instance_gruuls_lair.cpp \

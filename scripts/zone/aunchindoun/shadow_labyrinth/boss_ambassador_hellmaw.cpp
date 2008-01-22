@@ -24,7 +24,7 @@ EndScriptData */
 #include "../../../sc_defines.h"
 #include "../../../creature/simple_ai.h"
 
-#define CORROSIVE_ACID 23314
+#define CORROSIVE_ACID  23313
 #define TERRIFYING_HOWL 30752
 
 CreatureAI* GetAI_boss_ambassador_hellmaw(Creature *_Creature)
@@ -50,13 +50,13 @@ CreatureAI* GetAI_boss_ambassador_hellmaw(Creature *_Creature)
     ai->Spell[0].Spell_Id = CORROSIVE_ACID;
     ai->Spell[0].Cooldown = 25000;
     ai->Spell[0].First_Cast = 25000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    ai->Spell[0].Cast_Target_Type = CAST_SELF;
 
     ai->Spell[1].Enabled = true;
     ai->Spell[1].Spell_Id = TERRIFYING_HOWL;
     ai->Spell[1].Cooldown = 30000;
     ai->Spell[1].First_Cast = 40000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    ai->Spell[1].Cast_Target_Type = CAST_SELF;
 
     ai->Aggro_Text[0] = "Pathetic mortals! You will pay dearly!";
     ai->Aggro_Sound[0] = 10475;

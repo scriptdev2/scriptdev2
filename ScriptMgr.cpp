@@ -93,6 +93,7 @@ extern void AddSC_nether_wraith_beacon();
 extern void AddSC_purification_mixture();
 extern void AddSC_vorenthals_presence();
 extern void AddSC_item_skin_of_purest_water();
+extern void AddSC_item_yehkinyas_bramble();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -287,6 +288,8 @@ extern void AddSC_npc_henze_faulk();
 
 //Felwood
 //Feralas
+extern void AddSC_npcs_feralas();
+
 //Ghostlands
 //Gnomeregan
 //Gruul's Lair
@@ -814,6 +817,7 @@ void ScriptsInit()
     AddSC_purification_mixture();
     AddSC_vorenthals_presence();
     AddSC_item_skin_of_purest_water();
+    AddSC_item_yehkinyas_bramble();
 
     // -- NPC --
     AddSC_not_selectable();
@@ -1008,6 +1012,8 @@ void ScriptsInit()
 
     //Felwood
     //Feralas
+    AddSC_npcs_feralas();
+
     //Ghostlands
     //Gnomeregan
     //Gruul's Lair

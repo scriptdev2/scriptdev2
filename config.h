@@ -22,7 +22,7 @@
 
 #include "../../framework/Platform/CompilerDefs.h"
 //#include "svn_revision.h"              //Will be enabled when SVN automatic revision extraction complete
-#define SVN_REVISION        "232"
+#define SVN_REVISION        "234"
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
