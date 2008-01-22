@@ -55,6 +55,7 @@ UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry` = 
 UPDATE `item_template` SET `ScriptName` = 'draenei_fishing_net' WHERE `entry` = 23654;
 UPDATE `item_template` SET `ScriptName` = 'item_skin_of_purest_water' WHERE `entry` = 23751;
 UPDATE `item_template` SET `ScriptName` = 'item_tainted_core' WHERE `entry` = 31088;
+UPDATE `item_template` SET `ScriptName` = 'item_yehkinyas_bramble' WHERE `entry` = 10699;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
@@ -377,6 +378,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_mana_tapped' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11552);
 
 /* FERALAS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_screecher_spirit' WHERE `entry` = 8612;
 /* Gordunni Ogre Mage, Gordunni Mage-Lord, Woodpaw Mystic, Gordok Ogre-Mage */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5237, 5239, 5254, 11443);
 
