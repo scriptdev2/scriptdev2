@@ -162,16 +162,16 @@ static Location HordeCoords[]=
 
 const uint32 allianceSoldierId[3] = 
 {
-    {12938}, // 12938 Injured Alliance Soldier
-    {12936}, // 12936 Badly injured Alliance Soldier
-    {12937}  // 12937 Critically injured Alliance Soldier
+    12938, // 12938 Injured Alliance Soldier
+    12936, // 12936 Badly injured Alliance Soldier
+    12937  // 12937 Critically injured Alliance Soldier
 };
 
 const uint32 hordeSoldierId[3] = 
 {
-    {12923}, //12923 Injured Soldier
-    {12924}, //12924 Badly injured Soldier
-    {12925}  //12925 Critically injured Soldier
+    12923, //12923 Injured Soldier
+    12924, //12924 Badly injured Soldier
+    12925  //12925 Critically injured Soldier
 };
 
 /*######
@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);    //make not selectable
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);      //regen health
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);  //stand up
-            m_creature->Say(SAY_DOC,LANG_UNIVERSAL,NULL);
+            DoSay(SAY_DOC,LANG_UNIVERSAL,NULL);
             m_creature->SendMoveToPacket(A_RUNTOX, A_RUNTOY, A_RUNTOZ, true, 2000 );
         }
         return;
