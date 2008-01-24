@@ -4,6 +4,7 @@ CREATE TABLE `eventai_scripts` (
 `creature_id` int(11) unsigned NOT NULL default '0' COMMENT 'Creature Template Identifier',
 
 `event_type` tinyint(5) unsigned NOT NULL default '0' COMMENT 'Event Type',
+`event_inverse_phase_mask` int(11) signed NOT NULL default '0' COMMENT 'Mask which phases this event will not trigger in',
 `event_param1` int(11) signed NOT NULL default '0',
 `event_param2` int(11) signed NOT NULL default '0',
 `event_param3` int(11) signed NOT NULL default '0',

@@ -23,13 +23,13 @@ EndScriptData */
 
 #include "mob_event_ai.h"
 #include "../../../../game/Player.h"
+#include "../../../../game/TargetedMovementGenerator.h"
 
 #define EVENT_UPDATE_TIME 500
 
 struct EventHolder
 {
     EventHolder(uint32 p) : EventId(p), Time(0), Enabled(true){}
-    EventHolder(uint32 p, uint32 z) : EventId(p), Time(z), Enabled(true){}
 
     uint32 EventId;
     uint32 Time;
@@ -50,19 +50,121 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         EventList.clear();
     }
 
-    std::list<EventHolder> EventList;
-    bool InCombat;
-    uint32 EventUpdateTime;
-    uint32 EventDiff;
+    std::list<EventHolder> EventList;       //Holder for events (stores enabled, time, and eventid)
+    bool InCombat;                          //Combat var
+    bool CombatMovementEnabled;             //If we allow targeted movment gen (movement twoards top threat)
+    bool MeleeEnabled;                      //If we allow melee auto attack
+    uint32 EventUpdateTime;                 //Time between event updates
+    uint32 EventDiff;                       //Time between the last event call
+    uint8 Phase;                            //Current phase, max 32 phases
 
-    void ProcessEvent(uint32 i)
+    void ProcessEvent(EventHolder& pEvent, Unit* pTarget = NULL)
     {   
+        if (!pEvent.Enabled || pEvent.Time || pEvent.EventId > MAX_EVENTS)
+            return;
+
+        //Check the inverse phase mask (event doesn't trigger if current phase bit is set in mask)
+        if (Phase)
+            if ((EventAI_Events[pEvent.EventId].event_inverse_phase_mask & (1 << Phase)))
+                return;
+
+        uint32 param1 = EventAI_Events[pEvent.EventId].event_param1;
+        uint32 param2 = EventAI_Events[pEvent.EventId].event_param2;
+        uint32 param3 = EventAI_Events[pEvent.EventId].event_param3;
+
+        //Check event conditions based on the event type, also reset events
+        switch (EventAI_Events[pEvent.EventId].event_type)
+        {
+        case EVENT_T_TIMER_REPEAT:
+            {
+                if (!InCombat)
+                    return;
+
+                pEvent.Time = param1;
+            }
+            break;
+        case EVENT_T_TIMER_SINGLE:
+            {
+                if (!InCombat)
+                    return;
+
+                pEvent.Enabled = false;
+            }
+            break;
+        case EVENT_T_TIMER_OOC_REPEAT:
+            {
+                if (InCombat)
+                    return;
+
+                pEvent.Time = param1;
+            }
+            break;
+        case EVENT_T_TIMER_OOC_SINGLE:
+            {
+                if (InCombat)
+                    return;
+
+                pEvent.Enabled = false;
+            }
+            break;
+        case EVENT_T_HP:
+            {
+                if (!InCombat || !m_creature->GetMaxHealth())
+                    return;
+
+                if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() > param1)
+                    return;
+
+                //Prevent repeat for param2 time, or disable if param2 not set
+                if (param2)
+                    pEvent.Time = param2;
+                else
+                    pEvent.Enabled = false;
+            }
+            break;
+        case EVENT_T_MANA:
+            {
+                if (!InCombat || !m_creature->GetMaxPower(POWER_MANA))
+                    return;
+
+                if ((m_creature->GetPower(POWER_MANA)*100) / m_creature->GetMaxPower(POWER_MANA) > param1)
+                    return;
+
+                if (param2)
+                    pEvent.Time = param2;
+                else
+                    pEvent.Enabled = false;
+
+            }
+            break;
+        case EVENT_T_AGGRO:
+            break;
+        case EVENT_T_KILL:
+            {
+                if (param1)
+                    pEvent.Time = param1;
+            }
+        case EVENT_T_DEATH:
+            break;
+        case EVENT_T_EVADE:
+            break;
+        case EVENT_T_SPELLHIT:
+            {
+                //Spell hit is special case, first param handled within EventAI::SpellHit
+                if (param2)
+                    pEvent.Time = param2;
+                else
+                    pEvent.Enabled = false;
+            }
+            break;
+        }
+
         //Store random here so that all random actions match up
         uint32 rnd = rand();
 
         //Process actions
         for (uint32 j = 0; j < MAX_ACTIONS; j++)
-            ProcessAction(i, j, rnd);
+            ProcessAction(pEvent.EventId, j, rnd, pTarget);
     }
 
     inline uint32 GetRandActionParam(uint32 Id, uint32 Action, uint32 rnd)
@@ -112,7 +214,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         };
     }
 
-    void ProcessAction(uint32 Id, uint32 Action, uint32 rnd)
+    void ProcessAction(uint32 Id, uint32 Action, uint32 rnd, Unit* pTarget)
     {
         if (Action >= MAX_ACTIONS)
             ASSERT(false);
@@ -215,7 +317,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     error_log( "SD2: Eventid %d, Action %d failed to spawn creature %d", Id, Action, param3);
 
                 if (param2 != TARGET_T_SELF)
-                    pCreature->Attack(target);
+                    pCreature->AI()->AttackStart(target);
             }
             break;
 
@@ -286,6 +388,50 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->RemoveFlag(UNIT_FIELD_FLAGS, param1);
             }
             break;
+
+        case ACTION_T_AUTO_ATTACK:
+            {
+                if (param1)
+                    MeleeEnabled = true;
+                else MeleeEnabled = false;
+            }
+            break;
+
+        case ACTION_T_COMBAT_MOVEMENT:
+            {
+                //Allow movement (create new targeted movement gen if none exist already)
+                if (param1)
+                {
+                    if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                }
+                else
+                    if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    {
+                        m_creature->GetMotionMaster()->Clear(false);
+                        m_creature->GetMotionMaster()->Idle();
+                    }
+            }
+            break;
+        case ACTION_T_SET_PHASE:
+            {
+                Phase = param1;
+            }
+            break;
+        case ACTION_T_INC_PHASE:
+            {
+                Phase += param1;
+
+                if (Phase > 31)
+                    error_log( "SD2: Eventid %d Action %d incremented Phase above 31. Phase mask cannot be used with phases past 31.", Id, Action);
+            }
+            break;
+
+        case ACTION_T_EVADE:
+            {
+                EnterEvadeMode();
+            }
+            break;
         };
 
         if (type >= ACTION_T_END)
@@ -296,6 +442,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     void Reset(Event_Types e)
     {
         InCombat = false;
+        Phase = 0;
 
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
@@ -303,21 +450,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         //Handle Evade events and reset all events to enabled
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            if ((*i).EventId > MAX_EVENTS)
-                continue;
-
             switch (EventAI_Events[(*i).EventId].event_type)
             {
                 //Evade
             case EVENT_T_EVADE:
                 if (e == EVENT_T_EVADE)
-                    ProcessEvent((*i).EventId);
+                    ProcessEvent(*i);
                 break;
 
                 //Death
             case EVENT_T_DEATH:
                 if (e == EVENT_T_DEATH)
-                    ProcessEvent((*i).EventId);
+                    ProcessEvent(*i);
                 break;
 
                 //Reset all out of combat timers
@@ -345,6 +489,24 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         Reset(EVENT_T_DEATH);
     }
 
+    void KilledUnit(Unit* victim)
+    {
+        if (victim->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch (EventAI_Events[(*i).EventId].event_type)
+            {
+                //Kill
+            case EVENT_T_KILL:
+                ProcessEvent(*i);
+                break;
+            }
+        }
+
+    }
+
     void AttackStart(Unit *who)
     {
         if (!who || who == m_creature)
@@ -352,16 +514,20 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         if (!InCombat)
         {
+            //Combat movement and Melee attack always enabled by default at combat reset
+            CombatMovementEnabled = true;
+            MeleeEnabled = true;
+
+            //Reset phase to 0
+            Phase = 0;
+
             //Check for on combat start events
             for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
-                if ((*i).EventId > MAX_EVENTS)
-                    continue;
-
                 switch (EventAI_Events[(*i).EventId].event_type)
                 {
                 case EVENT_T_AGGRO:
-                    ProcessEvent((*i).EventId);
+                    ProcessEvent(*i);
                     break;
 
                     //Reset all in combat timers
@@ -385,7 +551,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
 
         //Begin melee attack if we are within range
-        DoStartMeleeAttack(who);
+        if (CombatMovementEnabled)
+            DoStartMeleeAttack(who);
+        else DoStartRangedAttack(who);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -407,46 +575,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
     }
 
-    void DamageDeal(Unit *done_to, uint32 &damage)
-    {
-        if (done_to->GetTypeId() != TYPEID_PLAYER)
-            return;
-
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
-        {
-            if (!(*i).Enabled || (*i).EventId > MAX_EVENTS || (*i).Time)
-                continue;
-
-            switch (EventAI_Events[(*i).EventId].event_type)
-            {
-                //Kill
-            case EVENT_T_KILL:
-                {
-                    if (done_to->GetHealth() <= damage)
-                    {
-                        ProcessEvent((*i).EventId);
-
-                        //Prevent repeat for param1 time if set
-                        if (EventAI_Events[(*i).EventId].event_param1)
-                            (*i).Time = EventAI_Events[(*i).EventId].event_param1;
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-    }
-
     virtual void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
     {
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            if (!(*i).Enabled || (*i).EventId > MAX_EVENTS || (*i).Time)
-                continue;
-
             switch (EventAI_Events[(*i).EventId].event_type)
             {
                 //Spell hit
@@ -454,15 +586,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     //If spell id matches (or no spell id)
                     if (!EventAI_Events[(*i).EventId].event_param1 || pSpell->Id == EventAI_Events[(*i).EventId].event_param1)
-                    {
-                        ProcessEvent((*i).EventId);
-
-                        //Prevent repeat for param2 time, or disable if param2 not set
-                        if (EventAI_Events[(*i).EventId].event_param2)
-                            (*i).Time = EventAI_Events[(*i).EventId].event_param2;
-                        else
-                            (*i).Enabled = false;
-                    }
+                        ProcessEvent(*i);
                 }
                 break;
             }
@@ -486,9 +610,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             //Check for time based events
             for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
-                if (!(*i).Enabled || (*i).EventId > MAX_EVENTS)
-                    continue;
-
                 //Decrement Timers
                 if ((*i).Time)
                     if ((*i).Time > EventDiff)
@@ -499,83 +620,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     }
                     else (*i).Time = 0; 
 
-                    switch (EventAI_Events[(*i).EventId].event_type)
-                    {
-                        //Timer event
-                    case EVENT_T_TIMER_REPEAT:
-                    case EVENT_T_TIMER_SINGLE:
-                        if (Combat)
-                        {
-                            ProcessEvent((*i).EventId);
-
-                            //Reset or remove timer
-                            if (EventAI_Events[(*i).EventId].event_type == EVENT_T_TIMER_SINGLE)
-                                (*i).Enabled = false;
-                            else (*i).Time = EventAI_Events[(*i).EventId].event_param1;
-                        }
-                        break;
-
-                        //Out of Combat Timer event
-                    case EVENT_T_TIMER_OOC_REPEAT:
-                    case EVENT_T_TIMER_OOC_SINGLE:
-                        if (!Combat)
-                        {
-                            ProcessEvent((*i).EventId);
-
-                            //Reset or remove timer
-                            if (EventAI_Events[(*i).EventId].event_type == EVENT_T_TIMER_OOC_SINGLE)
-                                (*i).Enabled = false;
-                            else (*i).Time = EventAI_Events[(*i).EventId].event_param1;
-
-                        }
-                        break;
-
-                        //Mana Event
-                    case EVENT_T_MANA:
-                        if (Combat)
-                        {
-                            //Don't process mana events if creature has no max mana to prevent crash
-                            if (m_creature->GetMaxPower(POWER_MANA))
-                            {
-
-                                //If mana is below target mana%
-                                if ((m_creature->GetPower(POWER_MANA)*100) / m_creature->GetMaxPower(POWER_MANA) < EventAI_Events[(*i).EventId].event_param1)
-                                {
-                                    ProcessEvent((*i).EventId);
-
-                                    //Prevent repeat for param2 time, or disable if param2 not set
-                                    if (EventAI_Events[(*i).EventId].event_param2)
-                                        (*i).Time = EventAI_Events[(*i).EventId].event_param2;
-                                    else
-                                        (*i).Enabled = false;
-                                }
-                            }
-                        }
-                        break;
-
-                        //HP Event
-                    case EVENT_T_HP:
-                        if (Combat)
-                        {
-                            //Don't process health events if creature has no max health to prevent crash
-                            if (m_creature->GetMaxHealth())
-                            {
-
-                                //If mana is below target mana%
-                                if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < EventAI_Events[(*i).EventId].event_param1)
-                                {
-                                    ProcessEvent((*i).EventId);
-
-                                    //Prevent repeat for param2 time, or disable if param2 not set
-                                    if (EventAI_Events[(*i).EventId].event_param2)
-                                        (*i).Time = EventAI_Events[(*i).EventId].event_param2;
-                                    else
-                                        (*i).Enabled = false;
-                                }
-                            }
-                        }
-                        break;
-                    }
+                switch (EventAI_Events[(*i).EventId].event_type)
+                {
+                    //Events that are updated every EVENT_UPDATE_TIME
+                case EVENT_T_TIMER_REPEAT:
+                case EVENT_T_TIMER_SINGLE:
+                case EVENT_T_TIMER_OOC_REPEAT:
+                case EVENT_T_TIMER_OOC_SINGLE:
+                case EVENT_T_MANA:
+                case EVENT_T_HP:
+                    ProcessEvent(*i);
+                    break;
+                }
             }
 
             EventDiff = 0;
@@ -587,7 +643,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
 
         //Melee Auto-Attack
-        if (Combat)
+        if (Combat && MeleeEnabled)
             DoMeleeAttackIfReady();
 
     }
@@ -606,9 +662,7 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
             EventList.push_back(EventHolder(i));
 
             if (EventAI_Events[i].event_type >= EVENT_T_END)
-            {
                 error_log( "SD2: Eventid %d has Not Yet Implemented Event Type", i);
-            }
         }
     }
 

@@ -110,6 +110,7 @@ extern void AddSC_npc_mount_vendor();
 //Aunchindoun
 //--Auchenai Crypts
 extern void AddSC_boss_shirrak_the_dead_watcher();
+extern void AddSC_boss_exarch_maladaar();
 //--Mana Tombs
 extern void AddSC_boss_nexusprince_shaffar();
 extern void AddSC_boss_pandemonius();
@@ -616,7 +617,7 @@ void LoadDatabase()
         }else error_log("SD2: >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
 
         //Gather event data
-        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
+        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
             "FROM `eventai_scripts`"
             "LIMIT %u ", uint32(MAX_EVENTS));
 
@@ -639,9 +640,10 @@ void LoadDatabase()
 
                 EventAI_Events[i].creature_id = fields[1].GetUInt32();
                 EventAI_Events[i].event_type = fields[2].GetUInt16();
-                EventAI_Events[i].event_param1 = fields[3].GetUInt32();
-                EventAI_Events[i].event_param2 = fields[4].GetUInt32();
-                EventAI_Events[i].event_param3 = fields[5].GetUInt32();
+                EventAI_Events[i].event_inverse_phase_mask = fields[3].GetUInt32();
+                EventAI_Events[i].event_param1 = fields[4].GetUInt32();
+                EventAI_Events[i].event_param2 = fields[5].GetUInt32();
+                EventAI_Events[i].event_param3 = fields[6].GetUInt32();
 
                 //Report any errors in event
                 if (EventAI_Events[i].event_type >= EVENT_T_END)
@@ -649,10 +651,10 @@ void LoadDatabase()
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
-                    EventAI_Events[i].action[j].type = fields[6+(j*4)].GetUInt16();
-                    EventAI_Events[i].action[j].param1 = fields[7+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param2 = fields[8+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param3 = fields[9+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].type = fields[7+(j*4)].GetUInt16();
+                    EventAI_Events[i].action[j].param1 = fields[8+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param2 = fields[9+(j*4)].GetUInt32();
+                    EventAI_Events[i].action[j].param3 = fields[10+(j*4)].GetUInt32();
 
                     //Report any errors in actions
                     switch (EventAI_Events[i].action[j].type)
@@ -702,19 +704,31 @@ void LoadDatabase()
                             error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
                         break;
 
-                    //No need for checks for these actions
+                        //No need for checks for these actions
                     case ACTION_T_NONE:
                     case ACTION_T_SOUND:
                     case ACTION_T_EMOTE:
                     case ACTION_T_RANDOM_SOUND:
                     case ACTION_T_RANDOM_EMOTE:
                     case ACTION_T_THREAT_ALL_PCT:
+                    case ACTION_T_AUTO_ATTACK:
+                    case ACTION_T_COMBAT_MOVEMENT:
                         break;
 
-                    default:
-                        error_log("SD2: Event %d Action %d has incorrect action type", i, j);
+                    case ACTION_T_SET_PHASE:
+                        if (EventAI_Events[i].action[j].param1 > 31)
+                            error_log("SD2: Event %d Action %d is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j);
+                            break;
+
+                    case ACTION_T_INC_PHASE:
+                        if (!EventAI_Events[i].action[j].param1)
+                            error_log("SD2: Event %d Action %d is incrementing phase by 0. Was this intended?", i, j);
                         break;
+
                     }
+
+                    if (EventAI_Events[i].action[j].type >= ACTION_T_END)
+                        error_log("SD2: Event %d Action %d has incorrect action type", i, j);
                 }
             }while (result->NextRow());
 
@@ -833,6 +847,8 @@ void ScriptsInit()
     //Aunchindoun
     //--Auchenai Crypts
     AddSC_boss_shirrak_the_dead_watcher();
+    AddSC_boss_exarch_maladaar();
+
     //--Mana Tombs
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
@@ -1685,34 +1701,6 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool trigger
 
     m_creature->StopMoving();
     m_creature->CastSpell(who, spellInfo, triggered);
-}
-
-void ScriptedAI::DoAddAura(Unit *target, uint32 SpellId)
-{
-    if (!target)
-        return;
-
-    SpellEntry const *spellInfo = GetSpellStore()->LookupEntry(SpellId);
-    if(spellInfo)
-    {
-        for(uint32 i = 0;i<3;i++)
-        {
-            uint8 eff = spellInfo->Effect[i];
-            if (eff>=TOTAL_SPELL_EFFECTS)
-                continue;
-
-            if (eff == SPELL_EFFECT_APPLY_AREA_AURA)
-            {
-                Aura *Aur = new AreaAura(spellInfo, i, NULL, target, NULL);
-                target->AddAura(Aur);
-            }
-            else if (eff == SPELL_EFFECT_APPLY_AURA || eff == SPELL_EFFECT_PERSISTENT_AREA_AURA)
-            {
-                Aura *Aur = new Aura(spellInfo, i, NULL, target);
-                target->AddAura(Aur);
-            }
-        }
-    }
 }
 
 void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)

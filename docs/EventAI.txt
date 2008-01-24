@@ -12,31 +12,34 @@ Basic Structure of EventAI
 Event AI follows a basic if (Event) then do {Action} format.
 Below is a the list of current fields within the Eventai_scripts table.
 
-(Field_Name            Discription)
-id                     This value is mearly an incrementing counter of the current Event number. Required for sql queries.
-creature_id            Creature id which this event should occur on.
+(Field_Name                 Discription)
+id                          This value is mearly an incrementing counter of the current Event number. Required for sql queries.
+creature_id                 Creature id which this event should occur on.
 
-event_type             Type of event (See Event Types below)
-event_param1           Variable for event (dependant on Event type)
+event_type                  Type of event (See Event Types below)
+event_inverse_phase_mask    Mask which phases this event should NOT trigger in*
+event_param1                Variable for event (dependant on Event type)
 event_param2
 event_param3
 
-action1_type           First Type of Action to take when event occurs (See Action Types below)
-action1_param1         Variables used for Action1 (dependant on Action type)
+action1_type                First Type of Action to take when event occurs (See Action Types below)
+action1_param1              Variables used for Action1 (dependant on Action type)
 action1_param2
 action1_param3
 
-action2_type           Second Type of Action to take when event occurs (See Action Types below)
-action2_param1         Variables used for Action2 (dependant on Action type)
+action2_type                Second Type of Action to take when event occurs (See Action Types below)
+action2_param1              Variables used for Action2 (dependant on Action type)
 action2_param2
 action2_param3
 
-action3_type           Third Type of Action to take when event occurs (See Action Types below)
-action3_param1         Variables used for Action3 (dependant on Action type)
+action3_type                Third Type of Action to take when event occurs (See Action Types below)
+action3_param1              Variables used for Action3 (dependant on Action type)
 action3_param2
 action3_param3
 
 All params are signed 32 bit values (+/- 2147483647). If param specifies time then time is in milliseconds. If param specifies percentage then percentages are value/100 (ex: if param = 500 then that means 500%, -50 = -50%)
+
+*Phase mask is a bit mask of which phases this event should not trigger in. Example: Phase mask value of 12 (1100) would mean that this event would trigger 0, 1 and all other phases except for 2 and 3 (0 counts as the first phase). 
 -----------------------------------------
 Event Types
 -----------------------------------------
@@ -85,6 +88,10 @@ Params are always read from Param1, then Param2, then Param3.
 17   ACTION_T_SET_UNIT_FIELD           Field_Number, Value, Target     Sets Unit Field (param1) to Value (param2) on target type (param3)
 18   ACTION_T_SET_UNIT_FLAG            Flags, Target                   Sets flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
 19   ACTION_T_REMOVE_UNIT_FLAG         Flags, Target                   Removes flag (flags can be binary OR together to modify multiple flags at once) on for Target type (param2)
+20   ACTION_T_AUTO_ATTACK              AllowAutoAttack                 0 = stop melee attack, anything else means continue attacking/allow melee attacking
+21   ACTION_T_COMBAT_MOVEMENT          AllowCombatMovement             0 = stop combat based movement, anything else continue/allow combat based movement (targeted movement generator)
+22   ACTION_T_SET_PHASE                Phase                           Sets the current phase to (param1)
+23   ACTION_T_INC_PHASE                Value                           Increments the phase by (param1). May be negative to decrement phase but should not be 0.
 
 * = Use -1 to specify that if this param is picked to do nothing. Random is constant between actions within an event. So if you have a random Yell and a random Sound they will match up (ex: param2 with param2)
 -----------------------------------------
