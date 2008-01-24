@@ -50,7 +50,6 @@ UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (4
 UPDATE `creature_template` SET `ScriptName` = 'honor_vendor' WHERE `entry` IN (40200,40201,40202,40203,40204,40205,40206,40207,40208,40209,40210,40211,40212,40213);
 
 /* ITEM */
-UPDATE `item_template` SET `ScriptName` = 'purification_mixture' WHERE `entry` = 23268;
 UPDATE `item_template` SET `ScriptName` = 'nether_wraith_beacon' WHERE `entry` = 31742;
 UPDATE `item_template` SET `ScriptName` = 'area_52_special' WHERE `entry` = 28132;
 UPDATE `item_template` SET `ScriptName` = 'vorenthals_presence' WHERE `entry` = 30259;

@@ -344,10 +344,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\item\item_purification_mixture.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\item\item_skin_of_purest_water.cpp"
 					>
 				</File>

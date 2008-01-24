@@ -53,7 +53,6 @@ scripts/honor/honor_vendor.cpp \
 scripts/item/item_area_52_special.cpp \
 scripts/item/item_draenei_fishing_net.cpp \
 scripts/item/item_nether_wraith_beacon.cpp \
-scripts/item/item_purification_mixture.cpp \
 scripts/item/item_skin_of_purest_water.cpp \
 scripts/item/item_test.cpp \
 scripts/item/item_vorenthals_presence.cpp \
