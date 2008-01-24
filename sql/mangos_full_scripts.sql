@@ -65,8 +65,7 @@ UPDATE `creature_template` SET `ScriptName` = 'silva_filnaveth' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 UPDATE `creature_template` SET `ScriptName` = 'bunthen_plainswind' WHERE `entry` = 11798;
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry` = 5764;
-/* inkeepers for halloween event */
-UPDATE `creature_template` SET `ScriptName` = 'innkeeper' WHERE `npcflag` & 128<>0;
+
 /* regular mount vendors */
 UPDATE `creature_template` SET `ScriptName` = 'npc_mount_vendor' WHERE `entry` IN (384, 1261, 1460, 2357, 3362, 3685, 4730, 4731, 4885, 7952, 7955, 16264, 17584);
 
@@ -903,20 +902,20 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510
 UPDATE `creature_template` SET `ScriptName` = 'boss_mandokir' WHERE `entry` = 11382;
 UPDATE `creature_template` SET `ScriptName` = 'boss_gahzranka' WHERE `entry` = 15114;
 UPDATE `creature_template` SET `ScriptName` = 'boss_jindo' WHERE `entry` = 11380;
-UPDATE `creature_template` SET `ScriptName` = "boss_hakkar" WHERE  `creature_template`.`entry` = 14834;
-UPDATE `creature_template` SET `ScriptName` = "boss_thekal" WHERE  `creature_template`.`entry` = 14509;
-UPDATE `creature_template` SET `ScriptName` = "boss_arlokk" WHERE  `creature_template`.`entry` = 14515;
-UPDATE `creature_template` SET `ScriptName` = "mob_zealot_lorkhan" WHERE  `creature_template`.`entry` = 11347;
-UPDATE `creature_template` SET `ScriptName` = "mob_zealot_zath" WHERE  `creature_template`.`entry` = 11348;
-UPDATE `creature_template` SET `ScriptName` = "mob_healing_ward" WHERE  `creature_template`.`entry` = 14987;
+UPDATE `creature_template` SET `ScriptName` = 'boss_hakkar' WHERE `entry` = 14834;
+UPDATE `creature_template` SET `ScriptName` = 'boss_thekal' WHERE `entry` = 14509;
+UPDATE `creature_template` SET `ScriptName` = 'boss_arlokk' WHERE `entry` = 14515;
+UPDATE `creature_template` SET `ScriptName` = 'mob_zealot_lorkhan' WHERE `entry` = 11347;
+UPDATE `creature_template` SET `ScriptName` = 'mob_zealot_zath' WHERE `entry` = 11348;
+UPDATE `creature_template` SET `ScriptName` = 'mob_healing_ward' WHERE `entry` = 14987;
 UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
-UPDATE `creature_template` SET `Scriptname` = "mobs_zulgurub" WHERE `creature_template`.`entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
+UPDATE `creature_template` SET `Scriptname` = 'mobs_zulgurub' WHERE `entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
 UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
 
 /* Fix for Wrong ZG Update */
-UPDATE `creature_template` SET `ScriptName` = ' ' WHERE `entry` = 14607;
-UPDATE `creature_template` SET `ScriptName` = ' ' WHERE `entry` = 15295;
+UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 14607;
+UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 15295;
 
 
 
