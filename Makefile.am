@@ -347,6 +347,7 @@ scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_yauj.cpp \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
+scripts/zone/terokkar_forest/npcs_terokkar_forest.cpp \
 scripts/zone/thunder_bluff/npc_cairne_bloodhoof.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \

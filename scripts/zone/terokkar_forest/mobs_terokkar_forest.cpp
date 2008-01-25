@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: mobs_terokkar_forest
+SDName: Mobs_Terokkar_Forest
 SD%Complete: 100
-SDComment: terokkar forest mobs
+SDComment: Quest support: 10873, 10896, 11096.
+SDCategory: Terokkar Forest
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -85,13 +86,10 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
     {
         if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
         {
-            if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
+            if (m_creature->GetHealth() <= damage)
             {
-                if (m_creature->GetHealth() <= damage)
-                {
-                    if (rand()%100 < 75)
-                        m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
-                }
+                if (rand()%100 < 75)
+                    m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
             }
         }
     }
@@ -154,13 +152,10 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
         {
-            if( ((Player*)done_by)->GetQuestStatus(10896) == QUEST_STATUS_INCOMPLETE && !((Player*)done_by)->GetReqKillOrCastCurrentCount(10896, m_creature->GetEntry()) )
+            if (m_creature->GetHealth() <= damage)
             {
-                if (m_creature->GetHealth() <= damage)
-                {
-                    if (rand()%100 < 75)
-                        m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
-                }
+                if (rand()%100 < 75)
+                    m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
             }
         }
     }

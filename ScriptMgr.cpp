@@ -513,6 +513,7 @@ extern void AddSC_boss_cthun();
 
 //Terokkar Forest
 extern void AddSC_mobs_terokkar_forest();
+extern void AddSC_npcs_terokkar_forest();
 
 //Thousand Needles
 //Thunder Bluff
@@ -1252,6 +1253,7 @@ void ScriptsInit()
 
     //Terokkar Forest
     AddSC_mobs_terokkar_forest();
+    AddSC_npcs_terokkar_forest();
 
     //Thousand Needles
     //Thunder Bluff

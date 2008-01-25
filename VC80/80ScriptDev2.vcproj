@@ -1798,6 +1798,10 @@
 						RelativePath="..\scripts\zone\terokkar_forest\mobs_terokkar_forest.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\terokkar_forest\npcs_terokkar_forest.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Zangarmarsh"
