@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npcs_searing_gorge
-SD%Complete: 90
-SDComment: Provides quest and portal to Molten Core + misc other quest. More accurate info on Kalaran needed.
+SDName: Npcs_Searing_Gorge
+SD%Complete: 100
+SDComment: Quest support: 3377, 3441 (More accurate info on Kalaran needed). Lothos Riftwaker teleport to Molten Core.
+SDCategory: Searing Gorge
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -63,37 +64,14 @@ bool GossipSelect_npc_kalaran_windblade(Player *player, Creature *_Creature, uin
 }
 
 /*######
-## npc_lothos_riftwalker
+## npc_lothos_riftwaker
 ######*/
 
-struct MANGOS_DLL_DECL npc_lothos_riftwalkerAI : public ScriptedAI
-{
-    npc_lothos_riftwalkerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
-
-    bool InCombat;
-
-    void EnterEvadeMode()
-    {
-        InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
-    }
-};
-
-
-CreatureAI* GetAI_npc_lothos_riftwalker(Creature *_Creature)
-{
-    return new npc_lothos_riftwalkerAI (_Creature);
-}
-
-bool GossipHello_npc_lothos_riftwalker(Player *player, Creature *_Creature)
+bool GossipHello_npc_lothos_riftwaker(Player *player, Creature *_Creature)
 {
     if (player->GetQuestRewardStatus(7487)==1 || player->GetQuestRewardStatus(7848)==1)  {
         player->ADD_GOSSIP_ITEM(2, "Teleport me to the Molten Core", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(384,_Creature->GetGUID());
+        player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
     }else{
         uint64 guid = _Creature->GetGUID();
         if (_Creature->isQuestGiver()) {
@@ -104,7 +82,7 @@ bool GossipHello_npc_lothos_riftwalker(Player *player, Creature *_Creature)
     return true;
 }
 
-bool GossipSelect_npc_lothos_riftwalker(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_lothos_riftwaker(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -112,6 +90,43 @@ bool GossipSelect_npc_lothos_riftwalker(Player *player, Creature *_Creature, uin
         player->TeleportTo(409, 1096, -467, -104.6, 3.64);
     }
 
+    return true;
+}
+
+/*######
+## npc_zamael_lunthistle
+######*/
+
+bool GossipHello_npc_zamael_lunthistle(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestStatus(3377) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->PlayerTalkClass->SendGossipMenu(1920, _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_zamael_lunthistle(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, "Please continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(1921, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "Goodbye", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            player->SEND_GOSSIP_MENU(1922, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->PlayerTalkClass->CloseGossip();
+            player->CompleteQuest(3377);
+            break;
+    }
     return true;
 }
 
@@ -130,9 +145,14 @@ void AddSC_npcs_searing_gorge()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_lothos_riftwalker";
-    newscript->pGossipHello          = &GossipHello_npc_lothos_riftwalker;
-    newscript->pGossipSelect         = &GossipSelect_npc_lothos_riftwalker;
-    newscript->GetAI = GetAI_npc_lothos_riftwalker;
+    newscript->Name="npc_lothos_riftwaker";
+    newscript->pGossipHello          = &GossipHello_npc_lothos_riftwaker;
+    newscript->pGossipSelect         = &GossipSelect_npc_lothos_riftwaker;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_zamael_lunthistle";
+    newscript->pGossipHello =  &GossipHello_npc_zamael_lunthistle;
+    newscript->pGossipSelect = &GossipSelect_npc_zamael_lunthistle;
     m_scripts[nrscripts++] = newscript;
 }

@@ -639,8 +639,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 
 /* SEARING GORGE */
-UPDATE `creature_template` SET `ScriptName` = 'npc_lothos_riftwalker' WHERE `entry` = 14387;
 UPDATE `creature_template` SET `ScriptName` = 'npc_kalaran_windblade' WHERE `entry` = 8479;
+UPDATE `creature_template` SET `ScriptName` = 'npc_lothos_riftwaker' WHERE `entry` = 14387;
+UPDATE `creature_template` SET `ScriptName` = 'npc_zamael_lunthistle' WHERE `entry` = 8436;
 /* Glassweb Spider, Searing Lava Spider, Greater Lava Spider */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5856, 5857, 5858);
 
