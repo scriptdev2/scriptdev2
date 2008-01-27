@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npc_tanaris
+SDName: Npcs_Tanaris
 SD%Complete: 100
-SDComment: Keeper of Time script
+SDComment: Quest support: 10279 (Special flight path). Noggenfogger vendor
+SDCategory: Tanaris
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,7 +27,31 @@ EndScriptData */
 #include "../../../../../game/GossipDef.h"
 #include "../../../../../shared/WorldPacket.h"
 
-// **** This script is still under Developement ****
+/*######
+## npc_marin_noggenfogger
+######*/
+
+bool GossipHello_npc_marin_noggenfogger(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestRewardStatus(2662))
+        player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_marin_noggenfogger(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if (action == GOSSIP_ACTION_TRADE)
+    {
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    }
+    return true;
+}
 
 /*######
 ## npc_steward_of_time
@@ -111,11 +136,16 @@ void AddSC_npcs_tanaris()
     Script *newscript;
 
     newscript = new Script;
+    newscript->Name="npc_marin_noggenfogger";
+    newscript->pGossipHello =  &GossipHello_npc_marin_noggenfogger;
+    newscript->pGossipSelect = &GossipSelect_npc_marin_noggenfogger;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="npc_steward_of_time";
     newscript->GetAI = GetAI_npc_steward_of_time;
     newscript->pGossipHello          = &GossipHello_npc_steward_of_time;
     newscript->pGossipSelect         = &GossipSelect_npc_steward_of_time;
     newscript->pQuestAccept          = &QuestAccept_npc_steward_of_time;
-
     m_scripts[nrscripts++] = newscript;
 }

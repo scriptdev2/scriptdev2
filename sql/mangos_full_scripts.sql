@@ -767,6 +767,7 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (747, 740, 741, 743, 745, 769);
 
 /* TANARIS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_marin_noggenfogger' WHERE `entry` = 7564;
 UPDATE `creature_template` SET `ScriptName` = 'npc_steward_of_time' WHERE `entry` = 20142;
 /* Dunemaul Ogre Mage, Wastewander Shadow Mage, Sandfury Axe Thrower */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5473, 5617, 5646);
