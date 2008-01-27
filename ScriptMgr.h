@@ -32,7 +32,6 @@ class SpellCastTargets;
 class Map;
 
 #define MAX_SCRIPTS     5000        //72 bytes each (approx 351kb)
-#define MAX_TEXTS       5000        //? bytes each
 
 #define VISIBLE_RANGE   (26.46f)
 
@@ -107,23 +106,8 @@ InstanceData* (*GetInstanceData)(Map*);
 // -----------------------------------------
 };
 
-// Localized Text structure for storing locales. 
-struct Localized_Text
-{
-    std::string locale_0;
-    std::string locale_1;
-    std::string locale_2;
-    std::string locale_3;
-    std::string locale_4;
-    std::string locale_5;
-    std::string locale_6;
-    std::string locale_7;
-};
-
-
 extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
-extern Localized_Text Localized_Texts[MAX_TEXTS];
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {

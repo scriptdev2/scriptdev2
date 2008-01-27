@@ -53,7 +53,7 @@ enum Action_Types
     ACTION_T_THREAT_SINGLE_PCT      = 13,   //Threat%, Target
     ACTION_T_THREAT_ALL_PCT         = 14,   //Threat%
     ACTION_T_QUEST_COMPLETE         = 15,   //QuestID, Target
-    ACTION_T_QUEST_CASTCREATUREGO   = 16,   //QuestID, SpellId, Target
+    ACTION_T_CASTCREATUREGO         = 16,   //QuestID, SpellId, Target
     ACTION_T_SET_UNIT_FIELD         = 17,   //Field_Number, Value, Target
     ACTION_T_SET_UNIT_FLAG          = 18,   //Flags (may be more than one field OR'd together), Target
     ACTION_T_REMOVE_UNIT_FLAG       = 19,   //Flags (may be more than one field OR'd together), Target
@@ -62,6 +62,10 @@ enum Action_Types
     ACTION_T_SET_PHASE              = 22,   //Phase
     ACTION_T_INC_PHASE              = 23,   //Value (may be negative to decrement phase, should not be 0)
     ACTION_T_EVADE                  = 24,   //No Params
+    ACTION_T_FLEE                   = 25,   //No Params
+    ACTION_T_QUEST_COMPLETE_ALL     = 26,   //QuestID
+    ACTION_T_CASTCREATUREGO_ALL     = 27,   //QuestId, SpellId
+
 
     ACTION_T_END,
 };

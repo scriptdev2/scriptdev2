@@ -34,7 +34,21 @@
 //*** Global data ***
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
-Localized_Text Localized_Texts[MAX_TEXTS];
+
+// Localized Text structure for storing locales. 
+struct Localized_Text
+{
+    std::string locale_0;
+    std::string locale_1;
+    std::string locale_2;
+    std::string locale_3;
+    std::string locale_4;
+    std::string locale_5;
+    std::string locale_6;
+    std::string locale_7;
+};
+
+HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 //*** End Global data ***
 
 //*** EventAI data ***
@@ -577,45 +591,46 @@ void LoadDatabase()
 
         //Gather Localized Text Entries
         result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`"
-            "FROM `localized_texts`"
-            "LIMIT %u ", uint32(MAX_TEXTS));
+            "FROM `localized_texts`");
 
         if (result)
         {
             outstring_log( "SD2: Loading Localized_Texts...");
             barGoLink bar(result->GetRowCount());
+            uint32 c = 0;
+
             do
             {
+                Localized_Text temp;
+                //typedef pair<uint32, Localized_Text> text_pair;
+
                 bar.step();
                 Field *fields = result->Fetch();
                 i = fields[0].GetInt32();
 
-                if (i >= MAX_TEXTS)
-                {
-                    error_log( "SD2: Localized Text ID greater than MAX_TEXTS");
-                    continue;
-                }
+                temp.locale_0 = fields[1].GetString();
+                temp.locale_1 = fields[2].GetString();
+                temp.locale_2 = fields[3].GetString();
+                temp.locale_3 = fields[4].GetString();
+                temp.locale_4 = fields[5].GetString();
+                temp.locale_5 = fields[6].GetString();
+                temp.locale_6 = fields[7].GetString();
+                temp.locale_7 = fields[8].GetString();
 
-                Localized_Texts[i].locale_0 = fields[1].GetString();
-                Localized_Texts[i].locale_1 = fields[2].GetString();
-                Localized_Texts[i].locale_2 = fields[3].GetString();
-                Localized_Texts[i].locale_3 = fields[4].GetString();
-                Localized_Texts[i].locale_4 = fields[5].GetString();
-                Localized_Texts[i].locale_5 = fields[6].GetString();
-                Localized_Texts[i].locale_6 = fields[7].GetString();
-                Localized_Texts[i].locale_7 = fields[8].GetString();
-
-                if (!strlen(Localized_Texts[i].locale_0.c_str()))
+                if (!strlen(temp.locale_0.c_str()))
                     error_log("SD2: locale_0 for text %i is empty", i);
+
+                Localized_Text_Map[i] = temp;
+                ++c;
 
             }while (result->NextRow());
 
             delete result;
 
             outstring_log("");
-            outstring_log("SD2: >> Loaded %d Localized_Texts", i);
+            outstring_log("SD2: >> Loaded %d Localized_Texts", c);
 
-        }else error_log("SD2: >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
+        }else outstring_log("SD2: WARNING >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
 
         //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
@@ -626,16 +641,16 @@ void LoadDatabase()
         {
             outstring_log( "SD2: Loading EventAI_Scripts...");
             barGoLink bar(result->GetRowCount());
+            i = 0;
 
             do
             {
                 bar.step();
                 Field *fields = result->Fetch();
-                i = fields[0].GetInt32();
 
                 if (i >= MAX_EVENTS)
                 {
-                    error_log( "SD2: Event ID greater than MAX_EVENTS");
+                    error_log( "SD2: Total events greater than MAX_EVENTS");
                     continue;
                 }
 
@@ -699,7 +714,7 @@ void LoadDatabase()
                         break;
 
                     //3rd param target
-                    case ACTION_T_QUEST_CASTCREATUREGO:
+                    case ACTION_T_CASTCREATUREGO:
                     case ACTION_T_SET_UNIT_FIELD:
                         if (EventAI_Events[i].action[j].param3 >= TARGET_T_END)
                             error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
@@ -731,13 +746,15 @@ void LoadDatabase()
                     if (EventAI_Events[i].action[j].type >= ACTION_T_END)
                         error_log("SD2: Event %d Action %d has incorrect action type", i, j);
                 }
-            }while (result->NextRow());
+
+                ++i;
+            }while (result->NextRow() && i < MAX_EVENTS);
 
             delete result;
             outstring_log("");
             outstring_log("SD2: >> Loaded %d EventAI_Events", i);
 
-        }else error_log("SD2: >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
 
         //Free database thread and resources
         ScriptDev2DB.HaltDelayThread();
@@ -1310,54 +1327,59 @@ void ScriptsInit()
 
 const char* GetLocalizedText(uint32 Entry)
 {
-    if (Entry > MAX_TEXTS)
-    {
-        error_log("SD2: Request from script to access localized text entry > MAX_TEXTS");
-        return NULL;
-    }
+    if (Entry == 0xffffffff)
+        error_log("SD2: Entry = -1, GetLocalizedText should not be called in this case.");
 
     const char* temp = NULL;
+
+    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = Localized_Text_Map.find(Entry);
+
+    if (i == Localized_Text_Map.end())
+    {
+        error_log("SD2: Localized_Text %d not found", Entry);
+        return DEFAULT_TEXT;
+    }
 
     switch (Locale)
     {
         case 0:
-        temp =  Localized_Texts[Entry].locale_0.c_str();
+        temp =  (*i).second.locale_0.c_str();
         break;
 
         case 1:
-        temp =  Localized_Texts[Entry].locale_1.c_str();
+        temp =  (*i).second.locale_1.c_str();
         break;
 
         case 2:
-        temp =  Localized_Texts[Entry].locale_2.c_str();
+        temp =  (*i).second.locale_2.c_str();
         break;
 
         case 3:
-        temp =  Localized_Texts[Entry].locale_3.c_str();
+        temp =  (*i).second.locale_3.c_str();
         break;
 
         case 4:
-        temp =  Localized_Texts[Entry].locale_4.c_str();
+        temp =  (*i).second.locale_4.c_str();
         break;
 
         case 5:
-        temp =  Localized_Texts[Entry].locale_5.c_str();
+        temp =  (*i).second.locale_5.c_str();
         break;
 
         case 6:
-        temp =  Localized_Texts[Entry].locale_6.c_str();
+        temp =  (*i).second.locale_6.c_str();
         break;
 
         case 7:
-        temp =  Localized_Texts[Entry].locale_7.c_str();
+        temp =  (*i).second.locale_7.c_str();
         break;
     };
 
     if (strlen(temp))
         return temp;
 
-    if (strlen(Localized_Texts[Entry].locale_0.c_str()))
-        return Localized_Texts[Entry].locale_0.c_str();
+    if (strlen((*i).second.locale_0.c_str()))
+        return (*i).second.locale_0.c_str();
 
     return DEFAULT_TEXT;
 }

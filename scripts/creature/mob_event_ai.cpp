@@ -25,7 +25,8 @@ EndScriptData */
 #include "../../../../game/Player.h"
 #include "../../../../game/TargetedMovementGenerator.h"
 
-#define EVENT_UPDATE_TIME 500
+#define EVENT_UPDATE_TIME   500
+#define SPELL_RUN_AWAY      8225
 
 struct EventHolder
 {
@@ -294,6 +295,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_CAST:
             {
                 Unit* target = GetTargetByType(param2, Id, Action);
+                if (!target)
+                    return;
 
                 if (param3 || !m_creature->IsNonMeleeSpellCasted(false))
                 {
@@ -315,8 +318,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (!pCreature)
                     error_log( "SD2: Eventid %d, Action %d failed to spawn creature %d", Id, Action, param3);
-
-                if (param2 != TARGET_T_SELF)
+                else if (param2 != TARGET_T_SELF && target)
                     pCreature->AI()->AttackStart(target);
             }
             break;
@@ -353,7 +355,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             break;
 
-        case ACTION_T_QUEST_CASTCREATUREGO:
+        case ACTION_T_CASTCREATUREGO:
             {
                 Unit* target = GetTargetByType(param3, Id, Action);
 
@@ -430,6 +432,39 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_EVADE:
             {
                 EnterEvadeMode();
+            }
+            break;
+        case ACTION_T_FLEE:
+            {
+                //TODO: Replace with Flee movement generator
+                m_creature->CastSpell(m_creature, SPELL_RUN_AWAY, true);
+            }
+            break;
+        case ACTION_T_QUEST_COMPLETE_ALL:
+            {
+                Unit* Temp = NULL;
+
+                std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+                {
+                    Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+                    if (Temp && Temp->GetTypeId() == TYPEID_PLAYER)
+                        ((Player*)Temp)->CompleteQuest(param1);
+                }
+            }
+            break;
+
+        case ACTION_T_CASTCREATUREGO_ALL:
+            {
+                Unit* Temp = NULL;
+
+                std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+                {
+                    Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+                    if (Temp && Temp->GetTypeId() == TYPEID_PLAYER)
+                        ((Player*)Temp)->CastedCreatureOrGO(param1, m_creature->GetGUID(), param2);
+                }
             }
             break;
         };
