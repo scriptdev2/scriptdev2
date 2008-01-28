@@ -53,7 +53,8 @@ HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 
 //*** EventAI data ***
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
-EventAI_Event EventAI_Events[MAX_EVENTS];
+HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
+
 //*** End EventAI data ***
 
 DatabaseMysql ScriptDev2DB;
@@ -587,7 +588,9 @@ void LoadDatabase()
     {
         //***Preform all DB queries here***
         QueryResult *result;
-        uint32 i = 0;
+
+        //Drop existing Localized Text has map
+        Localized_Text_Map.clear();
 
         //Gather Localized Text Entries
         result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`"
@@ -597,16 +600,15 @@ void LoadDatabase()
         {
             outstring_log( "SD2: Loading Localized_Texts...");
             barGoLink bar(result->GetRowCount());
-            uint32 c = 0;
+            uint32 Count = 0;
 
             do
             {
                 Localized_Text temp;
-                //typedef pair<uint32, Localized_Text> text_pair;
-
                 bar.step();
                 Field *fields = result->Fetch();
-                i = fields[0].GetInt32();
+
+                uint32 i = fields[0].GetInt32();
 
                 temp.locale_0 = fields[1].GetString();
                 temp.locale_1 = fields[2].GetString();
@@ -618,86 +620,96 @@ void LoadDatabase()
                 temp.locale_7 = fields[8].GetString();
 
                 if (!strlen(temp.locale_0.c_str()))
-                    error_log("SD2: locale_0 for text %i is empty", i);
+                    error_log("SD2: locale_0 for text %u is empty", i);
 
                 Localized_Text_Map[i] = temp;
-                ++c;
+                ++Count;
 
             }while (result->NextRow());
 
             delete result;
 
             outstring_log("");
-            outstring_log("SD2: >> Loaded %d Localized_Texts", c);
+            outstring_log("SD2: >> Loaded %u Localized_Texts", Count);
 
         }else outstring_log("SD2: WARNING >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
 
         //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
-            "FROM `eventai_scripts`"
-            "LIMIT %u ", uint32(MAX_EVENTS));
+            "FROM `eventai_scripts`");
+
+        //Drop Existing EventAI Map
+        Event_Map.clear();
 
         if (result)
         {
             outstring_log( "SD2: Loading EventAI_Scripts...");
             barGoLink bar(result->GetRowCount());
-            i = 0;
+            uint32 Count = 0;
 
             do
             {
                 bar.step();
                 Field *fields = result->Fetch();
 
-                if (i >= MAX_EVENTS)
-                {
-                    error_log( "SD2: Total events greater than MAX_EVENTS");
-                    continue;
-                }
+                EventAI_Event temp;
 
-                EventAI_Events[i].creature_id = fields[1].GetUInt32();
-                EventAI_Events[i].event_type = fields[2].GetUInt16();
-                EventAI_Events[i].event_inverse_phase_mask = fields[3].GetUInt32();
-                EventAI_Events[i].event_param1 = fields[4].GetUInt32();
-                EventAI_Events[i].event_param2 = fields[5].GetUInt32();
-                EventAI_Events[i].event_param3 = fields[6].GetUInt32();
+                uint32 i = fields[0].GetUInt32();
+                temp.creature_id = fields[1].GetUInt32();
+                temp.event_type = fields[2].GetUInt16();
+                temp.event_inverse_phase_mask = fields[3].GetUInt32();
+                temp.event_param1 = fields[4].GetUInt32();
+                temp.event_param2 = fields[5].GetUInt32();
+                temp.event_param3 = fields[6].GetUInt32();
 
                 //Report any errors in event
-                if (EventAI_Events[i].event_type >= EVENT_T_END)
-                    error_log("SD2: Event %d has incorrect event type", i);
+                if (temp.event_type >= EVENT_T_END)
+                    error_log("SD2: Event %u has incorrect event type", i);
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
-                    EventAI_Events[i].action[j].type = fields[7+(j*4)].GetUInt16();
-                    EventAI_Events[i].action[j].param1 = fields[8+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param2 = fields[9+(j*4)].GetUInt32();
-                    EventAI_Events[i].action[j].param3 = fields[10+(j*4)].GetUInt32();
+                    temp.action[j].type = fields[7+(j*4)].GetUInt16();
+                    temp.action[j].param1 = fields[8+(j*4)].GetUInt32();
+                    temp.action[j].param2 = fields[9+(j*4)].GetUInt32();
+                    temp.action[j].param3 = fields[10+(j*4)].GetUInt32();
 
                     //Report any errors in actions
-                    switch (EventAI_Events[i].action[j].type)
+                    switch (temp.action[j].type)
                     {
+                    case ACTION_T_NONE:
+                        break;
+
                     case ACTION_T_SAY:
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
-                        if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT)
-                            error_log("SD2: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                        if (GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT)
+                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
+                        break;
+
+                    case ACTION_T_SOUND:
+                    case ACTION_T_EMOTE:
                         break;
 
                     case ACTION_T_RANDOM_SAY:
                     case ACTION_T_RANDOM_YELL:
                     case ACTION_T_RANDOM_TEXTEMOTE:
-                        if (GetLocalizedText(EventAI_Events[i].action[j].param1) == DEFAULT_TEXT ||
-                            GetLocalizedText(EventAI_Events[i].action[j].param2) == DEFAULT_TEXT ||
-                            GetLocalizedText(EventAI_Events[i].action[j].param3) == DEFAULT_TEXT)
-                            error_log("SD2: Event %d Action %d refrences missing Localized_Text entry", i, j);
+                        if ((temp.action[j].param1 != 0xffffffff && GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT) ||
+                            (temp.action[j].param2 != 0xffffffff && GetLocalizedText(temp.action[j].param2) == DEFAULT_TEXT) ||
+                            (temp.action[j].param3 != 0xffffffff && GetLocalizedText(temp.action[j].param3) == DEFAULT_TEXT))
+                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
+                        break;
+
+                    case ACTION_T_RANDOM_SOUND:
+                    case ACTION_T_RANDOM_EMOTE:
                         break;
 
                     case ACTION_T_CAST:
                         {
-                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(EventAI_Events[i].action[j].param1);
+                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param1);
                             if (!pSpell)
                             {
-                                error_log("SD2: Event %d Action %d uses non-existant SpellID %d", i, j, EventAI_Events[i].action[j].param1);
-                                error_log("Spell Store Size = %d", GetSpellStore()->GetNumRows());
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u", i, j, temp.action[j].param1);
+                                error_log("Spell Store Size = %u", GetSpellStore()->GetNumRows());
                             }
                         }
                         //Missing break on purpose here (cast uses 2nd param target)
@@ -709,50 +721,53 @@ void LoadDatabase()
                     case ACTION_T_SET_UNIT_FLAG:
                     case ACTION_T_REMOVE_UNIT_FLAG:
                         //TODO: Add check for existing creature template for summon
-                        if (EventAI_Events[i].action[j].param2 >= TARGET_T_END)
-                            error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
+                        if (temp.action[j].param2 >= TARGET_T_END)
+                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
                         break;
 
                     //3rd param target
                     case ACTION_T_CASTCREATUREGO:
                     case ACTION_T_SET_UNIT_FIELD:
-                        if (EventAI_Events[i].action[j].param3 >= TARGET_T_END)
-                            error_log("SD2: Event %d Action %d uses incorrect Target type", i, j);
+                        if (temp.action[j].param3 >= TARGET_T_END)
+                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
                         break;
 
-                        //No need for checks for these actions
-                    case ACTION_T_NONE:
-                    case ACTION_T_SOUND:
-                    case ACTION_T_EMOTE:
-                    case ACTION_T_RANDOM_SOUND:
-                    case ACTION_T_RANDOM_EMOTE:
                     case ACTION_T_THREAT_ALL_PCT:
                     case ACTION_T_AUTO_ATTACK:
                     case ACTION_T_COMBAT_MOVEMENT:
                         break;
 
                     case ACTION_T_SET_PHASE:
-                        if (EventAI_Events[i].action[j].param1 > 31)
-                            error_log("SD2: Event %d Action %d is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j);
+                        if (temp.action[j].param1 > 31)
+                            error_log("SD2: Event %u Action %u is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j);
                             break;
 
                     case ACTION_T_INC_PHASE:
-                        if (!EventAI_Events[i].action[j].param1)
-                            error_log("SD2: Event %d Action %d is incrementing phase by 0. Was this intended?", i, j);
+                        if (!temp.action[j].param1)
+                            error_log("SD2: Event %u Action %u is incrementing phase by 0. Was this intended?", i, j);
+                        break;
+
+                    case ACTION_T_EVADE:
+                    case ACTION_T_FLEE:
+                    case ACTION_T_QUEST_COMPLETE_ALL:
+                    case ACTION_T_CASTCREATUREGO_ALL:
                         break;
 
                     }
 
-                    if (EventAI_Events[i].action[j].type >= ACTION_T_END)
-                        error_log("SD2: Event %d Action %d has incorrect action type", i, j);
+                    if (temp.action[j].type >= ACTION_T_END)
+                        error_log("SD2: Event %u Action %u has incorrect action type", i, j);
                 }
 
-                ++i;
-            }while (result->NextRow() && i < MAX_EVENTS);
+                //Add to map
+                Event_Map[i] = temp;
+                ++Count;
+
+            }while (result->NextRow());
 
             delete result;
             outstring_log("");
-            outstring_log("SD2: >> Loaded %d EventAI_Events", i);
+            outstring_log("SD2: >> Loaded %u EventAI_Events", Count);
 
         }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
 
@@ -797,7 +812,7 @@ void ScriptsInit()
     //Locale
     Locale = SD2Config.GetIntDefault("Locale", 0);
 
-    outstring_log("SD2: Using locale %d", Locale);
+    outstring_log("SD2: Using locale %u", Locale);
     outstring_log("");
 
     //Load database (must be called after SD2Config.SetSource)
@@ -1318,7 +1333,7 @@ void ScriptsInit()
 
     // -------------------
 
-    outstring_log("SD2: Loaded %d Scripts", nrscripts);
+    outstring_log("SD2: Loaded %u Scripts", nrscripts);
     outstring_log("");
 }
 
@@ -1336,7 +1351,7 @@ const char* GetLocalizedText(uint32 Entry)
 
     if (i == Localized_Text_Map.end())
     {
-        error_log("SD2: Localized_Text %d not found", Entry);
+        error_log("SD2: Localized_Text %u not found", Entry);
         return DEFAULT_TEXT;
     }
 

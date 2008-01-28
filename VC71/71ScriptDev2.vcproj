@@ -47,7 +47,10 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				Description="Extract SVN revision"
+				CommandLine="cd ..\&#x0D;&#x0A;svn_revision.js"
+			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -97,7 +100,10 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				Description="Extract SVN revision"
+				CommandLine="cd ..\&#x0D;&#x0A;svn_revision.js"
+			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool

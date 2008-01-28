@@ -21,8 +21,12 @@
 #endif
 
 #include "../../framework/Platform/CompilerDefs.h"
-//#include "svn_revision.h"              //Will be enabled when SVN automatic revision extraction complete
-#define SVN_REVISION        "243"
+
+#ifdef WIN32
+  #include "svn_revision.h"
+#else
+  #define SVN_REVISION        "246"
+#endif
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.

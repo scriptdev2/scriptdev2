@@ -28,12 +28,13 @@ Index: configure.ac
 ===================================================================
 --- configure.ac	(revision 5049)
 +++ configure.ac	(working copy)
-@@ -228,7 +228,9 @@
+@@ -228,7 +228,10 @@
     src/mangosd/Makefile
     src/mangosd/mangosd.conf
     src/bindings/Makefile
 -   src/bindings/universal/Makefile
 +   src/bindings/ScriptDev2/Makefile
++   src/bindings/ScriptDev2/config.h
 +   src/bindings/ScriptDev2/sql/Makefile
 +   src/bindings/ScriptDev2/sql/Updates/Makefile
  ])

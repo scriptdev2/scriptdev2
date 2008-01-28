@@ -15,8 +15,6 @@
 */
 
 #include "../sc_defines.h"
-
-#define MAX_EVENTS      5000        //60 bytes each (approx 292kb)
 #define MAX_ACTIONS     3
 
 enum Event_Types
@@ -103,4 +101,4 @@ struct EventAI_Event
     }action[MAX_ACTIONS];
 };
 
-extern EventAI_Event EventAI_Events[MAX_EVENTS];
+extern HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
