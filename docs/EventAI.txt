@@ -92,6 +92,10 @@ Params are always read from Param1, then Param2, then Param3.
 21   ACTION_T_COMBAT_MOVEMENT          AllowCombatMovement             0 = stop combat based movement, anything else continue/allow combat based movement (targeted movement generator)
 22   ACTION_T_SET_PHASE                Phase                           Sets the current phase to (param1)
 23   ACTION_T_INC_PHASE                Value                           Increments the phase by (param1). May be negative to decrement phase but should not be 0.
+24   ACTION_T_EVADE                    No Params                       Forces the creature to evade. Wiping all threat and dropping combat.
+25   ACTION_T_FLEE                     No Params                       Causes the creature to flee. Please use this action instead of directly casting this spell so we may change this when a more correct approach is found.
+26   ACTION_T_QUEST_COMPLETE_ALL       QuestId                         Completes quest (param1) for all players on the threat list
+27   ACTION_T_CASTCREATUREGO_ALL       QuestId, SpellId                Calls CastedCreatureOrGo for all players on the threat list with QuestID(Param1) and SpellId(Param2)
 
 * = Use -1 to specify that if this param is picked to do nothing. Random is constant between actions within an event. So if you have a random Yell and a random Sound they will match up (ex: param2 with param2)
 -----------------------------------------

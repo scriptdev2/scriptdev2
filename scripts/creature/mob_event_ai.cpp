@@ -65,9 +65,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             return;
 
         //Check the inverse phase mask (event doesn't trigger if current phase bit is set in mask)
-        if (Phase)
-            if ((EventAI_Events[pEvent.EventId].event_inverse_phase_mask & (1 << Phase)))
-                return;
+        if (EventAI_Events[pEvent.EventId].event_inverse_phase_mask & (1 << Phase))
+            return;
 
         uint32 param1 = EventAI_Events[pEvent.EventId].event_param1;
         uint32 param2 = EventAI_Events[pEvent.EventId].event_param2;
@@ -649,8 +648,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if ((*i).Time)
                     if ((*i).Time > EventDiff)
                     {
-                        //Skip events that have time remaining
-                        (*i).Time -= EventDiff;
+                        //Do not decrement timers if event cannot trigger in this phase
+                        if (!(EventAI_Events[(*i).EventId].event_inverse_phase_mask & (1 << Phase)))
+                            (*i).Time -= EventDiff;
+
+                        //Skip processing of events that have time remaining
                         continue;
                     }
                     else (*i).Time = 0; 
