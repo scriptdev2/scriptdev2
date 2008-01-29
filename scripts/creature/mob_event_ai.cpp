@@ -67,9 +67,30 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if (pHolder.Event.event_inverse_phase_mask & (1 << Phase))
             return;
 
-        uint32 param1 = pHolder.Event.event_param1;
-        uint32 param2 = pHolder.Event.event_param2;
-        uint32 param3 = pHolder.Event.event_param3;
+        //Store random here so that all random actions match up
+        uint32 rnd = rand();
+
+        union 
+        {
+            uint32 param1;
+            int32 param1_s;
+        };
+
+        union 
+        {
+            uint32 param2;
+            int32 param2_s;
+        };
+
+        union 
+        {
+            uint32 param3;
+            int32 param3_s;
+        };
+
+        param1 = pHolder.Event.event_param1;
+        param2 = pHolder.Event.event_param2;
+        param3 = pHolder.Event.event_param3;
 
         //Check event conditions based on the event type, also reset events
         switch (pHolder.Event.event_type)
@@ -79,12 +100,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!InCombat)
                     return;
 
-                pHolder.Time = param1;
+                //Check for negative param3 (chance%)
+                if (param3_s < 0 && -param3_s < rnd % 100)
+                    return;
+
+                if (param3_s > 0)
+                    pHolder.Time = param1 + (rnd % param3);
+                else pHolder.Time = param1;
             }
             break;
         case EVENT_T_TIMER_SINGLE:
             {
-                if (!InCombat)
+                if (!InCombat || param2 < rnd % 100)
                     return;
 
                 pHolder.Enabled = false;
@@ -95,12 +122,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (InCombat)
                     return;
 
-                pHolder.Time = param1;
+                //Check for negative param3 (chance%)
+                if (param3_s < 0 && -param3_s < rnd % 100)
+                    return;
+
+                if (param3_s > 0)
+                    pHolder.Time = param1 + (rnd % param3);
+                else pHolder.Time = param1;
             }
             break;
         case EVENT_T_TIMER_OOC_SINGLE:
             {
-                if (InCombat)
+                if (InCombat || param2 < rnd % 100)
                     return;
 
                 pHolder.Enabled = false;
@@ -111,12 +144,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!InCombat || !m_creature->GetMaxHealth())
                     return;
 
-                if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() > param1)
+                uint32 perc = (m_creature->GetHealth()*100) / m_creature->GetMaxHealth();
+
+                if (perc > param1 || perc < param2)
                     return;
 
-                //Prevent repeat for param2 time, or disable if param2 not set
-                if (param2)
-                    pHolder.Time = param2;
+                //Prevent repeat for param3 time, or disable if param3 not set
+                if (param3)
+                    if (param3_s > 0)
+                        pHolder.Time = param3;
+                    else if (-param3_s < rnd % 100)
+                        return;
                 else
                     pHolder.Enabled = false;
             }
@@ -126,29 +164,51 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!InCombat || !m_creature->GetMaxPower(POWER_MANA))
                     return;
 
-                if ((m_creature->GetPower(POWER_MANA)*100) / m_creature->GetMaxPower(POWER_MANA) > param1)
+                uint32 perc = (m_creature->GetPower(POWER_MANA)*100) / m_creature->GetMaxPower(POWER_MANA);
+
+                if (perc > param1 || perc < param2)
                     return;
 
-                if (param2)
-                    pHolder.Time = param2;
+                if (param3)
+                    if (param3_s > 0)
+                        pHolder.Time = param3;
+                    else if (-param3_s < rnd % 100)
+                        return;
                 else
                     pHolder.Enabled = false;
-
             }
             break;
         case EVENT_T_AGGRO:
+            {
+                if (param1 < rnd % 100)
+                    return;
+            }
             break;
         case EVENT_T_KILL:
             {
+                if (param2 < rnd % 100)
+                    return;
+
                 if (param1)
                     pHolder.Time = param1;
             }
         case EVENT_T_DEATH:
+            {
+                if (param1 < rnd % 100)
+                    return;
+            }
             break;
         case EVENT_T_EVADE:
+            {
+                if (param1 < rnd % 100)
+                    return;
+            }
             break;
         case EVENT_T_SPELLHIT:
             {
+                if (param3 < rnd % 100)
+                    return;
+
                 //Spell hit is special case, first param handled within EventAI::SpellHit
                 if (param2)
                     pHolder.Time = param2;
@@ -157,9 +217,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             break;
         }
-
-        //Store random here so that all random actions match up
-        uint32 rnd = rand();
 
         //Process actions
         for (uint32 j = 0; j < MAX_ACTIONS; j++)
@@ -488,6 +545,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 //Reset all out of combat timers
             case EVENT_T_TIMER_OOC_REPEAT:
+                (*i).Time = (*i).Event.event_param2 + (*i).Event.event_param3 ? rand()%(*i).Event.event_param3 : 0;
+                (*i).Enabled = true;
+                break;
             case EVENT_T_TIMER_OOC_SINGLE:
                 (*i).Time = (*i).Event.event_param1;
                 (*i).Enabled = true;
@@ -549,11 +609,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 switch ((*i).Event.event_type)
                 {
                 case EVENT_T_AGGRO:
-                    ProcessEvent(*i);
+                    ProcessEvent(*i, who);
                     break;
 
                     //Reset all in combat timers
                 case EVENT_T_TIMER_REPEAT:
+                    (*i).Time = (*i).Event.event_param2 + (*i).Event.event_param3 ? rand()%(*i).Event.event_param3 : 0;
+                    (*i).Enabled = true;
+                    break;
                 case EVENT_T_TIMER_SINGLE:
                     (*i).Time = (*i).Event.event_param1;
                     (*i).Enabled = true;

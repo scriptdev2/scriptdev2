@@ -19,17 +19,17 @@
 
 enum Event_Types
 {
-    EVENT_T_TIMER_REPEAT            = 0,    //Time, Initial Time
-    EVENT_T_TIMER_SINGLE            = 1,    //Time
-    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time, Initial Time
-    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time
-    EVENT_T_HP                      = 4,    //HP%, TimeUntilRepeat (Never if 0)
-    EVENT_T_MANA                    = 5,    //Mana%, TimeUntilRepeat (Never if 0)
-    EVENT_T_AGGRO                   = 6,    //No Params
-    EVENT_T_KILL                    = 7,    //TimeUntilRepeat (0 = always)
-    EVENT_T_DEATH                   = 8,    //No Params
-    EVENT_T_EVADE                   = 9,    //No Params
-    EVENT_T_SPELLHIT                = 10,   //SpellID(will trigger for all spells if 0), TimeUntilRepeat (Never if 0),
+    EVENT_T_TIMER_REPEAT            = 0,    //Time, Initial Time, RandAddition (Chance% if negative)
+    EVENT_T_TIMER_SINGLE            = 1,    //Time, Chance%
+    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time, Initial Time, RandAddition (Chance% if negative)
+    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time, Chance%
+    EVENT_T_HP                      = 4,    //HPMax%, HPMin%, TimeUntilRepeat (Never if 0, Chance% if negative)
+    EVENT_T_MANA                    = 5,    //ManaMax%, ManaMin%,TimeUntilRepeat (Never if 0, Chance% if negative)
+    EVENT_T_AGGRO                   = 6,    //No Params, Chance%
+    EVENT_T_KILL                    = 7,    //TimeUntilRepeat (0 = always), Chance%
+    EVENT_T_DEATH                   = 8,    //No Params, Chance%
+    EVENT_T_EVADE                   = 9,    //No Params, Chance%
+    EVENT_T_SPELLHIT                = 10,   //SpellID(will trigger for all spells if 0), TimeUntilRepeat (Never if 0), Chance%
     
     EVENT_T_END,
 };
