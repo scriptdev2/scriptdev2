@@ -251,6 +251,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     if (Resurrect_Timer < diff)
                     {
                         DoCast(m_creature,SPELL_TIGER_FORM);
+                        m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
                         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         m_creature->SetHealth(int(m_creature->GetMaxHealth()*1.0));                 
@@ -303,7 +304,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 {
                     DoCast(m_creature->getVictim(),SPELL_SUMMONTIGERS);
                     SummonTigers_Timer = 10000 + rand()%4000;
-                }else Silence_Timer -= diff;
+                }else SummonTigers_Timer -= diff;
 
                 if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
                 {

@@ -23,21 +23,30 @@ EndScriptData */
 #include "../../sc_defines.h"
 
 
-// Adds NYI
-
 #define SPELL_DEMORALIZINGSHOUT     19778
 #define SPELL_INSPIRE               19779
 #define SPELL_KNOCKDOWN             19780
 #define SPELL_FLAMESPEAR            19781       //Might be NYI in core
 
+//Adds Spells
+#define SPELL_HEAL                  24208
+#define SPELL_SHADOWWORDPAIN        23952
+#define SPELL_IMMOLATE              20294
+
 struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 {
-    boss_sulfuronAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_sulfuronAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
 
     uint32 DemoralizingShout_Timer;
     uint32 Inspire_Timer;
     uint32 Knockdown_Timer;
     uint32 Flamespear_Timer;
+    ScriptedInstance *pInstance;
     bool InCombat;
 
     void EnterEvadeMode()
@@ -154,10 +163,159 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 }; 
+
+
+struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
+{
+    mob_flamewaker_priestAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+
+    uint32 Heal_Timer;
+    uint32 ShadowWordPain_Timer;
+    uint32 Immolate_Timer;
+    bool InCombat;
+
+    ScriptedInstance *pInstance;
+
+    void EnterEvadeMode()
+    {
+        Heal_Timer = 15000+rand()%15000;     
+        ShadowWordPain_Timer = 2000;
+        Immolate_Timer = 8000;
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+
+        //Casting Heal to Sulfuron or other Guards.
+        if(Heal_Timer < diff)
+        {
+                    if(pInstance)
+                    {    
+
+                     Unit *pSulfuron = Unit::GetUnit((*m_creature), pInstance->GetData64("Sulfuron"));
+                     Unit *pFlamewakerPriest = Unit::GetUnit((*m_creature), pInstance->GetData64("FlamewakerPriest"));
+
+
+
+                         switch(rand()%2)
+                         {
+                            case 0:  
+                            DoCast(pSulfuron, SPELL_HEAL);
+                            break;
+
+                            case 1:
+                            DoCast(pFlamewakerPriest, SPELL_HEAL);
+                            break;
+                         }
+
+
+                    }
+                       
+            Heal_Timer = 15000+rand()%5000;
+        }else Heal_Timer -= diff;
+
+        //ShadowWordPain_Timer
+        if (ShadowWordPain_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            if (target)DoCast(target,SPELL_SHADOWWORDPAIN);
+
+            //35 seconds until we should cast this agian
+            ShadowWordPain_Timer = 18000+rand()%8000;
+        }else ShadowWordPain_Timer -= diff;
+
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)DoCast(target,SPELL_IMMOLATE);
+
+            //30 seconds until we should cast this agian
+            Immolate_Timer = 15000+rand()%10000;
+        }else Immolate_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+}; 
+
 CreatureAI* GetAI_boss_sulfuron(Creature *_Creature)
 {
     return new boss_sulfuronAI (_Creature);
 }
+CreatureAI* GetAI_mob_flamewaker_priest(Creature *_Creature)
+{
+    return new mob_flamewaker_priestAI (_Creature);
+}
+
 
 
 void AddSC_boss_sulfuron()
@@ -166,5 +324,10 @@ void AddSC_boss_sulfuron()
     newscript = new Script;
     newscript->Name="boss_sulfuron";
     newscript->GetAI = GetAI_boss_sulfuron;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_flamewaker_priest";
+    newscript->GetAI = GetAI_mob_flamewaker_priest;
     m_scripts[nrscripts++] = newscript;
 }

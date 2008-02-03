@@ -17,33 +17,44 @@
 /* ScriptData
 SDName: Boss_Golemagg
 SD%Complete: 90
-SDComment: Adds NYI
+SDComment: 
 EndScriptData */
 
 #include "../../sc_defines.h"
 
 
-// Adds NYI
-
-#define SPELL_MAGMASPLASH               13879      
+#define SPELL_MAGMASPLASH               37667      
 #define SPELL_PYROBLAST                 20228
 #define SPELL_EARTHQUAKE                19798
 #define SPELL_ENRAGE                    19953
+#define SPELL_BUFF                      20553
+
+//-- CoreRager Spells --
+#define SPELL_MANGLE                    19820    
+#define SPELL_AEGIS                     20620       //This is self casted whenever we are below 50%
+
+#define SAY_AEGIS                   "Core Rager refuses to die while its master is in trouble"
 
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
-    boss_golemaggAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_golemaggAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
 
     uint32 Pyroblast_Timer;
     uint32 EarthQuake_Timer;
     uint32 Enrage_Timer;
+    uint32 Buff_Timer;
     bool InCombat;
-    bool HasAura;
+    ScriptedInstance *pInstance;
 
     void EnterEvadeMode()
     {
         Pyroblast_Timer = 7000;      //These times are probably wrong
         EarthQuake_Timer = 3000; 
+        Buff_Timer = 2500;
         Enrage_Timer = 0;     
         InCombat = false;
 
@@ -67,7 +78,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
-        HasAura = true;
     }
 
     void AttackStart(Unit *who)
@@ -83,6 +93,13 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         }
     }
 
+    void JustDied(Unit* Killer)
+    {
+        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        if(pInstance)
+            pInstance->SetData("Golemagg_Death", 0);
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -95,12 +112,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (!HasAura)
-                {
-                    m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
-                    HasAura = true;
-                }
 
                 DoStartMeleeAttack(who);
                 InCombat = true;
@@ -154,6 +165,138 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
             }else EarthQuake_Timer -= diff;
         }
 
+
+        //Casting Buff for Coreragers. Spell is not working right. Players get the buff...
+//        if(Buff_Timer < diff)
+//        {
+// 
+//            
+//            DoCast(m_creature, SPELL_BUFF);
+//                     
+//            Buff_Timer = 2500;
+//        }else Buff_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+}; 
+
+
+struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
+{
+    mob_core_ragerAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+
+    uint32 Mangle_Timer;
+    uint32 Check_Timer;
+    bool InCombat;
+    ScriptedInstance *pInstance;
+
+    void EnterEvadeMode()
+    {
+        Mangle_Timer = 7000;      //These times are probably wrong 
+        Check_Timer = 1000;
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+            InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+
+                DoStartMeleeAttack(who);
+                InCombat = true;
+
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+
+        //Mangle_Timer
+        if (Mangle_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_MANGLE);
+
+            //10 seconds until we should cast this agian
+            Mangle_Timer = 10000;
+        }else Mangle_Timer -= diff;
+
+
+            //Cast AEGIS
+            if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
+            {
+
+                    DoCast(m_creature,SPELL_AEGIS);
+                    DoYell(SAY_AEGIS,LANG_UNIVERSAL,NULL);
+            }
+
+        //Check_Timer
+        if(Check_Timer < diff)
+        {
+            if(pInstance)
+            {    
+
+                    if(pInstance->GetData("GolemaggIsDead"))
+                    //remove
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->RemoveCorpse();
+                    m_creature->setFaction(35);
+            }
+
+            Check_Timer = 1000;
+        }else Check_Timer -= diff;
+
         DoMeleeAttackIfReady();
     }
 }; 
@@ -162,12 +305,20 @@ CreatureAI* GetAI_boss_golemagg(Creature *_Creature)
     return new boss_golemaggAI (_Creature);
 }
 
-
+CreatureAI* GetAI_mob_core_rager(Creature *_Creature)
+{
+    return new mob_core_ragerAI (_Creature);
+}
 void AddSC_boss_golemagg()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name="boss_golemagg";
     newscript->GetAI = GetAI_boss_golemagg;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_core_rager";
+    newscript->GetAI = GetAI_mob_core_rager;
     m_scripts[nrscripts++] = newscript;
 }

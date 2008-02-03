@@ -32,7 +32,7 @@ EndScriptData */
 #define SPELL_SHADEOFJINDO              24308   //We will not use this spell. We will summon a shade by script.
 
 //Healing Ward Spell
-#define SPELL_HEAL                      24311
+#define SPELL_HEAL                      37455  //Not right ID. Other Spell is not working...
 
 
 #define SAY_AGGRO         "Welcome to da great show friends! Step right up to die!"
@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     
     void EnterEvadeMode()
     {
-        Heal_Timer = 2000;
+        Heal_Timer = 3000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -302,9 +302,6 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
  
     void UpdateAI (const uint32 diff)
     {
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
-            return;
      
         //Heal_Timer
         if(Heal_Timer < diff)

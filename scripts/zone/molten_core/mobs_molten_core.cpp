@@ -33,14 +33,6 @@
 #define SPELL_ANCIENT_DESPAIR       19369 
 #define SPELL_ANCIENT_HYSTERIA      19372     
 
-
-//-- CoreRager Spells --
-
-#define SPELL_MANGLE                19820    
-#define SPELL_AEGIS                 20620       //This is self casted whenever we are below 50%
-
-#define SAY_AEGIS                   "Core Rager refuses to die while its master is in trouble"
-
 // -- FireLord Spells --
 
 #define SPELL_SOUL_BURN             19393
@@ -153,41 +145,6 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
- 
-    ai->EnterEvadeMode();
- 
-    return ai;
-}
- 
-
-CreatureAI* GetAI_mob_core_rager(Creature *_Creature)
-{
-    SimpleAI *ai = new SimpleAI(_Creature);
- 
-    ai->Spell[0].Enabled                = true;
-    ai->Spell[0].Spell_Id               = SPELL_AEGIS;
-    ai->Spell[0].First_Cast             = -65;
-    ai->Spell[0].Cooldown               = 15000;
-    ai->Spell[0].Cast_Target_Type       = CAST_SELF;
- 
-    ai->Spell[1].Enabled          = true;
-    ai->Spell[1].Spell_Id         = SPELL_MANGLE;
-    ai->Spell[1].First_Cast       = 8000;
-    ai->Spell[1].Cooldown         = 6000;
-    ai->Spell[0].CooldownRandomAddition = 6000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
- 
-    _Creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
  
     ai->EnterEvadeMode();
  
@@ -583,12 +540,6 @@ void AddSC_mobs_molten_core()
     newscript = new Script;
     newscript->Name="mob_ancient_core_hound";
     newscript->GetAI = GetAI_mob_ancient_core_hound;
-    m_scripts[nrscripts++] = newscript;
-
-    //Core Rager
-    newscript = new Script;
-    newscript->Name="mob_core_rager";
-    newscript->GetAI = GetAI_mob_core_rager;
     m_scripts[nrscripts++] = newscript;
 
     //Firelord

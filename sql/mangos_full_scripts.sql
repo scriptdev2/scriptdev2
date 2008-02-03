@@ -528,6 +528,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_flame_guard' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker' WHERE `entry` = 11661;
 UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_elite' WHERE `entry` = 11664;
 UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_healer' WHERE `entry` = 11663;
+UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_priest' WHERE `entry` = 11662;
 UPDATE `creature_template` SET `ScriptName` = 'mob_flamewaker_protector' WHERE `entry` = 12119;
 UPDATE `creature_template` SET `ScriptName` = 'mob_lavaspawn' WHERE `entry` = 12265;
 UPDATE `creature_template` SET `ScriptName` = 'mob_molten_destroyer' WHERE `entry` = 11659;
@@ -693,6 +694,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (697, 1653, 1562, 1564, 694, 696, 701, 780);
 
 /* STRATHOLME */
+UPDATE `creature_template` SET `ScriptName` = 'boss_dathrohan_balnazzar' WHERE `entry` = 11058;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fras_siabi' WHERE `entry` = 11058;
 UPDATE `creature_template` SET `ScriptName` = 'boss_skul' WHERE `entry` = 10393;
 UPDATE `creature_template` SET `ScriptName` = 'boss_hearthsinger_forresten' WHERE `entry` = 10558;

@@ -41,8 +41,8 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        FireNova_Timer = 17000;
-        BurningWinds_Timer = 12000;
+        FireNova_Timer = 15000;
+        BurningWinds_Timer = 10000;
         Pyroblast_Timer = 3000;
         InCombat = false;
 
@@ -50,6 +50,22 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
     }
 
     void AttackStart(Unit *who)
@@ -96,17 +112,22 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
 
-            //17 seconds until we should cast this again
-            FireNova_Timer = 17000;
+            //10 seconds until we should cast this again
+            FireNova_Timer = 10000;
         }else FireNova_Timer -= diff;
 
         //BurningWinds
         if (BurningWinds_Timer < diff)
         {
             //Cast
-            if (rand()%100 < 50) //50% chance to cast
+            if (rand()%100 < 70) //70% chance to cast
             {
-                DoCast(m_creature->getVictim(),SPELL_BURNINGWINDS);
+                    //Cast
+                    Unit* target = NULL;
+
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)
+                    DoCast(target,SPELL_BURNINGWINDS);
             }
 
             //15 seconds until we should cast this again
@@ -117,12 +138,12 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
         if (Pyroblast_Timer < diff)
         {
             //Cast
-            if (rand()%100 < 55) //55% chance to cast
+            if (rand()%100 < 25) //25% chance to cast
             {
                 DoCast(m_creature->getVictim(),SPELL_PYROBLAST);
             }
-            //21 seconds until we should cast this again
-            Pyroblast_Timer = 21000;
+            //18 seconds until we should cast this again
+            Pyroblast_Timer = 18000;
         }else Pyroblast_Timer -= diff;
 
         DoMeleeAttackIfReady();

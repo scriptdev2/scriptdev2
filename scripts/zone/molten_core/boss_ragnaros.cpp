@@ -33,8 +33,10 @@ EndScriptData */
 
 #define SPELL_SONSOFFLAME_DUMMY     21108       //Server side effect
 #define SPELL_RAGSUBMERGE           21107       //Stealth aura
-#define SPELL_RAGEMERGE            20568
+#define SPELL_RAGEMERGE             20568
 #define SPELL_MELTWEAPON            21388
+#define SPELL_ELEMENTALFIRE         20564
+#define SPELL_ERRUPTION             17731
 
 #define SAY_ARRIVAL_1       "TOO SOON! YOU HAVE AWAKENED ME TOO SOON, EXECUTUS! WHAT IS THE MEANING OF THIS INTRUSION?"
 #define SAY_ARRIVAL_3       "FOOL! YOU ALLOWED THESE INSECTS TO RUN RAMPANT THROUGH THE HALLOWED CORE, AND NOW YOU LEAD THEM TO MY VERY LAIR? YOU HAVE FAILED ME, EXECUTUS! JUSTICE SHALL BE MET, INDEED!"
@@ -104,6 +106,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
     uint32 HandOfRagnaros_Timer;
     uint32 LavaBurst_Timer;
     uint32 MagmaBurst_Timer;
+    uint32 ElementalFire_Timer;
+    uint32 Erruption_Timer;
     uint32 Submerge_Timer;
     uint32 Attack_Timer;
     Creature *Summoned;
@@ -118,7 +122,9 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         WrathOfRagnaros_Timer = 30000;
         HandOfRagnaros_Timer = 25000;
         LavaBurst_Timer = 10000;
-        MagmaBurst_Timer = 12000;
+        MagmaBurst_Timer = 2000;
+        Erruption_Timer = 15000;
+        ElementalFire_Timer = 3000;
         Submerge_Timer = 180000;
         Attack_Timer = 90000;
         HasYelledMagmaBurst = false;
@@ -279,6 +285,26 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             LavaBurst_Timer = 10000;
         }else LavaBurst_Timer -= diff;
 
+        //Erruption_Timer
+        if (LavaBurst_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ERRUPTION);
+
+            //10 seconds until we should cast this agian
+            Erruption_Timer = 20000 + rand()%25000;
+        }else Erruption_Timer -= diff;
+
+        //ElementalFire_Timer
+        if (ElementalFire_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ELEMENTALFIRE);
+
+            //10 seconds until we should cast this agian
+            ElementalFire_Timer = 10000 + rand()%8000;
+        }else ElementalFire_Timer -= diff;
+
         //Submerge_Timer
         if (!WasBanished && Submerge_Timer < diff)
         {
@@ -365,8 +391,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                     HasYelledMagmaBurst = true;
                 }
 
-                //8 seconds until we should cast this agian
-                MagmaBurst_Timer = 8000;
+                //3 seconds until we should cast this agian
+                MagmaBurst_Timer = 2500;
             }else MagmaBurst_Timer -= diff;
         }
     }

@@ -32,31 +32,21 @@ EndScriptData */
 #define ID_SULFURON     12098
 #define ID_DOMO         12018
 #define ID_RAGNAROS     11502
+#define ID_FLAMEWAKERPRIEST     11662
 
-class MANGOS_DLL_SPEC MoltenCore : public ScriptedInstance
+class MANGOS_DLL_SPEC instance_molten_core : public ScriptedInstance
 {
 public:
 
-    MoltenCore(Map *map) : ScriptedInstance(map) {}
-    ~MoltenCore() {}
+    instance_molten_core(Map *map) : ScriptedInstance(map) {}
 
-    uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros;
+    uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
     uint64 RuneGUID[8];
+    
+    //If all Bosses are dead.
+    bool IsBossDied[9];
 
     uint32 CheckTimer;
-
-    bool isDead(uint64 guid)
-    {
-        if (guid)
-        {
-            /*Unit* pUnit = Unit::GetUnit(??, guid);
-
-            if (pUnit && pUnit->isAlive())
-                return false;*/
-        }
-
-        return true; 
-    }
 
 
     //On creation, NOT load.
@@ -73,6 +63,7 @@ public:
         Golemagg = 0;
         Domo = 0;
         Ragnaros = 0;
+        FlamewakerPriest = 0;
 
         RuneGUID[0] = 0;
         RuneGUID[1] = 0;
@@ -82,6 +73,17 @@ public:
         RuneGUID[5] = 0;
         RuneGUID[6] = 0;
         RuneGUID[7] = 0;
+
+        IsBossDied[0] = false;
+        IsBossDied[1] = false;
+        IsBossDied[2] = false;
+        IsBossDied[3] = false;
+        IsBossDied[4] = false;
+        IsBossDied[5] = false;
+        IsBossDied[6] = false;
+
+        IsBossDied[7] = false;
+        IsBossDied[8] = false;
 
         CheckTimer = 10000;
     }
@@ -151,14 +153,18 @@ public:
 
         case ID_DOMO:
             Domo = creature->GetGUID();
-            creature->SetVisibility(VISIBILITY_OFF);
-            creature->setFaction(35);
+//            creature->SetVisibility(VISIBILITY_OFF);
+//            creature->setFaction(35);
             break;
 
         case ID_RAGNAROS:
             Ragnaros = creature->GetGUID();
-            creature->SetVisibility(VISIBILITY_OFF);
-            creature->setFaction(35);
+//            creature->SetVisibility(VISIBILITY_OFF);
+//            creature->setFaction(35);
+            break;
+
+        case ID_FLAMEWAKERPRIEST:
+            FlamewakerPriest = creature->GetGUID();
             break;
 
             default:
@@ -166,23 +172,81 @@ public:
         }
     }
 
+    uint64 GetData64 (char *identifier) {
+        if (identifier == "Sulfuron")
+            return Sulfuron;
+        if (identifier == "FlamewakerPriest")
+            return FlamewakerPriest;
+        return 0;
+    } // end GetData64
+
+    uint32 GetData(char *type)
+    {
+
+        if(type == "LucifronIsDead")
+            if(IsBossDied[0])
+                return 1;
+
+        if(type == "MagmadarIsDead")
+            if(IsBossDied[1])
+                return 1;
+
+        if(type == "GehennasIsDead")
+            if(IsBossDied[2])
+                return 1;
+
+        if(type == "GarrIsDead")
+            if(IsBossDied[3])
+                return 1;
+
+        if(type == "GeddonIsDead")
+            if(IsBossDied[4])
+                return 1;
+
+        if(type == "ShazzrahIsDead")
+            if(IsBossDied[5])
+                return 1;
+
+        if(type == "SulfuronIsDead")
+            if(IsBossDied[6])
+                return 1;
+
+        if(type == "GolemaggIsDead")
+            if(IsBossDied[7])
+                return 1;
+
+        if(type == "MajordomoIsDead")
+            if(IsBossDied[8])
+                return 1;
+
+        return 0;
+    }
+
+
+    void SetData(char *type, uint32 data)
+    {
+        if(type == "Golemagg_Death")
+            IsBossDied[7] = true;
+    }
+
+
     //Virtual functions that are not used
     Creature* GetUnit(char *identifier) { return NULL; };
     GameObject* GetGO(char *identifier) { return NULL; };
 
 };
 
-InstanceData* GetInstance_MoltenCore(Map *_Map)
+InstanceData* GetInstance_instance_molten_core(Map *_Map)
 {
-    return new MoltenCore (_Map);
+    return new instance_molten_core (_Map);
 }
 
 
-void AddSC_instance_moltencore()
+void AddSC_instance_molten_core()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name="instance_molten_core";
-    newscript->GetInstanceData = &GetInstance_MoltenCore;
+    newscript->GetInstanceData = &GetInstance_instance_molten_core;
     m_scripts[nrscripts++] = newscript;
 }

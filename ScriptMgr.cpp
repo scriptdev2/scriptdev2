@@ -376,6 +376,7 @@ extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
 extern void AddSC_mobs_molten_core();
+extern void AddSC_instance_molten_core();
 
 //Moonglade
 extern void AddSC_silva_filnaveth();
@@ -497,6 +498,7 @@ extern void AddSC_boss_timmy_the_cruel();
 extern void AddSC_boss_stonespine();
 extern void AddSC_boss_postmaster_malown();
 extern void AddSC_boss_baron_rivendare();
+extern void AddSC_boss_dathrohan_balnazzar();
 extern void AddSC_mobs_stratholme();
 
 //Sunken Temple
@@ -1132,6 +1134,7 @@ void ScriptsInit()
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
     AddSC_mobs_molten_core();
+    AddSC_instance_molten_core();
 
 
     //Moonglade
@@ -1254,6 +1257,7 @@ void ScriptsInit()
     AddSC_boss_stonespine();
     AddSC_boss_postmaster_malown();
     AddSC_boss_baron_rivendare();
+    AddSC_boss_dathrohan_balnazzar();
     AddSC_mobs_stratholme();
 
     //Sunken Temple

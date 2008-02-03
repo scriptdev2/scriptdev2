@@ -204,20 +204,20 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Spider ) { Spider ->AI()->AttackStart(target); }
                                                    
-                    SpawnSpider_Timer = 15000 + rand()%5000;
+                    SpawnSpider_Timer = 12000 + rand()%5000;
                 }else SpawnSpider_Timer -= diff;
                 
            
 
                 if(!PhaseTwo && Transform_Timer < diff)
                 {
-                    DoCast(m_creature,SPELL_SPIDER_FORM);
-                    DoCast(m_creature,SPELL_ENVOLWINGWEB);    
+                    DoCast(m_creature,SPELL_SPIDER_FORM);   
   
                     const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                    DoCast(m_creature,SPELL_ENVOLWINGWEB); 
                     ResetThreat();
                     PhaseTwo = true;
                     Transform_Timer = 35000 + rand()%25000;
