@@ -15,17 +15,16 @@
 */
 
 /* ScriptData
-SDName: npcs_hellfire_peninsula
-SD%Complete: 99
-SDComment: misc npcs hfp, true text missing for gossip items
+SDName: Npcs_Hellfire_Peninsula
+SD%Complete: 100
+SDComment: Quest support: 10129, 10146, 10162, 10163, 10340, 10346, 10347, 10382 (Special flight paths)
+SDCategory: Hellfire Peninsula
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/QuestDef.h"
 #include "../../../../../game/GossipDef.h"
-
-// **** This script is still under Developement ****
 
 /*######
 ## npc_wing_commander_dabiree
@@ -41,14 +40,11 @@ bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature *_Creature)
 
         //Mission: The Murketh and Shaadraz Gateways
     if (player->GetQuestStatus(10146) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF+1);
-    }
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
         //Shatter Point
-    if (player->GetQuestStatus(10340) != QUEST_STATUS_NONE && !player->GetQuestRewardStatus(10340))
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF+2);
-    }
+    if (!player->GetQuestRewardStatus(10340))
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
@@ -57,7 +53,7 @@ bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->PlayerTalkClass->CloseGossip();
 
@@ -68,7 +64,7 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
         nodes[1] = 134;                                     //end at expedition point
         player->ActivateTaxiPathTo(nodes);                  //TaxiPath 585
     }
-    if (action == GOSSIP_ACTION_INFO_DEF+2)
+    if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->PlayerTalkClass->CloseGossip();
 
@@ -92,19 +88,15 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
 bool GossipHello_npc_gryphoneer_windbellow(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
-    player->PrepareQuestMenu( _Creature->GetGUID() );
+        player->PrepareQuestMenu( _Creature->GetGUID() );
 
         //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
-    if (player->GetQuestStatus(10163) == QUEST_STATUS_INCOMPLETE || 
-        player->GetQuestStatus(10346) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF+1);
-    }
+    if (player->GetQuestStatus(10163) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10346) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
         //Go to the Front
     if (player->GetQuestStatus(10382) != QUEST_STATUS_NONE && !player->GetQuestRewardStatus(10382))
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF+2);
-    }
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
@@ -113,7 +105,7 @@ bool GossipHello_npc_gryphoneer_windbellow(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->PlayerTalkClass->CloseGossip();
 
@@ -124,7 +116,7 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
         nodes[1] = 138;                                     //end at shatter point
         player->ActivateTaxiPathTo(nodes);                  //TaxiPath 589
     }
-    if (action == GOSSIP_ACTION_INFO_DEF+2)
+    if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->PlayerTalkClass->CloseGossip();
 
@@ -148,19 +140,15 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
 bool GossipHello_npc_wing_commander_brack(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
-    player->PrepareQuestMenu( _Creature->GetGUID() );
+        player->PrepareQuestMenu( _Creature->GetGUID() );
 
         //Mission: The Murketh and Shaadraz Gateways
     if (player->GetQuestStatus(10129) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF+1);
-    }
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
         //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
-    if (player->GetQuestStatus(10162) == QUEST_STATUS_INCOMPLETE || 
-        player->GetQuestStatus(10347) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF+2);
-    }
+    if (player->GetQuestStatus(10162) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10347) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
@@ -169,7 +157,7 @@ bool GossipHello_npc_wing_commander_brack(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->PlayerTalkClass->CloseGossip();
 
@@ -180,7 +168,7 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
         nodes[1] = 136;                                     //end at Reaver's Fall
         player->ActivateTaxiPathTo(nodes);                  //TaxiPath 587
     }
-    if (action == GOSSIP_ACTION_INFO_DEF+2)
+    if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->PlayerTalkClass->CloseGossip();
 

@@ -119,7 +119,9 @@ update `quest_template` set `ReqCreatureOrGOId1` = 0, `ReqCreatureOrGOId2` = 0, 
 `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `SpecialFlags` = `SpecialFlags`|2 where `entry` IN (6622, 6624);
 */
 
-#define SAY_DOC "I'm saved! Thank you, doctor!"
+#define SAY_DOC1 "I'm saved! Thank you, doctor!"
+#define SAY_DOC2 "HOORAY! I AM SAVED!"
+#define SAY_DOC3 "Sweet, sweet embrace... take me..."
 
 /*######
 ## Triage quest
@@ -137,7 +139,7 @@ static Location AllianceCoords[]=
     {-3754.2653, -4539.0634, 14.1620, 5.1827}, // Left Bed
     {-3757.5134, -4532.7343, 14.1667, 5.1497}, // Right Bed
     {-3755.9040, -4529.0385, 14.0517, 0.4200}, // Far Right Bed
-    {-3749.5649, -4526.9609, 14.0764, 5.1297} // Far Right Bed, Behind
+    {-3749.5649, -4526.9609, 14.0764, 5.1297}  // Far Right Bed, Behind
 };
 
 //alliance run to where
@@ -152,7 +154,7 @@ static Location HordeCoords[]=
     {-1015.77, -3497.15, 62.82, 4.34}, // Left, Mid
     {-1019.51, -3495.49, 62.82, 4.34}, // Right, Mid
     {-1017.25, -3500.85, 62.98, 4.34}, // Left, front
-    {-1020.95, -3499.21, 62.98, 4.34} // Right, Front
+    {-1020.95, -3499.21, 62.98, 4.34}  // Right, Front
 };
 
 //horde run to where
@@ -256,8 +258,22 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);    //make not selectable
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);      //regen health
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);  //stand up
-            DoSay(SAY_DOC,LANG_UNIVERSAL,NULL);
-            m_creature->SendMoveToPacket(A_RUNTOX, A_RUNTOY, A_RUNTOZ, true, 2000 );
+            DoSay(SAY_DOC1,LANG_UNIVERSAL,NULL);
+
+            uint32 mobId = m_creature->GetEntry();
+            switch (mobId)
+            {
+                case 12923:
+                case 12924:
+                case 12925:
+                    m_creature->SendMoveToPacket(H_RUNTOX, H_RUNTOY, H_RUNTOZ, true, 2000 );
+                    break;
+                case 12936:
+                case 12937:
+                case 12938:
+                    m_creature->SendMoveToPacket(A_RUNTOX, A_RUNTOY, A_RUNTOZ, true, 2000 );
+                    break;
+            }
         }
         return;
     }
