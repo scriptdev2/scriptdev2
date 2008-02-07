@@ -694,7 +694,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (697, 1653, 1562, 1564, 694, 696, 701, 780);
 
 /* STRATHOLME */
-UPDATE `creature_template` SET `ScriptName` = 'boss_dathrohan_balnazzar' WHERE `entry` = 11058;
+UPDATE `creature_template` SET `ScriptName` = 'boss_dathrohan_balnazzar' WHERE `entry` = 10812;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fras_siabi' WHERE `entry` = 11058;
 UPDATE `creature_template` SET `ScriptName` = 'boss_skul' WHERE `entry` = 10393;
 UPDATE `creature_template` SET `ScriptName` = 'boss_hearthsinger_forresten' WHERE `entry` = 10558;
