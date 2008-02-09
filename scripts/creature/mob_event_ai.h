@@ -88,16 +88,40 @@ struct EventAI_Event
 
     uint16 event_type;
     uint32 event_inverse_phase_mask;
-    uint32 event_param1;
-    uint32 event_param2;
-    uint32 event_param3;
+    union
+    {
+        uint32 event_param1;
+        int32 event_param1_s;
+    };
+    union
+    {
+        uint32 event_param2;
+        int32 event_param2_s;
+    };
+    union
+    {
+        uint32 event_param3;
+        int32 event_param3_s;
+    };
 
     struct _action
     {
         uint16 type;
-        uint32 param1;
-        uint32 param2;
-        uint32 param3;
+        union
+        {
+            uint32 param1;
+            int32 param1_s;
+        };
+        union
+        {
+            uint32 param2;
+            int32 param2_s;
+        };
+        union
+        {
+            uint32 param3;
+            int32 param3_s;
+        };
     }action[MAX_ACTIONS];
 };
 

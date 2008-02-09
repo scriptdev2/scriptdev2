@@ -155,8 +155,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         pHolder.Time = param3;
                     else if (-param3_s < rnd % 100)
                         return;
-                else
-                    pHolder.Enabled = false;
+                    else
+                        pHolder.Enabled = false;
             }
             break;
         case EVENT_T_MANA:
@@ -174,8 +174,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         pHolder.Time = param3;
                     else if (-param3_s < rnd % 100)
                         return;
-                else
-                    pHolder.Enabled = false;
+                    else
+                        pHolder.Enabled = false;
             }
             break;
         case EVENT_T_AGGRO:
@@ -545,7 +545,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 //Reset all out of combat timers
             case EVENT_T_TIMER_OOC_REPEAT:
-                (*i).Time = (*i).Event.event_param2 + (*i).Event.event_param3 ? rand()%(*i).Event.event_param3 : 0;
+                if ((*i).Event.event_param3_s > 0)
+                    (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
+                else (*i).Time = (*i).Event.event_param2;
+
                 (*i).Enabled = true;
                 break;
             case EVENT_T_TIMER_OOC_SINGLE:
@@ -614,7 +617,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                     //Reset all in combat timers
                 case EVENT_T_TIMER_REPEAT:
-                    (*i).Time = (*i).Event.event_param2 + (*i).Event.event_param3 ? rand()%(*i).Event.event_param3 : 0;
+                    if ((*i).Event.event_param3_s > 0)
+                        (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
+                    else (*i).Time = (*i).Event.event_param2;                 
+
                     (*i).Enabled = true;
                     break;
                 case EVENT_T_TIMER_SINGLE:
