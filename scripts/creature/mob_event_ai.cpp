@@ -151,12 +151,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 //Prevent repeat for param3 time, or disable if param3 not set
                 if (param3)
+                {
                     if (param3_s > 0)
                         pHolder.Time = param3;
                     else if (-param3_s < rnd % 100)
                         return;
-                    else
-                        pHolder.Enabled = false;
+                }else pHolder.Enabled = false;
             }
             break;
         case EVENT_T_MANA:
@@ -170,12 +170,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 if (param3)
+                {
                     if (param3_s > 0)
                         pHolder.Time = param3;
                     else if (-param3_s < rnd % 100)
                         return;
-                    else
-                        pHolder.Enabled = false;
+                }else pHolder.Enabled = false;
             }
             break;
         case EVENT_T_AGGRO:
