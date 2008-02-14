@@ -50,7 +50,7 @@ bool GossipSelectWithCode_Honor_Vendor( Player *player, Creature *_Creature, uin
 
 uint32 NPCDialogStatus_Honor_Vendor(Player *player, Creature *_Creature )
 {
-    return _Creature->QUEST_DIALOG_STATUS(player, DIALOG_STATUS_CHAT);
+    return player->QUEST_DIALOG_STATUS(player, _Creature, DIALOG_STATUS_CHAT);
 }
 
 void AddSC_Honor_Vendor()

@@ -57,6 +57,7 @@ UPDATE `item_template` SET `ScriptName` = 'draenei_fishing_net' WHERE `entry` = 
 UPDATE `item_template` SET `ScriptName` = 'item_skin_of_purest_water' WHERE `entry` = 23751;
 UPDATE `item_template` SET `ScriptName` = 'item_tainted_core' WHERE `entry` = 31088;
 UPDATE `item_template` SET `ScriptName` = 'item_yehkinyas_bramble' WHERE `entry` = 10699;
+UPDATE `item_template` SET `ScriptName` = 'item_zezzaks_shard' WHERE `entry` = 31463;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;

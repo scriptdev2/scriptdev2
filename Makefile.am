@@ -57,6 +57,7 @@ scripts/item/item_skin_of_purest_water.cpp \
 scripts/item/item_test.cpp \
 scripts/item/item_vorenthals_presence.cpp \
 scripts/item/item_yehkinyas_bramble.cpp \
+scripts/item/item_zerraks_shard.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \

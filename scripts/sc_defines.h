@@ -186,5 +186,5 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 
 // defined fuctions to use with Creature
 
-#define QUEST_DIALOG_STATUS(a,b)   getDialogStatus(a,b)
+#define QUEST_DIALOG_STATUS(a,b,c)   GetSession()->getDialogStatus(a,b,c)
 #endif

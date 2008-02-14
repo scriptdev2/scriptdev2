@@ -299,13 +299,13 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             if(!InCombat)
             {
                 InCombat = true;
-                DoStartMeleeAttack(who);
                 if(pInstance)
                 {
                     pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
                     pInstance->SetData("MaulgarEvent", 1);
                 }
             }
+			DoStartMeleeAttack(who);
         }
     }
 
@@ -444,13 +444,13 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             if(!InCombat)
             {
                 InCombat = true;
-                DoStartMeleeAttack(who);
                 if(pInstance)
                 {
                     pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
                     pInstance->SetData("MaulgarEvent", 1);
                 }
             }
+		    DoStartMeleeAttack(who);
         }
     }
 
@@ -582,13 +582,13 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             if(!InCombat)
             {
                 InCombat = true;
-                DoStartMeleeAttack(who);
                 if(pInstance)
                 {
                     pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
                     pInstance->SetData("MaulgarEvent", 1);
                 }
             }
+			DoStartMeleeAttack(who);
         }
     }
 
@@ -705,13 +705,13 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             if(!InCombat)
             {
                 InCombat = true;
-                DoStartMeleeAttack(who);
                 if(pInstance)
                 {
                     pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
                     pInstance->SetData("MaulgarEvent", 1);
                 }
             }
+			DoStartMeleeAttack(who);
         }
     }
 

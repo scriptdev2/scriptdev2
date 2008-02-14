@@ -364,6 +364,10 @@
 					RelativePath="..\scripts\item\item_yehkinyas_bramble.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\item\item_zerraks_shard.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="zone"

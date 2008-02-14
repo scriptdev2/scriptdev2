@@ -108,6 +108,7 @@ extern void AddSC_nether_wraith_beacon();
 extern void AddSC_vorenthals_presence();
 extern void AddSC_item_skin_of_purest_water();
 extern void AddSC_item_yehkinyas_bramble();
+extern void AddSC_item_zezzak_shard();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -865,6 +866,7 @@ void ScriptsInit()
     AddSC_vorenthals_presence();
     AddSC_item_skin_of_purest_water();
     AddSC_item_yehkinyas_bramble();
+    AddSC_item_zezzak_shard();
 
     // -- NPC --
     AddSC_not_selectable();
@@ -1512,6 +1514,18 @@ uint32 NPCDialogStatus( Player *player, Creature *_Creature )
 
     player->PlayerTalkClass->ClearMenus();
     return tmpscript->pNPCDialogStatus(player,_Creature);
+}
+
+MANGOS_DLL_EXPORT
+uint32 GODialogStatus( Player *player, GameObject *_GO )
+{
+    Script *tmpscript = NULL;
+
+    tmpscript = GetScriptByName(_GO->GetGOInfo()->ScriptName);
+    if(!tmpscript || !tmpscript->pGODialogStatus) return 100;
+
+    player->PlayerTalkClass->ClearMenus();
+    return tmpscript->pGODialogStatus(player,_GO);
 }
 
 MANGOS_DLL_EXPORT

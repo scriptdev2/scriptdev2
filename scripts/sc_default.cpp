@@ -42,7 +42,10 @@ uint32 NPCDialogStatus_default(Player *player, Creature *_Creature )
 {
     return 128;
 }
-
+uint32 GODialogStatus_default(Player* /*player*/, GameObject* /*_Creature*/ )
+{
+    return 128;
+}
 bool ItemHello_default(Player *player, Item *_Item, Quest *_Quest )
 {return false;}
 
@@ -73,6 +76,7 @@ void AddSC_default()
     newscript->pQuestSelect          = &QuestSelect_default;
     newscript->pQuestComplete        = &QuestComplete_default;
     newscript->pNPCDialogStatus      = &NPCDialogStatus_default;
+    newscript->pGODialogStatus       = &GODialogStatus_default;
     newscript->pChooseReward         = &ChooseReward_default;
     newscript->pItemHello            = &ItemHello_default;
     newscript->pGOHello              = &GOHello_default;
