@@ -139,7 +139,10 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 // b - Text
 // c - Sender(this is to identify the current Menu with this item)
 // d - Action (identifys this Menu Item)
-#define ADD_GOSSIP_ITEM(a,b,c,d)   PlayerTalkClass->GetGossipMenu()->AddMenuItem(a,b,c,d)
+// e - Text to be displayed in pop up box
+// f - Money value in pop up box
+#define ADD_GOSSIP_ITEM(a,b,c,d)   PlayerTalkClass->GetGossipMenu()->AddMenuItem(a,b,c,d,"",0)
+#define ADD_GOSSIP_ITEM_EXTENDED(a,b,c,d,e,f)   PlayerTalkClass->GetGossipMenu()->AddMenuItem(a,b,c,d,e,f)
 
 // This fuction Sends the current menu to show to client, a - NPCTEXTID(uint32) , b - npc guid(uint64)
 #define SEND_GOSSIP_MENU(a,b)      PlayerTalkClass->SendGossipMenu(a,b)

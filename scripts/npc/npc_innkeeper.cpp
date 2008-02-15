@@ -77,7 +77,7 @@ bool GossipHello_npc_innkeeper(Player *player, Creature *_Creature)
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
         }
  
-        player->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID, false);
+        player->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID,"",0);
     }
 
     _Creature->sendPreparedGossip( player );
