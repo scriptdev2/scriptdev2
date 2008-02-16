@@ -240,6 +240,10 @@ extern void AddSC_npcs_burning_steppes();
 
 //Caverns of Time
 //--Battle for Mt. Hyjal
+extern void AddSC_hyjal();
+extern void AddSC_boss_archimonde();
+extern void AddSC_instance_mount_hyjal();
+
 //--Old Hillsbrad
 extern void AddSC_boss_captain_skarloc();
 extern void AddSC_boss_epoch_hunter();
@@ -1003,6 +1007,10 @@ void ScriptsInit()
 
     //Caverns of Time
     //--Battle for Mt. Hyjal
+    AddSC_hyjal();
+    AddSC_boss_archimonde();
+    AddSC_instance_mount_hyjal();
+
     //--Old Hillsbrad
     AddSC_boss_captain_skarloc();
     AddSC_boss_epoch_hunter();

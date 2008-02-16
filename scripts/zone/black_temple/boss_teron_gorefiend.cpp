@@ -18,8 +18,8 @@
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
-SD%Complete: 100
-SDComment: 
+SD%Complete: 60
+SDComment: Requires Mind Control support for Ghosts.
 SDCategory: Black Temple
 EndScriptData */
 
@@ -34,39 +34,38 @@ EndScriptData */
 //Speech'n'sound
 
 #define SAY_INTRO          "I was the first, you know. For me, the wheel of death has spun many times. So much time has passed. I have a lot of catching up to do..." 
-#define SOUND_INTRO          11512
+#define SOUND_INTRO         11512
 
 #define SAY_AGGRO          "Vengeance is mine!"
-#define SOUND_AGGRO          11513
+#define SOUND_AGGRO        11513
 
 #define SAY_SLAY1          "I have use for you!"
-#define SOUND_SLAY1          11514
+#define SOUND_SLAY1        11514
 
 #define SAY_SLAY2          "It gets worse..."
-#define SOUND_SLAY2          11515
+#define SOUND_SLAY2        11515
 
 #define SAY_SPELL1          "What are you afraid of?"
-#define SOUND_SPELL1          11517
+#define SOUND_SPELL1        11517
 
 #define SAY_SPELL2          "Death... really isn't so bad."
-#define SOUND_SPELL2          11516
+#define SOUND_SPELL2        11516
 
-#define SAY_SPECIAL1          "Give in!"
-#define SOUND_SPECIAL1          11518
+#define SAY_SPECIAL1        "Give in!"
+#define SOUND_SPECIAL1      11518
 
-#define SAY_SPECIAL2          "I have something for you..."
-#define SOUND_SPECIAL2          11519
+#define SAY_SPECIAL2        "I have something for you..."
+#define SOUND_SPECIAL2      11519
 
 #define SAY_ENRAGE          "YOU WILL SHOW THE PROPER RESPECT!"
-#define SOUND_ENRAGE          11520
+#define SOUND_ENRAGE        11520
 
-#define SAY_DEATH          "The wheel...spins...again...."
-#define SOUND_DEATH          11521
-
+#define SAY_DEATH           "The wheel...spins...again...."
+#define SOUND_DEATH         11521
 
 //Locations
 
-#define Z_SUMMON          193.201141
+#define Z_SUMMON           193.201141
 
 #define X_SUMMON1          527.814087
 #define Y_SUMMON1          380.843170
@@ -74,25 +73,108 @@ EndScriptData */
 #define X_SUMMON2          527.814087
 #define Y_SUMMON2          421.829803
 
+struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
+{
+    mob_doom_blossomAI(Creature *c) : ScriptedAI(c)
+    {
+        SetVariables();
+    }
+
+    bool InCombat;
+
+    uint32 CheckTeronTimer;
+    uint32 ShadowBoltTimer;
+    uint64 TeronGUID;
+
+    void SetVariables()
+    {
+        CheckTeronTimer = 5000;
+        InCombat = false;
+        ShadowBoltTimer = 12000;
+        TeronGUID = 0;
+    }
+
+    void EnterEvadeMode()
+    {
+        SetVariables();
+
+        m_creature->CombatStop();
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        DoGoHome();
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if(who && who->isAlive())
+                {
+                    InCombat = true;
+                    m_creature->AddThreat(who, 1.0f);
+                }
+            }
+        }
+    }
+
+    void AttackStart(Unit *who) { return; }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(!InCombat)
+            return;
+
+        if(!m_creature->isInCombat()) m_creature->SetInCombat();
+
+        if(CheckTeronTimer < diff)
+        {
+            if(TeronGUID)
+            {
+                Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
+                if((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            }
+            CheckTeronTimer = 5000;
+        }else CheckTeronTimer -= diff;
+
+        if(ShadowBoltTimer < diff)
+        {
+            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SHADOWBOLT);
+            ShadowBoltTimer = 15000;
+        }else ShadowBoltTimer -= diff;
+    }
+
+    void SetTeronGUID(uint64 guid)
+    {
+        if(guid)
+            TeronGUID = guid;
+    }
+};
 
 struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 {
     boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c) 
     {
-        if(c->GetInstanceData())
-            pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        else pInstance = NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         SetVariables();
     }
 
     ScriptedInstance* pInstance;
 
     uint32 IncinerateTimer;
-    uint32 ShadowBoltTimer;
+    uint32 SummonDoomBlossomTimer;
     uint32 EnrageTimer;
     uint32 CrushingShadowsTimer;
     uint32 SummonShadowsTimer;
     uint32 RandomYellTimer;
+    uint32 AggroTimer;
+    uint64 AggroTargetGUID;
 
     bool InCombat;
     bool Intro;
@@ -104,22 +186,25 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             pInstance->SetData("TeronGorefiendEvent", 0);
 
         IncinerateTimer = 40000;
-        ShadowBoltTimer = 22000;
+        SummonDoomBlossomTimer = 12000;
         EnrageTimer = 600000;
         CrushingShadowsTimer = 22000;
         SummonShadowsTimer = 60000;
         RandomYellTimer = 50000;
 
-        Intro = false;
         HasEnraged = false;
-        InCombat = false;
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Start off unattackable so that the intro is done properly
     }
 
     void EnterEvadeMode()
     {
+        SetVariables();
         InCombat = false;
+        AggroTimer = 20000;
+        AggroTargetGUID = 0;
+        Intro = false;
 
-        (*m_creature).GetMotionMaster()->Clear(false);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -128,72 +213,58 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if(!who)
+        if(!who || Intro)
             return;
 
         if(who->isTargetableForAttack() && who!= m_creature)
         {
             DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                if(pInstance)
-                    pInstance->SetData("TeronGorefiendEvent", 1);
-
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                InCombat = true;
-            }
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-
         if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
+
+            if(!who || (!who->isAlive())) return;
+
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    if(pInstance)
-                        pInstance->SetData("TeronGorefiendEvent", 1);
-
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
-                }
+                
+                m_creature->AddThreat(who, 1.0f);
             }
-            else if (!Intro && m_creature->IsWithinDistInMap(who, 100.0f))
+            
+            if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f))
             {
+                if(pInstance)
+                    pInstance->SetData("TeronGorefiendEvent", 1);
+
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoYell(SAY_INTRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_INTRO);
+                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
+                AggroTargetGUID = who->GetGUID();
                 Intro = true;
             }
         }
-
-
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
     }
 
@@ -202,13 +273,65 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData("TeronGorefiendEvent", 3);
 
+        InCombat = false;
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
+    float CalculateRandomLocation(float Loc)
+    {
+        float coord = Loc;
+        switch(rand()%2)
+        {
+            case 0:
+                coord += rand()%5;
+                break;
+            case 1:
+                coord -= rand()%5;
+                break;
+        }
+        return coord;
+    }
+
+    void SetThreatList(Creature* Blossom)
+    {
+        if(!Blossom) return;
+
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>::iterator i = m_threatlist.begin();
+        for(i = m_threatlist.begin(); i != m_threatlist.end(); i++)
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+            if(pUnit && pUnit->isAlive())
+            {
+                float threat = m_creature->getThreatManager().getThreat(pUnit);
+                Blossom->AddThreat(pUnit, threat);
+            }
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if(Intro)
+        {
+            if(AggroTimer < diff)
+            {
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+                InCombat = true;
+                Intro = false;
+                if(AggroTargetGUID)
+                {
+                    Unit* pUnit = Unit::GetUnit((*m_creature), AggroTargetGUID);
+                    if(pUnit) AttackStart(pUnit);
+                }
+            }else AggroTimer -= diff;
+        }
+
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() || Intro)
             return;
 
         if(SummonShadowsTimer < diff)
@@ -230,22 +353,26 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             SummonShadowsTimer = 60000;
         }else SummonShadowsTimer -= diff;
 
-        if(ShadowBoltTimer < diff)
+        if(SummonDoomBlossomTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(target && target->isAlive())
+            if(target)
             {
-                DoCast(target, SPELL_SHADOWBOLT);
-                if(!HasEnraged)
+                float X = CalculateRandomLocation(m_creature->GetPositionX());
+                float Y = CalculateRandomLocation(m_creature->GetPositionY());
+                Creature* DoomBlossom = NULL;
+                DoomBlossom = m_creature->SummonCreature(23123, X, Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                if(DoomBlossom)
                 {
-                    ShadowBoltTimer = 20 + rand()%7 * 1000;
+                    DoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    DoomBlossom->setFaction(m_creature->getFaction());
+                    DoomBlossom->AddThreat(target, 1.0f);
+                    ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
+                    SetThreatList(DoomBlossom);
                 }
-                else
-                {
-                    ShadowBoltTimer = 1000;
-                }     
             }
-        }else ShadowBoltTimer -= diff;
+            SummonDoomBlossomTimer = 45000;
+        }else SummonDoomBlossomTimer -= diff;
 
         if(IncinerateTimer < diff)
         {
@@ -254,17 +381,17 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             {
                 switch(rand()%2)
                 {
-                case 0:
-                    DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
-                    break;
-                case 1:
-                    DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
-                    break;
+                    case 0:
+                        DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
+                        break;
+                    case 1:
+                        DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
+                        break;
                 }                         
                 DoCast(target, SPELL_INCINERATE);
-                IncinerateTimer = 20000 + rand()%31 * 1000;
+                IncinerateTimer = 10000 + rand()%31 * 1000;
             }
         }else IncinerateTimer -= diff;
 
@@ -273,21 +400,21 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target && target->isAlive())
                 DoCast(target, SPELL_CRUSHING_SHADOWS);
-            CrushingShadowsTimer = 30000 + rand()%16 * 1000;
+            CrushingShadowsTimer = 10000 + rand()%16 * 1000;
         }else CrushingShadowsTimer -= diff;
 
         if(RandomYellTimer < diff)
         {
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_SPELL1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SPELL1);
-                break;
-            case 1:
-                DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SPELL2);
-                break;
+                case 0:
+                    DoYell(SAY_SPELL1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SPELL1);
+                    break;
+                case 1:
+                    DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SPELL2);
+                   break;
             }
             RandomYellTimer = 50000 + rand()%51 * 1000;
         }else RandomYellTimer -= diff;
@@ -306,6 +433,11 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     }
 };
 
+CreatureAI* GetAI_mob_doom_blossom(Creature *_Creature)
+{
+    return new mob_doom_blossomAI(_Creature);
+}
+
 CreatureAI* GetAI_boss_teron_gorefiend(Creature *_Creature)
 {
     return new boss_teron_gorefiendAI (_Creature);
@@ -314,6 +446,11 @@ CreatureAI* GetAI_boss_teron_gorefiend(Creature *_Creature)
 void AddSC_boss_teron_gorefiend()
 {
     Script *newscript;
+    newscript = new Script;
+    newscript->Name = "mob_doom_blossom";
+    newscript->GetAI = GetAI_mob_doom_blossom;
+    m_scripts[nrscripts++] = newscript;
+
     newscript = new Script;
     newscript->Name="boss_teron_gorefiend";
     newscript->GetAI = GetAI_boss_teron_gorefiend;

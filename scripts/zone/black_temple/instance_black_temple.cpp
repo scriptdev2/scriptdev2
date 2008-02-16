@@ -49,7 +49,11 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 {
     instance_black_temple(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
+    uint64 Najentus;
+    uint64 Akama; // This is the Akama that starts the Illidan encounter.
+    uint64 Akama_Shade; // This is the Akama that starts the Shade of Akama encounter.
     uint64 ShadeOfAkama;
+    uint64 Supremus;
     uint64 LadyMalande;
     uint64 GathiosTheShatterer;
     uint64 HighNethermancerZerevor;
@@ -60,7 +64,11 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     void Initialize()
     {
+        Najentus = 0;
+        Akama = 0;
+        Akama_Shade = 0;
         ShadeOfAkama = 0;
+        Supremus = 0;
         LadyMalande = 0;
         GathiosTheShatterer = 0;
         HighNethermancerZerevor = 0;
@@ -83,8 +91,24 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(creature_entry)
         {
+            case 22887:
+                Najentus = creature->GetGUID();
+                break;
+
+            case 22990:
+                Akama = creature->GetGUID();
+                break;
+
+            case 23890:
+                Akama_Shade = creature->GetGUID();
+                break;
+
             case 22841:
                 ShadeOfAkama = creature->GetGUID();
+                break;
+
+            case 22898:
+                Supremus = creature->GetGUID();
                 break;
 
             case 22917:
@@ -111,13 +135,21 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     uint64 GetData64(char *identifier)
     {
-        if(identifier == "ShadeOfAkama" && ShadeOfAkama)
+        if(identifier == "HighWarlordNajentus" && Najentus)
+            return Najentus;
+        else if(identifier == "Akama" && Akama)
+            return Akama;
+        else if(identifier == "Akama(Shade)" && Akama_Shade)
+            return Akama_Shade;
+        else if(identifier == "ShadeOfAkama" && ShadeOfAkama)
             return ShadeOfAkama;
+        else if(identifier == "Supremus" && Supremus)
+            return Supremus;
         else if(identifier == "IllidanStormrage" && IllidanStormrage)
             return IllidanStormrage;
         else if(identifier == "GathiosTheShatterer" && GathiosTheShatterer)
             return GathiosTheShatterer;
-        else if(identifier == "HighNetermancerZerevor" && HighNethermancerZerevor)
+        else if(identifier == "HighNethermancerZerevor" && HighNethermancerZerevor)
             return HighNethermancerZerevor;
         else if(identifier == "LadyMalande" && LadyMalande)
             return LadyMalande;

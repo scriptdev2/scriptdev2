@@ -153,7 +153,11 @@ scripts/zone/burning_steppes/npcs_burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \
+scripts/zone/caverns_of_time/hyjal/boss_archimonde.cpp \
+scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp \
+scripts/zone/caverns_of_time/hyjal/hyjalAI.h \
 scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
+scripts/zone/caverns_of_time/hyjal/npc_hyjal.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_captain_skarloc.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_epoch_hunter.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_leutenant_drake.cpp \

@@ -16,12 +16,14 @@
 
 /* ScriptData
 SDName: Boss_Warlord_Najentus
-SD%Complete: 100
-SDComment: 
+SD%Complete: 90
+SDComment: Using a creature workaround instead of a GO for Impaling Spine.
 SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "../../../../../game/GameObject.h"
+#include "../../../../../game/TargetedMovementGenerator.h"
 
 //Aggro
 #define SAY_AGGRO "You will die, in the name of Lady Vashj!"
@@ -56,43 +58,34 @@ EndScriptData */
 #define SAY_DEATH "Lord Illidan will... crush you."
 #define SOUND_DEATH 11459
 
-
 //Spells
-#define SPELL_CRASHINGWAVE               40100
-#define SPELL_NEEDLE_SINGLE               39835
+#define SPELL_CRASHINGWAVE             40100
+#define SPELL_NEEDLE_SPINE             39835
 #define SPELL_NEEDLE_AOE               39968
-#define SPELL_ENRAGE                    28747
-#define SPELL_TIDAL_BURST               39878
+#define SPELL_ENRAGE                   8747 // TODO: Find proper enrage spell.
+#define SPELL_TIDAL_BURST              39878
+#define SPELL_TIDAL_SHIELD             39872 // Not going to use this since Hurl Spine doesn't dispel it.
+#define SPELL_IMPALING_SPINE           39837
+#define SPELL_CREATE_NAJENTUS_SPINE    39956
+#define SPELL_HURL_SPINE               39948
+#define SPELL_SHIELD_VISUAL            37136
 
-struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
 {
-    boss_najentusAI(Creature *c) : ScriptedAI(c) 
+    mob_najentus_spineAI(Creature *c) : ScriptedAI(c)
     {
-        if(c->GetInstanceData())
-            pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        pInstance = NULL;
         SetVariables();
     }
 
-    ScriptedInstance* pInstance;
-    uint32 CrashingWaveTimer;
-    uint32 NeedleTimer;
-    uint32 EnrageTimer;
-    uint32 SpecialYellTimer;
-
     bool InCombat;
+    
+    uint64 SpineVictimGUID;
 
     void SetVariables()
     {
         InCombat = false;
 
-        CrashingWaveTimer = 28000;
-        NeedleTimer = 24000;
-        EnrageTimer = 480000;
-        SpecialYellTimer = 45000 + (rand()%76)*1000;
-
-        if(pInstance)
-            pInstance->SetData("HighWarlordNajentusEvent", 0);
+        SpineVictimGUID = 0;
     }
 
     void EnterEvadeMode()
@@ -105,42 +98,147 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         DoGoHome();
     }
 
+    void SetSpineVictimGUID(uint64 guid)
+    {
+        if(guid)
+            SpineVictimGUID = guid;
+    }
+
+    void JustDied(Unit *killer)
+    {
+        // Make the killer have the Najentus Spine item to pierce Tidal Shield
+        if(killer)
+            killer->CastSpell(killer, SPELL_CREATE_NAJENTUS_SPINE, true);
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if(damage < m_creature->GetHealth()) return;
+        
+        // Remove the Impaling Spine DoT from whoever was affected
+        if(SpineVictimGUID)
+        {
+            Unit* victim = Unit::GetUnit((*m_creature), SpineVictimGUID);
+            if(victim && ((victim->HasAura(SPELL_IMPALING_SPINE, 0)) || (victim->HasAura(SPELL_IMPALING_SPINE, 1)) || (victim->HasAura(SPELL_IMPALING_SPINE, 2))))
+                victim->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
+        }
+    }
+
+    void AttackStart(Unit *who) { if(!InCombat) InCombat = true; }
+
+    void MoveInLineOfSight(Unit *who) { if(!InCombat) InCombat = true; }
+
+    void UpdateAI(const uint32 diff) { if(InCombat) m_creature->SetInCombat(); }
+};
+
+struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
+{
+    boss_najentusAI(Creature *c) : ScriptedAI(c) 
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        SetVariables();
+    }
+
+    ScriptedInstance* pInstance;
+    uint32 CrashingWaveTimer;
+    uint32 NeedleSpineTimer;
+    uint32 EnrageTimer;
+    uint32 SpecialYellTimer;
+    uint32 TidalShieldTimer;
+    uint32 ImpalingSpineTimer;
+    uint32 CheckTimer; // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
+    uint32 DispelShieldTimer; // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
+
+    uint64 SpineTargetGUID;
+
+    bool InCombat;
+    bool IsShielded;
+
+    void SetVariables()
+    {
+        IsShielded = false;
+
+        CrashingWaveTimer = 28000;
+        NeedleSpineTimer = 10000;
+        EnrageTimer = 480000;
+        SpecialYellTimer = 45000 + (rand()%76)*1000;
+        TidalShieldTimer = 60000;
+        ImpalingSpineTimer = 45000;
+        CheckTimer = 2000;
+        DispelShieldTimer = 30000;
+
+        SpineTargetGUID = 0;
+
+        if(pInstance)
+            pInstance->SetData("HighWarlordNajentusEvent", 0);
+    }
+
+    void EnterEvadeMode()
+    {
+        SetVariables();
+        InCombat = false;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+    }
+
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
     }
-
 
     void JustDied(Unit *victim)
     {
         if(pInstance)
-        {
             pInstance->SetData("HighWarlordNajentusEvent", 3);
-        }
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
-    } 
 
+        InCombat = false;
+    }
+
+    void SpellHit(Unit *caster, const SpellEntry *spell)
+    {
+        if(IsShielded)
+        {
+            if(spell->Id == SPELL_HURL_SPINE)
+            {
+                if(m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
+                    m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
+                if(m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
+                    m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
+                DoCast(m_creature->getVictim(), SPELL_TIDAL_BURST);
+                IsShielded = false;
+            }
+        }
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if(IsShielded)
+            damage = 0;
+    }
 
     void AttackStart(Unit *who)
     {
-        if (!who)
+        if (!who || IsShielded)
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-
             DoStartMeleeAttack(who);
 
             if (!InCombat)
@@ -149,6 +247,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                     pInstance->SetData("HighWarlordNajentusEvent", 1);
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                SetVariables();
                 InCombat = true;
             }
         }
@@ -182,11 +281,67 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         }
     }
 
+    // This is a workaround since we cannot summon GameObjects at will.
+    // Instead, we create a custom creature on top of the player.
+    // When someone kills the creature, the killer gets the "Naj'entus Spine" item.
+    // This item is the only item that should be able to pierce Tidal Shield
+    void DoImpalingSpineWorkaround(Unit* target)
+    {
+        Creature* Spine = NULL;
+        Spine = m_creature->SummonCreature(500000, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 10000);
+        if(Spine)
+        {
+            Spine->setFaction(m_creature->getFaction());
+            ((mob_najentus_spineAI*)Spine->AI())->SetSpineVictimGUID(target->GetGUID());
+            SpineTargetGUID = target->GetGUID();
+        }
+    }
+
+    void RemoveImpalingSpine()
+    {
+        if(!IsShielded) return;
+
+        if(SpineTargetGUID)
+        {
+            Unit* target = Unit::GetUnit((*m_creature), SpineTargetGUID);
+            if(target && target->HasAura(SPELL_IMPALING_SPINE, 0))
+                target->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
+
+        if(CheckTimer < diff)
+        {
+            // if(m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
+            if(m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
+                m_creature->SetHealth(m_creature->GetHealth() + (m_creature->GetMaxHealth()*0.01));
+            else
+                IsShielded = false;
+
+            CheckTimer = 2000;
+        }else CheckTimer -= diff;
+
+        if(IsShielded)
+        {
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->Idle();
+            if(!m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
+                DoCast(m_creature, SPELL_SHIELD_VISUAL);
+            if(DispelShieldTimer < diff)
+            {
+                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                if(m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
+                    m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
+                IsShielded = false;
+            }else DispelShieldTimer -= diff;
+            
+            return; // Don't cast or do anything while Shielded
+        }
 
         // Crashing Wave
         if(CrashingWaveTimer < diff)
@@ -200,57 +355,103 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         {
             DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            m_creature->CastSpell(m_creature, SPELL_ENRAGE, true);
-            DoCast(m_creature->getVictim(), SPELL_TIDAL_BURST);
+            DoCast(m_creature, SPELL_ENRAGE);
             EnrageTimer = 480000;
         }else EnrageTimer -= diff;
 
         // Needle
-        if(NeedleTimer < diff)
+        if(NeedleSpineTimer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-            m_creature->CastSpell(target, SPELL_NEEDLE_AOE, true);
-            DoCast(target, SPELL_NEEDLE_SINGLE);
-            NeedleTimer = 60000;
-
-            switch(rand()%4)
+            for(uint8 i = 0; i < 3; i++)
             {
-            case 0:
-                DoYell(SAY_NEEDLE1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_NEEDLE1);
-                break;
-            case 1:
-                DoYell(SAY_NEEDLE2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_NEEDLE2);
-                break;
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                DoCast(target, SPELL_NEEDLE_AOE, true);
+                DoCast(target, SPELL_NEEDLE_SPINE);
             }
-        }else NeedleTimer -= diff;
+            
+            NeedleSpineTimer = 60000;
+        }else NeedleSpineTimer -= diff;
 
         if(SpecialYellTimer < diff)
         {
             switch(rand()%2)
             {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
-                break;
-            case 1:
-                DoYell(SAY_SPECIAL2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
-                break;
+                case 0:
+                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
+                    break;
+                case 1:
+                    DoYell(SAY_SPECIAL2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
+                    break;
             }
-            SpecialYellTimer = 45000 + (rand()%76)*1000;
-        } else SpecialYellTimer -= diff;
+            SpecialYellTimer = 25000 + (rand()%76)*1000;
+        }else SpecialYellTimer -= diff;
+
+        if(ImpalingSpineTimer < diff)
+        {
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if(target && (target->GetTypeId() == TYPEID_PLAYER))
+            {
+                DoCast(target, SPELL_IMPALING_SPINE);
+                DoImpalingSpineWorkaround(target);
+                ImpalingSpineTimer = 45000;
+            
+                switch(rand()%2)
+                {
+                    case 0:
+                        DoYell(SAY_NEEDLE1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_NEEDLE1);
+                        break;
+                    case 1:
+                        DoYell(SAY_NEEDLE2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_NEEDLE2);
+                        break;
+                }
+            }
+        }else ImpalingSpineTimer -= diff;
+
+        if(TidalShieldTimer < diff)
+        {
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoCast(m_creature, SPELL_SHIELD_VISUAL, true);
+            // DoCast(m_creature, SPELL_TIDAL_SHIELD);
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->Idle();
+            IsShielded = true;
+            TidalShieldTimer = 60000;
+            CheckTimer = 2000;
+            DispelShieldTimer = 30000;
+        }else TidalShieldTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
+ 
+bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
+{
+    ScriptedInstance* pInstance = ((ScriptedInstance*)_GO->GetInstanceData());
+    if(pInstance)
+    {
+        Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), pInstance->GetData64("HighWarlordNajentus")));
+        if(Najentus)
+        {
+            ((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine();
+        }else _GO->Say("Najentus not found", LANG_UNIVERSAL, NULL);
+    }
+    else _GO->Say("Invalid instance or location", LANG_UNIVERSAL, NULL);
+
+    return true;
+}
+
+CreatureAI* GetAI_mob_najentus_spine(Creature *_Creature)
+{
+    return new mob_najentus_spineAI (_Creature);
+}
+
 CreatureAI* GetAI_boss_najentus(Creature *_Creature)
 {
     return new boss_najentusAI (_Creature);
 }
-
 
 void AddSC_boss_najentus()
 {
@@ -258,5 +459,15 @@ void AddSC_boss_najentus()
     newscript = new Script;
     newscript->Name="boss_najentus";
     newscript->GetAI = GetAI_boss_najentus;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "mob_najentus_spine";
+    newscript->GetAI = GetAI_mob_najentus_spine;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "go_najentus_spine";
+    newscript->pGOHello = &GOHello_go_najentus_spine;
     m_scripts[nrscripts++] = newscript;
 }

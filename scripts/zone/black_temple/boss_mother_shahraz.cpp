@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Mother_Shahraz
 SD%Complete: 80
-SDComment: Prismatic shields randomly applied instead of correct "based on damage taken"
+SDComment: Saber Lash missing, Fatal Attraction slightly incorrect; need to damage only if affected players are within range of each other
 SDCategory: Black Temple
 EndScriptData */
 
@@ -26,71 +26,86 @@ EndScriptData */
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 //Spells
-#define SPELL_BEAM_SINISTER          40859
-#define SPELL_BEAM_VILE          40860
-#define SPELL_BEAM_WICKED          40861
-#define SPELL_BEAM_SINFUL          40827
-#define SPELL_PRISMATIC_SHADOW          40880
-#define SPELL_PRISMATIC_FIRE          40882
-#define SPELL_PRISMATIC_NATURE          40883
-#define SPELL_PRISMATIC_ARCANE          40891
-#define SPELL_PRISMATIC_FROST          40896
-#define SPELL_PRISMATIC_HOLY          40897
-#define SPELL_ATTRACTION          40871
-#define SPELL_ENRAGE          23537
+#define SPELL_BEAM_SINISTER     40859
+#define SPELL_BEAM_VILE         40860
+#define SPELL_BEAM_WICKED       40861
+#define SPELL_BEAM_SINFUL       40827
+#define SPELL_PRISMATIC_SHADOW  40880
+#define SPELL_PRISMATIC_FIRE    40882
+#define SPELL_PRISMATIC_NATURE  40883
+#define SPELL_PRISMATIC_ARCANE  40891
+#define SPELL_PRISMATIC_FROST   40896
+#define SPELL_PRISMATIC_HOLY    40897
+#define SPELL_ATTRACTION        40871
+#define SPELL_ENRAGE            23537
+#define SPELL_SABER_LASH        43267
+#define SPELL_SABER_LASH_IMM    43690
+#define SPELL_TELEPORT_VISUAL   40869
 
 //Speech'n'Sounds
 #define SAY_TAUNT1          "You play, you pay."
-#define SOUND_TAUNT1          11501
+#define SOUND_TAUNT1        11501
 
 #define SAY_TAUNT2          "I'm not impressed."
-#define SOUND_TAUNT2          11502
+#define SOUND_TAUNT2        11502
 
 #define SAY_TAUNT3          "Enjoying yourselves?"
-#define SOUND_TAUNT3          11503
+#define SOUND_TAUNT3        11503
 
-#define SAY_AGGRO          "So, business... Or pleasure?"
-#define SOUND_AGGRO          11504
+#define SAY_AGGRO           "So, business... Or pleasure?"
+#define SOUND_AGGRO         11504
 
 #define SAY_SPELL1          "You seem a little tense."
-#define SOUND_SPELL1          11505
+#define SOUND_SPELL1        11505
 
 #define SAY_SPELL2          "Don't be shy."
-#define SOUND_SPELL2          11506
+#define SOUND_SPELL2        11506
 
 #define SAY_SPELL3          "I'm all... yours."
-#define SOUND_SPELL3          11507
+#define SOUND_SPELL3        11507
 
-#define SAY_SLAY1          "Easy come, easy go."
-#define SOUND_SLAY1          11508
+#define SAY_SLAY1           "Easy come, easy go."
+#define SOUND_SLAY1         11508
 
-#define SAY_SLAY2          "So much for a happy ending."
-#define SOUND_SLAY2          11509
+#define SAY_SLAY2           "So much for a happy ending."
+#define SOUND_SLAY2         11509
 
 #define SAY_ENRAGE          "Stop toying with my emotions!"
-#define SOUND_ENRAGE          11510
+#define SOUND_ENRAGE        11510
 
-#define SAY_DEATH          "I wasn't... finished."
-#define SOUND_DEATH          11511
+#define SAY_DEATH           "I wasn't... finished."
+#define SOUND_DEATH         11511
 
+struct Locations
+{
+    float x,y,z;
+};
+
+static Locations TeleportPoint[]=
+{
+    {959.996, 212.576, 193.843},
+    {932.537, 231.813, 193.838},
+    {958.675, 254.767, 193.822},
+    {946.955, 201.316, 192.535},
+    {944.294, 149.676, 197.551},
+    {930.548, 284.888, 193.367},
+    {965.997, 278.398, 195.777}
+};
 
 struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
     boss_shahrazAI(Creature *c) : ScriptedAI(c) 
     {
-        if(c->GetInstanceData())
-            pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        else pInstance = NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         SetVariables();
     }
 
     ScriptedInstance* pInstance;
 
-    uint64 BombGUID;
-
+    uint64 TargetGUID[3];
     uint32 BeamTimer;
     uint32 BeamCounter;
-    uint32 ElementalShieldTimer;
+    uint32 PrismaticShieldTimer;
     uint32 FatalAttractionTimer;
     uint32 FatalAttractionExplodeTimer;
     uint32 RandomYellTimer;
@@ -106,27 +121,27 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData("MotherShahrazEvent", 0);
 
-        BombGUID = 0;
+        for(uint8 i = 0; i<3; i++)
+            TargetGUID[i] = 0;
 
         BeamTimer = 60000;
         BeamCounter = 4;
-        ElementalShieldTimer = 0;
+        PrismaticShieldTimer = 0;
         FatalAttractionTimer = 60000;
-        FatalAttractionExplodeTimer = 3000;
+        FatalAttractionExplodeTimer = 70000;
         RandomYellTimer = 70000 + rand()%41 * 1000;
         EnrageTimer = 600000;
         Multiplier = 1;
         ExplosionCount = 0;
 
         HasSummonedBomb = false;
-        InCombat = false;
     }
 
     void EnterEvadeMode()
     {
+        SetVariables();
         InCombat = false;
 
-        (*m_creature).GetMotionMaster()->Clear(false);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -147,6 +162,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 if(pInstance)
                     pInstance->SetData("MotherShahrazEvent", 1);
 
+                SetVariables();
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
@@ -156,7 +172,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-
         if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
@@ -184,14 +199,14 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+           case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
     }
 
@@ -200,6 +215,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData("MotherShahrazEvent", 3);
 
+        InCombat = false;
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
@@ -218,15 +234,15 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-                    case 0:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
-                        break;
-                    case 1:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
-                        break;
-                    case 2:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
-                        break;
+                        case 0:
+                            DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
+                            break;
+                        case 1:
+                            DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
+                            break;
+                        case 2:
+                            DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
+                            break;
                     }
                     BeamCounter++;
                 }
@@ -242,108 +258,107 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             {
                 switch(rand()%3)
                 {
-                case 0:
-                    DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
-                    break;
-                case 1:
-                    DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
-                    break;
-                case 2:
-                    DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
-                    break;
+                    case 0:
+                        DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
+                        break;
+                    case 1:
+                        DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
+                        break;
+                    case 2:
+                        DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
+                        break;
                 }
             }
-            BeamTimer = 40000 / Multiplier;
+            BeamTimer = 30000 / Multiplier;
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds. 
-        // This is a workaround as it should be cast on the player depending on what spell school he damaged with
-        // It should stack based on damage.
-        if(ElementalShieldTimer < diff)
+        if(PrismaticShieldTimer < diff)
         {
             switch(rand()%6)
             {
-            case 0:
-                DoCast(m_creature, SPELL_PRISMATIC_SHADOW);
-                break;
-            case 1:
-                DoCast(m_creature, SPELL_PRISMATIC_FIRE);
-                break;
-            case 2:
-                DoCast(m_creature, SPELL_PRISMATIC_NATURE);
-                break;
-            case 3:
-                DoCast(m_creature, SPELL_PRISMATIC_ARCANE);
-                break;
-            case 4:
-                DoCast(m_creature, SPELL_PRISMATIC_FROST);
-                break;
-            case 5:
-                DoCast(m_creature, SPELL_PRISMATIC_HOLY);
-                break;
+                case 0:
+                    DoCast(m_creature, SPELL_PRISMATIC_SHADOW);
+                    break;
+                case 1:
+                    DoCast(m_creature, SPELL_PRISMATIC_FIRE);
+                    break;
+                case 2:
+                    DoCast(m_creature, SPELL_PRISMATIC_NATURE);
+                    break;
+                case 3:
+                    DoCast(m_creature, SPELL_PRISMATIC_ARCANE);
+                    break;
+                case 4:
+                    DoCast(m_creature, SPELL_PRISMATIC_FROST);
+                    break;
+                case 5:
+                    DoCast(m_creature, SPELL_PRISMATIC_HOLY);
+                    break;
             }
-            ElementalShieldTimer = 15000;
-        }else ElementalShieldTimer -= diff;
+            PrismaticShieldTimer = 15000;
+        }else PrismaticShieldTimer -= diff;
 
-        // Select 3 random targets (can select same target more than once), teleport to creature then cast an explosion.
-        // Targets have ~3 seconds to run away.
+        // Select 3 random targets (can select same target more than once), teleport to a random location then make them cast explosions until they get away from each other.
         if(FatalAttractionTimer < diff)
         {
+            uint32 random = rand()%7;
+            float X = TeleportPoint[random].x;
+            float Y = TeleportPoint[random].y;
+            float Z = TeleportPoint[random].z;
+            ExplosionCount = 0;
+
             for(uint32 i = 0; i<4; i++)
             {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (target && target->GetTypeId() == TYPEID_PLAYER) // Teleport Z + 2 since they can fall through the ground if VMaps is disabled
-                    ((Player*)target)->TeleportTo(m_creature->GetMapId(), m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+2, target->GetOrientation());
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                if (target && target->GetTypeId() == TYPEID_PLAYER)
+                {
+                    ((Player*)target)->TeleportTo(m_creature->GetMapId(), X, Y, Z, target->GetOrientation());
+                    TargetGUID[i] = target->GetGUID();
+                    target->CastSpell(target, SPELL_TELEPORT_VISUAL, true);
+                }
             }
 
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SPELL2);
-                break;
-            case 1:
-                DoYell(SAY_SPELL3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SPELL3);
-                break;
+                case 0:
+                    DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SPELL2);
+                    break;
+                case 1:
+                    DoYell(SAY_SPELL3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_SPELL3);
+                    break;
             }
-            FatalAttractionExplodeTimer = 4000;
-            Creature* Bomb = NULL; // This creature casts the explosion spell.
+            FatalAttractionExplodeTimer = 2000;
             FatalAttractionTimer = 40000 + rand()%31 * 1000;
-            Bomb = m_creature->SummonCreature(23085, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 5, TEMPSUMMON_TIMED_DESPAWN, 10000);
-            if(Bomb)
-            {
-                BombGUID = Bomb->GetGUID();
-                Bomb->setFaction(m_creature->getFaction());
-                Bomb->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE); // Unselectable. Players shouldn't be able to kill it.
-                Bomb->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Invisible
-            }              
         }else FatalAttractionTimer -= diff;
 
         if(FatalAttractionExplodeTimer < diff)
         {
-            if(BombGUID)
+            // Just make them explode three times... they're supposed to keep exploding while they are in range, but it'll take too much code. I'll try to think of an efficient way for it later.
+            if(ExplosionCount < 3)
             {
-                Creature* Bomb = NULL;
-                Bomb = ((Creature*)Unit::GetUnit((*m_creature), BombGUID));
-                if(ExplosionCount < 3)
-                {            
-                    if(Bomb)
+                for(uint8 i = 0; i < 4; i++)
+                {
+                    Unit* pUnit = NULL;
+                    if(TargetGUID[i])
                     {
-                        Bomb->CastSpell(Bomb, SPELL_ATTRACTION, false);
-                        FatalAttractionExplodeTimer = 1000;
-                        ExplosionCount++;
+                        pUnit = Unit::GetUnit((*m_creature), TargetGUID[i]);
+                        if(pUnit)
+                            pUnit->CastSpell(pUnit, SPELL_ATTRACTION, true);
                     }
                 }
-                else
-                {
-                    FatalAttractionExplodeTimer = FatalAttractionTimer + 4000;
-                    ExplosionCount = 0;
-                    BombGUID = NULL;
-                }
+
+                ExplosionCount++;
+                FatalAttractionExplodeTimer = 1000;
+            }
+            else
+            {
+                FatalAttractionExplodeTimer = FatalAttractionTimer + 2000;
+                ExplosionCount = 0;
             }
         }else FatalAttractionExplodeTimer -= diff;
-
 
         //Enrage
         if(EnrageTimer < diff)

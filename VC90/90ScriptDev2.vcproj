@@ -1991,7 +1991,23 @@
 						Name="Battle for Mt. Hyjal"
 						>
 						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_archimonde.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\instance_hyjal.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\npc_hyjal.cpp"
 							>
 						</File>
 					</Filter>
