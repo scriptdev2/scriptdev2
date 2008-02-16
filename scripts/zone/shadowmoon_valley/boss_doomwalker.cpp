@@ -23,7 +23,6 @@ EndScriptData */
 #include "../../sc_defines.h"
 //--------------------------------------
 //Spells
-#define SPELL_MARK_DEATH            37128
 #define SPELL_SUNDER_ARMOR          30901
 
 #define SPELL_CHAIN_LIGHTNING       33665
@@ -35,6 +34,8 @@ EndScriptData */
 #define SOUND_OVERRUN_2             11348
 
 #define SPELL_ENRAGE                34624
+
+#define SPELL_MARK_DEATH            37128
 
 #define SPELL_EARTHQUAKE            32686
 #define SAY_EARTHQUAKE_1            "Tectonic disruption commencing."
@@ -62,6 +63,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 {
     boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
+
     uint32 Chain_Timer;
     uint32 Enrage_Timer; 
     uint32 Overrun_Timer;
@@ -69,6 +71,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
     uint32 Armor_Timer;
 
     bool InCombat;
+    bool InEnrage;
 
     void EnterEvadeMode()
     {
@@ -79,32 +82,53 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         Overrun_Timer   = 120000;
 
         InCombat = false;
-
+        InEnrage = false;
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISTRACT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_KNOCKOUT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SHACKLE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_TURN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+
     }
 
     void KilledUnit(Unit* Victim)
     {
+        if(rand()%5)
+            return;
+
         switch(rand()%3)
         {
         case 0:
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(Victim, SOUND_SLAY_1);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY_1);
             break;
         case 1:
             DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(Victim, SOUND_SLAY_2);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY_2);
             break;
         case 2:
             DoYell(SAY_SLAY_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(Victim, SOUND_SLAY_3);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY_3);
             break;
         }
-        DoCast(m_creature->getVictim(),SPELL_MARK_DEATH);
     }
 
     void JustDied(Unit* Killer)
@@ -155,21 +179,24 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
+
         if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-
+            //Spell Enrage   
             if (((m_creature->GetHealth()*100)/ m_creature->GetMaxHealth()) <= 20)//when hp <= 20% gain enrage
             {   
                 if(Enrage_Timer < diff)
                 {
                     DoCast(m_creature,SPELL_ENRAGE);
                     Enrage_Timer = 6000;
-
+                    InEnrage = true;
                 }else Enrage_Timer -= diff;
             }
 
+            //Spell Overrun
             if (Overrun_Timer < diff)
             {   
                 switch(rand()%2)
@@ -184,10 +211,11 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
                     break;
                 }
                 DoCast(m_creature->getVictim(),SPELL_OVERRUN);
-                Overrun_Timer = (100 + rand()% 80) * 1000;
+                Overrun_Timer = (30 + rand()% 40) * 1000;//30-70sec cooldown
 
             }else Overrun_Timer -= diff;
 
+            //Spell Earthquake
             if (Quake_Timer < diff)
             {
                 if (rand()%2)
@@ -204,22 +232,26 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_EARTHQUAKE_2);
                     break;
                 }
-                m_creature->RemoveAura(SPELL_ENRAGE, NULL);//remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
+                if(InEnrage)
+                {
+                    m_creature->RemoveAura(SPELL_ENRAGE, NULL);//remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
+                }
                 DoCast(m_creature,SPELL_EARTHQUAKE);
-                Quake_Timer = (80 + rand()% 20) * 1000;
-
+                Quake_Timer = (70 + rand()% 30) * 1000;//70-100sec cooldown
             }else Quake_Timer -= diff;
 
+            //Spell Chain Lightning
             if (Chain_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
-                Chain_Timer = (50 + rand()% 50) * 1000;
+                Chain_Timer = (50 + rand()% 50) * 1000;//50-100sec cooldown
             }else Chain_Timer -= diff;
 
+            //Spell Sunder Armor        
             if (Armor_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
-                Armor_Timer = (30 + rand()% 10) * 1000;
+                Armor_Timer = (15 + rand()% 7) * 1000;//15-23sec cooldown about 70 proc to stack
             }else Armor_Timer -= diff;
 
             DoMeleeAttackIfReady();

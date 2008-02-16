@@ -346,10 +346,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!target)
                     return;
 
-                if (param3 || !m_creature->IsNonMeleeSpellCasted(false))
+                if (param3 & CAST_INTURRUPT_PREVIOUS || !m_creature->IsNonMeleeSpellCasted(false))
                 {
                     m_creature->InterruptNonMeleeSpells(false);
-                    m_creature->CastSpell(target, param1, false);
+                    m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
                 }
             }
             break;
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Duration
                 Creature* pCreature = NULL;
                 if (param3)
-                    pCreature = DoSpawnCreature(param1, 0,0,0,0,TEMPSUMMON_TIMED_DESPAWN, param3);
+                    pCreature = DoSpawnCreature(param1, 0,0,0,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, param3);
                 else pCreature = DoSpawnCreature(param1, 0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)

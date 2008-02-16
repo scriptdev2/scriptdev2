@@ -40,6 +40,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     uint64 GrandAstromancerCapernian;
     uint64 MasterEngineerTelonicus;
     uint64 Kaelthas;
+    uint64 Astromancer;
 
     uint8 KaelthasEventPhase;
 
@@ -52,6 +53,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         GrandAstromancerCapernian = 0;
         MasterEngineerTelonicus = 0;
         Kaelthas = 0;
+        Astromancer = 0;
 
         KaelthasEventPhase = 0;
 
@@ -98,6 +100,10 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             case 19622:
             Kaelthas = creature->GetGUID();
             break;
+
+            case 18805:
+            Astromancer = creature->GetGUID();
+            break;
         }
     }
 
@@ -113,6 +119,8 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             return MasterEngineerTelonicus;
         else if(identifier == "Kaelthas")
             return Kaelthas;
+        else if(identifier == "Astromancer")
+            return Astromancer;
 
         return NULL;
     }
@@ -132,6 +140,8 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             KaelthasEventPhase = data;
             Encounters[3] = (data) ? true : false;
         }
+        else if(type = "HighAstromancerSolarianEvent")
+            Encounters[4] = (data) ? true : false;
     }
 
     uint32 GetData(char *type)
@@ -142,6 +152,8 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             return Encounters[1];
         else if(type == "VoidReaverEvent")
             return Encounters[2];
+        else if(type == "HighAstromancerSolarianEvent")
+            return Encounters[4];
 
         //Kael'thas
         else if(type == "KaelThasEvent")

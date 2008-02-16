@@ -165,8 +165,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         Entangle = false;
         InCombat = false;
 
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -252,7 +250,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     void AttackStart(Unit *who)
     {
         if(!who && who != m_creature)
-        return;
+            return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
@@ -276,7 +274,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 if(Phase != 2)
                     DoStartMeleeAttack(who);
@@ -291,13 +289,13 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
+        case 0:
             //Shoot
             //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits her target for 4097-5543 Physical damage.
             DoCast(m_creature->getVictim(), SPELL_SHOOT);
             break;
 
-            case 1:
+        case 1:
             //Multishot
             //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits 1 person and 4 people around him for 6475-7525 physical damage.
             DoCast(m_creature->getVictim(), SPELL_MULTI_SHOT);
@@ -308,12 +306,12 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         {
             switch(rand()%2)
             {
-                case 0:
+            case 0:
                 DoPlaySoundToSet(m_creature, SOUND_BOWSHOT1);
                 DoYell(SAY_BOWSHOT1, LANG_UNIVERSAL, NULL);
                 break;
 
-                case 1:
+            case 1:
                 DoPlaySoundToSet(m_creature, SOUND_BOWSHOT2);
                 DoYell(SAY_BOWSHOT2, LANG_UNIVERSAL, NULL);
                 break;
@@ -390,9 +388,9 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     m_creature->Relocate(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
                     m_creature->SendMoveToPacket(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, false, 0);
 
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
                     m_creature->RemoveAllAuras();
+
+                    DoCast(m_creature, SPELL_MAGIC_BARRIER, true);
 
                     Creature *pCreature;
                     for(uint8 i = 0; i < 4; i++)
@@ -543,7 +541,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     //set life 50%
                     m_creature->SetHealth(m_creature->GetMaxHealth()/2);
 
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->RemoveAurasDueToSpell(SPELL_MAGIC_BARRIER);
 
                     DoPlaySoundToSet(m_creature, SOUND_PHASE3);
                     DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
@@ -679,7 +677,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     void AttackStart(Unit *who)
     {
         if(!who && who != m_creature)
-        return;
+            return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
@@ -698,7 +696,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 m_creature->AddThreat(who, 0.1f);
             }
@@ -742,10 +740,10 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
     }
 
     ScriptedInstance *pInstance;
-     
+
     uint32 ToxicSpore_Timer;
     uint32 Check_Timer;
- 
+
     void EnterEvadeMode()
     {
         m_creature->setFaction(14);
@@ -780,19 +778,19 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
             }
         }
     }
- 
+
     void UpdateAI (const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-     
+
         //ToxicSpore_Timer
         if(ToxicSpore_Timer < diff)
         {
@@ -882,7 +880,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
 
     uint32 Check_Timer;
     bool Channeled;
- 
+
     void EnterEvadeMode()
     {
         Check_Timer = 1000;
@@ -892,7 +890,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        
+
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
@@ -900,7 +898,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
     void AttackStart(Unit *who) { return; }
 
     void MoveInLineOfSight(Unit *who) { return; }
- 
+
     void UpdateAI (const uint32 diff)
     {
         if(!pInstance)
@@ -910,7 +908,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
         {
             Unit *Vashj = NULL;
             Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
-            
+
             if(Vashj && Vashj->isAlive())
             {
                 //start visual channel
@@ -925,7 +923,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
 bool ItemUse_item_tainted_core(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     ScriptedInstance *pInstance = (player->GetInstanceData()) ? ((ScriptedInstance*)player->GetInstanceData()) : NULL;
-    
+
     if(!pInstance)
     {
         player->GetSession()->SendNotification("Instance script not initialized");

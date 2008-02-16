@@ -329,7 +329,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                 DoYell(SAY_REINFORCEMENTS1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS1);
                 
-                // summon 10 druids 
+                // summon 10 elementals
                 Unit* target = NULL;
                 for(int i = 0; i < 9;i++)
                 {

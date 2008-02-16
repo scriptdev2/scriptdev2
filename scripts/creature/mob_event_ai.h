@@ -47,7 +47,7 @@ enum Action_Types
     ACTION_T_RANDOM_TEXTEMOTE       = 8,    //TextId1, TextId2, TextId3 (-1 in any field means no output if randomed that field)
     ACTION_T_RANDOM_SOUND           = 9,    //SoundId1, SoundId2, SoundId3 (-1 in any field means no output if randomed that field)
     ACTION_T_RANDOM_EMOTE           = 10,   //EmoteId1, EmoteId2, EmoteId3 (-1 in any field means no output if randomed that field)
-    ACTION_T_CAST                   = 11,   //SpellId, Target, (false = don't inturrupt prev cast, true = intrurrupt)
+    ACTION_T_CAST                   = 11,   //SpellId, Target, CastFlags
     ACTION_T_SUMMON                 = 12,   //CreatureID, Target, Duration in ms
     ACTION_T_THREAT_SINGLE_PCT      = 13,   //Threat%, Target
     ACTION_T_THREAT_ALL_PCT         = 14,   //Threat%
@@ -81,6 +81,11 @@ enum Target
     //CAST_FRIENDLY_RANDOM,             //NOT YET IMPLEMENTED
 };
 
+enum CastFlags
+{
+    CAST_INTURRUPT_PREVIOUS = 0x01,
+    CAST_TRIGGERED          = 0x02,
+};
 
 struct EventAI_Event
 {

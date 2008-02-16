@@ -325,7 +325,9 @@ scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
+scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
+scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
@@ -357,6 +359,9 @@ scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
+scripts/zone/zulaman/boss_janalai.cpp \
+scripts/zone/zulaman/boss_nalorakk.cpp \
+scripts/zone/zulaman/instance_zulaman.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
 scripts/zone/zulgurub/boss_grilek.cpp \

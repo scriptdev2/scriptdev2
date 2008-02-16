@@ -509,6 +509,7 @@ extern void AddSC_npcs_tanaris();
 //Teldrassil
 //Tempest Keep
 //--Arcatraz
+extern void AddSC_boss_zereketh();
 extern void AddSC_instance_arcatraz();
 
 //--Botanica
@@ -516,6 +517,7 @@ extern void AddSC_instance_arcatraz();
 extern void AddSC_boss_kaelthas();
 extern void AddSC_boss_void_reaver();
 extern void AddSC_instance_the_eye();
+extern void AddSC_boss_high_astromancer_solarian();
 extern void AddSC_mob_crystalcore_devastator();
 extern void AddSC_mob_the_eye();
 
@@ -574,6 +576,8 @@ extern void AddSC_boss_hakkar();
 extern void AddSC_mobs_zulgurub();
 extern void AddSC_instance_zulgurub();
 //Zul'Aman
+extern void AddSC_boss_janalai();
+extern void AddSC_instance_zulaman();
 
 
 // -------------------
@@ -1269,6 +1273,7 @@ void ScriptsInit()
     //Teldrassil
     //Tempest Keep
     //--Arcatraz
+    AddSC_boss_zereketh();
     AddSC_instance_arcatraz();
 
     //--Botanica
@@ -1278,6 +1283,7 @@ void ScriptsInit()
     AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
     AddSC_mob_the_eye();
+    AddSC_boss_high_astromancer_solarian();
 
     //--The Mechanar
     AddSC_boss_gatewatcher_iron_hand();
@@ -1335,6 +1341,8 @@ void ScriptsInit()
     AddSC_instance_zulgurub();
 
     //Zul'Aman
+    AddSC_boss_janalai();
+    AddSC_instance_zulaman();
 
 
     // -------------------

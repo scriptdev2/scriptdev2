@@ -1321,11 +1321,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
+						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
 						>
 					</File>
 				</Filter>
@@ -1688,6 +1688,10 @@
 						Name="Arcatraz"
 						>
 						<File
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\boss_zereketh_the_unbound.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
 							>
 						</File>
@@ -1699,6 +1703,10 @@
 					<Filter
 						Name="The Eye"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_astromancer.cpp"
+							>
+						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_kaelthas.cpp"
 							>
@@ -1843,7 +1851,6 @@
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_lady_vashj.cpp"
 							>
 						</File>
-
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\boss_leotheras_the_blind.cpp"
 							>
@@ -1991,8 +1998,20 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="Zul'Aman"
+					Name="Zul&apos;Aman"
 					>
+					<File
+						RelativePath="..\scripts\zone\zulaman\boss_janalai.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulaman\boss_nalorakk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulaman\instance_zulaman.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
