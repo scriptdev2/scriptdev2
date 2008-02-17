@@ -60,7 +60,7 @@
 #define SOUND_SLAY2         10991
 
 #define SAY_SLAY3           "I am the coming of the end!"
-#define SOUND_SLAY3         10992
+#define SOUND_SLAY3         11045
 
 #define SAY_UNK1           "You are mine now."
 #define SOUND_UNK1          10988
