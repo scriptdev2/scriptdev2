@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 11180, 558, 11126, 6622, 6624
+SDComment: Quest support: 11180, 558, 11126, 6622, 6624 (Includes Triage for Horde in Arathi Highlands)
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -25,8 +25,6 @@ EndScriptData */
 #include "../../../../../game/Player.h"
 #include "../../../../../game/QuestDef.h"
 #include "../../../../../game/GossipDef.h"
-
-// **** This script is still under Developement ****
 
 /*######
 ## npc_deserter_agitator
@@ -111,13 +109,6 @@ bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
 /*######
 ## common defines first aid
 ######*/
-
-/*
-update `creature_template` set `ScriptName` = 'npc_doctor' where `entry` IN (12939, 12920);
-update `creature_template` set `ScriptName` = 'npc_injured_patient' where `entry` IN (12936, 12937, 12938, 12923, 12924, 12925);
-update `quest_template` set `ReqCreatureOrGOId1` = 0, `ReqCreatureOrGOId2` = 0, `ReqCreatureOrGOCount1` = 0, `ReqCreatureOrGOCount2` = 0,
-`ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `SpecialFlags` = `SpecialFlags`|2 where `entry` IN (6622, 6624);
-*/
 
 #define SAY_DOC1 "I'm saved! Thank you, doctor!"
 #define SAY_DOC2 "HOORAY! I AM SAVED!"

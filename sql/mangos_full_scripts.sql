@@ -387,6 +387,8 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (314, 533, 203, 215, 909, 531, 787, 203, 1110, 785, 48, 217, 539);
 
 /* DUSTWALLOW MARSH */
+UPDATE `creature_template` SET `ScriptName` = 'npc_doctor' WHERE `entry` IN (12939, 12920);
+UPDATE `creature_template` SET `ScriptName` = 'npc_injured_patient' WHERE `entry` IN (12936, 12937, 12938, 12923, 12924, 12925);
 UPDATE `creature_template` SET `ScriptName` = 'npc_deserter_agitator' WHERE `entry` = 23602;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
 UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `entry` = 23861;
@@ -721,8 +723,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_braug_dimspirit' WHERE `entry
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4005);
 
 /* STORMWIND CITY */
+UPDATE `creature_template` SET `ScriptName` = 'npc_archmage_malin' WHERE `entry` = 2708;
 UPDATE `creature_template` SET `ScriptName` = 'npc_bartleby' WHERE `entry` = 6090;
-UPDATE `creature_template` SET `ScriptName` = 'dashel_stonefist' WHERE `entry` = 4961;
+UPDATE `creature_template` SET `ScriptName` = 'npc_dashel_stonefist' WHERE `entry` = 4961;
 
 /* STRANGLETHORN VALE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530;

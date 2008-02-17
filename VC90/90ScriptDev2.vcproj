@@ -1888,11 +1888,7 @@
 					Name="Stormwind City"
 					>
 					<File
-						RelativePath="..\scripts\zone\stormwind\npc_bartleby.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stormwind\npc_dashel_stonefist.cpp"
+						RelativePath="..\scripts\zone\stormwind\npcs_stormwind_city.cpp"
 						>
 					</File>
 				</Filter>

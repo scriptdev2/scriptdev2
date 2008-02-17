@@ -305,8 +305,7 @@ scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
 scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \
-scripts/zone/stormwind/npc_bartleby.cpp \
-scripts/zone/stormwind/npc_dashel_stonefist.cpp \
+scripts/zone/stormwind/npcs_stormwind_city.cpp \
 scripts/zone/stranglethorn_vale/mobs_stranglethorn_vale.cpp \
 scripts/zone/stratholme/boss_archivist_galford.cpp \
 scripts/zone/stratholme/boss_baron_rivendare.cpp \

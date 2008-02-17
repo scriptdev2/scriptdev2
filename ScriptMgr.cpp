@@ -478,8 +478,7 @@ extern void AddSC_npc_blood_knight_stillblade();
 extern void AddSC_npcs_stonetalon_mountains();
 
 //Stormwind City
-extern void AddSC_npc_bartleby();
-extern void AddSC_npc_dashel_stonefist();
+extern void AddSC_npcs_stormwind_city();
 
 //Stranglethorn Vale
 extern void AddSC_mobs_stranglethorn_vale();
@@ -1246,8 +1245,7 @@ void ScriptsInit()
     AddSC_npcs_stonetalon_mountains();
 
     //Stormwind City
-    AddSC_npc_bartleby();
-    AddSC_npc_dashel_stonefist();
+    AddSC_npcs_stormwind_city();
 
     //Stranglethorn Vale
     AddSC_mobs_stranglethorn_vale();
