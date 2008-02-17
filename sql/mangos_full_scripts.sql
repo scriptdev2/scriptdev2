@@ -273,6 +273,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_daranelle' WHERE `entry` = 21
 UPDATE `creature_template` SET `ScriptName` = 'npc_skyguard_handler_deesak' WHERE `entry` = 23415;
 
 /* BLASTED LANDS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_deathly_usher' WHERE `entry` = 8816;
 UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `entry` = 7572;
 /* Dreadmaul Ogre Mage, Bloodmage Drazial, Bloodmage Lynnore, Archmage Allistarj */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5975, 7505, 7506, 7666);

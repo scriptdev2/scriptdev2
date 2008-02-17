@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Npcs_Blasted_Lands
-SD%Complete: 98
-SDComment: npcs blasted lands, mostly quest related. Fallen hero of horde is as close as it gets without first hand knowledge.
+SD%Complete: 90
+SDComment: Quest support: 2784, 2801, 3628. Missing some texts for Fallen Hero. Teleporter to Rise of the Defiler missing group support.
 SDCategory: Blasted Lands
 EndScriptData */
 
@@ -25,6 +25,33 @@ EndScriptData */
 #include "../../../../../game/Player.h"
 #include "../../../../../game/QuestDef.h"
 #include "../../../../../game/GossipDef.h"
+
+#define GOSSIP_ITEM_USHER "I wish to to visit the Rise of the Defiler."
+
+#define SPELL_TELEPORT_SINGLE           12885
+#define SPELL_TELEPORT_SINGLE_IN_GROUP  13142
+#define SPELL_TELEPORT_GROUP            27686
+
+bool GossipHello_npc_deathly_usher(Player *player, Creature *_Creature)
+{
+    if(player->GetQuestStatus(3628) == QUEST_STATUS_INCOMPLETE && player->HasItemCount(10757, 1))
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_USHER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_deathly_usher(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if(action = GOSSIP_ACTION_INFO_DEF)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        _Creature->CastSpell(player, SPELL_TELEPORT_SINGLE, true);
+    }
+
+    return true;
+}
 
 /*######
 ## npc_fallen_hero_of_horde
@@ -111,6 +138,12 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player *player, Creature *_Creature, 
 void AddSC_npcs_blasted_lands()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_deathly_usher";
+    newscript->pGossipHello =  &GossipHello_npc_deathly_usher;
+    newscript->pGossipSelect = &GossipSelect_npc_deathly_usher;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_fallen_hero_of_horde";
