@@ -1449,7 +1449,7 @@ bool GossipSelect( Player *player, Creature *_Creature,uint32 sender, uint32 act
 {
     Script *tmpscript = NULL;
 
-    printf("action: %d\n",action);
+    debug_log("DEBUG: Gossip selection, sender: %d, action: %d",sender, action);
 
     tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
     if(!tmpscript || !tmpscript->pGossipSelect) return false;
@@ -1462,6 +1462,8 @@ MANGOS_DLL_EXPORT
 bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode )
 {
     Script *tmpscript = NULL;
+
+    debug_log("DEBUG: Gossip selection, sender: %d, action: %d",sender, action);
 
     tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
     if(!tmpscript || !tmpscript->pGossipSelectWithCode) return false;

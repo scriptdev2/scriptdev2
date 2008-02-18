@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Stormwind_City
 SD%Complete: 100
-SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell 42711)
+SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell 42711). Receive emote General Marcus
 SDCategory: NPCs
 EndScriptData */
 
@@ -268,6 +268,26 @@ CreatureAI* GetAI_npc_dashel_stonefist(Creature *_creature)
 }
 
 /*######
+## npc_general_marcus_jonathan
+######*/
+
+bool ReceiveEmote_npc_general_marcus_jonathan(Player *player, Creature *_Creature, uint32 emote) 
+{
+    if(player->GetTeam() == ALLIANCE)
+    {
+        if (emote == EMOTE_ONESHOT_SALUTE)
+        {
+            _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+        }
+        if (emote == EMOTE_ONESHOT_WAVE)
+        {
+            _Creature->MonsterSay("Greetings citizen",LANG_COMMON,0);
+        }
+    }
+    return true;
+}
+
+/*######
 ## npc_lady_katrana_prestor
 ######*/
 
@@ -333,6 +353,11 @@ void AddSC_npcs_stormwind_city()
     newscript->Name = "npc_dashel_stonefist";
     newscript->GetAI = GetAI_npc_dashel_stonefist;
     newscript->pQuestAccept = &QuestAccept_npc_dashel_stonefist;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_general_marcus_jonathan";
+    newscript->pReceiveEmote = &ReceiveEmote_npc_general_marcus_jonathan;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
