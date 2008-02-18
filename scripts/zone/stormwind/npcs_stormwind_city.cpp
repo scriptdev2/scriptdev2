@@ -17,13 +17,17 @@
 /* ScriptData
 SDName: Npcs_Stormwind_City
 SD%Complete: 100
-SDComment: Quest support: 1640, 1447, 11223 (DB support required for spell 42711)
+SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell 42711)
 SDCategory: NPCs
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
+
+/*######
+## npc_archmage_malin
+######*/
 
 #define GOSSIP_ITEM_MALIN "Can you send me to Theramore? I have an urgent message for Lady Jaina from Highlord Bolvar."
 
@@ -50,6 +54,10 @@ bool GossipSelect_npc_archmage_malin(Player *player, Creature *_Creature, uint32
 
     return true;
 }
+
+/*######
+## npc_bartleby
+######*/
 
 struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 {
@@ -158,6 +166,10 @@ CreatureAI* GetAI_npc_bartleby(Creature *_creature)
     return new npc_bartlebyAI(_creature);
 }
 
+/*######
+## npc_dashel_stonefist
+######*/
+
 struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 {
     npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
@@ -255,6 +267,52 @@ CreatureAI* GetAI_npc_dashel_stonefist(Creature *_creature)
     return new npc_dashel_stonefistAI(_creature);
 }
 
+/*######
+## npc_lady_katrana_prestor
+######*/
+
+#define GOSSIP_ITEM_KAT_1 "Pardon the intrusion, Lady Prestor, but Highlord Bolvar suggested that I seek your advice."
+#define GOSSIP_ITEM_KAT_2 "My apologies, Lady Prestor."
+#define GOSSIP_ITEM_KAT_3 "Begging your pardon, Lady Prestor. That was not my intent."
+#define GOSSIP_ITEM_KAT_4 "Thank you for your time, Lady Prestor."
+
+bool GossipHello_npc_lady_katrana_prestor(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestStatus(4185) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KAT_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->PlayerTalkClass->SendGossipMenu(2693, _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_lady_katrana_prestor(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KAT_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(2694, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KAT_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            player->SEND_GOSSIP_MENU(2695, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KAT_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            player->SEND_GOSSIP_MENU(2696, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->PlayerTalkClass->CloseGossip();
+            player->CompleteQuest(4185);
+            break;
+    }
+    return true;
+}
+
 void AddSC_npcs_stormwind_city()
 {
     Script *newscript;
@@ -275,5 +333,11 @@ void AddSC_npcs_stormwind_city()
     newscript->Name = "npc_dashel_stonefist";
     newscript->GetAI = GetAI_npc_dashel_stonefist;
     newscript->pQuestAccept = &QuestAccept_npc_dashel_stonefist;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_lady_katrana_prestor";
+    newscript->pGossipHello = &GossipHello_npc_lady_katrana_prestor;
+    newscript->pGossipSelect = &GossipSelect_npc_lady_katrana_prestor;
     m_scripts[nrscripts++] = newscript;
 }
