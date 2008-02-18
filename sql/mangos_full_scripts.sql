@@ -61,9 +61,7 @@ UPDATE `item_template` SET `ScriptName` = 'item_zezzaks_shard' WHERE `entry` = 3
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
-UPDATE `creature_template` SET `ScriptName` = 'silva_filnaveth' WHERE `entry` = 11800;
 UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
-UPDATE `creature_template` SET `ScriptName` = 'bunthen_plainswind' WHERE `entry` = 11798;
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry` = 5764;
 
 /* regular mount vendors */
@@ -573,9 +571,10 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_lavaspawn' WHERE `entry` = 12
 UPDATE `creature_template` SET `ScriptName` = 'mob_molten_destroyer' WHERE `entry` = 11659;
 UPDATE `creature_template` SET `ScriptName` = 'mob_molten_giant' WHERE `entry` = 11658;
 
-
 /* MOONGLADE */
+UPDATE `creature_template` SET `ScriptName` = 'npc_bunthen_plainswind' WHERE `entry` = 11798;
 UPDATE `creature_template` SET `ScriptName` = 'npc_great_bear_spirit' WHERE `entry` = 11956;
+UPDATE `creature_template` SET `ScriptName` = 'npc_silva_filnaveth' WHERE `entry` = 11800;
 
 /* MULGORE */
 /* Bristleback Shaman, Bristleback Interloper, Bristleback Quilboar, Bristleback Battleboar, Bristleback Interloper,  */

@@ -343,6 +343,8 @@ extern void AddSC_npcs_hellfire_peninsula();
 //Hillsbrad Foothills
 //Hinterlands
 //Ironforge
+extern void AddSC_npcs_ironforge();
+
 //Karazhan
 extern void AddSC_boss_attumen();
 extern void AddSC_boss_curator();
@@ -384,9 +386,7 @@ extern void AddSC_mobs_molten_core();
 extern void AddSC_instance_molten_core();
 
 //Moonglade
-extern void AddSC_silva_filnaveth();
-extern void AddSC_bunthen_plainswind();
-extern void AddSC_npc_great_bear_spirit();
+extern void AddSC_npcs_moonglade();
 
 //Mulgore
 extern void AddSC_skorn_whitecloud();
@@ -1109,6 +1109,8 @@ void ScriptsInit()
     //Hillsbrad Foothills
     //Hinterlands
     //Ironforge
+    AddSC_npcs_ironforge();
+
     //Karazhan
     AddSC_boss_attumen();
     AddSC_boss_curator();
@@ -1151,9 +1153,7 @@ void ScriptsInit()
 
 
     //Moonglade
-    AddSC_silva_filnaveth();
-    AddSC_bunthen_plainswind();
-    AddSC_npc_great_bear_spirit();
+    AddSC_npcs_moonglade();
 
     //Mulgore
     AddSC_skorn_whitecloud();

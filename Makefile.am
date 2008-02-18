@@ -200,6 +200,7 @@ scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
 scripts/zone/hellfire_peninsula/npcs_hellfire_peninsula.cpp \
+scripts/zone/ironforge/npcs_ironforge.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
 scripts/zone/karazhan/boss_midnight.cpp \
@@ -234,9 +235,7 @@ scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
-scripts/zone/moonglade/npc_bunthen_plainswind.cpp \
-scripts/zone/moonglade/npc_great_bear_spirit.cpp \
-scripts/zone/moonglade/npc_silva_filnaveth.cpp \
+scripts/zone/moonglade/npcs_moonglade.cpp \
 scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
 scripts/zone/nagrand/mobs_nagrand.cpp \
 scripts/zone/nagrand/npcs_nagrand.cpp \

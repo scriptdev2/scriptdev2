@@ -613,15 +613,7 @@
 					Name="Moonglade"
 					>
 					<File
-						RelativePath="..\scripts\zone\moonglade\npc_bunthen_plainswind.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\moonglade\npc_great_bear_spirit.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\moonglade\npc_silva_filnaveth.cpp"
+						RelativePath="..\scripts\zone\moonglade\npcs_moonglade.cpp"
 						>
 					</File>
 				</Filter>
@@ -1980,6 +1972,10 @@
 				<Filter
 					Name="Iron Forge"
 					>
+					<File
+						RelativePath="..\scripts\zone\ironforge\npcs_ironforge.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Orgrimmar"
