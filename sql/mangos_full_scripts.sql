@@ -23,6 +23,9 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_barov_journal' WHERE `entry` = 180794;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot_74A' where `entry`= 179552;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_northern_crystal_pylon' WHERE `entry` = 164955;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_western_crystal_pylon' WHERE `entry` = 164956;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_eastern_crystal_pylon' WHERE `entry` = 164957;
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_azuremyst' WHERE `entry` = 18038;

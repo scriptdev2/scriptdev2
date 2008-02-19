@@ -42,6 +42,7 @@ scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
 scripts/custom/test.cpp \
+scripts/go/go_crystal_pylon.cpp \
 scripts/go/go_field_repair_bot.cpp \
 scripts/go/go_jandice_barov_journal.cpp \
 scripts/go/go_orb_of_command.cpp \

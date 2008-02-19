@@ -89,6 +89,7 @@ extern void AddSC_custom_example();
 extern void AddSC_test();
 
 // -- GO --
+extern void AddSC_go_crystal_pylon();
 extern void AddSC_go_field_repair_bot_74A();
 extern void AddSC_go_teleporter();
 extern void AddSC_go_orb_of_command();
@@ -854,6 +855,7 @@ void ScriptsInit()
     AddSC_test();
 
     // -- GO --
+    AddSC_go_crystal_pylon();
     AddSC_go_field_repair_bot_74A();
     AddSC_go_teleporter();
     AddSC_go_orb_of_command();

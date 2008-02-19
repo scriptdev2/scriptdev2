@@ -317,6 +317,10 @@
 				Name="go"
 				>
 				<File
+					RelativePath="..\scripts\go\go_crystal_pylon.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\go\go_field_repair_bot.cpp"
 					>
 				</File>
