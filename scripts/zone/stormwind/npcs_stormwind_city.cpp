@@ -277,6 +277,7 @@ bool ReceiveEmote_npc_general_marcus_jonathan(Player *player, Creature *_Creatur
     {
         if (emote == EMOTE_ONESHOT_SALUTE)
         {
+            _Creature->SetOrientation(_Creature->GetAngle(player));
             _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
         }
         if (emote == EMOTE_ONESHOT_WAVE)

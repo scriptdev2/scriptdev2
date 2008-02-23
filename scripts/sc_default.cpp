@@ -24,7 +24,7 @@ bool GossipHello_default(Player *player, Creature *_Creature)
 bool GossipSelect_default(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {return false;}
 
-bool GossipSelectWithCode_default( Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode )
+bool GossipSelectWithCode_default( Player *player, Creature *_Creature, uint32 sender, uint32 action, const char* sCode )
 {return false;}
 bool QuestAccept_default(Player *player, Creature *_Creature, Quest *_Quest )
 {return false;}

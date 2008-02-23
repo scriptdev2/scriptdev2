@@ -43,7 +43,7 @@ bool GossipSelect_Honor_Vendor(Player *player, Creature *_Creature, uint32 sende
     return true;
 }
 
-bool GossipSelectWithCode_Honor_Vendor( Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode )
+bool GossipSelectWithCode_Honor_Vendor( Player *player, Creature *_Creature, uint32 sender, uint32 action, const char* sCode )
 {
     return false;
 }

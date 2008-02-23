@@ -87,7 +87,7 @@ std::string Name;
 bool (*pGossipHello         )(Player*, Creature*);
 bool (*pQuestAccept         )(Player*, Creature*, Quest const* );
 bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32  );
-bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , char* );
+bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , const char* );
 bool (*pQuestSelect         )(Player*, Creature*, Quest const* );
 bool (*pQuestComplete       )(Player*, Creature*, Quest const* );
 uint32 (*pNPCDialogStatus   )(Player*, Creature* );

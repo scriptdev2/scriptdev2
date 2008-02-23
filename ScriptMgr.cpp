@@ -89,11 +89,7 @@ extern void AddSC_custom_example();
 extern void AddSC_test();
 
 // -- GO --
-extern void AddSC_go_crystal_pylon();
-extern void AddSC_go_field_repair_bot_74A();
-extern void AddSC_go_teleporter();
-extern void AddSC_go_orb_of_command();
-extern void AddSC_go_barov_journal();
+extern void AddSC_go_scripts();
 
 // -- Guard --
 extern void AddSC_guards();
@@ -474,6 +470,8 @@ extern void AddSC_npcs_rutgar_and_frankal();
 extern void AddSC_npc_blood_knight_stillblade();
 
 //Silverpine forest
+extern void AddSC_npcs_silverpine_forest();
+
 //Stockade
 //Stonetalon mountains
 extern void AddSC_npcs_stonetalon_mountains();
@@ -855,11 +853,7 @@ void ScriptsInit()
     AddSC_test();
 
     // -- GO --
-    AddSC_go_crystal_pylon();
-    AddSC_go_field_repair_bot_74A();
-    AddSC_go_teleporter();
-    AddSC_go_orb_of_command();
-    AddSC_go_barov_journal();
+    AddSC_go_scripts();
 
     // -- Guard --
     AddSC_guards();
@@ -1242,6 +1236,8 @@ void ScriptsInit()
     AddSC_npc_blood_knight_stillblade();
 
     //Silverpine forest
+    AddSC_npcs_silverpine_forest();
+
     //Stockade
     //Stonetalon mountains
     AddSC_npcs_stonetalon_mountains();
@@ -1461,7 +1457,7 @@ bool GossipSelect( Player *player, Creature *_Creature,uint32 sender, uint32 act
 }
 
 MANGOS_DLL_EXPORT
-bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, uint32 action, char* sCode )
+bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, uint32 action, const char* sCode )
 {
     Script *tmpscript = NULL;
 

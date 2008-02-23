@@ -136,19 +136,24 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
 
 #define GOSSIP_ITEM1_BRA "Fly me to Murketh and Shaadraz Gateways"
 #define GOSSIP_ITEM2_BRA "Fly me to The Abyssal Shelf"
+#define GOSSIP_ITEM3_BRA "Fly me to Spinebreaker Post"
 
 bool GossipHello_npc_wing_commander_brack(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-        //Mission: The Murketh and Shaadraz Gateways
+    //Mission: The Murketh and Shaadraz Gateways
     if (player->GetQuestStatus(10129) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
+    //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
     if (player->GetQuestStatus(10162) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10347) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
+    //Spinebreaker Post
+    if (player->GetQuestStatus(10242) == QUEST_STATUS_COMPLETE && !player->GetQuestRewardStatus(10242))
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
     player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
@@ -164,9 +169,9 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
         std::vector<uint32> nodes;
 
         nodes.resize(2);
-        nodes[0] = 135;                                     //from Reaver's Fall
-        nodes[1] = 136;                                     //end at Reaver's Fall
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 587
+        nodes[0] = 131;                                     //from Reaver's Fall
+        nodes[1] = 132;                                     //end at Reaver's Fall
+        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 584
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
@@ -175,9 +180,20 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
         std::vector<uint32> nodes;
 
         nodes.resize(2);
-        nodes[0] = 131;                                     //from Reaver's Fall
-        nodes[1] = 132;                                     //end at Reaver's Fall
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 584
+        nodes[0] = 135;                                     //from Reaver's Fall
+        nodes[1] = 136;                                     //end at Reaver's Fall
+        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 587
+    }
+    if (action == GOSSIP_ACTION_INFO_DEF + 3)
+    {
+        player->PlayerTalkClass->CloseGossip();
+
+        std::vector<uint32> nodes;
+
+        nodes.resize(2);
+        nodes[0] = 142;                                     //from Reaver's Fall
+        nodes[1] = 141;                                     //end at Spinebreaker Post
+        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 604
     }
     return true;
 }

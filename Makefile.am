@@ -42,11 +42,7 @@ scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
 scripts/custom/test.cpp \
-scripts/go/go_crystal_pylon.cpp \
-scripts/go/go_field_repair_bot.cpp \
-scripts/go/go_jandice_barov_journal.cpp \
-scripts/go/go_orb_of_command.cpp \
-scripts/go/go_teleporter.cpp \
+scripts/go/go_scripts.cpp \
 scripts/guard/guard_ai.cpp \
 scripts/guard/guard_ai.h \
 scripts/guard/guards.cpp \
@@ -304,6 +300,7 @@ scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
 scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
+scripts/zone/silverpine_forest/npcs_silverpine_forest.cpp \
 scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \
 scripts/zone/stormwind/npcs_stormwind_city.cpp \
 scripts/zone/stranglethorn_vale/mobs_stranglethorn_vale.cpp \

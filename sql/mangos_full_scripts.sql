@@ -713,6 +713,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npcs_captains_blackanvil_and_skul
 UPDATE `creature_template` SET `ScriptName` = 'blood_knight_stillblade' WHERE `entry` = 17768;
 
 /* SILVERPINE FOREST */
+UPDATE `creature_template` SET `ScriptName` = 'npc_astor_hadren' WHERE `entry` = 6497;
 /* Dalaran Apprentice, Dalaran Conjuror, Dalaran Mage, Dalaran Wizard, Rot Hide Mystic, Rot Hide Gladerunner, Rot Hide Brute, Rot Hide Plague Weaver, Rot Hide Savage, Rot Hide Bruiser, Mist Creeper, Dalaran Apprentice, Dalaran Wizard, Dalaran Protector, Dalaran Warder, Dalaran Mage, Dalaran Conjuror, Lake Creeper, Elder Lake Creeper, Vile Fin Shorecreeper, Nightlash, Archmage Ataeric */
 UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1867, 1915, 1914, 1889, 1773, 1772, 1939, 1940, 1942, 1944, 1781, 1867, 1889, 1912, 1913, 1914, 1915, 1955, 1956, 1957, 1983, 2120);
 

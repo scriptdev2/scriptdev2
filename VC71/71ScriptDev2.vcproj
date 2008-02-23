@@ -254,23 +254,7 @@
 				Name="go"
 				>
 				<File
-					RelativePath="..\scripts\go\go_crystal_pylon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\go\go_field_repair_bot.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\go\go_jandice_barov_journal.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\go\go_orb_of_command.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\go\go_teleporter.cpp"
+					RelativePath="..\scripts\go\go_scripts.cpp"
 					>
 				</File>
 			</Filter>
@@ -1220,6 +1204,10 @@
 				<Filter
 					Name="Silverpine Forest"
 					>
+					<File
+						RelativePath="..\scripts\zone\silverpine_forest\npcs_silverpine_forest.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Stockade"

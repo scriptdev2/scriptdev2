@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: GO_Crystal_Pylon
+SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285, 4287, 4288 (crystal pylons in un'goro).
+SDComment: Quest support: 4285, 4287, 4288 (crystal pylons in un'goro). Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
  
@@ -25,6 +25,10 @@ EndScriptData */
 #include "../../../../game/Player.h"
 #include "../../../../game/GameObject.h"
  
+/*######
+## go_crystal_pylons (3x)
+######*/
+
 bool GOHello_go_northern_crystal_pylon(Player *player, GameObject* _GO)
 {
     if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
@@ -66,23 +70,91 @@ bool GOHello_go_western_crystal_pylon(Player *player, GameObject* _GO)
 
     return true;
 }
- 
-void AddSC_go_crystal_pylon()
+
+/*######
+## go_field_repair_bot_74A
+######*/
+
+bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
+{
+    if (player->HasSkill(202) && player->GetSkillValue(202) >= 300 && !player->HasSpell(22704)) 
+    {
+        player->CastSpell(player,22705,false);
+    }
+    return true;
+}
+
+/*######
+## go_barov_journal
+######*/
+
+bool GOHello_go_barov_journal(Player *player, GameObject* _GO)
+{
+    if (player->HasSkill(197) && player->GetSkillValue(197) >= 280 && !player->HasSpell(26086)) 
+    {
+        player->CastSpell(player,26089,false);
+    }
+    return true;
+}
+
+/*######
+## go_orb_of_command
+######*/
+
+bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
+{
+    if (player->GetQuestRewardStatus(7761)) 
+        player->TeleportTo(469,-7672,-1107,399, 0); 
+
+    return true;
+}
+
+/*######
+## go_teleporter
+######*/
+
+bool GOHello_go_teleporter(Player *player, GameObject* _GO)
+{
+    player->TeleportTo(0, 1807.07f,336.105f,70.3975f,0.0f);
+    return false;
+}
+
+void AddSC_go_scripts()
 {
     Script *newscript;
 
     newscript = new Script;
     newscript->Name="go_northern_crystal_pylon";
-    newscript->pGOHello = &GOHello_go_northern_crystal_pylon;
+    newscript->pGOHello =           &GOHello_go_northern_crystal_pylon;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="go_eastern_crystal_pylon";
-    newscript->pGOHello = &GOHello_go_eastern_crystal_pylon;
+    newscript->pGOHello =           &GOHello_go_eastern_crystal_pylon;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="go_western_crystal_pylon";
-    newscript->pGOHello = &GOHello_go_western_crystal_pylon;
+    newscript->pGOHello =           &GOHello_go_western_crystal_pylon;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_field_repair_bot_74A";
+    newscript->pGOHello =           &GOHello_go_field_repair_bot_74A;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_barov_journal";
+    newscript->pGOHello =           &GOHello_go_barov_journal;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_orb_of_command";
+    newscript->pGOHello =           &GOHello_go_orb_of_command;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_teleporter";
+    newscript->pGOHello =           GOHello_go_teleporter;
     m_scripts[nrscripts++] = newscript;
 }
