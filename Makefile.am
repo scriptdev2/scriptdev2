@@ -41,6 +41,7 @@ scripts/creature/mob_kobold.cpp \
 scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
+scripts/custom/custom_gossip_codebox.cpp \
 scripts/custom/test.cpp \
 scripts/go/go_scripts.cpp \
 scripts/guard/guard_ai.cpp \

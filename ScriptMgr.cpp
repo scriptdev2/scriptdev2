@@ -86,6 +86,7 @@ extern void AddSC_defias();
 
 // -- Custom --
 extern void AddSC_custom_example();
+extern void AddSC_custom_gossip_codebox();
 extern void AddSC_test();
 
 // -- GO --
@@ -844,6 +845,7 @@ void ScriptsInit()
 
     // -- Custom --
     AddSC_custom_example();
+    AddSC_custom_gossip_codebox();
     AddSC_test();
 
     // -- GO --

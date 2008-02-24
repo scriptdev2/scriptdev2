@@ -242,6 +242,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\scripts\custom\custom_gossip_codebox.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\custom\test.cpp"
 					>
 				</File>
