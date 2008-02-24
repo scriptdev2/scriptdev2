@@ -262,35 +262,11 @@
 				Name="item"
 				>
 				<File
-					RelativePath="..\scripts\item\item_area_52_special.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_draenei_fishing_net.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_nether_wraith_beacon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_skin_of_purest_water.cpp"
+					RelativePath="..\scripts\item\item_scripts.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\scripts\item\item_test.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_vorenthals_presence.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_yehkinyas_bramble.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_zerraks_shard.cpp"
 					>
 				</File>
 			</Filter>

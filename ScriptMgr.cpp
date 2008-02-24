@@ -98,14 +98,8 @@ extern void AddSC_guards();
 extern void AddSC_Honor_Vendor();
 
 // -- Item --
+extern void AddSC_item_scripts();
 extern void AddSC_item_test();
-extern void AddSC_area_52_special();
-extern void AddSC_draenei_fishing_net();
-extern void AddSC_nether_wraith_beacon();
-extern void AddSC_vorenthals_presence();
-extern void AddSC_item_skin_of_purest_water();
-extern void AddSC_item_yehkinyas_bramble();
-extern void AddSC_item_zezzak_shard();
 
 // -- NPC --
 extern void AddSC_not_selectable();
@@ -862,14 +856,8 @@ void ScriptsInit()
     AddSC_Honor_Vendor();
 
     // -- Item --
+    AddSC_item_scripts();
     AddSC_item_test();
-    AddSC_area_52_special();
-    AddSC_draenei_fishing_net();
-    AddSC_nether_wraith_beacon();
-    AddSC_vorenthals_presence();
-    AddSC_item_skin_of_purest_water();
-    AddSC_item_yehkinyas_bramble();
-    AddSC_item_zezzak_shard();
 
     // -- NPC --
     AddSC_not_selectable();

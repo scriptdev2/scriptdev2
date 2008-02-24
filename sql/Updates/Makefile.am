@@ -107,4 +107,5 @@ pkgdata_DATA = \
 	r261_mangos.sql \
 	r262_mangos.sql \
 	r263_mangos.sql \
-	r264_mangos.sql
+	r264_mangos.sql \
+	r265_mangos.sql
