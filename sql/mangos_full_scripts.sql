@@ -1,8 +1,5 @@
 /*  */
 
-/* UNKNOWN LOCATION */
-
-
 /* WORLD BOSS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_ysondre' WHERE `entry` = 14887;
 UPDATE `creature_template` SET `ScriptName` = 'boss_emeriss' WHERE `entry` = 14889;
@@ -14,10 +11,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_azuregos' WHERE `entry` = 61
 UPDATE `creature_template` SET `ScriptName` = 'mob_dementeddruids' WHERE `entry` = 15260;
 
 /* WORLD CREATURE  These are creatures to be found in more than one specific zone */
-UPDATE `creature_template` SET `ScriptName` = 'lumberjack' WHERE `entry` IN (11328, 11260);
-UPDATE `creature_template` SET `ScriptName` = 'miner' WHERE `entry` IN (80, 1236, 3578, 40, 1358, 1360, 5996, 1426, 1094, 674);
-/* Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (14881);
+
 
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
@@ -59,43 +53,28 @@ UPDATE `item_template` SET `ScriptName` = 'item_yehkinyas_bramble' WHERE `entry`
 UPDATE `item_template` SET `ScriptName` = 'item_zezzaks_shard' WHERE `entry` = 31463;
 
 /* NPC */
-UPDATE `creature_template` SET `ScriptName` = 'marshal_mcbride' WHERE `entry` = 197;
-UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry` = 5764;
-
-/* regular mount vendors */
 UPDATE `creature_template` SET `ScriptName` = 'npc_mount_vendor' WHERE `entry` IN (384, 1261, 1460, 2357, 3362, 3685, 4730, 4731, 4885, 7952, 7955, 16264, 17584);
-
-/* SERVERS */
-UPDATE `creature_template` SET `ScriptName` = 'battlemaster' WHERE `entry` IN (12198,14982,857,12197,7427,347,15007,2804);
-UPDATE `creature_template` SET `ScriptName` = 'travelmaster' WHERE `entry` IN (9564,12136,3149,12137,9566,3150,9559,9558);
 
 /*  */
 /* ZONE */
 /* */
 
 /* ALTERAC MOUNTAINS */
-/* Crushridge Mage, Argus Shadow Mage, Dalaran Summoner, Archmage Ansirem Runeweaver <Kirin Tor> */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2255, 2318, 2358, 2543);
+
 
 /* ALTERAC VALLEY */
-/* Wildpaw Mystic */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11838);
+
 
 /* ARATHI HIGHLANDS */
-/* Feeboz, Boulderfist Shaman, Boulderfist Magus, Syndicate Magus, Dark Iron Shadowcaster, Witherbark Axe Thrower, Plains Creeper, Giant Plains Creeper */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4063, 2570, 2567, 2591, 2577, 2554, 2563, 2565);
+
 
 /* ASHENVALE */
-/* Shadethicket Raincaller, Forsaken Seeker, Dark Strand Cultist, Dark Strand Adept */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3783, 3732, 3725, 3728);
 
 
 /*  */
 /* AUCHINDOUN */
 /*  */
-
-/* BONE WASTES (area around entrance to the four instances) */
 
 /* MANA TOMBS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_tavarok' WHERE `entry` = 18343;
@@ -125,9 +104,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_grandmaster_vorpil' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'boss_blackheart_the_inciter' WHERE `entry` = 18667;
 
 /* AZSHARA */
-/* Draconic Magelord, Draconic Mageweaver, Archmage Xylem */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6129, 6131, 8379);
-/* Spitelashes for polymorph quest */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_spitelashes' WHERE entry IN (6190,6193,6194,6195,6196,7885,7886,12204,12205);
 UPDATE `creature_template` SET `ScriptName` = 'npc_loramus_thalipedes' WHERE `entry` = 7783;
 
@@ -135,13 +111,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_loramus_thalipedes' WHERE `en
 UPDATE `creature_template` SET `ScriptName` = 'injured_draenei' WHERE `entry` = 16971;
 
 /* BADLANDS */
-/* Dustbelcher Ogre Mage, Dustbelcher Mystic, Shadowmage Vivian Lagrave <Kargath Expeditionary Force> */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2720, 2907, 9078);
+
 
 /* BARRENS */
-/* Kolkar Stormer, Razormane Geomancer, Razormane Seer, Razormane Mystic, Razormane Hunter, Razormane Warfrenzy, Razormane Water Seeker, Silithid Creeper, Elder Mystic Razorsnout, Horde Axe Thrower */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3273, 3269, 3458, 3271, 3265, 3459, 3267, 3250, 3270, 9458);
-/* Beaten corpse */
 UPDATE `creature_template` SET `ScriptName` = 'npc_beaten_corpse' WHERE `entry` = 10668;
 
 /* BLACK TEMPLE */
@@ -182,8 +154,7 @@ UPDATE creature_template SET ScriptName = 'npc_enslaved_soul' WHERE entry = 2346
 UPDATE `creature_template` SET `ScriptName` = 'mob_blacktemple' WHERE `entry` IN (22844,22845,22846,22849,22853,22855,22869,22873,22875,22876,22877,22878,22880,22881,22882,22883,22884,22945,22953,22954,23337,23339);
 
 /* BLACKFATHOM DEPTHS */
-/* Blindlight Oracle, Blindlight Muckdweller, Blindlight Murloc, Twilight Shadowmage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4820, 4819, 4818, 4813);
+
 
 /* BLACKROCK DEPTHS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_emperor_dagran_thaurissan' WHERE `entry` = 9019;
@@ -215,19 +186,8 @@ UPDATE `creature_template` SET `ScriptName` = 'phalanx' WHERE `entry` = 9502;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lokhtos_darkbargainer' WHERE `entry` = 12944;
 UPDATE `creature_template` SET `ScriptName` = 'npc_kharan_mighthammer' WHERE `entry` = 9021;
 
-/* Hedrum the Creeper, Dark Keeper Zimrel */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9032, 9441);
-/* Anvilrage military */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (8890, 8891, 8892, 8893, 8894, 8895, 8898);
-/* Cave Creeper */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (8933);
-
 /* BLACKROCK SPIRE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_chromatic_elite_guard' WHERE `entry` = 10814;
-/* Blackhand Dreadweaver,Blackhand Summoner,Blackhand Veteran,Blackhand Elite,Blackhand Assassin,Blackhand Iron Guard,Chromatic Whelp,Chromatic Dragonspawn,Rookery Whelp,Rookery Guardian,Rage Talon Captain,Rage Talon Fire Tongue,Rage Talon Flamescale */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9817, 9818, 9819, 10317, 10318, 10319, 10442, 10447, 10161, 10258, 10371, 10372, 10083);
-/* Spirestone Battle Mage, Spirestone Mystic, Smolderthorn Mystic, Smolderthorn Axe Thrower, Bloodaxe Summoner <Bloodaxe Legion>, Spire Spider, Spire Spiderling */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (9197, 9198, 9239, 9267, 9717, 10374, 10375);
 
 /* BLACKROCK SPIRE Lower bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_highlord_omokk' WHERE `entry` = 9196;
@@ -244,14 +204,11 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_drakkisath' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'boss_gyth' WHERE `entry` = 10339;
 UPDATE `creature_template` SET `ScriptName` = 'boss_rend_blackhand' WHERE `entry` = 10429;
 UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `entry` = 9816;
-/* Jed Runewatcher,Solakar Flamewreath,Goraluk Anvilcrack */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry`IN (10509,10264,10899);
 
 /* BLACKWING LAIR */
 UPDATE `instance_template` SET `script` = 'instance_blackwing_lair' WHERE `map` = 469;
 /* Trash Mobs */
 UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264);
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (12420);
 /* Bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
 UPDATE `creature_template` SET `ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
@@ -272,14 +229,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_skyguard_handler_deesak' WHER
 /* BLASTED LANDS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_deathly_usher' WHERE `entry` = 8816;
 UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `entry` = 7572;
-/* Dreadmaul Ogre Mage, Bloodmage Drazial, Bloodmage Lynnore, Archmage Allistarj */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5975, 7505, 7506, 7666);
 
 /* BURNING STEPPES */
 UPDATE `creature_template` SET `ScriptName` = 'npc_ragged_john' WHERE `entry` = 9563;
-/* Blackrock Sorcerer, Blackrock Warlock, Scalding Broodling, Thaurissan Agent, Firegut Ogre Mage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7026, 7028, 7048, 7038, 7034);
-
 
 /*  */
 /* CAVERNS OF TIME */
@@ -300,7 +252,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_captain_skarloc' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'boss_chrono_lord_deja' WHERE `entry` = 17879;
 UPDATE `creature_template` SET `ScriptName` = 'boss_aeonus' WHERE `entry` = 17881;
 UPDATE `creature_template` SET `ScriptName` = 'boss_temporus' WHERE `entry` = 17880;
-
 
 
 /*  */
@@ -350,39 +301,28 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_shield_generator_channel' WHE
 
 /* DARKSHORE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_lunaclaw' WHERE `entry` = 12138;
-/* Delmanis the Hated, Greymist Oracle,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3662, 2207);
 
 /* DEADMINES */
-/* Defias Squallshaper, Defias Magician, Defias Conjurer, Defias Overseer, Defias Watchman, Defias Wizard, Defias Evoker, Defias Pirate, Defias Taskmaster, Defias Miner, Defias Strip Miner, Defias Henchman,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1732, 1726, 619, 634, 1725, 4418, 1729, 657, 4417, 598, 4416, 594);
 UPDATE `creature_template` SET `ScriptName` = 'boss_deadmines' WHERE `entry` IN (645, 1763, 599, 3586);
 
 /* DEADWIND PASS */
-/* Deadwind Ogre Mage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7379);
+
 
 /* DESOLACE */
-/* Burning Blade Shadowmage, Burning Blade Summoner, Mage Hunter */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4667, 4668, 4681);
+
 
 /* DIRE MAUL */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11492, 14325, 14324, 14321, 14326, 14323, 13280, 14122, 11488, 11496, 14396, 11501, 14327, 14506, 11487, 11486, 14354, 11498, 11489, 11490, 11444, 11450, 11441, 11457, 13197);
-/* Gordok Mage-Lord, Highborne Summoner */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11444, 11466);
+
 
 /* DUN MOROGH */
 UPDATE `creature_template` SET `ScriptName` = 'npc_narm_faulk' WHERE `entry` = 6177;
-/* Frostmane Novice, Frostmane Seer, Rockjaw Skullthumper, Rockjaw Bonesnapper, Rockjaw Ambusher, Rockjaw Backbreaker,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (946, 1397, 1115, 1117, 1116, 1118);
+
 
 /* DUROTAR */
-/* Razormane Scout, Razormane Dustrunner, Razormane Quilboar, Razormane Battleguard, Vile Familiar */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3112, 3113, 3111, 3114, 3101);
+
 
 /* DUSKWOOD */
-/* Eliza, Nightbane Shadow Weaver, Skeletal Mage, Defias Night Runner, Defias Night Blade, Skeletal Fiend, Skeletal Healer, Skeletal Mage, Skeletal Raider, Skeletal Warder, Skeletal Warrior, Venom Web Spider, Pygmy Venom Web Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (314, 533, 203, 215, 909, 531, 787, 203, 1110, 785, 48, 217, 539);
+
 
 /* DUSTWALLOW MARSH */
 UPDATE `creature_template` SET `ScriptName` = 'npc_doctor' WHERE `entry` IN (12939, 12920);
@@ -392,41 +332,33 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE 
 UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `entry` = 23861;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_direhorn_grimtotem' WHERE `entry` = 23595;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_risen_husk_spirit' WHERE `entry` IN (23554, 23555);
-/* Mirefin Murloc, Darkmist Spider, Withervine Creeper, Darkfang Creeper, Darkfang Spider, Giant Darkfang Spider, Archmage Tervosh */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4359, 4376, 4382, 4412, 4413, 4415, 4967);
+
 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
 UPDATE `creature_template` SET `ScriptName` = 'npc_darrowshire_spirit' WHERE `entry` = 11064;
 UPDATE `creature_template` SET `ScriptName` = 'npc_tirion_fordring' WHERE `entry` = 1855;
-/* Crimson Bodyguard, Crimson Courier, Crypt Walker, Hate Shrieker, Cursed Mage, Shadowmage, Dark Summoner, Scarlet Archmage, Archmage Angela Dosantos */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (13118, 12337, 8556, 8541, 8524, 8550, 8551, 9451, 16116);
 
 /* ELWYNN FOREST */
-/* Hogger, Defias Rogue Wizard, Defias Enchanter, Defias Bodyguard, Defias Bandit, Defias Cutpurse, Murloc Lurker, Murloc Forager, Forest Spider, Mine Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (448, 474, 910, 6866, 116, 94, 732, 46, 30, 43);
 UPDATE `creature_template` SET `ScriptName` = 'npc_henze_faulk' WHERE `entry` = 6172;
 
 /* EVERSONG WOODS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_mana_tapped' WHERE `entry` IN (15273,15274,15294,15298,15367);
 
 /* FELWOOD */
-/* Timbermaw Mystic */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11552);
+
 
 /* FERALAS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_screecher_spirit' WHERE `entry` = 8612;
-/* Gordunni Ogre Mage, Gordunni Mage-Lord, Woodpaw Mystic, Gordok Ogre-Mage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5237, 5239, 5254, 11443);
 
 /* GHOSTLANDS */
 
 
 /* GNOMEREGAN */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6206, 6208, 6209, 6215, 6219, 6229, 6228, 6235, 7361, 6407, 6220, 6218, 7603, 6223, 6222, 6234, 6233, 6226, 6227, 6225, 6230, 7079);
+
 
 /* GRUUL'S LAIR */
-UPDATE `instance_template` SET `script` ="instance_gruuls_lair" WHERE `map` =565;
+UPDATE `instance_template` SET `script` = 'instance_gruuls_lair' WHERE `map` =565;
 /* Gruul's Lair Trash Mobs */
 UPDATE `creature_template` SET `ScriptName` = 'mob_gruuls_lair' WHERE `entry` IN (19389, 21350);
 /* Gruul the Dragonkiller */
@@ -449,32 +381,21 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_broggok' WHERE `entry` = 173
 UPDATE `creature_template` SET `ScriptName` = 'boss_kelidan_the_breaker' WHERE `entry` = 17377;
 UPDATE `creature_template` SET `ScriptName` = 'mob_broggok_poisoncloud' WHERE `entry` = 17662;
 
-/* Laughing Skull Legionnaire, Laughing Skull Warden, Laughing Skull Rogue, Hellfire Imp, Shadowmoon Channeler, Fel Orc Neophyte, Shadowmoon Technician, Shadowmoon Adept, Hellfire Familiar, Felguard Brute, Shadowmoon Summoner, Shadowmoon Warlock */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17626, 17624, 17491, 17477, 17653, 17429, 17414, 17397, 19016, 18894, 17395, 17371);
-
 /* HELLFIRE RAMPARTS */
 /* Vazruden, Omor the Unscarred, Watchkeeper Gargolmar */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17537, 17308, 17306);
 UPDATE `creature_template` SET `ScriptName` = 'boss_omor_the_unscarred' WHERE `entry` = 17308;
 UPDATE `creature_template` SET `ScriptName` = 'boss_watchkeeper_gargolmar' WHERE `entry` = 17306;
-/* Hellfire Watcher <Watchkeeper's Subordinate>, Bonechewer Hungerer, Bonechewer Beastmaster, Bonechewer Ravener, Bonechewer Ripper, Bonechewer Destroyer, Bleeding Hollow Archer, Bleeding Hollow Darkcaster, Hellfire Sentry <Herald's Sentry>, Bleeding Hollow Scryer */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17309, 17259, 17455, 17264, 17281, 17271, 17270, 17269, 17517, 17478);
 
 /* SHATTERED HALLS */
-/* Warchief Kargath Bladefist */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (16808);
 /* Nethekurse and his spawned shadowfissure */
 UPDATE `creature_template` SET `ScriptName` = 'boss_grand_warlock_nethekurse' WHERE `entry` = 16807;
 UPDATE `creature_template` SET `ScriptName` = 'mob_nethe_shadowfissure' WHERE `entry` = 17471;
-/* Shattered Hand Centurion, Shadowmoon Darkcaster, Shattered Hand Champion, Sharpshooter Guard, Shattered Hand Assassin, Warbringer O'mrogg, Grand Warlock Nethekurse, Shattered Hand Sharpshooter, Shattered Hand Legionnaire, Shattered Hand Reaver, Shattered Hand Brawler */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (17465, 17694, 17671, 17622, 17695, 16809, 16807, 16704, 16700, 16699, 16593);
 
 /* MAGTHERIDON'S LAIR */
 UPDATE `instance_template` SET `script` = 'instance_magtheridons_lair' WHERE `map` = 544;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_manticron_cube' WHERE `entry` = 181713;
 UPDATE `creature_template` SET `ScriptName` = 'boss_magtheridon' WHERE `entry` =17257;
 UPDATE `creature_template` SET `ScriptName` = 'mob_hellfire_channeler' WHERE `entry` =17256;
-
 
 /* HELLFIRE PENINSULA */
 UPDATE `creature_template` SET `ScriptName` = 'boss_doomlord_kazzak' WHERE `entry` = 18728;
@@ -484,14 +405,11 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_wing_commander_brack' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'npc_wing_commander_dabiree' WHERE `entry` = 19409;
 UPDATE `creature_template` SET `ScriptName` = 'npc_gryphoneer_windbellow' WHERE `entry` = 20235;
 
-
 /* HILLSBRAD FOOTHILLS */
-/* Syndicate Shadow Mage, Elder Moss Creeper, Giant Moss Creeper(also AM), Forest Moss Creeper, Writhing Mage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2244, 2348, 2349, 2350, 7075);
+
 
 /* HINTERLANDS */
-/* Vilebranch Axe Thrower, Mystic Yayo'jin <Reagent Vendor> */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2639, 14739);
+
 
 /* IRONFORGE */
 
@@ -517,20 +435,16 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_shade_of_aran' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'boss_netherspite' WHERE `entry` = 15689;
 UPDATE `creature_template` SET `ScriptName` = 'boss_malchezaar' WHERE `entry` = 15690;
 UPDATE `creature_template` SET `ScriptName` = 'boss_nightbane' WHERE `entry` = 17225;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_shadow_of_aran' WHERE `entry` = 18254;
 UPDATE `creature_template` SET `ScriptName` = 'mob_aran_elemental' WHERE `entry` = 17167;
 UPDATE `creature_template` SET `ScriptName` = 'mob_aran_blizzard' WHERE `entry` = 17161;
-
 UPDATE `creature_template` SET `ScriptName` = 'mob_homunculus' WHERE `entry` = 16539;
 UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229;
 UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;
 
-
 /* LOCH MODAN */
 UPDATE `creature_template` SET `ScriptName` = 'npc_mountaineer_pebblebitty' WHERE `entry` = 3836;
-/* Mo'grosh Mystic, Tunnel Rat Geomancer, Magosh <Stonesplinter Tribal Shaman>, Stonesplinter Scout, Stonesplinter Seer, Stonesplinter Geomancer, Stonesplinter Skullthumper, Stonesplinter Bonesnapper, Stonesplinter Shaman, Stonesplinter Digger,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1183, 1174, 1399, 1162, 1166, 1165, 1163, 1164, 1197, 1167);
+
 
 /* MARAUDON */
 UPDATE `creature_template` SET `ScriptName` = 'boss_princess_theradras' WHERE `entry` = 12201;
@@ -576,8 +490,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_great_bear_spirit' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'npc_silva_filnaveth' WHERE `entry` = 11800;
 
 /* MULGORE */
-/* Bristleback Shaman, Bristleback Interloper, Bristleback Quilboar, Bristleback Battleboar, Bristleback Interloper,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (2953, 3232, 2952, 2954, 3232);
+UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` = 3052;
 
 /* NAGRAND */
 UPDATE `creature_template` SET `ScriptName` = 'mob_gurok_the_usurper' WHERE `entry` = 18182;
@@ -608,17 +521,12 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_stalagg' WHERE `entry` = 159
 UPDATE `creature_template` SET `ScriptName` = 'boss_fugen' WHERE `entry` = 15930;
 UPDATE `creature_template` SET `ScriptName` = 'boss_sapphiron' WHERE `entry` = 15989;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kelthuzad' WHERE `entry` = 15990;
-/* Dread Creeper, Archmage Tarsis Kir-Moldir */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (15974, 16381);
 
 /* NETHERSTORM */
 UPDATE `creature_template` SET `ScriptName` = 'npc_protectorate_nether_drake' WHERE `entry` = 20903;
 
-
 /* ONYXIA'S LAIR */
 UPDATE `creature_template` SET `ScriptName` = 'boss_onyxia' WHERE `entry` = 10184;
-/* Onyxian Whelp */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (11262);
 
 /* ORGRIMMAR */
 
@@ -628,18 +536,12 @@ UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` I
 
 /* RAZORFEN DOWNS */
 UPDATE `creature_template` SET `ScriptName` = 'boss_amnennar_the_coldbringer' WHERE `entry` = 7358;
-/* Mordresh Fire Eye, Plaguemaw the Rotting, Tuten\'kash, Ragglesnout, Glutton */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7357, 7356, 7355, 7354, 8567);
-/* Skeletal Frostweaver, Skeletal Shadowcaster, Skeletal Summoner,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7341, 7340, 7342);
 
 /* REDRIDGE MOUNTAINS */
-/* Blackrock Shadowcaster, Murloc Minor Tidecaller, Murloc Nightcrawler, Murloc Tidecaller, Murloc Scout, Murloc Shorestriker, Shadowhide Darkweaver, Rabid Shadowhide Gnoll, Shadowhide Gnoll, Shadowhide Brute, Shadowhide Warrior, Shadowhide Assassin, Redridge Mystic, Redridge Poacher, Redridge Thrasher, Redridge Basher, Black Dragon Whelp, Tarantula, Greater Tarantula, Blackrock Summoner */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (436, 548, 544, 545, 578, 1083, 422, 429, 434, 433, 432, 568, 579, 430, 424, 712, 446, 441, 442, 505, 4463);
+
 
 /* RUINS OF AHN'QIRAJ */
 UPDATE `instance_template` SET `script` = 'instance_ruins_of_ahnqiraj' WHERE `map` = 509;
-
 
 /* SCARLET MONASTERY */
 UPDATE `creature_template` SET `ScriptName` = 'boss_arcanist_doan' WHERE `entry` = 6487;
@@ -653,8 +555,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_interrogator_vishas' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'boss_scarlet_commander_mograine' WHERE `entry` = 3976;
 UPDATE `creature_template` SET `ScriptName` = 'boss_scorn' WHERE `entry` = 14693;
 UPDATE `creature_template` SET `ScriptName` = 'scarlet_torturer' WHERE `entry` = 4306;
-/* Fallen Champion, Scarlet Chaplain, Scarlet Adept, Scarlet Wizard,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6488, 4299, 4296, 4300);
 
 /* SCHOLOMANCE */
 UPDATE `instance_template` SET `script` = 'instance_scholomance' WHERE `map` = 289;
@@ -671,21 +571,14 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_jandice_barov' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'boss_lorekeeper_polkelt' WHERE `entry` = 10901;
 UPDATE `creature_template` SET `ScriptName` = 'boss_kormok' WHERE `entry` = 16118;
 UPDATE `creature_template` SET `ScriptName` = 'mob_illusionofjandicebarov' WHERE `entry` = 11439;
-/* Kirtonos the Herald, Rattlegore, Marduk Blackpool, Risen Guard, Risen Bonewarder, Risen Lackey, Risen Aberration, Risen Warrior, Risen Protector, Risen Construct, Risen Guardian, Diseased Ghoul, Ragged Ghoul, Spectral Projection, Spectral Teacher, Necrofiend, Scholomance Neophyte, Scholomance Acolyte, Scholomance Occultist */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10506, 11622, 10433, 10489, 10491, 10482, 10485, 10486, 10487, 10488, 11598, 10495, 10497, 11263, 10500, 11551, 10470, 10471, 10472);
-/* Scholomance Student, Scholomance Necromancer, Scholomance Adept, Scholomance Handler, Splintered Skeleton, Skulking Corpse, Unstable Corpse, Reanimated Corpse, Aspect of Banality, Aspect of Corruption, Aspect of Malice, Aspect of Shadow, Blood Steward of Kirtonos, Spectral Tutor, Dark Shade, Corrupted Spirit, Malicious Spirit, Banal Spirit, Scholomance Dark Summoner */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (10475, 10477, 10469, 11257, 10478, 10479, 10480, 10481, 14518, 14519, 14520, 14521, 14861, 10498, 11284, 14512, 14513, 14514, 11582);
 
 /* SEARING GORGE */
 UPDATE `creature_template` SET `ScriptName` = 'npc_kalaran_windblade' WHERE `entry` = 8479;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lothos_riftwaker' WHERE `entry` = 14387;
 UPDATE `creature_template` SET `ScriptName` = 'npc_zamael_lunthistle' WHERE `entry` = 8436;
-/* Glassweb Spider, Searing Lava Spider, Greater Lava Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5856, 5857, 5858);
 
 /* SHADOWFANG KEEP */
-/* Archmage Arugal */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4275);
+
 
 /* SHADOWMOON VALLEY */
 UPDATE `creature_template` SET `ScriptName` = 'neltharaku' WHERE `entry` = 21657;
@@ -700,8 +593,6 @@ UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `e
 UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `entry` = 23484;
 
 /* SILITHUS */
-/* Orgrimmar Legion Axe Thrower, Stormwind Archmage */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (15617, 15859);
 UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal' WHERE `entry` IN (15170, 15171);
 UPDATE `creature_template` SET `ScriptName` = 'npcs_captains_blackanvil_and_skullsplit' WHERE `entry` IN (15440, 15612);
 
@@ -710,17 +601,11 @@ UPDATE `creature_template` SET `ScriptName` = 'blood_knight_stillblade' WHERE `e
 
 /* SILVERPINE FOREST */
 UPDATE `creature_template` SET `ScriptName` = 'npc_astor_hadren' WHERE `entry` = 6497;
-/* Dalaran Apprentice, Dalaran Conjuror, Dalaran Mage, Dalaran Wizard, Rot Hide Mystic, Rot Hide Gladerunner, Rot Hide Brute, Rot Hide Plague Weaver, Rot Hide Savage, Rot Hide Bruiser, Mist Creeper, Dalaran Apprentice, Dalaran Wizard, Dalaran Protector, Dalaran Warder, Dalaran Mage, Dalaran Conjuror, Lake Creeper, Elder Lake Creeper, Vile Fin Shorecreeper, Nightlash, Archmage Ataeric */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1867, 1915, 1914, 1889, 1773, 1772, 1939, 1940, 1942, 1944, 1781, 1867, 1889, 1912, 1913, 1914, 1915, 1955, 1956, 1957, 1983, 2120);
 
 /* STOCKADES */
-/* Defias Captive, Defias Convict, Defias Inmate, Defias Insurgent, Defias Prisoner,  */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1707, 1711, 1708, 1715, 1706);
 
 /* STONETALON MOUNTAINS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_braug_dimspirit' WHERE `entry` = 4489;
-/* Deepmoss Creeper */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (4005);
 
 /* STORMWIND CITY */
 UPDATE `creature_template` SET `ScriptName` = 'npc_archmage_malin' WHERE `entry` = 2708;
@@ -731,8 +616,6 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_lady_katrana_prestor' WHERE `
 
 /* STRANGLETHORN VALE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530;
-/* Bloodscalp Shaman, Bloodsail Elder Magus, Bloodsail Mage, Bloodsail Warlock, Bloodscalp Axe Thrower, Skullsplitter Axe Thrower, Bloodscalp Mystic, Skullsplitter Mystic */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (697, 1653, 1562, 1564, 694, 696, 701, 780);
 
 /* STRATHOLME */
 UPDATE `creature_template` SET `ScriptName` = 'boss_dathrohan_balnazzar' WHERE `entry` = 10812;
@@ -796,28 +679,18 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_thuzadin_shadowcaster' WHERE 
 UPDATE `creature_template` SET `ScriptName` = 'mobs_spectral_ghostly_citizen' WHERE `entry` IN (10384, 10385);
 UPDATE `creature_template` SET `ScriptName` = 'mob_restless_soul' WHERE `entry` = 11122;
 UPDATE `creature_template` SET `ScriptName` = 'mob_freed_soul' WHERE `entry` = 11136;
-/* Jarien, Aurius, Ash'ari Crystal, Elder Farwhisper, Mindless Undead */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (16101, 10917, 10415, 15607, 11030);
 
 /* SUNKEN TEMPLE */
-/* Zekkis, Kazkaz the Unholy, Spawn of Hakkar, Shade of Eranikus, Jammal'an the Prophet, Ogom the Wretched, Zolo, Gasher, Loro, Hukku, Zul'Lor, Mijan, Morphaz, Weaver, Dreamscythe, Hazzas, Avatar of Hakkar, Atal'alarion <Guardian of the Idol> */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5400, 5401, 5708, 5709, 5710, 5711, 5712, 5713, 5714, 5715, 5716, 5717, 5719, 5720, 5721, 5722, 8443, 8580);
-/* Jade, Murk Slitherer, Murk Spitter, Murk Worm, Saturated Ooze, Fungal Ooze, Cursed Atal'ai, Atal'ai Witch Doctor, Enthralled Atal'ai, Mummified Atal'ai, Unliving Atal'ai, Atal'ai Priest, Atal'ai Corpse Eater, Atal'ai Deathwalker, Atal'ai High Priest, Nightmare Scalebane, Nightmare Wyrmkin, Nightmare Wanderer, Hakkari Frostwing, Nightmare Whelp, Atal'ai Skeleton, Hakkari Sapper, Hakkari Minion, Hakkari Bloodkeeper, Nightmare Suppressor */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1063, 5224, 5225, 5226, 5228, 5235, 5243, 5259, 5261, 5263, 5267, 5269, 5270, 5271, 5273, 5277, 5280, 5283, 5291, 8319, 8324, 8336, 8437, 8438, 8497);
+
 
 /* SWAMP OF SORROWS */
-/* Marsh Murloc, Adolescent Whelp, Dreaming Whelp, Wyrmkin Dreamwalker, Scalebane Captain, Deathstrike Tarantula */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (747, 740, 741, 743, 745, 769);
+
 
 /* TANARIS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_marin_noggenfogger' WHERE `entry` = 7564;
 UPDATE `creature_template` SET `ScriptName` = 'npc_steward_of_time' WHERE `entry` = 20142;
-/* Dunemaul Ogre Mage, Wastewander Shadow Mage, Sandfury Axe Thrower */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (5473, 5617, 5646);
 
 /* TELDRASSIL */
-/* Gnarlpine Mystic, Gnarlpine Pathfinder, Bloodfeather Sorceress, Webwood Spider, Giant Webwood Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7235, 2012, 2018, 1986, 2001);
 
 
 /*  */
@@ -849,7 +722,6 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_lord_sanguinar' WHERE `entry
 UPDATE `creature_template` SET `ScriptName` = 'boss_grand_astromancer_capernian' WHERE `entry` = 20062;
 UPDATE `creature_template` SET `ScriptName` = 'boss_master_engineer_telonicus' WHERE `entry` = 20063;
 
-
 /* TEMPLE OF AHN'QIRAJ */
 UPDATE `instance_template` SET `script` = 'instance_temple_of_ahnqiraj' WHERE `map` = 531;
 /* AQ40 Bosses */
@@ -876,7 +748,6 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_giant_claw_tentacle' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'mob_giant_eye_tentacle' WHERE `entry` = 15334;
 UPDATE `creature_template` SET `ScriptName` = 'mob_giant_flesh_tentacle' WHERE `entry` = 15802;
 
-
 /* TEROKKAR FOREST */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_gordunni_ogre' WHERE `entry` IN (22143, 22144, 22148, 23022);
 UPDATE `creature_template` SET `ScriptName` = 'mob_infested_root_walker' WHERE `entry` = 22095;
@@ -891,8 +762,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_skyguard_handler_irena' WHERE
 UPDATE `creature_template` SET `ScriptName` = 'npc_cairne_bloodhoof' WHERE `entry` = 3057;
 
 /* TIRISFAL GLADES */
-/* Scarlet Neophyte, Rot Hide Gnoll, Young Night Web Spider, Night Web Spider, Vicious Night Web Spider */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1539, 1674, 1504, 1505, 1555);
+
 
 /* ULDAMAN */
 /* Uldaman Trash Mobs */
@@ -904,35 +774,28 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_ironaya' WHERE `entry` = 722
 
 
 /* UN'GORO CRATER */
-/* Tar Creeper */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (6527);
+
 
 /* UNDERCITY */
 UPDATE `creature_template` SET `ScriptName` = 'npc_parqual_fintallas' WHERE `entry` = 4488;
 
 
 /* WAILING CAVERNS */
-/* Deviate Creeper */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (3632);
 UPDATE `creature_template` SET `ScriptName` = 'boss_wailing_caverns' WHERE `entry` =3654;
 
 /* WESTERN PLAGUELANDS */
-/* Skeletal Acolyte, Skeletal Flayer, Skeletal Sorcerer, Scarlet Mage, Araj the Summoner */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1789, 1783, 1784, 1826, 1852);
+
 
 /* WESTFALL */
-/* Defias Pillager, Defias Smuggler, Defias Trapper, Defias Highwayman, Defias Knuckleduster, Defias Pathstalker, Defias Looter, Murloc Oracle, Murloc Hunter, Murloc Warrior, Murloc Tidehunter, Murloc Coastrunner, Riverpaw Scout, Riverpaw Mongrel, Riverpaw Brute, Riverpaw Herbalist, Defias Renegade Mage, Riverpaw Mystic */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (589, 95, 504, 122, 449, 121, 590, 517, 458, 171, 127, 126, 500, 123, 124, 501, 450, 453);
+
 
 /* WETLANDS */
-/* Bluegill Forager, Bluegill Murloc, Bluegill Muckdweller, Bluegill Raider, Bluegill Warrior, Bluegill Oracle, Mosshide Mistweaver, Mosshide Mystic, Mosshide Trapper, Mosshide Mongrel, Mosshide Gnoll, Fen Creeper, Red Whelp, Lost Whelp, Flamesnorting Whelp, Crimson Whelp */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (1026, 1024, 1028, 1418, 1027, 1029, 1009, 1013, 1011, 1008, 1007, 1040, 1042, 1043, 1044, 1069);
+
 
 /* WINTERSPRING */
 UPDATE `creature_template` SET `ScriptName` = 'npc_lorax' WHERE `entry` = 10918;
 UPDATE `creature_template` SET `ScriptName` = 'npc_rivern_frostwind' WHERE `entry` = 10618;
-/* Cobalt Mageweaver, Chillwind Chimaera */
-UPDATE `creature_template` SET `ScriptName` = 'generic_creature' WHERE `entry` IN (7437, 7448);
+
 
 /* ZANGARMARSH */
 UPDATE `creature_template` SET `ScriptName` = 'npcs_ashyen_and_keleth' WHERE `entry` IN (17900, 17901);
@@ -942,6 +805,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` =
 
 
 /* ZUL'GURUB */
+UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
 UPDATE `creature_template` SET `ScriptName` = 'boss_jeklik' WHERE `entry` = 14517;
 UPDATE `creature_template` SET `ScriptName` = 'boss_venoxis' WHERE `entry` = 14507;
 UPDATE `creature_template` SET `ScriptName` = 'boss_marli' WHERE `entry` = 14510;
@@ -957,13 +821,6 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_healing_ward' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
 UPDATE `creature_template` SET `Scriptname` = 'mobs_zulgurub' WHERE `entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
-UPDATE `instance_template` SET `script` = 'instance_zulgurub' WHERE `map` = 309;
-
-/* Fix for Wrong ZG Update */
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 14607;
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 15295;
-
-
 
 
 /* EOF */
