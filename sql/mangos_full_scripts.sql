@@ -498,6 +498,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_gurok_the_usurper' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'mob_shattered_rumbler' WHERE `entry` = 17157;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_kilsorrow_agent' WHERE `entry` IN (17146, 17147, 17148, 18397, 18658);
 UPDATE `creature_template` SET `ScriptName` = 'npc_altruis_the_sufferer' WHERE `entry` = 18417;
+UPDATE `creature_template` SET `ScriptName` = 'npc_greatmother_geyah' WHERE `entry` = 18141;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lantresor_of_the_blade' WHERE `entry` = 18261;
 
 /* NAXXRAMAS */
