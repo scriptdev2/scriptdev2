@@ -21,6 +21,7 @@ SDComment: Water globules don't explode properly
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 #include "../../../../../../game/Player.h"
 
 #define SPELL_TIDAL_WAVE             37730
@@ -111,7 +112,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("MorogrimTidewalkerEvent", 0);
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
@@ -124,7 +125,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         InCombat = true;
 
         if(pInstance)
-            pInstance->SetData("MorogrimTidewalkerEvent", 1); 
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 1); 
     }
 
     void KilledUnit(Unit *victim)
@@ -154,7 +155,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData("MorogrimTidewalkerEvent", 0);
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
     }
 
     void AttackStart(Unit *who)

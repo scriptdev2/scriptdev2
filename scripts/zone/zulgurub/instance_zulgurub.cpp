@@ -21,6 +21,7 @@ SDComment: Missing reset function after killing a boss for Ohgan, Thekal.
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 {
@@ -76,99 +77,99 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
         return false;
     }
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
 
-        if(type == "JeklikIsDead")
+        if(type == DATA_JEKLIKISDEAD)
             if(IsBossDied[0])
                 return 1;
 
-        if(type == "VenoxisIsDead")
+        if(type == DATA_VENOXISISDEAD)
             if(IsBossDied[1])
                 return 1;
 
-        if(type == "MarliIsDead")
+        if(type == DATA_MARLIISDEAD)
             if(IsBossDied[2])
                 return 1;
 
-        if(type == "ThekalIsDead")
+        if(type == DATA_THEKALISDEAD)
             if(IsBossDied[3])
                 return 1;
 
-        if(type == "ArlokkIsDead")
+        if(type == DATA_ARLOKKISDEAD)
             if(IsBossDied[4])
                 return 1;
 
-        if(type == "LorKhanIsDead")
+        if(type == DATA_LORKHANISDEAD)
             if(IsBossDied[5])
                 return 1;
 
-        if(type == "ZathIsDead")
+        if(type == DATA_ZATHISDEAD)
             if(IsBossDied[6])
                 return 1;
 
-        if(type == "ThekalIsFakeDead")
+        if(type == DATA_THEKALISFAKEDEAD)
             if(IsBossDied[7])
                 return 1;
 
-        if(type == "OhganIsDead")
+        if(type == DATA_OHGANISDEAD)
             if(IsBossDied[8])
                 return 1;
 
         //Boss is not dead. Resetting function for some bosses after killing them but whiping at the complete encounter.
 
-        if(type == "ThekalIsAlive")
+        if(type == DATA_THEKALISALIVE)
             if(IsBossDied[3])
                 return 0;
 
-        if(type == "LorKhanIsAlive")
+        if(type == DATA_LORKHANISALIVE)
             if(IsBossDied[5])
                 return 0;
 
-        if(type == "ZathIsAlive")
+        if(type == DATA_ZATHISALIVE)
             if(IsBossDied[6])
                 return 0;
 
         return 0;
     }
 
-    uint64 GetData64 (char *identifier) {
-        if (identifier == "LorKhan")
+    uint64 GetData64 (uint32 identifier) {
+        if (identifier  == DATA_LORKHAN)
             return LorKhanGUID;
-        if (identifier == "Zath")
+        if (identifier  == DATA_ZATH)
             return ZathGUID;
-        if (identifier == "Thekal")
+        if (identifier  == DATA_THEKAL)
             return ThekalGUID;
-        if (identifier == "Jindo")
+        if (identifier  == DATA_JINDO)
             return JindoGUID;
         return 0;
     } // end GetData64
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "Jeklik_Death")
+        if(type == DATA_JEKLIK_DEATH)
             IsBossDied[0] = true;
-        else if(type == "Venoxis_Death")
+        else if(type == DATA_VENOXIS_DEATH)
             IsBossDied[1] = true;
-        else if(type == "Marli_Death")
+        else if(type == DATA_MARLI_DEATH)
             IsBossDied[2] = true;
-        else if(type == "Thekal_Death")
+        else if(type == DATA_THEKAL_DEATH)
             IsBossDied[3] = true;
-        else if(type == "Arlokk_Death")
+        else if(type == DATA_ARLOKK_DEATH)
             IsBossDied[4] = true;
-        else if(type == "LorKhan_Death")
+        else if(type == DATA_LORKHAN_DEATH)
             IsBossDied[5] = true;
-        else if(type == "Zath_Death")
+        else if(type == DATA_ZATH_DEATH)
             IsBossDied[6] = true;
-        else if(type == "ThekalFake_Death")
+        else if(type == DATA_THEKALFAKE_DEATH)
         IsBossDied[7] = true;
-        else if(type == "Ohgan_Death")
+        else if(type == DATA_OHGAN_DEATH)
             IsBossDied[8] = true;
-        else if(type == "LorKhan_Alive")
+        else if(type == DATA_LORKHAN_ALIVE)
             IsBossDied[5] = false;
-        else if(type == "Zath_Alive")
+        else if(type == DATA_ZATH_ALIVE)
             IsBossDied[6] = false;
-        else if(type == "Thekal_Alive")
+        else if(type == DATA_THEKAL_ALIVE)
             IsBossDied[7] = false;
     }
 };

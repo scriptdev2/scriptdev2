@@ -15,6 +15,7 @@
 */   
 
 #include "../../../sc_defines.h"
+#include "def_the_eye.h"
 
 #define SPELL_ARCANE_MISSLES                 33031                 
 #define SPELL_MARK_OF_THE_ASTROMANCER        42783
@@ -106,7 +107,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("HighAstromancerSolarianEvent", 0);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
     }
@@ -116,7 +117,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoYell(SAY_PHASE1, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData("HighAstromancerSolarianEvent", 1);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 1);
 
         InCombat = true;
 
@@ -144,7 +145,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData("HighAstromancerSolarianEvent", 0);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -398,7 +399,7 @@ struct MANGOS_DLL_DECL mob_solarian_priestAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        Unit* astromancer = Unit::GetUnit((*m_creature), pInstance->GetData64("Astromancer"));
+        Unit* astromancer = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ASTROMANCER));
         if (healTimer < diff)
         {  
             DoCast(astromancer,SOLARIUM_HEAL);

@@ -213,12 +213,12 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         ~ScriptedInstance() {}
 
         //All-purpose data storage 64 bit
-        virtual uint64 GetData64(char *) {return 0; }
-        virtual void SetData64(char *, uint64) { }
+        virtual uint64 GetData64(uint32) {return 0; }
+        virtual void SetData64(uint32, uint64) { }
 
         //All-purpose data storage 32 bit
-        virtual uint32 GetData(char *type) { return 0; }
-        virtual void SetData(char *type, uint32 data) {}
+        virtual uint32 GetData(uint32) { return 0; }
+        virtual void SetData(uint32, uint32 data) {}
 };
 
 //Localized text function

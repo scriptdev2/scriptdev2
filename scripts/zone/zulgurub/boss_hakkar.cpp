@@ -21,6 +21,7 @@ SDComment: Spells buggy. Bloodsiphon will always do dmg no poison cloud check.
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 
 #define SPELL_BLOODSIPHON            24322
@@ -246,7 +247,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if(pInstance)
             {    
-                if(!pInstance->GetData("JeklikIsDead"))
+                if(!pInstance->GetData(DATA_JEKLIKISDEAD))
                 {
                 
                   if (AspectOfJeklik_Timer < diff)
@@ -269,7 +270,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if(pInstance)
             {    
-                if(!pInstance->GetData("VenoxisIsDead"))
+                if(!pInstance->GetData(DATA_VENOXISISDEAD))
                 {
                 
                   if (AspectOfVenoxis_Timer < diff)
@@ -292,7 +293,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if(pInstance)
             {    
-                if(!pInstance->GetData("MarliIsDead"))
+                if(!pInstance->GetData(DATA_MARLIISDEAD))
                 {
                 
                   if (AspectOfMarli_Timer < diff)
@@ -315,7 +316,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if(pInstance)
             {    
-                if(!pInstance->GetData("ThekalIsDead"))
+                if(!pInstance->GetData(DATA_THEKALISDEAD))
                 {
                 
                   if (AspectOfThekal_Timer < diff)
@@ -338,7 +339,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         {
             if(pInstance)
             {    
-                if(!pInstance->GetData("ArlokkIsDead"))
+                if(!pInstance->GetData(DATA_ARLOKKISDEAD))
                 {
                 
                   if (AspectOfArlokk_Timer < diff)

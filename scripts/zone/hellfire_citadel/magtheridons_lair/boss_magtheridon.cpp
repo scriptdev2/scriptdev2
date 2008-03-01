@@ -21,6 +21,7 @@ SDComment: In Development
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_magtheridons_lair.h"
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Map.h"
 #include "../../../../../../game/GameObject.h"
@@ -453,7 +454,7 @@ bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
 
     ScriptedInstance* pInst = (ScriptedInstance*)_GO->GetMap()->GetInstanceData();
 
-    Unit* pUnit = Unit::GetUnit(*_GO, pInst->GetData64("Magtheridon"));
+    Unit* pUnit = Unit::GetUnit(*_GO, pInst->GetData64(DATA_MAGTHERIDON));
 
     if (!pUnit || !pUnit->isAlive() || !player)
     {

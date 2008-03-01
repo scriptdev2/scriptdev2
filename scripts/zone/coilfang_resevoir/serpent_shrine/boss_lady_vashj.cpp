@@ -21,6 +21,7 @@ SDComment: Missing blizzlike Shield Generators coords
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 #include "../../../creature/simple_ai.h"
 #include "../../../../../../game/GameObject.h"
 #include "../../../../../../game/Player.h"
@@ -171,7 +172,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("LadyVashjEvent", 0);
+            pInstance->SetData(DATA_LADYVASHJEVENT, 0);
 
         ShieldGeneratorChannel[0] = 0;
         ShieldGeneratorChannel[1] = 0;
@@ -212,7 +213,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData("LadyVashjEvent", 0);
+            pInstance->SetData(DATA_LADYVASHJEVENT, 0);
     }
 
     void StartEvent()
@@ -244,7 +245,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         Phase = 1;
 
         if(pInstance)
-            pInstance->SetData("LadyVashjEvent", 1);
+            pInstance->SetData(DATA_LADYVASHJEVENT, 1);
     }
 
     void AttackStart(Unit *who)
@@ -536,7 +537,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if(Check_Timer < diff)
             {
                 //Start Phase 3
-                if(pInstance && pInstance->GetData("CanStartPhase3"))
+                if(pInstance && pInstance->GetData(DATA_CANSTARTPHASE3))
                 {
                     //set life 50%
                     m_creature->SetHealth(m_creature->GetMaxHealth()/2);
@@ -593,7 +594,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
         if(Movement_Timer < diff)
         {
             Unit *Vashj = NULL;
-            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
             if(Vashj)
             {
                 m_creature->GetMotionMaster()->Clear();
@@ -610,7 +611,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
             if(pInstance)
             {
                 Unit *Vashj = NULL;
-                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
                 if(Vashj)
                 {
                     if(Vashj->IsWithinDistInMap(m_creature, 5))
@@ -667,7 +668,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
         if(pInstance)
         {
             Creature *Vashj = NULL;
-            Vashj = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj")));
+            Vashj = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ)));
 
             if(Vashj)
                 ((boss_lady_vashjAI*)Vashj->AI())->EventTaintedElementalDeath();
@@ -811,7 +812,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
             {    
                 //check if vashj is death
                 Unit *Vashj = NULL;
-                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
                 if(!Vashj || (Vashj && !Vashj->isAlive()))
                 {
                     //remove
@@ -907,7 +908,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
         if(!Channeled)
         {
             Unit *Vashj = NULL;
-            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64("LadyVashj"));
+            Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
 
             if(Vashj && Vashj->isAlive())
             {
@@ -931,32 +932,32 @@ bool ItemUse_item_tainted_core(Player *player, Item* _Item, SpellCastTargets con
     }
 
     Creature *Vashj = NULL;
-    Vashj = (Creature*)(Unit::GetUnit((*player), pInstance->GetData64("LadyVashj")));
+    Vashj = (Creature*)(Unit::GetUnit((*player), pInstance->GetData64(DATA_LADYVASHJ)));
     if(Vashj && ((boss_lady_vashjAI*)Vashj->AI())->Phase == 2)
     {
         if(targets.getGOTarget() && targets.getGOTarget()->GetTypeId()==TYPEID_GAMEOBJECT)
         {
-            char *identifier;
+            uint32 identifier;
             uint8 channel_identifier;
             switch(targets.getGOTarget()->GetEntry())
             {
             case 185052:
-                identifier = "ShieldGenerator1";
+                identifier = DATA_SHIELDGENERATOR1;
                 channel_identifier = 0;
                 break;
 
             case 185053:
-                identifier = "ShieldGenerator2";
+                identifier = DATA_SHIELDGENERATOR2;
                 channel_identifier = 1;
                 break;
 
             case 185051:
-                identifier = "ShieldGenerator3";
+                identifier = DATA_SHIELDGENERATOR3;
                 channel_identifier = 2;
                 break;
 
             case 185054:
-                identifier = "ShieldGenerator4";
+                identifier = DATA_SHIELDGENERATOR4;
                 channel_identifier = 3;
                 break;
 

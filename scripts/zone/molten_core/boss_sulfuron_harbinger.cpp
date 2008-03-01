@@ -21,6 +21,7 @@ SDComment: Adds NYI
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_molten_core.h"
 
 
 #define SPELL_DEMORALIZINGSHOUT     19778
@@ -254,8 +255,8 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
                     if(pInstance)
                     {    
 
-                     Unit *pSulfuron = Unit::GetUnit((*m_creature), pInstance->GetData64("Sulfuron"));
-                     Unit *pFlamewakerPriest = Unit::GetUnit((*m_creature), pInstance->GetData64("FlamewakerPriest"));
+                     Unit *pSulfuron = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_SULFURON));
+                     Unit *pFlamewakerPriest = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_FLAMEWAKERPRIEST));
 
 
 

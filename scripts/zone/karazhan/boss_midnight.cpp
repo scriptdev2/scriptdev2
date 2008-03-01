@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
             Unit *pUnit = Unit::GetUnit(*m_creature, Attumen);
             if(pUnit)
             {
-                pUnit->MonsterYell(SAY_MIDNIGHT_KILL, LANG_UNIVERSAL, NULL);
+                pUnit->MonsterYell(SAY_MIDNIGHT_KILL, LANG_UNIVERSAL, 0);
                 DoPlaySoundToSet(pUnit, SOUND_MIDNIGHT_KILL);
             }
         }    
@@ -118,15 +118,15 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                 switch(rand()%3)
                 {    
                 case 0:
-                    pAttumen->Yell(SAY_APPEAR1, LANG_UNIVERSAL, NULL);
+                    pAttumen->Yell(SAY_APPEAR1, LANG_UNIVERSAL, 0);
                     DoPlaySoundToSet(m_creature, SOUND_APPEAR1);
                     break;
                 case 1:    
-                    pAttumen->Yell(SAY_APPEAR2, LANG_UNIVERSAL, NULL);
+                    pAttumen->Yell(SAY_APPEAR2, LANG_UNIVERSAL, 0);
                     DoPlaySoundToSet(m_creature, SOUND_APPEAR2);
                     break;
                 case 2:
-                    pAttumen->Yell(SAY_APPEAR3, LANG_UNIVERSAL, NULL);
+                    pAttumen->Yell(SAY_APPEAR3, LANG_UNIVERSAL, 0);
                     DoPlaySoundToSet(m_creature, SOUND_APPEAR3);
                     break;
                 }   

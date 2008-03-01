@@ -1341,7 +1341,7 @@ void ScriptsInit()
 
     // -------------------
 
-    outstring_log("SD2: Loaded %u Scripts", nrscripts);
+    outstring_log("SD2: Loaded %u C++ Scripts", nrscripts);
     outstring_log("");
 }
 

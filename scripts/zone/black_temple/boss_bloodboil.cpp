@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 #include "../../../../../game/SpellAuras.h"
 
@@ -102,7 +103,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void SetVariables()
     {
           if(pInstance)
-               pInstance->SetData("GurtoggBloodboilEvent", 0);
+               pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 0);
 
           TargetGUID = 0;
 
@@ -148,7 +149,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
-                    if(pInstance) pInstance->SetData("GurtoggBloodboilEvent", 1);
+                    if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
             }
         }
     }
@@ -172,7 +173,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
-                         if(pInstance) pInstance->SetData("GurtoggBloodboilEvent", 1);
+                         if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
                 }
             }
         }
@@ -196,7 +197,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData("GurtoggBloodboilEvent", 3);
+            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 3);
 
         InCombat = false;
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
@@ -226,7 +227,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         targets.resize(5);
          
         //Aura each player in the targets list with Bloodboil. Aura code copied+pasted from Aura command in Level3.cpp
-        SpellEntry const *spellInfo = GetSpellStore()->LookupEntry( SPELL_BLOODBOIL );   
+        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry( SPELL_BLOODBOIL );   
         if(spellInfo)
         {
             for(std::list<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
@@ -238,11 +239,12 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     uint8 eff = spellInfo->Effect[i];
                     if (eff>=TOTAL_SPELL_EFFECTS)
                         continue;
+                    
                     Aura *Aur = new Aura(spellInfo, i, NULL, target);
                     target->AddAura(Aur);
                 }
             }
-        }
+        }*/
     }
      
     void RevertThreatOnTarget(uint64 guid)

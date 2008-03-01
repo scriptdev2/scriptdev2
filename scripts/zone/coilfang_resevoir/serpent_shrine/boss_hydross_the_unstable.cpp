@@ -21,6 +21,7 @@ SDComment: Needs some corrections to switch radius and location
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 
 #define SWITCH_RADIUS             15
 
@@ -129,7 +130,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 0);
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FROST, true);
@@ -142,7 +143,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 1);
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 1);
 
         InCombat = true;
     }
@@ -191,7 +192,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         }
 
         if(pInstance)
-            pInstance->SetData("HydrossTheUnstableEvent", 0);
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
 
         // despawn invisible trigger
         DespawnCreatureIfExists(Invisible);

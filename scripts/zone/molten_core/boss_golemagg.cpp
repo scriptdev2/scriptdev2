@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_molten_core.h"
 
 
 #define SPELL_MAGMASPLASH               37667      
@@ -97,7 +98,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Golemagg_Death", 0);
+            pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -287,7 +288,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
             if(pInstance)
             {    
 
-                    if(pInstance->GetData("GolemaggIsDead"))
+                    if(pInstance->GetData(DATA_GOLEMAGGISDEAD))
                     //remove
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();

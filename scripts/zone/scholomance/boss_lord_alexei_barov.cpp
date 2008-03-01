@@ -21,6 +21,7 @@ SDComment: aura applied/defined in database
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_scholomance.h"
 
 #define SPELL_IMMOLATE             20294        // Old ID  was 15570       
 #define SPELL_VEILOFSHADOW         17820
@@ -70,9 +71,9 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
         {
-            pInstance->SetData("LordAlexeiBarov_Death", 0);
+            pInstance->SetData(DATA_LORDALEXEIBAROV_DEATH, 0);
 
-            if(pInstance->GetData("CanSpawnGandling"))
+            if(pInstance->GetData(DATA_CANSPAWNGANDLING))
                 m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }

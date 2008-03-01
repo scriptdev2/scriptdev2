@@ -74,26 +74,22 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         switch(creature_entry)
         {
             case 20064:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
             ThaladredTheDarkener = creature->GetGUID();
             break;
 
             case 20063:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
             MasterEngineerTelonicus = creature->GetGUID();
             break;
 
             case 20062:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
             GrandAstromancerCapernian = creature->GetGUID();
             break;
 
             case 20060:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            creature->setFaction(35);
+            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
             LordSanguinar = creature->GetGUID();
             break;
 

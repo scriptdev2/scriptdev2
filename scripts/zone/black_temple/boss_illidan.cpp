@@ -23,6 +23,7 @@ EndScriptData */
 
 /******** Includes ************/
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 #include "../../../../../shared/WorldPacket.h"
 #include "../../../../../game/SpellAuras.h"
@@ -515,7 +516,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     void JustDied(Unit *killer)
     {
         if(pInstance)
-            pInstance->SetData("IllidanStormrageEvent", 3); // Completed
+            pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, 3); // Completed
         IsTalking = false;
         InCombat = false;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -543,7 +544,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if(damage>m_creature->GetHealth())
         {
             damage = 0;
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.01);
+            m_creature->SetHealth(m_creature->GetMaxHealth()/100);
         }
     }
 
@@ -681,7 +682,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 if(pInstance)
                 {
-                    AkamaGUID = pInstance->GetData64("Akama");
+                    AkamaGUID = pInstance->GetData64(DATA_AKAMA);
                     if(!AkamaGUID) return;
                 }
             }
@@ -690,7 +691,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             if(Akama)
             {
                 if(text)
-                    Akama->Yell(text, LANG_UNIVERSAL, NULL);
+                    Akama->Yell(text, LANG_UNIVERSAL, 0);
                 Akama->HandleEmoteCommand(emote);
                 if(sound)
                     DoPlaySoundToSet(Akama, sound);
@@ -703,7 +704,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             if(Maiev)
             {
                 if(text)
-                    Maiev->Yell(text, LANG_UNIVERSAL, NULL);
+                    Maiev->Yell(text, LANG_UNIVERSAL, 0);
                 Maiev->HandleEmoteCommand(emote);
                 if(sound)
                     DoPlaySoundToSet(Maiev, sound);
@@ -1317,7 +1318,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
 void npc_akama_illidanAI::SetVariables()
 {
-    if(pInstance) pInstance->SetData("IllidanStormrageEvent", 0); // Not started
+    if(pInstance) pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, 0); // Not started
     IllidanGUID = 0;
     TalkTimer = 0;
     TalkCount = 0;
@@ -1345,7 +1346,7 @@ void npc_akama_illidanAI::BeginEvent(Player *player)
     InCombat = true;
 
     if(pInstance)
-        IllidanGUID = pInstance->GetData64("IllidanStormrage");
+        IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
 
     if(IllidanGUID)
     {
@@ -1434,7 +1435,7 @@ void npc_akama_illidanAI::UpdateAI(const uint32 diff)
                     switch(TalkCount)
                     {
                         case 0:
-                            Illidan->Yell(SAY_AKAMA_MINION, LANG_UNIVERSAL, NULL);
+                            Illidan->Yell(SAY_AKAMA_MINION, LANG_UNIVERSAL, 0);
                             DoPlaySoundToSet(Illidan, SOUND_AKAMA_MINION);
                             TalkTimer = 10000;
                             TalkCount = 1;
@@ -1462,7 +1463,7 @@ void npc_akama_illidanAI::UpdateAI(const uint32 diff)
     }else
     {
         if(pInstance)
-            IllidanGUID = pInstance->GetData64("IllidanStormrage");
+            IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
     }
 
     // If we don't have a target, or is talking, or has run away, return
@@ -1588,7 +1589,7 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
         {
             if(pInstance)
             {
-                IllidanGUID = pInstance->GetData64("IllidanStormrage");
+                IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
             }
         }else
         {

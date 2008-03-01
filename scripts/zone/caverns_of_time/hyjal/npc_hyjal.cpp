@@ -15,6 +15,7 @@
 */
 
 #include "hyjalAI.h"
+#include "def_hyjal.h"
 
 #define GOSSIP_ITEM_BEGIN_ALLY  "We are ready to defend the Alliance base."
 #define GOSSIP_ITEM_ANETHERON   "The defenses are holding up; we can continue."
@@ -68,15 +69,15 @@ bool GossipSelect_npc_jaina_proudmoore(Player *player, Creature *_Creature, uint
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("RageWinterchillEvent", ENCOUNTER_IN_PROGRESS);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_RAGEWINTERCHILLEVENT, ENCOUNTER_IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("RageWinterchillEvent", ENCOUNTER_COMPLETE);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("AnetheronEvent", ENCOUNTER_IN_PROGRESS);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_RAGEWINTERCHILLEVENT, ENCOUNTER_COMPLETE);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_ANETHERONEVENT, ENCOUNTER_IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("AnetheronEvent", ENCOUNTER_COMPLETE);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_ANETHERONEVENT, ENCOUNTER_COMPLETE);
             ((hyjalAI*)_Creature->AI())->TeleportRaid(player, HORDEBASE_X, HORDEBASE_Y, HORDEBASE_Z);
             break;
     }
@@ -98,7 +99,7 @@ CreatureAI* GetAI_npc_thrall(Creature *_Creature)
 bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
 {
     uint32 AnetheronEvent = 0;
-    AnetheronEvent = ((hyjalAI*)_Creature->AI())->GetInstanceData("AnetheronEvent");
+    AnetheronEvent = ((hyjalAI*)_Creature->AI())->GetInstanceData(DATA_ANETHERONEVENT);
     if(AnetheronEvent == 3) // Only let them start the Horde phase if Anetheron is dead.
     {
         if((((hyjalAI*)_Creature->AI())->EventBegun) && (!((hyjalAI*)_Creature->AI())->FirstBossDead))
@@ -124,15 +125,15 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("KazrogalEvent", ENCOUNTER_IN_PROGRESS);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_KAZROGALEVENT, ENCOUNTER_IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("KazrogalEvent", ENCOUNTER_COMPLETE);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("AzgalorEvent", ENCOUNTER_IN_PROGRESS);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_KAZROGALEVENT, ENCOUNTER_COMPLETE);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_AZGALOREVENT, ENCOUNTER_IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->SetInstanceData("AzgalorEvent", ENCOUNTER_COMPLETE);
+            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_AZGALOREVENT, ENCOUNTER_COMPLETE);
             ((hyjalAI*)_Creature->AI())->TeleportRaid(player, NIGHTELFBASE_X, NIGHTELFBASE_Y, NIGHTELFBASE_Z);
             break;
     }

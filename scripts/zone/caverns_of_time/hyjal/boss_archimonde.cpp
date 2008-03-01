@@ -15,6 +15,7 @@
 */
 
 #include "../../../sc_defines.h"
+#include "def_hyjal.h"
 #include "../../../../../../game/TargetedMovementGenerator.h"
 
 #define SPELL_DENOUEMENT_WISP      32124 // Wisps use this
@@ -239,7 +240,7 @@ struct mob_ancient_wispAI : public ScriptedAI
         if(!ArchimondeGUID)
         {
             if(pInstance)
-                ArchimondeGUID = pInstance->GetData64("Archimonde");
+                ArchimondeGUID = pInstance->GetData64(DATA_ARCHIMONDE);
         }
 
         if(CheckTimer < diff)

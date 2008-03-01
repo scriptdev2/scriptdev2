@@ -22,6 +22,7 @@ EndScriptData */
 
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
  
 #define SPELL_CHARGE        24315
 #define SPELL_CLEAVE        20691
@@ -170,7 +171,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             {    
                 if (!RaptorDead)
                 {
-                    if(pInstance->GetData("OhganIsDead"))
+                    if(pInstance->GetData(DATA_OHGANISDEAD))
                     DoCast(m_creature, SPELL_ENRAGE);
                     RaptorDead = true;
                 }
@@ -357,7 +358,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Ohgan_Death", 0);
+            pInstance->SetData(DATA_OHGAN_DEATH, 0);
     }
 
     void MoveInLineOfSight(Unit *who)

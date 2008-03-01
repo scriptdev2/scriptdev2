@@ -21,6 +21,7 @@ SDComment: Place Holder
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_molten_core.h"
 
 #define ID_LUCIFRON     12118
 #define ID_MAGMADAR     11982
@@ -172,50 +173,50 @@ public:
         }
     }
 
-    uint64 GetData64 (char *identifier) {
-        if (identifier == "Sulfuron")
+    uint64 GetData64 (uint32 identifier) {
+        if (identifier  == DATA_SULFURON)
             return Sulfuron;
-        if (identifier == "FlamewakerPriest")
+        if (identifier  == DATA_FLAMEWAKERPRIEST)
             return FlamewakerPriest;
         return 0;
     } // end GetData64
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
 
-        if(type == "LucifronIsDead")
+        if(type == DATA_LUCIFRONISDEAD)
             if(IsBossDied[0])
                 return 1;
 
-        if(type == "MagmadarIsDead")
+        if(type == DATA_MAGMADARISDEAD)
             if(IsBossDied[1])
                 return 1;
 
-        if(type == "GehennasIsDead")
+        if(type == DATA_GEHENNASISDEAD)
             if(IsBossDied[2])
                 return 1;
 
-        if(type == "GarrIsDead")
+        if(type == DATA_GARRISDEAD)
             if(IsBossDied[3])
                 return 1;
 
-        if(type == "GeddonIsDead")
+        if(type == DATA_GEDDONISDEAD)
             if(IsBossDied[4])
                 return 1;
 
-        if(type == "ShazzrahIsDead")
+        if(type == DATA_SHAZZRAHISDEAD)
             if(IsBossDied[5])
                 return 1;
 
-        if(type == "SulfuronIsDead")
+        if(type == DATA_SULFURONISDEAD)
             if(IsBossDied[6])
                 return 1;
 
-        if(type == "GolemaggIsDead")
+        if(type == DATA_GOLEMAGGISDEAD)
             if(IsBossDied[7])
                 return 1;
 
-        if(type == "MajordomoIsDead")
+        if(type == DATA_MAJORDOMOISDEAD)
             if(IsBossDied[8])
                 return 1;
 
@@ -223,9 +224,9 @@ public:
     }
 
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "Golemagg_Death")
+        if(type == DATA_GOLEMAGG_DEATH)
             IsBossDied[7] = true;
     }
 

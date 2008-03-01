@@ -21,6 +21,7 @@ SDComment: Problem in finding the right flying batriders for spawning and making
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
 #define SPELL_ASPECT_OF_JEKLIK    24687       //This is her silence spell. 
@@ -117,7 +118,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Jeklik_Death", 0);
+            pInstance->SetData(DATA_JEKLIK_DEATH, 0);
 
     }
     
@@ -357,7 +358,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(pInstance)
             {    
 
-                    if(pInstance->GetData("JeklikIsDead"))
+                    if(pInstance->GetData(DATA_JEKLIKISDEAD))
                     //remove
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();

@@ -21,6 +21,7 @@ SDComment: Missing Multishot, pet, Totems, Windfury, Whirlwind
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Group.h"
 
@@ -115,7 +116,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("KarathressEvent", 0);
+            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
@@ -143,9 +144,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void GetAdvisors()
     {
-        Advisors[0] = pInstance->GetData64("Sharkkis");
-        Advisors[1] = pInstance->GetData64("Tidalvess");
-        Advisors[3] = pInstance->GetData64("Caribdis");
+        Advisors[0] = pInstance->GetData64(DATA_SHARKKIS);
+        Advisors[1] = pInstance->GetData64(DATA_TIDALVESS);
+        Advisors[3] = pInstance->GetData64(DATA_CARIBDIS);
     }
 
     void StartEvent(Unit *who)
@@ -160,8 +161,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         InCombat = true;
 
-        pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-        pInstance->SetData("KarathressEvent", 1);
+        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
     }
 
     void KilledUnit(Unit *victim)
@@ -189,7 +190,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData("FathomLordKarathressEvent", 0);
+            pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, 0);
 
         //support for quest 10944
         if(killer && (killer->GetTypeId() == TYPEID_PLAYER))
@@ -264,9 +265,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("KarathressEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("KarathressEvent_Starter"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
             if(target)
             {
@@ -285,7 +286,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("KarathressEvent"))
+        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //CataclysmicBolt_Timer
@@ -344,7 +345,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("KarathressEvent", 0);
+            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
@@ -367,7 +368,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         if(pInstance)
         {
             Creature *Karathress = NULL;
-            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64("Karathress")));
+            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
             if(Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventSharkkisDeath();
@@ -389,8 +390,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
                 if(pInstance)
                 {
-                    pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                    pInstance->SetData("KarathressEvent", 1);
+                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                 }
             }
         }
@@ -416,8 +417,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
                     if(pInstance)
                     {
-                        pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                        pInstance->SetData("KarathressEvent", 1);
+                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                     }
                 }
             }
@@ -427,9 +428,9 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("KarathressEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("KarathressEvent_Starter"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
             if(target)
             {
@@ -443,7 +444,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("KarathressEvent"))
+        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //LeechingThrow_Timer
@@ -491,7 +492,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("KarathressEvent", 0);
+            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
@@ -514,7 +515,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         if(pInstance)
         {
             Creature *Karathress = NULL;
-            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64("Karathress")));
+            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
             if(Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventTidalvessDeath();
@@ -536,8 +537,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
                 if(pInstance)
                 {
-                    pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                    pInstance->SetData("KarathressEvent", 1);
+                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                 }
             }
         }
@@ -563,8 +564,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
                     if(pInstance)
                     {
-                        pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                        pInstance->SetData("KarathressEvent", 1);
+                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                     }
                 }
             }
@@ -574,9 +575,9 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("KarathressEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("KarathressEvent_Starter"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
             if(target)
             {
@@ -590,7 +591,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("KarathressEvent"))
+        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //FrostShock_Timer
@@ -635,7 +636,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("KarathressEvent", 0);
+            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
@@ -658,7 +659,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         if(pInstance)
         {
             Creature *Karathress = NULL;
-            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64("Karathress")));
+            Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
             if(Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventCaribdisDeath();
@@ -680,8 +681,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
                 if(pInstance)
                 {
-                    pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                    pInstance->SetData("KarathressEvent", 1);
+                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                 }
             }
         }
@@ -707,8 +708,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
                     if(pInstance)
                     {
-                        pInstance->SetData64("KarathressEvent_Starter", who->GetGUID());
-                        pInstance->SetData("KarathressEvent", 1);
+                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
                     }
                 }
             }
@@ -718,9 +719,9 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("KarathressEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("KarathressEvent_Starter"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
             if(target)
             {
@@ -734,7 +735,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("KarathressEvent"))
+        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //WaterBoltVolley_Timer
@@ -762,15 +763,15 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
                 switch(rand()%4)
                 {
                     case 0:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64("Karathress"));
+                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS));
                     break;
                     
                     case 1:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64("Sharkkis"));
+                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_SHARKKIS));
                     break;
 
                     case 2:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64("Tidalvess"));
+                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_TIDALVESS));
                     break;
 
                     case 3:

@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_steam_vault.h"
 
 #define SPELL_LIGHTNING_CLOUD       25033
 #define SPELL_LUNG_BURST            31481 
@@ -86,7 +87,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
 
         if(pInstance)
-            pInstance->SetData("HydromancerThespiaEvent", 0);
+            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 0);
     }
 
     void JustDied(Unit* Killer)
@@ -95,7 +96,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEAD);
 
         if(pInstance)
-            pInstance->SetData("HydromancerThespiaEvent", 2);
+            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 2);
     }
 
     void KilledUnit(Unit* victim)
@@ -140,7 +141,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
         InCombat = true;
 
         if(pInstance)
-            pInstance->SetData("HydromancerThespiaEvent", 1);
+            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 1);
     }
 
     void AttackStart(Unit *who)

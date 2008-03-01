@@ -564,6 +564,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
+        m_creature->LoadCreaturesAddon();
         DoGoHome();
 
         Reset(EVENT_T_EVADE);

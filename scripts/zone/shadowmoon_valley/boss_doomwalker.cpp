@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
                 }
                 if(InEnrage)
                 {
-                    m_creature->RemoveAura(SPELL_ENRAGE, NULL);//remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
+                    m_creature->RemoveAura(SPELL_ENRAGE, 0);//remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
                 }
                 DoCast(m_creature,SPELL_EARTHQUAKE);
                 Quake_Timer = (70 + rand()% 30) * 1000;//70-100sec cooldown

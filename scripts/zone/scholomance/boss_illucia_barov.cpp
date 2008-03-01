@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_scholomance.h"
 
 #define SPELL_CURSEOFAGONY      18671
 #define SPELL_SHADOWSHOCK       20603
@@ -71,9 +72,9 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
         {
-            pInstance->SetData("LadyIlluciaBarov_Death", 0);
+            pInstance->SetData(DATA_LADYILLUCIABAROV_DEATH, 0);
 
-            if(pInstance->GetData("CanSpawnGandling"))
+            if(pInstance->GetData(DATA_CANSPAWNGANDLING))
                 m_creature->SummonCreature(1853, 180.73, -9.43856, 75.507, 1.61399, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }

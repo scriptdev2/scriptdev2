@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_the_eye.h"
 
 #define SPELL_POUNDING              34162
 #define SPELL_ARCANE_ORB_TRIGGER    34172
@@ -72,7 +73,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("VoidReaverEvent", 0);
+            pInstance->SetData(DATA_VOIDREAVEREVENT, 0);
     }
 
     void KilledUnit(Unit *victim)
@@ -102,7 +103,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData("VoidReaverEvent", 0);
+            pInstance->SetData(DATA_VOIDREAVEREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -122,7 +123,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
                 if(pInstance)
-                    pInstance->SetData("VoidReaverEvent", 1);
+                    pInstance->SetData(DATA_VOIDREAVEREVENT, 1);
             }
         }
     }
@@ -146,7 +147,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
                     if(pInstance)
-                        pInstance->SetData("VoidReaverEvent", 1);
+                        pInstance->SetData(DATA_VOIDREAVEREVENT, 1);
                 }
 
                 DoStartMeleeAttack(who);

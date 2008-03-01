@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_magtheridons_lair.h"
 
 struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 {
@@ -47,38 +48,38 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
             Magtheridon = creature->GetGUID();
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "Magtheridon")
+        if(identifier  == DATA_MAGTHERIDON)
             return Magtheridon;
 
-        if(identifier == "Event_Starter")
+        if(identifier  == DATA_EVENT_STARTER)
             return EventStarter;
 
         return 0;
     }
 
-    void SetData64(char *identifier, uint64 guid)
+    void SetData64(uint32 identifier, uint64 guid)
     {
-        if(identifier == "Magtheridon")
+        if(identifier  == DATA_MAGTHERIDON)
             Magtheridon = guid;
 
-        if(identifier == "Event_Starter")
+        if(identifier  == DATA_EVENT_STARTER)
             EventStarter = guid;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "Magtheridon_Event_Started")
+        if(type == DATA_MAGTHERIDON_EVENT_STARTED)
             EncounterInProgress = true;
 
-        if(type == "Magtheridon_Event_Ended")
+        if(type == DATA_MAGTHERIDON_EVENT_ENDED)
             EncounterInProgress = false;
     }
 
-    uint32 GetData(char *type) 
+    uint32 GetData(uint32 type) 
     { 
-        if(type == "Magtheridon_Event_Status")
+        if(type == DATA_MAGTHERIDON_EVENT_STATUS)
             return EncounterInProgress;
 
         return 0;

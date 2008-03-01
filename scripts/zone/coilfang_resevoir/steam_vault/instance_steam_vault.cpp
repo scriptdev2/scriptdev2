@@ -15,6 +15,7 @@
 */
 
 #include "../../../sc_defines.h"
+#include "def_steam_vault.h"
 #include "../../../../../../game/GameObject.h"
 
 #define ENCOUNTERS 3
@@ -80,9 +81,9 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         }
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "HydromancerThespiaEvent")
+        if(type == DATA_HYDROMANCERTHESPIAEVENT)
         {
             if(data == 2)
             {
@@ -93,7 +94,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
             else
                 Encounters[0] = (data) ? true : false;
         }
-        else if(type == "MekgineerSteamriggerEvent")
+        else if(type == DATA_MEKGINEERSTEAMRIGGEREVENT)
         {
             if(data == 2)
             {
@@ -104,7 +105,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
             else
                 Encounters[1] = (data) ? true : false;
         }
-        else if(type == "WarlordKalithreshEvent")
+        else if(type == DATA_WARLORDKALITHRESHEVENT)
             Encounters[2] = (data) ? true : false;
     }
 };

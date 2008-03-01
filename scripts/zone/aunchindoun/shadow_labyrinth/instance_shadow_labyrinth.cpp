@@ -22,6 +22,7 @@ SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_shadow_labyrinth.h"
 #include "../../../../../../game/GameObject.h"
 
 #define ENCOUNTERS 4
@@ -88,9 +89,9 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
-    uint64 GetUnitGUID(char *identifier)
+    uint64 GetUnitGUID(uint32 identifier)
     {
-        if(identifier == "GrandmasterVorpil")
+        if(identifier  == DATA_GRANDMASTERVORPIL)
             return GrandmasterVorpil;
 
         return 0;
@@ -103,11 +104,11 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         go->SetUInt32Value(GAMEOBJECT_STATE, 0);
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "AmbassadorHellmawEvent")
+        if(type == DATA_AMBASSADORHELLMAWEVENT)
             Encounters[0] = (data) ? true : false;
-        else if(type == "BlackheartTheInciterEvent")
+        else if(type == DATA_BLACKHEARTTHEINCITEREVENT)
         {
             if(data == 2)
             {
@@ -118,7 +119,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
             else
                 Encounters[1] = (data) ? true : false;
         }
-        else if(type == "GrandmasterVorpilEvent")
+        else if(type == DATA_GRANDMASTERVORPILEVENT)
         {
             if(data == 2)
             {
@@ -129,7 +130,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
             else
                 Encounters[2] = (data) ? true : false;
         }
-        else if(type == "MurmurEvent")
+        else if(type == DATA_MURMUREVENT)
             Encounters[3] = (data) ? true : false;
     }
 };

@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     void EnterEvadeMode()
     {
         PlayerGUID = 0;
-        SpeachTimer = NULL;
+        SpeachTimer = 0;
         SpeachNum = 0;
         Cleave_Timer = 15000;      //These times are probably wrong
         FlameBreath_Timer = 25000;

@@ -23,6 +23,7 @@ EndScriptData */
 
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 #define SPELL_SHADOWWORDPAIN       23952
 #define SPELL_GOUGE                24698
@@ -121,7 +122,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Arlokk_Death", 0);
+            pInstance->SetData(DATA_ARLOKK_DEATH, 0);
     }
 
   void ResetThreat()

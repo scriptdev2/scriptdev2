@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
@@ -119,7 +120,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void SetVariables()
     {
         if(pInstance)
-            pInstance->SetData("MotherShahrazEvent", 0);
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 0);
 
         for(uint8 i = 0; i<3; i++)
             TargetGUID[i] = 0;
@@ -160,7 +161,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             if(!InCombat)
             {
                 if(pInstance)
-                    pInstance->SetData("MotherShahrazEvent", 1);
+                    pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
 
                 SetVariables();
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
@@ -186,7 +187,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 if(!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData("MotherShahrazEvent", 1);
+                        pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
@@ -213,7 +214,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData("MotherShahrazEvent", 3);
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 3);
 
         InCombat = false;
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);

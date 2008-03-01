@@ -21,6 +21,7 @@ SDComment: Mind Control not working because of core bug.
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 #include "../../../../../game/Player.h"
 
 
@@ -309,7 +310,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
             if(pInstance)
             {    
 
-            Unit *pJindo = Unit::GetUnit((*m_creature), pInstance->GetData64("Jindo"));
+            Unit *pJindo = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_JINDO));
             DoCast(pJindo, SPELL_HEAL);
 
             }

@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "def_zulaman.h"
 
 #define ENCOUNTERS     1
 
@@ -69,18 +70,18 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         }
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "Janalai" && janalai)
+        if(identifier  == DATA_JANALAI && janalai)
             return janalai;
 
 
-        return NULL;
+        return 0;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "JanalaiEvent")
+        if(type == DATA_JANALAIEVENT)
         {
             if(data == 0)
             {
@@ -89,23 +90,23 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             };
             Encounters[0] = data;
         }
-        else if(type == "J_Hatchleft")
+        else if(type == DATA_J_HATCHLEFT)
         {
             janalai_eggs_l -= data;
-        }else if(type == "J_Hatchright")
+        }else if(type == DATA_J_HATCHRIGHT)
         {
             janalai_eggs_r -= data;
         };
 
     }
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
-        if(type == "JanalaiEvent")
+        if(type == DATA_JANALAIEVENT)
             return Encounters[0];
-        else if(type == "J_Eggsleft")
+        else if(type == DATA_J_EGGSLEFT)
             return janalai_eggs_l;
-        else if(type == "J_Eggsright")
+        else if(type == DATA_J_EGGSRIGHT)
             return janalai_eggs_r;
 
         return 0;

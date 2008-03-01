@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 //Spells
@@ -183,7 +184,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             }
         }
         if(pInstance)
-            pInstance->SetData("IllidariCouncilEvent",0);
+            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT,0);
     }
 
     void EnterEvadeMode()
@@ -215,7 +216,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 if(!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData("IllidariCouncil", 1);
+                        pInstance->SetData(DATA_ILLIDARICOUNCIL, 1);
 
                     StartEvent(who);
                     InCombat = true;
@@ -232,10 +233,10 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         {
             SetVariables();
 
-            Council[0] = pInstance->GetData64("GathiosTheShatterer");
-            Council[1] = pInstance->GetData64("HighNethermancerZerevor");
-            Council[2] = pInstance->GetData64("LadyMalande");
-            Council[3] = pInstance->GetData64("VerasDarkshadow");
+            Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
+            Council[1] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
+            Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
+            Council[3] = pInstance->GetData64(DATA_VERASDARKSHADOW);
 
             if(!Council[0] || !Council[1] || !Council[2] || !Council[3])
                 return;
@@ -258,7 +259,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             if(Veras)
                 Veras->AddThreat(target, 1.0f);
 
-            pInstance->SetData("IllidariCouncilEvent", 1);
+            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 1);
         }
     }
 
@@ -297,7 +298,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             if(!Gathios->isAlive() && !Zerevor->isAlive() && !Malande->isAlive() && !Veras->isAlive())
             {
                 if(pInstance)
-                    pInstance->SetData("IllidariCouncilEvent", 3); // Completed
+                    pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
 
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
@@ -412,7 +413,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
     {
         if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
         {    
-            damage *= 0.25;
+            damage /= 4;
             for(uint8 i = 0; i < 3; i++)
             {
                 Unit* pUnit = NULL;
@@ -481,9 +482,9 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetData64("HighNethermancerZerevor");
-                Council[1] = pInstance->GetData64("LadyMalande");
-                Council[2] = pInstance->GetData64("VerasDarkshadow");
+                Council[0] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
+                Council[1] = pInstance->GetData64(DATA_LADYMALANDE);
+                Council[2] = pInstance->GetData64(DATA_VERASDARKSHADOW);
             }
             AcquiredGUIDs = true;
         }
@@ -660,7 +661,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
     {
         if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
         {    
-            damage *= 0.25;
+            damage /= 4;
             for(uint8 i = 0; i < 3; i++)
             {
                 Unit* pUnit = NULL;
@@ -710,9 +711,9 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetData64("GathiosTheShatterer");
-                Council[1] = pInstance->GetData64("LadyMalande");
-                Council[2] = pInstance->GetData64("VerasDarkshadow");
+                Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
+                Council[1] = pInstance->GetData64(DATA_LADYMALANDE);
+                Council[2] = pInstance->GetData64(DATA_VERASDARKSHADOW);
             }
             AcquiredGUIDs = true;
         }
@@ -881,7 +882,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
     {          
         if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
         {    
-            damage *= 0.25;
+            damage /= 4;
             for(uint8 i = 0; i < 3; i++)
             {
                 Unit* pUnit = NULL;
@@ -933,9 +934,9 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetData64("GathiosTheShatterer");
-                Council[1] = pInstance->GetData64("HighNethermancerZerevor");
-                Council[2] = pInstance->GetData64("VerasDarkshadow");
+                Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
+                Council[1] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
+                Council[2] = pInstance->GetData64(DATA_VERASDARKSHADOW);
             }
             AcquiredGUIDs = true;
         }
@@ -1093,7 +1094,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
     {   
         if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
         {    
-            damage *= 0.25;
+            damage /= 4;
             for(uint8 i = 0; i < 3; i++)
             {
                 Unit* pUnit = NULL;
@@ -1142,9 +1143,9 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         {
             if(pInstance)
             {
-                Council[0] = pInstance->GetData64("GathiosTheShatterer");
-                Council[1] = pInstance->GetData64("HighNethermancerZerevor");
-                Council[2] = pInstance->GetData64("LadyMalande");
+                Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
+                Council[1] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
+                Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
             }
             AcquiredGUIDs = true;
         }

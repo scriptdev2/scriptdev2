@@ -21,6 +21,7 @@ SDComment: Missing connection to containers, making fight impossible
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_steam_vault.h"
 
 #define SPELL_SPELL_REFLECTION  23920
 #define SPELL_IMPALE            26548
@@ -66,7 +67,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("WarlordKalithreshEvent", 0);
+            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);
     }
 
     void KilledUnit(Unit* victim)
@@ -87,7 +88,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData("WarlordKalithreshEvent", 0);
+            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);
     }
 
     void StartEvent()
@@ -108,7 +109,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         InCombat = true;
 
         if(pInstance)
-            pInstance->SetData("WarlordKalithreshEvent", 1);
+            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 1);
     }
 
     void AttackStart(Unit *who)

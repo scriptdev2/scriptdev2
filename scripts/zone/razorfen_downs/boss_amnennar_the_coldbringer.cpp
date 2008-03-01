@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
         case 0: RandX = 0 - Rand; break;
         case 1: RandX = 0 + Rand; break;
         }
-        Rand = NULL;
+        Rand = 0;
         Rand = rand()%5;
         switch (rand()%2)
         {

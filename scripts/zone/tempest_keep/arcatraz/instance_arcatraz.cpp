@@ -21,6 +21,7 @@ SDComment: VERIFY SCRIPT
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_arcatraz.h"
 #include "../../../../../../game/GameObject.h"
 
 #define ENCOUNTERS 4
@@ -79,11 +80,11 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         go->SetUInt32Value(GAMEOBJECT_STATE, 0);
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "ZerekeththeUnboundEvent")
+        if(type == DATA_ZEREKETHTHEUNBOUNDEVENT)
             Encounters[0] = (data) ? true : false;
-        else if(type == "Wrath-ScryerSoccothratesEvent")
+        else if(type == DATA_WRATH_SCRYERSOCCOTHRATESEVENT)
         {
             if(data == 2)
             {
@@ -94,7 +95,7 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 
             Encounters[1] = (data) ? true : false;
         }
-        else if(type == "DalliahtheDoomsayerEvent")
+        else if(type == DATA_DALLIAHTHEDOOMSAYEREVENT)
         {
             if(data == 2)
             {
@@ -105,7 +106,7 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 
             Encounters[2] = (data) ? true : false;
         }
-        else if(type == "HarbingerSkyrissEvent")
+        else if(type == DATA_HARBINGERSKYRISSEVENT)
             Encounters[3] = (data) ? true : false;
     }
 };

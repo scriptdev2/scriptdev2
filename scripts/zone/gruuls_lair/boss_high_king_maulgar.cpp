@@ -21,6 +21,7 @@ SDComment: Verify that the script is working properly
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_gruuls_lair.h"
 
 #define SOUND_AGGRO              11367
 #define SOUND_ENRAGE             11368
@@ -90,7 +91,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -121,7 +122,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -141,10 +142,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     void GetCouncil()
     {
         //get council member's guid to respawn them if needed
-        Council[0] = pInstance->GetData64("KigglerTheCrazed");
-        Council[1] = pInstance->GetData64("BlindeyeTheSeer");
-        Council[2] = pInstance->GetData64("OlmTheSummoner");
-        Council[3] = pInstance->GetData64("KroshFirehand");
+        Council[0] = pInstance->GetData64(DATA_KIGGLERTHECRAZED);
+        Council[1] = pInstance->GetData64(DATA_BLINDEYETHESEER);
+        Council[2] = pInstance->GetData64(DATA_OLMTHESUMMONER);
+        Council[3] = pInstance->GetData64(DATA_KROSHFIREHAND);
     }
 
     void StartEvent(Unit *who)
@@ -158,8 +159,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         InCombat = true;
 
-        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-        pInstance->SetData("MaulgarEvent", 1);
+        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+        pInstance->SetData(DATA_MAULGAREVENT, 1);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -186,9 +187,9 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("MaulgarEvent_Tank"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if(target)
             {
@@ -206,7 +207,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
         //ArcingSmash_Timer
@@ -285,7 +286,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -301,8 +302,8 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
                 InCombat = true;
                 if(pInstance)
                 {
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                    pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
             }
 			DoStartMeleeAttack(who);
@@ -330,8 +331,8 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
-                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                        pInstance->SetData("MaulgarEvent", 1);
+                        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                        pInstance->SetData(DATA_MAULGAREVENT, 1);
                     }
                 }
             }
@@ -359,9 +360,9 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("MaulgarEvent_Tank"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if(target)
             {
@@ -375,7 +376,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
         //DarkDecay_Timer
@@ -431,7 +432,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -446,8 +447,8 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
                 InCombat = true;
                 if(pInstance)
                 {
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                    pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
             }
 		    DoStartMeleeAttack(who);
@@ -473,8 +474,8 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
-                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                        pInstance->SetData("MaulgarEvent", 1);
+                        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                        pInstance->SetData(DATA_MAULGAREVENT, 1);
                     }
                 }
             }
@@ -484,9 +485,9 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("MaulgarEvent_Tank"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if(target)
             {
@@ -500,7 +501,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
         //GreatherPolymorph_Timer / disabled: it makes you fall under the texture / if you've got vmaps feel free to uncomment this
@@ -568,7 +569,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -584,8 +585,8 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
                 InCombat = true;
                 if(pInstance)
                 {
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                    pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
             }
 			DoStartMeleeAttack(who);
@@ -611,8 +612,8 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
-                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                        pInstance->SetData("MaulgarEvent", 1);
+                        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                        pInstance->SetData(DATA_MAULGAREVENT, 1);
                     }
                 }
             }
@@ -622,9 +623,9 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("MaulgarEvent_Tank"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if(target)
             {
@@ -638,7 +639,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
         //GreaterPowerWordShield_Timer
@@ -691,7 +692,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData("MaulgarEvent", 0);
+            pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -707,8 +708,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
                 InCombat = true;
                 if(pInstance)
                 {
-                    pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                    pInstance->SetData("MaulgarEvent", 1);
+                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                    pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
             }
 			DoStartMeleeAttack(who);
@@ -734,8 +735,8 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
-                        pInstance->SetData64("MaulgarEvent_Tank", who->GetGUID());
-                        pInstance->SetData("MaulgarEvent", 1);
+                        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+                        pInstance->SetData(DATA_MAULGAREVENT, 1);
                     }
                 }
             }
@@ -745,9 +746,9 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData("MaulgarEvent"))
+        if(!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
-            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64("MaulgarEvent_Tank"));
+            Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if(target)
             {
@@ -761,7 +762,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData("MaulgarEvent"))
+        if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
         //GreaterFireball_Timer

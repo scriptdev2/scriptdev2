@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_gruuls_lair.h"
 
 #define ENCOUNTERS 2
 
@@ -83,41 +84,41 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         }
     }
 
-    void SetData64(char *type, uint64 data)
+    void SetData64(uint32 type, uint64 data)
     {
-        if(type == "MaulgarEvent_Tank")
+        if(type == DATA_MAULGAREVENT_TANK)
             MaulgarEvent_Tank = data;
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "MaulgarEvent_Tank")
+        if(identifier  == DATA_MAULGAREVENT_TANK)
             return MaulgarEvent_Tank;
-        else if(identifier == "KigglerTheCrazed")
+        else if(identifier  == DATA_KIGGLERTHECRAZED)
             return KigglerTheCrazed;
-        else if(identifier == "BlindeyeTheSeer")
+        else if(identifier  == DATA_BLINDEYETHESEER)
             return BlindeyeTheSeer;
-        else if(identifier == "OlmTheSummoner")
+        else if(identifier  == DATA_OLMTHESUMMONER)
             return OlmTheSummoner;
-        else if(identifier == "KroshFirehand")
+        else if(identifier  == DATA_KROSHFIREHAND)
             return KroshFirehand;
 
         return 0;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "MaulgarEvent")
+        if(type == DATA_MAULGAREVENT)
             Encounters[0] = (data) ? true : false;
-        else if(type == "GruulEvent")
+        else if(type == DATA_GRUULEVENT)
             Encounters[1] = (data) ? true : false;
     }
 
-    uint32 GetData(char *type) 
+    uint32 GetData(uint32 type) 
     { 
-        if(type == "MaulgarEvent")
+        if(type == DATA_MAULGAREVENT)
             return Encounters[0];
-        else if(type =="GruulEvent")
+        else if(type == DATA_GRUULEVENT)
             return Encounters[1];
 
         return 0;

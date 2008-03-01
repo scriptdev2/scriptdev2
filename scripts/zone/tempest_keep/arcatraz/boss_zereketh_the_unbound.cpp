@@ -1,4 +1,5 @@
 #include "../../../sc_defines.h"
+#include "def_arcatraz.h"
 
 #define SPELL_SEED_OF_CORRUPTION 36123
 #define SPELL_SHADOW_NOVA 36127
@@ -70,14 +71,14 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
  wait = false;
  wait_timer = 0;
 
- if(pInstance) pInstance->SetData("ZerekeththeUnboundEvent",0);
+ if(pInstance) pInstance->SetData(DATA_ZEREKETHTHEUNBOUNDEVENT,0);
  }
 
  void JustDied(Unit* Killer)
  { 
  DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
  DoPlaySoundToSet(m_creature,SOUND_DEATH);
- if(pInstance) pInstance->SetData("ZerekeththeUnboundEvent",0);
+ if(pInstance) pInstance->SetData(DATA_ZEREKETHTHEUNBOUNDEVENT,0);
  }
 
  void KilledUnit(Unit* victim)
@@ -114,7 +115,7 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
  DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
  DoPlaySoundToSet(m_creature,SOUND_AGGRO);
  InCombat = true;
- if(pInstance) pInstance->SetData("ZerekeththeUnboundEvent",1);
+ if(pInstance) pInstance->SetData(DATA_ZEREKETHTHEUNBOUNDEVENT,1);
  }
  }
  }
@@ -138,7 +139,7 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
  DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
  DoPlaySoundToSet(m_creature,SOUND_AGGRO);
  InCombat = true;
- if(pInstance) pInstance->SetData("ZerekeththeUnboundEvent",1);
+ if(pInstance) pInstance->SetData(DATA_ZEREKETHTHEUNBOUNDEVENT,1);
  }
  }
  }

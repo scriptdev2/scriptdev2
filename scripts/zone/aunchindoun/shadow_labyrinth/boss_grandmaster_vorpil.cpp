@@ -15,6 +15,7 @@
 */
 
 #include "../../../sc_defines.h"
+#include "def_shadow_labyrinth.h"
 
 /* ScriptData
 SDName: Boss_Grandmaster_Vorpil
@@ -90,7 +91,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
 
         if(pInstance)
-            pInstance->SetData("GrandmasterVorpilEvent", 0);
+            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 0);
     }
 
     void KilledUnit(Unit *victim)
@@ -115,7 +116,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData("GrandmasterVorpilEvent", 2);
+            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 2);
     }
 
     void StartEvent()
@@ -141,7 +142,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         InCombat = true;
 
         if(pInstance)
-            pInstance->SetData("GrandmasterVorpilEvent", 1);
+            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 1);
     }
 
     void AttackStart(Unit *who)

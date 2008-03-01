@@ -15,6 +15,7 @@
 */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
@@ -183,7 +184,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     void SetVariables()
     {
         if(pInstance)
-            pInstance->SetData("TeronGorefiendEvent", 0);
+            pInstance->SetData(DATA_TERONGOREFIENDEVENT, 0);
 
         IncinerateTimer = 40000;
         SummonDoomBlossomTimer = 12000;
@@ -241,7 +242,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f))
             {
                 if(pInstance)
-                    pInstance->SetData("TeronGorefiendEvent", 1);
+                    pInstance->SetData(DATA_TERONGOREFIENDEVENT, 1);
 
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoYell(SAY_INTRO,LANG_UNIVERSAL,NULL);
@@ -271,7 +272,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData("TeronGorefiendEvent", 3);
+            pInstance->SetData(DATA_TERONGOREFIENDEVENT, 3);
 
         InCombat = false;
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);

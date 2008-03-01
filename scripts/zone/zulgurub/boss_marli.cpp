@@ -21,6 +21,7 @@ SDComment: Charging healers and casters not working. Perhaps wrong Spell Timers.
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
 #define SPELL_ASPECT_OF_MARLI     24686      // A stun spell      
@@ -115,7 +116,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Marli_Death", 0);
+            pInstance->SetData(DATA_MARLI_DEATH, 0);
     }
     
   void ResetThreat()

@@ -222,7 +222,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 m_creature->CombatStop();
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
-                m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, NULL);
+                m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, 0);
 
                 Reset = true;
             }

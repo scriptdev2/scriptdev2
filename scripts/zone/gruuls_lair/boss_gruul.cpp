@@ -21,6 +21,7 @@ SDComment: Ground Slam seriously messed up due to core problem
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_gruuls_lair.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 #define SPELL_GROWTH              36300
@@ -71,7 +72,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
 
         if(pInstance)
-            pInstance->SetData("GruulEvent", 0);
+            pInstance->SetData(DATA_GRUULEVENT, 0);
 
     }
 
@@ -88,7 +89,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         if(pInstance)
-            pInstance->SetData("GruulEvent", 1);
+            pInstance->SetData(DATA_GRUULEVENT, 1);
     }
 
     void AttackStart(Unit *who)
@@ -107,7 +108,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 InCombat = true;
 
                 if(pInstance)
-                    pInstance->SetData("GruulEvent", 1);
+                    pInstance->SetData(DATA_GRUULEVENT, 1);
             }
         }
     }
@@ -134,7 +135,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                     InCombat = true;
 
                     if(pInstance)
-                        pInstance->SetData("GruulEvent", 1);
+                        pInstance->SetData(DATA_GRUULEVENT, 1);
                 }
             }
         }

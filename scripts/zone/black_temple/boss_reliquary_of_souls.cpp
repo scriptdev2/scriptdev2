@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 //Sound'n'speech
@@ -154,7 +155,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
                 {
                     if((done_by->GetPower(POWER_MANA) / done_by->GetMaxPower(POWER_MANA)) < 70)
                     {
-                        uint32 mana = done_by->GetPower(POWER_MANA) + (done_by->GetMaxPower(POWER_MANA)*0.3);
+                        uint32 mana = done_by->GetPower(POWER_MANA) + (uint32)(done_by->GetMaxPower(POWER_MANA)*0.3);
                         done_by->SetPower(POWER_MANA, mana);
                     }else done_by->SetPower(POWER_MANA, done_by->GetMaxPower(POWER_MANA));
                 }
@@ -195,7 +196,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     void SetVariables()
     {
         if(pInstance)
-            pInstance->SetData("ReliquaryOfSoulsEvent", 0);
+            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 0);
 
         SufferingGUID = 0;
         DesireGUID = 0;
@@ -250,7 +251,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 if(!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData("ReliquaryOfSoulsEvent", 1);
+                        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
 
                     SetVariables();
                     Phase = 1;
@@ -352,7 +353,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                             MergeThreatList(EssenceSuffering);
                             EssenceSuffering->RemoveAllAuras();
                             (*EssenceSuffering).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
-                            EssenceSuffering->Yell(SUFF_SAY_RECAP,LANG_UNIVERSAL,NULL);
+                            EssenceSuffering->Yell(SUFF_SAY_RECAP,LANG_UNIVERSAL,0);
                             DoPlaySoundToSet(m_creature, SUFF_SOUND_RECAP);
                             (*EssenceSuffering).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
                             EssenceSuffering->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -374,7 +375,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if(DespawnEssenceTimer < diff)
                     {
                         EssenceSuffering->DeleteThreatList();
-                        EssenceSuffering->Yell(SUFF_SAY_AFTER,LANG_UNIVERSAL,NULL);
+                        EssenceSuffering->Yell(SUFF_SAY_AFTER,LANG_UNIVERSAL,0);
                         DoPlaySoundToSet(m_creature, SUFF_SOUND_AFTER);
                         EssenceSuffering->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                         EssenceSuffering->setFaction(35);
@@ -452,7 +453,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         EssenceDesire->setFaction(35);
                         EssenceDesire->RemoveAllAuras();
                         EssenceDesire->DeleteThreatList();
-                        EssenceDesire->Yell(DESI_SAY_RECAP,LANG_UNIVERSAL,NULL);
+                        EssenceDesire->Yell(DESI_SAY_RECAP,LANG_UNIVERSAL,0);
                         DoPlaySoundToSet(m_creature, DESI_SOUND_RECAP);
                         EssenceDesire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         EssenceDesire->setFaction(35);
@@ -594,7 +595,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         if((damage >= m_creature->GetHealth()) && (done_by != m_creature))
         {
             damage = 0;
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.1); // 10% of total health, signalling time to return
+            m_creature->SetHealth(m_creature->GetMaxHealth()/10); // 10% of total health, signalling time to return
             if(StatAuraGUID)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
@@ -771,11 +772,11 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         if((damage >= m_creature->GetHealth()) && (done_by != m_creature))
         {
             damage = 0;
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.1); // 10% of total health, signalling time to return
+            m_creature->SetHealth(m_creature->GetMaxHealth()/10); // 10% of total health, signalling time to return
         }
         else
         {
-            done_by->DealDamage(done_by, damage*0.5, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
         }
     }
 

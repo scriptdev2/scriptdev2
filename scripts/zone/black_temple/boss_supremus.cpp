@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 //Spells
@@ -250,7 +251,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     void SetVariables()
     {
         if(pInstance)
-            pInstance->SetData("SupremusEvent", 0);
+            pInstance->SetData(DATA_SUPREMUSEVENT, 0);
 
         HurtfulStrikeTimer = 20000;
         SummonFlameTimer = 20000;
@@ -285,7 +286,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             if(!InCombat)
             {
                 if(pInstance)
-                    pInstance->SetData("SupremusEvent", 1);
+                    pInstance->SetData(DATA_SUPREMUSEVENT, 1);
                 SetVariables();
                 InCombat = true;
             }
@@ -310,7 +311,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if (!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData("SupremusEvent", 1);
+                        pInstance->SetData(DATA_SUPREMUSEVENT, 1);
                     InCombat = true;
                 }
             }
@@ -322,7 +323,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         InCombat = false;
 
         if(pInstance)
-            pInstance->SetData("SupremusEvent", 3);
+            pInstance->SetData(DATA_SUPREMUSEVENT, 3);
     }
 
     void ResetThreat()

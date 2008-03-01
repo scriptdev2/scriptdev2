@@ -22,6 +22,7 @@ EndScriptData */
 
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 #define SPELL_HOLY_FIRE     23860
 #define SPELL_HOLY_WRATH    28883               //Not sure if this or 23979
@@ -112,7 +113,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Venoxis_Death", 0);
+            pInstance->SetData(DATA_VENOXIS_DEATH, 0);
     }
 
   void ResetThreat()

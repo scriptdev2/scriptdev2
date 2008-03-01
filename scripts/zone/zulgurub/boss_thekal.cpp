@@ -21,6 +21,7 @@ SDComment: Almost finished.
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_zulgurub.h"
 
 #define SPELL_MORTALCLEAVE        22859
 #define SPELL_SILENCE             23207
@@ -98,7 +99,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         if(pInstance)
-            pInstance->SetData("Thekal_Alive", 0);
+            pInstance->SetData(DATA_THEKAL_ALIVE, 0);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);    
@@ -140,7 +141,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
-            pInstance->SetData("Thekal_Death", 0);
+            pInstance->SetData(DATA_THEKAL_DEATH, 0);
     }
     
   void ResetThreat()
@@ -197,20 +198,20 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     if(pInstance)
                     {    
 
-                    if(pInstance->GetData("LorKhanIsDead"))
+                    if(pInstance->GetData(DATA_LORKHANISDEAD))
                     {
                     //Resurrect LorKhan
-                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64("LorKhan"));
+                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
                     pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pLorKhan->setFaction(14);
                     pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                     }
                     
-                    if(pInstance->GetData("ZathIsDead"))
+                    if(pInstance->GetData(DATA_ZATHISDEAD))
                     {
                     //Resurrect Zath
-                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64("Zath"));
+                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
                     pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pZath->setFaction(14);
                     pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -241,7 +242,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
                 m_creature->AttackStop();
                 if(pInstance)
-                pInstance->SetData("ThekalFake_Death", 0);
+                pInstance->SetData(DATA_THEKALFAKE_DEATH, 0);
                 WasDead=true;
         }
 
@@ -353,7 +354,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         if(pInstance)
-            pInstance->SetData("LorKhan_Alive", 0);
+            pInstance->SetData(DATA_LORKHAN_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
@@ -429,8 +430,8 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     if(pInstance)
                     {    
 
-                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64("Thekal"));
-                     Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64("Zath"));
+                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
+                     Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
 
 
 
@@ -467,20 +468,20 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     if(pInstance)
                     {    
 
-                    if(pInstance->GetData("ThekalIsFakeDead"))
+                    if(pInstance->GetData(DATA_THEKALISFAKEDEAD))
                     {
                     //Resurrect Thekal
-                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64("Thekal"));
+                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
                     pThekal->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pThekal->setFaction(14);
                     pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
                     }
                     
-                    if(pInstance->GetData("ZathIsDead"))
+                    if(pInstance->GetData(DATA_ZATHISDEAD))
                     {
                     //Resurrect Zath
-                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64("Zath"));
+                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
                     pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pZath->setFaction(14);
@@ -498,7 +499,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 m_creature->setFaction(35);
                 m_creature->AttackStop();
                 if(pInstance)
-                pInstance->SetData("LorKhan_Death", 0);
+                pInstance->SetData(DATA_LORKHAN_DEATH, 0);
                 FakeDeath = true;
         }
 
@@ -542,7 +543,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         if(pInstance)
-            pInstance->SetData("Zath_Alive", 0);
+            pInstance->SetData(DATA_ZATH_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
@@ -644,20 +645,20 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                     if(pInstance)
                     {    
 
-                    if(pInstance->GetData("LorKhanIsDead"))
+                    if(pInstance->GetData(DATA_LORKHANISDEAD))
                     {
                     //Resurrect LorKhan
-                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64("LorKhan"));
+                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
                     pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pLorKhan->setFaction(14);
                     pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                     }
                     
-                    if(pInstance->GetData("ThekalIsFakeDead"))
+                    if(pInstance->GetData(DATA_THEKALISFAKEDEAD))
                     {
                     //Resurrect Thekal
-                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64("Thekal"));
+                    Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
                     pThekal->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
                     pThekal->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     pThekal->setFaction(14);
@@ -675,7 +676,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                 m_creature->setFaction(35);
                 m_creature->AttackStop();
                 if(pInstance)
-                pInstance->SetData("Zath_Death", 0);
+                pInstance->SetData(DATA_ZATH_DEATH, 0);
                 FakeDeath = true;
         }
 

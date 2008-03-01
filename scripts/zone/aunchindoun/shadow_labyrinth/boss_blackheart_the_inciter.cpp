@@ -15,6 +15,7 @@
 */
 
 #include "../../../sc_defines.h"
+#include "def_shadow_labyrinth.h"
 #include "../../../creature/simple_ai.h"
 
 /* ScriptData
@@ -86,7 +87,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
 
         if(pInstance)
-            pInstance->SetData("BlackheartTheInciterEvent", 0);
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 0);
     }
 
     void KilledUnit(Unit *victim)
@@ -116,7 +117,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData("BlackheartTheInciterEvent", 2);
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 2);
     }
 
     void StartEvent()
@@ -142,7 +143,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         InCombat = true;
 
         if(pInstance)
-            pInstance->SetData("BlackheartTheInciterEvent", 1);
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 1);
     }
 
     void AttackStart(Unit *who)

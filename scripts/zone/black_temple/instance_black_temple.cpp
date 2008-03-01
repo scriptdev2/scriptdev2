@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 
 #define ENCOUNTERS     8
 
@@ -133,73 +134,73 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "HighWarlordNajentus" && Najentus)
+        if(identifier  == DATA_HIGHWARLORDNAJENTUS && Najentus)
             return Najentus;
-        else if(identifier == "Akama" && Akama)
+        else if(identifier  == DATA_AKAMA && Akama)
             return Akama;
-        else if(identifier == "Akama(Shade)" && Akama_Shade)
+        else if(identifier  == DATA_AKAMA_SHADE && Akama_Shade)
             return Akama_Shade;
-        else if(identifier == "ShadeOfAkama" && ShadeOfAkama)
+        else if(identifier  == DATA_SHADEOFAKAMA && ShadeOfAkama)
             return ShadeOfAkama;
-        else if(identifier == "Supremus" && Supremus)
+        else if(identifier  == DATA_SUPREMUS && Supremus)
             return Supremus;
-        else if(identifier == "IllidanStormrage" && IllidanStormrage)
+        else if(identifier  == DATA_ILLIDANSTORMRAGE && IllidanStormrage)
             return IllidanStormrage;
-        else if(identifier == "GathiosTheShatterer" && GathiosTheShatterer)
+        else if(identifier  == DATA_GATHIOSTHESHATTERER && GathiosTheShatterer)
             return GathiosTheShatterer;
-        else if(identifier == "HighNethermancerZerevor" && HighNethermancerZerevor)
+        else if(identifier  == DATA_HIGHNETHERMANCERZEREVOR && HighNethermancerZerevor)
             return HighNethermancerZerevor;
-        else if(identifier == "LadyMalande" && LadyMalande)
+        else if(identifier  == DATA_LADYMALANDE && LadyMalande)
             return LadyMalande;
-        else if(identifier == "VerasDarkshadow" && VerasDarkshadow)
+        else if(identifier  == DATA_VERASDARKSHADOW && VerasDarkshadow)
             return VerasDarkshadow;
 
-        return NULL;
+        return 0;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "HighWarlordNajentusEvent")
+        if(type == DATA_HIGHWARLORDNAJENTUSEVENT)
             Encounters[0] = data;
-        else if(type == "SupremusEvent")
+        else if(type == DATA_SUPREMUSEVENT)
             Encounters[1] = data;
-        else if(type == "ShadeOfAkamaEvent")
+        else if(type == DATA_SHADEOFAKAMAEVENT)
             Encounters[2] = data;
-        else if(type == "TeronGorefiendEvent")
+        else if(type == DATA_TERONGOREFIENDEVENT)
             Encounters[3] = data;
-        else if(type == "GurtoggBloodboilEvent")
+        else if(type == DATA_GURTOGGBLOODBOILEVENT)
             Encounters[4] = data;
-        else if(type == "ReliquaryOfSoulsEvent")
+        else if(type == DATA_RELIQUARYOFSOULSEVENT)
             Encounters[5] = data;
-        else if(type == "MotherShahrazEvent")
+        else if(type == DATA_MOTHERSHAHRAZEVENT)
             Encounters[6] = data;
-        else if(type == "IllidariCouncilEvent")
+        else if(type == DATA_ILLIDARICOUNCILEVENT)
             Encounters[7] = data;
-        else if(type == "IllidanStormrageEvent")
+        else if(type == DATA_ILLIDANSTORMRAGEEVENT)
             Encounters[8] = data;
     }
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
-        if(type == "HighWarlordNajentusEvent")
+        if(type == DATA_HIGHWARLORDNAJENTUSEVENT)
             return Encounters[0];
-        else if(type == "SupremusEvent")
+        else if(type == DATA_SUPREMUSEVENT)
             return Encounters[1];
-        else if(type == "ShadeOfAkamaEvent")
+        else if(type == DATA_SHADEOFAKAMAEVENT)
             return Encounters[2];
-        else if(type == "TeronGorefiendEvent")
+        else if(type == DATA_TERONGOREFIENDEVENT)
             return Encounters[3];
-        else if(type == "GurtoggBloodboilEvent")
+        else if(type == DATA_GURTOGGBLOODBOILEVENT)
             return Encounters[4];
-        else if(type == "ReliquaryOfSoulsEvent")
+        else if(type == DATA_RELIQUARYOFSOULSEVENT)
             return Encounters[5];
-        else if(type == "MotherShahrazEvent")
+        else if(type == DATA_MOTHERSHAHRAZEVENT)
             return Encounters[6];
-        else if(type == "IllidariCouncilEvent")
+        else if(type == DATA_ILLIDARICOUNCILEVENT)
             return Encounters[7];
-        else if(type == "IllidanStormrageEvent")
+        else if(type == DATA_ILLIDANSTORMRAGEEVENT)
             return Encounters[8];
 
         return 0;

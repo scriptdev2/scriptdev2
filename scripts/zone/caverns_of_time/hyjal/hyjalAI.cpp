@@ -220,7 +220,7 @@ void hyjalAI::StartEvent(Player* player)
     }
 }
 
-void hyjalAI::SetInstanceData(char* Event, uint32 data)
+void hyjalAI::SetInstanceData(uint32 Event, uint32 data)
 {
     if(!Event || !data)
         return;
@@ -229,7 +229,7 @@ void hyjalAI::SetInstanceData(char* Event, uint32 data)
         pInstance->SetData(Event, data);
 }
 
-uint32 hyjalAI::GetInstanceData(char* Event)
+uint32 hyjalAI::GetInstanceData(uint32 Event)
 {
     if(!Event)
         return 0;

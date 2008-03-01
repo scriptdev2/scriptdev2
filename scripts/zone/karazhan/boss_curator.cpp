@@ -190,7 +190,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 }
 
                 //Reduce Mana by 10%
-                int32 mana = (0.1*(m_creature->GetMaxPower(POWER_MANA)));               
+                int32 mana = (int32)(0.1*(m_creature->GetMaxPower(POWER_MANA)));               
                 m_creature->ModifyPower(POWER_MANA, -mana);
                 switch(rand()%4)
                 {

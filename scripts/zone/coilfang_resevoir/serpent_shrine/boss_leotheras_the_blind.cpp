@@ -21,6 +21,7 @@ SDComment: Missing Inner Demons
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 
 #define SPELL_WHIRLWIND         40653
 #define SPELL_CHAOS_BLAST       37675
@@ -97,7 +98,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoGoHome();
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 0);
+            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
 
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
@@ -108,7 +109,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 1);
+            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 1);
 
         InCombat = true;
     }
@@ -172,7 +173,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         }
 
         if(pInstance)
-            pInstance->SetData("LeotherasTheBlindEvent", 0);
+            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
     }
 
     void AttackStart(Unit *who)

@@ -184,9 +184,9 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void StartEvent(Player* player);
     
-    void SetInstanceData(char* Event, uint32 data);
+    void SetInstanceData(uint32 Event, uint32 data);
 
-    uint32 GetInstanceData(char* Event);
+    uint32 GetInstanceData(uint32 Event);
 
     void Talk(uint32 id);
 public:    

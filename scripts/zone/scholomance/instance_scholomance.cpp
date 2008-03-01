@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_scholomance.h"
 
 struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
 {
@@ -45,28 +46,28 @@ struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
         return false;
     }
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
-        if(type == "CanSpawnGandling")
+        if(type == DATA_CANSPAWNGANDLING)
             if(IsBossDied[0] && IsBossDied[1] && IsBossDied[2] && IsBossDied[3] && IsBossDied[4] && IsBossDied[5])
                 return 1;
 
         return 0;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "LordAlexeiBarov_Death")
+        if(type == DATA_LORDALEXEIBAROV_DEATH)
             IsBossDied[0] = true;
-        else if(type == "DoctorTheolenKrastinov_Death")
+        else if(type == DATA_DOCTORTHEOLENKRASTINOV_DEATH)
             IsBossDied[1] = true;
-        else if(type == "TheRavenian_Death")
+        else if(type == DATA_THERAVENIAN_DEATH)
             IsBossDied[2] = true;
-        else if(type == "LorekeeperPolkelt_Death")
+        else if(type == DATA_LOREKEEPERPOLKELT_DEATH)
             IsBossDied[3] = true;
-        else if(type == "InstructorMalicia_Death")
+        else if(type == DATA_INSTRUCTORMALICIA_DEATH)
             IsBossDied[4] = true;
-        else if(type == "LadyIlluciaBarov_Death")
+        else if(type == DATA_LADYILLUCIABAROV_DEATH)
             IsBossDied[5] = true;
     }
 };

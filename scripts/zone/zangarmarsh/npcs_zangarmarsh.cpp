@@ -63,19 +63,19 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, ui
             {                                               //mark of lore
                 case REP_FRIENDLY:
                     _Creature->CastSpell(player, 31808, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_HONORED:
                     _Creature->CastSpell(player, 31810, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_REVERED:
                     _Creature->CastSpell(player, 31811, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_EXALTED:
                     _Creature->CastSpell(player, 31815, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
             }
         }
@@ -86,19 +86,19 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, ui
             {
                 case REP_FRIENDLY:
                     _Creature->CastSpell(player, 31807, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_HONORED:
                     _Creature->CastSpell(player, 31812, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_REVERED:
                     _Creature->CastSpell(player, 31813, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
                 case REP_EXALTED:
                     _Creature->CastSpell(player, 31814, true);
-                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, NULL);
+                    _Creature->Say(GOSSIP_REWARD_BLESS, LANG_UNIVERSAL, 0);
                     break;
             }
         }

@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/GameObject.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
@@ -170,7 +171,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         SpineTargetGUID = 0;
 
         if(pInstance)
-            pInstance->SetData("HighWarlordNajentusEvent", 0);
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 0);
     }
 
     void EnterEvadeMode()
@@ -202,7 +203,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData("HighWarlordNajentusEvent", 3);
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 3);
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
@@ -244,7 +245,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             if (!InCombat)
             {
                 if(pInstance)
-                    pInstance->SetData("HighWarlordNajentusEvent", 1);
+                    pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 SetVariables();
@@ -272,7 +273,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 if (!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData("HighWarlordNajentusEvent", 1);
+                        pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
@@ -319,7 +320,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         {
             // if(m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
             if(m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
-                m_creature->SetHealth(m_creature->GetHealth() + (m_creature->GetMaxHealth()*0.01));
+                m_creature->SetHealth(m_creature->GetHealth() + (m_creature->GetMaxHealth()/100));
             else
                 IsShielded = false;
 
@@ -432,13 +433,13 @@ bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
     ScriptedInstance* pInstance = ((ScriptedInstance*)_GO->GetInstanceData());
     if(pInstance)
     {
-        Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), pInstance->GetData64("HighWarlordNajentus")));
+        Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS)));
         if(Najentus)
         {
             ((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine();
-        }else _GO->Say("Najentus not found", LANG_UNIVERSAL, NULL);
+        }else _GO->Say("Najentus not found", LANG_UNIVERSAL, 0);
     }
-    else _GO->Say("Invalid instance or location", LANG_UNIVERSAL, NULL);
+    else _GO->Say("Invalid instance or location", LANG_UNIVERSAL, 0);
 
     return true;
 }

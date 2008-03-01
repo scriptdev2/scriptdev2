@@ -22,6 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
+#include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
@@ -213,7 +214,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
         }else
         {
             if(pInstance)
-                ShadeGUID = pInstance->GetData64("ShadeOfAkama");
+                ShadeGUID = pInstance->GetData64(DATA_SHADEOFAKAMA);
         }
     }
 };
@@ -443,7 +444,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 }else
                 {
                     if(pInstance)
-                        AkamaGUID = pInstance->GetData64("Akama(Shade)");
+                        AkamaGUID = pInstance->GetData64(DATA_AKAMA_SHADE);
                 }
             }
 
@@ -465,7 +466,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     if(Akama && Akama->isAlive())
                     {
                         //10 % less health every few seconds.
-                        m_creature->DealDamage(Akama, Akama->GetMaxHealth()*0.1, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                        m_creature->DealDamage(Akama, Akama->GetMaxHealth()/10, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
                         ReduceHealthTimer = Enrage ? 5000 : 12000; // Reduce health more rapidly if enraged
                     }
                     else
@@ -482,7 +483,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 else // Debug
                 {
                     if(pInstance)
-                        AkamaGUID = pInstance->GetData64("Akama(Shade)");
+                        AkamaGUID = pInstance->GetData64(DATA_AKAMA_SHADE);
                 }
             }else ReduceHealthTimer -= diff;
 
@@ -599,14 +600,14 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         if(!pInstance)
             return;
         
-        ShadeGUID = pInstance->GetData64("ShadeOfAkama");
+        ShadeGUID = pInstance->GetData64(DATA_SHADEOFAKAMA);
         if(!ShadeGUID)
             return;
 
         Creature* Shade = ((Creature*)Unit::GetUnit((*m_creature), ShadeGUID));
         if(Shade)
         {
-            pInstance->SetData("ShadeOfAkamaEvent", 1); // In Progress
+            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, 1); // In Progress
             m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Prevent players from trying to restart event
             ((boss_shade_of_akamaAI*)Shade->AI())->SetAkamaGUID(m_creature->GetGUID());
             ((boss_shade_of_akamaAI*)Shade->AI())->InCombat = true;

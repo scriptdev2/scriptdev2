@@ -21,6 +21,7 @@ SDComment: VERIFY SCRIPT
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_serpent_shrine.h"
 
 #define ENCOUNTERS 6
 
@@ -100,45 +101,45 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         }
     }
 
-    void SetData64(char* type, uint64 data)
+    void SetData64(uint32 type, uint64 data)
     {
-        if(type == "KarathressEvent_Starter")
+        if(type == DATA_KARATHRESSEVENT_STARTER)
             KarathressEvent_Starter = data;
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "Sharkkis")
+        if(identifier  == DATA_SHARKKIS)
             return Sharkkis;
-        else if(identifier == "Tidalvess")
+        else if(identifier  == DATA_TIDALVESS)
             return Tidalvess;
-        else if(identifier == "Caribdis")
+        else if(identifier  == DATA_CARIBDIS)
             return Caribdis;
-        else if(identifier == "LadyVashj")
+        else if(identifier  == DATA_LADYVASHJ)
             return LadyVashj;
-        else if(identifier == "Karathress")
+        else if(identifier  == DATA_KARATHRESS)
             return Karathress;
-        else if(identifier == "KarathressEvent_Starter")
+        else if(identifier  == DATA_KARATHRESSEVENT_STARTER)
             return KarathressEvent_Starter;
 
-        return NULL;
+        return 0;
     }
 
-    void SetData(char *type, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "HydrossTheUnstableEvent")
+        if(type == DATA_HYDROSSTHEUNSTABLEEVENT)
             Encounters[0] = (data) ? true : false;
-        else if(type == "LeotherasTheBlindEvent")
+        else if(type == DATA_LEOTHERASTHEBLINDEVENT)
             Encounters[1] = (data) ? true : false;
-        else if(type == "TheLurkerBelowEvent")
+        else if(type == DATA_THELURKERBELOWEVENT)
             Encounters[2] = (data) ? true : false;
-        else if(type == "KarathressEvent")
+        else if(type == DATA_KARATHRESSEVENT)
             Encounters[3] = (data) ? true : false;
-        else if(type == "MorogrimTidewalkerEvent")
+        else if(type == DATA_MOROGRIMTIDEWALKEREVENT)
             Encounters[4] = (data) ? true : false;
 
         //Lady Vashj
-        else if(type == "LadyVashjEvent")
+        else if(type == DATA_LADYVASHJEVENT)
         {
             if(data == 0)
             {
@@ -149,41 +150,41 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             }
             Encounters[5] = (data) ? true : false;
         }
-        else if(type == "ShieldGenerator1")
+        else if(type == DATA_SHIELDGENERATOR1)
             ShieldGeneratorDeactivated[0] = (data) ? true : false;
-        else if(type == "ShieldGenerator2")
+        else if(type == DATA_SHIELDGENERATOR2)
             ShieldGeneratorDeactivated[1] = (data) ? true : false;
-        else if(type == "ShieldGenerator3")
+        else if(type == DATA_SHIELDGENERATOR3)
             ShieldGeneratorDeactivated[2] = (data) ? true : false;
-        else if(type == "ShieldGenerator4")
+        else if(type == DATA_SHIELDGENERATOR4)
             ShieldGeneratorDeactivated[3] = (data) ? true : false;
     }
 
-    uint32 GetData(char *type)
+    uint32 GetData(uint32 type)
     {
-        if(type == "HydrossTheUnstableEvent")
+        if(type == DATA_HYDROSSTHEUNSTABLEEVENT)
             return Encounters[0];
-        else if (type == "LeotherasTheBlindEvent")
+        else if (type == DATA_LEOTHERASTHEBLINDEVENT)
             return Encounters[1];
-        else if(type == "TheLurkerBelowEvent")
+        else if(type == DATA_THELURKERBELOWEVENT)
             return Encounters[2];
-        else if(type == "KarathressEvent")
+        else if(type == DATA_KARATHRESSEVENT)
             return Encounters[3];
-        else if(type == "MorogrimTidewalkerEvent")
+        else if(type == DATA_MOROGRIMTIDEWALKEREVENT)
             return Encounters[4];
 
         //Lady Vashj
-        else if(type == "LadyVashjEvent")
+        else if(type == DATA_LADYVASHJEVENT)
             return Encounters[5];
-        else if(type == "ShieldGenerator1")
+        else if(type == DATA_SHIELDGENERATOR1)
             return ShieldGeneratorDeactivated[0];
-        else if(type == "ShieldGenerator2")
+        else if(type == DATA_SHIELDGENERATOR2)
             return ShieldGeneratorDeactivated[1];
-        else if(type == "ShieldGenerator3")
+        else if(type == DATA_SHIELDGENERATOR3)
             return ShieldGeneratorDeactivated[2];
-        else if(type == "ShieldGenerator4")
+        else if(type == DATA_SHIELDGENERATOR4)
             return ShieldGeneratorDeactivated[3];
-        else if(type == "CanStartPhase3")
+        else if(type == DATA_CANSTARTPHASE3)
         {
             if(ShieldGeneratorDeactivated[0] && ShieldGeneratorDeactivated[1] && ShieldGeneratorDeactivated[2] && ShieldGeneratorDeactivated[3])
                 return 1;
