@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Blades_Edge_Mountains
 SD%Complete: 90
-SDComment: Quest support: 10556, 10682. Ogri'la->Skettis Flight. (npc_daranelle needs bit more work before consider complete)
+SDComment: Quest support: 10556, 10682, 10980. Ogri'la->Skettis Flight. (npc_daranelle needs bit more work before consider complete)
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
@@ -95,6 +95,41 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32
 }
 
 /*######
+## npc_saikkal_the_elder
+######*/
+
+//textId's are unknown, same goes for gossip item texts (except the two used below)
+bool GossipHello_npc_saikkal_the_elder(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "Yes... yes, it's me", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, "[PH] <text>", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+            break;
+    }
+    return true;
+}
+
+/*######
 ## npc_skyguard_handler_irena
 ######*/
 
@@ -145,6 +180,12 @@ void AddSC_npcs_blades_edge_mountains()
     newscript->Name="npc_overseer_nuaar";
     newscript->pGossipHello = &GossipHello_npc_overseer_nuaar;
     newscript->pGossipSelect = &GossipSelect_npc_overseer_nuaar;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_saikkal_the_elder";
+    newscript->pGossipHello = &GossipHello_npc_saikkal_the_elder;
+    newscript->pGossipSelect = &GossipSelect_npc_saikkal_the_elder;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

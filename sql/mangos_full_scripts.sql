@@ -225,6 +225,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_bladespire_ogre' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'mobs_bloodmaul_ogre' WHERE `entry` IN (19948, 19952, 19957);
 UPDATE `creature_template` SET `ScriptName` = 'npc_daranelle' WHERE `entry` = 21469;
 UPDATE `creature_template` SET `ScriptName` = 'npc_overseer_nuaar' WHERE `entry` = 21981;
+UPDATE `creature_template` SET `ScriptName` = 'npc_saikkal_the_elder' WHERE `entry` = 22932;
 UPDATE `creature_template` SET `ScriptName` = 'npc_skyguard_handler_deesak' WHERE `entry` = 23415;
 
 /* BLASTED LANDS */
