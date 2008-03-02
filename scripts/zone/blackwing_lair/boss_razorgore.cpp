@@ -33,10 +33,10 @@ EndScriptData */
 #define SAY_EGGS_BREAK3 "No! Not another one! I'll have your heads for this atrocity. "
 #define SOUND_EGGS_BREAK3 8277
 
-#define SPELL_CLEAVE                20691
+#define SPELL_CLEAVE                22540
 #define SPELL_WARSTOMP              27758       //Warstomp causes 1k dmg but doesn't knockback
 #define SPELL_FIREBALLVOLLEY        29958       //Our fireball doesn't leave a dot
-#define SPELL_CONFLAGRATION         16805
+#define SPELL_CONFLAGRATION         23023
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
@@ -52,16 +52,30 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     {
         Cleave_Timer = 15000;      //These times are probably wrong
         WarStomp_Timer = 35000;
-        FireballVolley_Timer = 20000;
-        Conflagration_Timer = 30000;
+        FireballVolley_Timer = 7000;
+        Conflagration_Timer = 12000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -109,8 +123,8 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //15 seconds until we should cast this agian
-            Cleave_Timer = 15000;
+            //7-14 seconds until we should cast this agian
+            Cleave_Timer = 7000 + rand()%7000;
         }else Cleave_Timer -= diff;
 
         //WarStomp_Timer
@@ -119,8 +133,8 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
-            //35 seconds until we should cast this agian
-            WarStomp_Timer = 35000;
+            //20-30 seconds until we should cast this agian
+            WarStomp_Timer = 20000 + rand()%10000;
         }else WarStomp_Timer -= diff;
 
         //FireballVolley_Timer
@@ -129,8 +143,8 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
 
-            //20 seconds until we should cast this agian
-            FireballVolley_Timer = 20000;
+            //10-15 seconds until we should cast this agian
+            FireballVolley_Timer = 12000 + rand()%5000;
         }else FireballVolley_Timer -= diff;
 
         //Conflagration_Timer
@@ -138,9 +152,10 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
-            //30 seconds until we should cast this agian
-            Conflagration_Timer = 30000;
+            //12 seconds until we should cast this agian
+            Conflagration_Timer = 12000;
         }else Conflagration_Timer -= diff;
 
         DoMeleeAttackIfReady();

@@ -24,7 +24,8 @@ EndScriptData */
 #include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
-#define SPELL_ASPECT_OF_JEKLIK    24687       //This is her silence spell. 
+#define SPELL_SONICBURST          23918  
+#define SPELL_SCREECH             6605   
 #define SPELL_SHADOW_WORD_PAIN    23952 
 #define SPELL_MIND_FLAY           23953
 #define SPELL_CHAIN_MIND_FLAY     23849      //Right ID unknown. So disabled
@@ -46,7 +47,8 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
     boss_jeklikAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
 
     uint32 Charge_Timer;
-    uint32 Aspect_Timer;
+    uint32 SonicBurst_Timer;
+    uint32 Screech_Timer;
     uint32 SpawnBats_Timer;
     uint32 ShadowWordPain_Timer;
     uint32 MindFlay_Timer;
@@ -62,7 +64,8 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
     void EnterEvadeMode()
     {
         Charge_Timer = 20000;
-        Aspect_Timer = 12000;
+        SonicBurst_Timer = 8000;
+        Screech_Timer = 13000;
         SpawnBats_Timer = 60000;
         ShadowWordPain_Timer = 6000;
         MindFlay_Timer = 11000;
@@ -184,11 +187,17 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     Charge_Timer = 25000 + rand()%5000;
                 }else Charge_Timer -= diff;
                 
-                if (Aspect_Timer < diff)
+                if (SonicBurst_Timer < diff)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_JEKLIK);
-                    Aspect_Timer = 15000 + rand()%5000;
-                }else Aspect_Timer -= diff;
+                    DoCast(m_creature->getVictim(),SPELL_SONICBURST);
+                    SonicBurst_Timer = 10000 + rand()%5000;
+                }else SonicBurst_Timer -= diff;
+
+                if (Screech_Timer < diff)
+                {
+                    DoCast(m_creature->getVictim(),SPELL_SCREECH);
+                    Screech_Timer = 18000 + rand()%15000;
+                }else Screech_Timer -= diff;
 
 
                 if (SpawnBats_Timer < diff)
@@ -265,7 +274,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                             FlyingBat->AI()->AttackStart(target);
                     }
                          
-                    SpawnFlyingBats_Timer = 12000 + rand()%8000;
+                    SpawnFlyingBats_Timer = 10000 + rand()%8000;
                 }SpawnFlyingBats_Timer -=diff;
 
 
@@ -292,14 +301,12 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     void EnterEvadeMode()
     {
         m_creature->setFaction(14);
-        Bomb_Timer = 3000;
+        Bomb_Timer = 2000;
         Check_Timer = 1000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-        DoCast(m_creature, 11010);
-        m_creature->SetHover(true);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         DoGoHome();
     }
@@ -326,9 +333,10 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartRangedAttack(who);
+                DoStartMeleeAttack(who);
+
             }
         }
     }
@@ -349,7 +357,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(target)
                 DoCast(target, SPELL_BOMB);
 
-            Bomb_Timer = 7000+rand()%5000;
+            Bomb_Timer = 7000;
         }else Bomb_Timer -= diff;
 
         //Check_Timer

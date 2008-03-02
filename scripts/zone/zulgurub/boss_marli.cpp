@@ -168,13 +168,13 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 if (PoisonVolley_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_POISONVOLLEY);
-                    PoisonVolley_Timer = 15000 + rand()%10000;
+                    PoisonVolley_Timer = 10000 + rand()%10000;
                 }else PoisonVolley_Timer -= diff;
 
                 if (!PhaseTwo && Aspect_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_MARLI);
-                    Aspect_Timer = 18000 + rand()%5000;
+                    Aspect_Timer = 13000 + rand()%5000;
                 }else Aspect_Timer -= diff;
 
 
@@ -213,13 +213,13 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 if(!PhaseTwo && Transform_Timer < diff)
                 {
                     DoCast(m_creature,SPELL_SPIDER_FORM);   
-  
+                    DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB);
                     const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                    DoCast(m_creature,SPELL_ENVOLWINGWEB); 
-                    ResetThreat();
+                    DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB); 
+                    ResetThreat(); 
                     PhaseTwo = true;
                     Transform_Timer = 35000 + rand()%25000;
                 }else Transform_Timer -= diff;

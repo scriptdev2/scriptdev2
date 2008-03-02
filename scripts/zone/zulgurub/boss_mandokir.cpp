@@ -38,7 +38,7 @@ EndScriptData */
 #define SPELL_SUNDERARMOR     24317     
 
 #define SAY_AGGRO               "I'll feed your souls to Hakkar himself!" 
-#define SAY_WATCH        "I'm keeping my eye on you"
+#define SAY_WATCH        "I'm keeping my eye on you, $N!"
 #define SAY_KILL        "DING!"
 
 #define SOUND_AGGRO             8413 

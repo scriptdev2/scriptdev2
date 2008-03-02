@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 
-#define SPELL_CLEAVE            20691
+#define SPELL_CLEAVE            26350
 #define SPELL_BLASTWAVE         23331
 #define SPELL_MORTALSTRIKE      24573
 #define SPELL_KNOCKBACK         25778
@@ -46,19 +46,34 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        Cleave_Timer = 25000;      //These times are probably wrong
-        BlastWave_Timer = 35000;
-        MortalStrike_Timer = 15000;
-        KnockBack_Timer = 25000;
+        Cleave_Timer = 8000;      //These times are probably wrong
+        BlastWave_Timer = 12000;
+        MortalStrike_Timer = 20000;
+        KnockBack_Timer = 30000;
         LeashCheck_Timer = 2000;
         InCombat = false;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -133,8 +148,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //25 seconds until we should cast this agian
-            Cleave_Timer = 25000;
+            //8-12 seconds until we should cast this agian
+            Cleave_Timer = 8000 + rand()%4000;
         }else Cleave_Timer -= diff;
 
         // BlastWave
@@ -144,7 +159,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);                
 
             //35 seconds until we should cast this again
-            BlastWave_Timer = 35000;
+            BlastWave_Timer = 12000;
         }else BlastWave_Timer -= diff;
 
         //MortalStrike_Timer
@@ -152,12 +167,11 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-            // he casts it first after 15 seconds and then each 35 seconds. <- now it should be desyncronised from blastwave.Thx Ntsc.
-            //25 seconds until we should cast this agian
-            MortalStrike_Timer = 35000;
+
+            //30 seconds until we should cast this agian
+            MortalStrike_Timer = 30000;
         }else MortalStrike_Timer -= diff;
 
-        //KnockBack_Timer
         if (KnockBack_Timer < diff)
         {
             //Cast
@@ -166,8 +180,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             //Drop 50% aggro
             m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
-            //25 seconds until we should cast this agian
-            KnockBack_Timer = 25000;
+            //15 seconds until we should cast this agian
+            KnockBack_Timer = 15000 + rand()%15000;
         }else KnockBack_Timer -= diff;
 
         DoMeleeAttackIfReady();

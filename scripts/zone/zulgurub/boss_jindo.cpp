@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Jin'do the Hexxer
 SD%Complete: 85
-SDComment: Mind Control not working because of core bug.
+SDComment: Mind Control not working because of core bug. Shades visible for all.
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,14 +26,18 @@ EndScriptData */
 
 
 
-#define SPELL_BRAINWASHTOTEM            24262
-#define SPELL_POWERFULLHEALINGWARD      24309                
+#define SPELL_BRAINWASHTOTEM            24262   
+#define SPELL_POWERFULLHEALINGWARD      24309   //We will not use this spell. We will summon a totem by script cause the spell totems will not cast.             
 #define SPELL_HEX                       24053
 #define SPELL_DELUSIONSOFJINDO          24306
 #define SPELL_SHADEOFJINDO              24308   //We will not use this spell. We will summon a shade by script.
 
 //Healing Ward Spell
-#define SPELL_HEAL                      37455  //Not right ID. Other Spell is not working...
+#define SPELL_HEAL                      38588   //Totems are not working right. Right heal spell ID is 24311 but this spell is not casting...
+
+//Shade of Jindo Spell
+#define SPELL_SHADOWSHOCK               19460
+#define SPELL_INVISIBLE                 24699
 
 
 #define SAY_AGGRO         "Welcome to da great show friends! Step right up to die!"
@@ -58,6 +62,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 
     Creature *Shade;
     Creature *Skeletons;
+    Creature *HealingWard;
     
     ScriptedInstance *pInstance;
     
@@ -66,10 +71,10 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     void EnterEvadeMode()
     {
         BrainWashTotem_Timer = 20000;
-        HealingWard_Timer = 10000;
+        HealingWard_Timer = 16000;
         Hex_Timer = 8000;
-        Delusions_Timer = 14000;
-        Teleport_Timer = 11000;
+        Delusions_Timer = 10000;
+        Teleport_Timer = 5000;
         InCombat = false;
 
         m_creature->RemoveAllAuras();
@@ -158,7 +163,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         if (HealingWard_Timer < diff)
         {
             //Cast
-            DoCast(m_creature, SPELL_POWERFULLHEALINGWARD);
+            //DoCast(m_creature, SPELL_POWERFULLHEALINGWARD);
+            HealingWard = m_creature->SummonCreature(14987, m_creature->GetPositionX()+3, m_creature->GetPositionY()-2, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,30000);
 
             //14-20 seconds until we should cast this agian
             HealingWard_Timer = 14000 + rand()%6000;
@@ -187,8 +193,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             Shade = m_creature->SummonCreature(14986, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
             Shade->AI()->AttackStart(target); 
 
-            //10-18 seconds until we should cast this agian
-            Delusions_Timer = 15000 + rand()%5000;
+            //4-12 seconds until we should cast this agian
+            Delusions_Timer = 4000 + rand()%8000;
         }else Delusions_Timer -= diff;
         
         //Teleporting a random gamer and spawning 9 skeletons that will attack this gamer
@@ -225,7 +231,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             }
             
             //17-25 seconds until we should cast this agian
-            Teleport_Timer = 17000 + rand()%8000;
+            Teleport_Timer = 15000 + rand()%8000;
         }else Teleport_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -249,7 +255,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     
     void EnterEvadeMode()
     {
-        Heal_Timer = 3000;
+        Heal_Timer = 2000;
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -322,6 +328,91 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     }
 };
 
+//Shade of Jindo
+struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
+{
+    mob_shade_of_jindoAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
+    
+    uint32 ShadowShock_Timer;
+    
+    
+    ScriptedInstance *pInstance;
+    
+    
+    void EnterEvadeMode()
+    {
+        ShadowShock_Timer = 1000;
+
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->CastSpell(m_creature, SPELL_INVISIBLE,true);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if(!who && who != m_creature)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+ 
+    void UpdateAI (const uint32 diff)
+    {
+     
+        //ShadowShock_Timer
+        if(ShadowShock_Timer < diff)
+        {
+
+            DoCast(m_creature->getVictim(), SPELL_SHADOWSHOCK);
+
+            ShadowShock_Timer = 2000;
+        }else ShadowShock_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
 
 CreatureAI* GetAI_boss_jindo(Creature *_Creature)
 {
@@ -330,6 +421,10 @@ CreatureAI* GetAI_boss_jindo(Creature *_Creature)
 CreatureAI* GetAI_mob_healing_ward(Creature *_Creature)
 {
     return new mob_healing_wardAI (_Creature);
+}
+CreatureAI* GetAI_mob_shade_of_jindo(Creature *_Creature)
+{
+    return new mob_shade_of_jindoAI (_Creature);
 }
 
 void AddSC_boss_jindo()
@@ -343,6 +438,11 @@ void AddSC_boss_jindo()
     newscript = new Script;
     newscript->Name="mob_healing_ward";
     newscript->GetAI = GetAI_mob_healing_ward;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_shade_of_jindo";
+    newscript->GetAI = GetAI_mob_shade_of_jindo;
     m_scripts[nrscripts++] = newscript;
 
 }

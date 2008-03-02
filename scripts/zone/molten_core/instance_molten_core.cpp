@@ -154,14 +154,10 @@ public:
 
         case ID_DOMO:
             Domo = creature->GetGUID();
-//            creature->SetVisibility(VISIBILITY_OFF);
-//            creature->setFaction(35);
             break;
 
         case ID_RAGNAROS:
             Ragnaros = creature->GetGUID();
-//            creature->SetVisibility(VISIBILITY_OFF);
-//            creature->setFaction(35);
             break;
 
         case ID_FLAMEWAKERPRIEST:

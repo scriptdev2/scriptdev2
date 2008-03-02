@@ -38,8 +38,8 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        ShadowFlame_Timer = 45000;      //These times are probably wrong
-        WingBuffet_Timer = 25000;
+        ShadowFlame_Timer = 30000;      //These times are probably wrong
+        WingBuffet_Timer = 24000;
         FlameBuffet_Timer = 5000;
         InCombat = false;
 
@@ -47,8 +47,22 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void AttackStart(Unit *who)
@@ -96,8 +110,8 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
-            //45 seconds till recast
-            ShadowFlame_Timer = 45000;
+            //25-45 seconds till recast
+            ShadowFlame_Timer = 25000 + rand()%20000;
         }else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer

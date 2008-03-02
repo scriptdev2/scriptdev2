@@ -26,12 +26,13 @@ EndScriptData */
 
 #define SPELL_HOLY_FIRE     23860
 #define SPELL_HOLY_WRATH    28883               //Not sure if this or 23979
-#define SPELL_ASPECTOFVENOXIS   25053
+#define SPELL_VENOMSPIT     23862
 #define SPELL_HOLY_NOVA     23858 
-#define SPELL_POISON_CLOUD  24840
+#define SPELL_POISON_CLOUD  23861
 #define SPELL_SNAKE_FORM    23849
 #define SPELL_RENEW         23895
 #define SPELL_BERSERK       23537
+#define SPELL_DISPELL       23859
 
 #define SAY_AGGRO         "Let the coils of hate unfurl!"
 
@@ -43,10 +44,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
 
     uint32 HolyFire_Timer;
     uint32 HolyWrath_Timer;
-    uint32 Aspect_Timer;
+    uint32 VenomSpit_Timer;
     uint32 Renew_Timer;
     uint32 PoisonCloud_Timer;
     uint32 HolyNova_Timer;
+    uint32 Dispell_Timer;
     uint32 TargetInRange;
 
   bool InCombat;
@@ -57,10 +59,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     {
         HolyFire_Timer = 10000;
         HolyWrath_Timer = 60500;
-        Aspect_Timer = 14000;
+        VenomSpit_Timer = 5500;
         Renew_Timer = 30500;
         PoisonCloud_Timer = 2000;
         HolyNova_Timer = 5000;
+        Dispell_Timer = 35000;
         TargetInRange = 0;
 
 
@@ -164,11 +167,11 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 50))
             {
 
-        if (Aspect_Timer < diff)
+                if (Dispell_Timer < diff)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_ASPECTOFVENOXIS);
-                    Aspect_Timer = 15000 + rand()%5000;
-                }else Aspect_Timer -= diff;
+                    DoCast(m_creature, SPELL_DISPELL);
+                    Dispell_Timer = 15000 + rand()%15000;
+                }else Dispell_Timer -= diff;
                 
                 if (Renew_Timer < diff)
                 {
@@ -200,7 +203,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     }
                     else
                     {
-                        HolyNova_Timer = 5000;
+                        HolyNova_Timer = 2000;
                     }
                     
                 }else HolyNova_Timer -= diff;
@@ -224,6 +227,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 {
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_SNAKE_FORM);
+                    m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
           const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
           m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
           m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
@@ -235,8 +239,17 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 if(PhaseTwo && PoisonCloud_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(), SPELL_POISON_CLOUD);
-                    PoisonCloud_Timer = 16000;
+                    PoisonCloud_Timer = 15000;
                 }PoisonCloud_Timer -=diff;
+
+                if (PhaseTwo && VenomSpit_Timer < diff)
+                {
+                    Unit* targetrandom = NULL;
+                    targetrandom = SelectUnit(SELECT_TARGET_RANDOM,0);
+                        
+                    DoCast(targetrandom, SPELL_VENOMSPIT);
+                    VenomSpit_Timer = 15000 + rand()%5000;
+                }else VenomSpit_Timer -= diff;
 
                 if (PhaseTwo && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11))
                 {

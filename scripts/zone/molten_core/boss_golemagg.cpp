@@ -24,7 +24,7 @@ EndScriptData */
 #include "def_molten_core.h"
 
 
-#define SPELL_MAGMASPLASH               37667      
+#define SPELL_MAGMASPLASH               13879      
 #define SPELL_PYROBLAST                 20228
 #define SPELL_EARTHQUAKE                19798
 #define SPELL_ENRAGE                    19953
@@ -63,7 +63,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
@@ -79,6 +78,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
     }
 
     void AttackStart(Unit *who)

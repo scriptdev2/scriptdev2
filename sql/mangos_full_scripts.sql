@@ -208,7 +208,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `
 /* BLACKWING LAIR */
 UPDATE `instance_template` SET `script` = 'instance_blackwing_lair' WHERE `map` = 469;
 /* Trash Mobs */
-UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264);
+UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264, 12557);
 /* Bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
 UPDATE `creature_template` SET `ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;

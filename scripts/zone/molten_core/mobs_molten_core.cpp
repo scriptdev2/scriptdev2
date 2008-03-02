@@ -449,6 +449,7 @@ CreatureAI* GetAI_mob_lavaspawn(Creature *_Creature)
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
     _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+    _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
  
     ai->EnterEvadeMode();
  

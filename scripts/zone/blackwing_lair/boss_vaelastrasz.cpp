@@ -28,11 +28,11 @@ EndScriptData */
 #include "../../../../../game/GossipDef.h"
 
 #define SPELL_ESSENCEOFTHERED       23513
-#define SPELL_FLAMEBREATH           18435       //Wrong spell. Damage is right but it should not proc the heated blade.
+#define SPELL_FLAMEBREATH           23461       
 #define SPELL_FIRENOVA              23462
 #define SPELL_TAILSWIPE             15847
-#define SPELL_BURNINGADRENALINE     18173
-#define SPELL_CLEAVE                20691       //Chain cleave is most likely named something different and contains a dummy effect
+#define SPELL_BURNINGADRENALINE     23620
+#define SPELL_CLEAVE                20684       //Chain cleave is most likely named something different and contains a dummy effect
 
 #define SAY_LINE1           "Too late...friends. Nefarius' corruption has taken hold. I cannot...control myself. "
 #define SOUND_LINE1         8281
@@ -79,8 +79,8 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         PlayerGUID = 0;
         SpeachTimer = 0;
         SpeachNum = 0;
-        Cleave_Timer = 15000;      //These times are probably wrong
-        FlameBreath_Timer = 25000;
+        Cleave_Timer = 8000;      //These times are probably wrong
+        FlameBreath_Timer = 11000;
         BurningAdrenalineCaster_Timer = 15000;
         BurningAdrenalineTank_Timer = 45000;
         FireNova_Timer = 5000;
@@ -93,8 +93,22 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
     }
 
     void BeginSpeach(Unit* target)
@@ -233,7 +247,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
 
             //25 seconds until we should cast this again
-            FlameBreath_Timer = 25000;
+            FlameBreath_Timer = 4000 + rand()%4000;
         }else FlameBreath_Timer -= diff;
 
         //BurningAdrenalineCaster_Timer (NOT YET IMPLEMENTED due to the fact that we can't randomly select a target yet)

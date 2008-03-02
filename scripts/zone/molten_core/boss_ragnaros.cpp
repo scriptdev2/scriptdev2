@@ -302,7 +302,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_ELEMENTALFIRE);
 
             //10 seconds until we should cast this agian
-            ElementalFire_Timer = 10000 + rand()%8000;
+            ElementalFire_Timer = 10000 + rand()%4000;
         }else ElementalFire_Timer -= diff;
 
         //Submerge_Timer
