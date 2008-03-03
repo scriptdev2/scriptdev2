@@ -826,6 +826,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_zealot_zath' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'mob_healing_ward' WHERE `entry` = 14987;
 UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
+UPDATE `creature_template` SET `ScriptName` = 'mob_shade_of_jindo' WHERE `entry` = 14986;
 UPDATE `creature_template` SET `Scriptname` = 'mobs_zulgurub' WHERE `entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
 
 

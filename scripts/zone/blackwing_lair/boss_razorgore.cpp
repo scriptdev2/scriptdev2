@@ -35,7 +35,7 @@ EndScriptData */
 
 #define SPELL_CLEAVE                22540
 #define SPELL_WARSTOMP              27758       //Warstomp causes 1k dmg but doesn't knockback
-#define SPELL_FIREBALLVOLLEY        29958       //Our fireball doesn't leave a dot
+#define SPELL_FIREBALLVOLLEY        29922       //Our fireball doesn't leave a dot
 #define SPELL_CONFLAGRATION         23023
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
@@ -131,6 +131,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         if (WarStomp_Timer < diff)
         {
             //Cast
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
             //20-30 seconds until we should cast this agian
