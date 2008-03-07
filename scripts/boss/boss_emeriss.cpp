@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        
     }
 
     void AttackStart(Unit *who)

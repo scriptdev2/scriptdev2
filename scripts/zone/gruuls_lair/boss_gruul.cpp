@@ -66,10 +66,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         HurtfulStrike_Timer= 8000;
         Reverberation_Timer= 60000+45000;
         InCombat = false;
-        
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
 
         if(pInstance)
             pInstance->SetData(DATA_GRUULEVENT, 0);

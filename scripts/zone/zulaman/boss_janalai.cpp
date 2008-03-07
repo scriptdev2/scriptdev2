@@ -155,8 +155,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         bombing =false;
         reset_timer = 5000;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);   
-
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();

@@ -113,8 +113,6 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
 
     void StartEvent()

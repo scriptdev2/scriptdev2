@@ -80,7 +80,6 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         Attumen = 0;
         Mount_Timer = 0;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
@@ -204,7 +203,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         RandomYellTimer = 30000 + (rand()%31)*1000; //Occasionally yell
         ChargeTimer = 20000;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BLEED, true);
+        
     }
 
     uint64 Midnight;

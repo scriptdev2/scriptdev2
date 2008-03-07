@@ -475,7 +475,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 ResetThreat();
                 PhaseSwitchTimer = 60000;
                 m_creature->SetSpeed(MOVE_RUN, 1.0f);
-                m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, SPELL_AURA_MOD_TAUNT, false);
+                
             }
             else
             {
@@ -485,7 +485,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 SummonVolcanoTimer = 2000;
                 PhaseSwitchTimer = 60000;
                 m_creature->SetSpeed(MOVE_RUN, 0.5f);
-                m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, SPELL_AURA_MOD_TAUNT, true);
+                
             }
         }else PhaseSwitchTimer -= diff;
 

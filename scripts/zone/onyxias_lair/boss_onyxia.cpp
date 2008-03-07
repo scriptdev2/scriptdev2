@@ -90,7 +90,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         phase = 1;
         counter = 0;        
 
-
         //        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
         m_creature->SetHover(false);
@@ -99,10 +98,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        //m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, SPELL_AURA_MOD_TAUNT, true); not working
-        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+        // not working
     }
 
     void KilledUnit(Unit* victim)

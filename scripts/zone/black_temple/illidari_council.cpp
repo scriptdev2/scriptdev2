@@ -810,7 +810,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         ReflectiveShieldTimer = 0;
         AggroYellTimer = 0;
 
-        m_creature->ApplySpellImmune( 0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
+        
     }
 
     void EnterEvadeMode()

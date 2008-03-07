@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     uint32 Dispell_Timer;
     uint32 TargetInRange;
 
-  bool InCombat;
+    bool InCombat;
     bool PhaseTwo;
     bool InBerserk;
 
@@ -66,31 +66,14 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         Dispell_Timer = 35000;
         TargetInRange = 0;
 
-
         InCombat = false;
         PhaseTwo = false;
         InBerserk= false;
 
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);       
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SNARE, true);
+        m_creature->RemoveAllAuras();
+        m_creature->DeleteThreatList();
+        m_creature->CombatStop();
+        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -102,7 +85,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         {
             DoStartMeleeAttack(who);
             //Say our dialog on initial aggro
-      if (!InCombat)
+            if (!InCombat)
             {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO);
@@ -119,18 +102,18 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             pInstance->SetData(DATA_VENOXIS_DEATH, 0);
     }
 
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
+    void ResetThreat()
     {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+
+        for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
+        {
+            Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
+            if(pUnit)
+                (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
+        }
+
     }
- 
-  }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -145,19 +128,19 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-                      //Say our dialog on initial aggro
+                //Say our dialog on initial aggro
                 if (!InCombat)
                 {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                InCombat = true;
+                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                    InCombat = true;
                 }
 
             }
         }
     }
 
-     void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget())
             return;
@@ -172,7 +155,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     DoCast(m_creature, SPELL_DISPELL);
                     Dispell_Timer = 15000 + rand()%15000;
                 }else Dispell_Timer -= diff;
-                
+
                 if (Renew_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_RENEW);
@@ -205,21 +188,21 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     {
                         HolyNova_Timer = 2000;
                     }
-                    
+
                 }else HolyNova_Timer -= diff;
-                
-        if (HolyFire_Timer < diff && TargetInRange < 3)
+
+                if (HolyFire_Timer < diff && TargetInRange < 3)
                 {
 
                     Unit* targetrandom = NULL;
                     targetrandom = SelectUnit(SELECT_TARGET_RANDOM,0);
-                        
+
                     DoCast(targetrandom, SPELL_HOLY_FIRE);
                     HolyFire_Timer = 8000;
                 }else HolyFire_Timer -= diff;               
-                
-                
-                
+
+
+
             }
             else
             {
@@ -228,12 +211,12 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_SNAKE_FORM);
                     m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
-          const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
-          m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
-          m_creature->UpdateDamagePhysical(BASE_ATTACK);
-          ResetThreat();
-          PhaseTwo = true;
+                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
+                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
+                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                    ResetThreat();
+                    PhaseTwo = true;
                 }
 
                 if(PhaseTwo && PoisonCloud_Timer < diff)
@@ -246,7 +229,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 {
                     Unit* targetrandom = NULL;
                     targetrandom = SelectUnit(SELECT_TARGET_RANDOM,0);
-                        
+
                     DoCast(targetrandom, SPELL_VENOMSPIT);
                     VenomSpit_Timer = 15000 + rand()%5000;
                 }else VenomSpit_Timer -= diff;
@@ -255,9 +238,9 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 {
                     if (!InBerserk)
                     {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                    DoCast(m_creature, SPELL_BERSERK);
-                    InBerserk = true;
+                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                        DoCast(m_creature, SPELL_BERSERK);
+                        InBerserk = true;
                     }
                 }
             }

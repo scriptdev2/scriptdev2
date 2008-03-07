@@ -179,8 +179,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         ShieldGeneratorChannel[2] = 0;
         ShieldGeneratorChannel[3] = 0;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_NATURE, true);
     }
 
     //Called when a tainted elemental dies
@@ -834,8 +832,6 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
 CreatureAI* GetAI_mob_coilfang_elite(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
-
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 31345;           //Cleave

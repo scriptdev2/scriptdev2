@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         Evocating = false;
 
         InCombat = false;
-        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_ARCANE, true);
+        
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();

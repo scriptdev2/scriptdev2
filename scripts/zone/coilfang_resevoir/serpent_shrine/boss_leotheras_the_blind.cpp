@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        
     }
 
     void StartEvent()

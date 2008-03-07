@@ -35,12 +35,6 @@ CreatureAI* GetAI_mob_gurok_the_usurper(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
 
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-
     //knockback
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 24199;

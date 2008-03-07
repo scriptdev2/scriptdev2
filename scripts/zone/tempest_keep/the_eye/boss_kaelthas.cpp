@@ -363,7 +363,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
@@ -399,7 +399,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             if(pCreature)
             {
                 pCreature->Respawn();
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 pCreature->setFaction(m_creature->getFaction());
                 pCreature->AI()->EnterEvadeMode();
             }
@@ -555,7 +555,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -590,7 +590,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -625,7 +625,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -660,7 +660,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -766,7 +766,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
                     Unit *target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);

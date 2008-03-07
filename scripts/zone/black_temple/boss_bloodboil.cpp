@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
                     //Cast this without triggered so that it appears in combat logs and shows visual.
                     DoCast(m_creature, SPELL_FEL_RAGE_SELF);
-                    m_creature->ApplySpellImmune( 0, IMMUNITY_MECHANIC, SPELL_AURA_MOD_TAUNT, true);
+                    
 
                     switch(rand()%2)
                     {
@@ -363,7 +363,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
             if(!Phase1) // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
             {
                 m_creature->TauntFadeOut(m_creature->getVictim());
-                m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, SPELL_AURA_MOD_TAUNT, false);
+                
                 //if(TargetGUID)
                     //RevertThreatOnTarget(TargetGUID);
                 Phase1 = true;

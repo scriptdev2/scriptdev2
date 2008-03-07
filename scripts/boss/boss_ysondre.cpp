@@ -64,12 +64,11 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         SummonDruids3_Timer = 0;
         InCombat = false;
 
-
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         DoGoHome();
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
+        
     }
 
     void AttackStart(Unit *who)

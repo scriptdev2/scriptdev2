@@ -30,9 +30,7 @@ EndScriptData */
 CreatureAI* GetAI_boss_rokmar_the_crackler(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
- 
-    ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
- 
+
     //Watter Spit
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_WATTER_SPIT;

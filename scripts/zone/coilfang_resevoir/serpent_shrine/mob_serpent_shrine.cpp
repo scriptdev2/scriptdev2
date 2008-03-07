@@ -33,7 +33,6 @@ CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)
     {
         //Serpentshrine Sporebat
     case 21246:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_DISPEL, IMMUNE_DISPEL_ALL, true);
        
         ai->Spell[0].Enabled = true;
         ai->Spell[0].Spell_Id = 22120;           //Charge
@@ -76,16 +75,9 @@ CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)
         break;
         //Tidewalker Depth-Seer
     case 21224:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
         break;
         //Tidewalker Harpooner
     case 21227:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
         break;
         //Tidewalker Hydromancer
     case 21228:
@@ -109,14 +101,9 @@ CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)
         break;
         //Tidewalker Shaman
     case 21226:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
         break;
         //Tidewalker Warrior
     case 21225:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-
         ai->Spell[0].Enabled = true;
         ai->Spell[0].Spell_Id = 43273;         //Cleave
         ai->Spell[0].Cooldown = 10000;
@@ -148,8 +135,6 @@ CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)
         break;
         //Coilfang Fathom-Witch - TODO: Domination (mind control)
     case 21299:
-        ai->m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-
         ai->Spell[0].Enabled = true;
         ai->Spell[0].Spell_Id = 36127;         //Shadow Nova
         ai->Spell[0].Cooldown = 20000;
