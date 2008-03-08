@@ -67,6 +67,7 @@ scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
+scripts/zone/aunchindoun/shadow_labyrinth/def_shadow_labyrinth.h \
 scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
@@ -82,6 +83,7 @@ scripts/zone/black_temple/boss_shade_of_akama.cpp \
 scripts/zone/black_temple/boss_supremus.cpp \
 scripts/zone/black_temple/boss_teron_gorefiend.cpp \
 scripts/zone/black_temple/boss_warlord_najentus.cpp \
+scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/mob_blacktemple.cpp \
@@ -146,6 +148,7 @@ scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \
 scripts/zone/caverns_of_time/hyjal/boss_archimonde.cpp \
+scripts/zone/caverns_of_time/hyjal/def_hyjal.h \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.h \
 scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
@@ -158,11 +161,13 @@ scripts/zone/coilfang_resevoir/serpent_shrine/boss_hydross_the_unstable.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_lady_vashj.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_leotheras_the_blind.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_morogrim_tidewalker.cpp \
+scripts/zone/coilfang_resevoir/serpent_shrine/def_serpent_shrine.h \
 scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/mob_serpent_shrine.cpp \
 scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_hydromancer_thespia.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
+scripts/zone/coilfang_resevoir/steam_vault/def_steam_vault.h \
 scripts/zone/coilfang_resevoir/steam_vault/instance_steam_vault.cpp \
 scripts/zone/coilfang_resevoir/underbog/boss_ghazan.cpp \
 scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
@@ -178,6 +183,7 @@ scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
+scripts/zone/gruuls_lair/def_gruuls_lair.h \
 scripts/zone/gruuls_lair/instance_gruuls_lair.cpp \
 scripts/zone/gruuls_lair/mob_gruuls_lair.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_broggok.cpp \
@@ -186,6 +192,7 @@ scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
+scripts/zone/hellfire_citadel/magtheridons_lair/def_magtheridons_lair.h \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
@@ -225,6 +232,7 @@ scripts/zone/molten_core/boss_majordomo_executus.cpp \
 scripts/zone/molten_core/boss_ragnaros.cpp \
 scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
+scripts/zone/molten_core/def_molten_core.h \
 scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
 scripts/zone/moonglade/npcs_moonglade.cpp \
@@ -285,6 +293,7 @@ scripts/zone/scholomance/boss_lorekeeper_polkelt.cpp \
 scripts/zone/scholomance/boss_ras_frostwhisper.cpp \
 scripts/zone/scholomance/boss_the_ravenian.cpp \
 scripts/zone/scholomance/boss_vectus.cpp \
+scripts/zone/scholomance/def_scholomance.h \
 scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
@@ -321,10 +330,12 @@ scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \
+scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
 scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
+scripts/zone/tempest_keep/the_eye/def_the_eye.h \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
 scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
@@ -356,6 +367,7 @@ scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
 scripts/zone/zulaman/boss_janalai.cpp \
 scripts/zone/zulaman/boss_nalorakk.cpp \
+scripts/zone/zulaman/def_zulaman.h \
 scripts/zone/zulaman/instance_zulaman.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
@@ -370,6 +382,7 @@ scripts/zone/zulgurub/boss_renataki.cpp \
 scripts/zone/zulgurub/boss_thekal.cpp \
 scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
+scripts/zone/zulgurub/def_zulgurub.h \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
 scripts/zone/zulgurub/mobs_zulgurub.cpp \
 system.cpp
