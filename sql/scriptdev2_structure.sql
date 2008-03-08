@@ -5,6 +5,7 @@ CREATE TABLE `eventai_scripts` (
 
 `event_type` tinyint(5) unsigned NOT NULL default '0' COMMENT 'Event Type',
 `event_inverse_phase_mask` int(11) signed NOT NULL default '0' COMMENT 'Mask which phases this event will not trigger in',
+`event_chance` int(3) signed NOT NULL default '100',
 `event_param1` int(11) signed NOT NULL default '0',
 `event_param2` int(11) signed NOT NULL default '0',
 `event_param3` int(11) signed NOT NULL default '0',

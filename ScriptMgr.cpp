@@ -639,7 +639,7 @@ void LoadDatabase()
         }else outstring_log("SD2: WARNING >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
 
         //Gather event data
-        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
+        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
             "FROM `eventai_scripts`");
 
         //Drop Existing EventAI Map
@@ -662,20 +662,25 @@ void LoadDatabase()
                 temp.creature_id = fields[1].GetUInt32();
                 temp.event_type = fields[2].GetUInt16();
                 temp.event_inverse_phase_mask = fields[3].GetUInt32();
-                temp.event_param1 = fields[4].GetUInt32();
-                temp.event_param2 = fields[5].GetUInt32();
-                temp.event_param3 = fields[6].GetUInt32();
+                temp.event_chance = fields[4].GetUInt8();
+                temp.event_param1 = fields[5].GetUInt32();
+                temp.event_param2 = fields[6].GetUInt32();
+                temp.event_param3 = fields[7].GetUInt32();
 
                 //Report any errors in event
                 if (temp.event_type >= EVENT_T_END)
-                    error_log("SD2: Event %u has incorrect event type", i);
+                    error_log("SD2: Event %d has incorrect event type", i);
+
+                //No chance of this event occuring
+                if (temp.event_chance == 0)
+                    error_log("SD2: Event %d has 0 percent chance. Event will never trigger!", i);
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
-                    temp.action[j].type = fields[7+(j*4)].GetUInt16();
-                    temp.action[j].param1 = fields[8+(j*4)].GetUInt32();
-                    temp.action[j].param2 = fields[9+(j*4)].GetUInt32();
-                    temp.action[j].param3 = fields[10+(j*4)].GetUInt32();
+                    temp.action[j].type = fields[8+(j*4)].GetUInt16();
+                    temp.action[j].param1 = fields[9+(j*4)].GetUInt32();
+                    temp.action[j].param2 = fields[10+(j*4)].GetUInt32();
+                    temp.action[j].param3 = fields[11+(j*4)].GetUInt32();
 
                     //Report any errors in actions
                     switch (temp.action[j].type)

@@ -183,6 +183,8 @@ float KaelthasWeapons[7][5] =
 #define TIME_PHASE_2_3      120000
 #define TIME_PHASE_3_4      120000
 
+#define KAEL_VISIBLE_RANGE  50.0f
+
 //Base AI for Advisors
 struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 {
@@ -205,12 +207,8 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         DelayRes_Timer = 0;
         DelayRes_Target = 0;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
 
         //reset encounter
         if(pInstance && (pInstance->GetData(DATA_KAELTHASEVENT) == 1 || pInstance->GetData(DATA_KAELTHASEVENT) == 3))
@@ -363,18 +361,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
 
         if(pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
     }
 
     void ResetThreat()
@@ -399,7 +390,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             if(pCreature)
             {
                 pCreature->Respawn();
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                 pCreature->setFaction(m_creature->getFaction());
                 pCreature->AI()->EnterEvadeMode();
             }
@@ -418,21 +409,39 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         if(!AdvisorGuid[0] || !AdvisorGuid[1] || !AdvisorGuid[2] || !AdvisorGuid[3])
         {
-            error_log("One or more advisors missing");
-            DoYell("One or more advisors missing", LANG_UNIVERSAL, NULL);
-            return;
+            error_log("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3");
+            DoYell("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3", LANG_UNIVERSAL, NULL);
+        
+            DoYell(SAY_PHASE4, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_PHASE4);
+            Phase = 4;
+
+            pInstance->SetData(DATA_KAELTHASEVENT, 4);
+
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+
+            Unit *target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(target)
+            {
+                InCombat = true;
+                DoStartMeleeAttack(target);
+            }
+        }else 
+        {
+            PrepareAdvisors();
+
+            DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_INTRO);
+
+            pInstance->SetData(DATA_KAELTHASEVENT, 1);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+
+            PhaseSubphase = 0;
+            Phase_Timer = 23000;
+            Phase = 1;
         }
-
-        PrepareAdvisors();
-
-        DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_INTRO);
-
-        pInstance->SetData(DATA_KAELTHASEVENT, 1);
-
-        PhaseSubphase = 0;
-        Phase_Timer = 23000;
-        Phase = 1;
     }
 
     void KilledUnit()
@@ -453,6 +462,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
@@ -492,6 +504,15 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 m_creature->AddThreat(who,0.0f);
             }
         }
+    }
+
+    //Extended vision range
+    bool IsVisible(Unit* who)
+    {
+        if (!who)
+            return false;
+
+        return m_creature->IsWithinDistInMap(who, KAEL_VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -555,7 +576,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -590,7 +611,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -625,7 +646,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -660,7 +681,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -714,7 +735,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         Weapon = m_creature->SummonCreature(KaelthasWeapons[i][0],KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
 
                         if (!Weapon)
-                            error_log("Kael'thas weapon %i could not be spawned", i);
+                            error_log("SD2: Kael'thas weapon %i could not be spawned", i);
                         else
                         {
                             Weapon->setFaction(m_creature->getFaction());
@@ -750,7 +771,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     {
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[i]));
                         if (!Advisor)
-                            error_log("Kael'Thas Advisor %u does not exist. Possibly despawned? Incorrectly Killed?", i);
+                            error_log("SD2: Kael'Thas Advisor %u does not exist. Possibly despawned? Incorrectly Killed?", i);
                         else ((advisorbase_ai*)Advisor->AI())->Revive(Target);
                     }
 
@@ -835,7 +856,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         if (m_creature->getThreatManager().getThreatList().size() >= 2)
                             for (uint32 i = 0; i < 3; i++)
                             {
-                                error_log("MC");
+                                error_log("SD2: Kael'Thas mind control not supported.");
                                 Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
                                 m_creature->Whisper(pUnit->GetGUID(), TEMP_MC_WHISPER);
                                 //DoCast(pUnit, SPELL_MIND_CONTROL);
@@ -856,7 +877,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                         if (target)
                             Phoenix->AI()->AttackStart(target);
-                    }else error_log("Kael'Thas Phoenix could not be spawned");
+                    }else error_log("SD2: Kael'Thas Phoenix could not be spawned");
 
                     switch(rand()%2)
                     {
@@ -1102,21 +1123,6 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         PsychicBlow_Timer = 10000;
 
         advisorbase_ai::EnterEvadeMode();
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void JustDied(Unit* pKiller)
@@ -1127,7 +1133,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 
     void AttackStart(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1150,9 +1156,6 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-            return;
-
         if (!who || m_creature->getVictim())
             return;
 
@@ -1161,9 +1164,6 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
                 AttackStart(who);
             }
         }
@@ -1224,21 +1224,6 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
     {
         Fear_Timer = 20000;
         advisorbase_ai::EnterEvadeMode();
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void JustDied(Unit* Killer)
@@ -1249,7 +1234,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 
     void AttackStart(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1271,9 +1256,6 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-            return;
-
         if (!who || m_creature->getVictim())
             return;
 
@@ -1282,8 +1264,6 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin attack
                 AttackStart(who);
@@ -1335,22 +1315,6 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         Yell = false;
 
         advisorbase_ai::EnterEvadeMode();
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, IMMUNE_SCHOOL_FIRE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void JustDied(Unit* pKiller)
@@ -1379,7 +1343,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void AttackStart(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1397,9 +1361,6 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-            return;
-
         if (!who || m_creature->getVictim())
             return;
 
@@ -1408,9 +1369,6 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
                 //Begin attack
                 AttackStart(who);
             }
@@ -1501,21 +1459,6 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         RemoteToy_Timer = 5000;
 
         advisorbase_ai::EnterEvadeMode();
-
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true); 
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CONFUSED, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR , true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_HORROR, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SLEEP, true);
-        m_creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_BANISH, true);
     }
 
     void JustDied(Unit* pKiller)
@@ -1526,7 +1469,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 
     void AttackStart(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1548,9 +1491,6 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-            return;
-
         if (!who || m_creature->getVictim())
             return;
 
@@ -1559,9 +1499,6 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
                 //Begin attack
                 AttackStart(who);
             }
@@ -1621,11 +1558,6 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->setFaction(14);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -1677,10 +1609,6 @@ struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
         EggVis_Timer = 0;
         IsEgg = false;
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_MODEL);
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Hatch()

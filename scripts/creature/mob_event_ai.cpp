@@ -75,6 +75,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         //Store random here so that all random actions match up
         uint32 rnd = rand();
 
+        //Return if chance for event is not met
+        if (pHolder.Event.event_chance <= rnd % 100)
+            return;
+
         union 
         {
             uint32 param1;
@@ -105,18 +109,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!InCombat)
                     return;
 
-                //Check for negative param3 (chance%)
-                if (param3_s < 0 && -param3_s < rnd % 100)
-                    return;
-
-                if (param3_s > 0)
+                if (param3 > 0)
                     pHolder.Time = param1 + (rnd % param3);
                 else pHolder.Time = param1;
             }
             break;
         case EVENT_T_TIMER_SINGLE:
             {
-                if (!InCombat || param2 < rnd % 100)
+                if (!InCombat)
                     return;
 
                 pHolder.Enabled = false;
@@ -127,18 +127,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (InCombat)
                     return;
 
-                //Check for negative param3 (chance%)
-                if (param3_s < 0 && -param3_s < rnd % 100)
-                    return;
-
-                if (param3_s > 0)
+                if (param3 > 0)
                     pHolder.Time = param1 + (rnd % param3);
                 else pHolder.Time = param1;
             }
             break;
         case EVENT_T_TIMER_OOC_SINGLE:
             {
-                if (InCombat || param2 < rnd % 100)
+                if (InCombat)
                     return;
 
                 pHolder.Enabled = false;
@@ -156,12 +152,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 //Prevent repeat for param3 time, or disable if param3 not set
                 if (param3)
-                {
-                    if (param3_s > 0)
-                        pHolder.Time = param3;
-                    else if (-param3_s < rnd % 100)
-                        return;
-                }else pHolder.Enabled = false;
+                    pHolder.Time = param3;
+                else pHolder.Enabled = false;
             }
             break;
         case EVENT_T_MANA:
@@ -175,45 +167,29 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 if (param3)
-                {
-                    if (param3_s > 0)
-                        pHolder.Time = param3;
-                    else if (-param3_s < rnd % 100)
-                        return;
-                }else pHolder.Enabled = false;
+                    pHolder.Time = param3;
+                else pHolder.Enabled = false;
             }
             break;
         case EVENT_T_AGGRO:
             {
-                if (param1 < rnd % 100)
-                    return;
             }
             break;
         case EVENT_T_KILL:
             {
-                if (param2 < rnd % 100)
-                    return;
-
                 if (param1)
                     pHolder.Time = param1;
             }
         case EVENT_T_DEATH:
             {
-                if (param1 < rnd % 100)
-                    return;
             }
             break;
         case EVENT_T_EVADE:
             {
-                if (param1 < rnd % 100)
-                    return;
             }
             break;
         case EVENT_T_SPELLHIT:
             {
-                if (param3 < rnd % 100)
-                    return;
-
                 //Spell hit is special case, first param handled within EventAI::SpellHit
                 if (param2)
                     pHolder.Time = param2;

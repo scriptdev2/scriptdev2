@@ -13,7 +13,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\bin\debug"
+			OutputDirectory="..\..\..\..\bin\win32_debug"
 			IntermediateDirectory=".\ScriptDev2__Win32_Debug"
 			ConfigurationType="2"
 			CharacterSet="2">
@@ -36,7 +36,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC71\zthread__Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug;..\..\..\..\dep\lib\debug\"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC71\zthread__Win32_Debug;..\..\..\..\win\VC71\mangosd__Win32_Debug;..\..\..\..\dep\lib\win32_debug\"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -68,7 +68,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\bin\release"
+			OutputDirectory="..\..\..\..\bin\win32_release"
 			IntermediateDirectory=".\ScriptDev2__Win32_Release"
 			ConfigurationType="2"
 			CharacterSet="2">

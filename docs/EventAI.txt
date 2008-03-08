@@ -18,6 +18,7 @@ creature_id                 Creature id which this event should occur on.
 
 event_type                  Type of event (See Event Types below)
 event_inverse_phase_mask    Mask which phases this event should NOT trigger in*
+event_chance                Percent chance of this event occuring (1 - 100)
 event_param1                Variable for event (dependant on Event type)
 event_param2
 event_param3
@@ -48,17 +49,17 @@ Each event type has its own specific interpretation of the params that accompany
 Params are always read from Param1, then Param2, then Param3.
 
 (#   Internal Name               Pamarm usage                           Discription)
-0    EVENT_T_TIMER_REPEAT        Time, Initial, Random                  Expires first at (Param2) and then every (Param1 + rand()%Param3) time. If (Param3) is negative it specifices chance of event occuring.
-1    EVENT_T_TIMER_SINGLE        Time, Chance%                          Expires once every (Param1) per Reset with (Param2) chance of occuring.
-2    EVENT_T_TIMER_OOC_REPEAT    Time, Initial, Random                  Expires first at (Param2) and then every (Param1 + rand()%Param3) time while not in combat. If (Param3) is negative it specifies chance of event occuring.
-3    EVENT_T_TIMER_OOC_SINGLE    Time, Chance%                          Expires once every (Param1) while not in combat per Reset with (Param2) chance of occuring.
-4    EVENT_T_HP_SINGLE           HPMax%, HPMin%, TimeUntilRepeat        Expires when HP is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. If Param3 is negative it specifies chance of event occuring.
-5    EVENT_T_MANA_SINGLE         ManaMax%,ManaMin% TimeUntilRepeat      Expires once Mana% is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. If Param3 is negative it specifies chance of event occuring.
-6    EVENT_T_AGGRO               Chance%                                Expires upon initial aggro (does not repeat). Has (Param1) chance of occuring.
-7    EVENT_T_KILL                TimeUntilRepeat, Chance%               Expires upon killing a player. Will always occur unless (Param1) is not 0 in which case will only occur every (Param1) milliseconds. Has (Param2) chance of occuring.
-8    EVENT_T_DEATH               Chance%                                Expires upon Death. Has (Param1) chance of occuring.
-9    EVENT_T_EVADE               Chance%                                Expires upon creature EnterEvadeMode(). Has (Param1) chance of occuring.
-10   EVENT_T_SPELLHIT            SpellID, TimeUntilRepeat, Chance%      Expires upon Spell hit. If (param1) is set will only expire on that spell. Will repeat every (Param2) or never repeat if Param2 = 0. Has (Param3) chance of occuring.
+0    EVENT_T_TIMER_REPEAT        Time, Initial, Random                  Expires first at (Param2) and then every (Param1 + rand()%Param3) time. 
+1    EVENT_T_TIMER_SINGLE        Time                                   Expires once every (Param1) per Reset.
+2    EVENT_T_TIMER_OOC_REPEAT    Time, Initial, Random                  Expires first at (Param2) and then every (Param1 + rand()%Param3) time while not in combat. 
+3    EVENT_T_TIMER_OOC_SINGLE    Time                                   Expires once every (Param1) while not in combat per Reset.
+4    EVENT_T_HP_SINGLE           HPMax%, HPMin%, TimeUntilRepeat        Expires when HP is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. 
+5    EVENT_T_MANA_SINGLE         ManaMax%,ManaMin% TimeUntilRepeat      Expires once Mana% is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. 
+6    EVENT_T_AGGRO               NONE                                   Expires upon initial aggro (does not repeat). 
+7    EVENT_T_KILL                TimeUntilRepeat                        Expires upon killing a player. Will always occur unless (Param1) is not 0 in which case will only occur every (Param1) milliseconds.
+8    EVENT_T_DEATH               NONE                                   Expires upon Death. 
+9    EVENT_T_EVADE               NONE                                   Expires upon creature EnterEvadeMode().
+10   EVENT_T_SPELLHIT            SpellID, TimeUntilRepeat               Expires upon Spell hit. If (param1) is set will only expire on that spell. Will repeat every (Param2) or never repeat if Param2 = 0. 
 
 -----------------------------------------
 Action Types

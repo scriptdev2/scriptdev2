@@ -93,6 +93,7 @@ struct EventAI_Event
 
     uint16 event_type;
     uint32 event_inverse_phase_mask;
+    uint8 event_chance;
     union
     {
         uint32 event_param1;
