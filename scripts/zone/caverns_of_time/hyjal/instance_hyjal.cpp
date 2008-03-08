@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_Mount_Hyjal
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 100
+SDComment: Instance Data Scripts and functions to acquire mobs and set encounter status for use in various Hyjal Scripts
 EndScriptData */
 
 #include "../../../sc_defines.h"
@@ -119,52 +119,81 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        if(identifier  == DATA_RAGEWINTERCHILL && RageWinterchill)
-            return RageWinterchill;
-        else if(identifier  == DATA_ANETHERON && Anetheron)
-            return Anetheron;
-        else if(identifier  == DATA_KAZROGAL && Kazrogal)
-            return Kazrogal;
-        else if(identifier  == DATA_AZGALOR && Azgalor)
-            return Azgalor;
-        else if(identifier  == DATA_ARCHIMONDE && Archimonde)
-            return Archimonde;
-        else if(identifier  == DATA_JAINAPROUDMOORE && JainaProudmoore)
-            return JainaProudmoore;
-        else if(identifier  == DATA_THRALL && Thrall)
-            return Thrall;
-        else if(identifier  == DATA_TYRANDEWHISPERWIND && TyrandeWhisperwind)
-            return TyrandeWhisperwind;
+        switch(identifier)
+        {
+            case DATA_RAGEWINTERCHILL:
+                return RageWinterchill;
+                
+            case DATA_ANETHERON:
+                return Anetheron;
+
+            case DATA_KAZROGAL:
+                return Kazrogal;
+
+            case DATA_AZGALOR:
+                return Azgalor;
+            
+            case DATA_ARCHIMONDE:
+                return Archimonde;
+            
+            case DATA_JAINAPROUDMOORE:
+                return JainaProudmoore;
+
+            case DATA_THRALL:
+                return Thrall;
+
+            case DATA_TYRANDEWHISPERWIND:
+                return TyrandeWhisperwind;
+        }
 
         return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_RAGEWINTERCHILLEVENT)
-            Encounters[0] = data;
-        else if(type == DATA_ANETHERONEVENT)
-            Encounters[1] = data;
-        else if(type == DATA_KAZROGALEVENT)
-            Encounters[2] = data;
-        else if(type == DATA_AZGALOREVENT)
-            Encounters[3] = data;
-        else if(type == DATA_ARCHIMONDEEVENT)
-            Encounters[4] = data;
+        switch(type)
+        {
+            case DATA_RAGEWINTERCHILLEVENT:
+                Encounters[0] = data;
+                break;
+
+             case DATA_ANETHERONEVENT:
+                Encounters[1] = data;
+                break;
+
+             case DATA_KAZROGALEVENT:
+                Encounters[2] = data;
+                break;
+
+             case DATA_AZGALOREVENT:
+                Encounters[3] = data;
+                break;
+
+             case DATA_ARCHIMONDEEVENT:
+                Encounters[4] = data;
+                break;
+        }
     }
 
     uint32 GetData(uint32 type)
     {
-        if(type == DATA_RAGEWINTERCHILLEVENT)
-            return Encounters[0];
-        else if(type == DATA_ANETHERONEVENT)
-            return Encounters[1];
-        else if(type == DATA_KAZROGALEVENT)
-            return Encounters[2];
-        else if(type == DATA_AZGALOREVENT)
-            return Encounters[3];
-        else if(type == DATA_ARCHIMONDEEVENT)
-            return Encounters[4];
+        switch(type)
+        {
+            case DATA_RAGEWINTERCHILLEVENT:
+                return Encounters[0];
+
+             case DATA_ANETHERONEVENT:
+                return Encounters[1];
+
+             case DATA_KAZROGALEVENT:
+                return Encounters[2];
+
+             case DATA_AZGALOREVENT:
+                return Encounters[3];
+
+             case DATA_ARCHIMONDEEVENT:
+                return Encounters[4];
+        }
         return 0;
     }
 };

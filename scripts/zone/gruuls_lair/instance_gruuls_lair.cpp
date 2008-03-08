@@ -92,34 +92,51 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        if(identifier  == DATA_MAULGAREVENT_TANK)
-            return MaulgarEvent_Tank;
-        else if(identifier  == DATA_KIGGLERTHECRAZED)
-            return KigglerTheCrazed;
-        else if(identifier  == DATA_BLINDEYETHESEER)
-            return BlindeyeTheSeer;
-        else if(identifier  == DATA_OLMTHESUMMONER)
-            return OlmTheSummoner;
-        else if(identifier  == DATA_KROSHFIREHAND)
-            return KroshFirehand;
+        switch(identifier)
+        {
+            case DATA_MAULGAREVENT_TANK:
+                return MaulgarEvent_Tank;
+
+             case DATA_KIGGLERTHECRAZED:
+                return KigglerTheCrazed;
+
+             case DATA_BLINDEYETHESEER:
+                return BlindeyeTheSeer;
+
+             case DATA_OLMTHESUMMONER:
+                return OlmTheSummoner;
+
+             case DATA_KROSHFIREHAND:
+                return KroshFirehand;
+        }
 
         return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_MAULGAREVENT)
-            Encounters[0] = (data) ? true : false;
-        else if(type == DATA_GRUULEVENT)
-            Encounters[1] = (data) ? true : false;
+        switch(type)
+        {
+            case DATA_MAULGAREVENT:
+                Encounters[0] = (data) ? true : false;
+                break;
+
+            case DATA_GRUULEVENT:
+                Encounters[1] = (data) ? true : false;
+                break;
+        }
     }
 
     uint32 GetData(uint32 type) 
     { 
-        if(type == DATA_MAULGAREVENT)
-            return Encounters[0];
-        else if(type == DATA_GRUULEVENT)
-            return Encounters[1];
+        switch(type)
+        {
+            case DATA_MAULGAREVENT:
+                return Encounters[0];
+        
+            case DATA_GRUULEVENT:
+                return Encounters[1];
+        }
 
         return 0;
     }

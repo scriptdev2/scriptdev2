@@ -83,30 +83,34 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_HYDROMANCERTHESPIAEVENT)
+        switch(type)
         {
-            if(data == 2)
-            {
-                Encounters[0] = false;
-                IsHydromancerDied = true;
-                CheckInstanceStatus();
-            }
-            else
-                Encounters[0] = (data) ? true : false;
+            case DATA_HYDROMANCERTHESPIAEVENT:
+                if(data == 2)
+                {
+                    Encounters[0] = false;
+                    IsHydromancerDied = true;
+                    CheckInstanceStatus();
+                }
+                else
+                    Encounters[0] = (data) ? true : false;
+                break;
+
+            case DATA_MEKGINEERSTEAMRIGGEREVENT:
+                if(data == 2)
+                {
+                    Encounters[1] = false;
+                    IsMekgineerDied = true;
+                    CheckInstanceStatus();
+                }
+                else
+                    Encounters[1] = (data) ? true : false;
+                break;
+
+            case DATA_WARLORDKALITHRESHEVENT:
+                Encounters[2] = (data) ? true : false;
+                break;
         }
-        else if(type == DATA_MEKGINEERSTEAMRIGGEREVENT)
-        {
-            if(data == 2)
-            {
-                Encounters[1] = false;
-                IsMekgineerDied = true;
-                CheckInstanceStatus();
-            }
-            else
-                Encounters[1] = (data) ? true : false;
-        }
-        else if(type == DATA_WARLORDKALITHRESHEVENT)
-            Encounters[2] = (data) ? true : false;
     }
 };
 

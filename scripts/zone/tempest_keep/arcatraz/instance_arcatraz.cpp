@@ -64,12 +64,12 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         switch(go->GetEntry())
         {
             case CONTAINMENT_CORE_SECURITY_FIELD_ALPHA:
-            Containment_Core_Security_Field_Alpha = go;
-            break;
+                Containment_Core_Security_Field_Alpha = go;
+                break;
 
             case CONTAINMENT_CORE_SECURITY_FIELD_BETA:
-            Containment_Core_Security_Field_Beta = go;
-            break;
+                Containment_Core_Security_Field_Beta = go;
+                break;
         }
     }
 
@@ -82,32 +82,36 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_ZEREKETHTHEUNBOUNDEVENT)
-            Encounters[0] = (data) ? true : false;
-        else if(type == DATA_WRATH_SCRYERSOCCOTHRATESEVENT)
+        switch(type)
         {
-            if(data == 2)
-            {
-                Encounters[1] = false;
-                if(Containment_Core_Security_Field_Alpha)
-                    OpenDoor(Containment_Core_Security_Field_Alpha);
-            }
+            case DATA_ZEREKETHTHEUNBOUNDEVENT:
+                Encounters[0] = (data) ? true : false;
+                break;
 
-            Encounters[1] = (data) ? true : false;
-        }
-        else if(type == DATA_DALLIAHTHEDOOMSAYEREVENT)
-        {
-            if(data == 2)
-            {
-                Encounters[2] = false;
-                if(Containment_Core_Security_Field_Beta)
-                    OpenDoor(Containment_Core_Security_Field_Beta);
-            }
+            case DATA_WRATH_SCRYERSOCCOTHRATESEVENT:
+                if(data == 2)
+                {
+                    Encounters[1] = false;
+                    if(Containment_Core_Security_Field_Alpha)
+                        OpenDoor(Containment_Core_Security_Field_Alpha);
+                }
+                Encounters[1] = (data) ? true : false;
+                break;
 
-            Encounters[2] = (data) ? true : false;
+            case DATA_DALLIAHTHEDOOMSAYEREVENT:
+                if(data == 2)
+                {
+                    Encounters[2] = false;
+                    if(Containment_Core_Security_Field_Beta)
+                        OpenDoor(Containment_Core_Security_Field_Beta);
+                }
+                Encounters[2] = (data) ? true : false;
+                break;
+
+            case DATA_HARBINGERSKYRISSEVENT:
+                Encounters[3] = (data) ? true : false;
+                break;
         }
-        else if(type == DATA_HARBINGERSKYRISSEVENT)
-            Encounters[3] = (data) ? true : false;
     }
 };
 

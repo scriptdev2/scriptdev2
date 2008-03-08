@@ -21,6 +21,7 @@ SDComment:
 EndScriptData */
  
 #include "../../../sc_defines.h"
+#include "def_the_eye.h"
 
 #define ENCOUNTERS 5
 
@@ -74,86 +75,109 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
         switch(creature_entry)
         {
             case 20064:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
-            ThaladredTheDarkener = creature->GetGUID();
-            break;
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                ThaladredTheDarkener = creature->GetGUID();
+                break;
 
             case 20063:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
-            MasterEngineerTelonicus = creature->GetGUID();
-            break;
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                MasterEngineerTelonicus = creature->GetGUID();
+                break;
 
             case 20062:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
-            GrandAstromancerCapernian = creature->GetGUID();
-            break;
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                GrandAstromancerCapernian = creature->GetGUID();
+                break;
 
             case 20060:
-            creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
-            LordSanguinar = creature->GetGUID();
-            break;
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                LordSanguinar = creature->GetGUID();
+                break;
 
             case 19622:
-            Kaelthas = creature->GetGUID();
-            break;
+                Kaelthas = creature->GetGUID();
+                break;
 
             case 18805:
-            Astromancer = creature->GetGUID();
-            break;
+                Astromancer = creature->GetGUID();
+                break;
         }
     }
 
-    uint64 GetData64(char *identifier)
+    uint64 GetData64(uint32 identifier)
     {
-        if(identifier == "ThaladredTheDarkener")
-            return ThaladredTheDarkener;
-        else if(identifier == "LordSanguinar")
-            return LordSanguinar;
-        else if(identifier == "GrandAstromancerCapernian")
-            return GrandAstromancerCapernian;
-        else if(identifier == "MasterEngineerTelonicus")
-            return MasterEngineerTelonicus;
-        else if(identifier == "Kaelthas")
-            return Kaelthas;
-        else if(identifier == "Astromancer")
-            return Astromancer;
-
-        return NULL;
-    }
-
-    void SetData(char *type, uint32 data)
-    {
-        if(type == "AlArEvent")
-            Encounters[0] = (data) ? true : false;
-        else if(type == "SolarianEvent")
-            Encounters[1] = (data) ? true : false;
-        else if(type == "VoidReaverEvent")
-            Encounters[2] = (data) ? true : false;
-
-        //Kael'thas
-        else if(type == "KaelThasEvent")
+        switch(identifier)
         {
-            KaelthasEventPhase = data;
-            Encounters[3] = (data) ? true : false;
+            case DATA_THALADREDTHEDARKENER:
+                return ThaladredTheDarkener;
+
+            case DATA_LORDSANGUINAR:
+                return LordSanguinar;
+
+            case DATA_GRANDASTROMANCERCAPERNIAN:
+                return GrandAstromancerCapernian;
+
+            case DATA_MASTERENGINEERTELONICUS:
+                return MasterEngineerTelonicus;
+
+            case DATA_KAELTHAS:
+                return Kaelthas;
+
+            case DATA_ASTROMANCER:
+                return Astromancer;
         }
-        else if(type = "HighAstromancerSolarianEvent")
-            Encounters[4] = (data) ? true : false;
+
+        return 0;
     }
 
-    uint32 GetData(char *type)
+    void SetData(uint32 type, uint32 data)
     {
-        if(type == "AlArEvent")
-            return Encounters[0];
-        else if(type == "SolarianEvent")
-            return Encounters[1];
-        else if(type == "VoidReaverEvent")
-            return Encounters[2];
-        else if(type == "HighAstromancerSolarianEvent")
-            return Encounters[4];
+        switch(type)
+        {
+            case DATA_ALAREVENT:
+                Encounters[0] = (data) ? true : false;
+                break;
 
-        //Kael'thas
-        else if(type == "KaelThasEvent")
-            return KaelthasEventPhase;
+             case DATA_SOLARIANEVENT:
+                Encounters[1] = (data) ? true : false;
+                break;
+
+             case DATA_VOIDREAVEREVENT:
+                Encounters[2] = (data) ? true : false;
+                break;
+
+            //Kael'thas
+             case DATA_KAELTHAS:
+                KaelthasEventPhase = data;
+                Encounters[3] = (data) ? true : false;
+                break;
+
+             case DATA_HIGHASTROMANCERSOLARIANEVENT:
+                Encounters[4] = (data) ? true : false;
+                break;
+        }
+    }
+
+    uint32 GetData(uint32 type)
+    {
+        switch(type)
+        {
+            case DATA_ALAREVENT:
+                return Encounters[0];
+
+            case DATA_SOLARIANEVENT:
+                return Encounters[1];
+
+            case DATA_VOIDREAVEREVENT:
+                return Encounters[2];
+
+            case DATA_HIGHASTROMANCERSOLARIANEVENT:
+                return Encounters[4];
+
+            //Kael'thas
+            case DATA_KAELTHASEVENT:
+                return KaelthasEventPhase;
+        }
 
         return 0;
     }

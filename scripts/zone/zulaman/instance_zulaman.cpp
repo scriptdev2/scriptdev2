@@ -27,8 +27,6 @@ enum EncounterState
     DONE          = 3
 };
 
-
-
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
     instance_zulaman(Map *Map) : ScriptedInstance(Map) {Initialize();};
@@ -62,11 +60,9 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(creature_entry)
         {
-        case 23578:
-            janalai = creature->GetGUID();
-            break;
-
-
+            case 23578:
+                janalai = creature->GetGUID();
+                break;
         }
     }
 
@@ -75,39 +71,45 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         if(identifier  == DATA_JANALAI && janalai)
             return janalai;
 
-
         return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_JANALAIEVENT)
+        switch(type)
         {
-            if(data == 0)
-            {
-                janalai_eggs_l = 20;
-                janalai_eggs_r = 20;
-            };
-            Encounters[0] = data;
-        }
-        else if(type == DATA_J_HATCHLEFT)
-        {
-            janalai_eggs_l -= data;
-        }else if(type == DATA_J_HATCHRIGHT)
-        {
-            janalai_eggs_r -= data;
-        };
+            case DATA_JANALAIEVENT:
+                if(data == 0)
+                {
+                    janalai_eggs_l = 20;
+                    janalai_eggs_r = 20;
+                }
+                Encounters[0] = data;
+                break;
 
+            case DATA_J_HATCHLEFT:
+                janalai_eggs_l -= data;
+                break;
+
+            case DATA_J_HATCHRIGHT:
+                janalai_eggs_r -= data;
+                break;
+        }
     }
 
     uint32 GetData(uint32 type)
     {
-        if(type == DATA_JANALAIEVENT)
-            return Encounters[0];
-        else if(type == DATA_J_EGGSLEFT)
-            return janalai_eggs_l;
-        else if(type == DATA_J_EGGSRIGHT)
-            return janalai_eggs_r;
+        switch(type)
+        {
+            case DATA_JANALAIEVENT:
+                return Encounters[0];
+
+            case DATA_J_EGGSLEFT:
+                return janalai_eggs_l;
+
+            case DATA_J_EGGSRIGHT:
+                return janalai_eggs_r;
+        }
 
         return 0;
     }

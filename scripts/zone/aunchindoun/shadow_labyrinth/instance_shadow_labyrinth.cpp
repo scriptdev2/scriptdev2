@@ -106,32 +106,36 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_AMBASSADORHELLMAWEVENT)
-            Encounters[0] = (data) ? true : false;
-        else if(type == DATA_BLACKHEARTTHEINCITEREVENT)
+        switch(type)
         {
-            if(data == 2)
-            {
-                Encounters[1] = false;
-                if(RefectoryDoor)
-                    OpenDoor(RefectoryDoor);
-            }
-            else
-                Encounters[1] = (data) ? true : false;
+            case DATA_AMBASSADORHELLMAWEVENT:
+                Encounters[0] = (data) ? true : false;
+                break;
+
+            case DATA_BLACKHEARTTHEINCITEREVENT:
+                if(data == 2)
+                {
+                    Encounters[1] = false;
+                    if(RefectoryDoor)
+                        OpenDoor(RefectoryDoor);
+                }
+                else
+                    Encounters[1] = (data) ? true : false;
+                break;
+            case DATA_GRANDMASTERVORPILEVENT:
+                if(data == 2)
+                {
+                    Encounters[2] = false;
+                    if(ScreamingHallDoor)
+                        OpenDoor(ScreamingHallDoor);
+                }
+                else
+                    Encounters[2] = (data) ? true : false;
+                break;
+            case DATA_MURMUREVENT:
+                Encounters[3] = (data) ? true : false;
+                break;
         }
-        else if(type == DATA_GRANDMASTERVORPILEVENT)
-        {
-            if(data == 2)
-            {
-                Encounters[2] = false;
-                if(ScreamingHallDoor)
-                    OpenDoor(ScreamingHallDoor);
-            }
-            else
-                Encounters[2] = (data) ? true : false;
-        }
-        else if(type == DATA_MURMUREVENT)
-            Encounters[3] = (data) ? true : false;
     }
 };
 

@@ -120,101 +120,118 @@ public:
         //Store specific creatures based on entry id
         switch (creature_entry)
         {
-        case ID_LUCIFRON:
-            Lucifron = creature->GetGUID();
-            break;
+            case ID_LUCIFRON:
+                Lucifron = creature->GetGUID();
+                break;
 
-        case ID_MAGMADAR:
-            Magmadar = creature->GetGUID();
-            break;
+            case ID_MAGMADAR:
+                Magmadar = creature->GetGUID();
+                break;
 
-        case ID_GEHENNAS:
-            Gehennas = creature->GetGUID();
-            break;
+            case ID_GEHENNAS:
+                Gehennas = creature->GetGUID();
+                break;
 
-        case ID_GARR:
-            Garr = creature->GetGUID();
-            break;
+            case ID_GARR:
+                Garr = creature->GetGUID();
+                break;
 
-        case ID_GEDDON:
-            Geddon = creature->GetGUID();
-            break;
+            case ID_GEDDON:
+                Geddon = creature->GetGUID();
+                break;
 
-        case ID_SHAZZRAH:
-            Shazzrah = creature->GetGUID();
-            break;
+            case ID_SHAZZRAH:
+                Shazzrah = creature->GetGUID();
+                break;
 
-        case ID_SULFURON:
-            Sulfuron = creature->GetGUID();
-            break;
+            case ID_SULFURON:
+                Sulfuron = creature->GetGUID();
+                break;
 
-        case ID_GOLEMAGG:
-            Golemagg = creature->GetGUID();
-            break;
+            case ID_GOLEMAGG:
+                Golemagg = creature->GetGUID();
+                break;
 
-        case ID_DOMO:
-            Domo = creature->GetGUID();
-            break;
+            case ID_DOMO:
+                Domo = creature->GetGUID();
+                break;
 
-        case ID_RAGNAROS:
-            Ragnaros = creature->GetGUID();
-            break;
+            case ID_RAGNAROS:
+                Ragnaros = creature->GetGUID();
+                break;
 
-        case ID_FLAMEWAKERPRIEST:
-            FlamewakerPriest = creature->GetGUID();
-            break;
+            case ID_FLAMEWAKERPRIEST:
+                FlamewakerPriest = creature->GetGUID();
+                break;
 
             default:
-            return;
+                return;
         }
     }
 
-    uint64 GetData64 (uint32 identifier) {
-        if (identifier  == DATA_SULFURON)
-            return Sulfuron;
-        if (identifier  == DATA_FLAMEWAKERPRIEST)
-            return FlamewakerPriest;
+    uint64 GetData64 (uint32 identifier)
+    {
+        switch(identifier)
+        {
+            case DATA_SULFURON:
+                return Sulfuron;
+
+            case DATA_FLAMEWAKERPRIEST:
+                return FlamewakerPriest;
+        }
+
         return 0;
     } // end GetData64
 
     uint32 GetData(uint32 type)
     {
+        switch(type)
+        {
+            case DATA_LUCIFRONISDEAD:
+                if(IsBossDied[0])
+                    return 1;
+                break;
 
-        if(type == DATA_LUCIFRONISDEAD)
-            if(IsBossDied[0])
-                return 1;
+            case DATA_MAGMADARISDEAD:
+                if(IsBossDied[1])
+                    return 1;
+                break;
 
-        if(type == DATA_MAGMADARISDEAD)
-            if(IsBossDied[1])
-                return 1;
+            case DATA_GEHENNASISDEAD:
+                if(IsBossDied[2])
+                    return 1;
+                break;
 
-        if(type == DATA_GEHENNASISDEAD)
-            if(IsBossDied[2])
-                return 1;
+            case DATA_GARRISDEAD:
+                if(IsBossDied[3])
+                    return 1;
+                break;
 
-        if(type == DATA_GARRISDEAD)
-            if(IsBossDied[3])
-                return 1;
+            case DATA_GEDDONISDEAD:
+                if(IsBossDied[4])
+                    return 1;
+                break;
 
-        if(type == DATA_GEDDONISDEAD)
-            if(IsBossDied[4])
-                return 1;
+            case DATA_SHAZZRAHISDEAD:
+                if(IsBossDied[5])
+                    return 1;
+                break;
 
-        if(type == DATA_SHAZZRAHISDEAD)
-            if(IsBossDied[5])
-                return 1;
+            case DATA_SULFURONISDEAD:
+                if(IsBossDied[6])
+                    return 1;
+                break;
 
-        if(type == DATA_SULFURONISDEAD)
-            if(IsBossDied[6])
-                return 1;
+            case DATA_GOLEMAGGISDEAD:
+                if(IsBossDied[7])
+                    return 1;
+                break;
 
-        if(type == DATA_GOLEMAGGISDEAD)
-            if(IsBossDied[7])
-                return 1;
-
-        if(type == DATA_MAJORDOMOISDEAD)
-            if(IsBossDied[8])
-                return 1;
+            case DATA_MAJORDOMOISDEAD:
+                if(IsBossDied[8])
+                    return 1;
+                break;
+        }
 
         return 0;
     }

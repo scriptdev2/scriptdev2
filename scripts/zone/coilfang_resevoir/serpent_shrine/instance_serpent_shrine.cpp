@@ -80,24 +80,24 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         switch(creature_entry)
         {
             case 21212:
-            LadyVashj = creature->GetGUID();
-            break;
+                LadyVashj = creature->GetGUID();
+                break;
 
             case 21214:
-            Karathress = creature->GetGUID();
-            break;
+                Karathress = creature->GetGUID();
+                break;
 
             case 21966:
-            Sharkkis = creature->GetGUID();
-            break;
+                Sharkkis = creature->GetGUID();
+                break;
 
             case 21965:
-            Tidalvess = creature->GetGUID();
-            break;
+                Tidalvess = creature->GetGUID();
+                break;
 
             case 21964:
-            Caribdis = creature->GetGUID();
-            break;
+                Caribdis = creature->GetGUID();
+                break;
         }
     }
 
@@ -109,85 +109,122 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        if(identifier  == DATA_SHARKKIS)
-            return Sharkkis;
-        else if(identifier  == DATA_TIDALVESS)
-            return Tidalvess;
-        else if(identifier  == DATA_CARIBDIS)
-            return Caribdis;
-        else if(identifier  == DATA_LADYVASHJ)
-            return LadyVashj;
-        else if(identifier  == DATA_KARATHRESS)
-            return Karathress;
-        else if(identifier  == DATA_KARATHRESSEVENT_STARTER)
-            return KarathressEvent_Starter;
+        switch(identifier)
+        {
+            case DATA_SHARKKIS:
+                return Sharkkis;
 
+             case DATA_TIDALVESS:
+                return Tidalvess;
+
+             case DATA_CARIBDIS:
+                return Caribdis;
+
+             case DATA_LADYVASHJ:
+                return LadyVashj;
+
+             case DATA_KARATHRESS:
+                return Karathress;
+
+             case DATA_KARATHRESSEVENT_STARTER:
+                return KarathressEvent_Starter;
+        }
         return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_HYDROSSTHEUNSTABLEEVENT)
-            Encounters[0] = (data) ? true : false;
-        else if(type == DATA_LEOTHERASTHEBLINDEVENT)
-            Encounters[1] = (data) ? true : false;
-        else if(type == DATA_THELURKERBELOWEVENT)
-            Encounters[2] = (data) ? true : false;
-        else if(type == DATA_KARATHRESSEVENT)
-            Encounters[3] = (data) ? true : false;
-        else if(type == DATA_MOROGRIMTIDEWALKEREVENT)
-            Encounters[4] = (data) ? true : false;
-
-        //Lady Vashj
-        else if(type == DATA_LADYVASHJEVENT)
+        switch(type)
         {
-            if(data == 0)
-            {
-                ShieldGeneratorDeactivated[0] = false;
-                ShieldGeneratorDeactivated[1] = false;
-                ShieldGeneratorDeactivated[2] = false;
-                ShieldGeneratorDeactivated[3] = false;
-            }
-            Encounters[5] = (data) ? true : false;
+            case DATA_HYDROSSTHEUNSTABLEEVENT:
+                Encounters[0] = (data) ? true : false;
+                break;
+
+            case DATA_LEOTHERASTHEBLINDEVENT:
+                Encounters[1] = (data) ? true : false;
+                break;
+
+            case DATA_THELURKERBELOWEVENT:
+                Encounters[2] = (data) ? true : false;
+                break;
+
+            case DATA_KARATHRESSEVENT:
+                Encounters[3] = (data) ? true : false;
+                break;
+
+            case DATA_MOROGRIMTIDEWALKEREVENT:
+                Encounters[4] = (data) ? true : false;
+                break;
+
+            //Lady Vashj
+            case DATA_LADYVASHJEVENT:
+                if(data == 0)
+                {
+                    ShieldGeneratorDeactivated[0] = false;
+                    ShieldGeneratorDeactivated[1] = false;
+                    ShieldGeneratorDeactivated[2] = false;
+                    ShieldGeneratorDeactivated[3] = false;
+                }
+                Encounters[5] = (data) ? true : false;
+                break;
+
+            case DATA_SHIELDGENERATOR1:
+                ShieldGeneratorDeactivated[0] = (data) ? true : false;
+                break;
+
+            case DATA_SHIELDGENERATOR2:
+                ShieldGeneratorDeactivated[1] = (data) ? true : false;
+                break;
+
+            case DATA_SHIELDGENERATOR3:
+                ShieldGeneratorDeactivated[2] = (data) ? true : false;
+                break;
+
+            case DATA_SHIELDGENERATOR4:
+                ShieldGeneratorDeactivated[3] = (data) ? true : false;
+                break;
         }
-        else if(type == DATA_SHIELDGENERATOR1)
-            ShieldGeneratorDeactivated[0] = (data) ? true : false;
-        else if(type == DATA_SHIELDGENERATOR2)
-            ShieldGeneratorDeactivated[1] = (data) ? true : false;
-        else if(type == DATA_SHIELDGENERATOR3)
-            ShieldGeneratorDeactivated[2] = (data) ? true : false;
-        else if(type == DATA_SHIELDGENERATOR4)
-            ShieldGeneratorDeactivated[3] = (data) ? true : false;
     }
 
     uint32 GetData(uint32 type)
     {
-        if(type == DATA_HYDROSSTHEUNSTABLEEVENT)
-            return Encounters[0];
-        else if (type == DATA_LEOTHERASTHEBLINDEVENT)
-            return Encounters[1];
-        else if(type == DATA_THELURKERBELOWEVENT)
-            return Encounters[2];
-        else if(type == DATA_KARATHRESSEVENT)
-            return Encounters[3];
-        else if(type == DATA_MOROGRIMTIDEWALKEREVENT)
-            return Encounters[4];
-
-        //Lady Vashj
-        else if(type == DATA_LADYVASHJEVENT)
-            return Encounters[5];
-        else if(type == DATA_SHIELDGENERATOR1)
-            return ShieldGeneratorDeactivated[0];
-        else if(type == DATA_SHIELDGENERATOR2)
-            return ShieldGeneratorDeactivated[1];
-        else if(type == DATA_SHIELDGENERATOR3)
-            return ShieldGeneratorDeactivated[2];
-        else if(type == DATA_SHIELDGENERATOR4)
-            return ShieldGeneratorDeactivated[3];
-        else if(type == DATA_CANSTARTPHASE3)
+        switch(type)
         {
-            if(ShieldGeneratorDeactivated[0] && ShieldGeneratorDeactivated[1] && ShieldGeneratorDeactivated[2] && ShieldGeneratorDeactivated[3])
-                return 1;
+            case DATA_HYDROSSTHEUNSTABLEEVENT:
+                return Encounters[0];
+
+             case DATA_LEOTHERASTHEBLINDEVENT:
+                return Encounters[1];
+
+             case DATA_THELURKERBELOWEVENT:
+                return Encounters[2];
+
+             case DATA_KARATHRESSEVENT:
+                return Encounters[3];
+
+             case DATA_MOROGRIMTIDEWALKEREVENT:
+                return Encounters[4];
+
+            //Lady Vashj
+             case DATA_LADYVASHJEVENT:
+                return Encounters[5];
+
+             case DATA_SHIELDGENERATOR1:
+                return ShieldGeneratorDeactivated[0];
+
+             case DATA_SHIELDGENERATOR2:
+                return ShieldGeneratorDeactivated[1];
+
+             case DATA_SHIELDGENERATOR3:
+                return ShieldGeneratorDeactivated[2];
+
+             case DATA_SHIELDGENERATOR4:
+                return ShieldGeneratorDeactivated[3];
+
+             case DATA_CANSTARTPHASE3:
+                if(ShieldGeneratorDeactivated[0] && ShieldGeneratorDeactivated[1] && ShieldGeneratorDeactivated[2] && ShieldGeneratorDeactivated[3])
+                    return 1;
+                break;
         }
 
         return 0;

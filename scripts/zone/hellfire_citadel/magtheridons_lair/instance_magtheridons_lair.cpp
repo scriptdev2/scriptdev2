@@ -50,31 +50,43 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        if(identifier  == DATA_MAGTHERIDON)
-            return Magtheridon;
+        switch(identifier)
+        {
+            case DATA_MAGTHERIDON:
+                return Magtheridon;
 
-        if(identifier  == DATA_EVENT_STARTER)
-            return EventStarter;
-
+            case DATA_EVENT_STARTER:
+                return EventStarter;
+        }
         return 0;
     }
 
     void SetData64(uint32 identifier, uint64 guid)
     {
-        if(identifier  == DATA_MAGTHERIDON)
-            Magtheridon = guid;
+        switch(identifier)
+        {
+            case DATA_MAGTHERIDON:
+                Magtheridon = guid;
+                break;
 
-        if(identifier  == DATA_EVENT_STARTER)
-            EventStarter = guid;
+            case DATA_EVENT_STARTER:
+                EventStarter = guid;
+                break;
+        }
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_MAGTHERIDON_EVENT_STARTED)
-            EncounterInProgress = true;
+        switch(type)
+        {
+            case DATA_MAGTHERIDON_EVENT_STARTED:
+                EncounterInProgress = true;
+                break;
 
-        if(type == DATA_MAGTHERIDON_EVENT_ENDED)
-            EncounterInProgress = false;
+            case DATA_MAGTHERIDON_EVENT_ENDED:
+                EncounterInProgress = false;
+                break;
+        }
     }
 
     uint32 GetData(uint32 type) 

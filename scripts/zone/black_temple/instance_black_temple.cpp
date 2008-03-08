@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_Black_Temple
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 100
+SDComment: Instance Data Scripts and functions to acquire mobs and set encounter status for use in various Black Temple Scripts
 SDCategory: Black Temple
 EndScriptData */
 
@@ -136,72 +136,115 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        if(identifier  == DATA_HIGHWARLORDNAJENTUS && Najentus)
-            return Najentus;
-        else if(identifier  == DATA_AKAMA && Akama)
-            return Akama;
-        else if(identifier  == DATA_AKAMA_SHADE && Akama_Shade)
-            return Akama_Shade;
-        else if(identifier  == DATA_SHADEOFAKAMA && ShadeOfAkama)
-            return ShadeOfAkama;
-        else if(identifier  == DATA_SUPREMUS && Supremus)
-            return Supremus;
-        else if(identifier  == DATA_ILLIDANSTORMRAGE && IllidanStormrage)
-            return IllidanStormrage;
-        else if(identifier  == DATA_GATHIOSTHESHATTERER && GathiosTheShatterer)
-            return GathiosTheShatterer;
-        else if(identifier  == DATA_HIGHNETHERMANCERZEREVOR && HighNethermancerZerevor)
-            return HighNethermancerZerevor;
-        else if(identifier  == DATA_LADYMALANDE && LadyMalande)
-            return LadyMalande;
-        else if(identifier  == DATA_VERASDARKSHADOW && VerasDarkshadow)
-            return VerasDarkshadow;
+        switch(identifier)
+        {
+            case DATA_HIGHWARLORDNAJENTUS:
+                return Najentus;
+
+             case DATA_AKAMA:
+                return Akama;
+
+             case DATA_AKAMA_SHADE:
+                return Akama_Shade;
+
+             case DATA_SHADEOFAKAMA:
+                return ShadeOfAkama;
+
+             case DATA_SUPREMUS:
+                return Supremus;
+
+             case DATA_ILLIDANSTORMRAGE:
+                return IllidanStormrage;
+
+             case DATA_GATHIOSTHESHATTERER:
+                return GathiosTheShatterer;
+
+             case DATA_HIGHNETHERMANCERZEREVOR:
+                return HighNethermancerZerevor;
+
+             case DATA_LADYMALANDE:
+                return LadyMalande;
+
+             case DATA_VERASDARKSHADOW:
+                return VerasDarkshadow;
+        }
 
         return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_HIGHWARLORDNAJENTUSEVENT)
-            Encounters[0] = data;
-        else if(type == DATA_SUPREMUSEVENT)
-            Encounters[1] = data;
-        else if(type == DATA_SHADEOFAKAMAEVENT)
-            Encounters[2] = data;
-        else if(type == DATA_TERONGOREFIENDEVENT)
-            Encounters[3] = data;
-        else if(type == DATA_GURTOGGBLOODBOILEVENT)
-            Encounters[4] = data;
-        else if(type == DATA_RELIQUARYOFSOULSEVENT)
-            Encounters[5] = data;
-        else if(type == DATA_MOTHERSHAHRAZEVENT)
-            Encounters[6] = data;
-        else if(type == DATA_ILLIDARICOUNCILEVENT)
-            Encounters[7] = data;
-        else if(type == DATA_ILLIDANSTORMRAGEEVENT)
-            Encounters[8] = data;
+        switch(type)
+        {
+            case DATA_HIGHWARLORDNAJENTUSEVENT:
+                Encounters[0] = data;
+                break;
+
+            case DATA_SUPREMUSEVENT:
+                Encounters[1] = data;
+                break;
+
+            case DATA_SHADEOFAKAMAEVENT:
+                Encounters[2] = data;
+                break;
+
+            case DATA_TERONGOREFIENDEVENT:
+                Encounters[3] = data;
+                break;
+
+            case DATA_GURTOGGBLOODBOILEVENT:
+                Encounters[4] = data;
+                break;
+
+            case DATA_RELIQUARYOFSOULSEVENT:
+                Encounters[5] = data;
+                break;
+
+            case DATA_MOTHERSHAHRAZEVENT:
+                Encounters[6] = data;
+                break;
+
+            case DATA_ILLIDARICOUNCILEVENT:
+                Encounters[7] = data;
+                break;
+
+            case DATA_ILLIDANSTORMRAGEEVENT:
+                Encounters[8] = data;
+                break;
+        }
     }
 
     uint32 GetData(uint32 type)
     {
-        if(type == DATA_HIGHWARLORDNAJENTUSEVENT)
-            return Encounters[0];
-        else if(type == DATA_SUPREMUSEVENT)
-            return Encounters[1];
-        else if(type == DATA_SHADEOFAKAMAEVENT)
-            return Encounters[2];
-        else if(type == DATA_TERONGOREFIENDEVENT)
-            return Encounters[3];
-        else if(type == DATA_GURTOGGBLOODBOILEVENT)
-            return Encounters[4];
-        else if(type == DATA_RELIQUARYOFSOULSEVENT)
-            return Encounters[5];
-        else if(type == DATA_MOTHERSHAHRAZEVENT)
-            return Encounters[6];
-        else if(type == DATA_ILLIDARICOUNCILEVENT)
-            return Encounters[7];
-        else if(type == DATA_ILLIDANSTORMRAGEEVENT)
-            return Encounters[8];
+        switch(type)
+        {
+            case DATA_HIGHWARLORDNAJENTUSEVENT:
+                return Encounters[0];
+
+             case DATA_SUPREMUSEVENT:
+                return Encounters[1];
+
+             case DATA_SHADEOFAKAMAEVENT:
+                return Encounters[2];
+
+             case DATA_TERONGOREFIENDEVENT:
+                return Encounters[3];
+
+             case DATA_GURTOGGBLOODBOILEVENT:
+                return Encounters[4];
+
+             case DATA_RELIQUARYOFSOULSEVENT:
+                return Encounters[5];
+
+             case DATA_MOTHERSHAHRAZEVENT:
+                return Encounters[6];
+
+             case DATA_ILLIDARICOUNCILEVENT:
+                return Encounters[7];
+
+             case DATA_ILLIDANSTORMRAGEEVENT:
+                return Encounters[8];
+        }
 
         return 0;
     }
