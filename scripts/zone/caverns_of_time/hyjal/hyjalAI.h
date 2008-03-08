@@ -18,6 +18,8 @@
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Group.h"
 #include "../../../../../../game/GossipDef.h"
+//#include "../../../../../../game/World.h"
+//#include "../../../../../../game/WorldSession.h"
 
 // Trash Mobs summoned in waves
 #define NECROMANCER         17899
@@ -138,41 +140,45 @@ enum YellId
 
 static Yells JainaQuotes[]=
 {
-    {ATTACKED, "I'm in jeopardy, help me if you can!", 0},
-    {ATTACKED, "They've broken through!", 0},
-    {INCOMING, "Stay alert! Another wave approaches.", 0},
-    {RALLY, "Don't give up! We must prevail!", 0},
-    {RALLY, "We must hold strong!", 0},
-    {FAILED, "We are lost. Fall back!", 0},
-    {SUCCESS, "We have won valuable time. Now we must pull back!", 0},
-    {SUCCESS, "We have played our part and done well. It is up to the others now.", 0},
-    {DEATH, "I did... my best.", 0},
+    {ATTACKED, "I'm in jeopardy, help me if you can!", 11007},
+    {ATTACKED, "They've broken through!", 11049},
+    {INCOMING, "Stay alert! Another wave approaches.", 11008},
+    {RALLY, "Don't give up! We must prevail!", 11006},
+    {RALLY, "Hold them back as long as possible", 11050},
+    {RALLY, "We must hold strong!", 11051},
+    {FAILED, "We are lost. Fall back!", 11009},
+    {SUCCESS, "We have won valuable time. Now we must pull back!", 11011},
+    {DEATH, "I did... my best.", 11010},
 };
 
 static Yells ThrallQuotes[]=
 { 
-    {ATTACKED, "I will lie down for no one!", 0},
-    {ATTACKED, "Bring the fight to me and pay with your lives!", 0},
-    {INCOMING, "Make ready for another wave! Lok-Tar Ogar!", 0},
-    {RALLY, "Hold them back! Do not falter!", 0},
-    {RALLY, "Victory or death!", 0},
-    {RALLY, "Do not give an inch of ground!", 0},
-    {FAILED, "It is over. Withdraw! We have failed.", 0},
+    {ATTACKED, "I will lie down for no one!", 11031},
+    {ATTACKED, "Bring the fight to me and pay with your lives!", 11051},
+    {INCOMING, "Make ready for another wave! LOK-TAR OGAR!", 11032},
+    {RALLY, "Hold them back! Do not falter!", 11030},
+    {RALLY, "Victory or death!", 11059},
+    {RALLY, "Do not give an inch of ground!", 11060},
+    {FAILED, "It is over. Withdraw! We have failed.", 11033},
+    {SUCCESS, "We have played our part and done well. It is up to the others now.", 11035},
+    {DEATH, "Uraaa...", 11034},
 };
 
 struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 {
     hyjalAI(Creature *c);
 
-    void SetVariables();
-
     void Reset();
+
+    void EnterEvadeMode();
 
     void AttackStart(Unit *who);
 
     void MoveInLineOfSight(Unit *who);
 
     void UpdateAI(const uint32 diff);
+
+    void JustDied(Unit* killer);
 
     void SetFaction(uint32 faction);
 
@@ -189,6 +195,8 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     uint32 GetInstanceData(uint32 Event);
 
     void Talk(uint32 id);
+
+    void Debug(char* text, ...);
 public:    
     ScriptedInstance* pInstance;
 
@@ -197,7 +205,8 @@ public:
 
     uint32 NextWaveTimer;
     uint32 WaveCount;
-    uint32 CheckTimer;
+    uint32 CheckRaidTimer;
+    uint32 CheckBossTimer;
     uint32 Faction;
 
     bool EventBegun;

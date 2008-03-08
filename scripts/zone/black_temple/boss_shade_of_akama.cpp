@@ -89,7 +89,10 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
     mob_ashtongue_channelerAI(Creature* c) : ScriptedAI(c)
     {
         Reset();
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
     }
+
+    ScriptedInstance* pInstance;
 
     uint64 ShadeGUID;
 
@@ -117,11 +120,10 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
     {
         if(!InCombat) InCombat = true;
         
-        if(ShadeGUID)
+        if(!ShadeGUID)
         {
-            Unit* Shade = Unit::GetUnit((*m_creature), ShadeGUID);
-            if(Shade)
-                DoCast(Shade, SPELL_BEAM);
+            if(pInstance)
+                ShadeGUID = pInstance->GetData64(DATA_SHADEOFAKAMA);
         }
     }
 
@@ -257,7 +259,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         IsBanished = true;
         InCombat = false;
         HasKilledAkama = false;
-
         
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -295,30 +296,35 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void SummonCreature()
     {
-        uint32 entry = spawnEntries[rand()%4];
-        uint32 random = rand()%2;
-        float X = SpawnLocations[random].x;
-        float Y = SpawnLocations[random].y;
         if((rand()%15 == 0) && DeathCount > 0)
         {
-            Creature* Sorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+            uint32 index;
+            for(uint8 i = 0; i < 6; i++)
+            {
+                if(!ChannelerGUID[i])
+                {
+                    index = i;
+                    break;
+                }
+            }
+            float X = ChannelerLocations[index].x;
+            float Y = ChannelerLocations[index].y;
+            float O = ChannelerLocations[index].o;
+            Creature* Sorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, O, TEMPSUMMON_DEAD_DESPAWN, 0);
             if(Sorcerer)
             {
                 Sorcerer->AddThreat(m_creature, 100000000.0f);
                 Sorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
-                for(uint8 i = 0; i < 6; i++)
-                {
-                    if(!ChannelerGUID[i])
-                    {
-                        ChannelerGUID[i] = Sorcerer->GetGUID();
-                        break;
-                    }
-                }
+                ChannelerGUID[index] = Sorcerer->GetGUID();
                 DeathCount--;
             }
         }
         else
-        {
+        {            
+            uint32 entry = spawnEntries[rand()%4];
+            uint32 random = rand()%2;
+            float X = SpawnLocations[random].x;
+            float Y = SpawnLocations[random].y;
             Creature* Spawn = m_creature->SummonCreature(entry, X, Y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
             if(Spawn)
                 Spawn->AddThreat(SelectUnit(SELECT_TARGET_RANDOM, 0), 1.0f);
@@ -385,6 +391,19 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
             if(SummonTimer < diff)
             {
+                // Nullifies any GUIDs to creatures that have despawned and/or died.
+                for(uint8 i = 0; i < 6; i++)
+                {
+                    if(ChannelerGUID[i])
+                    {
+                        Unit* Channeler = Unit::GetUnit((*m_creature), ChannelerGUID[i]);
+                        if(!Channeler)
+                            ChannelerGUID[i] = 0;
+                        else if(!Channeler->isAlive())
+                            ChannelerGUID[i] = 0;
+                    }
+                }
+
                 SummonCreature();
                 SummonCreature();
                 SummonTimer = Enrage ? 10000 : 15000; // Spawn them faster if enraged

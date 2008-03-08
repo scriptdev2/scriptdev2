@@ -16,6 +16,7 @@
 
 #include "../../sc_defines.h"
 #include "def_black_temple.h"
+#include "../../../../../game/TargetedMovementGenerator.h"
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
@@ -25,15 +26,15 @@ SDCategory: Black Temple
 EndScriptData */
 
 //Spells
-
-#define SPELL_INCINERATE          40239
+#define SPELL_INCINERATE                40239
 #define SPELL_CRUSHING_SHADOWS          40243
-#define SPELL_SHADOWBOLT          40185          
+#define SPELL_SHADOWBOLT                40185          
 #define SPELL_PASSIVE_SHADOWFORM        41913
+#define SPELL_SHADOW_OF_DEATH           40251
 
+#define SPELL_ATROPHY                   40327 // Shadowy Constructs use this when they get within melee range of a player
 
 //Speech'n'sound
-
 #define SAY_INTRO          "I was the first, you know. For me, the wheel of death has spun many times. So much time has passed. I have a lot of catching up to do..." 
 #define SOUND_INTRO         11512
 
@@ -64,15 +65,8 @@ EndScriptData */
 #define SAY_DEATH           "The wheel...spins...again...."
 #define SOUND_DEATH         11521
 
-//Locations
-
-#define Z_SUMMON           193.201141
-
-#define X_SUMMON1          527.814087
-#define Y_SUMMON1          380.843170
-
-#define X_SUMMON2          527.814087
-#define Y_SUMMON2          421.829803
+#define CEATURE_DOOM_BLOSSOM        23123
+#define CREATURE_SHADOWY_CONSTRUCT  23111
 
 struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 {
@@ -118,11 +112,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!InCombat)
-            return;
-
-        if(!m_creature->isInCombat()) m_creature->SetInCombat();
-
         if(CheckTeronTimer < diff)
         {
             if(TeronGUID)
@@ -131,8 +120,16 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
                 if((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
+            else
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+
             CheckTeronTimer = 5000;
         }else CheckTeronTimer -= diff;
+
+        if(!InCombat)
+            return;
+
+        if(!m_creature->isInCombat()) m_creature->SetInCombat();
 
         if(ShadowBoltTimer < diff)
         {
@@ -145,6 +142,117 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
     {
         if(guid)
             TeronGUID = guid;
+    }
+};
+
+//This is used to sort the players by distance for Constructs to see who to cast Atrophy on
+struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
+{
+    const Unit* MainTarget;
+    TargetDistanceOrder(const Unit* Target) : MainTarget(Target) {};
+    // functor for operator "<"
+    bool operator()(const Unit* _Left, const Unit* _Right) const
+   {
+       return (MainTarget->GetDistanceSq(_Left) < MainTarget->GetDistanceSq(_Right));
+    }
+};
+
+struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
+{
+    mob_shadowy_constructAI(Creature* c) : ScriptedAI(c)
+    {
+        Reset();
+    }
+
+    uint64 GhostGUID;
+    uint64 TeronGUID;
+
+    uint32 CheckPlayerTimer;
+    uint32 CheckTeronTimer;
+
+    void Reset()
+    {
+        GhostGUID = 0;
+        TeronGUID = 0;
+
+        CheckPlayerTimer = 2000;
+        CheckTeronTimer = 5000;
+    }
+
+    void AttackStart(Unit* who)
+    {
+        if(!who || (who->GetGUID() == GhostGUID))
+            return;
+
+        if(who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+        }
+    }
+    
+    void MoveInLineOfSight(Unit *who)
+    {
+        if(!who || (!who->isAlive()) || (who->GetGUID() == GhostGUID))
+            return;
+
+        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                
+                m_creature->AddThreat(who, 1.0f);
+            }
+        }
+    }
+
+    void DamageTaken(Unit* done_by, uint32 &damage)
+    {/* COmment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
+        if(done_by->GetGUID() != GhostGUID) 
+            damage = 0; // Only the ghost can deal damage. */
+    }
+
+    void CheckPlayers()
+    {
+        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+        if(m_threatlist.empty())
+            return; // No threat list. Don't continue.
+        std::list<HostilReference*>::iterator itr = m_threatlist.begin();
+        std::list<Unit*> targets;
+        for( ; itr != m_threatlist.end(); ++itr)
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
+            if(pUnit && pUnit->isAlive())
+                targets.push_back(pUnit);
+        }
+        targets.sort(TargetDistanceOrder(m_creature));
+        Unit* target = targets.front();
+        if(target && m_creature->IsWithinDistInMap(target, m_creature->GetAttackDistance(target)))
+        {
+            DoCast(target, SPELL_ATROPHY);
+            m_creature->AI()->AttackStart(target);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(CheckPlayerTimer < diff)
+        {
+            CheckPlayers();
+            CheckPlayerTimer = 3000;
+        }else CheckPlayerTimer -= diff;
+
+        if(CheckTeronTimer < diff)
+        {
+            Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
+            if(!Teron || !Teron->isAlive() || Teron->IsInEvadeMode())
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+
+            CheckTeronTimer = 5000;
+        }else CheckTeronTimer -= diff;
     }
 };
 
@@ -162,10 +270,13 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     uint32 SummonDoomBlossomTimer;
     uint32 EnrageTimer;
     uint32 CrushingShadowsTimer;
+    uint32 ShadowOfDeathTimer;
     uint32 SummonShadowsTimer;
     uint32 RandomYellTimer;
     uint32 AggroTimer;
+
     uint64 AggroTargetGUID;
+    uint64 GhostGUID; // Player that gets killed by Shadow of Death and gets turned into a ghost
 
     bool InCombat;
     bool Intro;
@@ -187,7 +298,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Start off unattackable so that the intro is done properly
     
-        Reset();
         InCombat = false;
         AggroTimer = 20000;
         AggroTargetGUID = 0;
@@ -196,7 +306,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if(!who || Intro)
+        if(!who || !InCombat)
             return;
 
         if(who->isTargetableForAttack() && who!= m_creature)
@@ -207,11 +317,11 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
+        if(!who || (!who->isAlive())) return;
+
         if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
-
-            if(!who || (!who->isAlive())) return;
 
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
@@ -221,7 +331,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 m_creature->AddThreat(who, 1.0f);
             }
             
-            if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f))
+            if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
                 if(pInstance)
                     pInstance->SetData(DATA_TERONGOREFIENDEVENT, 1);
@@ -267,10 +377,10 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         switch(rand()%2)
         {
             case 0:
-                coord += rand()%5;
+                coord += rand()%10;
                 break;
             case 1:
-                coord -= rand()%5;
+                coord -= rand()%10;
                 break;
         }
         return coord;
@@ -293,6 +403,38 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         }
     }
 
+    void MindControlGhost()
+    {
+        /************************************************************************/
+        /** NOTE FOR FUTURE DEVELOPER: PROPERLY IMPLEMENT THE GHOST PORTION *****/
+        /**  ONLY AFTER MaNGOS FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
+        /**   THE CURRENT CODE IN THIS FUNCTION IS ONLY THE BEGINNING       *****/
+        /**   OF WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE  *****/
+        /************************************************************************/
+
+        Unit* Ghost = NULL;
+        if(GhostGUID)
+            Ghost = Unit::GetUnit((*m_creature), GhostGUID);
+        if(Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
+        {
+            Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            for(uint8 i = 0; i < 4; i++)
+            {
+                Creature* Construct = NULL;
+                float X = CalculateRandomLocation(Ghost->GetPositionX());
+                float Y = CalculateRandomLocation(Ghost->GetPositionY());
+                Construct = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, Y, Ghost->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                if(Construct)
+                {
+                    Construct->CastSpell(Construct, SPELL_PASSIVE_SHADOWFORM, true);
+                    SetThreatList(Construct); // Use same function as Doom Blossom to set Threat List.
+                    ((mob_shadowy_constructAI*)Construct->AI())->GhostGUID = GhostGUID;
+                    Construct->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*SelectUnit(SELECT_TARGET_RANDOM, 1)));
+                }
+            }
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
         if(Intro)
@@ -310,7 +452,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 {
                     Unit* pUnit = Unit::GetUnit((*m_creature), AggroTargetGUID);
                     if(pUnit) AttackStart(pUnit);
-                }
+                }else EnterEvadeMode();
+
             }else AggroTimer -= diff;
         }
 
@@ -319,20 +462,16 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
         if(SummonShadowsTimer < diff)
         {
-            Creature* Shadow1 = NULL;
-            Shadow1 = m_creature->SummonCreature(23111, m_creature->GetPositionX()+20, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-            Shadow1->CastSpell(Shadow1, SPELL_PASSIVE_SHADOWFORM, true);
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(target && Shadow1)
-                Shadow1->AddThreat(target, 1.0f);
-
-            Creature* Shadow2 = NULL;
-            Shadow2 = m_creature->SummonCreature(23111, m_creature->GetPositionX()-20,m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-            Shadow2->CastSpell(Shadow2, SPELL_PASSIVE_SHADOWFORM, true);
-            Unit* target2 = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(target2 && Shadow2)
-                Shadow2->AddThreat(target2, 1.0f);
-
+            //MindControlGhost();
+            
+            for(uint8 i = 0; i < 2; i++)
+            {
+                Creature* Shadow = NULL;
+                float X = CalculateRandomLocation(m_creature->GetPositionX());
+                Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                if(Shadow)
+                    Shadow->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
+            }
             SummonShadowsTimer = 60000;
         }else SummonShadowsTimer -= diff;
 
@@ -341,10 +480,10 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
             {
-                float X = CalculateRandomLocation(m_creature->GetPositionX());
-                float Y = CalculateRandomLocation(m_creature->GetPositionY());
+                float X = CalculateRandomLocation(target->GetPositionX());
+                float Y = CalculateRandomLocation(target->GetPositionY());
                 Creature* DoomBlossom = NULL;
-                DoomBlossom = m_creature->SummonCreature(23123, X, Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                DoomBlossom = m_creature->SummonCreature(23123, X, Y, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
                 if(DoomBlossom)
                 {
                     DoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -352,14 +491,14 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     DoomBlossom->AddThreat(target, 1.0f);
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
                     SetThreatList(DoomBlossom);
+                    SummonDoomBlossomTimer = 45000;
                 }
             }
-            SummonDoomBlossomTimer = 45000;
         }else SummonDoomBlossomTimer -= diff;
 
         if(IncinerateTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if(target)
             {
                 switch(rand()%2)
@@ -385,6 +524,19 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 DoCast(target, SPELL_CRUSHING_SHADOWS);
             CrushingShadowsTimer = 10000 + rand()%16 * 1000;
         }else CrushingShadowsTimer -= diff;
+
+        /*** NOTE FOR FUTURE DEV: UNCOMMENT BELOW ONLY IF MIND CONTROL IS FULLY IMPLEMENTED **/
+        /*if(ShadowOfDeathTimer < diff)
+        {
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            {
+                DoCast(target, SPELL_SHADOW_OF_DEATH);
+                GhostGUID = target->GetGUID();
+                ShadowOfDeathTimer = 30000;
+                SummonShadowsTimer = 53000; // Make it VERY close but slightly less so that we can check if the aura is still on the player
+            }
+        }else ShadowOfDeathTimer -= diff;*/
 
         if(RandomYellTimer < diff)
         {
@@ -421,6 +573,11 @@ CreatureAI* GetAI_mob_doom_blossom(Creature *_Creature)
     return new mob_doom_blossomAI(_Creature);
 }
 
+CreatureAI* GetAI_mob_shadowy_construct(Creature *_Creature)
+{
+    return new mob_shadowy_constructAI(_Creature);
+}
+
 CreatureAI* GetAI_boss_teron_gorefiend(Creature *_Creature)
 {
     return new boss_teron_gorefiendAI (_Creature);
@@ -432,6 +589,11 @@ void AddSC_boss_teron_gorefiend()
     newscript = new Script;
     newscript->Name = "mob_doom_blossom";
     newscript->GetAI = GetAI_mob_doom_blossom;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "mob_shadowy_construct";
+    newscript->GetAI = GetAI_mob_shadowy_construct;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

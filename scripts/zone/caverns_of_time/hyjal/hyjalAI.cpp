@@ -21,23 +21,39 @@ hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
     pInstance = ((ScriptedInstance*)c->GetInstanceData());
     Reset();
 }
+
 void hyjalAI::Reset()
 {
+    /** GUIDs **/
     PlayerGUID = 0;
     BossGUID[0] = 0;
     BossGUID[1] = 0;
 
+    /** Timers **/
     NextWaveTimer = 10000;
+    CheckRaidTimer = 0;
+    CheckBossTimer = 0;
+
+    /** Misc **/
     WaveCount = 0;
-    CheckTimer = 0;
     Faction = 0;
 
+    /** Bools **/
     EventBegun = false;
     InCombat = false;
     FirstBossDead = false;
     SecondBossDead = false;
 
+    /** Flags **/
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+}
+
+void hyjalAI::EnterEvadeMode()
+{
+    m_creature->RemoveAllAuras();
+    m_creature->DeleteThreatList();
+    m_creature->CombatStop();
+    DoGoHome();
 }
 
 void hyjalAI::AttackStart(Unit *who)
@@ -51,10 +67,10 @@ void hyjalAI::AttackStart(Unit *who)
 
         if(!InCombat)
         {
+            Talk(ATTACKED);
             InCombat = true;
         }
     }
-
 }
 
 void hyjalAI::MoveInLineOfSight(Unit *who)
@@ -76,6 +92,15 @@ void hyjalAI::MoveInLineOfSight(Unit *who)
             }
         }
     }
+}
+
+void hyjalAI::JustDied(Unit* killer)
+{
+    EventBegun = false;
+    InCombat = false;
+    WaveCount = 0;
+    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+    Talk(DEATH);
 }
 
 void hyjalAI::SetFaction(uint32 faction)
@@ -102,14 +127,17 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
         Z = HordeBase[random].z;
     }
 
-    Creature* pCreature = m_creature->SummonCreature(entry, X, Y, Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+    Creature* pCreature = m_creature->SummonCreature(entry, X, Y, Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 45000);
     if(pCreature)
     {
         if(PlayerGUID)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID);
             if(pUnit)
+            {
                 pCreature->AddThreat(pUnit, 10.0f);
+                pCreature->AI()->AttackStart(pUnit);
+            }
         }
 
         pCreature->AddThreat(m_creature, 1.0f);
@@ -118,13 +146,16 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
             if(!FirstBossDead)
                 BossGUID[0] = pCreature->GetGUID();
             else BossGUID[1] = pCreature->GetGUID();
+            CheckBossTimer = 5000;
         }
     }
 }
 
-
 void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
 {
+    if(rand()%6 == 0) // 1 in 6 chance we give a rally yell. Not sure if the chance is Blizzlike.
+        Talk(RALLY);
+
     if(wave[Count].IsBoss)
         SummonCreature(wave[Count].Mob1, true);
 
@@ -167,7 +198,11 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
 
      if(!wave[Count].IsBoss)
          NextWaveTimer = wave[Count].WaveTimer;
-     else NextWaveTimer = 0;
+     else 
+     {
+         NextWaveTimer = 0;
+         CheckBossTimer = 1000;
+     }
 }
 
 void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
@@ -229,6 +264,51 @@ uint32 hyjalAI::GetInstanceData(uint32 Event)
 
     return 0;
 }
+void hyjalAI::Talk(uint32 id)
+{
+    std::list<uint8> index;
+    for(uint8 i = 0; i < 9; i++)
+    {
+        if(Faction == 0) // Alliance
+        {
+            if(JainaQuotes[i].id == id)
+                index.push_back(i);
+        }
+        else if(Faction == 1) // Horde
+        {
+            if(ThrallQuotes[i].id == id)
+                index.push_back(i);
+        }
+    }
+
+    if(index.empty())
+        return; // No quotes found, no use to continue
+
+    uint8 ind = *(index.begin()) + rand()%index.size();
+
+    char* Yell = NULL;
+    uint32 Sound = 0;
+    if(Faction == 0) // Alliance
+    {
+        Yell = JainaQuotes[ind].text;
+        Sound = JainaQuotes[ind].sound;
+    }
+    else if(Faction == 1) // Horde
+    {
+        Yell = ThrallQuotes[ind].text;
+        Sound = ThrallQuotes[ind].sound;
+    }
+    if(Yell)
+        DoYell(Yell, LANG_UNIVERSAL, NULL);
+    if(Sound)
+        DoPlaySoundToSet(m_creature, Sound);
+}
+
+void hyjalAI::Debug(char* text, ...)
+{
+    if(text)
+        outstring_log(text);
+}
 
 void hyjalAI::UpdateAI(const uint32 diff)
 {
@@ -246,16 +326,8 @@ void hyjalAI::UpdateAI(const uint32 diff)
         }else NextWaveTimer -= diff;
     }
 
-    if(CheckTimer < diff)
+    if(CheckRaidTimer < diff)
     {
-        if(NextWaveTimer)
-        {
-            if(Faction == 0)
-                SummonNextWave(AllianceWaves, WaveCount, 1);
-            else if(Faction == 1)
-                SummonNextWave(HordeWaves, WaveCount, 1);
-            WaveCount++;
-        }
         if(PlayerGUID)
         {
             Player* target = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
@@ -274,7 +346,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
                         {
                             Player* member = ((Player*)Unit::GetUnit((*m_creature), itr->guid));
 
-                            if(member->GetMapId() != m_creature->GetMapId()) // Make sure they are in the same map.
+                            if(member && (member->GetMapId() != m_creature->GetMapId())) // Make sure they are in the same map.
                                 break;
 
                             if(member && member->isAlive())
@@ -286,36 +358,53 @@ void hyjalAI::UpdateAI(const uint32 diff)
                         }
                         if(DeathCount == RaidCount)
                         {
+                            Talk(FAILED);
                             EventBegun = false;
                             EnterEvadeMode();
+                            Reset();
                         }
                     }else
                     {
                         EventBegun = false;
                         EnterEvadeMode();
+                        Reset();
                     }
                 }
             }
         }
+        CheckRaidTimer = 25000;
+    }else CheckRaidTimer -= diff;
 
-        for(uint8 i = 0; i < 2; i++)
+    if(CheckBossTimer)
+    {
+        if(CheckBossTimer < diff)
         {
-            if(BossGUID[i])
+            for(uint8 i = 0; i < 2; i++)
             {
-                Unit* pUnit = Unit::GetUnit((*m_creature), BossGUID[i]);
-                if(pUnit && (!pUnit->isAlive()))
+                if(BossGUID[i])
                 {
-                    if(BossGUID[i] == BossGUID[0])
-                        FirstBossDead = true;
-                    else if(BossGUID[i] == BossGUID[1])
-                        SecondBossDead = true;
-                    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
-                    BossGUID[i] = 0;
+                    Unit* pUnit = Unit::GetUnit((*m_creature), BossGUID[i]);
+                    if(pUnit && (!pUnit->isAlive()))
+                    {
+                        if(BossGUID[i] == BossGUID[0])
+                        {
+                            Talk(INCOMING);
+                            FirstBossDead = true;
+                        }
+                        else if(BossGUID[i] == BossGUID[1])
+                        {
+                            Talk(SUCCESS);
+                            SecondBossDead = true;
+                        }
+                        CheckBossTimer = 0;
+                        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+                        BossGUID[i] = 0;
+                    }
                 }
             }
-        }
-        CheckTimer = 25000;
-    }else CheckTimer -= diff;
+            CheckBossTimer = 5000;
+        }else CheckBossTimer -= diff;
+    }
 
     if(!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
 

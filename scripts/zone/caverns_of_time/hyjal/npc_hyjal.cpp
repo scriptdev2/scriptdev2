@@ -99,6 +99,7 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
 {
     uint32 AnetheronEvent = 0;
     AnetheronEvent = ((hyjalAI*)_Creature->AI())->GetInstanceData(DATA_ANETHERONEVENT);
+    outstring_log("Anetheron Event is %u", AnetheronEvent);
     if(AnetheronEvent == 3) // Only let them start the Horde phase if Anetheron is dead.
     {
         if((((hyjalAI*)_Creature->AI())->EventBegun) && (!((hyjalAI*)_Creature->AI())->FirstBossDead))
@@ -147,6 +148,14 @@ bool GossipHello_npc_tyrande_whisperwind(Player* player, Creature* _Creature)
     return true;
 }
 
+bool GossipSelect_npc_tyrande_whisperwind(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if(action == GOSSIP_ACTION_TRADE)
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+
+    return true;
+}
+
 void AddSC_hyjal()
 {
     Script *newscript;
@@ -168,5 +177,6 @@ void AddSC_hyjal()
     newscript = new Script;
     newscript->Name = "npc_tyrande_whisperwind";
     newscript->pGossipHello = &GossipHello_npc_tyrande_whisperwind;
+    newscript->pGossipSelect = &GossipSelect_npc_tyrande_whisperwind;
     m_scripts[nrscripts++] = newscript;
 }

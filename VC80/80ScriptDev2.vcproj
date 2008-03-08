@@ -604,6 +604,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\gruuls_lair\def_gruuls_lair.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
 						>
 					</File>
@@ -792,6 +796,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\scholomance\def_scholomance.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\scholomance\instance_scholomance.cpp"
 						>
 					</File>
@@ -925,6 +933,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\molten_core\boss_sulfuron_harbinger.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\molten_core\def_molten_core.h"
 						>
 					</File>
 					<File
@@ -1348,6 +1360,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\zulgurub\def_zulgurub.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
@@ -1439,6 +1455,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\def_shadow_labyrinth.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\instance_shadow_labyrinth.cpp"
 							>
 						</File>
@@ -1489,6 +1509,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\black_temple\boss_warlord_najentus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\black_temple\def_black_temple.h"
 						>
 					</File>
 					<File
@@ -1568,6 +1592,10 @@
 						>
 						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\boss_magtheridon.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\def_magtheridons_lair.h"
 							>
 						</File>
 						<File
@@ -1719,6 +1747,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\def_arcatraz.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
 							>
 						</File>
@@ -1740,6 +1772,10 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\boss_void_reaver.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\def_the_eye.h"
 							>
 						</File>
 						<File
@@ -1883,6 +1919,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\def_serpent_shrine.h"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
@@ -1908,6 +1948,10 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\def_steam_vault.h"
 							>
 						</File>
 						<File
@@ -1952,6 +1996,10 @@
 						>
 						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_archimonde.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\def_hyjal.h"
 							>
 						</File>
 						<File
@@ -2049,6 +2097,10 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\zulaman\boss_nalorakk.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\zulaman\def_zulaman.h"
 						>
 					</File>
 					<File

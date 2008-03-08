@@ -25,20 +25,21 @@ EndScriptData */
 #include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
 
-//Spells
-
+// High Nethermancer Zerevor's spells
 #define SPELL_FLAMESTRIKE          41481
 #define SPELL_BLIZZARD             41482
 #define SPELL_ARCANE_BOLT          41483
 #define SPELL_ARCANE_EXPLOSION     41524
 #define SPELL_DAMPEN_MAGIC         41478
 
+// Lady Malande's spells
 #define SPELL_EMPOWERED_SMITE      41471
 #define SPELL_CIRCLE_OF_HEALING    41455
 #define SPELL_REFLECTIVE_SHIELD    41475
 #define SPELL_DIVINE_WRATH         41472
 #define SPELL_HEAL_VISUAL          24171
 
+// Gathios the Shatterer's spells
 #define SPELL_BLESS_PROTECTION     41450
 #define SPELL_BLESS_SPELLWARD      41451
 #define SPELL_CONSECRATION         41541
@@ -48,101 +49,72 @@ EndScriptData */
 #define SPELL_CHROMATIC_AURA       41453
 #define SPELL_DEVOTION_AURA        41452
 
+// Veras Darkshadow's spells
 #define SPELL_DEADLY_POISON        41485
 #define SPELL_ENVENOM              41487
 #define SPELL_VANISH               41479
 
 
 //Speech'n'Sounds
-
 #define SAY_GATH_AGGRO            "I have better things to do!"
 #define SOUND_GATH_AGGRO          11422
-
 #define SAY_GATH_SLAY             "Selama am'oronor!"
 #define SOUND_GATH_SLAY           11423
-
 #define SAY_GATH_COMNT            "Well done!"
 #define SOUND_GATH_COMNT          11424
-
 #define SAY_GATH_DEATH            "Lord Illidan... I..."
 #define SOUND_GATH_DEATH          11425
-
 #define SAY_GATH_SPECIAL1         "Enjoy your final moments!"
 #define SOUND_GATH_SPECIAL1       11426
-
 #define SAY_GATH_SPECIAL2         "You are mine!"
 #define SOUND_GATH_SPECIAL2       11427
-
 #define SAY_GATH_ENRAGE           "Enough games!"
 #define SOUND_GATH_ENRAGE         11428
 
 #define SAY_MALA_AGGRO            "Flee, or die!"
 #define SOUND_MALA_AGGRO          11482
-
 #define SAY_MALA_SLAY             "My work is done."
 #define SOUND_MALA_SLAY           11483
-
 #define SAY_MALA_COMNT            "As it should be!"
 #define SOUND_MALA_COMNT          11484
-
 #define SAY_MALA_DEATH            "Destiny... awaits."
 #define SOUND_MALA_DEATH          11485
-
 #define SAY_MALA_SPECIAL1         "No second chances!"
 #define SOUND_MALA_SPECIAL1       11486
-
 #define SAY_MALA_SPECIAL2         "I'm full of surprises!"
 #define SOUND_MALA_SPECIAL2       11487
-
 #define SAY_MALA_ENRAGE           "For Quel'Thalas! For the Sunwell!"
 #define SOUND_MALA_ENRAGE         11488
 
 #define SAY_ZERE_AGGRO            "Common... such a crude language. Bandal!"
 #define SOUND_ZERE_AGGRO          11440
-
 #define SAY_ZERE_SLAY             "Shorel'aran."
 #define SOUND_ZERE_SLAY           11441
-
 #define SAY_ZERE_COMNT            "Belesa menoor!"
 #define SOUND_ZERE_COMNT          11442
-
 #define SAY_ZERE_DEATH            "Diel ma'ahn... oreindel'o"
 #define SOUND_ZERE_DEATH          11443
-
 #define SAY_ZERE_SPECIAL1         "Diel fin'al"
 #define SOUND_ZERE_SPECIAL1       11444
-
 #define SAY_ZERE_SPECIAL2         "Sha'amoor ara mashal?"
 #define SOUND_ZERE_SPECIAL2       11445
-
 #define SAY_ZERE_ENRAGE           "Sha'amoor sine menoor!"
 #define SOUND_ZERE_ENRAGE         11446
 
 #define SAY_VERA_AGGRO            "You wish to test me?"
 #define SOUND_VERA_AGGRO          11524
-
 #define SAY_VERA_SLAY             "Valiant effort!"
 #define SOUND_VERA_SLAY           11525
-
 #define SAY_VERA_COMNT            "A glorious kill!"
 #define SOUND_VERA_COMNT          11526
-
 #define SAY_VERA_DEATH            "You got lucky!"
 #define SOUND_VERA_DEATH          11527
-
 #define SAY_VERA_SPECIAL1         "You're not caught up for this!"
 #define SOUND_VERA_SPECIAL1       11528
-
 #define SAY_VERA_SPECIAL2         "Anar'alah belore!"
 #define SOUND_VERA_SPECIAL2       11529
-
 #define SAY_VERA_ENRAGE           "You wish to kill me? Hahaha, you first!"
 #define SOUND_VERA_ENRAGE         11530
-
-//Locations
-#define X_VANISH               111.643913
-#define Y_VANISH               561.843872
-#define Z_VANISH               98.430679
 
 struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 {
@@ -245,19 +217,22 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             Zerevor = ((Creature*)Unit::GetUnit((*m_creature), Council[1]));
             Malande = ((Creature*)Unit::GetUnit((*m_creature), Council[2]));
             Veras = ((Creature*)Unit::GetUnit((*m_creature), Council[3]));
+
             if(Gathios)
                 Gathios->AddThreat(target, 1.0f);
+
             if(Zerevor)
                 Zerevor->AddThreat(target, 1.0f);
+
             if(Malande)
                 Malande->AddThreat(target, 1.0f);
+
             if(Veras)
                 Veras->AddThreat(target, 1.0f);
 
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 1);
         }
     }
-
     void UpdateAI(const uint32 diff)
     {
         if(!InCombat) return;
@@ -708,8 +683,8 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         {
             CastDampenMagicWorkaround();
             Cooldown = 1000;
-            DampenMagicTimer = 2000; // Should be ~2 minutes.
-            ArcaneBoltTimer += 2000;
+            DampenMagicTimer = 5000; // Should be ~2 minutes.
+            ArcaneBoltTimer += 1000;
         }else DampenMagicTimer -= diff;
         
         if(ArcaneExplosionTimer < diff)
@@ -984,7 +959,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         AggroYellTimer = 0;
 
         HasVanished = false;
-        (*m_creature).GetMotionMaster()->Clear(false);
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 

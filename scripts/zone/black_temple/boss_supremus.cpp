@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Supremus
-SD%Complete: 90
-SDComment: Using incorrect summon ids that are not official creature ids
+SD%Complete: 98
+SDComment: Missing Enrage
 SDCategory: Black Temple
 EndScriptData */
 
@@ -174,11 +174,11 @@ float npc_volcanoAI::CalculateRandomCoord()
 void npc_volcanoAI::UpdateAI(const uint32 diff)
 {
     // Workaround for the visual of the fireball that is spammed around the volcano. This seems to cause lots of lag and maybe client freezes?
-   /* if(FireballTimer < diff)
+    if(FireballTimer < diff)
     {
         float X = CalculateRandomCoord();
         float Y = CalculateRandomCoord();
-        Creature* Target = DoSpawnCreature(24550, X, Y, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 1000);
+        Creature* Target = DoSpawnCreature(24550, X, Y, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 600);
         if(Target)
         {
             Target->SetVisibility(VISIBILITY_OFF);
@@ -186,7 +186,7 @@ void npc_volcanoAI::UpdateAI(const uint32 diff)
             DoCast(Target, SPELL_VOLCANIC_FIREBALL);
         }
         FireballTimer = 500;
-    }else FireballTimer -= diff;*/
+    }else FireballTimer -= diff;
 
     if(CheckTimer < diff)
     {

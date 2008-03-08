@@ -17,14 +17,13 @@
 /* ScriptData
 SDName: Boss_Bloodboil
 SD%Complete: 80
-SDComment: Bloodboil not working correctly
+SDComment: Bloodboil not working correctly, missing enrage
 SDCategory: Black Temple
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "def_black_temple.h"
 #include "../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../game/SpellAuras.h"
 
 //Spells
 #define SPELL_ACID_GEYSER        40630
@@ -76,19 +75,19 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c) 
-     {
-         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-         Reset();
-     }
+    {
+     pInstance = ((ScriptedInstance*)c->GetInstanceData());
+     Reset();
+    }
 
-     ScriptedInstance* pInstance;
-     
-     uint64 TargetGUID;
+    ScriptedInstance* pInstance;
 
-     float TargetThreat;
+    uint64 TargetGUID;
 
-     uint32 BloodboilTimer;
-     uint32 BloodboilCount;
+    float TargetThreat;
+
+    uint32 BloodboilTimer;
+    uint32 BloodboilCount;
     uint32 AcidGeyserTimer;
     uint32 AcidicWoundTimer;
     uint32 ArcingSmashTimer;
@@ -102,28 +101,26 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Reset()
     {
-          if(pInstance)
-               pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 0);
+        if(pInstance)
+           pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 0);
 
-          TargetGUID = 0;
+        TargetGUID = 0;
 
-          TargetThreat = 0;
+        TargetThreat = 0;
 
-          BloodboilTimer = 10000;
-          BloodboilCount = 0;
-          AcidGeyserTimer = 1000;
-          AcidicWoundTimer = 6000;
-          ArcingSmashTimer = 19000;
-          EnrageTimer = 600000;
-          FelAcidTimer = 25000;
-          KnockbackTimer = 10000;
-          PhaseChangeTimer = 60000;
+        BloodboilTimer = 10000;
+        BloodboilCount = 0;
+        AcidGeyserTimer = 1000;
+        AcidicWoundTimer = 6000;
+        ArcingSmashTimer = 19000;
+        EnrageTimer = 600000;
+        FelAcidTimer = 25000;
+        KnockbackTimer = 10000;
+        PhaseChangeTimer = 60000;
 
-          Phase1 = true;
+        Phase1 = true;
 
-          InCombat = false;
-
-         (*m_creature).GetMotionMaster()->Clear(false);
+        InCombat = false;
      }
 
     void AttackStart(Unit *who)
@@ -148,6 +145,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
+        if(!who || !who->isAlive())
+            return;
 
         if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -165,7 +164,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;
-                         if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
+                    if(pInstance)
+                        pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
                 }
             }
         }
@@ -195,7 +195,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
-    // Note: This seems like a very complicated fix.
+    // Note: This seems like a very complicated fix. The fix needs to be handled by the core, as implementation of limited-target AoE spells are still not limited.
     void CastBloodboil()
     {
         // Get the Threat List
@@ -305,7 +305,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
             
             if(BloodboilTimer < diff)
             {
-                CastBloodboil();
+                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 1), SPELL_BLOODBOIL);
                 BloodboilCount++;
                 if(BloodboilCount < 5)
                     BloodboilTimer = 10000*BloodboilCount;

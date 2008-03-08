@@ -24,7 +24,7 @@ EndScriptData */
 #include "../../sc_defines.h"
 #include "def_black_temple.h"
 #include "../../../../../game/Player.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "../../../../../shared/WorldPacket.h"
 
 //Spells
 #define SPELL_BEAM_SINISTER     40859
@@ -211,6 +211,29 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
+    void TeleportPlayers()
+    {
+        uint32 random = rand()%7;
+        float X = TeleportPoint[random].x;
+        float Y = TeleportPoint[random].y;
+        float Z = TeleportPoint[random].z;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            {
+                TargetGUID[i] = pUnit->GetGUID();
+                pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
+                //Use work around packet to prevent player from being dropped from combat
+                WorldPacket data;
+                ((Player*)pUnit)->BuildTeleportAckMsg(&data, X, Y, Z, pUnit->GetOrientation());
+                ((Player*)pUnit)->GetSession()->SendPacket(&data);
+                ((Player*)pUnit)->SetPosition( X, Y, Z, pUnit->GetOrientation(), true);
+                //((Player*)pUnit)->TeleportTo(m_creature->GetMapId(), X, Y, Z, pUnit->GetOrientation());
+            }
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -293,22 +316,9 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         // Select 3 random targets (can select same target more than once), teleport to a random location then make them cast explosions until they get away from each other.
         if(FatalAttractionTimer < diff)
         {
-            uint32 random = rand()%7;
-            float X = TeleportPoint[random].x;
-            float Y = TeleportPoint[random].y;
-            float Z = TeleportPoint[random].z;
             ExplosionCount = 0;
 
-            for(uint32 i = 0; i<4; i++)
-            {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                if (target && target->GetTypeId() == TYPEID_PLAYER)
-                {
-                    ((Player*)target)->TeleportTo(m_creature->GetMapId(), X, Y, Z, target->GetOrientation());
-                    TargetGUID[i] = target->GetGUID();
-                    target->CastSpell(target, SPELL_TELEPORT_VISUAL, true);
-                }
-            }
+            TeleportPlayers();
 
             switch(rand()%2)
             {
