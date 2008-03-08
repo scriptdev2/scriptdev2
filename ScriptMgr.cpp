@@ -1694,7 +1694,7 @@ void ScriptedAI::EnterEvadeMode()
     Reset();
 }
 
-void ScriptedAI::JustDied(Unit* pKiller)
+void ScriptedAI::JustRespawned()
 {
     Reset();
 }

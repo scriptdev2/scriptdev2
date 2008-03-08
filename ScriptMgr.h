@@ -144,10 +144,13 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void UpdateAI(const uint32);
 
     //Called at creature death
-    void JustDied(Unit*);
+    void JustDied(Unit*){}
 
     //Called at creature killing another unit
     void KilledUnit(Unit*){}
+
+    //Called at creature respawn
+    void JustRespawned();
 
     //Pointer to creature we are manipulating
     Creature* m_creature;
