@@ -139,6 +139,7 @@ UPDATE creature_template SET ScriptName = 'boss_gathios_the_shatterer' WHERE ent
 UPDATE creature_template SET ScriptName = 'boss_maiev_shadowsong' WHERE entry = 23197; -- Maiev Shadowsong
 UPDATE creature_template SET ScriptName = 'mob_blaze' WHERE entry = 23259; -- Blaze mob in Illidan Phase 2
 UPDATE creature_template SET ScriptName = 'mob_flame_of_azzinoth' WHERE entry = 22997; -- Flame of Azzinoth (Illidan Phase 2)
+UPDATE creature_template SET ScriptName = 'mob_blade_of_azzinoth' WHERE entry = 22996; -- Blade of Azzinoth (Illidan Phase 2)
 UPDATE creature_template SET ScriptName = 'mob_demon_fire' WHERE entry = 23069; -- Demon Fire in Illidan Phase 2
 UPDATE creature_template SET ScriptName = 'mob_flame_crash' WHERE entry = 23336; -- Flame Crash in Illidan Normal Form
 UPDATE creature_template SET ScriptName = 'mob_cage_trap_trigger' WHERE entry = 23304; -- Cage Trap mob in Illidan Phase 3/4 Normal
@@ -148,6 +149,8 @@ UPDATE creature_template SET ScriptName = 'molten_flame' WHERE entry = 23095; --
 UPDATE creature_template SET ScriptName = 'mob_ashtongue_channeler' WHERE entry = 23421; -- Ashtongue CHanneler in Shade of AKama
 UPDATE creature_template SET ScriptName = 'mob_ashtongue_sorcerer' WHERE entry = 23215; -- Ashtongue Sorcerer in Shade of Akama
 UPDATE creature_template SET ScriptName = 'npc_enslaved_soul' WHERE entry = 23469; -- Enslaved Soul in Reliquary Event
+UPDATE creature_template SET ScriptName = 'mob_doom_blossom' WHERE entry = 23123; -- Doom Blossoms in Teron Gorefiend's encounter
+-- UPDATE creature_template sET ScriptName = 'mob_shadowy_construct' WHERE entry = 23111; -- Shadowy Construct in Teron Gorefiend's encounter. Commented until Mind Control is implemented.
 -- UPDATE creature_template SET ScriptName = 'mob_najentus_spine' WHERE entry = 500000; -- Workaround creature for spine in Najentus event
 
 /* BT Trash Mobs */
