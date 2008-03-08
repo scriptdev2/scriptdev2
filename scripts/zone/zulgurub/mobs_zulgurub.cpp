@@ -33,15 +33,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
     {
         //Gurubashi Axe Thrower
     case 11350:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
         ai->Spell[0].Enabled = true;               
         ai->Spell[0].Spell_Id = 24018;      //24020,24071; 24018 should be a mixture out of the others       
         ai->Spell[0].Cooldown = 15000;                 
@@ -51,17 +42,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Hakkari Priest
     case 11830:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-
         ai->Spell[0].Enabled = true;     
         ai->Spell[0].Spell_Id = 25820;      //AOE Fear, spell should be right one
         ai->Spell[0].Cooldown = 20000;
@@ -83,16 +63,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Razzashi Adder
     case 11372:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
 
         ai->Spell[0].Enabled = true;               
         ai->Spell[0].Spell_Id = 24840;      //AOE Poison       
@@ -103,17 +73,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Gurubashi Headhunter
     case 11351:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-
         ai->Spell[0].Enabled = true;     
         ai->Spell[0].Spell_Id = 24053;      //Sheep, hope right
         ai->Spell[0].Cooldown = 20000;
@@ -129,18 +88,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Gurubashi Berserker
     case 11352:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-
         ai->Spell[0].Enabled = true;     
         ai->Spell[0].Spell_Id = 23931;      // Thunderclap
         ai->Spell[0].Cooldown = 13000;
@@ -156,16 +103,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Hakkari Blood Priest
     case 11340:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-
         ai->Spell[0].Enabled = true;               
         ai->Spell[0].Spell_Id = 24617;      //Blood Funnel, not working :/       
         ai->Spell[0].Cooldown = 15000;                 
@@ -175,18 +112,6 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         break;
         //Gurubashi Bat Rider
     case 14750:
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DISARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_STUN, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FREEZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_POLYMORPH, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_INTERRUPT, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_FEAR, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SILENCE, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
-        _Creature->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_ROOT, true);
-
         ai->Spell[0].Enabled = true;               
         ai->Spell[0].Spell_Id = 25699;      //Explosion       
         ai->Spell[0].Cooldown = 15000;                 
