@@ -29,24 +29,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {
-    boss_ebonrocAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ebonrocAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 ShadowOfEbonroc_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowFlame_Timer = 15000;      //These times are probably wrong
         WingBuffet_Timer = 30000;
         ShadowOfEbonroc_Timer = 45000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

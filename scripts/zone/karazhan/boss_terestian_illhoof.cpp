@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
 {
-    boss_terestian_illhoofAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_terestian_illhoofAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SummonChains_Timer;
     uint32 Enrage_Timer;
@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
 
     bool InCombat, KilrekAlive, FirstSpawn;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SummonChains_Timer      = 45000;      
         Enrage_Timer            = 600000;
@@ -71,11 +71,11 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
         InCombat = false;
         FirstSpawn = true;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

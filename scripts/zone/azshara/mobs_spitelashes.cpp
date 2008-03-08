@@ -28,13 +28,13 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {
     uint32 morphtimer;
     bool spellhit;
-    mobs_spitelashesAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_spitelashesAI(Creature *c) : ScriptedAI(c) {Reset();}
  
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //DoGoHome();
         morphtimer=0;
         spellhit=false;
     }

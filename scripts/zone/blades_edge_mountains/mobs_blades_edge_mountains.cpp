@@ -31,7 +31,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
 {
-    mobs_bladespire_ogreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_bladespire_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -69,7 +73,11 @@ CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_bloodmaul_ogreAI : public ScriptedAI
 {
-    mobs_bloodmaul_ogreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_bloodmaul_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {

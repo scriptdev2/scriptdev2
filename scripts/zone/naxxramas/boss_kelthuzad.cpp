@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     bool Phase3;
     bool InCombat;
     
-    void EnterEvadeMode()
+    void Reset()
     {
         FrostBolt_Timer = (rand()%60)*1000;             //It won't be more than a minute without cast it
         FrostBoltNova_Timer = 15000;                    //Cast every 15 seconds
@@ -209,10 +209,10 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         Phase3 = false;
         InCombat = false;        
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit()

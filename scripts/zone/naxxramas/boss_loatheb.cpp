@@ -66,7 +66,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
 {
-    boss_loathebAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_loathebAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CorruptedMind_Timer;
     uint32 PoisonAura_Timer;
@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         CorruptedMind_Timer = 4000;
         PoisonAura_Timer = 2500;
@@ -87,10 +87,10 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         Summon_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

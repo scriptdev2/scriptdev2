@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
 {
-    boss_magistrate_barthilasAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_magistrate_barthilasAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 DrainingBlow_Timer;
     uint32 CrowdPummel_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
     uint32 Dazed_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         DrainingBlow_Timer = 4000;
         CrowdPummel_Timer = 13000;
@@ -49,10 +49,10 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
         Dazed_Timer = 7000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

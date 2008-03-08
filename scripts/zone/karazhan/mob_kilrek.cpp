@@ -28,24 +28,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 {
-    mob_kilrekAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_kilrekAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Amplify_Timer;
 
     bool InCombat, Broken;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Amplify_Timer = 0;      
 
         InCombat = false;
         Broken = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

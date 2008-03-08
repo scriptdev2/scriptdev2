@@ -31,7 +31,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_direhorn_grimtotemAI : public ScriptedAI
 {
-    mobs_direhorn_grimtotemAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_direhorn_grimtotemAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -71,7 +75,11 @@ CreatureAI* GetAI_mobs_direhorn_grimtotem(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
 {
-    mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {

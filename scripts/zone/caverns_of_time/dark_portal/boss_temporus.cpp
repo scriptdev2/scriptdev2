@@ -43,14 +43,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 {
-    boss_temporusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_temporusAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     { 
         Haste_Timer = 20000;
         SpellReflection_Timer = 40000;
@@ -60,10 +60,10 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Immune to taunt
         //
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();        
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();        
     }
 
     void AttackStart(Unit *who)

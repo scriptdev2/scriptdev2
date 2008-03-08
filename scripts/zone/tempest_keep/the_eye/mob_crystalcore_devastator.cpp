@@ -27,23 +27,23 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 {
-    mob_crystalcore_devastatorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_crystalcore_devastatorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Knockaway_Timer;
     uint32 Countercharge_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Countercharge_Timer = 9000;
         Knockaway_Timer = 25000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

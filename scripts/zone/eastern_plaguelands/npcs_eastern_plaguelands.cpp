@@ -33,14 +33,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
 {
-    npc_darrowshire_spiritAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_darrowshire_spiritAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
     
     void AttackStart(Unit *who)

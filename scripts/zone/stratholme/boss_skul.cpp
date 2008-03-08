@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
 {
-    boss_skulAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_skulAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Frostbolt_Timer;
     uint32 Chilled_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
     uint32 ArcaneBolt_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Frostbolt_Timer = 1000;
         Chilled_Timer = 23000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
         ArcaneBolt_Timer = 11000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

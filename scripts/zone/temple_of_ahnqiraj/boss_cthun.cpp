@@ -79,7 +79,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 {
-    eye_of_cthunAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    eye_of_cthunAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WisperTimer; 
 
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     uint32 i;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {
         //One random wisper every 90 - 300 seconds
         WisperTimer = 90000;
@@ -120,10 +120,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         i = 0;
 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -343,19 +343,19 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
 {
-    eye_tentacleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    eye_tentacleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MindflayTimer; 
 
-    void EnterEvadeMode()
+    void Reset()
     {
         //Mind flay half a second after we spawn
         MindflayTimer = 500;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -400,23 +400,23 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
 {
-    claw_tentacleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    claw_tentacleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 GroundRuptureTimer; 
     uint32 HamstringTimer;
     uint32 EvadeTimer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         //First rupture should happen half a second after we spawn
         GroundRuptureTimer = 500;
         HamstringTimer = 2000;
         EvadeTimer = 5000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

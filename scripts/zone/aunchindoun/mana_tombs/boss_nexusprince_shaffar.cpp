@@ -61,7 +61,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
 {
-    boss_nexusprince_shaffarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_nexusprince_shaffarAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 beacon_timer;
     uint32 firebolt_timer;
@@ -71,12 +71,12 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
     bool InCombat;
     bool HasTaunted;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         beacon_timer = 10000;
         firebolt_timer = 8000;
@@ -254,7 +254,7 @@ CreatureAI* GetAI_boss_nexusprince_shaffarAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
-    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 apprentice_timer;
     uint32 arcanebolt_timer;
@@ -262,11 +262,11 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
     bool onlyonce;
     bool apprentice;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
         apprentice_timer = 20000;
         arcanebolt_timer = 3000;
@@ -347,17 +347,17 @@ CreatureAI* GetAI_mob_ethereal_beaconAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_ethereal_apprenticeAI : public ScriptedAI
 {
-    mob_ethereal_apprenticeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_ethereal_apprenticeAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 etherealfireball_timer;
     uint32 etherealfrostbolt_timer;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
         etherealfireball_timer = 3000;
         etherealfrostbolt_timer = 6000;

@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     bool DoingSpeach;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         PlayerGUID = 0;
         SpeachTimer = 0;
@@ -89,10 +89,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         DoingSpeach = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void BeginSpeach(Unit* target)

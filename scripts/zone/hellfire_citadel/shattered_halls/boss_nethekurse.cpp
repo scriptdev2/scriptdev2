@@ -60,7 +60,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 {
-    boss_grand_warlock_nethekurseAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    boss_grand_warlock_nethekurseAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
     uint32 deathcoil_timer;
     uint32 shadowfissure_timer;
@@ -69,12 +69,12 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     bool InCombat;
     bool HasTaunted;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras(); 
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras(); 
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         InCombat = false;
 
@@ -256,12 +256,12 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_shadowfissureAI : public ScriptedAI
 {
-    mob_shadowfissureAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    mob_shadowfissureAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
     bool start;
     uint32 stop_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
         start = false;
         stop_timer = 26000;

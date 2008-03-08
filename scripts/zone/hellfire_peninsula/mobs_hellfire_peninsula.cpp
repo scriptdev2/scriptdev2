@@ -30,7 +30,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_bonechewer_orcAI : public ScriptedAI
 {
-    mobs_bonechewer_orcAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_bonechewer_orcAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -69,7 +73,11 @@ CreatureAI* GetAI_mobs_bonechewer_orc(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_shattered_hand_orcAI : public ScriptedAI
 {
-    mobs_shattered_hand_orcAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_shattered_hand_orcAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {

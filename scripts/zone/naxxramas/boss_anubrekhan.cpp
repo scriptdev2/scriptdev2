@@ -59,17 +59,17 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     bool InCombat;
     bool HasTaunted;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Impale_Timer = 15000;                       //15 seconds
         LocustSwarm_Timer = 80000 + (rand()%40000); //Random time between 80 seconds and 2 minutes for initial cast      
         Summon_Timer = LocustSwarm_Timer + 45000;   //45 seconds after initial locust swarm
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

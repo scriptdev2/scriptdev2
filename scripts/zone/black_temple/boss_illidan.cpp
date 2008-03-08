@@ -285,7 +285,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     npc_akama_illidanAI(Creature* c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
     
     /* Instance Data */
@@ -303,8 +303,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     bool RunAway;
     uint32 TalkCount;
 
-    void SetVariables();
-    void EnterEvadeMode();
+    void Reset();
     void BeginEvent(Player *player);
     void AttackStart(Unit *who);
     void DamageTaken(Unit *done_by, uint32 &damage);
@@ -318,7 +317,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     boss_illidan_stormrageAI(Creature* c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     /** Instance Data **/
@@ -364,7 +363,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     uint32 AnimationTimer;
     uint32 TauntTimer; // This is used for his random yells
 
-    void SetVariables()
+    void Reset()
     {
         Phase = 1;
 
@@ -458,21 +457,12 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         //m_creature->setFaction(35); // Start him off as friendly.
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
 
-    void EnterEvadeMode()
-    {
         IsTalking = false;
         InCombat = false;
         
         TalkCount = 0;
         TalkTimer = 0;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
-        SetVariables();
     }
 
     void AttackStart(Unit *who)
@@ -487,7 +477,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
             if (!InCombat)
             {
-                SetVariables();
+                Reset();
                 InCombat = true;
             }
         }
@@ -828,7 +818,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 ((npc_akama_illidanAI*)Akama->AI())->AttackStart(m_creature); // Akama starts attacking us
                             }
                         }
-                        m_creature->RemoveAllAuras(); // Remove any auras we have on us
+                        //m_creature->RemoveAllAuras(); // Remove any auras we have on us
                         m_creature->setFaction(14); // Make him hostile after Intro is done.
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                         break;
@@ -876,7 +866,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         }
                         break;
                     case 18: // Kill ourself.
-                        m_creature->RemoveAllAuras();
+                        //m_creature->RemoveAllAuras();
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_DEAD);
                         if(MaievGUID)
                         {
@@ -1316,7 +1306,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 };
 
 
-void npc_akama_illidanAI::SetVariables()
+void npc_akama_illidanAI::Reset()
 {
     if(pInstance) pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, 0); // Not started
     IllidanGUID = 0;
@@ -1329,16 +1319,6 @@ void npc_akama_illidanAI::SetVariables()
 
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1); // Gossip flag
     m_creature->SetVisibility(VISIBILITY_ON);
-}
-    
-void npc_akama_illidanAI::EnterEvadeMode()
-{
-    SetVariables();
-
-    m_creature->DeleteThreatList();
-    m_creature->RemoveAllAuras();
-    m_creature->CombatStop();
-    DoGoHome();
 }
 
 void npc_akama_illidanAI::BeginEvent(Player *player)
@@ -1495,7 +1475,7 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
     boss_maievAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetMap()->GetInstanceData());
-        SetVariables(); 
+        Reset(); 
     };
 
     bool InCombat;
@@ -1505,21 +1485,11 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 
     ScriptedInstance* pInstance;
 
-    void SetVariables()
+    void Reset()
     {
         InCombat = false;
         TauntTimer = 12000;
         IllidanGUID = 0;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -1615,23 +1585,19 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
 {
-    cage_trap_triggerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    cage_trap_triggerAI(Creature *c) : ScriptedAI(c) {Reset();}
    
     uint32 DespawnTimer;
 
     bool HasCaged;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         HasCaged = false;
         DespawnTimer = 0;
 
         m_creature->SetUInt32Value(OBJECT_FIELD_SCALE_X, 1036831949);
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15882);
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
    
     void AttackStart(Unit *who){ return; }
@@ -1681,7 +1647,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 {
-    flame_of_azzinothAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    flame_of_azzinothAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FlameBlastTimer;
     uint32 SummonBlazeTimer;
@@ -1689,23 +1655,13 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         FlameBlastTimer = 15000;
         SummonBlazeTimer = 10000;
         ChargeTimer = 5000;
-    }
-
-    void EnterEvadeMode()
-    {
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
-
     
     void AttackStart(Unit *who)
     {
@@ -1804,24 +1760,24 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 {
-    shadow_demonAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    shadow_demonAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 TargetGUID;
 
     bool InCombat;
     bool HasCast;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         TargetGUID = 0;
 
         InCombat = false;
         HasCast = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -1897,20 +1853,20 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 };
 struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 {
-    flamecrashAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    flamecrashAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FlameCrashTimer;
     uint32 DespawnTimer;
    
-    void EnterEvadeMode()
+    void Reset()
     {
         FlameCrashTimer = 3000 +rand()%5000;
         DespawnTimer = 60000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
    
     void AttackStart(Unit *who){ return; }
@@ -1935,20 +1891,20 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 {
-    demonfireAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    demonfireAI(Creature *c) : ScriptedAI(c) {Reset();}
    
     uint32 DemonFireTimer;
     uint32 DespawnTimer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         DemonFireTimer = 0;
         DespawnTimer = 60000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
    
     void AttackStart(Unit *who){ return; }
@@ -1973,20 +1929,20 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
 {
-    blazeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    blazeAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 BlazeTimer;
     uint32 DespawnTimer;
       
-    void EnterEvadeMode()
+    void Reset()
     {
         BlazeTimer = 2000;
         DespawnTimer = 30000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who){ return; }

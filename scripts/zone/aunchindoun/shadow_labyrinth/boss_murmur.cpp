@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 {
-    boss_murmurAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_murmurAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SonicBoom_Timer = 30000;
         MurmursTouch_Timer = 20000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

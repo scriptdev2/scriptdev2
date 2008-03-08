@@ -51,7 +51,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 {
-    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SandBreath_Timer;
     uint32 ImpendingDoom_Timerr;
@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SandBreath_Timer = 25000;
         ImpendingDoom_Timerr = 30000;
@@ -69,10 +69,10 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

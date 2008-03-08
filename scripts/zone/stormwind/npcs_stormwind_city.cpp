@@ -61,17 +61,17 @@ bool GossipSelect_npc_archmage_malin(Player *player, Creature *_Creature, uint32
 
 struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 {
-    npc_bartlebyAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_bartlebyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit* PlayerHolder;
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         m_creature->setFaction(11);
-        DoGoHome();
+        //DoGoHome();
         m_creature->setEmoteState(7);
 
         PlayerHolder = NULL;
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
                 ((Player*)done_by)->AttackStop();
                 ((Player*)done_by)->CompleteQuest(1640);
             }
-            m_creature->CombatStop();
+            //m_creature->CombatStop();
             EnterEvadeMode();
         }
         AttackedBy(done_by);
@@ -172,15 +172,15 @@ CreatureAI* GetAI_npc_bartleby(Creature *_creature)
 
 struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 {
-    npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         m_creature->setFaction(11);
-        DoGoHome();
+        //DoGoHome();
         m_creature->setEmoteState(7);
     }
 
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
                 ((Player*)done_by)->AttackStop();
                 ((Player*)done_by)->CompleteQuest(1447);
             }
-            m_creature->CombatStop();
+            //m_creature->CombatStop();
             EnterEvadeMode();
         }
         AttackedBy(done_by);

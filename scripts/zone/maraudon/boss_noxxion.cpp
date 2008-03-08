@@ -27,7 +27,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 {
-    boss_noxxionAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_noxxionAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ToxicVolley_Timer;
     uint32 Uppercut_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ToxicVolley_Timer = 7000;
         Uppercut_Timer = 16000;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         Invisible = false;
         //m_creature->m_canMove = true;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

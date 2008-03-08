@@ -32,37 +32,37 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
 {
-    mob_yennikuAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_yennikuAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Reset_Timer;
-    bool Reset;
+    bool bReset;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Reset_Timer = 0;
-        Reset = false;
+        bReset = false;
 
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
         m_creature->setFaction(28);                         //troll, bloodscalp
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (caster->GetTypeId() == TYPEID_PLAYER)
         {
-            if(!Reset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)//Yenniku's Release
+            if(!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)//Yenniku's Release
             {
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
-                m_creature->CombatStop();                   //stop combat
-                m_creature->DeleteThreatList();             //unsure of this
+                //m_creature->CombatStop();                   //stop combat
+                //m_creature->DeleteThreatList();             //unsure of this
                 m_creature->setFaction(83);                 //horde generic
 
-                Reset = true;
+                bReset = true;
                 Reset_Timer = 60000;
             }
         }
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (Reset && Reset_Timer < diff)
+        if (bReset && Reset_Timer < diff)
         {
             EnterEvadeMode();
         }

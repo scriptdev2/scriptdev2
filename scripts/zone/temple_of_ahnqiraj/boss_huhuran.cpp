@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 {
-    boss_huhuranAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_huhuranAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Frenzy_Timer;
     uint32 Wyvern_Timer;
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
     uint32 phase;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Frenzy_Timer = 30000; //These times are probably wrong
         Wyvern_Timer = 35000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         phase = 1;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

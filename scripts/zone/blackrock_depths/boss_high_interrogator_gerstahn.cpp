@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
 {
-    boss_high_interrogator_gerstahnAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_high_interrogator_gerstahnAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowWordPain_Timer;
     uint32 ManaBurn_Timer;
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
     uint32 ShadowShield_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ShadowWordPain_Timer = 4000;
         ManaBurn_Timer = 14000;
@@ -51,10 +51,10 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         ShadowShield_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

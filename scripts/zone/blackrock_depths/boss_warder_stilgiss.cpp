@@ -32,22 +32,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_warder_stilgissAI : public ScriptedAI
 {
-    boss_warder_stilgissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_warder_stilgissAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FrostBolt_Timer;
     uint32 FrostNova_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FrostBolt_Timer = 2000;
         FrostNova_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

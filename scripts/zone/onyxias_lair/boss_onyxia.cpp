@@ -60,7 +60,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 swingcounter;
     uint32 flamebreath_timer;
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     Creature* Summoned;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {
 
         swingcounter = 0;
@@ -94,10 +94,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
         m_creature->SetHover(false);
         (*m_creature).GetMotionMaster()->Clear(false);
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         // not working
     }
 

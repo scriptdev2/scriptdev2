@@ -116,7 +116,7 @@ enum SuperSpell
 
 struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 {
-    boss_aranAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_aranAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SecondarySpellTimer;
     uint32 NormalCastTimer;
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SecondarySpellTimer = 5000;
         NormalCastTimer = 0;
@@ -169,10 +169,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)
@@ -637,18 +637,18 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 {
-    water_elementalAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    water_elementalAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CastTimer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CastTimer = 2000 + (rand()%3000);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void UpdateAI(const uint32 diff)

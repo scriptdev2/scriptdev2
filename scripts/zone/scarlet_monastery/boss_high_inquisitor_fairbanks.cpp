@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
 {
-    boss_high_inquisitor_fairbanksAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_high_inquisitor_fairbanksAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Healing_Timer;
     uint32 Sleep2_Timer;
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
     uint32 MindBlast5_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Healing_Timer = 300;
         Sleep2_Timer = 45000;
@@ -57,10 +57,10 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         MindBlast5_Timer = 20000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

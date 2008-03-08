@@ -65,16 +65,16 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowBoltVolley_Timer = 15000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 0);

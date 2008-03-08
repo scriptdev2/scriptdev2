@@ -58,6 +58,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     uint32 EventDiff;                       //Time between the last event call
     uint8 Phase;                            //Current phase, max 32 phases
 
+    void Reset()
+    {
+        //This version of reset not used
+    }
+
     void ProcessEvent(EventHolder& pHolder, Unit* pOverrideChatTarget = NULL)
     {  
         if (!pHolder.Enabled || pHolder.Time)
@@ -561,12 +566,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
         m_creature->LoadCreaturesAddon();
-        DoGoHome();
-
         Reset(EVENT_T_EVADE);
     }
 

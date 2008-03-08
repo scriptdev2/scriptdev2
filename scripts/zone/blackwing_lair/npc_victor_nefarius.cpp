@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     uint64 NefarianGUID;
     uint32 NefCheckTime;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SpawnedAdds = 0;
         AddSpawnTimer = 10000;
@@ -181,10 +181,10 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         NefarianGUID = 0;
         NefCheckTime = 2000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS,1);
         m_creature->setFaction(35);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

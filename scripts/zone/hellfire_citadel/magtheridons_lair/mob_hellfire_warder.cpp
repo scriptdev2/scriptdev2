@@ -28,7 +28,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
 {
-    mob_hellfire_warderAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_hellfire_warderAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Shadow_Timer;
     uint32 Death_Timer;
@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
 
     int RandTime(int time) {return ((rand()%time)*1000);}
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Shadow_Timer = 10000;
         Death_Timer = 50000;
@@ -46,11 +46,11 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

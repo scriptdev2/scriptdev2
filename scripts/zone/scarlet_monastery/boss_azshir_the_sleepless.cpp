@@ -30,24 +30,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 {
-    boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
     uint32 Terrify_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SoulSiphon_Timer = 1;
         CallOftheGrave_Timer = 30000;
         Terrify_Timer = 20000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

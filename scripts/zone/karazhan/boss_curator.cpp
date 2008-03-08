@@ -62,7 +62,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 {
-    boss_curatorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_curatorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 AddTimer;
     uint32 HatefulBoltTimer;
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     bool Enraged;
     bool Evocating;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         AddTimer = 10000;
         HatefulBoltTimer = 15000; // This time is probably wrong
@@ -82,10 +82,10 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
         InCombat = false;
         
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)

@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
     uint64 Void;
 
-    void EnterEvadeMode(){
+    void Reset(){
         ArcaneMissles_Timer = 5000;
         MarkOfTheAstromancer_Timer = 15000;
         BlindingLight_Timer = 45000;
@@ -101,10 +101,10 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_HUMAN);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetVisibility(VISIBILITY_OFF);
 
-                m_creature->RemoveAllAuras();
+                //m_creature->RemoveAllAuras();
 
                 switch (rand()%2)
                 {
@@ -380,15 +380,15 @@ struct MANGOS_DLL_DECL mob_solarian_priestAI : public ScriptedAI
     uint32 holysmiteTimer;
     uint32 aoesilenceTimer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         healTimer = 10000;
         holysmiteTimer = 10000;
         aoesilenceTimer = 15000;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who){ return; }

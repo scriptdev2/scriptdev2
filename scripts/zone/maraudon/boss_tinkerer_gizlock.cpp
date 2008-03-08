@@ -30,22 +30,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_tinkerergizlockAI : public ScriptedAI
 {
-    boss_tinkerergizlockAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_tinkerergizlockAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 GoblinGun_Timer;
     uint32 Bomb_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         GoblinGun_Timer = 6000;
         Bomb_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

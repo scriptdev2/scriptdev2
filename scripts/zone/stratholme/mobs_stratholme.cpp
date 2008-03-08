@@ -39,14 +39,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
 {
-    mob_freed_soulAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_freed_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         switch (rand()%4)
         {
@@ -75,21 +75,21 @@ CreatureAI* GetAI_mob_freed_soul(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
 {
-    mob_restless_soulAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_restless_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit* PlayerHolder;
     uint32 Die_Timer;
     bool OkToDie;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Die_Timer = 10000;
         OkToDie = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         PlayerHolder = NULL;
     }
@@ -165,21 +165,21 @@ CreatureAI* GetAI_mob_restless_soul(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
 {
-    mobs_spectral_ghostly_citizenAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_spectral_ghostly_citizenAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit* PlayerHolder;
     uint32 Die_Timer;
     bool OkToDie;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Die_Timer = 5000;
         OkToDie = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         PlayerHolder = NULL;
     }

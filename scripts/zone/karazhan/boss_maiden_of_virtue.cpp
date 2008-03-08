@@ -45,7 +45,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 {
-    boss_maiden_of_virtueAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_maiden_of_virtueAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Repentance_Timer;
     uint32 Holyfire_Timer;
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Repentance_Timer    = 30000+(rand()%15000);
         Holyfire_Timer      = 8000+(rand()%17000);
@@ -63,11 +63,11 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

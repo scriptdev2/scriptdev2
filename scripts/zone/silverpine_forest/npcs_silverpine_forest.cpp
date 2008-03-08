@@ -32,15 +32,15 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_astor_hadrenAI : public ScriptedAI
 {
-    npc_astor_hadrenAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_astor_hadrenAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         m_creature->setFaction(68);
-        DoGoHome();
+        //DoGoHome();
     }
 
     void JustDied(Unit *who)

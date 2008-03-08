@@ -32,14 +32,14 @@ struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
     uint32 lifeTimer;
     bool spellHit;
 
-    npc_narm_faulkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_narm_faulkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
         lifeTimer = 120000;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //DoGoHome();
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
         spellHit = false;
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
             DoCast(m_creature,32343);
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
-            m_creature->RemoveAllAuras();
+            //m_creature->RemoveAllAuras();
             DoSay(SAY_HEAL,LANG_COMMON,NULL);
             spellHit = true;
         }

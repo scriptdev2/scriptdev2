@@ -30,7 +30,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_dragonmaw_orcAI : public ScriptedAI
 {
-    mobs_dragonmaw_orcAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_dragonmaw_orcAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -68,7 +72,11 @@ CreatureAI* GetAI_mobs_dragonmaw_orc(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_shadowmoon_valley_wildlifeAI : public ScriptedAI
 {
-    mobs_shadowmoon_valley_wildlifeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_shadowmoon_valley_wildlifeAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {

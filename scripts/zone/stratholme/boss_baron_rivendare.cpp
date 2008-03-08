@@ -73,7 +73,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
 {
-    boss_baron_rivendareAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_baron_rivendareAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 Cleave_Timer;
@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
     Creature *Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowBolt_Timer = 5000;
         Cleave_Timer = 8000;
@@ -92,11 +92,11 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         SummonSkeletons_Timer = 34000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         
-        DoGoHome();
+        //DoGoHome();
 
         m_creature->LoadCreaturesAddon();
     }

@@ -42,12 +42,12 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
     bool wait;
     uint32 wait_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     { 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         seedofcorruption_timer = 10000;
         shadownova_timer = 15000;
@@ -196,14 +196,14 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
 {
-    mob_zerekethvoidzoneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    mob_zerekethvoidzoneAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
-    void EnterEvadeMode()
+    void Reset()
     { 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
         m_creature->setFaction(16);

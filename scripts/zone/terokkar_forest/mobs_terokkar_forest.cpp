@@ -32,7 +32,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_gordunni_ogreAI : public ScriptedAI
 {
-    mobs_gordunni_ogreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_gordunni_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -70,14 +74,14 @@ CreatureAI* GetAI_mobs_gordunni_ogre(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
 {
-    mob_infested_root_walkerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_infested_root_walkerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //m_creature->CastSpell(m_creature,7941,true);//Immunity: Nature
     }
@@ -136,14 +140,14 @@ CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
 {
-    mob_rotting_forest_ragerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_rotting_forest_ragerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //m_creature->CastSpell(m_creature,7941,true);//Immunity: Nature
     }
@@ -211,14 +215,14 @@ const uint32 netherwebVictims[6] =
 };
 struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 {
-    mob_netherweb_victimAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_netherweb_victimAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void SummonVictims(Unit* victim)

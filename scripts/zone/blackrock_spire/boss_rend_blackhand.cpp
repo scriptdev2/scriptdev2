@@ -31,24 +31,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
 {
-    boss_rend_blackhandAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_rend_blackhandAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 Cleave_Timer;
     uint32 Thunderclap_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         WhirlWind_Timer = 20000;
         Cleave_Timer = 5000;
         Thunderclap_Timer = 9000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

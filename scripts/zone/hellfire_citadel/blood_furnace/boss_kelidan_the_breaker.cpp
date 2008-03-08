@@ -51,7 +51,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 {
-    boss_kelidan_the_breakerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_kelidan_the_breakerAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 ShadowVolley_Timer;
     uint32 BurningNova_Timer;
@@ -61,12 +61,12 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         ShadowVolley_Timer = 1000;
         BurningNova_Timer = 10000;

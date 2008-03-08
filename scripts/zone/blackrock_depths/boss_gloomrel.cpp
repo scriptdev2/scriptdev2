@@ -34,14 +34,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 {
-    boss_gloomrelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_gloomrelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 HamString_Timer;
     uint32 Cleave_Timer;
     uint32 MortalStrike_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         HamString_Timer = 19000;
         Cleave_Timer = 6000;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
 
         m_creature->setFaction(734);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -21,7 +21,7 @@ make him fly from 70-100%
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 {
-    boss_ayamissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ayamissAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
     uint32 STINGERSPRAY_Timer;
@@ -29,7 +29,7 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
     uint32 SUMMONSWARMER_Timer;
     uint32 phase;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         pTarget = NULL;
         STINGERSPRAY_Timer = 30000;
@@ -37,10 +37,10 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         SUMMONSWARMER_Timer = 60000;
         phase=1;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

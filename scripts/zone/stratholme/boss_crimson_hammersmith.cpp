@@ -32,24 +32,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_crimson_hammersmithAI : public ScriptedAI
 {
-    boss_crimson_hammersmithAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_crimson_hammersmithAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 BoneSmelt_Timer;
     uint32 Dazed_Timer;
     uint32 HammerOfJustice_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         BoneSmelt_Timer = 12000;
         Dazed_Timer = 9000;
         HammerOfJustice_Timer = 16000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

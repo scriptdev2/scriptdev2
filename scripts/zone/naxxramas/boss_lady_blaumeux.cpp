@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
 {
-    boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Mark_Timer;
     uint32 VoidZone_Timer;
@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
     bool ShieldWall2;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
         VoidZone_Timer = 12000; // right
@@ -66,10 +66,10 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         ShieldWall2 = true;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void InitialYell()

@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void SetVariables();
 
-    void EnterEvadeMode();
+    void Reset();
 
     void AttackStart(Unit *who);
 

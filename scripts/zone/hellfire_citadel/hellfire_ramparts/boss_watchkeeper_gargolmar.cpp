@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
-    boss_watchkeeper_gargolmarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_watchkeeper_gargolmarAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 Surge_Timer;
     uint32 MortalWound_Timer;
@@ -60,12 +60,12 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
     bool HasTaunted;
     bool YelledForHeal;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         Surge_Timer = 5000;
         MortalWound_Timer = 4000;

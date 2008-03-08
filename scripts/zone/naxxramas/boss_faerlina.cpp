@@ -48,7 +48,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
 {
-    boss_faerlinaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_faerlinaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 PoisonBoltVolley_Timer;
     uint32 RainOfFire_Timer;
@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     bool InCombat;
     bool HasTaunted;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         PoisonBoltVolley_Timer = 8000;
         RainOfFire_Timer = 16000;
@@ -64,10 +64,10 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         InCombat = false;
         HasTaunted = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

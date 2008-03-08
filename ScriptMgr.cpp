@@ -1690,6 +1690,13 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->DeleteThreatList();
     m_creature->CombatStop();
     DoGoHome();
+
+    Reset();
+}
+
+void ScriptedAI::JustDied(Unit* pKiller)
+{
+    Reset();
 }
 
 void ScriptedAI::DoStartMeleeAttack(Unit* victim)
@@ -1843,7 +1850,6 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget target, uint32 position)
         return Unit::GetUnit((*m_creature),(*r)->getUnitGuid());
         break;
     }
-
 
     return NULL;
 }

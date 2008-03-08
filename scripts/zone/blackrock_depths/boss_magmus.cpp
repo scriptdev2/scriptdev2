@@ -33,22 +33,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 {
-    boss_magmusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_magmusAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FieryBurst_Timer;
     uint32 WarStomp_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FieryBurst_Timer = 5000;
         WarStomp_Timer =0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

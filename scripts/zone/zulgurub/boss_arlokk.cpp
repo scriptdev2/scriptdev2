@@ -39,7 +39,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 {
-    boss_arlokkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_arlokkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowWordPain_Timer;
     uint32 Gouge_Timer;
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     bool PhaseTwo;
     bool VanishedOnce;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowWordPain_Timer = 8000;
         Gouge_Timer = 14000;
@@ -74,10 +74,10 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         PhaseTwo = false;
         VanishedOnce = false;
 
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
+    //m_creature->RemoveAllAuras();
+    //m_creature->DeleteThreatList();
+    //m_creature->CombatStop();
+    //DoGoHome();
     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15218);
     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
           {
               m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  //Invisble Model
               m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-              m_creature->CombatStop();
+              //m_creature->CombatStop();
               ResetThreat();
               VanishedOnce = true;
               Vanish_Timer = 45000;

@@ -33,24 +33,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
 {
-    boss_quatermasterzigrisAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_quatermasterzigrisAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Shoot_Timer;
     uint32 StunBomb_Timer;
     uint32 Dazed_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Shoot_Timer = 1000;
         StunBomb_Timer = 16000;
         Dazed_Timer = 24000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

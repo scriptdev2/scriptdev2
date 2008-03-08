@@ -32,24 +32,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_stonespineAI : public ScriptedAI
 {
-    boss_stonespineAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_stonespineAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ViciousRend_Timer;
     uint32 Dazed_Timer;
     uint32 DeafeningScreech_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ViciousRend_Timer = 3000;
         Dazed_Timer = 8000;
         DeafeningScreech_Timer = 10000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
     bool Phase3;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Phase1_Timer = 1000;      //120000 - 2 minutes
         Cleave_Timer = 15000;
@@ -118,10 +118,10 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         QuakePhase = 0;
         Collapse_Timer = 0;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //m_creature->setFaction(35);
         //m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -191,7 +191,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                m_creature->RemoveAllAuras();
+                //m_creature->RemoveAllAuras();
 
                 Phase1_Timer = 0;
             }else 
@@ -271,7 +271,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 {
-    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DarkMending_Timer;
@@ -281,7 +281,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     bool InfernalSpawned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowBoltVolley_Timer = 10000;
         DarkMending_Timer = 30000;
@@ -292,11 +292,11 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
         FriendlyList.clear();
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
 
         // Must be scripted - don't know how.....
         //DoCast(m_creature,SPELL_HELLFIRE_CHANNELING);

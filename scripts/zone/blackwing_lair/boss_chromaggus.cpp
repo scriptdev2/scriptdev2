@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CurrentVurln_Spell = 0;     //We use this to store our last vurlnability spell so we can remove it later
 
@@ -213,10 +213,10 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         Enraged = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

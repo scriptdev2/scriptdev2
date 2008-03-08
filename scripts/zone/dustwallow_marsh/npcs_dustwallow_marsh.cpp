@@ -32,14 +32,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
 {
-    npc_deserter_agitatorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_deserter_agitatorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->setFaction(894);
     }
@@ -182,7 +182,9 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
 
     bool Event;
 
-    npc_doctorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_doctorAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset(){}
 
     void BeginEvent(Player* player);
     void PatientDied(Unit* soldier);
@@ -196,16 +198,16 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
 {
-    npc_injured_patientAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_injured_patientAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 Doctorguid;
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         Doctorguid = 0;
 
@@ -301,7 +303,6 @@ CreatureAI* GetAI_npc_injured_patient(Creature *_Creature)
 /*######
 ## npc_doctor (continue)
 ######*/
-
 void npc_doctorAI::BeginEvent(Player* player)
 {
     Playerguid = player->GetGUID();

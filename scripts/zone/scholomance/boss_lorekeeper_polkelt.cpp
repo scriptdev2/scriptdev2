@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
 {
-    boss_lorekeeperpolkeltAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lorekeeperpolkeltAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 VolatileInfection_Timer;
     uint32 Darkplague_Timer;
@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
     uint32 NoxiousCatalyst_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         VolatileInfection_Timer = 38000;
         Darkplague_Timer = 8000;
@@ -46,10 +46,10 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
         NoxiousCatalyst_Timer = 35000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

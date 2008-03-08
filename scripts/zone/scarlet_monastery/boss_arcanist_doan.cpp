@@ -41,7 +41,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 {
-    boss_arcanist_doanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_arcanist_doanAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FullAOE_Timer;
     uint32 Polymorph_Timer;
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     uint32 ManaShield4_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FullAOE_Timer = 5000;
         Polymorph_Timer = 1;
@@ -69,10 +69,10 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         ManaShield4_Timer = 70000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

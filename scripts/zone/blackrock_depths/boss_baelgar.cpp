@@ -29,22 +29,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baelgarAI : public ScriptedAI
 {
-    boss_baelgarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_baelgarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MagmaSplash_Timer;
     uint32 SpawnOfBaelgar_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         MagmaSplash_Timer = 12000;
         SpawnOfBaelgar_Timer = 30000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

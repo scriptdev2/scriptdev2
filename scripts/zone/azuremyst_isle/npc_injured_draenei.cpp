@@ -25,13 +25,13 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
 {
-    injured_draeneiAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    injured_draeneiAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //DoGoHome();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
         switch (rand()%2)

@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     bool Entangle;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShockBlast_Timer = 1+rand()%60000;
         Entangle_Timer = 30000;
@@ -166,10 +166,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         Entangle = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_LADYVASHJEVENT, 0);
@@ -387,7 +387,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     m_creature->Relocate(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
                     m_creature->SendMoveToPacket(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, false, 0);
 
-                    m_creature->RemoveAllAuras();
+                    //m_creature->RemoveAllAuras();
 
                     DoCast(m_creature, SPELL_MAGIC_BARRIER, true);
 
@@ -571,15 +571,15 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     uint32 Check_Timer;
     uint32 Movement_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Check_Timer = 5000;
         Movement_Timer = 500;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who) { return; }
@@ -650,15 +650,15 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     uint32 PoisonBolt_Timer;
     uint32 Despawn_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         PoisonBolt_Timer = 5000+rand()%5000;
         Despawn_Timer = 30000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit *killer)
@@ -743,16 +743,16 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
     uint32 ToxicSpore_Timer;
     uint32 Check_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         m_creature->setFaction(14);
         ToxicSpore_Timer = 5000;
         Check_Timer = 1000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -878,15 +878,15 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
     uint32 Check_Timer;
     bool Channeled;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Check_Timer = 1000;
         Channeled = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

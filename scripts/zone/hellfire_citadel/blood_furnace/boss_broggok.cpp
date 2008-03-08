@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
-    boss_broggokAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_broggokAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 AcidSpray_Timer;
     uint32 PoisonSpawn_Timer;
@@ -40,12 +40,12 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         AcidSpray_Timer = 10000;
         PoisonSpawn_Timer = 5000;
@@ -124,11 +124,11 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
-    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
     bool Start;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
         Start = false;
     }

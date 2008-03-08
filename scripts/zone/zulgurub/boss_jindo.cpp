@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         BrainWashTotem_Timer = 20000;
         HealingWard_Timer = 16000;
@@ -77,10 +77,10 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         Teleport_Timer = 5000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -236,14 +236,14 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     ScriptedInstance *pInstance;
     
     
-    void EnterEvadeMode()
+    void Reset()
     {
         Heal_Timer = 2000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         
@@ -326,14 +326,14 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
     ScriptedInstance *pInstance;
     
     
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowShock_Timer = 1000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         

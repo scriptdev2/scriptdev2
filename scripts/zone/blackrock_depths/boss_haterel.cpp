@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
 {
-    boss_haterelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_haterelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 ManaBurn_Timer;
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
     uint32 Strike_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ShadowBolt_Timer = 15000;
         ManaBurn_Timer = 3000;
@@ -51,10 +51,10 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
         Strike_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

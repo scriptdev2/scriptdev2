@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 {
-    boss_ptheradrasAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ptheradrasAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Dustfield_Timer;
     uint32 Boulder_Timer;
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
     uint32 RepulsiveGaze_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Dustfield_Timer = 8000;
         Boulder_Timer = 2000;
@@ -47,10 +47,10 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         RepulsiveGaze_Timer = 23000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

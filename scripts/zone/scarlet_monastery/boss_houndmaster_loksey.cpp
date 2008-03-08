@@ -34,20 +34,20 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 {
-    boss_houndmaster_lokseyAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_houndmaster_lokseyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Enrage_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Enrage_Timer = 6000000;
         InCombat = true;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

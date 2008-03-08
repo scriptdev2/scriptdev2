@@ -45,7 +45,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
-    boss_the_makerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_the_makerAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 AcidSpray_Timer;
     uint32 ExplodingBreaker_Timer;
@@ -54,12 +54,12 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         AcidSpray_Timer = 10000;
         ExplodingBreaker_Timer = 4000;

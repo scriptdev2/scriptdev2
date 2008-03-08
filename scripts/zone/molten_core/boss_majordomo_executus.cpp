@@ -53,24 +53,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 {
-    boss_majordomoAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_majordomoAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MagicReflection_Timer;
     uint32 DamageReflection_Timer;
     uint32 Blastwave_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         MagicReflection_Timer =  30000;      //Damage reflection first so we alternate
         DamageReflection_Timer = 15000;
         Blastwave_Timer = 10000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* victim)

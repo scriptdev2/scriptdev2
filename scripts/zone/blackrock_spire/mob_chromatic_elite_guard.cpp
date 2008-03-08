@@ -27,20 +27,20 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
 {
-    mob_chromatic_elite_guardAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_chromatic_elite_guardAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 KnockDown_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         KnockDown_Timer = 20000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

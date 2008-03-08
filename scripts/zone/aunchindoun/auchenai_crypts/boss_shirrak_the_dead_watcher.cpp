@@ -29,24 +29,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_shirrak_the_dead_watcherAI : public ScriptedAI
 {
-    boss_shirrak_the_dead_watcherAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_shirrak_the_dead_watcherAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Inhabitmagic_Timer;
     uint32 Attractmagic_Timer;
     uint32 Carnivorousbite_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Inhabitmagic_Timer = 2000;
         Attractmagic_Timer = 10000;
         Carnivorousbite_Timer = 11000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

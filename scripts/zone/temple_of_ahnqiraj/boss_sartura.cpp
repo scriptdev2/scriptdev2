@@ -33,20 +33,20 @@ Change to random attack for 5seconds
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
-    boss_sarturaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_sarturaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Whirlwind_Timer;
     bool Enraged;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Whirlwind_Timer = 30000;
         Enraged = false; 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

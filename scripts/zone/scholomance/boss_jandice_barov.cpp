@@ -29,7 +29,7 @@
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {
-    boss_jandicebarovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_jandicebarovAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CurseOfBlood_Timer;
     uint32 Illusion_Timer;
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CurseOfBlood_Timer = 15000;
         Illusion_Timer = 30000;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         InCombat = false;
         Invisible = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -193,20 +193,20 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
 {
-    mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cleave_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Cleave_Timer = 4000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

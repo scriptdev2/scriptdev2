@@ -32,14 +32,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
 {
-    mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit* Killer)

@@ -55,12 +55,12 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 
     bool InCombat;     
 
-    void EnterEvadeMode()    
+    void Reset()    
     {        
-        m_creature->RemoveAllAuras();        
-        m_creature->DeleteThreatList();        
-        m_creature->CombatStop();
-        DoGoHome();        
+        //m_creature->RemoveAllAuras();        
+        //m_creature->DeleteThreatList();        
+        //m_creature->CombatStop();
+        //DoGoHome();        
 
         Shadow_Power_Timer = 25000;        
         Jackhammer_Timer = 45000;

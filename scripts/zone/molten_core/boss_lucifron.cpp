@@ -29,24 +29,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 {
-    boss_lucifronAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lucifronAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ImpendingDoom_Timer;
     uint32 LucifronCurse_Timer;
     uint32 ShadowShock_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ImpendingDoom_Timer = 10000;        //Initial cast after 10 seconds so the debuffs alternate
         LucifronCurse_Timer = 20000;        //Initial cast after 20 seconds
         ShadowShock_Timer = 6000;           //6 seconds
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

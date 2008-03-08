@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
 {
-    boss_rasfrostAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_rasfrostAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 IceArmor_Timer;
     uint32 Frostbolt_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
     uint32 FrostVolley_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         IceArmor_Timer = 2000;
         Frostbolt_Timer = 8000;
@@ -51,10 +51,10 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         Fear_Timer = 45000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

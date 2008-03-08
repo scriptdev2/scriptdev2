@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     uint64 Demon;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Whirlwind_Timer = 20000;
         ChaosBlast_Timer = 1000;
@@ -92,10 +92,10 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
@@ -299,16 +299,16 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ChaosBlast_Timer = 1000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void StartEvent()

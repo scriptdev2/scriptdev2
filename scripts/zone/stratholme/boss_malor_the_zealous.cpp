@@ -31,22 +31,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_malor_the_zealousAI : public ScriptedAI
 {
-    boss_malor_the_zealousAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_malor_the_zealousAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 GroundSmash_Timer;
     bool LayOnHands;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         GroundSmash_Timer = 4000;
         LayOnHands = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

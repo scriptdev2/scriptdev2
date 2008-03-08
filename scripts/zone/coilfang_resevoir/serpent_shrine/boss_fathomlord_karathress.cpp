@@ -88,7 +88,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CataclysmicBolt_Timer = 10000;
         Enrage_Timer = 600000; //10 minutes
@@ -110,10 +110,10 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
@@ -330,17 +330,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         LeechingThrow_Timer = 20000;
         TheBeastWithin_Timer = 30000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
@@ -478,16 +478,16 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FrostShock_Timer = 25000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
@@ -620,7 +620,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         WaterBoltVolley_Timer = 35000;
         TidalSurge_Timer = 15000+rand()%5000;
@@ -628,10 +628,10 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);

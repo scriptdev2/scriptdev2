@@ -41,7 +41,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 {
-    boss_gruulAI(Creature *c) : ScriptedAI(c) { SetVariables(); }
+    boss_gruulAI(Creature *c) : ScriptedAI(c) { Reset(); }
 
     ScriptedInstance *pInstance;
 
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     uint32 Reverberation_Timer;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
 
@@ -69,17 +69,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_GRUULEVENT, 0);
-
-    }
-
-    void EnterEvadeMode()
-    {   
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();   
     }
 
     void JustDied(Unit* Killer)

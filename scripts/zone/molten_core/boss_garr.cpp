@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
 {
-    boss_garrAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_garrAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 AntiMagicPulse_Timer;
     uint32 MagmaShackles_Timer;
@@ -46,17 +46,17 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
     bool Enraged[8];
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         AntiMagicPulse_Timer = 25000;      //These times are probably wrong
         MagmaShackles_Timer = 15000;
         CheckAdds_Timer = 2000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

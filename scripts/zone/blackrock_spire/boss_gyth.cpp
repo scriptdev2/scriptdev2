@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 {
-    boss_gythAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_gythAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Aggro_Timer;
     uint32 Dragons_Timer;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     bool RootSelf;
     Creature *SummonedCreature;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Dragons_Timer = 3000;
         Orc_Timer = 60000;
@@ -75,10 +75,10 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
         //m_creature->m_canMove = true;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);  //Invisible for event start
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }

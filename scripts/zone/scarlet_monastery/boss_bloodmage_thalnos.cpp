@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
 {
-    boss_bloodmage_thalnosAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_bloodmage_thalnosAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FrostNova2_Timer;
     uint32 FlameShock3_Timer;
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
     uint32 Yell_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Yell_Timer = 1;
         FrostNova2_Timer = 10000;
@@ -60,10 +60,10 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
         FireNova_Timer = 10000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 {
-    boss_ambassador_flamelashAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ambassador_flamelashAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FireBlast_Timer;
     uint32 Spirit_Timer;
@@ -39,16 +39,16 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FireBlast_Timer = 2000;
         Spirit_Timer = 24000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

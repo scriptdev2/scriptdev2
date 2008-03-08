@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 {
-    boss_theravenianAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_theravenianAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Trample_Timer;
     uint32 Cleave_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
     bool HasYelled;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Trample_Timer = 24000;
         Cleave_Timer = 15000;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
         HasYelled = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

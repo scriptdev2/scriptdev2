@@ -44,7 +44,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
 {
-    boss_lieutenant_drakeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lieutenant_drakeAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Whirlwind_Timer;
     uint32 Fear_Timer;
@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Whirlwind_Timer = 20000;
         Fear_Timer = 30000;
@@ -62,10 +62,10 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

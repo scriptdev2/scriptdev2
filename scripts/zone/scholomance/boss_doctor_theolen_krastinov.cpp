@@ -29,24 +29,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
 {
-    boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Rend_Timer;
     uint32 Cleave_Timer;
     uint32 Frenzy_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Rend_Timer = 8000;
         Cleave_Timer = 9000;
         Frenzy_Timer =0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

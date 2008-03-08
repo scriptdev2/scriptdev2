@@ -100,7 +100,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 {
-    boss_ragnarosAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ragnarosAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WrathOfRagnaros_Timer;
     uint32 HandOfRagnaros_Timer;
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
     bool InCombat;
     bool HasAura;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         WrathOfRagnaros_Timer = 30000;
         HandOfRagnaros_Timer = 25000;
@@ -133,10 +133,10 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         InCombat = false;
 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
         HasAura = true;

@@ -60,17 +60,17 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Charge_Timer = 20000;
         Knockback_Timer = 15000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 0);

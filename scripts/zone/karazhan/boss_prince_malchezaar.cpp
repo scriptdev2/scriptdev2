@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
     uint32 malchezaar;
     InfernalPoint *point;
 
-    void EnterEvadeMode() {}
+    void Reset() {}
     void AttackStart(Unit *who) {}
     void MoveInLineOfSight(Unit *who) {}
 
@@ -205,7 +205,7 @@ void AddSC_netherspite_infernal()
 
 struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 {
-    boss_malchezaarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_malchezaarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 EnfeebleTimer;
     uint32 EnfeebleResetTimer;
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     uint32 phase;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         AxesCleanup();
         ClearWeapons();
@@ -252,10 +252,10 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         InCombat = false;
         
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)

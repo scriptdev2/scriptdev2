@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 {
-    boss_shazzrahAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_shazzrahAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ArcaneExplosion_Timer;
     uint32 ShazzrahCurse_Timer;
@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     uint32 Blink_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ArcaneExplosion_Timer = 6000;      //These times are probably wrong
         ShazzrahCurse_Timer = 10000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         Blink_Timer = 30000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

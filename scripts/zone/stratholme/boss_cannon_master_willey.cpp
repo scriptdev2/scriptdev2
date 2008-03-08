@@ -77,7 +77,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
 {
-    boss_cannon_master_willeyAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_cannon_master_willeyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 KnockAway_Timer;
     uint32 Pummel_Timer;
@@ -85,7 +85,7 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
     uint32 SummonRifleman_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Shoot_Timer = 1000;
         Pummel_Timer = 7000;
@@ -93,10 +93,10 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
         SummonRifleman_Timer = 15000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit* Victim)

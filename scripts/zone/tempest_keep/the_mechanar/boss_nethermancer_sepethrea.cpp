@@ -62,12 +62,12 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()    
+    void Reset()    
     {        
-        m_creature->RemoveAllAuras();        
-        m_creature->DeleteThreatList();        
-        m_creature->CombatStop();
-        DoGoHome();        
+        //m_creature->RemoveAllAuras();        
+        //m_creature->DeleteThreatList();        
+        //m_creature->CombatStop();
+        //DoGoHome();        
        
 
         frost_attack_Timer = 10000;        
@@ -221,7 +221,7 @@ CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature *_Creature)
 }
 struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
 {
-    mob_ragin_flamesAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_ragin_flamesAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 inferno_Timer;
     uint32 flame_timer;
@@ -229,12 +229,12 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
     bool InCombat;
     bool onlyonce;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
          

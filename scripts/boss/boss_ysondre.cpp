@@ -36,7 +36,7 @@ EndScriptData */
 // Ysondre script
 struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 {
-    boss_ysondreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ysondreAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
     Creature* Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Sleep_Timer = 15000;
         NoxiousBreath_Timer = 8000;
@@ -64,10 +64,10 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         SummonDruids3_Timer = 0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 
@@ -247,20 +247,20 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 // Summoned druid script
 struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
 {
-    mob_dementeddruidsAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_dementeddruidsAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MoonFire_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         MoonFire_Timer = 3000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

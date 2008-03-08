@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 {
-    boss_vilerelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_vilerelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MindBlast_Timer;
     uint32 Heal_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
     uint32 Shield_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         MindBlast_Timer = 10000;
         Heal_Timer = 35000;
@@ -51,10 +51,10 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
 
 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

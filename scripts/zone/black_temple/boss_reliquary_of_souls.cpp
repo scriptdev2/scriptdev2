@@ -135,11 +135,11 @@ static Position Coords[]=
 
 struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
 {
-    npc_enslaved_soulAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    npc_enslaved_soulAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 ReliquaryGUID;
 
-    void SetVariables()
+    void Reset()
     {
         ReliquaryGUID = 0;
     }
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -193,7 +193,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     bool IsDead;
     bool EndingPhase;
 
-    void SetVariables()
+    void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 0);
@@ -220,16 +220,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         (*m_creature).GetMotionMaster()->Clear(false);
     }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
-    }
-
     void AttackStart(Unit *who)
     {
         return;
@@ -253,7 +243,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if(pInstance)
                         pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
 
-                    SetVariables();
+                    Reset();
                     Phase = 1;
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
                     SummonEssenceTimer = 8000;
@@ -560,7 +550,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 {
-    boss_essence_of_sufferingAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    boss_essence_of_sufferingAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 StatAuraGUID;
 
@@ -570,24 +560,14 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         StatAuraGUID = 0;
 
         FixateTimer = 5000;
         EnrageTimer = 30000;
         SoulDrainTimer = 150000;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -627,7 +607,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
             if (!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoCast(who, AURA_OF_SUFFERING, true);
                 DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
                 DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
@@ -741,7 +721,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 };
 struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 {
-    boss_essence_of_desireAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    boss_essence_of_desireAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 RuneShieldTimer;
     uint32 DeadenTimer;
@@ -749,22 +729,12 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         RuneShieldTimer = 60000;
         DeadenTimer = 15000;
         SoulShockTimer = 40000;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -791,7 +761,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
             if (!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoCast(who, AURA_OF_DESIRE);
                 InCombat = true;
             }
@@ -885,7 +855,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 {
-    boss_essence_of_angerAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    boss_essence_of_angerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 AggroTargetGUID;
 
@@ -896,7 +866,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     bool CheckedAggro;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         AggroTargetGUID = 0;
 
@@ -905,19 +875,8 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         SpiteTimer = 30000;
 
         CheckedAggro = false;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
-
 
     void AttackStart(Unit *who)
     {
@@ -930,7 +889,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
             if (!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
                 DoCast(m_creature->getVictim(), AURA_OF_ANGER);

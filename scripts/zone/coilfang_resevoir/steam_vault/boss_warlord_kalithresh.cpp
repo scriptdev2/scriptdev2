@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Reflection_Timer = 10000;
         Impale_Timer = 30000;
@@ -61,10 +61,10 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);

@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         Council[2] = 0;
         Council[3] = 0;
 
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {     
         InCombat = false;
         CheckTimer = 2000;
@@ -185,17 +185,12 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         }
         if(pInstance)
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT,0);
-    }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetVisibility(VISIBILITY_OFF);
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -231,7 +226,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
         if(target)
         {
-            SetVariables();
+            Reset();
 
             Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
             Council[1] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
@@ -316,7 +311,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         Council[0] = 0;
         Council[1] = 0;
         Council[2] = 0;
-        SetVariables();
+        Reset();
     }
 
     uint64 Council[3];
@@ -332,7 +327,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
     bool AcquiredGUIDs;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         AcquiredGUIDs = false;
 
@@ -341,17 +336,8 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         SealTimer = 40000;
         AuraTimer = 90000;
         BlessingTimer = 60000;
-    }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -365,7 +351,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
                 InCombat = true;
@@ -560,7 +546,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         Council[0] = 0;
         Council[1] = 0;
         Council[2] = 0;
-        SetVariables();                                       
+        Reset();                                       
     }
 
     ScriptedInstance* pInstance;
@@ -578,7 +564,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
     bool AcquiredGUIDs;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         AcquiredGUIDs = false;
 
@@ -589,19 +575,9 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         ArcaneExplosionTimer = 14000;
         Cooldown = 0;
         AggroYellTimer = 0;
-    }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
-
 
     void AttackStart(Unit *who)
     {
@@ -614,7 +590,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 AggroYellTimer = 9000;
                 InCombat = true;
             }
@@ -784,7 +760,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         Council[0] = 0;
         Council[1] = 0;
         Council[2] = 0;
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -800,7 +776,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
     bool AcquiredGUIDs;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         AcquiredGUIDs = false;
 
@@ -810,18 +786,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         ReflectiveShieldTimer = 0;
         AggroYellTimer = 0;
 
-        
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-        InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        InCombat = false;        
     }
 
     void AttackStart(Unit *who)
@@ -835,7 +800,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 InCombat = true;
             }
         }
@@ -989,7 +954,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         Council[0] = 0;
         Council[1] = 0;
         Council[2] = 0;
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -1007,7 +972,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
     bool InCombat;
     bool HasVanished;
 
-    void SetVariables()
+    void Reset()
     {
         AcquiredGUIDs = false;
 
@@ -1022,17 +987,8 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         (*m_creature).GetMotionMaster()->Clear(false);
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -1046,7 +1002,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoYell(SAY_VERA_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_VERA_AGGRO);
                 InCombat = true;

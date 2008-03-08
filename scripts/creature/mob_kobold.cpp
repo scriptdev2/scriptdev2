@@ -29,22 +29,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL KoboldAI : public ScriptedAI
 {
-    KoboldAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    KoboldAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

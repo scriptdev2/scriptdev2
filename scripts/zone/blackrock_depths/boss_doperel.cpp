@@ -31,24 +31,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
 {
-    boss_doperelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_doperelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SinisterStrike_Timer;
     uint32 BackStab_Timer;
     uint32 Gouge_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         SinisterStrike_Timer = 8000;
         BackStab_Timer = 12000;
         Gouge_Timer = 6000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

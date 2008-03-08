@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
 {
-    boss_overlordwyrmthalakAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_overlordwyrmthalakAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 BlastWave_Timer;
     uint32 Shout_Timer;
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
     bool InCombat;
     Creature *SummonedCreature;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         BlastWave_Timer = 20000;
         Shout_Timer = 2000;
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
         Summoned = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

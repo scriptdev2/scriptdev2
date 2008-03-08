@@ -45,7 +45,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 {
-    boss_captain_skarlocAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_captain_skarlocAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Holy_Light_Timer;
     uint32 Cleanse_Timer;   
@@ -56,7 +56,7 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     { 
         Holy_Light_Timer = 30000;
         Cleanse_Timer = 10000;
@@ -67,10 +67,10 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

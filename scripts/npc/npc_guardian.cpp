@@ -28,16 +28,16 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 {
-    npc_guardianAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_guardianAI(Creature *c) : ScriptedAI(c) {Reset();}
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         InCombat = false;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 

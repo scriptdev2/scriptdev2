@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
         if (InCombat)
         {
@@ -80,10 +80,10 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             DoPlaySoundToSet(m_creature,SOUND_WIPE);
         }
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         InCombat = false;
         ShadowWhip_Timer = 1000;

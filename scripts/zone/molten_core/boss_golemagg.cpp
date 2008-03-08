@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     bool InCombat;
     ScriptedInstance *pInstance;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Pyroblast_Timer = 7000;      //These times are probably wrong
         EarthQuake_Timer = 3000; 
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         Enrage_Timer = 0;     
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
     }
@@ -181,16 +181,16 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     bool InCombat;
     ScriptedInstance *pInstance;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Mangle_Timer = 7000;      //These times are probably wrong 
         Check_Timer = 1000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         

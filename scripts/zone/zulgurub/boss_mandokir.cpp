@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     bool RaptorDead;
     bool CombatStart;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         Watch_Timer = 33000;
         Cleave_Timer = 7000;
@@ -98,10 +98,10 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         RaptorDead = false;
         CombatStart = false;
  
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop(); 
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop(); 
+        //DoGoHome();
 
         DoCast(m_creature, 23243); 
    }
@@ -302,14 +302,14 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     uint32 SunderArmor_Timer;
     ScriptedInstance *pInstance;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         SunderArmor_Timer = 5000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         

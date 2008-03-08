@@ -39,8 +39,7 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
 {
     hyjalAI* ai = new hyjalAI(_Creature);
 
-    ai->SetVariables();
-    ai->EnterEvadeMode();
+    ai->Reset();
     ai->SetFaction(ALLIANCE);
     
     return ai;
@@ -89,7 +88,7 @@ CreatureAI* GetAI_npc_thrall(Creature *_Creature)
 {
     hyjalAI* ai = new hyjalAI(_Creature);
 
-    ai->SetVariables();
+    ai->Reset();
     ai->EnterEvadeMode();
     ai->SetFaction(HORDE);
 

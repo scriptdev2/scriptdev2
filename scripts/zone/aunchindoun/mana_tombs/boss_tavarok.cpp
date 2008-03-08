@@ -29,17 +29,17 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_tavarokAI : public ScriptedAI
 {
-    boss_tavarokAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_tavarokAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 earthquake_timer;
     uint32 crystalprison_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         earthquake_timer = 10000;
         crystalprison_timer = 12000;

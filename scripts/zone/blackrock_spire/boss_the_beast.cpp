@@ -30,24 +30,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
 {
-    boss_thebeastAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_thebeastAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Flamebreak_Timer;
     uint32 Immolate_Timer;
     uint32 TerrifyingRoar_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Flamebreak_Timer = 12000;
         Immolate_Timer = 3000;
         TerrifyingRoar_Timer = 23000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

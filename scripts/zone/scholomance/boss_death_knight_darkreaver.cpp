@@ -27,14 +27,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
 {
-    boss_death_knight_darkreaverAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_death_knight_darkreaverAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 

@@ -75,28 +75,18 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
 {
     mob_najentus_spineAI(Creature *c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
     }
 
     bool InCombat;
     
     uint64 SpineVictimGUID;
 
-    void SetVariables()
+    void Reset()
     {
         InCombat = false;
 
         SpineVictimGUID = 0;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void SetSpineVictimGUID(uint64 guid)
@@ -137,7 +127,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     boss_najentusAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -155,7 +145,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     bool InCombat;
     bool IsShielded;
 
-    void SetVariables()
+    void Reset()
     {
         IsShielded = false;
 
@@ -172,17 +162,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 0);
-    }
 
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void KilledUnit(Unit *victim)
@@ -248,7 +229,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                     pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                SetVariables();
+                Reset();
                 InCombat = true;
             }
         }

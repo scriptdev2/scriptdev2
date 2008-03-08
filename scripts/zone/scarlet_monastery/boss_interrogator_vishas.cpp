@@ -38,22 +38,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 {
-    boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Yell_Timer;
     uint32 PowerWordShield_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Yell_Timer = 6000000;
         PowerWordShield_Timer = 60000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

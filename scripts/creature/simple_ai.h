@@ -34,7 +34,7 @@ struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 {
     SimpleAI(Creature *c);// : ScriptedAI(c);
 
-    void EnterEvadeMode();
+    void Reset();
 
     void AttackStart(Unit *who);
 

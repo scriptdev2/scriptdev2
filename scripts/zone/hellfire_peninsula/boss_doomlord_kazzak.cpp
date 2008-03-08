@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 {
-    boss_doomlordkazzakAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_doomlordkazzakAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     uint32 Rage_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ShadowVolley_Timer = 10000;
         Cleave_Timer = 5000;
@@ -52,10 +52,10 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         Rage_Timer = 55000;                //Cast 55
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

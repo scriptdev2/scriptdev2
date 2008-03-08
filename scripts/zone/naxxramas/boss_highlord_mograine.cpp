@@ -56,7 +56,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
 {
-    boss_highlord_mograineAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_highlord_mograineAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Mark_Timer;
     uint32 RighteousFire_Timer;
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     bool ShieldWall2;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
         RighteousFire_Timer = 2000; // applied approx 1 out of 4 attacks
@@ -72,10 +72,10 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
         ShieldWall2 = true;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void InitialYell()

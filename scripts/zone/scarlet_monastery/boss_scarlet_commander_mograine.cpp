@@ -42,7 +42,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 {
-    boss_scarlet_commander_mograineAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_scarlet_commander_mograineAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Heal_Timer;
     uint32 DivineShield2_Timer;
@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     uint32 BlessingOfProtection3_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Heal_Timer = 80000;
         DivineShield2_Timer = 60000;
@@ -64,10 +64,10 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         BlessingOfProtection3_Timer = 45000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

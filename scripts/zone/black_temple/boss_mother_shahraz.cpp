@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     boss_shahrazAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -117,7 +117,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     bool InCombat;
     bool HasSummonedBomb;
 
-    void SetVariables()
+    void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 0);
@@ -136,17 +136,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         ExplosionCount = 0;
 
         HasSummonedBomb = false;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -163,7 +153,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 if(pInstance)
                     pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
 
-                SetVariables();
+                Reset();
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;

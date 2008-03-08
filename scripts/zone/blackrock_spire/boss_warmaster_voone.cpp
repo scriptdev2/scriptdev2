@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
 {
-    boss_warmastervooneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_warmastervooneAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Snapkick_Timer;
     uint32 Cleave_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
     uint32 Dazed_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Snapkick_Timer = 8000;
         Cleave_Timer = 14000;
@@ -56,10 +56,10 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         Dazed_Timer = 25000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

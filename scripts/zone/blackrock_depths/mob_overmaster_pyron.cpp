@@ -33,22 +33,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL overmaster_pyronAI : public ScriptedAI
 {
-    overmaster_pyronAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    overmaster_pyronAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FireNova_Timer;
     uint32 FireBlast_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FireNova_Timer = 15000;
         FireBlast_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

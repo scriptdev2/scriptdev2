@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     bool bombing;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_JANALAIEVENT, 0);
@@ -155,10 +155,10 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         bombing =false;
         reset_timer = 5000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();            
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();            
     }
 
     void JustDied(Unit* Killer)
@@ -475,12 +475,12 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 
     uint32 bomb_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         bomb_timer = 12000;
     }
 
@@ -519,7 +519,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
     uint32 eggs;
     uint32 delete_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         waypoint = 0;
         waytype = 0;
@@ -531,10 +531,10 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         eggs = 0;
         delete_timer = 10000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void UpdateAI(const uint32 diff)
@@ -682,12 +682,12 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
     uint32 delete_timer;
     bool start;
 
-    void EnterEvadeMode()
+    void Reset()
     {
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         buffer_timer = 7000;
         delete_timer = 10000;

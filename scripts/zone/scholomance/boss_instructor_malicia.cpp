@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 {
-    boss_instructormaliciaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_instructormaliciaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CallOfGraves_Timer;
     uint32 Corruption_Timer;
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         CallOfGraves_Timer = 4000;
         Corruption_Timer = 8000;
@@ -54,10 +54,10 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         TouchCounter = 0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

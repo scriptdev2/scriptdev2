@@ -30,7 +30,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL razorlashAI : public ScriptedAI
 {
-    razorlashAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    razorlashAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Puncture_Timer;
     uint32 Cleave_Timer;
@@ -38,17 +38,17 @@ struct MANGOS_DLL_DECL razorlashAI : public ScriptedAI
     bool InCombat;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Puncture_Timer = 12000;
         Cleave_Timer = 6000;
         ThornVolley_Timer = 19000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -28,24 +28,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
 {
-    boss_pyroguard_emberseerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_pyroguard_emberseerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FireNova_Timer;
     uint32 FlameBuffet_Timer;
     uint32 PyroBlast_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FireNova_Timer = 6000;
         FlameBuffet_Timer = 3000;
         PyroBlast_Timer = 14000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

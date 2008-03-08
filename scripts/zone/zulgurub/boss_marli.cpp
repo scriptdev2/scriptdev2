@@ -42,7 +42,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 {
-    boss_marliAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_marliAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SpawnStartSpiders_Timer;
     uint32 PoisonVolley_Timer;
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
     bool Spawned;
     bool PhaseTwo;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SpawnStartSpiders_Timer = 1000;
         PoisonVolley_Timer = 15000;
@@ -71,10 +71,10 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         Spawned = false;
         PhaseTwo = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -254,18 +254,18 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 //Spawn of Marli
 struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
 {
-    mob_spawn_of_marliAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_spawn_of_marliAI(Creature *c) : ScriptedAI(c) {Reset();}
     
     uint32 LevelUp_Timer;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         LevelUp_Timer = 3000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

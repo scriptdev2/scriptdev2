@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
 {
-    boss_general_angerforgeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_general_angerforgeAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 MightyBlow_Timer;
     uint32 HamString_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     Creature* SummonedAdds;
     Creature* SummonedMedics;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         MightyBlow_Timer = 8000;
         HamString_Timer = 12000;
@@ -57,10 +57,10 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         InCombat = false;
         Medics = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

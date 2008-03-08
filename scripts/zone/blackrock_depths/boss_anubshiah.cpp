@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
 {
-    boss_anubshiahAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_anubshiahAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowBolt_Timer;
     uint32 CurseOfTongues_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
     bool InCombat;
 
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ShadowBolt_Timer = 7000;
         CurseOfTongues_Timer = 24000;
@@ -56,10 +56,10 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
 
 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

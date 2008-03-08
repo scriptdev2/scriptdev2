@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
     Creature *Invisible;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         PosCheck_Timer = 5000;
         MarkOfHydross_Timer = 20000;
@@ -124,10 +124,10 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CLEAN);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);

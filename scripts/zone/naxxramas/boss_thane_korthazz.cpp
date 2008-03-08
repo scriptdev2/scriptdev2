@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
 {
-    boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Mark_Timer;
     uint32 Meteor_Timer;
@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
     bool ShieldWall2;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
         Meteor_Timer = 30000; // wrong
@@ -66,10 +66,10 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         ShieldWall2 = true;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void InitialYell()

@@ -61,7 +61,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 {
-    boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
 
     uint32 Chain_Timer;
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
     bool InCombat;
     bool InEnrage;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Enrage_Timer    = 0;
         Armor_Timer     = 10000;
@@ -83,10 +83,10 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
         InCombat = false;
         InEnrage = false;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 

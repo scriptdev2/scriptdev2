@@ -32,10 +32,9 @@ EndScriptData */
 #define SPELL_CORRUPTIONOFEARTH    24910
 
 
-
 struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
 {
-    boss_emerissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_emerissAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
@@ -47,7 +46,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
     uint32 CorruptionofEarth3_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Sleep_Timer = 15000;
         NoxiousBreath_Timer = 8000;
@@ -59,10 +58,10 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         CorruptionofEarth3_Timer = 0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
     }
 
@@ -209,7 +208,6 @@ CreatureAI* GetAI_boss_emeriss(Creature *_Creature)
 {
     return new boss_emerissAI (_Creature);
 }
-
 
 void AddSC_boss_emeriss()
 {

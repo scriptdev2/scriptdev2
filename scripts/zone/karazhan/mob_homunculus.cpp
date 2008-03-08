@@ -26,23 +26,23 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
 {
-    mob_homunculusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_homunculusAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Firebolt_Timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Firebolt_Timer = 0;      
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
 
-        DoGoHome();
+        //DoGoHome();
     }
 
     int RandTime(int time) {return ((rand()%time)*1000);}

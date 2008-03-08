@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         EnterEvadeMode();
     }
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Heal_Timer = 12000;      //These times are probably wrong
         MindBlast_Timer = 16000;
@@ -57,10 +57,10 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         Smite_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

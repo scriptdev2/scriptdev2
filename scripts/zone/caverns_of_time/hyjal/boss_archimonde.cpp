@@ -81,14 +81,9 @@ struct mob_doomfireAI : public ScriptedAI
 
     uint32 CastTimer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CastTimer = 1000;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit* who) { return; }
@@ -116,30 +111,20 @@ struct mob_doomfire_targettingAI : public ScriptedAI
 {
     mob_doomfire_targettingAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
     }
 
     uint32 InitializeTimer;
     std::list<uint64> GUIDlist;
 
     bool IsWayPoint;
-    void SetVariables()
+    void Reset()
     {
         InitializeTimer = 1000;
 
         IsWayPoint = false;
 
         GUIDlist.clear();
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     bool IsInList(uint64 guid)
@@ -212,27 +197,17 @@ struct mob_ancient_wispAI : public ScriptedAI
     mob_ancient_wispAI(Creature* c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
     uint64 ArchimondeGUID;
     uint32 CheckTimer;
 
-    void SetVariables()
+    void Reset()
     {
         ArchimondeGUID = 0;
         CheckTimer = 1000;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-        
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void UpdateAI(const uint32 diff)
@@ -273,7 +248,7 @@ struct boss_archimondeAI : public ScriptedAI
 {
     boss_archimondeAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
     }
 
     uint32 DrainWorldTreeTimer;
@@ -296,7 +271,7 @@ struct boss_archimondeAI : public ScriptedAI
     bool HasProtectedWithElune;
     bool HasStartedChanneling;
 
-    void SetVariables()
+    void Reset()
     {
         /* These timers may be incorrect */
         FearTimer = 15000;
@@ -317,17 +292,7 @@ struct boss_archimondeAI : public ScriptedAI
         SoulCharged = false;
         HasProtectedWithElune = false;
         HasStartedChanneling = false;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit* who)
@@ -341,7 +306,7 @@ struct boss_archimondeAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, who);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;

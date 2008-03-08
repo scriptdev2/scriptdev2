@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
 {
-    boss_pyromancer_loregrainAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_pyromancer_loregrainAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FlameShock_Timer;
     uint32 MoltenBlast_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
     uint32 SearingTotem_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FlameShock_Timer = 13000;
         MoltenBlast_Timer = 20000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
         SearingTotem_Timer = 2000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

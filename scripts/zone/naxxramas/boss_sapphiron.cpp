@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     bool landoff;
     uint32 land_Timer;
     
-    void EnterEvadeMode()
+    void Reset()
     {
         FrostAura_Timer = 2000;
         LifeDrain_Timer = 24000;
@@ -67,10 +67,10 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         Icebolt_Count = 0;
         landoff = false;
         
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //m_creature->ApplySpellMod(SPELL_FROST_AURA, SPELLMOD_DURATION, -1);
     }

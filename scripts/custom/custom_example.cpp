@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 {
     //*** HANDLED FUNCTION *** 
     //This is the constructor, called only once when the creature is first created
-    custom_exampleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    custom_exampleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     //*** CUSTOM VARIABLES ****
     //These variables are for use only by this individual script.
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 
     //*** HANDLED FUNCTION *** 
     //This is called whenever the core decides we need to evade
-    void EnterEvadeMode()
+    void Reset()
     {
         Phase = 1;              //Start in phase 1
         Phase_Timer = 60000;     //60 seconds
@@ -89,10 +89,10 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         Beserk_Timer = 120000;  //2 minutes
 
         //Return to home position
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     //*** HANDLED FUNCTION *** 

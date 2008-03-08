@@ -44,7 +44,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 {
-    boss_jeklikAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_jeklikAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Charge_Timer;
     uint32 SonicBurst_Timer;
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
     bool InCombat;
     bool PhaseTwo;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Charge_Timer = 20000;
         SonicBurst_Timer = 8000;
@@ -76,10 +76,10 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         InCombat = false;
         PhaseTwo = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -285,17 +285,17 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     uint32 Bomb_Timer;
     uint32 Check_Timer;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         m_creature->setFaction(14);
         Bomb_Timer = 2000;
         Check_Timer = 1000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        DoGoHome();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

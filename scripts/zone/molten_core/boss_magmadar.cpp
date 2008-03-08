@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 {
-    boss_magmadarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_magmadarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Frenzy_Timer;
     uint32 LavaBreath_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     uint32 Lavabomb_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Frenzy_Timer = 30000;       
         LavaBreath_Timer = 7000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         Lavabomb_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
     }
 

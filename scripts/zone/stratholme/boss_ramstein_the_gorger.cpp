@@ -31,22 +31,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ramstein_the_gorgerAI : public ScriptedAI
 {
-    boss_ramstein_the_gorgerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ramstein_the_gorgerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Trample_Timer;
     uint32 Knockout_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Trample_Timer = 3000;
         Knockout_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

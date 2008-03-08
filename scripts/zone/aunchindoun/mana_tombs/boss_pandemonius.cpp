@@ -43,7 +43,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 {
-    boss_pandemoniusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_pandemoniusAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 voidblast_timer;
     uint32 darkshell_timer;
@@ -51,12 +51,12 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         voidblast_timer = 10000;
         darkshell_timer = 15000;

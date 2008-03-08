@@ -32,24 +32,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 {
-    boss_ironayaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_ironayaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Arcing_Timer;
     bool hasCastedWstomp;
     bool hasCastedKnockaway;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Arcing_Timer = 3000;
         hasCastedKnockaway = false;
         hasCastedWstomp = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -88,27 +88,17 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 {
     mob_ashtongue_channelerAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
     }
 
     uint64 ShadeGUID;
 
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         ShadeGUID = 0;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void SetShadeGUID(uint64 guid)
@@ -146,7 +136,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 {
     mob_ashtongue_sorcererAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
     }
 
@@ -156,22 +146,12 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
     bool StartBanishing;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         ShadeGUID = 0;
 
         StartBanishing = false;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void JustDied(Unit* killer);
@@ -224,7 +204,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 {
     boss_shade_of_akamaAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
     }
 
@@ -246,7 +226,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     bool InCombat;
     bool HasKilledAkama;
 
-    void SetVariables()
+    void Reset()
     {
         if(SummonedChannelers)
         {
@@ -285,17 +265,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         m_creature->GetMotionMaster()->Clear(false);
         m_creature->GetMotionMaster()->Idle();
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->DeleteThreatList();
-        m_creature->RemoveAllAuras();
         DoCast(m_creature, SPELL_PASSIVE_SHADOWFORM);
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit* who)
@@ -473,9 +443,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     {
                         HasKilledAkama = true; // Akama is dead or missing, we stop fighting and disappear
                         m_creature->SetVisibility(VISIBILITY_OFF);
-                        DoGoHome();
+                        //DoGoHome();
                         m_creature->SetHealth(m_creature->GetMaxHealth());
-                        m_creature->RemoveAllAuras();
+                        //m_creature->RemoveAllAuras();
                         DoCast(m_creature, SPELL_PASSIVE_SHADOWFORM);
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     }
@@ -523,7 +493,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 {
     npc_akamaAI(Creature* c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
     }
 
@@ -543,7 +513,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     bool HasYelledOnce;
     bool HasYelledTwice;
 
-    void SetVariables()
+    void Reset()
     {
         DestructivePoisonTimer = 5000;
         LightningBoltTimer = 10000;
@@ -556,16 +526,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         StartCombat = false;
         HasYelledOnce = false;
         HasYelledTwice = false;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit* who)

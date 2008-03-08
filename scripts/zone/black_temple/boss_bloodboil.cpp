@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c) 
      {
          pInstance = ((ScriptedInstance*)c->GetInstanceData());
-         SetVariables();
+         Reset();
      }
 
      ScriptedInstance* pInstance;
@@ -100,7 +100,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     bool Phase1;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
           if(pInstance)
                pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 0);
@@ -120,19 +120,11 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
           PhaseChangeTimer = 60000;
 
           Phase1 = true;
-     }
 
-     void EnterEvadeMode()
-     {
-         SetVariables();
-         InCombat = false;
+          InCombat = false;
 
          (*m_creature).GetMotionMaster()->Clear(false);
-         m_creature->RemoveAllAuras();
-         m_creature->DeleteThreatList();
-         m_creature->CombatStop();
-         DoGoHome();
-    }
+     }
 
     void AttackStart(Unit *who)
     {
@@ -145,7 +137,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
             if(!InCombat)
             {
-                SetVariables();
+                Reset();
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;

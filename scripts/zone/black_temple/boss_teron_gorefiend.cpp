@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 {
     mob_doom_blossomAI(Creature *c) : ScriptedAI(c)
     {
-        SetVariables();
+        Reset();
     }
 
     bool InCombat;
@@ -87,22 +87,12 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
     uint32 ShadowBoltTimer;
     uint64 TeronGUID;
 
-    void SetVariables()
+    void Reset()
     {
         CheckTeronTimer = 5000;
         InCombat = false;
         ShadowBoltTimer = 12000;
         TeronGUID = 0;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
-
-        m_creature->CombatStop();
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        DoGoHome();
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -163,7 +153,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -181,7 +171,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     bool Intro;
     bool HasEnraged;
 
-    void SetVariables()
+    void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_TERONGOREFIENDEVENT, 0);
@@ -196,20 +186,12 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         HasEnraged = false;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Start off unattackable so that the intro is done properly
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
+    
+        Reset();
         InCombat = false;
         AggroTimer = 20000;
         AggroTargetGUID = 0;
         Intro = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)

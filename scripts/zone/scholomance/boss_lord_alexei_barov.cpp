@@ -28,13 +28,13 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 {
-    boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Immolate_Timer;
     uint32 VeilofShadow_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
 
         Immolate_Timer = 7000;
@@ -42,10 +42,10 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->LoadCreaturesAddon();
     }
 

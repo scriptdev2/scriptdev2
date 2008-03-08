@@ -29,22 +29,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lord_vyletongueAI : public ScriptedAI
 {
-    boss_lord_vyletongueAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lord_vyletongueAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 PutridBreath_Timer;
     uint32 SmokeBomb_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         PutridBreath_Timer = 14000;
         SmokeBomb_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

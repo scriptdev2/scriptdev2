@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         BloodSiphon_Timer = 90000;
         CorruptedBlood_Timer = 25000;
@@ -98,10 +98,10 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         Enraged = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
 

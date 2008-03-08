@@ -42,7 +42,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 {
-    boss_aeonusAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_aeonusAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SandBreath_Timer;
     uint32 TimeStop_Timer; 
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SandBreath_Timer = 30000;
         TimeStop_Timer = 40000;
@@ -58,10 +58,10 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

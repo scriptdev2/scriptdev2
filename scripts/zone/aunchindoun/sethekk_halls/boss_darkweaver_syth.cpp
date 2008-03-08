@@ -60,7 +60,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 {
-    boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 flameshock_timer;
     uint32 arcaneshock_timer;
@@ -80,12 +80,12 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         flameshock_timer = 2000;
         arcaneshock_timer = 3000;
@@ -338,19 +338,19 @@ CreatureAI* GetAI_boss_darkweaver_sythAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 {
-    mob_syth_fireAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_syth_fireAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 flameshock_timer;
     uint32 flamebuffet_timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         
@@ -427,19 +427,19 @@ CreatureAI* GetAI_mob_syth_fireAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
 {
-    mob_syth_arcaneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_syth_arcaneAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 arcaneshock_timer;
     uint32 arcanebuffet_timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         
@@ -516,19 +516,19 @@ CreatureAI* GetAI_mob_syth_arcaneAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
 {
-    mob_syth_frostAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_syth_frostAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 frostshock_timer;
     uint32 frostbuffet_timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         
@@ -605,19 +605,19 @@ CreatureAI* GetAI_mob_syth_frostAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
 {
-    mob_syth_shadowAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_syth_shadowAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 shadowshock_timer;
     uint32 shadowbuffet_timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         

@@ -27,7 +27,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
 {
-    boss_landslideAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_landslideAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 KnockBack_Timer;
     uint32 WarStomp_Timer;
@@ -38,17 +38,17 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         KnockBack_Timer = 8000;
         WarStomp_Timer = 2000;
         Adds_Timer = 0;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

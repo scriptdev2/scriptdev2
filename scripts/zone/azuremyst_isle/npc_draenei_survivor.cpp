@@ -36,7 +36,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
 {
-    draenei_survivorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    draenei_survivorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 UnSpawnTimer;
     uint32 ResetlifeTimer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
     bool isRun;
     bool isMove;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         UnSpawnTimer = 2500;
         ResetlifeTimer= 60000;
@@ -59,8 +59,8 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
         isMove = false;
         UnSpawn    = false;
         HealSay = false;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->CastSpell(m_creature, 29152, false, NULL); //cast red shining
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
@@ -134,8 +134,8 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
             if(ResetlifeTimer < diff)
             {
                 ResetlifeTimer = 60000;
-                m_creature->RemoveAllAuras();
-                m_creature->DeleteThreatList();
+                //m_creature->RemoveAllAuras();
+                //m_creature->DeleteThreatList();
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
                 m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,3); // ley down
@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
             m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED);
             m_creature->HandleEmoteCommand(ANIM_RISE);
-            m_creature->RemoveAllAuras();
+            //m_creature->RemoveAllAuras();
             switch (rand()%4)//This switch doesn't work at all, creature say nothing!
             {
             case 0: DoSay(HEAL1, LANG_UNIVERSAL, Hitter); break;

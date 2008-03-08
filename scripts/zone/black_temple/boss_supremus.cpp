@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 {
     molten_flameAI(Creature *c) : ScriptedAI(c) 
     {
-        SetVariables();
+        Reset();
     }
 
     uint64 SupremusGUID;
@@ -45,8 +45,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     bool TargetLocked;
     uint32 CheckTimer;
 
-    void SetVariables();
-    void EnterEvadeMode();
+    void Reset();
     void AttackStart(Unit *who);
     void MoveInLineOfSight(Unit *who);
     void UpdateAI(const uint32 diff);
@@ -54,23 +53,13 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     void StalkTarget(Unit* target);
 };
 
-void molten_flameAI::SetVariables()
+void molten_flameAI::Reset()
 {
     SupremusGUID = 0;
     TargetLocked = false;
     InCombat = false;
     CheckTimer = 1000;
 
-}
-
-void molten_flameAI::EnterEvadeMode()
-{
-    InCombat = false;
-
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
 }
 
 void molten_flameAI::AttackStart(Unit *who)
@@ -136,7 +125,7 @@ void molten_flameAI::UpdateAI(const uint32 diff)
 
 struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 {
-    npc_volcanoAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    npc_volcanoAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     bool InCombat;
     uint32 CheckTimer;
@@ -144,8 +133,7 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
     uint32 FireballTimer;
     uint32 GeyserTimer;
 
-    void SetVariables();
-    void EnterEvadeMode();
+    void Reset();
     void AttackStart(Unit *who) {return;}
     void MoveInLineOfSight(Unit *who) {return;}
     void UpdateAI(const uint32 diff);
@@ -153,23 +141,13 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
     float CalculateRandomCoord();
 };
 
-void npc_volcanoAI::SetVariables()
+void npc_volcanoAI::Reset()
 {
     InCombat = false;
     CheckTimer = 1000;
     SupremusGUID = 0;
     FireballTimer = 500;
     GeyserTimer = 0;
-}
-
-void npc_volcanoAI::EnterEvadeMode()
-{
-    InCombat = false;
-
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
 }
 
 void npc_volcanoAI::SetSupremusGUID(uint64 guid)
@@ -234,7 +212,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     boss_supremusAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        SetVariables();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -248,7 +226,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     bool InCombat;
     bool Phase1;
 
-    void SetVariables()
+    void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_SUPREMUSEVENT, 0);
@@ -260,19 +238,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         SummonVolcanoTimer = 5000;
 
         Phase1 = true;
-    }
-
-    void EnterEvadeMode()
-    {
-        SetVariables();
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
-
 
     void AttackStart(Unit *who)
     {
@@ -287,7 +254,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             {
                 if(pInstance)
                     pInstance->SetData(DATA_SUPREMUSEVENT, 1);
-                SetVariables();
+                Reset();
                 InCombat = true;
             }
         }

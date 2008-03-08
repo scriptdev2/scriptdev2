@@ -69,15 +69,15 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
 {
     bool Spawn;
 
-    mob_shattered_rumblerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_shattered_rumblerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Spawn = false;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
@@ -127,7 +127,11 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_kilsorrow_agentAI : public ScriptedAI
 {
-    mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -176,24 +180,24 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_lump' WHERE `entry` = 18351;
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
-    mob_lumpAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_lumpAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Reset_Timer;
     uint32 Spear_Throw_Timer;
     bool InCombat;
-    bool Reset;
+    bool bReset;
     
-    void EnterEvadeMode()
+    void Reset()
     {
         Reset_Timer = 60000;
         Spear_Throw_Timer = 2000;
         InCombat = false;
-        Reset = false;
+        bReset = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
         m_creature->setFaction(1711);                       //hostile
@@ -204,21 +208,21 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER && (m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 30)
         {
-            if (!Reset && ((Player*)done_by)->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
+            if (!bReset && ((Player*)done_by)->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
             {
                 //Take 0 damage
                 damage = 0;
 
                 ((Player*)done_by)->AttackStop();
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                m_creature->RemoveAllAuras();
-                m_creature->DeleteThreatList();
-                m_creature->CombatStop();
+                //m_creature->RemoveAllAuras();
+                //m_creature->DeleteThreatList();
+                //m_creature->CombatStop();
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
                 m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, 0);
 
-                Reset = true;
+                bReset = true;
             }
         }
     }
@@ -277,7 +281,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //check if we waiting for a reset
-        if (Reset)
+        if (bReset)
         {
             if (Reset_Timer < diff) { EnterEvadeMode(); }
             else Reset_Timer -= diff;

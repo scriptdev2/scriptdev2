@@ -31,7 +31,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
 {
-    boss_nerubenkanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_nerubenkanAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 EncasingWebs_Timer;
     uint32 PierceArmor_Timer;
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         VirulentPoison_Timer = 3000;
         EncasingWebs_Timer = 7000;
@@ -51,10 +51,10 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         RaiseUndeadScarab_Timer = 11000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

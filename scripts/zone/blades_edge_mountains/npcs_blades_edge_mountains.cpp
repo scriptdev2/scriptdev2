@@ -32,7 +32,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 {
-    npc_daranelleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    npc_daranelleAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void MoveInLineOfSight(Unit *who)
     {

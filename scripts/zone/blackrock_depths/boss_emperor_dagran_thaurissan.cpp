@@ -33,24 +33,24 @@ EndScriptData */
  
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {
-    boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {Reset();}
  
     uint32 HandOfThaurissan_Timer;
     uint32 AvatarOfFlame_Timer;
 //    uint32 Counter;
     bool InCombat;
  
-    void EnterEvadeMode()
+    void Reset()
     {       
         HandOfThaurissan_Timer = 4000;
         AvatarOfFlame_Timer = 25000;
 //        Counter= 0;
         InCombat = false;
  
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
  
     void AttackStart(Unit *who)

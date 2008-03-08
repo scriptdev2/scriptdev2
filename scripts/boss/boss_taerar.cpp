@@ -41,7 +41,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 {
-    boss_taerarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_taerarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Sleep_Timer;
     uint32 NoxiousBreath_Timer;
@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
     bool InCombat;
     bool Shades;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Sleep_Timer = 15000;
         NoxiousBreath_Timer = 8000;
@@ -75,10 +75,10 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         InCombat = false;
         Shades = false; 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -303,22 +303,22 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
 {
-    boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 PoisonCloud_Timer;
     uint32 PosionBreath_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         PoisonCloud_Timer = 8000;
         PosionBreath_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -65,14 +65,14 @@ SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
     EnterEvadeMode();
 }
 
-void SimpleAI::EnterEvadeMode()
+void SimpleAI::Reset()
 {
     InCombat = false;
 
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
+    //m_creature->RemoveAllAuras();
+    //m_creature->DeleteThreatList();
+    //m_creature->CombatStop();
+    //DoGoHome();
 }
 
 void SimpleAI::AttackStart(Unit *who)

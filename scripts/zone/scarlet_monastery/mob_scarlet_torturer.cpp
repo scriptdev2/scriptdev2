@@ -31,20 +31,20 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL scarlet_torturerAI : public ScriptedAI
 {
-    scarlet_torturerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    scarlet_torturerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Immolate_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Immolate_Timer = 45000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

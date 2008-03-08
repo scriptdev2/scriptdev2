@@ -40,18 +40,18 @@ struct MANGOS_DLL_DECL neltharakuAI : public ScriptedAI
     int32 Interval_1;
     int32 Interval_2;
 
-    neltharakuAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    neltharakuAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {
         SayingTimer = 0;
         SayingTimer2 = 30000;
         Interval_1 = 1;
         Interval_2 = 1;
         StartSay = false;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

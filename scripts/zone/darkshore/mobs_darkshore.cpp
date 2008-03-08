@@ -28,7 +28,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_lunaclawAI : public ScriptedAI
 {
-    mob_lunaclawAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_lunaclawAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {

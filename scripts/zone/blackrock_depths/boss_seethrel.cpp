@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
 {
-    boss_seethrelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_seethrelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FrostArmor_Timer;
     uint32 Frostbolt_Timer;
@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
     uint32 FrostWard_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FrostArmor_Timer = 2000;
         Frostbolt_Timer = 6000;
@@ -53,10 +53,10 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
         FrostWard_Timer = 25000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_FROSTARMOR,true);
     }
 

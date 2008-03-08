@@ -58,7 +58,7 @@ EndScriptData */
 //Exarch Maladaar
 struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 {
-    boss_exarch_maladaarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}    
+    boss_exarch_maladaarAI(Creature *c) : ScriptedAI(c) {Reset();}    
 
     uint32 Fear_timer;
     uint32 Ribbon_of_Souls_timer;
@@ -69,12 +69,12 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     bool HasYelled;
     bool Avatar_summoned;
     
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         Fear_timer = 20000;
         Ribbon_of_Souls_timer = 5000;
@@ -263,18 +263,18 @@ CreatureAI* GetAI_boss_exarch_maladaarAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
 {
-    mob_avatar_of_martyredAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    mob_avatar_of_martyredAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 Mortal_Strike_timer;
     
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
         

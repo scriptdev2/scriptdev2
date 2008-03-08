@@ -74,7 +74,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 {
-    boss_nalorakkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_nalorakkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ChangeForm_Timer;
     uint32 BrutalSwipe_Timer;
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     bool ChangedToTroll;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ChangeForm_Timer = 45000;
         BrutalSwipe_Timer = 12000;
@@ -108,10 +108,10 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         ChangedToTroll = true;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

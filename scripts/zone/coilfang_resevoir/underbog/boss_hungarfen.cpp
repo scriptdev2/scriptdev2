@@ -28,20 +28,20 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
-    boss_hungarfenAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_hungarfenAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     bool Root;
     uint32 Mushroom_timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Root = false;
         Mushroom_timer = 5000;     // 1 mushroom after 5s, then one per 10s.
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();       
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();       
     }
 
     void AttackStart(Unit *who)
@@ -119,7 +119,7 @@ CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
 {
-    mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Grow_timer;    // grow for 20s (adjust scale modifiers with this!)
     uint32 Shrink_timer;  // shrink in 3s
@@ -127,17 +127,17 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
     bool Exploded;
     bool RootSelf;
 
-    void EnterEvadeMode() {
+    void Reset() {
         Grow_timer = 20000;    // grow for 20s
         Shrink_timer = 3000;   // shrink in 3s
         Scale = 0.1;           // start with small mushroomie
         Exploded = false;
         RootSelf = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         // let's make mushrooms immune to CC effects to force 'em exploding &&frozen in place
         

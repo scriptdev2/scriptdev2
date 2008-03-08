@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 {
-    boss_moamAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_moamAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     Unit *pTarget;
     uint32 TRAMPLE_Timer;
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
     uint32 i;
     uint32 j;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         i=0;
         j=0;
@@ -50,10 +50,10 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
         TRAMPLE_Timer = 30000;
         DRAINMANA_Timer = 30000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

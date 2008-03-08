@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
 {
-    boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FrostNova_Timer;
     uint32 Frostbolt_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
     uint32 DrainLife_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FrostNova_Timer = 11000;
         Frostbolt_Timer = 1000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         DrainLife_Timer = 31000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

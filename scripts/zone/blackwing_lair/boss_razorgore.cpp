@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
-    boss_razorgoreAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_razorgoreAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cleave_Timer;
     uint32 WarStomp_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     uint32 Conflagration_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Cleave_Timer = 15000;      //These times are probably wrong
         WarStomp_Timer = 35000;
@@ -56,10 +56,10 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         Conflagration_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

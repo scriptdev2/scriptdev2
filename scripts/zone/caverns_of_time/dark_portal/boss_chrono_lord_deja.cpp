@@ -42,24 +42,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
 {
-    boss_chrono_lord_dejaAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_chrono_lord_dejaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ArcaneBlast_Timer;
     uint32 TimeLapse_Timer;
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     { 
         ArcaneBlast_Timer = 20000;
         TimeLapse_Timer = 15000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

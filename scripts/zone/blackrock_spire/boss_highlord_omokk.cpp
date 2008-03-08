@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
 {
-    boss_highlordomokkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_highlordomokkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WarStomp_Timer;
     uint32 Cleave_Timer;
@@ -47,7 +47,7 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     uint32 Dazed_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         WarStomp_Timer = 15000;
         Cleave_Timer = 6000;
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
         Dazed_Timer = 30000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
 {
-    boss_broodlordAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_broodlordAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cleave_Timer;
     uint32 BlastWave_Timer;
@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     uint32 LeashCheck_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Cleave_Timer = 8000;      //These times are probably wrong
         BlastWave_Timer = 12000;
@@ -54,10 +54,10 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         InCombat = false;
 
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

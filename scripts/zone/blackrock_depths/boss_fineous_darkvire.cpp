@@ -32,22 +32,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_fineous_darkvireAI : public ScriptedAI
 {
-    boss_fineous_darkvireAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_fineous_darkvireAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 HolyShock_Timer;
     uint32 Kick_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         HolyShock_Timer = 5000;
         Kick_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

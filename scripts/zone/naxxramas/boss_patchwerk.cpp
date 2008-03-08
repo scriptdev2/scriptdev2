@@ -42,7 +42,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 {
-    boss_patchwerkAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_patchwerkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 HatefullStrike_Timer;
     uint32 Enrage_Timer;
@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         HatefullStrike_Timer = 1200;        //1.2 seconds
         Enrage_Timer = 420000;              //7 minutes 420,000
@@ -58,10 +58,10 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         Enraged = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

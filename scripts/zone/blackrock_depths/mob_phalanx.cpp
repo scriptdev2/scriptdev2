@@ -33,24 +33,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI
 {
-    phalanxAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    phalanxAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ThunderClap_Timer;
     uint32 FireballVolley_Timer;
     uint32 MightyBlow_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ThunderClap_Timer = 12000;
         FireballVolley_Timer =0;
         MightyBlow_Timer = 15000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

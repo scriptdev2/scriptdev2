@@ -32,7 +32,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
 {
-    boss_mothersmolderwebAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_mothersmolderwebAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Crystalize_Timer;
     uint32 MothersMilk_Timer;
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
     uint32 WebExplosion_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Crystalize_Timer = 20000;
         MothersMilk_Timer = 30000;
@@ -48,10 +48,10 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
         WebExplosion_Timer = 60000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

@@ -68,22 +68,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 {
-    boss_midnightAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_midnightAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 Attumen;
     uint8 Phase;
     uint32 Mount_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Phase = 1;
         Attumen = 0;
         Mount_Timer = 0;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)
@@ -216,16 +216,16 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         InCombat = false;
 
         ResetTimer = 2000;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)

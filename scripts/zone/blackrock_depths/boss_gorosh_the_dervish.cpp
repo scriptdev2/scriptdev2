@@ -30,22 +30,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
 {
-    boss_gorosh_the_dervishAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_gorosh_the_dervishAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WhirlWind_Timer;
     uint32 MortalStrike_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         WhirlWind_Timer = 12000;
         MortalStrike_Timer = 22000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

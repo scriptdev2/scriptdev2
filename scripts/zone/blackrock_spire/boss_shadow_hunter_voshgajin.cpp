@@ -29,24 +29,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
 {
-    boss_shadowvoshAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_shadowvoshAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CurseOfBlood_Timer;
     uint32 Hex_Timer;
     uint32 Cleave_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         CurseOfBlood_Timer = 2000;
         Hex_Timer = 8000;
         Cleave_Timer = 14000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

@@ -30,22 +30,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
 {
-    boss_the_unforgivenAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_the_unforgivenAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Frostbolt_Timer;
     uint32 Chilled_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Frostbolt_Timer = 1000;
         Chilled_Timer = 7000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

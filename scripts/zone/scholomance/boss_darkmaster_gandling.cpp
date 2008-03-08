@@ -51,7 +51,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 {
-    boss_darkmaster_gandlingAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_darkmaster_gandlingAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ArcaneMissiles_Timer;
     uint32 ShadowShield_Timer;
@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
     Creature *Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ArcaneMissiles_Timer = 4500;
         ShadowShield_Timer = 12000;
@@ -68,10 +68,10 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
         Teleport_Timer = 16000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

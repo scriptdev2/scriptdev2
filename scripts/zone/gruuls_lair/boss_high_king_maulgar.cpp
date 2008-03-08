@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     uint64 Council[4];
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         ArcingSmash_Timer = 10000;
         MightyBlow_Timer = 40000;
@@ -93,10 +93,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_MAULGAREVENT, 0);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit()
@@ -272,17 +272,17 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         DarkDecay_Timer = 10000;
         Summon_Timer = 15000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -416,7 +416,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         GreatherPolymorph_Timer = 5000;
         LightningBolt_Timer = 10000;
@@ -425,10 +425,10 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -555,17 +555,17 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         GreaterPowerWordShield_Timer = 5000;
         Heal_Timer = 30000;
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -677,7 +677,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         GreaterFireball_Timer = 10000;
         SpellShield_Timer = 5000;
@@ -685,10 +685,10 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         //reset encounter
         if (pInstance)

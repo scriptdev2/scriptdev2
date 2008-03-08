@@ -198,17 +198,17 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         EnterEvadeMode();
     }
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FakeDeath = false;
         InCombat = false;
         DelayRes_Timer = 0;
         DelayRes_Target = 0;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
 
@@ -340,7 +340,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     uint64 AdvisorGuid[4];
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Fireball_Timer = 5000+rand()%10000;
         ArcaneDisruption_Timer = 45000;
@@ -365,10 +365,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
@@ -1095,7 +1095,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
     uint32 Silence_Timer;
     uint32 PsychicBlow_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Gaze_Timer = 100;
         Silence_Timer = 20000;
@@ -1220,7 +1220,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 
     uint32 Fear_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Fear_Timer = 20000;
         advisorbase_ai::EnterEvadeMode();
@@ -1326,7 +1326,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
     uint32 Yell_Timer;
     bool Yell;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Fireball_Timer = 2000;
         Conflagration_Timer = 20000;
@@ -1495,7 +1495,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
     uint32 Bomb_Timer;
     uint32 RemoteToy_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Bomb_Timer = 10000;
         RemoteToy_Timer = 5000;
@@ -1606,13 +1606,13 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 //Flame Strike AI
 struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 {
-    mob_kael_flamestrikeAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_kael_flamestrikeAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Timer;
     bool Casting;
     bool KillSelf;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Timer = 5000;
         Casting = false;
@@ -1622,10 +1622,10 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->setFaction(14);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -1663,24 +1663,24 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 //Phoenix AI
 struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
 {
-    mob_phoenixAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_phoenixAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Burn_Timer;
     uint32 Hatch_Timer;
     uint32 EggVis_Timer;
     bool IsEgg;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Burn_Timer = 1000;
         Hatch_Timer = 15000;
         EggVis_Timer = 0;
         IsEgg = false;
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_MODEL);
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void Hatch()

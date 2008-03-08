@@ -19,9 +19,9 @@
 hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
 {
     pInstance = ((ScriptedInstance*)c->GetInstanceData());
-    SetVariables();
+    Reset();
 }
-void hyjalAI::SetVariables()
+void hyjalAI::Reset()
 {
     PlayerGUID = 0;
     BossGUID[0] = 0;
@@ -38,16 +38,6 @@ void hyjalAI::SetVariables()
     SecondBossDead = false;
 
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
-}
-
-void hyjalAI::EnterEvadeMode()
-{
-    SetVariables();
-
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    DoGoHome();
 }
 
 void hyjalAI::AttackStart(Unit *who)

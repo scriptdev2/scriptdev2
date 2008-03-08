@@ -34,24 +34,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
 {
-    boss_halyconAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_halyconAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CrowdPummel_Timer;
     uint32 MightyBlow_Timer;
     bool Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         CrowdPummel_Timer = 8000;
         MightyBlow_Timer = 14000;
         Summoned = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

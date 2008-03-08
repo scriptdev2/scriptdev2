@@ -30,7 +30,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
     uint32 ZoneAttackMsgTimer;
     bool InCombat;
 
-    void EnterEvadeMode();
+    void Reset();
 
     void AttackStart(Unit *who);
 

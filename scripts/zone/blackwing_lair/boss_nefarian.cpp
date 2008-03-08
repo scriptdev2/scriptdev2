@@ -73,7 +73,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 {
-    boss_nefarianAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_nefarianAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowFlame_Timer;
     uint32 BellowingRoar_Timer;
@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     bool Phase3;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowFlame_Timer = 12000;       //These times are probably wrong
         BellowingRoar_Timer = 30000;
@@ -95,10 +95,10 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         Phase3 = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

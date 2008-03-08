@@ -39,7 +39,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
 {
-    boss_postmaster_malownAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_postmaster_malownAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WailingDead_Timer;
     uint32 Backhand_Timer;
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
     bool HasYelled;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         WailingDead_Timer = 19000; //lasts 6 sec
         Backhand_Timer = 8000; //2 sec stun
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
         HasYelled = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

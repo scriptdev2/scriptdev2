@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     ScriptedInstance *pInstance;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         DemoralizingShout_Timer = 15000;      //These times are probably wrong
         Inspire_Timer = 13000;
@@ -58,10 +58,10 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         Flamespear_Timer = 2000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -167,17 +167,17 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
 
     ScriptedInstance *pInstance;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Heal_Timer = 15000+rand()%15000;     
         ShadowWordPain_Timer = 2000;
         Immolate_Timer = 8000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         
         
                

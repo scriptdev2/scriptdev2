@@ -49,7 +49,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 {
-    boss_tailonking_ikissAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}   
+    boss_tailonking_ikissAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 arcanevolley_timer;
     uint32 sheep_timer;
@@ -65,12 +65,12 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {   
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         arcanevolley_timer = 5000; 
         sheep_timer = 7000;

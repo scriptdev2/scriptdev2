@@ -111,7 +111,11 @@ bool GossipSelect_npc_steward_of_time(Player *player, Creature *_Creature, uint3
 
 struct MANGOS_DLL_DECL npc_steward_of_timeAI : public ScriptedAI
 {
-    npc_steward_of_timeAI(Creature *c) : ScriptedAI(c) {}
+    npc_steward_of_timeAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
 
     void UpdateAI(const uint32 diff)
     {

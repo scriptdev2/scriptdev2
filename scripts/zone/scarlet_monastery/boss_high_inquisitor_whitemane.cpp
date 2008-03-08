@@ -50,7 +50,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
-    boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Healing_Timer;
     uint32 Renew_Timer;
@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     uint32 MindBlast6_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Healing_Timer = 0;
         Renew_Timer= 0;
@@ -74,10 +74,10 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         MindBlast6_Timer = 6000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

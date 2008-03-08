@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     bool PhaseTwo;
     bool WasDead;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         MortalCleave_Timer = 4000;
         Silence_Timer = 9000;
@@ -94,10 +94,10 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         PhaseTwo = false;
         WasDead = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_THEKAL_ALIVE, 0);
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
     
     ScriptedInstance *pInstance;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         Shield_Timer = 1000;
         BloodLust_Timer = 16000;
@@ -335,10 +335,10 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         
         FakeDeath = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         if(pInstance)
             pInstance->SetData(DATA_LORKHAN_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
@@ -513,7 +513,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
     
     ScriptedInstance *pInstance;
  
-    void EnterEvadeMode()
+    void Reset()
     {
         SweepingStrikes_Timer = 13000;
         SinisterStrike_Timer = 8000;
@@ -524,10 +524,10 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
         
         FakeDeath = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
         if(pInstance)
             pInstance->SetData(DATA_ZATH_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 

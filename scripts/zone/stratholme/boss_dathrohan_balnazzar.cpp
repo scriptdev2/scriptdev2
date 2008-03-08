@@ -83,7 +83,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 {
-    boss_dathrohan_balnazzarAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_dathrohan_balnazzarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 CrusadersHammer_Timer;
     uint32 CrusaderStrike_Timer;
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
     bool Transformed;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         CrusadersHammer_Timer = 8000;
         CrusaderStrike_Timer = 14000;
@@ -113,13 +113,13 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         Transformed = false;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,10545);
         m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.00f);
         
-        DoGoHome();
+        //DoGoHome();
     }
 
     void JustDied(Unit* Victim)

@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
 {
-    boss_kruulAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_kruulAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
     Creature* Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         ShadowVolley_Timer = 10000;
         Cleave_Timer = 14000;
@@ -59,10 +59,10 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         Hound_Timer = 8000; 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

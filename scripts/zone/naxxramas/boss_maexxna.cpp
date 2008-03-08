@@ -44,12 +44,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 {
-    mob_webwrapAI(Creature *c) : ScriptedAI(c) {SetVariables();}
-
+    mob_webwrapAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint64 victimGUID;
 
-    void SetVariables()
+    void Reset()
     {
         victimGUID = 0;
     }
@@ -95,7 +94,7 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 {
-    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {SetVariables();}
+    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WebTrap_Timer;
     uint32 WebSpray_Timer;
@@ -105,7 +104,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     bool Enraged;
     bool InCombat;
 
-    void SetVariables()
+    void Reset()
     {
         WebTrap_Timer = 20000;          //20 sec init, 40 sec normal
         WebSpray_Timer = 40000;         //40 seconds
@@ -113,16 +112,8 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         NecroticPoison_Timer = 30000;   //30 seconds
         SummonSpiderling_Timer = 30000; //30 sec init, 40 sec normal
         Enraged = false;
-    }
 
-    void EnterEvadeMode()
-    {
         InCombat = false;
-
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
     }
 
     void AttackStart(Unit *who)

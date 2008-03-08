@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     bool Earthquake;
     bool Phase2;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         TidalWave_Timer = 10000;
         WateryGrave_Timer = 25000;
@@ -106,10 +106,10 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         Earthquake = false;
         Phase2 = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
@@ -375,11 +375,11 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 //Water Globule AI
 struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
 {
-    mob_water_globuleAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    mob_water_globuleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Check_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Check_Timer = 1000;
 
@@ -387,10 +387,10 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->setFaction(14);
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

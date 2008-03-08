@@ -32,24 +32,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
 {
-    boss_angerrelAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_angerrelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 SunderArmor_Timer;
     uint32 ShieldBlock_Timer;
     uint32 Strike_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         SunderArmor_Timer = 8000;
         ShieldBlock_Timer = 15000;
         Strike_Timer = 12000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

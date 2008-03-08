@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     uint32 Berserk_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         Pounding_Timer = 12000;
         ArcaneOrb_Timer = 3000;
@@ -67,10 +67,10 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         Berserk_Timer = 600000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, 0);
@@ -223,14 +223,14 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
 {
-    arcane_orb_targetAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    arcane_orb_targetAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void EnterEvadeMode()
+    void Reset()
     {       
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

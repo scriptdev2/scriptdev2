@@ -28,22 +28,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL meshlok_the_harvesterAI : public ScriptedAI
 {
-    meshlok_the_harvesterAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    meshlok_the_harvesterAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 WarStomp_Timer;
     uint32 Strike_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         WarStomp_Timer = 9000;
         Strike_Timer = 7000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

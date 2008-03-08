@@ -34,24 +34,24 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_lord_roccorAI : public ScriptedAI
 {
-    boss_lord_roccorAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_lord_roccorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FlameShock_Timer;
     uint32 EarthShock_Timer;
     uint32 GroundTremor_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {       
         FlameShock_Timer = 18000;
         EarthShock_Timer = 7000;
         GroundTremor_Timer = 14000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

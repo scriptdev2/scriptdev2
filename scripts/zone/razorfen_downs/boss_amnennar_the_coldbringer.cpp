@@ -34,7 +34,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 {
-    boss_amnennar_the_coldbringerAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_amnennar_the_coldbringerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 AmnenarsWrath_Timer;
     uint32 FrostBolt_Timer;
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
     Creature* Summoned;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         AmnenarsWrath_Timer = 8000;
         FrostBolt_Timer = 1000;
@@ -53,10 +53,10 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

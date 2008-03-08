@@ -33,7 +33,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
 {
-    boss_baroness_anastariAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_baroness_anastariAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 BansheeWail_Timer;
     uint32 BansheeCurse_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     //uint32 Possess_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         BansheeWail_Timer = 1000;
         BansheeCurse_Timer = 11000;
@@ -49,10 +49,10 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //Possess_Timer = 35000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

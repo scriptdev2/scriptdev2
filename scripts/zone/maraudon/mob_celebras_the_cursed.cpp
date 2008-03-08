@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
 {
-    celebras_the_cursedAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    celebras_the_cursedAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Wrath_Timer;
     uint32 EntanglingRoots_Timer;
@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
     int RandY;
     Creature* Summoned;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Wrath_Timer = 8000;
         EntanglingRoots_Timer = 2000;
@@ -49,10 +49,10 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         Adds_Timer = 30000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

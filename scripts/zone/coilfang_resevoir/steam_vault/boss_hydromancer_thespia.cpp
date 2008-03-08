@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         LightningCloud_Timer = 28000;
         LungBurst_Timer = 7000;
@@ -68,10 +68,10 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
         InCombat = false;
 
-        m_creature->RemoveAllAuras(); 
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras(); 
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 0);
@@ -206,17 +206,17 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
-    mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();} 
+    mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
     uint32 FrostBolt_Timer;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         FrostBolt_Timer = 10000;
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

@@ -40,7 +40,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
 {
-    boss_venoxisAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_venoxisAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 HolyFire_Timer;
     uint32 HolyWrath_Timer;
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     bool PhaseTwo;
     bool InBerserk;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         HolyFire_Timer = 10000;
         HolyWrath_Timer = 60500;
@@ -70,10 +70,10 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         PhaseTwo = false;
         InBerserk= false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)

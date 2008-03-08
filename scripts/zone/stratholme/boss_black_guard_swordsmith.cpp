@@ -34,22 +34,22 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_black_guard_swordsmithAI : public ScriptedAI
 {
-    boss_black_guard_swordsmithAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();}
+    boss_black_guard_swordsmithAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Dazed_Timer;
     uint32 BansheeCurse_Timer;
     bool InCombat;
 
-    void EnterEvadeMode()
+    void Reset()
     {
         Dazed_Timer = 6000;
         BansheeCurse_Timer = 10000;
         InCombat = false;
 
-        m_creature->RemoveAllAuras();
-        m_creature->DeleteThreatList();
-        m_creature->CombatStop();
-        DoGoHome();
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
