@@ -33,11 +33,9 @@ scripts/boss/boss_emeriss.cpp \
 scripts/boss/boss_lethon.cpp \
 scripts/boss/boss_taerar.cpp \
 scripts/boss/boss_ysondre.cpp \
-scripts/creature/mob_defias.cpp \
 scripts/creature/mob_event_ai.cpp \
 scripts/creature/mob_event_ai.h \
 scripts/creature/mob_generic_creature.cpp \
-scripts/creature/mob_kobold.cpp \
 scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \
 scripts/custom/custom_example.cpp \
@@ -47,13 +45,11 @@ scripts/go/go_scripts.cpp \
 scripts/guard/guard_ai.cpp \
 scripts/guard/guard_ai.h \
 scripts/guard/guards.cpp \
-scripts/honor/honor_vendor.cpp \
 scripts/item/item_scripts.cpp \
 scripts/item/item_test.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
-scripts/npc/npc_not_selectable.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \

@@ -221,10 +221,6 @@
 				Name="creature"
 				>
 				<File
-					RelativePath="..\scripts\creature\mob_defias.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\creature\mob_event_ai.cpp"
 					>
 				</File>
@@ -234,10 +230,6 @@
 				</File>
 				<File
 					RelativePath="..\scripts\creature\mob_generic_creature.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\creature\mob_kobold.cpp"
 					>
 				</File>
 				<File
@@ -268,10 +260,6 @@
 			<Filter
 				Name="honor"
 				>
-				<File
-					RelativePath="..\scripts\honor\honor_vendor.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="npc"
@@ -286,10 +274,6 @@
 				</File>
 				<File
 					RelativePath="..\scripts\npc\npc_mount_vendor.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\npc_not_selectable.cpp"
 					>
 				</File>
 			</Filter>

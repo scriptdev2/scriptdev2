@@ -57,18 +57,32 @@ struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        if(type == DATA_LORDALEXEIBAROV_DEATH)
-            IsBossDied[0] = true;
-        else if(type == DATA_DOCTORTHEOLENKRASTINOV_DEATH)
-            IsBossDied[1] = true;
-        else if(type == DATA_THERAVENIAN_DEATH)
-            IsBossDied[2] = true;
-        else if(type == DATA_LOREKEEPERPOLKELT_DEATH)
-            IsBossDied[3] = true;
-        else if(type == DATA_INSTRUCTORMALICIA_DEATH)
-            IsBossDied[4] = true;
-        else if(type == DATA_LADYILLUCIABAROV_DEATH)
-            IsBossDied[5] = true;
+        switch(type)
+        {
+            case DATA_LORDALEXEIBAROV_DEATH:
+                IsBossDied[0] = true;
+                break;
+
+             case DATA_DOCTORTHEOLENKRASTINOV_DEATH:
+                IsBossDied[1] = true;
+                break;
+
+             case DATA_THERAVENIAN_DEATH:
+                IsBossDied[2] = true;
+                break;
+
+             case DATA_LOREKEEPERPOLKELT_DEATH:
+                IsBossDied[3] = true;
+                break;
+
+             case DATA_INSTRUCTORMALICIA_DEATH:
+                IsBossDied[4] = true;
+                break;
+
+             case DATA_LADYILLUCIABAROV_DEATH:
+                IsBossDied[5] = true;
+                break;
+        }
     }
 };
 

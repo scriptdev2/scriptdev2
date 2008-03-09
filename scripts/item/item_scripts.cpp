@@ -25,7 +25,6 @@ EndScriptData */
 # item_area_52_special(i28132)       Prevents abuse of this item
 # item_draenei_fishing_net(i23654)   Correctly implements chance to spawn item or creature
 # item_nether_wraith_beacon(i31742)  Summons creatures for quest Becoming a Spellfire Tailor (q10832)
-# item_skin_of_purest_water(i23751)  Summons Tel'athion the Impure (Call of Water)
 # item_vorenthals_presence(i30259)   Prevents abuse of this item
 # item_yehkinyas_bramble(i10699)     Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 # item_zezzak_shard(i31463)          Quest The eyes of Grillok (q10813). Prevents abuse
@@ -107,30 +106,6 @@ bool ItemUse_item_nether_wraith_beacon(Player *player, Item* _Item, SpellCastTar
 }
 
 /*#####
-# item_skin_of_purest_water
-#####*/
-
-bool ItemUse_item_skin_of_purest_water(Player *player, Item* _Item, SpellCastTargets const& targets)
-{
-    Creature *Telathion;
-    Telathion = player->SummonCreature(17359,player->GetPositionX()+25, player->GetPositionY(), player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,300000);
-    if (Telathion)
-        ((CreatureAI*)Telathion->AI())->AttackStart(player);
-
-    Creature *WaterSpirit1;
-    WaterSpirit1 = player->SummonCreature(6748,player->GetPositionX()+5, player->GetPositionY()+5, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,180000);
-    if (WaterSpirit1 && Telathion)
-        ((CreatureAI*)WaterSpirit1->AI())->AttackStart(Telathion);
-
-    Creature *WaterSpirit2;
-    WaterSpirit2 = player->SummonCreature(6748,player->GetPositionX()+5, player->GetPositionY()-5, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,180000);
-    if (WaterSpirit2 && Telathion)
-        ((CreatureAI*)WaterSpirit2->AI())->AttackStart(Telathion);
-
-    return false;
-}
-
-/*#####
 # item_vorenthals_presence
 #####*/
 
@@ -203,11 +178,6 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_nether_wraith_beacon";
     newscript->pItemUse = ItemUse_item_nether_wraith_beacon;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="item_skin_of_purest_water";
-    newscript->pItemUse = ItemUse_item_skin_of_purest_water;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

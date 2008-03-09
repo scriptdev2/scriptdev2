@@ -80,9 +80,7 @@ extern void AddSC_boss_ysondre();
 
 // -- Creature --
 extern void AddSC_mob_event();
-extern void AddSC_kobold();
 extern void AddSC_generic_creature();
-extern void AddSC_defias();
 
 // -- Custom --
 extern void AddSC_custom_example();
@@ -96,14 +94,12 @@ extern void AddSC_go_scripts();
 extern void AddSC_guards();
 
 // -- Honor --
-extern void AddSC_Honor_Vendor();
 
 // -- Item --
 extern void AddSC_item_scripts();
 extern void AddSC_item_test();
 
 // -- NPC --
-extern void AddSC_not_selectable();
 extern void AddSC_npc_guardian();
 extern void AddSC_npc_mount_vendor();
 
@@ -844,9 +840,7 @@ void ScriptsInit()
 
     // -- Creature --
     AddSC_mob_event();
-    AddSC_kobold();
     AddSC_generic_creature();
-    AddSC_defias();
 
     // -- Custom --
     AddSC_custom_example();
@@ -860,14 +854,12 @@ void ScriptsInit()
     AddSC_guards();
 
     // -- Honor --
-    AddSC_Honor_Vendor();
 
     // -- Item --
     AddSC_item_scripts();
     AddSC_item_test();
 
     // -- NPC --
-    AddSC_not_selectable();
     AddSC_npc_guardian();
     AddSC_npc_mount_vendor();
 
