@@ -439,8 +439,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         /** Phase 3+ **/
         AgonizingFlamesTimer = 35000; // Phase 3+ timers may be incorrect
         ShadowBlastTimer = 3000;
-        FlameBurstTimer = 20000;
-        ShadowDemonTimer = 20000;
+        FlameBurstTimer = 10000;
+        ShadowDemonTimer = 30000;
         TransformTimer = 90000;
         EnrageTimer = 40000;
         CageTimer = 30000;
@@ -1237,7 +1237,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 DoYell(SAY_MORPH, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_MORPH);
                 TransformTimer = 60000;
-                ShadowDemonTimer = 22000;
+                FlameBurstTimer = 10000;
+                ShadowDemonTimer = 30000;
                 m_creature->GetMotionMaster()->Clear(false); // Stop moving
             }else TransformTimer -= diff;
         }
@@ -1247,10 +1248,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             // Stop moving if we are by clearing movement generators.
             if(!m_creature->GetMotionMaster()->empty())
-            {
                 m_creature->GetMotionMaster()->Clear(false);
-                m_creature->GetMotionMaster()->Idle();
-            }
 
             if(TransformTimer < diff)
             {

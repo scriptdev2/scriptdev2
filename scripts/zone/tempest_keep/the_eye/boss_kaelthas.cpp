@@ -197,7 +197,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     advisorbase_ai(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     void Reset()
@@ -311,7 +311,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         AdvisorGuid[2] = 0;
         AdvisorGuid[3] = 0;
         InCombat = false;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -788,6 +788,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
 
                     Unit *target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -1122,7 +1123,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         Silence_Timer = 20000;
         PsychicBlow_Timer = 10000;
 
-        advisorbase_ai::EnterEvadeMode();
+        advisorbase_ai::Reset();
     }
 
     void JustDied(Unit* pKiller)
@@ -1223,7 +1224,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
     void Reset()
     {
         Fear_Timer = 20000;
-        advisorbase_ai::EnterEvadeMode();
+        advisorbase_ai::Reset();
     }
 
     void JustDied(Unit* Killer)
@@ -1314,7 +1315,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         Yell_Timer = 2000;
         Yell = false;
 
-        advisorbase_ai::EnterEvadeMode();
+        advisorbase_ai::Reset();
     }
 
     void JustDied(Unit* pKiller)
@@ -1458,7 +1459,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         Bomb_Timer = 10000;
         RemoteToy_Timer = 5000;
 
-        advisorbase_ai::EnterEvadeMode();
+        advisorbase_ai::Reset();
     }
 
     void JustDied(Unit* pKiller)

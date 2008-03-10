@@ -23,8 +23,6 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
-#include "../../../../../game/SpellAuras.h"
-#include "../../../../../shared/Database/DBCStores.h"
 #include "../../../../../game/ObjectAccessor.h"
 
 

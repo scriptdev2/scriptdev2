@@ -148,11 +148,14 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         Creature* Member;
         for(uint8 i = 0; i < 3; i++)
         {
-            Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i]));
-            if(Member)
+            if(Council[i])
             {
-                ((Creature*)Member)->Respawn();
-                ((Creature*)Member)->AI()->EnterEvadeMode();
+                Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i]));
+                if(Member)
+                {
+                    ((Creature*)Member)->Respawn();
+                    ((Creature*)Member)->AI()->EnterEvadeMode();
+                }
             }
         }
         if(pInstance)
@@ -162,7 +165,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetVisibility(VISIBILITY_OFF);
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
     }
 
     void AttackStart(Unit *who)
@@ -198,8 +201,6 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
         if(target)
         {
-            Reset();
-
             Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
             Council[1] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
             Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
@@ -253,25 +254,39 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             Veras = ((Creature*)Unit::GetUnit((*m_creature), Council[3]));
 
             // Don't allow players to pull one of the council's members, aggro another members' target if none present
-            if(Gathios->isAlive() && !Gathios->SelectHostilTarget())
+            if(Gathios && Gathios->isAlive() && !Gathios->SelectHostilTarget())
                 Gathios->AddThreat(Veras->getVictim(), 1.0f);
 
-            if(Zerevor->isAlive() && !Zerevor->SelectHostilTarget())
+            if(Zerevor && Zerevor->isAlive() && !Zerevor->SelectHostilTarget())
                 Zerevor->AddThreat(Gathios->getVictim(), 1.0f);
 
-            if(Malande->isAlive() && !Malande->SelectHostilTarget())
+            if(Malande && Malande->isAlive() && !Malande->SelectHostilTarget())
                 Malande->AddThreat(Zerevor->getVictim(), 1.0f);
 
-            if(Veras->isAlive() && !Veras->SelectHostilTarget())
+            if(Veras && Veras->isAlive() && !Veras->SelectHostilTarget())
                 Veras->AddThreat(Malande->getVictim(), 1.0f);
 
-            if(!Gathios->isAlive() && !Zerevor->isAlive() && !Malande->isAlive() && !Veras->isAlive())
+            if((!Gathios || !Gathios->isAlive()) && (!Zerevor || !Zerevor->isAlive()) && (!Malande || !Malande->isAlive()) && (!Veras |!Veras->isAlive()))
             {
                 if(pInstance)
                     pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
 
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
+
+            uint8 EvadeCheck = 0;
+            for(uint8 i = 0; i < 3; i++)
+            {
+                if(Council[i])
+                {
+                    Creature* Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i]));
+                    if(Member && Member->IsInEvadeMode())
+                        EvadeCheck++;
+                }
+            }
+
+            if(EvadeCheck > 3)
+                Reset();
 
             CheckTimer = 2000;
         }else CheckTimer -= diff;

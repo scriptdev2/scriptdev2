@@ -59,7 +59,6 @@ void molten_flameAI::Reset()
     TargetLocked = false;
     InCombat = false;
     CheckTimer = 1000;
-
 }
 
 void molten_flameAI::AttackStart(Unit *who)

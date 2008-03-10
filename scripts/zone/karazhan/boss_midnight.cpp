@@ -148,7 +148,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                     Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen);
                     if(pAttumen)
                     {
-                        pAttumen->Mount(m_creature->GetUInt32Value(UNIT_FIELD_DISPLAYID));
+                        pAttumen->SetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID, m_creature->GetUInt32Value(UNIT_FIELD_DISPLAYID));
                         pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         pAttumen->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pAttumen->getVictim()));
                         pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());

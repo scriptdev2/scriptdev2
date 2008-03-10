@@ -154,7 +154,7 @@ static Yells JainaQuotes[]=
 static Yells ThrallQuotes[]=
 { 
     {ATTACKED, "I will lie down for no one!", 11031},
-    {ATTACKED, "Bring the fight to me and pay with your lives!", 11051},
+    {ATTACKED, "Bring the fight to me and pay with your lives!", 11061},
     {INCOMING, "Make ready for another wave! LOK-TAR OGAR!", 11032},
     {RALLY, "Hold them back! Do not falter!", 11030},
     {RALLY, "Victory or death!", 11059},
