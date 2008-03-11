@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9991, 10107, 10108, 10044, 10172, 10646. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9991, 10107, 10108, 10044, 10172, 10646, 10085. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
 SDCategory: Nagrand
 EndScriptData */
 
@@ -259,6 +259,47 @@ bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature *_Creature
     }
     return true;
 }
+/*######
+## npc_creditmarker_visist_with_ancestors (Quest 10085)
+######*/
+
+/*
+update creature_template set scriptname = 'npc_creditmarker_visit_with_ancestors' where entry in (18840,18841,18842,18843);
+*/
+
+struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
+{
+  npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
+
+  void Reset()
+  {
+  }
+
+  void MoveInLineOfSight(Unit *who)
+  {
+      if(!who)
+          return;
+      
+      if(who->GetTypeId() == TYPEID_PLAYER)
+      {
+          if(((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
+          {
+              uint32 creditMarkerId = m_creature->GetEntry();
+              if((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
+              {
+                  // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
+                  if(!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
+                      ((Player*)who)->KilledMonster(creditMarkerId, m_creature->GetGUID());
+              }
+          }
+      }
+  }
+};
+
+CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature *_Creature)
+{
+    return new npc_creditmarker_visit_with_ancestorsAI (_Creature);
+}
 
 /*######
 ## AddSC
@@ -285,5 +326,10 @@ void AddSC_npcs_nagrand()
     newscript->Name="npc_lantresor_of_the_blade";
     newscript->pGossipHello =  &GossipHello_npc_lantresor_of_the_blade;
     newscript->pGossipSelect = &GossipSelect_npc_lantresor_of_the_blade;
+    m_scripts[nrscripts++] = newscript;
+    
+    newscript = new Script;
+    newscript->Name="npc_creditmarker_visit_with_ancestors";
+    newscript->GetAI = GetAI_npc_creditmarker_visit_with_ancestors;
     m_scripts[nrscripts++] = newscript;
 }

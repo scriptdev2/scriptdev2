@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
                 break;
 
             //Kael'thas
-             case DATA_KAELTHAS:
+             case DATA_KAELTHASEVENT:
                 KaelthasEventPhase = data;
                 Encounters[3] = (data) ? true : false;
                 break;

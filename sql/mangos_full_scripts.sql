@@ -503,6 +503,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mobs_kilsorrow_agent' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'npc_altruis_the_sufferer' WHERE `entry` = 18417;
 UPDATE `creature_template` SET `ScriptName` = 'npc_greatmother_geyah' WHERE `entry` = 18141;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lantresor_of_the_blade' WHERE `entry` = 18261;
+UPDATE `creature_template` SET `ScriptName` = 'npc_creditmarker_visit_with_ancestors' WHERE `entry` IN (18840,18841,18842,18843);
 
 /* NAXXRAMAS */
 UPDATE `instance_template` SET `script` = 'instance_naxxramas' WHERE `map` = 533;

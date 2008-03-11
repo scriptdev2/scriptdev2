@@ -100,7 +100,7 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
     uint32 AnetheronEvent = 0;
     AnetheronEvent = ((hyjalAI*)_Creature->AI())->GetInstanceData(DATA_ANETHERONEVENT);
     outstring_log("Anetheron Event is %u", AnetheronEvent);
-    if(AnetheronEvent == 3) // Only let them start the Horde phase if Anetheron is dead.
+    if(AnetheronEvent >= 3) // Only let them start the Horde phase if Anetheron is dead.
     {
         if((((hyjalAI*)_Creature->AI())->EventBegun) && (!((hyjalAI*)_Creature->AI())->FirstBossDead))
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BEGIN_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);

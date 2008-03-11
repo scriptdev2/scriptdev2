@@ -18,8 +18,6 @@
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Group.h"
 #include "../../../../../../game/GossipDef.h"
-//#include "../../../../../../game/World.h"
-//#include "../../../../../../game/WorldSession.h"
 
 // Trash Mobs summoned in waves
 #define NECROMANCER         17899
@@ -131,11 +129,12 @@ struct Yells
 enum YellId
 {
     ATTACKED     = 0,
-    INCOMING     = 1,
-    RALLY        = 2,
-    FAILED       = 3,
-    SUCCESS      = 4,
-    DEATH        = 5,
+    BEGIN        = 1,
+    INCOMING     = 2,
+    RALLY        = 3,
+    FAILED       = 4,
+    SUCCESS      = 5,
+    DEATH        = 6,
 };
 
 static Yells JainaQuotes[]=
@@ -143,8 +142,8 @@ static Yells JainaQuotes[]=
     {ATTACKED, "I'm in jeopardy, help me if you can!", 11007},
     {ATTACKED, "They've broken through!", 11049},
     {INCOMING, "Stay alert! Another wave approaches.", 11008},
+    {BEGIN, "Hold them back as long as possible", 11050},
     {RALLY, "Don't give up! We must prevail!", 11006},
-    {RALLY, "Hold them back as long as possible", 11050},
     {RALLY, "We must hold strong!", 11051},
     {FAILED, "We are lost. Fall back!", 11009},
     {SUCCESS, "We have won valuable time. Now we must pull back!", 11011},
@@ -156,6 +155,7 @@ static Yells ThrallQuotes[]=
     {ATTACKED, "I will lie down for no one!", 11031},
     {ATTACKED, "Bring the fight to me and pay with your lives!", 11061},
     {INCOMING, "Make ready for another wave! LOK-TAR OGAR!", 11032},
+    {BEGIN, "Do not give an inch of ground!", 11060},
     {RALLY, "Hold them back! Do not falter!", 11030},
     {RALLY, "Victory or death!", 11059},
     {RALLY, "Do not give an inch of ground!", 11060},
@@ -195,8 +195,6 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     uint32 GetInstanceData(uint32 Event);
 
     void Talk(uint32 id);
-
-    void Debug(char* text, ...);
 public:    
     ScriptedInstance* pInstance;
 
@@ -205,13 +203,13 @@ public:
 
     uint32 NextWaveTimer;
     uint32 WaveCount;
-    uint32 CheckRaidTimer;
     uint32 CheckBossTimer;
     uint32 Faction;
 
     bool EventBegun;
     bool FirstBossDead;
     bool SecondBossDead;
+    bool Summon;
 
 private:
     bool InCombat;

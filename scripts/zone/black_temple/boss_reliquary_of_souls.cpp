@@ -456,6 +456,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                         if(DespawnEssenceTimer < diff)
                         {
+                            EssenceDesire->DeleteThreatList();
                             EssenceDesire->setFaction(35);
                             EssenceDesire->Yell(DESI_SAY_AFTER, LANG_UNIVERSAL, 0);
                             DoPlaySoundToSet(m_creature, DESI_SOUND_AFTER);

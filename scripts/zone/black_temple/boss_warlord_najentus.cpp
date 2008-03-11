@@ -27,37 +27,37 @@ EndScriptData */
 #include "../../../../../game/TargetedMovementGenerator.h"
 
 //Aggro
-#define SAY_AGGRO "You will die, in the name of Lady Vashj!"
-#define SOUND_AGGRO 11450
+#define SAY_AGGRO       "You will die, in the name of Lady Vashj!"
+#define SOUND_AGGRO     11450
 
 //Needle (Random)
-#define SAY_NEEDLE1 "Stick around!"
-#define SOUND_NEEDLE1 11451
+#define SAY_NEEDLE1     "Stick around!"
+#define SOUND_NEEDLE1   11451
 
-#define SAY_NEEDLE2 "I'll deal with you later!"
-#define SOUND_NEEDLE2 11452
+#define SAY_NEEDLE2     "I'll deal with you later!"
+#define SOUND_NEEDLE2   11452
 
 //Slay
-#define SAY_SLAY1 "Your success was short lived!"
-#define SOUND_SLAY1 11455
+#define SAY_SLAY1       "Your success was short lived!"
+#define SOUND_SLAY1     11455
 
-#define SAY_SLAY2 "Time for you, to go!"
-#define SOUND_SLAY2 11456
+#define SAY_SLAY2       "Time for you to go!"
+#define SOUND_SLAY2     11456
 
 //Special
-#define SAY_SPECIAL1 "Bel'anen dal'lorei!"
-#define SOUND_SPECIAL1 11453
+#define SAY_SPECIAL1    "Bel'anen dal'lorei!"
+#define SOUND_SPECIAL1  11453
 
-#define SAY_SPECIAL2 "Blood will flow!"
-#define SOUND_SPECIAL2 11454
+#define SAY_SPECIAL2    "Blood will flow!"
+#define SOUND_SPECIAL2  11454
 
 //Enrage
-#define SAY_ENRAGE "My patience has ran out! Die, DIE!"
-#define SOUND_ENRAGE 11458
+#define SAY_ENRAGE      "My patience has ran out! Die, DIE!"
+#define SOUND_ENRAGE    11458
 
 //Death
-#define SAY_DEATH "Lord Illidan will... crush you."
-#define SOUND_DEATH 11459
+#define SAY_DEATH       "Lord Illidan will... crush you."
+#define SOUND_DEATH     11459
 
 //Spells
 #define SPELL_CRASHINGWAVE             40100

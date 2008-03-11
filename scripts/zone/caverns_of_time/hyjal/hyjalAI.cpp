@@ -31,18 +31,24 @@ void hyjalAI::Reset()
 
     /** Timers **/
     NextWaveTimer = 10000;
-    CheckRaidTimer = 0;
     CheckBossTimer = 0;
 
     /** Misc **/
     WaveCount = 0;
-    Faction = 0;
+
+    /** Set faction properly based on creature entry**/
+    switch(m_creature->GetEntry())
+    {
+        case 17772: Faction = 0; break;
+        case 17852: Faction = 1; break;
+    }
 
     /** Bools **/
     EventBegun = false;
     InCombat = false;
     FirstBossDead = false;
     SecondBossDead = false;
+    Summon = false;
 
     /** Flags **/
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
@@ -96,9 +102,6 @@ void hyjalAI::MoveInLineOfSight(Unit *who)
 
 void hyjalAI::JustDied(Unit* killer)
 {
-    EventBegun = false;
-    InCombat = false;
-    WaveCount = 0;
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
     Talk(DEATH);
 }
@@ -114,7 +117,7 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
     float X = 0;
     float Y = 0;
     float Z = 0;
-    if(Faction == 0) // Alliance
+    if(!Faction) // Alliance
     {
         X = AllianceBase[random].x;
         Y = AllianceBase[random].y;
@@ -200,7 +203,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
          NextWaveTimer = wave[Count].WaveTimer;
      else 
      {
-         NextWaveTimer = 0;
+         Summon = false;
          CheckBossTimer = 1000;
      }
 }
@@ -238,8 +241,11 @@ void hyjalAI::StartEvent(Player* player)
 {
     if(player)
     {
+        Talk(BEGIN);
         EventBegun = true;
+        Summon = true;
         NextWaveTimer = 15000;
+        CheckBossTimer = 5000;
         PlayerGUID = player->GetGUID();
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0);
     }
@@ -267,7 +273,7 @@ uint32 hyjalAI::GetInstanceData(uint32 Event)
 void hyjalAI::Talk(uint32 id)
 {
     std::list<uint8> index;
-    for(uint8 i = 0; i < 9; i++)
+    for(uint8 i = 0; i < 10; i++)
     {
         if(Faction == 0) // Alliance
         {
@@ -304,17 +310,11 @@ void hyjalAI::Talk(uint32 id)
         DoPlaySoundToSet(m_creature, Sound);
 }
 
-void hyjalAI::Debug(char* text, ...)
-{
-    if(text)
-        outstring_log(text);
-}
-
 void hyjalAI::UpdateAI(const uint32 diff)
 {
     if(!EventBegun) return;
 
-    if(NextWaveTimer)
+    if(Summon)
     {
         if(NextWaveTimer < diff)
         {
@@ -325,55 +325,6 @@ void hyjalAI::UpdateAI(const uint32 diff)
             WaveCount++;
         }else NextWaveTimer -= diff;
     }
-
-    if(CheckRaidTimer < diff)
-    {
-        if(PlayerGUID)
-        {
-            Player* target = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-            if(target)
-            {
-                if(!target->isAlive())
-                {
-                    Group* Raid = target->GetGroup();
-                    if(Raid)
-                    {
-                        const Group::MemberSlotList list = Raid->GetMemberSlots();
-                        Group::member_citerator itr = list.begin();
-                        uint32 DeathCount = 0;
-                        uint32 RaidCount = 0;
-                        for( ; itr != list.end(); itr++)
-                        {
-                            Player* member = ((Player*)Unit::GetUnit((*m_creature), itr->guid));
-
-                            if(member && (member->GetMapId() != m_creature->GetMapId())) // Make sure they are in the same map.
-                                break;
-
-                            if(member && member->isAlive())
-                                break;
-                            else
-                                DeathCount++;
-
-                            RaidCount++;
-                        }
-                        if(DeathCount == RaidCount)
-                        {
-                            Talk(FAILED);
-                            EventBegun = false;
-                            EnterEvadeMode();
-                            Reset();
-                        }
-                    }else
-                    {
-                        EventBegun = false;
-                        EnterEvadeMode();
-                        Reset();
-                    }
-                }
-            }
-        }
-        CheckRaidTimer = 25000;
-    }else CheckRaidTimer -= diff;
 
     if(CheckBossTimer)
     {
@@ -396,6 +347,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
                             Talk(SUCCESS);
                             SecondBossDead = true;
                         }
+                        EventBegun = false;
                         CheckBossTimer = 0;
                         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
                         BossGUID[i] = 0;
