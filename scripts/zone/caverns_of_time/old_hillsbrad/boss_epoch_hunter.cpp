@@ -22,7 +22,7 @@ EndScriptData */
 
 #include "../../../sc_defines.h"
 
-#define SPELL_SAND_BREATH       20717
+#define SPELL_SAND_BREATH       31914
 #define SPELL_IMPENDING_DOOM    19702
 #define SPELL_KNOCKBACK         26027
 #define SPELL_MDA               33834

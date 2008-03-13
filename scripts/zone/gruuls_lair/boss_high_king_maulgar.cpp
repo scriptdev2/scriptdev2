@@ -34,10 +34,23 @@ EndScriptData */
 #define SOUND_SLAY3              11375
 #define SOUND_DEATH              11376
 
+// High King Maulgar
 #define SPELL_ARCING_SMASH       38761
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33239
 #define SPELL_ENRAGE             34970     
+
+// Council spells
+#define SPELL_DARK_DECAY        33129
+#define SPELL_GREATER_POLYMORPH 33173
+#define SPELL_LIGHTNING_BOLT    36152
+#define SPELL_ARCANE_SHOCK      33175
+#define SPELL_ARCANE_EXPLOSION  33237
+#define SPELL_GREATER_PW_SHIELD 33147
+#define SPELL_HEAL              33144
+#define SPELL_GREATER_FIREBALL  33051
+#define SPELL_SPELLSHIELD       33054
+#define SPELL_BLAST_WAVE        33061
 
 //High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
@@ -382,7 +395,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         //DarkDecay_Timer
         if(DarkDecay_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33129);
+            DoCast(m_creature->getVictim(), SPELL_DARK_DECAY);
             DarkDecay_Timer = 20000;
         }else DarkDecay_Timer -= diff;
 
@@ -504,34 +517,34 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         if(pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
-        //GreatherPolymorph_Timer / disabled: it makes you fall under the texture / if you've got vmaps feel free to uncomment this
-        /*if(GreatherPolymorph_Timer < diff)
+        //GreaterPolymorph_Timer / disabled: it makes you fall under the texture / if you've got vmaps feel free to uncomment this
+        /*if(GreaterPolymorph_Timer < diff)
         {
             Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
-                DoCast(target, 33173);
+                DoCast(target, SPELL_GREATER_POLYMORPH);
 
-            GreatherPolymorph_Timer = 20000;
-        }else GreatherPolymorph_Timer -= diff;*/
+            GreaterPolymorph_Timer = 20000;
+        }else GreaterPolymorph_Timer -= diff;*/
 
         //LightningBolt_Timer
         if(LightningBolt_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 36152);
+            DoCast(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
             LightningBolt_Timer = 15000;
         }else LightningBolt_Timer -= diff;
 
         //ArcaneShock_Timer
         if(ArcaneShock_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33175);
+            DoCast(m_creature->getVictim(), SPELL_ARCANE_SHOCK);
             ArcaneShock_Timer = 20000;
         }else ArcaneShock_Timer -= diff;
 
         //ArcaneExplosion_Timer
         if(ArcaneExplosion_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33237);
+            DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
             ArcaneExplosion_Timer = 30000;
         }else ArcaneExplosion_Timer -= diff;
 
@@ -645,14 +658,14 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         //GreaterPowerWordShield_Timer
         if(GreaterPowerWordShield_Timer < diff)
         {
-            DoCast(m_creature, 33147);
+            DoCast(m_creature, SPELL_GREATER_PW_SHIELD);
             GreaterPowerWordShield_Timer = 40000;
         }else GreaterPowerWordShield_Timer -= diff;
 
         //Heal_Timer
         if(Heal_Timer < diff)
         {
-            DoCast(m_creature, 33144);
+            DoCast(m_creature, SPELL_HEAL);
             Heal_Timer = 60000;
         }else Heal_Timer -= diff;
 
@@ -679,7 +692,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     void Reset()
     {
-        GreaterFireball_Timer = 10000;
+        GreaterFireball_Timer = 1000;
         SpellShield_Timer = 5000;
         BlastWave_Timer = 20000;
 
@@ -768,21 +781,23 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         //GreaterFireball_Timer
         if(GreaterFireball_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33051);
-            GreaterFireball_Timer = 30000;
+            DoCast(m_creature->getVictim(), SPELL_GREATER_FIREBALL);
+            GreaterFireball_Timer = 4000;
         }else GreaterFireball_Timer -= diff;
 
         //SpellShield_Timer
         if(SpellShield_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33054);
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoCast(m_creature->getVictim(), SPELL_SPELLSHIELD);
             SpellShield_Timer = 50000;
         }else SpellShield_Timer -= diff;
 
         //BlastWave_Timer
         if(BlastWave_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), 33061);
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoCast(m_creature->getVictim(), SPELL_BLAST_WAVE);
             BlastWave_Timer = 60000;
         }else BlastWave_Timer -= diff;
 

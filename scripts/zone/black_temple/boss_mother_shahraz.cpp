@@ -111,10 +111,10 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     uint32 FatalAttractionExplodeTimer;
     uint32 RandomYellTimer;
     uint32 EnrageTimer;
-    uint32 Multiplier;
     uint32 ExplosionCount;
 
     bool InCombat;
+    bool Enraged;
     bool HasSummonedBomb;
 
     void Reset()
@@ -132,11 +132,10 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         FatalAttractionExplodeTimer = 70000;
         RandomYellTimer = 70000 + rand()%41 * 1000;
         EnrageTimer = 600000;
-        Multiplier = 1;
         ExplosionCount = 0;
 
-        HasSummonedBomb = false;
         InCombat = false;
+        Enraged = false;
     }
 
     void AttackStart(Unit *who)
@@ -242,48 +241,26 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         //Randomly cast one beam.
         if(BeamTimer < diff)
         {
-            if(m_creature->GetHealth()*30 <= m_creature->GetMaxHealth())
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(!target || !target->isAlive())
+                return;
+
+            switch(rand()%4)
             {
-                if(BeamCounter < 4)
-                {
-                    switch(rand()%3)
-                    {
-                        case 0:
-                            DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
-                            break;
-                        case 1:
-                            DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
-                            break;
-                        case 2:
-                            DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
-                            break;
-                    }
-                    BeamCounter++;
-                }
-                else
-                {
-                    DoCast(m_creature->getVictim(), SPELL_BEAM_SINFUL);
-                    BeamCounter = 0;
-                    DoYell(SAY_SPELL1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPELL1);
-                }
+                case 0:
+                    DoCast(target, SPELL_BEAM_SINISTER);
+                    break;
+                case 1:
+                    DoCast(target, SPELL_BEAM_VILE);
+                    break;
+                case 2:
+                    DoCast(target, SPELL_BEAM_WICKED);
+                    break;
+                case 3:
+                    DoCast(target, SPELL_BEAM_SINFUL);
+                    break;
             }
-            else
-            {
-                switch(rand()%3)
-                {
-                    case 0:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_SINISTER);
-                        break;
-                    case 1:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_WICKED);
-                        break;
-                    case 2:
-                        DoCast(m_creature->getVictim(), SPELL_BEAM_VILE);
-                        break;
-                }
-            }
-            BeamTimer = 30000 / Multiplier;
+            BeamTimer = Enraged ? 10000 : 30000; // Cast it much faster if enraged
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds. 
@@ -367,7 +344,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             DoCast(m_creature, SPELL_ENRAGE);
             DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            Multiplier++;
+            Enraged = true;
             EnrageTimer = 600000;
         }else EnrageTimer -= diff;
 
@@ -376,18 +353,18 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         {
             switch(rand()%3)
             {
-            case 0:
-                DoYell(SAY_TAUNT1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_TAUNT1);
-                break;
-            case 1:
-                DoYell(SAY_TAUNT2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_TAUNT2);
-                break;
-            case 2:
-                DoYell(SAY_TAUNT3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_TAUNT3);
-                break;
+                case 0:
+                    DoYell(SAY_TAUNT1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_TAUNT1);
+                    break;
+                case 1:
+                    DoYell(SAY_TAUNT2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_TAUNT2);
+                    break;
+                case 2:
+                    DoYell(SAY_TAUNT3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_TAUNT3);
+                    break;
             }
             RandomYellTimer = 60000 + rand()%91 * 1000;
         }else RandomYellTimer -= diff;

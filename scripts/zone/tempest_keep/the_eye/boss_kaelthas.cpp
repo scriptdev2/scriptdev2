@@ -54,7 +54,6 @@ EndScriptData */
 #define SPELL_GRAVITY_LAPSE               34480
 #define SPELL_GRAVITY_LAPSE_AURA          39432
 #define SPELL_NETHER_BEAM                 35873
-#define SPELL_NETHER_VAPOR                35858
 //Thaladred the Darkener spells
 #define SPELL_PSYCHIC_BLOW                10689
 #define SPELL_SILENCE                     30225
@@ -700,7 +699,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
                     if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
                     {
-                        //This is provv: at the moment we can't implement phase 2 and 3
                         Phase = 2;
                         pInstance->SetData(DATA_KAELTHASEVENT, 2);
 

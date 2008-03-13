@@ -326,37 +326,34 @@ void hyjalAI::UpdateAI(const uint32 diff)
         }else NextWaveTimer -= diff;
     }
 
-    if(CheckBossTimer)
+    if(CheckBossTimer < diff)
     {
-        if(CheckBossTimer < diff)
+        for(uint8 i = 0; i < 2; i++)
         {
-            for(uint8 i = 0; i < 2; i++)
+            if(BossGUID[i])
             {
-                if(BossGUID[i])
+                Unit* pUnit = Unit::GetUnit((*m_creature), BossGUID[i]);
+                if(pUnit && (!pUnit->isAlive()))
                 {
-                    Unit* pUnit = Unit::GetUnit((*m_creature), BossGUID[i]);
-                    if(pUnit && (!pUnit->isAlive()))
+                    if(BossGUID[i] == BossGUID[0])
                     {
-                        if(BossGUID[i] == BossGUID[0])
-                        {
-                            Talk(INCOMING);
-                            FirstBossDead = true;
-                        }
-                        else if(BossGUID[i] == BossGUID[1])
-                        {
-                            Talk(SUCCESS);
-                            SecondBossDead = true;
-                        }
-                        EventBegun = false;
-                        CheckBossTimer = 0;
-                        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
-                        BossGUID[i] = 0;
+                        Talk(INCOMING);
+                        FirstBossDead = true;
                     }
+                    else if(BossGUID[i] == BossGUID[1])
+                    {
+                        Talk(SUCCESS);
+                        SecondBossDead = true;
+                    }
+                    EventBegun = false;
+                    CheckBossTimer = 0;
+                    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+                    BossGUID[i] = 0;
                 }
             }
-            CheckBossTimer = 5000;
-        }else CheckBossTimer -= diff;
-    }
+        }
+        CheckBossTimer = 5000;
+    }else CheckBossTimer -= diff;
 
     if(!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
 
