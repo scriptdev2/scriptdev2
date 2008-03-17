@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
             //25-45 seconds till recast
-            ShadowFlame_Timer = 25000 + rand()%20000;
+            ShadowFlame_Timer = 15000 + rand()%3000;
         }else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer

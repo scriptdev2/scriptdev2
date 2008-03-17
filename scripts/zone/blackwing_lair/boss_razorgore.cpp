@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
             //7-14 seconds until we should cast this agian
-            Cleave_Timer = 7000 + rand()%7000;
+            Cleave_Timer = 7000 + rand()%3000;
         }else Cleave_Timer -= diff;
 
         //WarStomp_Timer
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
 
             //10-15 seconds until we should cast this agian
-            FireballVolley_Timer = 12000 + rand()%5000;
+            FireballVolley_Timer = 12000 + rand()%3000;
         }else FireballVolley_Timer -= diff;
 
         //Conflagration_Timer

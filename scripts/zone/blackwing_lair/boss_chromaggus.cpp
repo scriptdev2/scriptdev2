@@ -64,7 +64,7 @@ EndScriptData */
 #define SPELL_CHROMATIC_MUT_1   23174
 
 //The frenzy spell may be wrong
-#define SPELL_FRENZY            19812
+#define SPELL_FRENZY            28371
 #define SPELL_ENRAGE            28747
 
 
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                     //Assuming it is caused by a lack of core support for Charm
                     //So instead we instant kill our target
                     //DoCast(target,SPELL_CHROMATIC_MUT_1);
-                    //target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, 0, false);
+                    target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, true);
                 }
 
             }

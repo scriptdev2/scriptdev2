@@ -54,8 +54,7 @@ CreatureAI* GetAI_mob_blackwing_lair(Creature *_Creature)
 
         ai->Spell[1].Enabled = true;
         ai->Spell[1].Spell_Id = 28478;           //Frostbolt
-        ai->Spell[1].Cooldown = 1000;
-        ai->Spell[0].CooldownRandomAddition = 59000;
+        ai->Spell[1].Cooldown = 2000;
         ai->Spell[1].First_Cast = (rand()%60)*1000;
         ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
         break;

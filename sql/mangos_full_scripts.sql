@@ -756,6 +756,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_cthun' WHERE `entry` = 15727
 UPDATE `creature_template` SET `ScriptName` = 'mob_giant_claw_tentacle' WHERE `entry` = 15728;
 UPDATE `creature_template` SET `ScriptName` = 'mob_giant_eye_tentacle' WHERE `entry` = 15334;
 UPDATE `creature_template` SET `ScriptName` = 'mob_giant_flesh_tentacle' WHERE `entry` = 15802;
+UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_fankriss' WHERE `entry` = 15630;
+
 
 /* TEROKKAR FOREST */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_gordunni_ogre' WHERE `entry` IN (22143, 22144, 22148, 23022);

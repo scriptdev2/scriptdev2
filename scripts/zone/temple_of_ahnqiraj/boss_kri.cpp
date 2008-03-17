@@ -17,49 +17,139 @@
 /* ScriptData
 SDName: boss_kri
 SD%Complete: 100
-SDComment: Loot and creatures not linked
+SDComment: Loot not linked
 EndScriptData */
 
+
 #include "../../sc_defines.h"
-#include "../../creature/simple_ai.h"
+#include "def_temple_of_ahnqiraj.h"
 
-#define SPELL_CLEAVE        16044
+#define SPELL_CLEAVE        26350
 #define SPELL_TOXIC_VOLLEY  25812
+#define SPELL_POISON_CLOUD  38718         //Only Spell with right dmg.
+#define SPELL_ENRAGE        28131
 
-//Passive spell cast by the poison cloud 
-//(note that this is definitly the wrong ID but th only spell that matches the damage)
-#define SPELL_POISON_CLOUD  38718
 
-CreatureAI* GetAI_Kri(Creature *_Creature)
+struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
+    boss_kriAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        EnterEvadeMode();
+    }
 
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = SPELL_CLEAVE;
-    ai->Spell[0].Cooldown = 6000;
-    ai->Spell[0].First_Cast = 6000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    ScriptedInstance *pInstance;
 
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = SPELL_TOXIC_VOLLEY;
-    ai->Spell[1].Cooldown = 12000;
-    ai->Spell[1].First_Cast = 12000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
+    uint32 Cleave_Timer;
+    uint32 ToxicVolley_Timer;
+    uint32 Check_Timer;
 
-    //This spell is wrong but oh well, best we can do for now
-    ai->Death_Spell = 38718;
-    ai->Death_Target_Type = CAST_SELF;
+    bool VemDead;
+    bool Death;
 
-    ai->EnterEvadeMode();
+    void Reset()
+    {
+        Cleave_Timer = 4000 + rand()%4000;
+        ToxicVolley_Timer = 6000 + rand()%6000;
+        Check_Timer = 2000;
 
-    return ai;
+        VemDead = false;
+        Death = false;
+
+//        m_creature->RemoveAllAuras();
+//        m_creature->DeleteThreatList();
+//        m_creature->CombatStop();
+//        DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+            //Cleave_Timer
+            if (Cleave_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+                Cleave_Timer = 5000 + rand()%7000;
+            }else Cleave_Timer -= diff;
+
+            //ToxicVolley_Timer
+            if (ToxicVolley_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
+                ToxicVolley_Timer = 10000 + rand()%5000;
+            }else ToxicVolley_Timer -= diff;
+
+
+        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05 && !Death)
+        {
+
+                DoCast(m_creature->getVictim(),SPELL_POISON_CLOUD);
+                Death = true;
+
+        }
+
+        //Checking if Vem is dead. If yes we will enrage.
+        if(Check_Timer < diff)
+        {
+            if (!VemDead)
+            {
+                if(pInstance)
+                {    
+                    if(pInstance->GetData(DATA_VEMISDEAD))
+                    DoCast(m_creature, SPELL_ENRAGE);
+                    VemDead = true;
+                }
+            }
+            Check_Timer = 2000;
+        }else Check_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+    }
+}; 
+CreatureAI* GetAI_boss_kri(Creature *_Creature)
+{
+    return new boss_kriAI (_Creature);
 }
 
-void AddSC_Kri()
+
+void AddSC_boss_kri()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name="boss_kri";
-    newscript->GetAI = GetAI_Kri;
+    newscript->GetAI = GetAI_boss_kri;
     m_scripts[nrscripts++] = newscript;
 }

@@ -519,10 +519,16 @@ extern void AddSC_boss_gatewatcher_iron_hand();
 extern void AddSC_boss_nethermancer_sepethrea();
 
 //Temple of ahn'qiraj
-extern void AddSC_Yauj();
-extern void AddSC_Kri();
-extern void AddSC_Vem();
 extern void AddSC_boss_cthun();
+extern void AddSC_boss_fankriss();
+extern void AddSC_boss_huhuran();
+extern void AddSC_boss_kri();
+extern void AddSC_boss_skeram();
+extern void AddSC_boss_veklor();
+extern void AddSC_boss_veknilash();
+extern void AddSC_boss_vem();
+extern void AddSC_boss_yauj();
+extern void AddSC_instance_temple_of_ahnqiraj();
 
 //Terokkar Forest
 extern void AddSC_mobs_terokkar_forest();
@@ -1281,10 +1287,16 @@ void ScriptsInit()
     AddSC_boss_nethermancer_sepethrea();
 
     //Temple of ahn'qiraj
-    AddSC_Yauj();
-    AddSC_Kri();
-    AddSC_Vem();
     AddSC_boss_cthun();
+    AddSC_boss_fankriss();
+    AddSC_boss_huhuran();
+    AddSC_boss_kri();
+    AddSC_boss_skeram();
+    AddSC_boss_veklor();
+    AddSC_boss_veknilash();
+    AddSC_boss_vem();
+    AddSC_boss_yauj();
+    AddSC_instance_temple_of_ahnqiraj();
 
     //Terokkar Forest
     AddSC_mobs_terokkar_forest();

@@ -59,6 +59,7 @@ EndScriptData */
 #define HIDE_Z  481
 
 #define SPELL_SHADOWBOLT        21077
+#define SPELL_FEAR              26070
 
 //This script is complicated
 //Instead of morphing Victor Nefarius we will have him control phase 1
@@ -165,6 +166,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
     uint32 SpawnedAdds;
     uint32 AddSpawnTimer;
     uint32 ShadowBoltTimer;
+    uint32 FearTimer;
     uint32 MindControlTimer;
     uint32 ResetTimer;
     uint32 DrakType1;
@@ -177,7 +179,8 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         SpawnedAdds = 0;
         AddSpawnTimer = 10000;
         ShadowBoltTimer = 5000;
-        ResetTimer = 60000;        //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
+        FearTimer = 8000;
+        ResetTimer = 900000;        //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
         NefarianGUID = 0;
         NefCheckTime = 2000;
 
@@ -256,6 +259,19 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                 ShadowBoltTimer = 3000 + (rand()%7000);
             }else ShadowBoltTimer -= diff;
 
+            //FearTimer
+            if (FearTimer < diff)
+            {
+                //Cast
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (target)
+                    DoCast(target,SPELL_FEAR);
+
+                //Random time till recast between 10 and 20 seconds
+                FearTimer = 10000 + (rand()%10000);
+            }else FearTimer -= diff;
+
             //Add spawning mechanism
             if (AddSpawnTimer < diff)
             {
@@ -331,7 +347,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
                     else DoYell("UNABLE TO SPAWN NEF PROPERLY",LANG_UNIVERSAL,NULL);
                 }
 
-                AddSpawnTimer = 5000;
+                AddSpawnTimer = 4000;
             }else AddSpawnTimer -= diff;
         }
         else if (NefarianGUID)

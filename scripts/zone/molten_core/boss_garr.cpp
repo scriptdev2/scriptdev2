@@ -92,43 +92,6 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         }
     }
 
-    void SpawnAdds()
-    {
-        for (int32 i = 0; i < 8; i++)
-        {
-            Unit* pUnit = NULL; 
-            pUnit = DoSpawnCreature(12099, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 1000);
-
-            if (pUnit)
-                Add[i] = pUnit->GetGUID();
-
-            Enraged[i] = false;
-        }
-
-    }
-
-    void CheckAdds()
-    {
-        for (int32 i = 0; i < 8; i++)
-        {
-            if (Enraged[i])
-                continue;
-
-            if (Add[i])
-            {
-                Unit* pUnit = NULL; 
-                pUnit = Unit::GetUnit((*m_creature), Add[i]);
-
-                if (pUnit && pUnit->isAlive())
-                    continue;
-            }
-
-            //Add isn't alive so enrage once
-            DoCast(m_creature, SPELL_ENRAGE);
-            Enraged[i] = true;
-        }
-
-    }
 
     void UpdateAI(const uint32 diff)
     {
@@ -143,7 +106,7 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
             DoCast(m_creature,SPELL_ANTIMAGICPULSE);
 
             //14-18 seconds until we should cast this agian
-            AntiMagicPulse_Timer = 14000 + rand()%4000;
+            AntiMagicPulse_Timer = 10000 + rand()%5000;
         }else AntiMagicPulse_Timer -= diff;
 
         //MagmaShackles_Timer
@@ -159,9 +122,95 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 }; 
+
+
+struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
+{
+    mob_fireswornAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 Immolate_Timer;
+
+    void Reset()
+    {
+        Immolate_Timer = 4000;      //These times are probably wrong
+
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+        //DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+
+            }
+        }
+    }
+
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //Immolate_Timer
+        if (Immolate_Timer < diff)
+        {
+            //Cast
+            Unit* target = NULL;
+
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+                DoCast(target,SPELL_IMMOLATE);
+
+            //5-10 seconds until we should cast this agian
+            Immolate_Timer = 5000 + rand()%5000;
+        }else Immolate_Timer -= diff;
+
+        //Cast Erruption and let them die
+        if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.10)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_ERUPTION);
+            m_creature->setDeathState(JUST_DIED);
+            m_creature->RemoveCorpse();
+        }
+
+        DoMeleeAttackIfReady();
+    }
+}; 
 CreatureAI* GetAI_boss_garr(Creature *_Creature)
 {
     return new boss_garrAI (_Creature);
+}
+CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
+{
+    return new mob_fireswornAI (_Creature);
 }
 
 
@@ -172,6 +221,11 @@ void AddSC_boss_garr()
     newscript = new Script;
     newscript->Name="boss_garr";
     newscript->GetAI = GetAI_boss_garr;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_firesworn";
+    newscript->GetAI = GetAI_mob_firesworn;
     m_scripts[nrscripts++] = newscript;
 
 }

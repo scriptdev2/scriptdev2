@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
 
             //30 seconds until we should cast this agian
-            MortalStrike_Timer = 30000;
+            MortalStrike_Timer = 25000 + rand()%10000;
         }else MortalStrike_Timer -= diff;
 
         if (KnockBack_Timer < diff)

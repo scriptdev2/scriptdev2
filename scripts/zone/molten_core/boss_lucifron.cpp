@@ -25,7 +25,7 @@ EndScriptData */
 
 #define SPELL_IMPENDINGDOOM 19702
 #define SPELL_LUCIFRONCURSE 19703
-#define SPELL_SHADOWSHOCK   17399
+#define SPELL_SHADOWSHOCK   20603
 
 struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
 {

@@ -1,7 +1,253 @@
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
 /* ScriptData
 SDName: boss_fankriss
 SD%Complete: 100
-SDComment: place holder
+SDComment: 
 EndScriptData */
 
+
+#include "../../sc_defines.h"
+#include "../../../../../game/Player.h"
+#include "../../creature/simple_ai.h"
+
 #define SPELL_MORTAL_WOUND 28467
+#define SPELL_ROOT         28858
+
+// Enrage for his spawns
+#define SPELL_ENRAGE       28798
+
+
+struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
+{
+    boss_fankrissAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 MortalWound_Timer;
+    uint32 SpawnHatchlings_Timer;
+    uint32 SpawnSpawns_Timer;
+    int Rand;
+    int RandX;
+    int RandY;
+
+    Creature* Hatchling;
+    Creature* Spawn;
+
+    void Reset()
+    {
+        MortalWound_Timer = 10000 + rand()%5000;
+        SpawnHatchlings_Timer = 6000 + rand()%6000;
+        SpawnSpawns_Timer = 15000 + rand()%30000;;
+
+//        m_creature->RemoveAllAuras();
+//        m_creature->DeleteThreatList();
+//        m_creature->CombatStop();
+//        DoGoHome();
+    }
+    
+    
+    void SummonSpawn(Unit* victim)
+    {
+        Rand = 10 + (rand()%10);
+        switch (rand()%2)
+        {
+        case 0: RandX = 0 - Rand; break;
+        case 1: RandX = 0 + Rand; break;
+        }
+        Rand = NULL;
+        Rand =  10 + (rand()%10);
+        switch (rand()%2)
+        {
+        case 0: RandY = 0 - Rand; break;
+        case 1: RandY = 0 + Rand; break;
+        }		
+        Rand = 0;
+        Spawn = DoSpawnCreature(15630, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+        if(Spawn)
+            ((CreatureAI*)Spawn->AI())->AttackStart(victim);
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
+                DoStartMeleeAttack(who);
+            else DoStartRangedAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+            //MortalWound_Timer
+            if (MortalWound_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
+                MortalWound_Timer = 10000 + rand()%10000;
+            }else MortalWound_Timer -= diff;
+
+            //Summon 1-3 Spawns of Fankriss at random time.
+            if (SpawnSpawns_Timer < diff)
+            {               
+            
+                    switch(rand()%3)
+                    {
+                        case 0:  
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                            break;
+                        case 1:
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                            break;
+                        case 2:
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                            break;
+ 
+                    }
+                    			
+                SpawnSpawns_Timer = 30000 + rand()%30000;;
+            }else SpawnSpawns_Timer -= diff;
+
+        // Teleporting Random Target to one of the three tunnels and spawn 4 hatchlings near the gamer.
+        //We will only telport if fankriss has more than 3% of hp so teleported gamers can always loot.
+        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 3 )
+        {
+          if(SpawnHatchlings_Timer< diff)
+          {
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target && target->GetTypeId() == TYPEID_PLAYER) 
+            {
+
+                    switch(rand()%3)
+                    {
+                        case 0:  
+                        DoCast(target, SPELL_ROOT);
+                        ((Player*)target)->TeleportTo(531,-8106.0142,1289.2900,-74.419533,5.112);
+                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()-5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()+5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                            break;
+                        case 1:
+                        DoCast(target, SPELL_ROOT);
+                        ((Player*)target)->TeleportTo(531,-7990.135354,1155.1907,-78.849319,2.608);
+                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()-5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()+5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                            break;
+                        case 2:
+                        DoCast(target, SPELL_ROOT);
+                        ((Player*)target)->TeleportTo(531,-8159.7753,1127.9064,-76.868660,0.675);
+                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()-5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                        Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()+5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        ((CreatureAI*)Hatchling->AI())->AttackStart(target);
+                            break;
+ 
+                    }
+
+
+            } 
+            SpawnHatchlings_Timer = 45000 + rand()%15000;
+        }else SpawnHatchlings_Timer -= diff;
+     }
+
+
+            DoMeleeAttackIfReady();
+    }
+}; 
+
+CreatureAI* GetAI_boss_fankriss(Creature *_Creature)
+{
+    return new boss_fankrissAI (_Creature);
+}
+CreatureAI* GetAI_mob_spawn_of_fankriss(Creature *_Creature)
+{
+    SimpleAI* ai = new SimpleAI (_Creature);
+ 
+    //Cast enrage after 20 secs
+    ai->Spell[0].Enabled = true;
+    ai->Spell[0].Cast_Target_Type = CAST_SELF;
+    ai->Spell[0].Cooldown = 1801000;
+    ai->Spell[0].First_Cast = 20000;
+    ai->Spell[0].Spell_Id = SPELL_ENRAGE;
+
+
+
+    ai->EnterEvadeMode();
+
+    return ai;
+}
+
+void AddSC_boss_fankriss()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name="boss_fankriss";
+    newscript->GetAI = GetAI_boss_fankriss;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_spawn_of_fankriss";
+    newscript->GetAI = GetAI_mob_spawn_of_fankriss;
+    m_scripts[nrscripts++] = newscript;
+}

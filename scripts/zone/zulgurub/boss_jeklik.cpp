@@ -34,7 +34,7 @@ EndScriptData */
 
 // Batriders Spell
 
-#define SPELL_BOMB                35276      //Wrong I think but real visual and dmg. School dmg missing.
+#define SPELL_BOMB                40332      //Wrong ID but Magmadars bomb is not working...
 
 #define SAY_AGGRO         "Lord Hireek grant me wings of vengance!"
 #define SAY_DEATH         "Hireek - Finnaly death. Curse you Hakkar! Curse you!"
@@ -167,23 +167,23 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     
-                    DoCast(target,SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                    DoCast(target,SPELL_CHARGE);
                     DoStartMeleeAttack(target);
                     
-                    Charge_Timer = 25000 + rand()%5000;
+                    Charge_Timer = 15000 + rand()%15000;
                 }else Charge_Timer -= diff;
                 
                 if (SonicBurst_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_SONICBURST);
-                    SonicBurst_Timer = 10000 + rand()%5000;
+                    SonicBurst_Timer = 8000 + rand()%5000;
                 }else SonicBurst_Timer -= diff;
 
                 if (Screech_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_SCREECH);
-                    Screech_Timer = 18000 + rand()%15000;
+                    Screech_Timer = 18000 + rand()%8000;
                 }else Screech_Timer -= diff;
 
 
@@ -236,14 +236,16 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     MindFlay_Timer = 10000;
                 }MindFlay_Timer -=diff;
                 
-//                if(PhaseTwo && ChainMindFlay_Timer < diff)
-//                {
-//                    DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);
-//                    ChainMindFlay_Timer = 27000 + rand()%5000;
-//                }ChainMindFlay_Timer -=diff;
+                if(PhaseTwo && ChainMindFlay_Timer < diff)
+                {
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
+                    ChainMindFlay_Timer = 27000 + rand()%5000;
+                }ChainMindFlay_Timer -=diff;
                 
                 if(PhaseTwo && GreaterHeal_Timer < diff)
                 {
+                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_GREATERHEAL);
                     GreaterHeal_Timer = 25000 + rand()%15000;
                 }GreaterHeal_Timer -=diff;
@@ -261,7 +263,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                             FlyingBat->AI()->AttackStart(target);
                     }
                          
-                    SpawnFlyingBats_Timer = 10000 + rand()%8000;
+                    SpawnFlyingBats_Timer = 10000 + rand()%5000;
                 }SpawnFlyingBats_Timer -=diff;
 
 
@@ -344,7 +346,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             if(target)
                 DoCast(target, SPELL_BOMB);
 
-            Bomb_Timer = 7000;
+            Bomb_Timer = 5000;
         }else Bomb_Timer -= diff;
 
         //Check_Timer

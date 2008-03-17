@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
 
             //15-25 seconds till recast
-            ShadowFlame_Timer = 15000 + rand()%10000;
+            ShadowFlame_Timer = 12000 + rand()%3000;
         }else ShadowFlame_Timer -= diff;
 
         //Wing Buffet Timer

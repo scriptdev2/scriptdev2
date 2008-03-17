@@ -45,11 +45,6 @@
 #define SPELL_MELTARMOR             19631    
 
 
-// -- Firesworn Spells --
-#define SPELL_ERUPTION              19497
-#define SPELL_IMMOLATE              20294
-
-
 // -- FlameGuard Spells --
 
 #define SPELL_FIRESHIELD            19626    
@@ -181,26 +176,6 @@ CreatureAI* GetAI_mob_firewalker(Creature *_Creature)
  
     ai->EnterEvadeMode();
  
-    return ai;
-}
-
-CreatureAI* GetAI_mob_firesworn(Creature *_Creature)
-{
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //Cast eruption upon death
-    ai->Death_Spell = SPELL_ERUPTION;
-    ai->Death_Target_Type = CAST_HOSTILE_TARGET;  //Self
-
-    //Cast eruption upon death
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    ai->Spell[0].Cooldown = 7000;
-    ai->Spell[0].First_Cast = 7000;
-    ai->Spell[0].Spell_Id = SPELL_IMMOLATE;
-
-    ai->EnterEvadeMode();
-
     return ai;
 }
 
@@ -395,12 +370,6 @@ void AddSC_mobs_molten_core()
     newscript = new Script;
     newscript->Name="mob_firewalker";
     newscript->GetAI = GetAI_mob_firewalker;
-    m_scripts[nrscripts++] = newscript;
-
-    //Firesworn
-    newscript = new Script;
-    newscript->Name="mob_firesworn";
-    newscript->GetAI = GetAI_mob_firesworn;
     m_scripts[nrscripts++] = newscript;
 
     //FlameGuard

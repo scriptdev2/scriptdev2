@@ -24,6 +24,7 @@ EndScriptData */
 
 #define SPELL_FRENZY 26051
 #define SPELL_BERSERK 26068
+#define SPELL_POISONBOLT 26052
 #define SPELL_NOXIOUSPOISON 26053
 #define SPELL_WYVERNSTING 26180
 #define SPELL_ACIDSPIT 26050
@@ -35,17 +36,25 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
     uint32 Frenzy_Timer;
     uint32 Wyvern_Timer;
     uint32 Spit_Timer;
-    uint32 Poison_Timer;
-    uint32 phase;
+    uint32 PoisonBolt_Timer;
+    uint32 NoxiousPoison_Timer;
+    uint32 FrenzyBack_Timer;
+
+    bool Frenzy;
+    bool Berserk;
     bool InCombat;
 
     void Reset()
     {
-        Frenzy_Timer = 30000; //These times are probably wrong
-        Wyvern_Timer = 35000;
-        Spit_Timer = 15000;
-        Poison_Timer = 300000;
-        phase = 1;
+        Frenzy_Timer = 25000 + rand()%10000; 
+        Wyvern_Timer = 18000 + rand()%10000;
+        Spit_Timer = 8000;
+        PoisonBolt_Timer = 4000;
+        NoxiousPoison_Timer = 10000 + rand()%10000;
+        FrenzyBack_Timer = 15000;
+
+        Frenzy = false;
+        Berserk = false;
         InCombat = false;
 
         //m_creature->RemoveAllAuras();
@@ -103,51 +112,75 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
 
         //Frenzy_Timer
-        if (Frenzy_Timer < diff && phase == 1)
+        if (!Frenzy && Frenzy_Timer < diff)
         {
             //Cast
             DoCast(m_creature, SPELL_FRENZY);
 
             //30 seconds until we should cast this agian
-            Frenzy_Timer = 30000;
+            Frenzy = true;
+            PoisonBolt_Timer = 3000;
+            Frenzy_Timer = 25000 + rand()%10000;
         }else Frenzy_Timer -= diff;
 
         // Wyvern Timer
-        if (Wyvern_Timer < diff && phase == 1)
+        if (Wyvern_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_WYVERNSTING);
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            DoCast(target,SPELL_WYVERNSTING);
 
             //35 seconds until we should cast this again
-            Wyvern_Timer = 35000;
+            Wyvern_Timer = 15000 + rand()%17000;
         }else Wyvern_Timer -= diff;
 
         //Spit Timer
-        if (Spit_Timer < diff && phase == 1 )
+        if (Spit_Timer < diff)
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
-            //15 seconds until we should cast this agian
-            Spit_Timer = 15000;
+
+            //5-10 seconds until we should cast this agian
+            Spit_Timer = 5000 + rand()%5000;
         }else Spit_Timer -= diff;
 
-        //Poison Timer
-        if (Poison_Timer < diff && (phase == 1 || phase == 2))
+        //NoxiousPoison_Timer
+        if (NoxiousPoison_Timer < diff)
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
 
-            //Cast first after 5 minutes, then 5 seconds until we should cast this agian
-            Poison_Timer = 5000;
-            phase = 2;
-        }else Poison_Timer -= diff;
+            //12-24 seconds until we should cast this agian
+            NoxiousPoison_Timer = 12000 + rand()%12000;
+        }else NoxiousPoison_Timer -= diff;
 
-        if ( (phase == 2 || phase == 1) && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 30)
+        //PoisonBolt only if frenzy or berserk
+        if (Frenzy || Berserk)
         {
-            phase = 3;
+            if (PoisonBolt_Timer < diff)
+            {
+                //Cast
+                DoCast(m_creature->getVictim(),SPELL_POISONBOLT);
+
+                //3 seconds until we should cast this again
+                PoisonBolt_Timer = 3000;
+            }else PoisonBolt_Timer -= diff;
+        }
+
+        //FrenzyBack_Timer
+        if (Frenzy && FrenzyBack_Timer < diff)
+        {
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            Frenzy = false;
+            FrenzyBack_Timer = 15000;
+        }else FrenzyBack_Timer -= diff;
+
+        if ( !Berserk && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 31 )
+        {
             m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
             DoTextEmote("is going berserk", NULL);
             DoCast(m_creature, SPELL_BERSERK);
+            Berserk = true;
         }
 
         DoMeleeAttackIfReady();
