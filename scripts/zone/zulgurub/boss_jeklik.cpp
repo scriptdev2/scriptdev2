@@ -28,7 +28,7 @@ EndScriptData */
 #define SPELL_SCREECH             6605   
 #define SPELL_SHADOW_WORD_PAIN    23952 
 #define SPELL_MIND_FLAY           23953
-#define SPELL_CHAIN_MIND_FLAY     23849      //Right ID unknown. So disabled
+#define SPELL_CHAIN_MIND_FLAY     26044      //Right ID unknown. So disabled
 #define SPELL_GREATERHEAL         23954
 #define SPELL_BAT_FORM            23966
 
@@ -233,21 +233,21 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 if(PhaseTwo && MindFlay_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
-                    MindFlay_Timer = 10000;
+                    MindFlay_Timer = 16000;
                 }MindFlay_Timer -=diff;
                 
                 if(PhaseTwo && ChainMindFlay_Timer < diff)
                 {
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
-                    ChainMindFlay_Timer = 27000 + rand()%5000;
+                    ChainMindFlay_Timer = 15000 + rand()%15000;
                 }ChainMindFlay_Timer -=diff;
                 
                 if(PhaseTwo && GreaterHeal_Timer < diff)
                 {
                     m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
                     DoCast(m_creature,SPELL_GREATERHEAL);
-                    GreaterHeal_Timer = 25000 + rand()%15000;
+                    GreaterHeal_Timer = 25000 + rand()%10000;
                 }GreaterHeal_Timer -=diff;
                 
                 if(PhaseTwo && SpawnFlyingBats_Timer < diff)

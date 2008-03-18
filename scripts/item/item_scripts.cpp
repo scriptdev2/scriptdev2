@@ -35,6 +35,7 @@ EndScriptData */
 #include "../../../../game/Player.h"
 #include "../../../../game/Creature.h"
 #include "../../../../game/Unit.h"
+#include "../../../../game/SpellMgr.h"
 #include "../../../../game/Spell.h"
 #include "../../../../shared/WorldPacket.h"
 

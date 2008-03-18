@@ -26,6 +26,7 @@ EndScriptData */
 #define SPELL_SHADOWFLAME           22539
 #define SPELL_WINGBUFFET            18500
 #define SPELL_SHADOWOFEBONROC       23340
+#define SPELL_HEAL                  23394    //Thea Heal spell of his Shadow
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {
@@ -34,6 +35,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 ShadowOfEbonroc_Timer;
+    uint32 Heal_Timer;
     bool InCombat;
 
     void Reset()
@@ -41,6 +43,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         ShadowFlame_Timer = 15000;      //These times are probably wrong
         WingBuffet_Timer = 30000;
         ShadowOfEbonroc_Timer = 45000;
+        Heal_Timer = 2000;
         InCombat = false;
 
         //m_creature->RemoveAllAuras();
@@ -118,6 +121,16 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
             //30-40 seconds until we should cast this agian
             ShadowOfEbonroc_Timer = 30000 + rand()%10000;
         }else ShadowOfEbonroc_Timer -= diff;
+
+
+        if (m_creature->getVictim()->HasAura(SPELL_SHADOWOFEBONROC,0) && Heal_Timer < diff)
+        {
+            //Cast Shadow of Ebonroc
+            DoCast(m_creature, SPELL_HEAL);
+
+            //2-4 seconds until we should cast this agian
+            Heal_Timer = 20000 + rand()%2000;
+        }else Heal_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
