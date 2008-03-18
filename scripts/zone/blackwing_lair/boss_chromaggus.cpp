@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                     //Assuming it is caused by a lack of core support for Charm
                     //So instead we instant kill our target
                     //DoCast(target,SPELL_CHROMATIC_MUT_1);
-                    target->DealDamage(target, target->GetHealth(), DIRECT_DAMAGE, 0, NULL, true);
+                    target->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, true);
                 }
 
             }
