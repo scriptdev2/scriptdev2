@@ -124,11 +124,10 @@ struct Yells
 {
     uint32 sound;
     char* text;
-    uint32 creature;
-    uint32 timer, emote;
+    uint32 creature, timer, emote;
     bool Talk;
 };
-// Note to self: do not convert from defines to char*. Change it. later.
+
 static Yells Conversation[]=
 {
     {11463, "Akama... your duplicity is hardly surprising. I should have slaughtered you and your malformed brethren long ago.", ILLIDAN_STORMRAGE, 8000, 0, true},
@@ -1524,7 +1523,7 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 {
     boss_maievAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = ((ScriptedInstance*)c->GetMap()->GetInstanceData());
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset(); 
     };
 

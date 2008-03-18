@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Terestian_Illhoof
 SD%Complete: 80
-SDComment: VERIFY SCRIPT
+SDComment: VERIFY AND CLEANUP SCRIPT
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -26,6 +26,12 @@ EndScriptData */
 #define SPELL_DEMON_CHAINS          30206 // Instant - Visual Effect 
 #define SPELL_ENRAGE                23537 // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
 #define SPELL_SHADOW_BOLT           41957 // Hurls a bolt of dark magic at an enemy, inflicting Shadow damage.
+
+#define SPELL_FIREBOLT              18086 // Blasts a target for 150 Fire damage.
+
+#define SPELL_BROKEN_PACT           30065 // All damage taken increased by 25%.
+#define SPELL_AMPLIFY_FLAMES        30053 // Increases the Fire damage taken by an enemy by 500 for 25 sec.
+#define SPELL_FIREBOLT              18086 // Blasts a target for 150 Fire damage.
 
 #define SAY_DIED1       "Your blood will anoint my circle."
 #define SOUND_DIED1     9264
@@ -47,6 +53,96 @@ EndScriptData */
 #define SOUND_SPAWN1    9265
 #define SAY_SPAWN2      "Gather, my pets. There is plenty for all."
 #define SOUND_SPAWN2    9331
+
+struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
+{
+    mob_kilrekAI(Creature *c) : ScriptedAI(c) 
+    {
+        Reset();
+    }
+
+    uint64 TerestianGUID;
+
+    uint32 Amplify_Timer;
+
+    bool InCombat, Broken;
+
+    void Reset()
+    {
+        TerestianGUID = 0;
+
+        Amplify_Timer = 0;      
+
+        InCombat = false;
+        Broken = false;
+
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+
+        //DoGoHome();
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who) return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+            if (!InCombat) InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim()) return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+
+                if (!InCombat) InCombat = true;
+            }
+        }
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        if(TerestianGUID)
+        {
+            Unit* Terestian = Unit::GetUnit((*m_creature), TerestianGUID);
+            if(Terestian && Terestian->isAlive())
+                DoCast(Terestian, SPELL_BROKEN_PACT);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        if (Amplify_Timer < diff)
+        {
+            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            DoCast(m_creature->getVictim(),SPELL_AMPLIFY_FLAMES);
+
+            Amplify_Timer = 20000;
+        }else Amplify_Timer -= diff;
+
+        //Chain cast
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
+            DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
+        else DoMeleeAttackIfReady();
+    }
+};
 
 struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
 {
@@ -150,13 +246,16 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
         {
             float A = m_creature->GetAngle(m_creature);
             Creature* Kilrek = m_creature->SummonCreature(17229, m_creature->GetPositionX(), m_creature->GetPositionY()+10, m_creature->GetPositionZ(), A, TEMPSUMMON_CORPSE_DESPAWN, 10000);
-            Kilrek->setFaction(m_creature->getFaction());
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(Kilrek)
+            {
+                Kilrek->setFaction(m_creature->getFaction());
+                ((mob_kilrekAI*)Kilrek->AI())->TerestianGUID = m_creature->GetGUID();
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-            if (target)
-                Kilrek->AI()->AttackStart(target);
-            else Kilrek->AI()->AttackStart(m_creature->getVictim());
+                if (target)
+                    Kilrek->AI()->AttackStart(target);
+                else Kilrek->AI()->AttackStart(m_creature->getVictim());
+            }
 
             SpawnKilrek_Timer = 20000;
         }
@@ -170,14 +269,16 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
             }                
             float A = m_creature->GetAngle(m_creature);
             Creature* Homunculus = m_creature->SummonCreature(16539, m_creature->GetPositionX()+(rand()%15), m_creature->GetPositionY()+(rand()%15), m_creature->GetPositionZ(), A, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-            Homunculus->setFaction(m_creature->getFaction());
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(Homunculus)
+            {
+                Homunculus->setFaction(m_creature->getFaction());
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-            if (target)
-                Homunculus->AI()->AttackStart(target);
-            else Homunculus->AI()->AttackStart(m_creature->getVictim());
-
+                if (target)
+                    Homunculus->AI()->AttackStart(target);
+                else Homunculus->AI()->AttackStart(m_creature->getVictim());
+            }
+            // What's this for?
             if (FirstSpawn)
             {
                 DoYell(SAY_SPAWN2,LANG_UNIVERSAL,NULL);
@@ -231,6 +332,83 @@ struct MANGOS_DLL_DECL boss_terestian_illhoofAI : public ScriptedAI
     }
 };
 
+struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
+{
+    mob_homunculusAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 Firebolt_Timer;
+
+    bool InCombat;
+
+    void Reset()
+    {
+        Firebolt_Timer = 0;      
+
+        InCombat = false;
+
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //m_creature->CombatStop();
+
+        //DoGoHome();
+    }
+
+    int RandTime(int time) {return ((rand()%time)*1000);}// What is this?
+
+    void AttackStart(Unit *who)
+    {
+        if (!who) return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            DoStartMeleeAttack(who);
+            if (!InCombat) InCombat = true;
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim()) return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                DoStartMeleeAttack(who);
+
+                if (!InCombat) InCombat = true;
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //Chain cast
+        if (!m_creature->IsNonMeleeSpellCasted(false) && !m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
+            DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
+        else DoMeleeAttackIfReady();
+
+    }
+};
+
+CreatureAI* GetAI_mob_kilrek(Creature *_Creature)
+{
+    return new mob_kilrekAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_homunculus(Creature *_Creature)
+{
+    return new mob_homunculusAI (_Creature);
+}
+
 CreatureAI* GetAI_boss_terestian_illhoof(Creature *_Creature)
 {
     return new boss_terestian_illhoofAI (_Creature);
@@ -242,5 +420,15 @@ void AddSC_boss_terestian_illhoof()
     newscript = new Script;
     newscript->Name="boss_terestian_illhoof";
     newscript->GetAI = GetAI_boss_terestian_illhoof;
+    m_scripts[nrscripts++] = newscript;
+    
+    newscript = new Script;
+    newscript->Name="mob_homunculus";
+    newscript->GetAI = GetAI_mob_homunculus;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_kilrek";
+    newscript->GetAI = GetAI_mob_kilrek;
     m_scripts[nrscripts++] = newscript;
 }

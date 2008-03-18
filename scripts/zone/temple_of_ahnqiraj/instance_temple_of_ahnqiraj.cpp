@@ -37,39 +37,48 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
     uint64 VeklorGUID;
     uint64 VeknilashGUID;
 
-
-    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
-    {
-    switch (creature_entry) {
-        case 15263:
-        SkeramGUID = creature->GetGUID();
-        break;
-
-        case 15544:
-        VemGUID = creature->GetGUID();
-        break;
-
-        case 15511:
-        KriGUID = creature->GetGUID();
-        break;
-
-        case 15276:
-        VeklorGUID = creature->GetGUID();
-        break;
-
-        case 15275:
-        VeknilashGUID = creature->GetGUID();
-        break;
-
-    }
-    } 
+    uint32 BugTrioDeathCount;
 
     void Initialize()
     {
         IsBossDied[0] = false;
         IsBossDied[1] = false;
         IsBossDied[2] = false;
+
+        SkeramGUID = 0;
+        VemGUID = 0;
+        KriGUID = 0;
+        VeklorGUID = 0;
+        VeknilashGUID = 0;
+
+        BugTrioDeathCount = 0;
     }
+
+    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
+    {
+        switch (creature_entry)
+        {
+            case 15263:
+            SkeramGUID = creature->GetGUID();
+            break;
+
+            case 15544:
+            VemGUID = creature->GetGUID();
+            break;
+
+            case 15511:
+            KriGUID = creature->GetGUID();
+            break;
+
+            case 15276:
+            VeklorGUID = creature->GetGUID();
+            break;
+
+            case 15275:
+            VeknilashGUID = creature->GetGUID();
+            break;
+        }
+    } 
 
     bool IsEncounterInProgress() const 
     {
@@ -79,7 +88,6 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-
         switch(type)
         {
             case DATA_VEMISDEAD:
@@ -96,40 +104,53 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
                 if(IsBossDied[2])
                     return 1;
                 break;
+
+            case DATA_BUG_TRIO_DEATH:
+                return BugTrioDeathCount;
         }
         return 0;
     }
 
-    uint64 GetData64 (uint32 identifier) {
-        if (identifier  == DATA_SKERAM)
-            return SkeramGUID;
-        if (identifier  == DATA_VEM)
-            return VemGUID;
-        if (identifier  == DATA_KRI)
-            return KriGUID;
-        if (identifier  == DATA_VEKLOR)
-            return VeklorGUID;
-        if (identifier  == DATA_VEKNILASH)
-            return VeknilashGUID;
+    uint64 GetData64 (uint32 identifier)
+    {
+        switch(identifier)
+        {
+            case DATA_SKERAM:
+                return SkeramGUID;
+            case DATA_VEM:
+                return VemGUID;
+            case DATA_KRI:
+                return KriGUID;
+            case DATA_VEKLOR:
+                return VeklorGUID;
+            case DATA_VEKNILASH:
+                return VeknilashGUID;
+        }
         return 0;
     } // end GetData64
 
     void SetData(uint32 type, uint32 data)
     {
-            switch(type)
-            {
-                case DATA_VEM_DEATH:
+        switch(type)
+        {
+            case DATA_VEM_DEATH:
                 IsBossDied[0] = true;
                 break;
 
-                case DATA_VEKLOR_DEATH:
+            case DATA_BUG_TRIO_DEATH:
+                if(data)
+                    BugTrioDeathCount++;
+                else BugTrioDeathCount--; // if they respawn, we decrement via their Reset() functions.
+                break;
+
+            case DATA_VEKLOR_DEATH:
                 IsBossDied[1] = true;
                 break;
 
-                case DATA_VEKNILASH_DEATH:
+            case DATA_VEKNILASH_DEATH:
                 IsBossDied[2] = true;
                 break;
-            }
+        }
     }
 };
 

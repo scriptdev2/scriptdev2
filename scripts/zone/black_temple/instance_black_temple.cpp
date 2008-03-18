@@ -61,6 +61,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 VerasDarkshadow;
     uint64 IllidanStormrage;
 
+    uint32 IllidariCouncilDeathCount;
+
     uint32 Encounters[ENCOUNTERS];
 
     void Initialize()
@@ -76,6 +78,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         VerasDarkshadow = 0;
         IllidanStormrage = 0;
         
+        IllidariCouncilDeathCount = 0;
+
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
     }
@@ -208,6 +212,11 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
                 Encounters[7] = data;
                 break;
 
+            case DATA_COUNCIL_DEATH_COUNT:
+                if(data)
+                    IllidariCouncilDeathCount++;
+                else IllidariCouncilDeathCount--;
+
             case DATA_ILLIDANSTORMRAGEEVENT:
                 Encounters[8] = data;
                 break;
@@ -241,6 +250,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
              case DATA_ILLIDARICOUNCILEVENT:
                 return Encounters[7];
+
+             case DATA_COUNCIL_DEATH_COUNT:
+                 return IllidariCouncilDeathCount;
 
              case DATA_ILLIDANSTORMRAGEEVENT:
                 return Encounters[8];

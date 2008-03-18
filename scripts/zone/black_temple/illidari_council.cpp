@@ -54,7 +54,6 @@ EndScriptData */
 #define SPELL_ENVENOM              41487
 #define SPELL_VANISH               41479
 
-
 //Speech'n'Sounds
 #define SAY_GATH_AGGRO            "I have better things to do!"
 #define SOUND_GATH_AGGRO          11422
@@ -120,9 +119,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 {
     boss_illidari_councilAI(Creature *c) : ScriptedAI(c) 
     {
-        if(c->GetInstanceData())
-            pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        else pInstance = NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
 
         Council[0] = 0;
         Council[1] = 0;
@@ -329,6 +326,9 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         BlessingTimer = 60000;
 
         InCombat = false;
+
+        if(pInstance)
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -384,6 +384,12 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         InCombat = false;
         DoYell(SAY_GATH_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_GATH_DEATH);
+        if(pInstance)
+        {
+            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
+        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -568,6 +574,9 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         AggroYellTimer = 0;
 
         InCombat = false;
+
+        if(pInstance)
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -622,6 +631,13 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
         DoYell(SAY_ZERE_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_ZERE_DEATH);
+
+        if(pInstance)
+        {
+            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Only one of us can be lootable.
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
+        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -777,7 +793,10 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         ReflectiveShieldTimer = 0;
         AggroYellTimer = 0;
 
-        InCombat = false;        
+        InCombat = false;
+        
+        if(pInstance)
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -799,7 +818,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-
         if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
@@ -832,6 +850,13 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
         DoYell(SAY_MALA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_MALA_DEATH);
+
+        if(pInstance)
+        {
+            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable unless we are the last to die
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
+        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -979,6 +1004,9 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         InCombat = false;
+
+        if(pInstance)
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -1034,6 +1062,13 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
         DoYell(SAY_VERA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_VERA_DEATH);
+
+        if(pInstance)
+        {
+            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if others are still alive
+            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
+        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)

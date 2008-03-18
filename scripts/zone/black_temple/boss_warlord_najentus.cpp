@@ -414,13 +414,17 @@ bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
     ScriptedInstance* pInstance = ((ScriptedInstance*)_GO->GetInstanceData());
     if(pInstance)
     {
-        Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS)));
-        if(Najentus)
+        uint64 NajentusGUID = pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS);
+        if(NajentusGUID)
         {
-            ((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine();
-        }else _GO->Say("Najentus not found", LANG_UNIVERSAL, 0);
+            Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), NajentusGUID));
+            if(Najentus)
+            {
+                ((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine();
+            }else error_log("ERROR: Na'entus Spine GameObject unable to find Naj'entus");
+        }else error_log("ERROR: Invalid GUID acquired for Naj'entus by Naj'entus Spine GameObject");
     }
-    else _GO->Say("Invalid instance or location", LANG_UNIVERSAL, 0);
+    else error_log("ERROR: Naj'entus Spine spawned in invalid instance or location");
 
     return true;
 }

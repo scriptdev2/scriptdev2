@@ -340,9 +340,9 @@ extern void AddSC_boss_maiden_of_virtue();
 extern void AddSC_boss_shade_of_aran();
 extern void AddSC_boss_malchezaar();
 extern void AddSC_boss_terestian_illhoof();
-extern void AddSC_mob_homunculus();
-extern void AddSC_mob_kilrek();
 extern void AddSC_netherspite_infernal();
+extern void AddSC_npcs_karazhan();
+extern void AddSC_instance_karazhan();
 
 //Loch Modan
 extern void AddSC_npcs_loch_modan();
@@ -522,12 +522,10 @@ extern void AddSC_boss_nethermancer_sepethrea();
 extern void AddSC_boss_cthun();
 extern void AddSC_boss_fankriss();
 extern void AddSC_boss_huhuran();
-extern void AddSC_boss_kri();
+extern void AddSC_bug_trio();
 extern void AddSC_boss_skeram();
 extern void AddSC_boss_veklor();
 extern void AddSC_boss_veknilash();
-extern void AddSC_boss_vem();
-extern void AddSC_boss_yauj();
 extern void AddSC_instance_temple_of_ahnqiraj();
 
 //Terokkar Forest
@@ -576,6 +574,7 @@ extern void AddSC_mobs_zulgurub();
 extern void AddSC_instance_zulgurub();
 //Zul'Aman
 extern void AddSC_boss_janalai();
+extern void AddSC_boss_nalorakk();
 extern void AddSC_instance_zulaman();
 
 
@@ -1107,9 +1106,9 @@ void ScriptsInit()
     AddSC_boss_shade_of_aran();
     AddSC_boss_malchezaar();
     AddSC_boss_terestian_illhoof();
-    AddSC_mob_homunculus();
-    AddSC_mob_kilrek();
     AddSC_netherspite_infernal();
+    AddSC_npcs_karazhan();
+    AddSC_instance_karazhan();
 
     //Loch Modan
     AddSC_npcs_loch_modan();
@@ -1290,12 +1289,10 @@ void ScriptsInit()
     AddSC_boss_cthun();
     AddSC_boss_fankriss();
     AddSC_boss_huhuran();
-    AddSC_boss_kri();
+    AddSC_bug_trio();
     AddSC_boss_skeram();
     AddSC_boss_veklor();
     AddSC_boss_veknilash();
-    AddSC_boss_vem();
-    AddSC_boss_yauj();
     AddSC_instance_temple_of_ahnqiraj();
 
     //Terokkar Forest
@@ -1345,6 +1342,7 @@ void ScriptsInit()
 
     //Zul'Aman
     AddSC_boss_janalai();
+    AddSC_boss_nalorakk();
     AddSC_instance_zulaman();
 
 

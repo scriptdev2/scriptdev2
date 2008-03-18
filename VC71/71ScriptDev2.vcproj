@@ -1109,6 +1109,10 @@
 					Name="Temple of Ahn&apos;Qiraj"
 					>
 					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_bug_trio.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_cthun.cpp"
 						>
 					</File>
@@ -1118,10 +1122,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_huhuran.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_kri.cpp"
 						>
 					</File>
 					<File
@@ -1145,15 +1145,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_vem.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_viscidus.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_yauj.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
 						>
 					</File>
 					<File
@@ -1605,15 +1601,15 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\karazhan\def_karazhan.h"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\karazhan\instance_karazhan.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\mob_homunculus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\karazhan\mob_kilrek.cpp"
+						RelativePath="..\scripts\zone\karazhan\npcs_karazhan.cpp"
 						>
 					</File>
 				</Filter>
