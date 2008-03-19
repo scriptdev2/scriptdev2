@@ -317,12 +317,15 @@ scripts/zone/stratholme/boss_magistrate_barthilas.cpp \
 scripts/zone/stratholme/boss_maleki_the_pallid.cpp \
 scripts/zone/stratholme/boss_malor_the_zealous.cpp \
 scripts/zone/stratholme/boss_nerubenkan.cpp \
+scripts/zone/stratholme/boss_order_of_silver_hand.cpp \
 scripts/zone/stratholme/boss_postmaster_malown.cpp \
 scripts/zone/stratholme/boss_ramstein_the_gorger.cpp \
 scripts/zone/stratholme/boss_skul.cpp \
 scripts/zone/stratholme/boss_stonespine.cpp \
 scripts/zone/stratholme/boss_the_unforgiven.cpp \
 scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
+scripts/zone/stratholme/def_stratholme.h \
+scripts/zone/stratholme/instance_stratholme.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \

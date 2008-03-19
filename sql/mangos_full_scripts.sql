@@ -624,6 +624,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_lady_katrana_prestor' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'mob_yenniku' WHERE `entry` = 2530;
 
 /* STRATHOLME */
+UPDATE `instance_template` SET `script` = 'instance_stratholme' WHERE `map` = 329;
 UPDATE `creature_template` SET `ScriptName` = 'boss_dathrohan_balnazzar' WHERE `entry` = 10812;
 UPDATE `creature_template` SET `ScriptName` = 'boss_fras_siabi' WHERE `entry` = 11058;
 UPDATE `creature_template` SET `ScriptName` = 'boss_skul' WHERE `entry` = 10393;
@@ -640,6 +641,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_ramstein_the_gorger' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'boss_malor_the_zealous' WHERE `entry` = 11032;
 UPDATE `creature_template` SET `ScriptName` = 'boss_black_guard_swordsmith' WHERE `entry` = 11121;
 UPDATE `creature_template` SET `ScriptName` = 'boss_timmy_the_cruel' WHERE `entry` = 10808;
+UPDATE `creature_template` SET `ScriptName` = 'boss_silver_hand_bosses' WHERE `entry` IN (17910, 17911, 17912, 17913, 17914);
 UPDATE `creature_template` SET `ScriptName` = 'boss_stonespine' WHERE `entry` = 10809;
 UPDATE `creature_template` SET `ScriptName` = 'boss_postmaster_malown' WHERE `entry` = 11143;
 UPDATE `creature_template` SET `ScriptName` = 'boss_baron_rivendare' WHERE `entry` = 10440;

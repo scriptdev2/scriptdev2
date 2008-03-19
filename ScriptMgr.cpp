@@ -493,7 +493,9 @@ extern void AddSC_boss_stonespine();
 extern void AddSC_boss_postmaster_malown();
 extern void AddSC_boss_baron_rivendare();
 extern void AddSC_boss_dathrohan_balnazzar();
+extern void AddSC_boss_order_of_silver_hand();
 extern void AddSC_mobs_stratholme();
+extern void AddSC_instance_stratholme();
 
 //Sunken Temple
 //Tanaris
@@ -1260,7 +1262,9 @@ void ScriptsInit()
     AddSC_boss_postmaster_malown();
     AddSC_boss_baron_rivendare();
     AddSC_boss_dathrohan_balnazzar();
+    AddSC_boss_order_of_silver_hand();
     AddSC_mobs_stratholme();
+    AddSC_instance_stratholme();
 
     //Sunken Temple
     //Tanaris

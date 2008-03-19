@@ -1061,6 +1061,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\stratholme\boss_order_of_silver_hand.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\stratholme\boss_postmaster_malown.cpp"
 						>
 					</File>
@@ -1082,6 +1086,14 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\stratholme\boss_timmy_the_cruel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\def_stratholme.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\stratholme\instance_stratholme.cpp"
 						>
 					</File>
 					<File
