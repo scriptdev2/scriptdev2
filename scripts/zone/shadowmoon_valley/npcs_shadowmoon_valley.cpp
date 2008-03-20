@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npcs_shadowmoon_valley
+SDName: Npcs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: misc npcs, mostly vendor/quest
+SDComment: Vendor Drake Dealer Hurlunk.
+SDCategory: Shadowmoon Valley
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -31,15 +32,12 @@ EndScriptData */
 
 bool GossipHello_npc_drake_dealer_hurlunk(Player *player, Creature *_Creature)
 {
-    if (player->GetReputationRank(1015) == REP_EXALTED)
-    {
+    if (_Creature->isVendor() && player->GetReputationRank(1015) == REP_EXALTED)
         player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-    }      
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
-
 }
 
 bool GossipSelect_npc_drake_dealer_hurlunk(Player *player, Creature *_Creature, uint32 sender, uint32 action)

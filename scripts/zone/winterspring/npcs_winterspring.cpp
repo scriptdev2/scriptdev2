@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npcs_winterspring
+SDName: Npcs_Winterspring
 SD%Complete: 95
-SDComment: misc npcs, mostly vendor/quest. Lorax tale could use some better text for gossip items
+SDComment: Quest support: 5126 (Loraxs' tale missing proper gossip items text). Vendor Rivern Frostwind
+SDCategory: Winterspring
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -37,7 +38,7 @@ bool GossipHello_npc_lorax(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(5126) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Talk to me", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -83,10 +84,10 @@ bool GossipHello_npc_rivern_frostwind(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetReputationRank(589) == REP_EXALTED)
+    if (_Creature->isVendor() && player->GetReputationRank(589) == REP_EXALTED)
         player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }

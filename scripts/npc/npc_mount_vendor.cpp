@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: npc_mount_vendor
 SD%Complete: 80
-SDComment: regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
+SDComment: Regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
 SDCategory: NPCs
 EndScriptData */
 
@@ -128,8 +128,10 @@ bool GossipHello_npc_mount_vendor(Player *player, Creature *_Creature)
 
     if (canBuy)
     {
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+        if (_Creature->isVendor())
+            player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
     }
 
     return true;

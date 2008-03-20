@@ -36,10 +36,10 @@ bool GossipHello_npc_marin_noggenfogger(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetQuestRewardStatus(2662))
+    if (_Creature->isVendor() && player->GetQuestRewardStatus(2662))
         player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }

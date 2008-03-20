@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: npcs_blackrock_depths
+SDName: Npcs_Blackrock_Depths
 SD%Complete: 95
-SDComment: npcs inside blackrock depths, mostly quest related, includes creation of thorium brotherhood contract
+SDComment: Quest support: 4342, 7604. Vendor Lokhtos Darkbargainer.
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -38,7 +38,7 @@ bool GossipHello_npc_kharan_mighthammer(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(4342) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "All is not lost, Kharan!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -97,7 +97,7 @@ bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetReputationRank(59) >= REP_FRIENDLY)
+    if (_Creature->isVendor() && player->GetReputationRank(59) >= REP_FRIENDLY)
         player->ADD_GOSSIP_ITEM( 1, "Show me what I have access to, Lothos.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
@@ -109,9 +109,9 @@ bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
     }
 
     if (player->GetReputationRank(59) < REP_FRIENDLY)
-        player->PlayerTalkClass->SendGossipMenu(3673, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3673, _Creature->GetGUID());
     else
-        player->PlayerTalkClass->SendGossipMenu(3677, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(3677, _Creature->GetGUID());
 
     return true;
 }
