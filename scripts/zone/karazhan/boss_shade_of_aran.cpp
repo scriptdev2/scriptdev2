@@ -22,6 +22,7 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../creature/simple_ai.h"
+#include "def_karazhan.h"
 
 //Aggro
 #define SAY_AGGRO1 "Please, no more. My son... he's gone mad!"
@@ -116,7 +117,13 @@ enum SuperSpell
 
 struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 {
-    boss_aranAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_aranAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 SecondarySpellTimer;
     uint32 NormalCastTimer;
@@ -169,6 +176,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         InCombat = false;
 
+        if(pInstance)
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, 0); // Not in progress
         //m_creature->RemoveAllAuras();
         //m_creature->DeleteThreatList();
         //m_creature->CombatStop();
@@ -179,14 +188,14 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(victim, SOUND_KILL1);
-            break;
-        case 1:
-            DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(victim, SOUND_KILL2);
-            break;
+            case 0:
+                DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(victim, SOUND_KILL1);
+                break;
+            case 1:
+                DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(victim, SOUND_KILL2);
+                break;
         }
     }
 
@@ -194,6 +203,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(NULL, SOUND_DEATH);
+
+        if(pInstance)
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, 3); // Completed
     }
 
     void AttackStart(Unit *who)
@@ -211,23 +223,22 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 switch(rand()%3)
                 {
-
-                case 0:
-                    DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                    break;
-
-                case 2:
-                    DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                    break;
+                    case 0:
+                        DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                        break;
+                    case 1:
+                        DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                        break;
+                    case 2:
+                        DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                        break;
                 }
 
+                if(pInstance)
+                    pInstance->SetData(DATA_SHADEOFARAN_EVENT, 1); // In Progress
                 InCombat = true;
             }
         }
@@ -251,23 +262,22 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-
-                    case 0:
-                        DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                        break;
-
-                    case 2:
-                        DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                        break;
+                        case 0:
+                            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                            break;
+                        case 1:
+                            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                            break;
+                        case 2:
+                            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                            break;
                     }
 
+                    if(pInstance)
+                        pInstance->SetData(DATA_SHADEOFARAN_EVENT, 1); // In Progress
                     InCombat = true;
                 }
 

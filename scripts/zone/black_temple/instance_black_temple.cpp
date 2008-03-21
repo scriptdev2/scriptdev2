@@ -213,9 +213,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
                 break;
 
             case DATA_COUNCIL_DEATH_COUNT:
-                if(data)
-                    IllidariCouncilDeathCount++;
-                else IllidariCouncilDeathCount--;
+                IllidariCouncilDeathCount++;
+                break;
 
             case DATA_ILLIDANSTORMRAGEEVENT:
                 Encounters[8] = data;

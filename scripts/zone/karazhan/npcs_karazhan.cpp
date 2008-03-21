@@ -13,6 +13,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+/* ScriptData
+SDName: npcs_karazhan
+SD%Complete: 35
+SDComment: Barnes: Not fully complete. Berthold: needs testing
+EndScriptData */
+
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
@@ -177,7 +184,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public ScriptedAI
         if(!pInstance)
             return;
 
-        Event = pInstance->GetData(DATA_OPERA_EVENT);
+        Event = pInstance->GetData(DATA_OPERA_PERFORMANCE);
         pInstance->SetData(DATA_BARNES_INTRO, 1); // IN Progress
 
         IsTalking = false;
@@ -328,6 +335,32 @@ bool GossipSelect_npc_barnes(Player *player, Creature *_Creature, uint32 sender,
     return true;
 }
 
+/*###
+# npc_berthold
+####*/
+
+#define SPELL_TELEPORT           39567
+
+#define GOSSIP_ITEM_TELEPORT     "Teleport me to the Guardian's Library"
+
+bool GossipHello_npc_berthold(Player* player, Creature* _Creature)
+{
+    ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+    if(pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= 3)) // Check if Shade of Aran is dead or not
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sender, uint32 action)
+{
+    if(action == GOSSIP_ACTION_INFO_DEF + 1)
+        player->CastSpell(player, SPELL_TELEPORT, true);
+
+    return true;
+}
+
 void AddSC_npcs_karazhan()
 {
     Script* newscript;
@@ -336,5 +369,11 @@ void AddSC_npcs_karazhan()
     newscript->Name = "npc_barnes";
     newscript->pGossipHello = GossipHello_npc_barnes;
     newscript->pGossipSelect = GossipSelect_npc_barnes;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_berthold";
+    newscript->pGossipHello = GossipHello_npc_berthold;
+    newscript->pGossipSelect = GossipSelect_npc_berthold;
     m_scripts[nrscripts++] = newscript;
 }

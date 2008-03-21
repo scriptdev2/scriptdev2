@@ -24,7 +24,7 @@ EndScriptData */
 #include "def_karazhan.h"
 #include "../../../../../game/GameObject.h"
 
-#define ENCOUNTERS      12
+#define ENCOUNTERS      11
 
 enum EncounterState
 {
@@ -86,8 +86,42 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch(identifier)
         {
+            case DATA_ATTUMEN_EVENT:
+                return Encounters[0];
+
+            case DATA_MOROES_EVENT:
+                return Encounters[1];
+
+            case DATA_MAIDENOFVIRTUE_EVENT:
+                return Encounters[2];
+
+            case DATA_OPTIONAL_BOSS_EVENT:
+                return Encounters[3];
+
             case DATA_OPERA_EVENT:
+                return Encounters[4];
+                
+            case DATA_CURATOR_EVENT:
+                return Encounters[5];
+
+            case DATA_SHADEOFARAN_EVENT:
+                return Encounters[6];
+
+            case DATA_TERESTIAN_EVENT:
+                return Encounters[7];
+
+            case DATA_CHESS_EVENT:
+                return Encounters[8];
+
+            case DATA_MALCHEZZAR_EVENT:
+                return Encounters[9];
+
+            case DATA_NETHERBANE_EVENT:
+                return Encounters[10];
+
+            case DATA_OPERA_PERFORMANCE:
                 return OperaEvent;
+
             case DATA_BARNES_INTRO:
                 return BarnesIntro;
         }
@@ -98,11 +132,45 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     void SetData(uint32 identifier, uint32 data)
     {
         switch(identifier)
-        {
+        {                
+            case DATA_ATTUMEN_EVENT:
+                Encounters[0] = data;
+
+            case DATA_MOROES_EVENT:
+                 Encounters[1] = data;
+
+            case DATA_MAIDENOFVIRTUE_EVENT:
+                 Encounters[2] = data;
+
+            case DATA_OPTIONAL_BOSS_EVENT:
+                 Encounters[3] = data;
+
+            case DATA_OPERA_EVENT:
+                 Encounters[4] = data;
+                
+            case DATA_CURATOR_EVENT:
+                 Encounters[5] = data;
+
+            case DATA_SHADEOFARAN_EVENT:
+                 Encounters[6] = data;
+
+            case DATA_TERESTIAN_EVENT:
+                 Encounters[7] = data;
+
+            case DATA_CHESS_EVENT:
+                 Encounters[8] = data;
+
+            case DATA_MALCHEZZAR_EVENT:
+                 Encounters[9] = data;
+
+            case DATA_NETHERBANE_EVENT:
+                 Encounters[10] = data;
+
             case DATA_BARNES_INTRO:
                 BarnesIntro = data;
                 CheckStatus();
                 break;
+
         }
     }
 

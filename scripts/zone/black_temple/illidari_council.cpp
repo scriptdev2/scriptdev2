@@ -326,9 +326,6 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         BlessingTimer = 60000;
 
         InCombat = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -574,9 +571,6 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         AggroYellTimer = 0;
 
         InCombat = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -794,9 +788,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         AggroYellTimer = 0;
 
         InCombat = false;
-        
-        if(pInstance)
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)
@@ -1004,9 +995,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         InCombat = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 0);
     }
 
     void AttackStart(Unit *who)

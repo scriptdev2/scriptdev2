@@ -62,14 +62,6 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 
         VemDead = false;
         Death = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_BUG_TRIO_DEATH, 0);
-
-//        m_creature->RemoveAllAuras();
-//        m_creature->DeleteThreatList();
-//        m_creature->CombatStop();
-//        DoGoHome();
     }
 
     void AttackStart(Unit *who)
@@ -180,13 +172,6 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         Enrage_Timer = 120000;
 
         Enraged = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_BUG_TRIO_DEATH, 0);
-//        m_creature->RemoveAllAuras();
-//        m_creature->DeleteThreatList();
-//        m_creature->CombatStop();
-//        DoGoHome();
     }
 
 
@@ -196,8 +181,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         {
             pInstance->SetData(DATA_VEM_DEATH, 0);
             if(pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                //m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if death
-                m_creature->RemoveCorpse();
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if death
             pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
         }
     }
@@ -241,14 +225,15 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
 
             //Charge_Timer
             if (Charge_Timer < diff)
-            {
-                
+            {                
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    
-                DoCast(target, SPELL_CHARGE);
-                m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                DoStartMeleeAttack(target);
+                if(target)
+                {
+                    DoCast(target, SPELL_CHARGE);
+                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                    DoStartMeleeAttack(target);
+                }
                    
                 Charge_Timer = 8000 + rand()%8000;
             }else Charge_Timer -= diff;
@@ -296,13 +281,6 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         Check_Timer = 2000;
 
         VemDead = false;
-
-        if(pInstance)
-            pInstance->SetData(DATA_BUG_TRIO_DEATH, 0);
-//        m_creature->RemoveAllAuras();
-//        m_creature->DeleteThreatList();
-//        m_creature->CombatStop();
-//        DoGoHome();
     }
 
   void ResetThreat()
@@ -419,8 +397,10 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 if(pInstance)
                 {    
                     if(pInstance->GetData(DATA_VEMISDEAD))
-                    DoCast(m_creature, SPELL_ENRAGE);
-                    VemDead = true;
+                    {
+                        DoCast(m_creature, SPELL_ENRAGE);
+                        VemDead = true;
+                    }
                 }
             }
             Check_Timer = 2000;

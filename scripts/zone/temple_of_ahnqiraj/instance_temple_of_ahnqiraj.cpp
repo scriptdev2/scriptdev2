@@ -138,9 +138,7 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
                 break;
 
             case DATA_BUG_TRIO_DEATH:
-                if(data)
-                    BugTrioDeathCount++;
-                else BugTrioDeathCount--; // if they respawn, we decrement via their Reset() functions.
+                BugTrioDeathCount++;
                 break;
 
             case DATA_VEKLOR_DEATH:

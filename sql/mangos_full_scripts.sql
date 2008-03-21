@@ -445,6 +445,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_aran_blizzard' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'mob_homunculus' WHERE `entry` = 16539;
 UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229;
 UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;
+UPDATE `creature_template` SET `ScriptName` = 'npc_berthold' WHERE `entry` = 16153;
 
 /* LOCH MODAN */
 UPDATE `creature_template` SET `ScriptName` = 'npc_mountaineer_pebblebitty' WHERE `entry` = 3836;
