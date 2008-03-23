@@ -19,17 +19,20 @@
 
 enum Event_Types
 {
-    EVENT_T_TIMER_REPEAT            = 0,    //Time, Initial Time, RandAddition (Chance% if negative)
-    EVENT_T_TIMER_SINGLE            = 1,    //Time, Chance%
-    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time, Initial Time, RandAddition (Chance% if negative)
-    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time, Chance%
-    EVENT_T_HP                      = 4,    //HPMax%, HPMin%, TimeUntilRepeat (Never if 0, Chance% if negative)
-    EVENT_T_MANA                    = 5,    //ManaMax%, ManaMin%,TimeUntilRepeat (Never if 0, Chance% if negative)
-    EVENT_T_AGGRO                   = 6,    //No Params, Chance%
-    EVENT_T_KILL                    = 7,    //TimeUntilRepeat (0 = always), Chance%
-    EVENT_T_DEATH                   = 8,    //No Params, Chance%
-    EVENT_T_EVADE                   = 9,    //No Params, Chance%
-    EVENT_T_SPELLHIT                = 10,   //SpellID(will trigger for all spells if 0), TimeUntilRepeat (Never if 0), Chance%
+    EVENT_T_TIMER_REPEAT            = 0,    //Time, Initial, Random
+    EVENT_T_TIMER_SINGLE            = 1,    //Time
+    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time, Initial, Random
+    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time
+    EVENT_T_HP                      = 4,    //HPMax%, HPMin%, TimeUntilRepeat
+    EVENT_T_MANA                    = 5,    //ManaMax%,ManaMin% TimeUntilRepeat
+    EVENT_T_AGGRO                   = 6,    //NONE
+    EVENT_T_KILL                    = 7,    //TimeUntilRepeat
+    EVENT_T_DEATH                   = 8,    //NONE
+    EVENT_T_EVADE                   = 9,    //NONE
+    EVENT_T_SPELLHIT                = 10,   //SpellID, School, TimeUntilRepeat
+    EVENT_T_RANGE                   = 11,   //MinDist, MaxDist, TimeUnitlRepeat
+    EVENT_T_OOC_LOS                 = 12,   //NoHostile, NoFriendly, TimeUntilRepeat
+    EVENT_T_SPAWNED                 = 13,   //NONE
     
     EVENT_T_END,
 };
@@ -64,6 +67,10 @@ enum Action_Types
     ACTION_T_FLEE                   = 25,   //No Params
     ACTION_T_QUEST_COMPLETE_ALL     = 26,   //QuestID
     ACTION_T_CASTCREATUREGO_ALL     = 27,   //QuestId, SpellId
+    ACTION_T_REMOVEAURASFROMSPELL   = 28,   //Target, Spellid
+    ACTION_T_RANGED_MOVEMENT        = 29,   //Distance, Angle
+    ACTION_T_RANDOM_PHASE           = 30,   //PhaseId1, PhaseId2, PhaseId3
+    ACTION_T_RANDOM_PHASE_RANGE     = 31,   //PhaseMin, PhaseMax
 
     ACTION_T_END,
 };
@@ -76,6 +83,7 @@ enum Target
     TARGET_T_HOSTILE_LAST_AGGRO,        //Dead last on aggro (no idea what this could be used for)
     TARGET_T_HOSTILE_RANDOM,            //Just any random target on our threat list
     TARGET_T_HOSTILE_RANDOM_NOT_TOP,    //Any random target except top threat
+    TARGET_T_ACTION_INVOKER,            //Unit who caused this Event to occur (only works for EVENT_T_AGGRO, EVENT_T_KILL, EVENT_T_DEATH, EVENT_T_SPELLHIT, EVENT_T_OOC_LOS)
 
     TARGET_T_END
     //CAST_FRIENDLY_RANDOM,             //NOT YET IMPLEMENTED

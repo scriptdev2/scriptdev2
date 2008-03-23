@@ -43,6 +43,22 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     {
         EventList = pEventList;
         EnterEvadeMode();
+        Phase = 0;
+        CombatMovementEnabled = true;
+        MeleeEnabled = true;
+        AttackDistance = 0;
+        AttackAngle = 0.0f;
+
+        //Handle Spawned Events
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+            case EVENT_T_SPAWNED:
+                ProcessEvent(*i);
+                break;
+            }
+        }
     }
 
     ~Mob_EventAI()
@@ -50,20 +66,36 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         EventList.clear();
     }
 
+    //Variables used by EventAI for handling events
     std::list<EventHolder> EventList;       //Holder for events (stores enabled, time, and eventid)
     bool InCombat;                          //Combat var
-    bool CombatMovementEnabled;             //If we allow targeted movment gen (movement twoards top threat)
-    bool MeleeEnabled;                      //If we allow melee auto attack
     uint32 EventUpdateTime;                 //Time between event updates
     uint32 EventDiff;                       //Time between the last event call
-    uint8 Phase;                            //Current phase, max 32 phases
 
-    void Reset()
+    //Variables used by Events themselves
+    uint8 Phase;                            //Current phase, max 32 phases
+    bool CombatMovementEnabled;             //If we allow targeted movment gen (movement twoards top threat)
+    bool MeleeEnabled;                      //If we allow melee auto attack
+    uint32 AttackDistance;                  //Distance to attack from
+    float AttackAngle;                      //Angle of attack
+    
+    void AttackTarget(Unit* pTarget)
     {
-        //This version of reset not used
+        if (!pTarget)
+            return;
+
+        if ( m_creature->Attack(pTarget) )
+        {
+            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
+            m_creature->AddThreat(pTarget, 0.0f);
+            m_creature->resetAttackTimer();
+
+            if (pTarget->GetTypeId() == TYPEID_PLAYER)
+                m_creature->SetLootRecipient((Player*)pTarget);
+        }
     }
 
-    void ProcessEvent(EventHolder& pHolder, Unit* pOverrideChatTarget = NULL)
+    void ProcessEvent(EventHolder& pHolder, Unit* pActionInvoker = NULL)
     {  
         if (!pHolder.Enabled || pHolder.Time)
             return;
@@ -190,18 +222,41 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             break;
         case EVENT_T_SPELLHIT:
             {
-                //Spell hit is special case, first param handled within EventAI::SpellHit
-                if (param2)
-                    pHolder.Time = param2;
+                //Spell hit is special case, param1 and param2 handled within EventAI::SpellHit
+                if (param3)
+                    pHolder.Time = param3;
                 else
                     pHolder.Enabled = false;
             }
+            break;
+        case EVENT_T_RANGE:
+            {
+                if (param3)
+                    pHolder.Time = param3;
+                else
+                    pHolder.Enabled = false;
+            }
+            break;
+        case EVENT_T_OOC_LOS:
+            {
+                if (param3)
+                    pHolder.Time = param3;
+                else
+                    pHolder.Enabled = false;
+            }
+            break;
+        case EVENT_T_SPAWNED:
+            {
+            }
+            break;
+        default:
+            error_log("Event type missing from ProcessEvent() Switch . Type = %d", pHolder.Event.event_type);
             break;
         }
 
         //Process actions
         for (uint32 j = 0; j < MAX_ACTIONS; j++)
-            ProcessAction(pHolder.Event.action[j].type, pHolder.Event.action[j].param1, pHolder.Event.action[j].param2, pHolder.Event.action[j].param3, rnd, pOverrideChatTarget);
+            ProcessAction(pHolder.Event.action[j].type, pHolder.Event.action[j].param1, pHolder.Event.action[j].param2, pHolder.Event.action[j].param3, rnd, pActionInvoker);
     }
 
     inline uint32 GetRandActionParam(uint32 rnd, uint32 param1, uint32 param2, uint32 param3)
@@ -223,7 +278,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         return 0;
     }
 
-    inline Unit* GetTargetByType(uint32 Target)
+    inline Unit* GetTargetByType(uint32 Target, Unit* pActionInvoker)
     {
         switch (Target)
         {
@@ -245,26 +300,29 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case TARGET_T_HOSTILE_RANDOM_NOT_TOP:
             return SelectUnit(SELECT_TARGET_RANDOM,1);
             break;
+        case TARGET_T_ACTION_INVOKER:
+            return pActionInvoker;
+            break;
         default:
             return NULL;
             break;
         };
     }
 
-    void ProcessAction(uint16 type, uint32 param1, uint32 param2, uint32 param3, uint32 rnd, Unit* pOverrideChatTarget)
+    void ProcessAction(uint16 type, uint32 param1, uint32 param2, uint32 param3, uint32 rnd, Unit* pActionInvoker)
     {
         switch (type)
         {
         case ACTION_T_SAY:
-            DoSay(GetLocalizedText(param1), LANG_UNIVERSAL, pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+            DoSay(GetLocalizedText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_YELL:
-            DoYell(GetLocalizedText(param1), LANG_UNIVERSAL, pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+            DoYell(GetLocalizedText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_TEXTEMOTE:
-            DoTextEmote(GetLocalizedText(param1), pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+            DoTextEmote(GetLocalizedText(param1), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_SOUND:
@@ -280,7 +338,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoSay(GetLocalizedText(temp), LANG_UNIVERSAL, pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+                    DoSay(GetLocalizedText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
@@ -289,7 +347,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoYell(GetLocalizedText(temp), LANG_UNIVERSAL, pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+                    DoYell(GetLocalizedText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
@@ -298,7 +356,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoTextEmote(GetLocalizedText(temp), pOverrideChatTarget ? pOverrideChatTarget : m_creature->getVictim());
+                    DoTextEmote(GetLocalizedText(temp), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
@@ -322,7 +380,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_CAST:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (!target)
                     return;
@@ -337,7 +395,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_SUMMON:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 //Duration
                 Creature* pCreature = NULL;
@@ -354,7 +412,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_THREAT_SINGLE_PCT:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (target)
                     m_creature->getThreatManager().modifyThreatPercent(target, param1);
@@ -377,7 +435,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_QUEST_COMPLETE:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                     ((Player*)target)->CompleteQuest(param1);
@@ -386,7 +444,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_CASTCREATUREGO:
             {
-                Unit* target = GetTargetByType(param3);
+                Unit* target = GetTargetByType(param3, pActionInvoker);
 
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                     ((Player*)target)->CastedCreatureOrGO(param1, m_creature->GetGUID(), param2);
@@ -395,7 +453,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_SET_UNIT_FIELD:
             {
-                Unit* target = GetTargetByType(param3);
+                Unit* target = GetTargetByType(param3, pActionInvoker);
 
                 if (target)
                     target->SetUInt32Value(param1, param2);
@@ -404,7 +462,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_SET_UNIT_FLAG:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (target)
                     target->SetFlag(UNIT_FIELD_FLAGS, param1);
@@ -413,7 +471,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_REMOVE_UNIT_FLAG:
             {
-                Unit* target = GetTargetByType(param2);
+                Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (target)
                     target->RemoveFlag(UNIT_FIELD_FLAGS, param1);
@@ -434,7 +492,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (param1)
                 {
                     if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != TARGETED_MOTION_TYPE)
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
                 }
                 else
                     if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE)
@@ -496,13 +554,69 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
+
+        case ACTION_T_REMOVEAURASFROMSPELL:
+            {
+                Unit* target = GetTargetByType(param1, pActionInvoker);
+
+                if (target)
+                    target->RemoveAurasDueToSpell(param2);
+            }
+            break;
+
+        case ACTION_T_RANGED_MOVEMENT:
+            {
+                AttackDistance = param1;
+                AttackAngle = ((float)param2/180)*M_PI;
+
+                if (CombatMovementEnabled)
+                {
+                    //Drop current movement gen
+                    m_creature->GetMotionMaster()->Clear(false);
+                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                }
+            }
+            break;
+
+        case ACTION_T_RANDOM_PHASE:
+            {
+                uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
+      
+                Phase = temp;
+            }
+            break;
+
+        case ACTION_T_RANDOM_PHASE_RANGE:
+            {
+                if (param2 > param1)
+                {
+                    Phase = param1 + (rnd % (param2 - param1));
+                }
+                else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero.");
+            }
+            break;
         };
     }
 
-    void Reset(Event_Types e)
+    void JustRespawned()
+    {
+        Reset();
+
+        //Handle Spawned Events
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+            case EVENT_T_SPAWNED:
+                ProcessEvent(*i);
+                break;
+            }
+        }
+    }
+
+    void Reset()
     {
         InCombat = false;
-        Phase = 0;
 
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
@@ -512,18 +626,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             switch ((*i).Event.event_type)
             {
-                //Evade
-            case EVENT_T_EVADE:
-                if (e == EVENT_T_EVADE)
-                    ProcessEvent(*i);
-                break;
-
-                //Death
-            case EVENT_T_DEATH:
-                if (e == EVENT_T_DEATH)
-                    ProcessEvent(*i);
-                break;
-
                 //Reset all out of combat timers
             case EVENT_T_TIMER_OOC_REPEAT:
                 if ((*i).Event.event_param3_s > 0)
@@ -547,12 +649,37 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         m_creature->CombatStop();
         DoGoHome();
         m_creature->LoadCreaturesAddon();
-        Reset(EVENT_T_EVADE);
+
+        Reset();
+
+        //Handle Evade events
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+                //Evade
+            case EVENT_T_EVADE:
+                ProcessEvent(*i);
+                break;
+            }
+        }
     }
 
     void JustDied(Unit* killer)
     {
-        Reset(EVENT_T_DEATH);
+        Reset();
+
+        //Handle Evade events
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+                //Evade
+            case EVENT_T_DEATH:
+                ProcessEvent(*i, killer);
+                break;
+            }
+        }
     }
 
     void KilledUnit(Unit* victim)
@@ -580,13 +707,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         if (!InCombat)
         {
-            //Combat movement and Melee attack always enabled by default at combat reset
-            CombatMovementEnabled = true;
-            MeleeEnabled = true;
-
-            //Reset phase to 0
-            Phase = 0;
-
             //Check for on combat start events
             for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
@@ -624,14 +744,33 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         //Begin melee attack if we are within range
         if (CombatMovementEnabled)
-            DoStartMeleeAttack(who);
+            AttackTarget(who);
         else DoStartRangedAttack(who);
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
+        if (!who || InCombat)
             return;
+
+        //Check for OOC LOS Event
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+            case EVENT_T_OOC_LOS:
+                {
+                    if ((*i).Event.event_param1 && m_creature->IsHostileTo(who))
+                        break;
+
+                    if ((*i).Event.event_param2 && m_creature->IsFriendlyTo(who))
+                        break;
+
+                    ProcessEvent(*i, who);
+                }
+                break;
+            }
+        }
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -656,9 +795,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Spell hit
             case EVENT_T_SPELLHIT:
                 {
-                    //If spell id matches (or no spell id)
+                    //If spell id matches (or no spell id) & if spell school matches (or no spell school)
                     if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
-                        ProcessEvent(*i);
+                        if ((*i).Event.event_param2_s == -1 || pSpell->School == (*i).Event.event_param2)
+                            ProcessEvent(*i, pUnit);
                 }
                 break;
             }
@@ -678,6 +818,21 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if (EventUpdateTime < diff)
         {
             EventDiff += diff;
+
+            //Check for range based events
+            //if (m_creature->GetDistance(m_creature->getVictim()) > 
+            if (Combat)
+                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+                {
+                    switch ((*i).Event.event_type)
+                    {
+                    case EVENT_T_RANGE:
+                        float dist = m_creature->GetDistance(m_creature->getVictim());
+                        if (dist > (*i).Event.event_param1 && dist < (*i).Event.event_param2)
+                            ProcessEvent(*i);
+                        break;
+                    }
+                }
 
             //Check for time based events
             for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)

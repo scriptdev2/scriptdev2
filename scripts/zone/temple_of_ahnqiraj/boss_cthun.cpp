@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 Unit* Spawned = NULL;
 
                 //1
-                Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+10,m_creature->GetPositionY()-10,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+10,m_creature->GetPositionY()-10,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
                 if (Spawned)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
