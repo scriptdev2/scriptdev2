@@ -140,3 +140,17 @@ struct EventAI_Event
 };
 
 extern HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
+
+struct EventAI_Summon
+{
+    uint32 id;
+
+    float position_x;
+    float position_y;
+    float position_z;
+    float orientation;
+    uint32 SpawnTimeSecs;
+};
+
+extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
+

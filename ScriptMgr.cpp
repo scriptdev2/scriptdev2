@@ -55,6 +55,9 @@ HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
 HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
 
+//Event AI summon structure. Used exclusivly by mob_event_ai.cpp.
+HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
+
 //*** End EventAI data ***
 
 DatabaseMysql ScriptDev2DB;
@@ -642,6 +645,45 @@ void LoadDatabase()
         }else outstring_log("SD2: WARNING >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
 
         //Gather event data
+        result = ScriptDev2DB.PQuery("SELECT `id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`"
+            "FROM `eventai_summons`");
+
+        //Drop Existing EventSummon Map
+        EventSummon_Map.clear();
+
+        if (result)
+        {
+            outstring_log( "SD2: Loading EventAI_Summons...");
+            barGoLink bar(result->GetRowCount());
+            uint32 Count = 0;
+
+            do
+            {
+                bar.step();
+                Field *fields = result->Fetch();
+
+                EventAI_Summon temp;
+
+                uint32 i = fields[0].GetUInt32();
+                temp.position_x = fields[1].GetFloat();
+                temp.position_y = fields[2].GetFloat();
+                temp.position_z = fields[3].GetFloat();
+                temp.orientation = fields[4].GetFloat();
+                temp.SpawnTimeSecs = fields[5].GetUInt32();
+
+                //Add to map
+                EventSummon_Map[i] = temp;
+                ++Count;
+
+            }while (result->NextRow());
+
+            delete result;
+            outstring_log("");
+            outstring_log("SD2: >> Loaded %u EventAI_Summons", Count);
+
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Summons. DB table `EventAI_Summons` is empty.");
+
+        //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
             "FROM `eventai_scripts`");
 
@@ -724,15 +766,19 @@ void LoadDatabase()
                                 error_log("Spell Store Size = %u", GetSpellStore()->GetNumRows());
                             }
                         }
-                        //Missing break on purpose here (cast uses 2nd param target)
+
+                        if (temp.action[j].param2 >= TARGET_T_END)
+                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                        break;
 
                     //2nd param target
                     case ACTION_T_SUMMON:
+                            if (EventSummon_Map.find(temp.action[j].param3) == EventSummon_Map.end())
+                                error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j, temp.action[j].param3);
                     case ACTION_T_THREAT_SINGLE_PCT:
                     case ACTION_T_QUEST_COMPLETE:
                     case ACTION_T_SET_UNIT_FLAG:
                     case ACTION_T_REMOVE_UNIT_FLAG:
-                        //TODO: Add check for existing creature template for summon
                         if (temp.action[j].param2 >= TARGET_T_END)
                             error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
                         break;

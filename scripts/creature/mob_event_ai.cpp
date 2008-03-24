@@ -399,9 +399,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 //Duration
                 Creature* pCreature = NULL;
-                if (param3)
-                    pCreature = DoSpawnCreature(param1, 0,0,0,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, param3);
-                else pCreature = DoSpawnCreature(param1, 0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
+
+                HM_NAMESPACE::hash_map<uint32, EventAI_Summon>::iterator i = EventSummon_Map.find(param3);
+
+                if (i == EventSummon_Map.end())
+                {
+                    error_log( "SD2: Eventid failed to spawn creature %u. Summon map index %u does not exist.", param1, param3);
+                    return;
+                }
+
+                if ((*i).second.SpawnTimeSecs)
+                    pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, (*i).second.SpawnTimeSecs);
+                else pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
                     error_log( "SD2: Eventid failed to spawn creature %u.", param1);
