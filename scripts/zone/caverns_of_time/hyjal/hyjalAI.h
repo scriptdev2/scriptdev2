@@ -18,6 +18,7 @@
 #include "../../../../../../game/Player.h"
 #include "../../../../../../game/Group.h"
 #include "../../../../../../game/GossipDef.h"
+#include "../../../../../../game/Map.h"
 
 // Trash Mobs summoned in waves
 #define NECROMANCER         17899
@@ -38,6 +39,9 @@
 #define ARCHIMONDE          17968
 
 #define SPELL_TELEPORT_VISUAL   41232
+
+#define WORLDSTATE_WAVES        2842
+#define WORLDSTATE_ENEMIES      2453
 
 struct Wave
 {

@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             float X = ChannelerLocations[index].x;
             float Y = ChannelerLocations[index].y;
             float O = ChannelerLocations[index].o;
-            Creature* Sorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, O, TEMPSUMMON_DEAD_DESPAWN, 0);
+            Creature* Sorcerer = m_creature->SummonCreature(CREATURE_SORCERER, X, Y, m_creature->GetPositionZ(), O, TEMPSUMMON_DEAD_DESPAWN, 0);
             if(Sorcerer)
             {
                 Sorcerer->AddThreat(m_creature, 100000000.0f);

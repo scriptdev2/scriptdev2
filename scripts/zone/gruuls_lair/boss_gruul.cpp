@@ -150,7 +150,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 case 0:
                     {
                         //Begin the whole ordeal
-                        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+                        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
                         
                         std::vector<Unit*> knockback_targets;
 
@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 case 1:
                     {
                         //Players are going to get stoned
-                        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+                        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
                         
                         for(std::list<HostilReference*>::iterator itr = m_threatlist.begin(); itr!= m_threatlist.end(); ++itr)
                         {
@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 case 3:
                     {
                         //Shatter takes effect
-                        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+                        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
                         
                         for(std::list<HostilReference*>::iterator itr = m_threatlist.begin(); itr!= m_threatlist.end(); ++itr)
                         {

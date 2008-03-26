@@ -172,7 +172,7 @@ float npc_volcanoAI::CalculateRandomCoord()
 
 void npc_volcanoAI::UpdateAI(const uint32 diff)
 {
-    // Workaround for the visual of the fireball that is spammed around the volcano. This seems to cause lots of lag and maybe client freezes?
+    // Workaround for the visual of the fireball that is spammed around the volcano.
     if(FireballTimer < diff)
     {
         float X = CalculateRandomCoord();
@@ -180,9 +180,9 @@ void npc_volcanoAI::UpdateAI(const uint32 diff)
         Creature* Target = DoSpawnCreature(24550, X, Y, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 600);
         if(Target)
         {
-            Target->SetVisibility(VISIBILITY_OFF);
-            Target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            Target->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Make it invisible
             DoCast(Target, SPELL_VOLCANIC_FIREBALL);
+            Target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
         FireballTimer = 500;
     }else FireballTimer -= diff;
@@ -305,41 +305,38 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         }
     }
 
-    uint64 SummonCreature(uint32 entry, Unit* target)
+    uint32 CalculateRandomCoord(float initial)
     {
-        Creature* Summon = NULL;
-        uint64 guid = 0;
+        float coord = 0;
+
+        switch(rand()%2)
+        {
+            case 0: coord = initial + 20 + rand()%20; break;
+            case 1: coord = initial - 20 - rand()%20; break;
+        }
+
+        return coord;
+    }
+
+    Creature* SummonCreature(uint32 entry, Unit* target)
+    {
         if(target && entry)
         {
-            switch(rand()%4)
-            {
-                case 0:
-                    Summon = m_creature->SummonCreature(entry, target->GetPositionX() + 20 + rand()%16, target->GetPositionY() + 20 + rand()%16, target->GetPositionZ(), rand()%7, TEMPSUMMON_TIMED_DESPAWN, 19000);
-                    break;
-                case 1:
-                    Summon = m_creature->SummonCreature(entry, target->GetPositionX() - 20 - rand()%16, target->GetPositionY() + 20 + rand()%16, target->GetPositionZ(), rand()%7, TEMPSUMMON_TIMED_DESPAWN, 19000);
-                    break;
-                case 2:
-                    Summon = m_creature->SummonCreature(entry, target->GetPositionX() + 20 + rand()%16, target->GetPositionY() - 20 - rand()%16, target->GetPositionZ(), rand()%7, TEMPSUMMON_TIMED_DESPAWN, 19000);
-                    break;
-                case 3:
-                    Summon = m_creature->SummonCreature(entry, target->GetPositionX() - 20 - rand()%16, target->GetPositionY() - 20 - rand()%16, target->GetPositionZ(), rand()%7, TEMPSUMMON_TIMED_DESPAWN, 19000);
-                    break;
-            }
+            Creature* Summon = m_creature->SummonCreature(entry, CalculateRandomCoord(target->GetPositionX()), CalculateRandomCoord(target->GetPositionY()), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 20000);
             if(Summon)
             {
                 Summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Summon->setFaction(m_creature->getFaction());
-                guid = Summon->GetGUID();
+                return Summon;
             }
         }
-        return guid;
+        return NULL;
     }
 
-    uint64 CalculateHurtfulStrikeTarget()
+    Unit* CalculateHurtfulStrikeTarget()
     {
-        uint64 guid = 0;
         uint32 health = 0;
+        Unit* target = NULL;
 
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         std::list<HostilReference*>::iterator i = m_threatlist.begin();
@@ -351,12 +348,12 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if(pUnit->GetHealth() > health)
                 {
                     health = pUnit->GetHealth();
-                    guid = (*i)->getUnitGuid();
+                    target = pUnit;
                 }
             }
         }
 
-        return guid;
+        return target;
     }
 
     void UpdateAI(const uint32 diff)
@@ -369,7 +366,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             if(HurtfulStrikeTimer < diff)
             {
                 Unit* target = NULL;
-                target = Unit::GetUnit((*m_creature), CalculateHurtfulStrikeTarget());
+                target = CalculateHurtfulStrikeTarget();
 
                 if(target && target->isAlive())
                     DoCast(target, SPELL_HURTFUL_STRIKE);
@@ -383,7 +380,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if(target)
                 {
                     Creature* MoltenFlame = NULL;
-                    MoltenFlame = ((Creature*)Unit::GetUnit((*m_creature), SummonCreature(23095, target)));
+                    MoltenFlame = SummonCreature(23095, target);
                     if(MoltenFlame)
                     {
                         ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
@@ -415,7 +412,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if(!target) return;
 
                 Creature* Volcano = NULL;
-                Volcano = ((Creature*)Unit::GetUnit((*m_creature), SummonCreature(23085, target)));
+                Volcano = SummonCreature(23085, target);
 
                 if(Volcano)
                 {
@@ -451,7 +448,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 SummonVolcanoTimer = 2000;
                 PhaseSwitchTimer = 60000;
                 m_creature->SetSpeed(MOVE_RUN, 0.5f);
-                
             }
         }else PhaseSwitchTimer -= diff;
 

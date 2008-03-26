@@ -153,7 +153,7 @@ static Yells Conversation[]=
 
 static Yells RandomTaunts[]=
 {
-    {11467, "I can feel your hatred", ILLIDAN_STORMRAGE, 0, 0, false},
+    {11467, "I can feel your hatred.", ILLIDAN_STORMRAGE, 0, 0, false},
     {11468, "Give in to your fear!", ILLIDAN_STORMRAGE, 0, 0, false},
     {11469, "You know nothing of power!", ILLIDAN_STORMRAGE, 0, 0, false},
     {11471, "Such... arrogance!", ILLIDAN_STORMRAGE, 0, 0, false}
@@ -301,7 +301,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     /* Generic */
     bool InCombat;
     bool IsTalking;
-    bool RunAway;
     uint32 TalkCount;
 
     void Reset();
@@ -820,7 +819,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     FlameGUID[i] = Flame->GetGUID(); // Record GUID in order to check if they're dead later on to move to the next phase
                     Glaive->CastSpell(Flame, SPELL_GREEN_BEAM, true); // Glaives do some random Beam type channel on it.
                     // Run through our threatlist and give the flame a small taste of who to attack
-                    std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+                    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
                     std::list<HostilReference*>::iterator itr = m_threatlist.begin();
                     for( ; itr != m_threatlist.end(); ++itr)
                     {
@@ -848,7 +847,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     void SummonMaiev(bool setHealth = false)
     {
         if(setHealth)
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.3);
+            m_creature->SetHealth((uint32)m_creature->GetMaxHealth()*0.3);
 
         TauntTimer += 4000;
         GlobalTimer += 4000;
@@ -878,7 +877,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     void InitializeDeath(bool setHealth = false)
     {
         if(setHealth)
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.01);
+            m_creature->SetHealth((uint32)m_creature->GetMaxHealth()*0.01);
 
         DoCast(m_creature, SPELL_DEATH); // Animate his kneeling + stun him
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Don't let the players interrupt our talk!
@@ -1230,6 +1229,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
            
             if(TransformTimer < diff)
             {
+                // Prevent Illidan from morphing if less than 32%, as this may cause issues with the phase transition
+                if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 32) && !MaievGUID)
+                    return;
+
                 Phase = 6; // Transform sequence
                 DemonFormSequence = 0;
                 AnimationTimer = 0;
@@ -1267,7 +1270,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if(target && target->GetTypeId() == TYPEID_PLAYER) // only on players.
                     {
-                        ShadowDemon = DoSpawnCreature(SHADOW_DEMON, 0,0,0,0,TEMPSUMMON_CORPSE_DESPAWN,0);
+                        ShadowDemon = DoSpawnCreature(SHADOW_DEMON, 0,0,0,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,25000);
                         if(ShadowDemon)
                         {
                             ShadowDemon->AddThreat(target, 5000000.0f);
@@ -1496,7 +1499,7 @@ void npc_akama_illidanAI::UpdateAI(const uint32 diff)
     }
 
     // If we don't have a target, or is talking, or has run away, return
-    if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() || IsTalking || RunAway) return;
+    if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() || IsTalking) return;
  
     DoMeleeAttackIfReady();
 }

@@ -200,8 +200,8 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
          SummonCreature(wave[Count].Mob18);
 
      if(!wave[Count].IsBoss)
-         NextWaveTimer = wave[Count].WaveTimer;
-     else 
+        NextWaveTimer = wave[Count].WaveTimer;
+     else
      {
          Summon = false;
          CheckBossTimer = 1000;
@@ -210,31 +210,15 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
 
 void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
 {
-    if(!player)
+    std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
+    if(PlayerList.empty())
+        return;
+
+    for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
     {
-        if(PlayerGUID)
-        {
-            player = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-            if(!player) return;
-        }else return;
+        (*itr)->CastSpell((*itr), SPELL_TELEPORT_VISUAL, true);
+        (*itr)->TeleportTo(m_creature->GetMapId(), X,Y,Z,(*itr)->GetOrientation());
     }
-    
-    Group* Raid = player->GetGroup();
-    if(Raid)
-    {
-        const Group::MemberSlotList list = Raid->GetMemberSlots();
-        Group::member_citerator itr = list.begin();
-        for( ; itr != list.end(); itr++)
-        {
-            Player* member = ((Player*)Unit::GetUnit((*m_creature), itr->guid));
-            if(member && member->isAlive() && (member->GetMapId() == m_creature->GetMapId()))
-            {
-                member->CastSpell(member, SPELL_TELEPORT_VISUAL, true);
-                member->TeleportTo(m_creature->GetMapId(), X, Y, Z, member->GetOrientation());
-            }
-        }
-    }
-    else player->TeleportTo(m_creature->GetMapId(), X, Y, Z, player->GetOrientation());
 }
 
 void hyjalAI::StartEvent(Player* player)

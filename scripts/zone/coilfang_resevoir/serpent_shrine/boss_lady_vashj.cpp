@@ -128,7 +128,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
     ScriptedInstance *pInstance;
 
-    uint64 ShieldGeneratorChannel[3];
+    uint64 ShieldGeneratorChannel[4];
 
     uint32 ShockBlast_Timer;
     uint32 Entangle_Timer;

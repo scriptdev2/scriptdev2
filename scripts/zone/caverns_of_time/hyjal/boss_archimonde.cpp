@@ -19,7 +19,8 @@
 #include "../../../../../../game/TargetedMovementGenerator.h"
 #include "../../../../../../game/SpellAuras.h"
 
-#define SPELL_DENOUEMENT_WISP      32124 // Wisps use this
+#define SPELL_DENOUEMENT_WISP      32124
+#define SPELL_ANCIENT_SPARK        39349
 #define SPELL_PROTECTION_OF_ELUNE  38528
 
 #define SPELL_DRAIN_WORLD_TREE      39140
@@ -30,7 +31,7 @@
 #define SPELL_AIR_BURST             32014
 #define SPELL_GRIP_OF_THE_LEGION    31972
 #define SPELL_DOOMFIRE_SPAWN        32074
-#define SPELL_DOOMFIRE_VISUAL       31945
+#define SPELL_DOOMFIRE_VISUAL       42344 // This is actually a Zul'Aman spell, but the proper Doomfire spell sometimes freezes the server if a player stands in it for too long
 #define SPELL_DOOMFIRE_DAMAGE       31944
 #define SPELL_SOUL_CHARGE_YELLOW    32045
 #define SPELL_SOUL_CHARGE_GREEN     32051
@@ -38,7 +39,7 @@
 #define SPELL_UNLEASH_SOUL_YELLOW   32054
 #define SPELL_UNLEASH_SOUL_GREEN    32057
 #define SPELL_UNLEASH_SOUL_RED      32053
-#define SPELL_FEAR                  41150
+#define SPELL_FEAR                  31970
 
 #define SAY_AGGRO           "Your resistance is insignificant!"
 #define SOUND_AGGRO         10987
@@ -76,6 +77,16 @@
 #define SAY_DEATH           "No, it cannot be! Nooo!"
 #define SOUND_DEATH         10992
 
+#define CREATURE_ARCHIMONDE             17968
+#define CREATURE_DOOMFIRE               18095
+#define CREATURE_DOOMFIRE_TARGETING     18104
+#define CREATURE_ANCIENT_WISP           17946
+#define CREATURE_CHANNEL_TARGET         22418
+
+#define NORDRASSIL_X        5503.713
+#define NORDRASSIL_Y       -3523.436
+#define NORDRASSIL_Z        1608.781
+
 struct mob_ancient_wispAI : public ScriptedAI
 {
     mob_ancient_wispAI(Creature* c) : ScriptedAI(c)
@@ -108,7 +119,12 @@ struct mob_ancient_wispAI : public ScriptedAI
             {
                 Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID);
                 if(Archimonde && (((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2))
-                    DoCast(Archimonde, SPELL_DENOUEMENT_WISP);
+                {
+                    if((((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2) || !Archimonde->isAlive())
+                        DoCast(m_creature, SPELL_DENOUEMENT_WISP);
+                    else
+                        DoCast(Archimonde, SPELL_ANCIENT_SPARK);
+                }
             }
             CheckTimer = 1000;
         }else CheckTimer -= diff;
@@ -126,6 +142,7 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
     }
 
     uint32 CheckTimer;
+    uint32 RefreshTimer;
 
     bool TargetSelected;
 
@@ -135,6 +152,7 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
     void Reset()
     {
         CheckTimer = 5000;
+        RefreshTimer = 0;
 
         TargetSelected = false;
 
@@ -142,28 +160,41 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
         TargetGUID = 0;
     }
 
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        damage = 0;
+    }
+
     void AttackStart(Unit* who) { return; }
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(!who || who == m_creature)
+        // Do not do anything if who does not exist, or we are refreshing our timer, or who is Doomfire, Archimonde or Doomfire targetting
+        if(!who || who == m_creature || RefreshTimer || who->GetEntry() == CREATURE_ANCIENT_WISP ||
+            who->GetEntry() == CREATURE_ARCHIMONDE || who->GetEntry() == CREATURE_DOOMFIRE ||
+            who->GetEntry() == CREATURE_DOOMFIRE_TARGETING)
             return;
 
         if(m_creature->IsWithinDistInMap(who, 3))
         {
             TargetSelected = true;
             TargetGUID = who->GetGUID();
+            RefreshTimer = 500;
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
+        if(RefreshTimer < diff)
+            RefreshTimer = 0;
+        else RefreshTimer -= diff;
+
         if(TargetSelected && TargetGUID)
         {
             Unit* target = Unit::GetUnit((*m_creature), TargetGUID);
             if(target && target->isAlive())
             {
-                DoCast(target, SPELL_DOOMFIRE_DAMAGE);
+                target->CastSpell(target, SPELL_DOOMFIRE_DAMAGE, true);
                 TargetGUID = 0;
                 TargetSelected = false;
             }
@@ -219,11 +250,24 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* who)
     {
-        return;
+        // Do not do anything if who does not exist, or who is Doomfire, Archimonde or Doomfire targetting
+        if(!who || who == m_creature || who->GetEntry() == CREATURE_ARCHIMONDE
+            || who->GetEntry() == CREATURE_DOOMFIRE || who->GetEntry() == CREATURE_DOOMFIRE_TARGETING)
+            return;
+
+        m_creature->AddThreat(who, 1.0f);
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        damage = 0;
     }
 
     void UpdateAI(const uint32 diff)
     {
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
         if(SummonTimer < diff)
         {
             if(ArchimondeGUID)
@@ -231,24 +275,31 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                 Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID);
                 if(Archimonde && Archimonde->isAlive())
                 {
-                    Creature* Doomfire = DoSpawnCreature(18095, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
+                    Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE, 0, 0, 0, 2, TEMPSUMMON_TIMED_DESPAWN, 30000);
                     if(Doomfire)
+                    {
+                        Doomfire->CastSpell(Doomfire, SPELL_DOOMFIRE_VISUAL, true);
                         ((mob_doomfireAI*)Doomfire->AI())->ArchimondeGUID = ArchimondeGUID;
-                    SummonTimer = 1000;
+                        Doomfire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    }
+                    SummonTimer = 500;
                 }
                 else
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
             }
             else
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
-
         }else SummonTimer -= diff;
 
         if(ChangeTargetTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if(target && target->isAlive())
+            {
+                m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
                 m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+            }
+            ChangeTargetTimer = 5000;
         }else ChangeTargetTimer -= diff;
     }
 
@@ -284,6 +335,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     ScriptedInstance* pInstance;
     
+    uint32 DrainNordrassilTimer;
     uint32 FearTimer;
     uint32 AirBurstTimer;
     uint32 GripOfTheLegionTimer;
@@ -292,32 +344,41 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     uint32 MeleeRangeCheckTimer;
     uint32 HandOfDeathTimer;
     uint32 SummonWispTimer;
+    uint32 EnrageTimer;
+    uint32 CheckDistanceTimer;
     uint32 GlobalSoulChargeCooldown; // This prevents spamming Soul Charges too quickly.
 
     bool InCombat;
     bool SoulCharged;
+    bool Enraged;
     bool BelowTenPercent;
     bool HasProtected;
+    bool IsChanneling;
 
     void Reset()
     {
         if(pInstance)
             pInstance->SetData(DATA_ARCHIMONDEEVENT, 0);
 
+        DrainNordrassilTimer = 0;
         FearTimer = 40000;
         AirBurstTimer = 30000;
         GripOfTheLegionTimer = 5000 + rand()%20000;
         DoomfireTimer = 20000;
         SoulChargeTimer = 15000 + rand()%105000;
         MeleeRangeCheckTimer = 15000;
-        HandOfDeathTimer = 5000;
+        HandOfDeathTimer = 2000;
         SummonWispTimer = 1500;
+        EnrageTimer = 600000; // 10 minutes
+        CheckDistanceTimer = 30000; // This checks if he's too close to the World Tree (75 yards from a point on the tree), if true then he will enrage
         GlobalSoulChargeCooldown = 0;
 
         InCombat = false;
         SoulCharged = false;
+        Enraged = false;
         BelowTenPercent = false;
         HasProtected = false;
+        IsChanneling = false;
     }
 
     void AttackStart(Unit *who)
@@ -331,6 +392,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
             if(!InCombat)
             {
+                m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
@@ -355,9 +417,11 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
                 if(!InCombat)
                 {
+                    m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                     DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    pInstance->SetData(DATA_ARCHIMONDEEVENT, 1);
+                    if(pInstance)
+                        pInstance->SetData(DATA_ARCHIMONDEEVENT, 1);
                     InCombat = true;
                 }
             }
@@ -408,6 +472,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         }
 
         SoulCharged = true;
+        CalculateSoulChargeTimer();
     }
 
     void JustDied(Unit *victim)
@@ -426,7 +491,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(victim && m_creature->IsWithinDistInMap(victim, m_creature->GetAttackDistance(victim)))
             return false;
 
-        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
             return false;
 
@@ -460,7 +525,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(!target)
             return;
 
-        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         
         if(m_threatlist.empty())
             return;
@@ -476,17 +541,18 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void SummonDoomfire(Unit* target)
     {    
-        Creature* Doomfire = DoSpawnCreature(18104, rand()%30, rand()%30, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
+        Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE_TARGETING, rand()%30, rand()%30, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
         if(Doomfire)
         {
-            m_creature->SetLootRecipient(NULL);
             ((mob_doomfire_targettingAI*)Doomfire->AI())->ArchimondeGUID = m_creature->GetGUID();
+            Doomfire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             SetThreatList(Doomfire);
             Doomfire->setFaction(m_creature->getFaction());
             DoCast(Doomfire, SPELL_DOOMFIRE_SPAWN);
             Doomfire->CastSpell(Doomfire, SPELL_DOOMFIRE_VISUAL, true);
             if(target)
-                Doomfire->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                Doomfire->AI()->AttackStart(target);
+
             if(rand()%2 == 0)
             {
                 DoYell(SAY_DOOMFIRE1, LANG_UNIVERSAL, m_creature);
@@ -499,72 +565,137 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         }
     }
 
+    void CalculateSoulChargeTimer()
+    {
+        uint32 totalStacks = 0;
+        uint32 newTimer = 0;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            uint32 spell = 0;
+            switch(i)
+            {
+                case 0:
+                    spell = SPELL_SOUL_CHARGE_RED;
+                    break;
+                case 1:
+                    spell = SPELL_SOUL_CHARGE_YELLOW;
+                    break;
+                case 2:
+                    spell = SPELL_SOUL_CHARGE_GREEN;
+                    break;
+            }
+
+            if(m_creature->HasAura(spell, 0))
+            {
+                Aura* aur = m_creature->GetAura(spell, 0);
+                if(aur)
+                {
+                    totalStacks += aur->GetAuraSlot();
+                    aur->SetAuraDuration(120000);
+                }
+            }
+        }
+
+        if(!totalStacks)
+            return;
+
+        newTimer = (5000 + rand()%115000)/totalStacks;
+        if(newTimer < (SoulChargeTimer+GlobalSoulChargeCooldown))
+            SoulChargeTimer = newTimer;
+
+        if(totalStacks > 7 && GlobalSoulChargeCooldown > 3000)
+            GlobalSoulChargeCooldown = 5000;
+    }
+
     void UnleashSoulCharge()
     {
+        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
         bool HasCast = false;
-        uint8 stacks = 0;
-        uint8 totalStacks = 0;
+        uint32 chargeSpell = 0;
+        uint32 unleashSpell = 0;
         switch(rand()%3)
         {
             case 0:
-                if(m_creature->HasAura(SPELL_SOUL_CHARGE_RED, 0))
-                {
-                    stacks = m_creature->GetAura(SPELL_SOUL_CHARGE_RED, 0)->GetAuraSlot();
-                    totalStacks += stacks-1;
-                    if(stacks > 2)
-                        m_creature->RemoveSingleAuraFromStack(SPELL_SOUL_CHARGE_RED, 0);
-                    else
-                        m_creature->RemoveAurasDueToSpell(SPELL_SOUL_CHARGE_RED);
-                    DoCast(m_creature->getVictim(), SPELL_UNLEASH_SOUL_RED);
-                    HasCast = true;
-                }
+                chargeSpell = SPELL_SOUL_CHARGE_RED;
+                unleashSpell = SPELL_UNLEASH_SOUL_RED;
             case 1:
-                if(m_creature->HasAura(SPELL_SOUL_CHARGE_GREEN, 0))
-                {
-                    stacks = m_creature->GetAura(SPELL_SOUL_CHARGE_GREEN, 0)->GetAuraSlot();
-                    totalStacks += stacks-1;
-                    if(stacks > 2)
-                        m_creature->RemoveSingleAuraFromStack(SPELL_SOUL_CHARGE_GREEN, 0);
-                    else
-                        m_creature->RemoveAurasDueToSpell(SPELL_SOUL_CHARGE_GREEN);
-                    DoCast(m_creature->getVictim(), SPELL_UNLEASH_SOUL_GREEN);
-                    HasCast = true;
-                }
+                chargeSpell = SPELL_SOUL_CHARGE_YELLOW;
+                unleashSpell = SPELL_UNLEASH_SOUL_YELLOW;
             case 2:
-                if(m_creature->HasAura(SPELL_SOUL_CHARGE_YELLOW, 0))
-                {
-                    stacks = m_creature->GetAura(SPELL_SOUL_CHARGE_YELLOW, 0)->GetAuraSlot();
-                    totalStacks += stacks-1;
-                    if(stacks > 2)
-                        m_creature->RemoveSingleAuraFromStack(SPELL_SOUL_CHARGE_YELLOW, 0);
-                    else
-                        m_creature->RemoveAurasDueToSpell(SPELL_SOUL_CHARGE_YELLOW);
-                    DoCast(m_creature->getVictim(), SPELL_UNLEASH_SOUL_YELLOW);
-                    HasCast = true;
-                }
+                chargeSpell = SPELL_SOUL_CHARGE_GREEN;
+                unleashSpell = SPELL_UNLEASH_SOUL_GREEN;
+        }
+        if(m_creature->HasAura(chargeSpell, 0))
+        {
+            m_creature->RemoveSingleAuraFromStack(chargeSpell, 0);
+            DoCast(m_creature->getVictim(), unleashSpell);
+            HasCast = true;
         }
         if(HasCast)
-        {
-            uint32 Divider = 1;
-            if(!totalStacks)
-                SoulCharged = false;
-            else Divider = totalStacks;
-
-            SoulChargeTimer = (15000 + rand()%105000)/Divider;
-            if(Divider > 4)
-                GlobalSoulChargeCooldown += 5000;
-            else GlobalSoulChargeCooldown += 1000;
-        }
+            CalculateSoulChargeTimer();
     }
 
     void UpdateAI(const uint32 diff)
     {
+        if(!InCombat)
+        {
+            if(DrainNordrassilTimer < diff)
+            {
+                if(!IsChanneling)
+                {
+                    Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
+                    if(Nordrassil)
+                    {
+                        DoFaceTarget(Nordrassil);
+                        DoCast(Nordrassil, SPELL_DRAIN_WORLD_TREE);
+                        IsChanneling = true;
+                    }
+                }
+                Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 5000);
+                if(Nordrassil)
+                {
+                    Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
+                    Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    DrainNordrassilTimer = 1000;
+                }
+            }else DrainNordrassilTimer -= diff;
+        }
+
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
     
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !BelowTenPercent)
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !BelowTenPercent && !Enraged)
             BelowTenPercent = true;
-        
+    
+        if(!Enraged)
+        {
+            if(EnrageTimer < diff)
+            {
+                if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
+                {
+                    Enraged = true;
+                    DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+                }
+            }else EnrageTimer -= diff;
+
+            if(CheckDistanceTimer < diff)
+            { // To simplify the check, we simply summon a creature in the location and then check how far we are from the creature
+                Creature* Check = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 2000);
+                if(Check)
+                {
+                    Check->SetVisibility(VISIBILITY_OFF);
+                    if(m_creature->IsWithinDistInMap(Check, 75))
+                    {
+                        Enraged = true;
+                        DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+                    }
+                }
+                CheckDistanceTimer = 5000;
+            }else CheckDistanceTimer -= diff;
+        }
+
         if(BelowTenPercent)
         {
             if(!HasProtected)
@@ -573,24 +704,28 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 m_creature->GetMotionMaster()->Idle();
                 DoCast(m_creature->getVictim(), SPELL_PROTECTION_OF_ELUNE);
                 HasProtected = true;
+                Enraged = true;
             }
 
+            if(SummonWispTimer < diff)
+            {
+                Creature* Wisp = DoSpawnCreature(CREATURE_ANCIENT_WISP, rand()%40, rand()%40, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                if(Wisp)
+                {
+                    Wisp->AI()->AttackStart(m_creature);
+                    ((mob_ancient_wispAI*)Wisp->AI())->ArchimondeGUID = m_creature->GetGUID();
+                }
+                SummonWispTimer = 5000;
+            }else SummonWispTimer -= diff;
+        }
+
+        if(Enraged)
+        {
             if(HandOfDeathTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_HAND_OF_DEATH);
                 HandOfDeathTimer = 1000;
             }else HandOfDeathTimer -= diff;
-
-            if(SummonWispTimer < diff)
-            {
-                Creature* Wisp = DoSpawnCreature(17946, rand()%40, rand()%40, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(Wisp)
-                {
-                    Wisp->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
-                    ((mob_ancient_wispAI*)Wisp->AI())->ArchimondeGUID = m_creature->GetGUID();
-                }
-                SummonWispTimer = 5000;
-            }else SummonWispTimer -= diff;
             return; // Don't do anything after this point.
         }
 

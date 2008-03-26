@@ -135,36 +135,47 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         {                
             case DATA_ATTUMEN_EVENT:
                 Encounters[0] = data;
+                break;
 
             case DATA_MOROES_EVENT:
                  Encounters[1] = data;
+                 break;
 
             case DATA_MAIDENOFVIRTUE_EVENT:
                  Encounters[2] = data;
+                 break;
 
             case DATA_OPTIONAL_BOSS_EVENT:
                  Encounters[3] = data;
+                 break;
 
             case DATA_OPERA_EVENT:
                  Encounters[4] = data;
+                 break;
                 
             case DATA_CURATOR_EVENT:
                  Encounters[5] = data;
+                 break;
 
             case DATA_SHADEOFARAN_EVENT:
                  Encounters[6] = data;
+                 break;
 
             case DATA_TERESTIAN_EVENT:
                  Encounters[7] = data;
+                 break;
 
             case DATA_CHESS_EVENT:
                  Encounters[8] = data;
+                 break;
 
             case DATA_MALCHEZZAR_EVENT:
                  Encounters[9] = data;
+                 break;
 
             case DATA_NETHERBANE_EVENT:
                  Encounters[10] = data;
+                 break;
 
             case DATA_BARNES_INTRO:
                 BarnesIntro = data;

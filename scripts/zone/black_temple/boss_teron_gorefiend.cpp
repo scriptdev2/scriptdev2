@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
     void CheckPlayers()
     {
-        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
             return; // No threat list. Don't continue.
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();

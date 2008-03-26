@@ -222,7 +222,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if(pInstance)
                         pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
 
-                    Reset();
                     Phase = 1;
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
                     SummonEssenceTimer = 8000;
@@ -233,10 +232,11 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         }
     }
 
-    void SummonSoul(uint32 SoulCount)
+    void SummonSoul()
     {
-        float x = Coords[SoulCount%7].x;
-        float y = Coords[SoulCount%7].y;
+        uint32 random = rand()%6;
+        float x = Coords[random].x;
+        float y = Coords[random].y;
         Creature* Soul = m_creature->SummonCreature(23469, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_CORPSE_DESPAWN, 0);
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
         if (target && Soul)
@@ -244,6 +244,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             ((npc_enslaved_soulAI*)Soul->AI())->ReliquaryGUID = m_creature->GetGUID();
             Soul->CastSpell(Soul, ENSLAVED_SOUL_PASSIVE, true);
             Soul->AddThreat(target, 1.0f);
+            SoulCount++;
         }
     }
 
@@ -251,7 +252,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     {
         if(!target) return;
 
-        std::list<HostilReference*> m_threatlist = target->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = target->getThreatManager().getThreatList();
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
         for( ; itr != m_threatlist.end(); itr++)
         {
@@ -377,13 +378,12 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 if(SummonSoulTimer < diff)
                 {
-                    SummonSoul(SoulCount);
+                    SummonSoul();
                     SummonSoulTimer = 500;
-                    SoulCount++;
                 }else SummonSoulTimer -= diff;
             }
 
-            if(SoulDeathCount > 26) // ~30 Souls are summoned.
+            if(SoulDeathCount >= SoulCount)
             {
                 if(AnimationTimer < diff)
                 {
@@ -482,13 +482,12 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 if(SummonSoulTimer < diff)
                 {
-                    SummonSoul(SoulCount);
+                    SummonSoul();
                     SummonSoulTimer = 500;
-                    SoulCount++;
                 }else SummonSoulTimer -= diff;
             }
 
-            if(SoulDeathCount > 25)
+            if(SoulDeathCount >= SoulCount)
             {                
                 if(AnimationTimer < diff)
                 {
@@ -677,7 +676,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void CastFixate()
     {
-        std::list<HostilReference*> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
             return; // No point continuing if empty threatlist.
         std::list<Unit*> targets;

@@ -725,7 +725,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_crystalcore_devastator' WHERE
 UPDATE `creature_template` SET `ScriptName` = 'boss_void_reaver' WHERE `entry` = 19516;
 UPDATE `creature_template` SET `ScriptName` = 'mob_arcane_orb_target' WHERE `entry` = 19577;
 /* Kael'thas event */
-UPDATE `creature_template` SET `ScriptName` = 'boss_kaelthas' WHERE `entry` = 23054;
+UPDATE `creature_template` SET `ScriptName` = 'boss_kaelthas' WHERE `entry` = 19622;
 UPDATE `creature_template` SET `ScriptName` = 'boss_thaladred_the_darkener' WHERE `entry` = 20064;
 UPDATE `creature_template` SET `ScriptName` = 'boss_lord_sanguinar' WHERE `entry` = 20060;
 UPDATE `creature_template` SET `ScriptName` = 'boss_grand_astromancer_capernian' WHERE `entry` = 20062;
