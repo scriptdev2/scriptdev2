@@ -1426,6 +1426,14 @@
 							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\boss_tailonking_ikiss.cpp"
 							>
 						</File>
+                        <File
+							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\def_sethekk_halls.h"
+							>
+						</File>
+                        <File
+							RelativePath="..\scripts\zone\aunchindoun\sethekk_halls\instance_sethekk_halls.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Shadow Labyrinth"

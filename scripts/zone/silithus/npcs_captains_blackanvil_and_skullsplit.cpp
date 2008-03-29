@@ -41,11 +41,11 @@ bool GossipSelect_npcs_captains_blackanvil_and_skullsplit(Player *player, Creatu
     {
         if( player->HasItemCount(23024,1) )
         {
-            uint16 dest;
-            uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 20810, 1, false );
+            ItemPosCountVec dest;
+            uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 20810, 1 );
             if( msg == EQUIP_ERR_OK )
             {
-                Item * item = player->StoreNewItem( dest, 20810, 1, true);
+                Item * item = player->StoreNewItem( dest, 20810, 1 );
                 if( item )
                 {
                     player->DestroyItemCount(23024,1,true);

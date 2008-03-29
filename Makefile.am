@@ -59,6 +59,8 @@ scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
+scripts/zone/aunchindoun/sethekk_halls/instance_sethekk_halls.cpp \
+scripts/zone/aunchindoun/sethekk_halls/def_sethekk_halls.h \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \

@@ -274,12 +274,11 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!Phase || m_creature->getThreatManager().getThreatList().empty()) // Phase 0 or empty threat list
-        {
-            if(m_creature->GetUInt32Value(UNIT_NPC_EMOTESTATE)) // Emote State is not 0, enter evade mode to reset variables
-                EnterEvadeMode();
+        if(!Phase)
             return;
-        }
+
+        if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Phase 0 or empty threat list
+            EnterEvadeMode();
 
         if(Phase == 1)
         {
@@ -561,6 +560,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     uint64 StatAuraGUID;
 
+    uint32 AggroYellTimer;
     uint32 FixateTimer;
     uint32 EnrageTimer;
     uint32 SoulDrainTimer;
@@ -571,6 +571,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         StatAuraGUID = 0;
 
+        AggroYellTimer = 5000;
         FixateTimer = 5000;
         EnrageTimer = 30000;
         SoulDrainTimer = 150000;
@@ -617,8 +618,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
                 Reset();
                 DoCast(who, AURA_OF_SUFFERING, true);
                 DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
-                DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
                 InCombat = true;
             }
         }
@@ -654,18 +653,18 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
-            break;
-        case 2:
-            DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
-            break;
+            case 0:
+                DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
+                break;
+            case 2:
+                DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
+                break;
         }
     }
 
@@ -699,54 +698,60 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Check if we have a current target
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
-            if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
+            if(StatAuraGUID)
             {
-                if(StatAuraGUID)
-                {
-                    Unit* pUnit = NULL;
-                    pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
-                    if(pUnit)
-                        pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
-                }
+                Unit* pUnit = NULL;
+                pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
+                if(pUnit)
+                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
-
-            //Supposed to be cast on nearest target
-            if(FixateTimer < diff)
-            {
-                //CastFixate();
-                FixateTimer = 5000;
-            }else FixateTimer -= diff;
-
-            if(EnrageTimer < diff)
-            {
-                DoCast(m_creature, SPELL_ENRAGE);
-                EnrageTimer = 60000;
-            }else EnrageTimer -= diff;
-
-            if(SoulDrainTimer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-                if(target)
-                    DoCast(target, SPELL_SOUL_DRAIN);
-                SoulDrainTimer = 60000;
-            }else SoulDrainTimer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+
+        // Prevent overlapping yells
+        if(AggroYellTimer)
+            if(AggroYellTimer < diff)
+            {
+                DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
+                AggroYellTimer = 0;
+            }else AggroYellTimer -= diff;
+
+        //Supposed to be cast on nearest target
+        if(FixateTimer < diff)
+        {
+            //CastFixate();
+            FixateTimer = 5000;
+        }else FixateTimer -= diff;
+
+        if(EnrageTimer < diff)
+        {
+            DoCast(m_creature, SPELL_ENRAGE);
+            EnrageTimer = 60000;
+        }else EnrageTimer -= diff;
+
+        if(SoulDrainTimer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+            if(target)
+                DoCast(target, SPELL_SOUL_DRAIN);
+            SoulDrainTimer = 60000;
+        }else SoulDrainTimer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 {
     boss_essence_of_desireAI(Creature *c) : ScriptedAI(c) {Reset();}
 
+    uint32 AggroYellTimer;
     uint32 RuneShieldTimer;
     uint32 DeadenTimer;
     uint32 SoulShockTimer;
@@ -755,9 +760,11 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
     void Reset()
     {
+        AggroYellTimer = 5000;
         RuneShieldTimer = 60000;
         DeadenTimer = 15000;
         SoulShockTimer = 40000;
+
         InCombat = false;
     }
 
@@ -863,12 +870,10 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(), SPELL_Soul_SHOCK);
             SoulShockTimer = 40000;
-            switch(rand()%2)
+            if(rand()%2 == 0)
             {
-            case 0:
                 DoYell(DESI_SAY_SPEC,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, DESI_SOUND_SPEC);
-                break;
             }
 
         }else SoulShockTimer -= diff;
@@ -883,6 +888,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     uint64 AggroTargetGUID;
 
+    uint32 AggroYellTimer;
     uint32 CheckTankTimer;
     uint32 SoulScreamTimer;
     uint32 SpiteTimer;
@@ -894,6 +900,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     {
         AggroTargetGUID = 0;
 
+        AggroYellTimer = 5000;
         CheckTankTimer = 5000;
         SoulScreamTimer = 10000;
         SpiteTimer = 30000;
@@ -914,8 +921,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             if (!InCombat)
             {
                 Reset();
-                DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
                 DoCast(m_creature->getVictim(), AURA_OF_ANGER);
                 InCombat = true;
             }
@@ -941,8 +946,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
                 if (!InCombat)
                 {
                     DoCast(who, AURA_OF_ANGER);
-                    DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
                     InCombat = true;
                 }
             }
@@ -960,13 +963,13 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
+                break;
         }
     }
 
@@ -982,6 +985,14 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             AggroTargetGUID = m_creature->getVictim()->GetGUID();
             CheckedAggro = true;
         }
+
+        if(AggroYellTimer)
+            if(AggroYellTimer < diff)
+            {
+                DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
+                AggroYellTimer = 0;
+            }else AggroYellTimer -= diff;
 
         if(CheckTankTimer < diff)
         {

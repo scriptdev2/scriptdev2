@@ -62,6 +62,7 @@ EndScriptData */
 #define SPELL_INTAGIBLE_PRESENCE 29833
 #define SPELL_BERSERKER_CHARGE 26561 //Only when mounted
 
+#define MOUNTED_DISPLAYID   16040
 
 //Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convinient for us)
 #define SUMMON_ATTUMEN 15550
@@ -148,7 +149,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                     Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen);
                     if(pAttumen)
                     {
-                        pAttumen->SetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID, m_creature->GetUInt32Value(UNIT_FIELD_DISPLAYID));
+                        pAttumen->SetUInt32Value(UNIT_FIELD_DISPLAYID, MOUNTED_DISPLAYID);
                         pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         pAttumen->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pAttumen->getVictim()));
                         pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());

@@ -63,7 +63,7 @@ bool ItemUse_item_area_52_special(Player *player, Item* _Item, SpellCastTargets 
 bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     Item* item = NULL;
-    uint16 dest;
+    ItemPosCountVec dest;
 
     if (player->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE)
     {
@@ -76,10 +76,10 @@ bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTarg
         }    
         else
         {    
-            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1, false);
+            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
             if(msg == EQUIP_ERR_OK)
             {
-                item = player->StoreNewItem(dest, 23614, 1, true);
+                item = player->StoreNewItem(dest, 23614, 1);
                 player->SendNewItem(item, 1, true, false);    
 
             }

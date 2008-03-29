@@ -22,6 +22,7 @@ SDCategory: Auchindoun / Sethekk Halls
 EndScriptData */
 
 #include "../../../sc_defines.h"
+#include "def_sethekk_halls.h"
 
 #define SPELL_BLINK                 38194
 #define SPELL_ARCANE_VOLLEY         36738
@@ -49,7 +50,13 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 {
-    boss_tailonking_ikissAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_tailonking_ikissAI(Creature *c) : ScriptedAI(c) 
+    {
+        Reset();
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+    }   
+
+    ScriptedInstance* pInstance;
 
     uint32 arcanevolley_timer;
     uint32 sheep_timer;
@@ -87,6 +94,9 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
     { 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
+
+        if(pInstance)
+            pInstance->SetData(DATA_IKISSDOOREVENT, 1);
     }
 
     void KilledUnit(Unit* victim)
@@ -121,20 +131,20 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
             {
                 switch(rand()%3)
                 {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
+                    case 0:
+                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                        break;
 
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break; 
+                    case 1:
+                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                        break; 
 
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;
+                    case 2:
+                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                        break;
                 }
                 manashild_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
                 InCombat = true;
@@ -160,27 +170,26 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
+                        case 0:
+                            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                            break;
 
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break;
+                        case 1:
+                            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                            break;
 
-                    case 2:
-                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;
+                        case 2:
+                            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                            break;
                     }
                     InCombat = true;
                     manashild_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
                 }
             }else
             {
-
                 if(!intro)
                 {
                     intro=true;
@@ -193,43 +202,39 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
         
         if(!wait)
         {   
             if(!manashild)
-            if(manashild_timer < diff)
-            {     
-                    DoCast(m_creature,SPELL_MANA_SHILD);
-                    manashild = true;
-            }else manashild_timer -= diff;
+                if(manashild_timer < diff)
+                {     
+                        DoCast(m_creature,SPELL_MANA_SHILD);
+                        manashild = true;
+                }else manashild_timer -= diff;
 
             if(arcanevolley_timer < diff)
-            {     
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if(target)
-                {
-                    DoCast(target,SPELL_ARCANE_VOLLEY);
-                    arcanevolley_timer = 3000+ rand()%8000;
-                }
+            {
+                DoCast(m_creature, SPELL_ARCANE_VOLLEY);
+                arcanevolley_timer = 3000+ rand()%8000;
             }else arcanevolley_timer -= diff;
         
-            if(sheep < 2)        
-            if(sheep_timer < diff)
-            {     
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if(target)
-                {
-                    DoCast(target,SPELL_POLYMORPH);
-                    sheep_timer = 5000;
-                    sheep++;
-                }
-                if(sheep == 2) blink_timer = 5000; 
-            }else sheep_timer -= diff;
+            if(sheep < 2)
+            {
+                if(sheep_timer < diff)
+                {     
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if(target)
+                    {
+                        DoCast(target,SPELL_POLYMORPH);
+                        sheep_timer = 5000;
+                        sheep++;
+                    }
+                    if(sheep == 2) blink_timer = 5000; 
+                }else sheep_timer -= diff;
+            }
             
             DoMeleeAttackIfReady();
                        
@@ -243,6 +248,11 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                     {
                         //THIS SPELL DOESNT WORK
                         //if(target != m_creature->getVictim()) DoCast(target,SPELL_BLINK);
+                        float X = target->GetPositionX();
+                        float Y = target->GetPositionY();
+                        float Z = target->GetPositionZ();
+                        m_creature->Relocate(X,Y,Z);
+                        m_creature->SendMonsterMove(X, Y, Z, 0, true, 1000);
                         blink = true;
                     }
                 }else blink_timer -= diff;
@@ -259,18 +269,19 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
         }
         
         if(wait)
-        if (wait_timer < diff)
         {
-            sheep = 0;
-            sheep_timer= 5000;
-            wait = false;
+            if (wait_timer < diff)
+            {
+                sheep = 0;
+                sheep_timer= 5000;
+                wait = false;
+            }
+            else
+            {
+                wait_timer -= diff;
+                //m_creature->StopMoving();
+            }
         }
-        else
-        {
-            wait_timer -= diff;
-            m_creature->StopMoving();
-        }
-
     }
 
 };

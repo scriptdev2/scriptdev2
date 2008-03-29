@@ -140,11 +140,11 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature *_Creature, uint32 s
         case GOSSIP_ACTION_INFO_DEF + 2:
             if ( !player->HasItemCount(24573,1))
             {
-                uint16 dest;
-                uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 24573, 1, false );
+                ItemPosCountVec dest;
+                uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 24573, 1 );
                 if( msg == EQUIP_ERR_OK )
                 {
-                    Item * item = player->StoreNewItem( dest, 24573, 1, true);
+                    Item * item = player->StoreNewItem( dest, 24573, 1 );
                     if( item )
                     {
                         player->SEND_GOSSIP_MENU(9231, _Creature->GetGUID());
