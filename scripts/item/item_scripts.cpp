@@ -79,7 +79,7 @@ bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTarg
             uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
             if(msg == EQUIP_ERR_OK)
             {
-                item = player->StoreNewItem(dest, 23614, 1);
+                item = player->StoreNewItem(dest, 23614, true);
                 player->SendNewItem(item, 1, true, false);    
 
             }
