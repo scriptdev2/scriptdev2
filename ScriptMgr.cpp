@@ -773,9 +773,10 @@ void LoadDatabase()
                         break;
 
                     //2nd param target
-                    case ACTION_T_SUMMON:
+                    case ACTION_T_SUMMON_ID:
                             if (EventSummon_Map.find(temp.action[j].param3) == EventSummon_Map.end())
                                 error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j, temp.action[j].param3);
+                    case ACTION_T_SUMMON:
                     case ACTION_T_THREAT_SINGLE_PCT:
                     case ACTION_T_QUEST_COMPLETE:
                     case ACTION_T_SET_UNIT_FLAG:

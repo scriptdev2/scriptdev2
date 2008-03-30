@@ -71,6 +71,7 @@ enum Action_Types
     ACTION_T_RANGED_MOVEMENT        = 29,   //Distance, Angle
     ACTION_T_RANDOM_PHASE           = 30,   //PhaseId1, PhaseId2, PhaseId3
     ACTION_T_RANDOM_PHASE_RANGE     = 31,   //PhaseMin, PhaseMax
+    ACTION_T_SUMMON_ID              = 32,   //CreatureId, Target, SpawnId
 
     ACTION_T_END,
 };

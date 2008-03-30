@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     bool MeleeEnabled;                      //If we allow melee auto attack
     uint32 AttackDistance;                  //Distance to attack from
     float AttackAngle;                      //Angle of attack
-    
+
     void AttackTarget(Unit* pTarget)
     {
         if (!pTarget)
@@ -397,20 +397,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
 
-                //Duration
                 Creature* pCreature = NULL;
 
-                HM_NAMESPACE::hash_map<uint32, EventAI_Summon>::iterator i = EventSummon_Map.find(param3);
-
-                if (i == EventSummon_Map.end())
-                {
-                    error_log( "SD2: Eventid failed to spawn creature %u. Summon map index %u does not exist.", param1, param3);
-                    return;
-                }
-
-                if ((*i).second.SpawnTimeSecs)
-                    pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, (*i).second.SpawnTimeSecs);
-                else pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
+                if (param3)
+                    pCreature = DoSpawnCreature(param1, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, param3);
+                else pCreature = pCreature = DoSpawnCreature(param1, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
                     error_log( "SD2: Eventid failed to spawn creature %u.", param1);
@@ -590,7 +581,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_RANDOM_PHASE:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
-      
+
                 Phase = temp;
             }
             break;
@@ -602,6 +593,31 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     Phase = param1 + (rnd % (param2 - param1));
                 }
                 else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero.");
+            }
+            break;
+        case ACTION_T_SUMMON_ID:
+            {
+                Unit* target = GetTargetByType(param2, pActionInvoker);
+
+                //Duration
+                Creature* pCreature = NULL;
+
+                HM_NAMESPACE::hash_map<uint32, EventAI_Summon>::iterator i = EventSummon_Map.find(param3);
+
+                if (i == EventSummon_Map.end())
+                {
+                    error_log( "SD2: Eventid failed to spawn creature %u. Summon map index %u does not exist.", param1, param3);
+                    return;
+                }
+
+                if ((*i).second.SpawnTimeSecs)
+                    pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, (*i).second.SpawnTimeSecs);
+                else pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
+
+                if (!pCreature)
+                    error_log( "SD2: Eventid failed to spawn creature %u.", param1);
+                else if (param2 != TARGET_T_SELF && target)
+                    pCreature->AI()->AttackStart(target);
             }
             break;
         };
@@ -843,38 +859,38 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     }
                 }
 
-            //Check for time based events
-            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
-            {
-                //Decrement Timers
-                if ((*i).Time)
-                    if ((*i).Time > EventDiff)
-                    {
-                        //Do not decrement timers if event cannot trigger in this phase
-                        if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
-                            (*i).Time -= EventDiff;
+                //Check for time based events
+                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+                {
+                    //Decrement Timers
+                    if ((*i).Time)
+                        if ((*i).Time > EventDiff)
+                        {
+                            //Do not decrement timers if event cannot trigger in this phase
+                            if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
+                                (*i).Time -= EventDiff;
 
-                        //Skip processing of events that have time remaining
-                        continue;
-                    }
-                    else (*i).Time = 0; 
+                            //Skip processing of events that have time remaining
+                            continue;
+                        }
+                        else (*i).Time = 0; 
 
-                    switch ((*i).Event.event_type)
-                    {
-                        //Events that are updated every EVENT_UPDATE_TIME
-                    case EVENT_T_TIMER_REPEAT:
-                    case EVENT_T_TIMER_SINGLE:
-                    case EVENT_T_TIMER_OOC_REPEAT:
-                    case EVENT_T_TIMER_OOC_SINGLE:
-                    case EVENT_T_MANA:
-                    case EVENT_T_HP:
-                        ProcessEvent(*i);
-                        break;
-                    }
-            }
+                        switch ((*i).Event.event_type)
+                        {
+                            //Events that are updated every EVENT_UPDATE_TIME
+                        case EVENT_T_TIMER_REPEAT:
+                        case EVENT_T_TIMER_SINGLE:
+                        case EVENT_T_TIMER_OOC_REPEAT:
+                        case EVENT_T_TIMER_OOC_SINGLE:
+                        case EVENT_T_MANA:
+                        case EVENT_T_HP:
+                            ProcessEvent(*i);
+                            break;
+                        }
+                }
 
-            EventDiff = 0;
-            EventUpdateTime = EVENT_UPDATE_TIME;
+                EventDiff = 0;
+                EventUpdateTime = EVENT_UPDATE_TIME;
         }else 
         {
             EventDiff += diff;
