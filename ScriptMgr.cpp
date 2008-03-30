@@ -105,6 +105,7 @@ extern void AddSC_item_test();
 // -- NPC --
 extern void AddSC_npc_guardian();
 extern void AddSC_npc_mount_vendor();
+extern void AddSC_npc_professions();
 
 // -- Servers --
 
@@ -458,8 +459,7 @@ extern void AddSC_npcs_shadowmoon_valley();
 extern void AddSC_npc_shattrathflaskvendors();
 
 //Silithus
-extern void AddSC_npcs_captains_blackanvil_and_skullsplit();
-extern void AddSC_npcs_rutgar_and_frankal();
+extern void AddSC_npcs_silithus();
 
 //Silvermoon
 extern void AddSC_npc_blood_knight_stillblade();
@@ -917,6 +917,7 @@ void ScriptsInit()
     // -- NPC --
     AddSC_npc_guardian();
     AddSC_npc_mount_vendor();
+    AddSC_npc_professions();
 
     // -- Servers --
 
@@ -1272,8 +1273,7 @@ void ScriptsInit()
     AddSC_npc_shattrathflaskvendors();
 
     //Silithus
-    AddSC_npcs_captains_blackanvil_and_skullsplit();
-    AddSC_npcs_rutgar_and_frankal();
+    AddSC_npcs_silithus();
 
     //Silvermoon
     AddSC_npc_blood_knight_stillblade();

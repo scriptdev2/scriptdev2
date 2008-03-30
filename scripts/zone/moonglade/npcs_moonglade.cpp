@@ -17,8 +17,8 @@
 /* ScriptData
 SDName: Npcs_Moonglade
 SD%Complete: 100
-SDComment: Quest support: 5929, 5930. Special Flight Paths for Druid class.
-SDCategory: NPCs
+SDComment: Quest support: 30, 272, 5929, 5930. Special Flight Paths for Druid class.
+SDCategory: Moonglade
 EndScriptData */
 
 #include "../../sc_defines.h"
@@ -34,10 +34,19 @@ bool GossipHello_npc_bunthen_plainswind(Player *player, Creature *_Creature)
     if(player->getClass() != CLASS_DRUID)
         player->SEND_GOSSIP_MENU(4916,_Creature->GetGUID());
     else if(player->GetTeam() != HORDE)
+    {
+        if(player->GetQuestStatus(272) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Endurance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
         player->SEND_GOSSIP_MENU(4917,_Creature->GetGUID());
+    }
     else if(player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
     {
         player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Thunder Bluff.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        if(player->GetQuestStatus(30) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Endurance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
         player->SEND_GOSSIP_MENU(4918,_Creature->GetGUID());
     }
     return true;
@@ -45,16 +54,28 @@ bool GossipHello_npc_bunthen_plainswind(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_bunthen_plainswind(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1 && player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
+    switch(action)
     {
-        player->CLOSE_GOSSIP_MENU();
+        case GOSSIP_ACTION_INFO_DEF + 1:
+        {
+            player->CLOSE_GOSSIP_MENU();
+            if (player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
+            {
+                std::vector<uint32> nodes;
 
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 63; // Nighthaven, Moonglade
-        nodes[1] = 22; // Thunder Bluff, Mulgore
-        player->ActivateTaxiPathTo(nodes);
+                nodes.resize(2);
+                nodes[0] = 63; // Nighthaven, Moonglade
+                nodes[1] = 22; // Thunder Bluff, Mulgore
+                player->ActivateTaxiPathTo(nodes);
+            }
+            break;
+        }
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            player->SEND_GOSSIP_MENU(5373,_Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            player->SEND_GOSSIP_MENU(5376,_Creature->GetGUID());
+            break;
     }
     return true;
 }
@@ -117,10 +138,19 @@ bool GossipHello_npc_silva_filnaveth(Player *player, Creature *_Creature)
     if(player->getClass() != CLASS_DRUID)
         player->SEND_GOSSIP_MENU(4913,_Creature->GetGUID());
     else if(player->GetTeam() != ALLIANCE)
+    {
+        if(player->GetQuestStatus(30) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Agility?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
         player->SEND_GOSSIP_MENU(4915,_Creature->GetGUID());
+    }
     else if(player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
     {
         player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Rut'theran Village.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        if(player->GetQuestStatus(272) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Agility?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
         player->SEND_GOSSIP_MENU(4914,_Creature->GetGUID());
     }
     return true;
@@ -128,16 +158,28 @@ bool GossipHello_npc_silva_filnaveth(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_silva_filnaveth(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1 && player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
+    switch(action)
     {
-        player->CLOSE_GOSSIP_MENU();
+        case GOSSIP_ACTION_INFO_DEF + 1:
+        {
+            player->CLOSE_GOSSIP_MENU();
+            if (player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
+            {
+                std::vector<uint32> nodes;
 
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 62; // Nighthaven, Moonglade
-        nodes[1] = 27; // Rut'theran Village, Teldrassil
-        player->ActivateTaxiPathTo(nodes);
+                nodes.resize(2);
+                nodes[0] = 62; // Nighthaven, Moonglade
+                nodes[1] = 27; // Rut'theran Village, Teldrassil
+                player->ActivateTaxiPathTo(nodes);
+            }
+            break;
+        }
+        case GOSSIP_ACTION_INFO_DEF + 2:
+            player->SEND_GOSSIP_MENU(5374,_Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 3:
+            player->SEND_GOSSIP_MENU(5375,_Creature->GetGUID());
+            break;
     }
     return true;
 }

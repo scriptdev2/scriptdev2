@@ -50,6 +50,7 @@ scripts/item/item_test.cpp \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
+scripts/npc/npc_professions.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
@@ -299,8 +300,7 @@ scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
 scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
 scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
-scripts/zone/silithus/npcs_captains_blackanvil_and_skullsplit.cpp \
-scripts/zone/silithus/npcs_rutgar_and_frankal.cpp \
+scripts/zone/silithus/npcs_silithus.cpp \
 scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
 scripts/zone/silverpine_forest/npcs_silverpine_forest.cpp \
 scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \

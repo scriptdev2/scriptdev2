@@ -15,14 +15,19 @@
 */
 
 /* ScriptData
-SDName: npcs_rutgar_and_frankal
+SDName: Npcs_Silithus
 SD%Complete: 100
-SDComment: 
+SDComment: Quest support: 8304.
+SDCategory: Silithus
 EndScriptData */
 
 #include "../../sc_defines.h"
 #include "../../../../../game/Player.h"
 #include "../../../../../game/GossipDef.h"
+
+/*###
+## npcs_rutgar_and_frankal
+###*/
 
 //gossip item text best guess
 #define GOSSIP_ITEM1 "I seek information about Natalia"
@@ -44,10 +49,6 @@ EndScriptData */
 #define TRIGGER_RUTGAR 15222
 #define TRIGGER_FRANKAL 15221
 
-/*################
-## Start default menu
-################*/
-
 bool GossipHello_npcs_rutgar_and_frankal(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
@@ -67,10 +68,6 @@ bool GossipHello_npcs_rutgar_and_frankal(Player *player, Creature *_Creature)
 
     return true;
 }
-
-/*################
-## Action Menues
-################*/
 
 bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
@@ -133,11 +130,11 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, u
     return true;
 }
 
-/*########
-## End
-########*/
+/*###
+## 
+####*/
 
-void AddSC_npcs_rutgar_and_frankal()
+void AddSC_npcs_silithus()
 {
     Script *newscript;
     newscript = new Script;

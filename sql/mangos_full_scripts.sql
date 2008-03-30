@@ -601,7 +601,6 @@ UPDATE `creature_template` SET ScriptName = 'npc_shattrathflaskvendors' WHERE `e
 
 /* SILITHUS */
 UPDATE `creature_template` SET `ScriptName` = 'npcs_rutgar_and_frankal' WHERE `entry` IN (15170, 15171);
-UPDATE `creature_template` SET `ScriptName` = 'npcs_captains_blackanvil_and_skullsplit' WHERE `entry` IN (15440, 15612);
 
 /* SILVERMOON */
 UPDATE `creature_template` SET `ScriptName` = 'blood_knight_stillblade' WHERE `entry` = 17768;

@@ -276,6 +276,10 @@
 					RelativePath="..\scripts\npc\npc_mount_vendor.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\npc\npc_professions.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="servers"
@@ -1240,11 +1244,7 @@
 					Name="Silithus"
 					>
 					<File
-						RelativePath="..\scripts\zone\silithus\npcs_captains_blackanvil_and_skullsplit.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\silithus\npcs_rutgar_and_frankal.cpp"
+						RelativePath="..\scripts\zone\silithus\npcs_silithus.cpp"
 						>
 					</File>
 				</Filter>
