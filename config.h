@@ -48,8 +48,12 @@
   #endif
 #endif
 
-#if PLATFORM == PLATFORM_WIN32
-  #define _FULLVERSION _VERSION " (Win32)"
+#if PLATFORM == PLATFORM_WINDOWS
+  #ifdef _WIN64
+    #define _FULLVERSION _VERSION " (Win64)"
+  #else
+    #define _FULLVERSION _VERSION " (Win32)"
+  #endif
   #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
 #else
   #define _FULLVERSION _VERSION " (Unix)"

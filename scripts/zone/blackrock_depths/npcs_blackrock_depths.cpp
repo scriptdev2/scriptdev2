@@ -101,8 +101,7 @@ bool GossipHello_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature)
         player->ADD_GOSSIP_ITEM( 1, "Show me what I have access to, Lothos.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
-        !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1) &&
-        player->GetBankItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT) < 1 &&
+        !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
         player->HasItemCount(ITEM_SULFURON_INGOT, 1))
     {
         player->ADD_GOSSIP_ITEM(0, "Get Thorium Brotherhood Contract", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);

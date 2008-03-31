@@ -600,6 +600,20 @@ void LoadDatabase()
         //***Preform all DB queries here***
         QueryResult *result;
 
+        //Get Version information
+        result = ScriptDev2DB.PQuery("SELECT `version`"
+            "FROM `db_version`");
+
+        if (result)
+        {
+            Field *fields = result->Fetch();
+            outstring_log(" ");
+            outstring_log("SD2: Database version is: %s", fields[0].GetString());
+            outstring_log(" ");
+            delete result;
+
+        }else error_log("SD2: Missing db_version information.");
+
         //Drop existing Localized Text has map
         Localized_Text_Map.clear();
 
@@ -871,6 +885,12 @@ void ScriptsInit()
 
     //Locale
     Locale = SD2Config.GetIntDefault("Locale", 0);
+
+    if (Locale > 7)
+    {
+        Locale = 0;
+        error_log("SD2: Locale set to invalid language id. Defaulting to 0.");
+    }
 
     outstring_log("SD2: Using locale %u", Locale);
     outstring_log("");
