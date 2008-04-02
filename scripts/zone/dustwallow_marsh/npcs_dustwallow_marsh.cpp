@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 11180, 558, 11126, 6622, 6624 (Includes Triage for Horde in Arathi Highlands)
+SDComment: Quest support: 11180, 558, 11126, 6622, 6624 (Includes Triage for Horde in Arathi Highlands). Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -88,6 +88,34 @@ bool GossipSelect_npc_lady_jaina_proudmoore(Player *player, Creature *_Creature,
         player->SEND_GOSSIP_MENU( 7012, _Creature->GetGUID() );
         player->CastSpell( player, 23122, false);
     }
+    return true;
+}
+
+/*######
+## npc_nat_pagle
+######*/
+
+bool GossipHello_npc_nat_pagle(Player *player, Creature *_Creature)
+{
+    if(_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if(_Creature->isVendor() && player->GetQuestRewardStatus(8227))
+    {
+        player->ADD_GOSSIP_ITEM( 0, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->SEND_GOSSIP_MENU( 7640, _Creature->GetGUID() );
+    }
+    else
+        player->SEND_GOSSIP_MENU( 7638, _Creature->GetGUID() );
+
+    return true;
+}
+
+bool GossipSelect_npc_nat_pagle(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if(action == GOSSIP_ACTION_TRADE)
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+
     return true;
 }
 
@@ -425,6 +453,12 @@ void AddSC_npcs_dustwallow_marsh()
     newscript->Name="npc_lady_jaina_proudmoore";
     newscript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
     newscript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_nat_pagle";
+    newscript->pGossipHello = &GossipHello_npc_nat_pagle;
+    newscript->pGossipSelect = &GossipSelect_npc_nat_pagle;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

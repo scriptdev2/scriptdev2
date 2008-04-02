@@ -333,6 +333,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_doctor' WHERE `entry` IN (129
 UPDATE `creature_template` SET `ScriptName` = 'npc_injured_patient' WHERE `entry` IN (12936, 12937, 12938, 12923, 12924, 12925);
 UPDATE `creature_template` SET `ScriptName` = 'npc_deserter_agitator' WHERE `entry` = 23602;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lady_jaina_proudmoore' WHERE `entry` = 4968;
+UPDATE `creature_template` SET `ScriptName` = 'npc_nat_pagle' WHERE `entry` = 12919;
 UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `entry` = 23861;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_direhorn_grimtotem' WHERE `entry` = 23595;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_risen_husk_spirit' WHERE `entry` IN (23554, 23555);
