@@ -2138,6 +2138,7 @@ void SendDefaultMenu_guard_orgrimmar(Player *player, Creature *_Creature, uint32
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ROGUE               , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 5);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_WARLOCK             , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 6);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_WARRIOR             , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 7);
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_PALADIN             , GOSSIP_SENDER_SEC_CLASSTRAIN, GOSSIP_ACTION_INFO_DEF + 8);
             player->SEND_GOSSIP_MENU(2599,_Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 13:                   //profession trainer
@@ -2208,6 +2209,10 @@ void SendClassTrainerMenu_guard_orgrimmar(Player *player, Creature *_Creature, u
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Warrior
             player->SEND_POI(1983.92, -4794.2, 6, 6, 0, "Hall of the Brave");
             player->SEND_GOSSIP_MENU(2565,_Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 8:                    //Paladin
+            player->SEND_POI(1906.65, -4134.26, 6, 6, 0, "Valley of Wisdom");
+            player->SEND_GOSSIP_MENU(10843,_Creature->GetGUID());
             break;
     }
 }
