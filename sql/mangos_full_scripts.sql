@@ -234,6 +234,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_skyguard_handler_deesak' WHER
 UPDATE `creature_template` SET `ScriptName` = 'npc_deathly_usher' WHERE `entry` = 8816;
 UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `entry` = 7572;
 
+/* BLOODMYST ISLE */
+UPDATE `creature_template` SET `ScriptName` = 'mob_webbed_creature' WHERE `entry` = 17680;
+
 /* BURNING STEPPES */
 UPDATE `creature_template` SET `ScriptName` = 'npc_ragged_john' WHERE `entry` = 9563;
 

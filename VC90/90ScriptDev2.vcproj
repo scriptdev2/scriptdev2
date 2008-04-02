@@ -585,6 +585,14 @@
 					</File>
 				</Filter>
 				<Filter
+					Name="Bloodmyst Isle"
+					>
+					<File
+						RelativePath="..\scripts\zone\bloodmyst_isle\mobs_bloodmyst_isle.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
 					Name="Gruul&apos;s Lair"
 					>
 					<File

@@ -229,6 +229,9 @@ extern void AddSC_boss_kruul();
 extern void AddSC_boss_teremusthedevourer();
 extern void AddSC_npcs_blasted_lands();
 
+//Bloodmyst Isle
+extern void AddSC_mobs_bloodmyst_isle();
+
 //Burning steppes
 extern void AddSC_npcs_burning_steppes();
 
@@ -1066,6 +1069,9 @@ void ScriptsInit()
     AddSC_boss_kruul();
     AddSC_boss_teremusthedevourer();
     AddSC_npcs_blasted_lands();
+
+    //Bloodmyst Isle
+    AddSC_mobs_bloodmyst_isle();
 
     //Burning steppes
     AddSC_npcs_burning_steppes();
