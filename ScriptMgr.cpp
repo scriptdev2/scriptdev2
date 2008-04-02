@@ -106,6 +106,7 @@ extern void AddSC_item_test();
 extern void AddSC_npc_guardian();
 extern void AddSC_npc_mount_vendor();
 extern void AddSC_npc_professions();
+extern void AddSC_npcs_darkmoon();
 
 // -- Servers --
 
@@ -300,6 +301,8 @@ extern void AddSC_npcs_eastern_plaguelands();
 extern void AddSC_npc_henze_faulk();
 
 //Felwood
+extern void AddSC_npcs_felwood();
+
 //Feralas
 extern void AddSC_npcs_feralas();
 
@@ -557,6 +560,8 @@ extern void AddSC_npcs_undercity();
 extern void AddSC_boss_wailing_caverns();
 
 //Western plaguelands
+extern void AddSC_npcs_western_plaguelands();
+
 //Westfall
 //Wetlands
 //Winterspring
@@ -938,6 +943,7 @@ void ScriptsInit()
     AddSC_npc_guardian();
     AddSC_npc_mount_vendor();
     AddSC_npc_professions();
+    AddSC_npcs_darkmoon();
 
     // -- Servers --
 
@@ -1133,6 +1139,8 @@ void ScriptsInit()
     AddSC_npc_henze_faulk();
 
     //Felwood
+    AddSC_npcs_felwood();
+
     //Feralas
     AddSC_npcs_feralas();
 
@@ -1391,6 +1399,8 @@ void ScriptsInit()
     AddSC_boss_wailing_caverns();
 
     //Western plaguelands
+    AddSC_npcs_western_plaguelands();
+
     //Westfall
     //Wetlands
     //Winterspring

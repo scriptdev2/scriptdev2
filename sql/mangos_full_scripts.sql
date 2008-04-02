@@ -11,7 +11,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_azuregos' WHERE `entry` = 61
 UPDATE `creature_template` SET `ScriptName` = 'mob_dementeddruids' WHERE `entry` = 15260;
 
 /* WORLD CREATURE  These are creatures to be found in more than one specific zone */
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_sayge' WHERE `entry` = 14822;
 
 /* GO */
 UPDATE `gameobject_template` SET `ScriptName` = 'go_orb_of_command' WHERE `entry` = 179879;
@@ -350,7 +350,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_henze_faulk' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'mobs_mana_tapped' WHERE `entry` IN (15273,15274,15294,15298,15367);
 
 /* FELWOOD */
-
+UPDATE `creature_template` SET `ScriptName` = 'npcs_riverbreeze_and_silversky' WHERE `entry` IN (9528, 9529);
 
 /* FERALAS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_screecher_spirit' WHERE `entry` = 8612;
@@ -797,7 +797,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_parqual_fintallas' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'boss_wailing_caverns' WHERE `entry` =3654;
 
 /* WESTERN PLAGUELANDS */
-
+UPDATE `creature_template` SET `ScriptName` = 'npcs_dithers_and_arbington' WHERE `entry` IN (11056, 11057);
 
 /* WESTFALL */
 
@@ -808,7 +808,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_wailing_caverns' WHERE `entr
 /* WINTERSPRING */
 UPDATE `creature_template` SET `ScriptName` = 'npc_lorax' WHERE `entry` = 10918;
 UPDATE `creature_template` SET `ScriptName` = 'npc_rivern_frostwind' WHERE `entry` = 10618;
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_witch_doctor_mauari' WHERE `entry` = 10307;
 
 /* ZANGARMARSH */
 UPDATE `creature_template` SET `ScriptName` = 'npcs_ashyen_and_keleth' WHERE `entry` IN (17900, 17901);

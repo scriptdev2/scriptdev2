@@ -51,6 +51,7 @@ scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
 scripts/npc/npc_professions.cpp \
+scripts/npc/npcs_darkmoon.cpp \
 scripts/sc_defines.cpp \
 scripts/sc_defines.h \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
@@ -179,6 +180,7 @@ scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
+scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
@@ -363,6 +365,7 @@ scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
+scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
 scripts/zone/zulaman/boss_janalai.cpp \

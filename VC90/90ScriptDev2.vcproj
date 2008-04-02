@@ -280,6 +280,10 @@
 					RelativePath="..\scripts\npc\npc_professions.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\npc\npcs_darkmoon.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="servers"
@@ -811,6 +815,10 @@
 				<Filter
 					Name="Felwood"
 					>
+					<File
+						RelativePath="..\scripts\zone\felwood\npcs_felwood.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Feralas"
@@ -1275,6 +1283,10 @@
 				<Filter
 					Name="Western Plaguelands"
 					>
+					<File
+						RelativePath="..\scripts\zone\western_plaguelands\npcs_western_plaguelands.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Westfall"
