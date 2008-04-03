@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
+SDComment: Quest support: 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -106,6 +106,44 @@ CreatureAI* GetAI_npc_invis_legion_teleporter(Creature *_Creature)
     return new npc_invis_legion_teleporterAI (_Creature);
 }
 
+/*######
+## npc_neltharaku
+######*/
+
+bool GossipHello_npc_neltharaku(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(10814) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "I am listening, dragon", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(10613, _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_neltharaku(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "But you are dragons! How could orcs do this to you?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(10614, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, "Your mate?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(10615, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM( 0, "I have battled many beasts, dragon. I will help you.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(10616, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->CLOSE_GOSSIP_MENU();
+            player->CompleteQuest(10814);
+            break;
+    }
+    return true;
+}
+
 void AddSC_npcs_shadowmoon_valley()
 {
     Script *newscript;
@@ -119,5 +157,11 @@ void AddSC_npcs_shadowmoon_valley()
     newscript = new Script;
     newscript->Name="npc_invis_legion_teleporter";
     newscript->GetAI = GetAI_npc_invis_legion_teleporter;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_neltharaku";
+    newscript->pGossipHello =  &GossipHello_npc_neltharaku;
+    newscript->pGossipSelect = &GossipSelect_npc_neltharaku;
     m_scripts[nrscripts++] = newscript;
 }

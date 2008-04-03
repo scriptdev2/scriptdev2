@@ -528,6 +528,10 @@
 						RelativePath="..\scripts\zone\bloodmyst_isle\mobs_bloodmyst_isle.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\bloodmyst_isle\npcs_bloodmyst_isle.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Gruul&apos;s Lair"
@@ -1682,10 +1686,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\shadowmoon_valley\mobs_shadowmoon_valley.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\shadowmoon_valley\npc_neltharaku.cpp"
 						>
 					</File>
 					<File

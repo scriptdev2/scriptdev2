@@ -83,7 +83,7 @@ bool GossipHello_npc_overseer_nuaar(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Overseer, I am here to negotiate on behalf of the Cenarion Expedition.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(10532, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(10532, _Creature->GetGUID());
 
     return true;
 }
@@ -92,7 +92,7 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->PlayerTalkClass->SendGossipMenu(10533, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(10533, _Creature->GetGUID());
         player->CompleteQuest(10682);
     }
     return true;
@@ -102,13 +102,12 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32
 ## npc_saikkal_the_elder
 ######*/
 
-//textId's are unknown, same goes for gossip item texts (except the two used below)
 bool GossipHello_npc_saikkal_the_elder(Player *player, Creature *_Creature)
 {
     if (player->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "Yes... yes, it's me", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM( 0, "Yes... yes, it's me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(10794, _Creature->GetGUID());
 
     return true;
 }
@@ -119,15 +118,11 @@ bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature *_Creature, uin
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             player->ADD_GOSSIP_ITEM( 0, "Yes elder. Tell me more of the book.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+            player->SEND_GOSSIP_MENU(10795, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, "[PH] <text>", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
             player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+            player->SEND_GOSSIP_MENU(10796, _Creature->GetGUID());
             break;
     }
     return true;
@@ -147,7 +142,7 @@ bool GossipHello_npc_skyguard_handler_irena(Player *player, Creature *_Creature 
     if (player->GetReputationRank(1031) >= REP_HONORED)
         player->ADD_GOSSIP_ITEM( 2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }

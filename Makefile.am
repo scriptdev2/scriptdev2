@@ -144,6 +144,7 @@ scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
 scripts/zone/bloodmyst_isle/mobs_bloodmyst_isle.cpp \
+scripts/zone/bloodmyst_isle/npcs_bloodmyst_isle.cpp \
 scripts/zone/burning_steppes/npcs_burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
@@ -300,7 +301,6 @@ scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
-scripts/zone/shadowmoon_valley/npc_neltharaku.cpp \
 scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
 scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_silithus.cpp \

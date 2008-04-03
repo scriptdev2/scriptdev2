@@ -231,6 +231,7 @@ extern void AddSC_npcs_blasted_lands();
 
 //Bloodmyst Isle
 extern void AddSC_mobs_bloodmyst_isle();
+extern void AddSC_npcs_bloodmyst_isle();
 
 //Burning steppes
 extern void AddSC_npcs_burning_steppes();
@@ -456,7 +457,6 @@ extern void AddSC_npcs_searing_gorge();
 
 //Shadowfang keep
 //Shadowmoon Valley
-extern void AddSC_neltharaku();
 extern void AddSC_boss_doomwalker();
 extern void AddSC_mobs_shadowmoon_valley();
 extern void AddSC_npcs_shadowmoon_valley();
@@ -1072,6 +1072,7 @@ void ScriptsInit()
 
     //Bloodmyst Isle
     AddSC_mobs_bloodmyst_isle();
+    AddSC_npcs_bloodmyst_isle();
 
     //Burning steppes
     AddSC_npcs_burning_steppes();
@@ -1298,7 +1299,6 @@ void ScriptsInit()
 
     //Shadowfang keep
     //Shadowmoon Valley
-    AddSC_neltharaku();
     AddSC_boss_doomwalker();
     AddSC_mobs_shadowmoon_valley();
     AddSC_npcs_shadowmoon_valley();

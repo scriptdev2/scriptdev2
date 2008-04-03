@@ -236,6 +236,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_fallen_hero_of_horde' WHERE `
 
 /* BLOODMYST ISLE */
 UPDATE `creature_template` SET `ScriptName` = 'mob_webbed_creature' WHERE `entry` = 17680;
+UPDATE `creature_template` SET `ScriptName` = 'npc_captured_sunhawk_agent' WHERE `entry` = 17824;
 
 /* BURNING STEPPES */
 UPDATE `creature_template` SET `ScriptName` = 'npc_ragged_john' WHERE `entry` = 9563;
@@ -592,9 +593,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_zamael_lunthistle' WHERE `ent
 
 
 /* SHADOWMOON VALLEY */
-UPDATE `creature_template` SET `ScriptName` = 'neltharaku' WHERE `entry` = 21657;
 UPDATE `creature_template` SET `ScriptName` = 'npc_drake_dealer_hurlunk' WHERE `entry` = 23489;
 UPDATE `creature_template` SET `ScriptName` = 'npc_invis_legion_teleporter' WHERE `entry` = 21807;
+UPDATE `creature_template` SET `ScriptName` = 'npc_neltharaku' WHERE `entry` = 21657;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_dragonmaw_orc' WHERE `entry` IN (21717, 21718, 21719, 21720, 22331);
 UPDATE `creature_template` SET `ScriptName` = 'mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878, 21879);
 /* Doomwalker */
