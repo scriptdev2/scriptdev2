@@ -20,5 +20,5 @@
 #define DATA_SUPREMUSEVENT              18
 #define DATA_TERONGOREFIENDEVENT        19
 #define DATA_VERASDARKSHADOW            20
-#define DATA_COUNCIL_DEATH_COUNT        21
+#define DATA_NAJENTUS_SPINE             21
 #endif

@@ -35,7 +35,6 @@ EndScriptData */
 
 #define SPELL_HEAL      25807
 #define SPELL_FEAR      19408
-#define SPELL_ENRAGE    28131
 
 struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 {

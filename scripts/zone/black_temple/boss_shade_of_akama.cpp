@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Shade_of_Akama
 SD%Complete: 95
-SDComment: Finish testing to see if Sorcerers work properly. Ending cinematic with Akama NYI
+SDComment: Problems with Channelers/Sorcerers displaying channel visual. Ending cinematic with Akama NYI
 SDCategory: Black Temple
 EndScriptData */
 
@@ -469,7 +469,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     }
                 }
-                else // Debug
+                else
                 {
                     if(pInstance)
                         AkamaGUID = pInstance->GetData64(DATA_AKAMA_SHADE);

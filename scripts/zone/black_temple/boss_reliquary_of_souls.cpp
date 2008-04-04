@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         uint32 random = rand()%6;
         float x = Coords[random].x;
         float y = Coords[random].y;
-        Creature* Soul = m_creature->SummonCreature(23469, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_CORPSE_DESPAWN, 0);
+        Creature* Soul = m_creature->SummonCreature(23469, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
         if (target && Soul)
         {
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if(!Phase)
             return;
 
-        if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Phase 0 or empty threat list
+        if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Reset if event is begun and we don't have a threatlist
             EnterEvadeMode();
 
         if(Phase == 1)
@@ -712,6 +712,13 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             }
         }
 
+        if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
+        {
+            if(m_creature->getVictim())
+                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+            return;
+        }
+
         // Prevent overlapping yells
         if(AggroYellTimer)
             if(AggroYellTimer < diff)
@@ -853,6 +860,13 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
+        
+        if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
+        {
+            if(m_creature->getVictim())
+                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+            return;
+        }
 
         if(RuneShieldTimer < diff)
         {

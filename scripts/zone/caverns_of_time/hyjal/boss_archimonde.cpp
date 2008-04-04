@@ -14,6 +14,12 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Archimonde
+SD%Complete: 95
+SDComment: Doomfires not completely offlike due to core limitations for random moving.
+EndScriptData */
+
 #include "../../../sc_defines.h"
 #include "def_hyjal.h"
 #include "../../../../../../game/TargetedMovementGenerator.h"
@@ -105,6 +111,8 @@ struct mob_ancient_wispAI : public ScriptedAI
         CheckTimer = 1000;
     }
 
+    void DamageTaken(Unit* done_by, uint32 &damage) { damage = 0; }
+
     void UpdateAI(const uint32 diff)
     {
         if(!ArchimondeGUID)
@@ -179,7 +187,7 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
         {
             TargetSelected = true;
             TargetGUID = who->GetGUID();
-            RefreshTimer = 500;
+            RefreshTimer = 2000;
         }
     }
 
@@ -365,7 +373,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         AirBurstTimer = 30000;
         GripOfTheLegionTimer = 5000 + rand()%20000;
         DoomfireTimer = 20000;
-        SoulChargeTimer = 15000 + rand()%105000;
+        SoulChargeTimer = 5000 + rand()%40000;
         MeleeRangeCheckTimer = 15000;
         HandOfDeathTimer = 2000;
         SummonWispTimer = 1500;
@@ -471,8 +479,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 break;
         }
 
+        SoulChargeTimer += 2000 + rand()%35000;
+//        CalculateSoulChargeTimer();
         SoulCharged = true;
-        CalculateSoulChargeTimer();
     }
 
     void JustDied(Unit *victim)
@@ -599,9 +608,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(!totalStacks)
             return;
 
-        newTimer = (5000 + rand()%115000)/totalStacks;
-        if(newTimer < (SoulChargeTimer+GlobalSoulChargeCooldown))
-            SoulChargeTimer = newTimer;
+        SoulChargeTimer = newTimer;
 
         if(totalStacks > 7 && GlobalSoulChargeCooldown > 3000)
             GlobalSoulChargeCooldown = 5000;
@@ -618,12 +625,15 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             case 0:
                 chargeSpell = SPELL_SOUL_CHARGE_RED;
                 unleashSpell = SPELL_UNLEASH_SOUL_RED;
+                break;
             case 1:
                 chargeSpell = SPELL_SOUL_CHARGE_YELLOW;
                 unleashSpell = SPELL_UNLEASH_SOUL_YELLOW;
+                break;
             case 2:
                 chargeSpell = SPELL_SOUL_CHARGE_GREEN;
                 unleashSpell = SPELL_UNLEASH_SOUL_GREEN;
+                break;
         }
         if(m_creature->HasAura(chargeSpell, 0))
         {
@@ -632,7 +642,10 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             HasCast = true;
         }
         if(HasCast)
-            CalculateSoulChargeTimer();
+        {
+            //CalculateSoulChargeTimer();
+            SoulCharged = false;
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -655,7 +668,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 if(Nordrassil)
                 {
                     Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
-                    Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     DrainNordrassilTimer = 1000;
                 }
             }else DrainNordrassilTimer -= diff;
@@ -673,6 +685,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             {
                 if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
                 {
+                    m_creature->GetMotionMaster()->Clear(false);
+                    m_creature->GetMotionMaster()->Idle();
                     Enraged = true;
                     DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
@@ -687,6 +701,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     Check->SetVisibility(VISIBILITY_OFF);
                     if(m_creature->IsWithinDistInMap(Check, 75))
                     {
+                        m_creature->GetMotionMaster()->Clear(false);
+                        m_creature->GetMotionMaster()->Idle();
                         Enraged = true;
                         DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
@@ -700,7 +716,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if(!HasProtected)
             {
-                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->Clear(false);
                 m_creature->GetMotionMaster()->Idle();
                 DoCast(m_creature->getVictim(), SPELL_PROTECTION_OF_ELUNE);
                 HasProtected = true;
@@ -770,7 +786,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(DoomfireTimer < diff)
         {
             SummonDoomfire(SelectUnit(SELECT_TARGET_RANDOM, 1));
-            DoomfireTimer = 30000;
+            DoomfireTimer = 40000;
         }else DoomfireTimer -= diff;
 
         if(MeleeRangeCheckTimer < diff)

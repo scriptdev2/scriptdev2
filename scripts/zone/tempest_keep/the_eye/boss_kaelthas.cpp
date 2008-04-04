@@ -730,7 +730,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Creature* Weapon;
                     for (uint32 i = 0; i < 7; i++)
                     {
-                        Weapon = m_creature->SummonCreature(KaelthasWeapons[i][0],KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
+                        Weapon = m_creature->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
 
                         if (!Weapon)
                             error_log("SD2: Kael'thas weapon %i could not be spawned", i);

@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "../../sc_defines.h"
 #include "def_black_temple.h"
+#include "../../../../../game/GameObject.h"
 
 #define ENCOUNTERS     8
 
@@ -61,7 +62,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 VerasDarkshadow;
     uint64 IllidanStormrage;
 
-    uint32 IllidariCouncilDeathCount;
+    uint64 NajentusSpine;
 
     uint32 Encounters[ENCOUNTERS];
 
@@ -78,7 +79,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         VerasDarkshadow = 0;
         IllidanStormrage = 0;
         
-        IllidariCouncilDeathCount = 0;
+        NajentusSpine = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
@@ -138,6 +139,16 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
     }
 
+    void OnObjectCreate(GameObject* go)
+    {
+        switch(go->GetEntry())
+        {
+            case 185584:
+                NajentusSpine = go->GetGUID();
+                break;
+        }
+    }
+
     uint64 GetData64(uint32 identifier)
     {
         switch(identifier)
@@ -171,6 +182,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
              case DATA_VERASDARKSHADOW:
                 return VerasDarkshadow;
+
+             case DATA_NAJENTUS_SPINE:
+                 return NajentusSpine;
         }
 
         return 0;
@@ -249,9 +263,6 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
              case DATA_ILLIDARICOUNCILEVENT:
                 return Encounters[7];
-
-             case DATA_COUNCIL_DEATH_COUNT:
-                 return IllidariCouncilDeathCount;
 
              case DATA_ILLIDANSTORMRAGEEVENT:
                 return Encounters[8];

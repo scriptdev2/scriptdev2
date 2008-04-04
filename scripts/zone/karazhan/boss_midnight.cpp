@@ -44,7 +44,7 @@ EndScriptData */
 #define SAY_KILL2 "Another trophy to add to my collection!"
 #define SOUND_KILL2 9300
 
-#define SAY_DISARMED "Weapons are merely a convinience for a warrior of my skill!"
+#define SAY_DISARMED "Weapons are merely a convenience for a warrior of my skill!"
 #define SOUND_DISARMED 9166
 
 #define SAY_DEATH "I always knew... someday I would become... the hunted."
@@ -53,7 +53,7 @@ EndScriptData */
 #define SAY_RANDOM1 "Such easy sport."
 #define SOUND_RANDOM1 9170 
 
-#define SAY_RANDOM2 "Amatures! Do not think you can best me! I kill for a living."
+#define SAY_RANDOM2 "Amateurs! Do not think you can best me! I kill for a living."
 #define SOUND_RANDOM2 9304 
 
 //Spells
@@ -64,7 +64,7 @@ EndScriptData */
 
 #define MOUNTED_DISPLAYID   16040
 
-//Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convinient for us)
+//Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convenient for us)
 #define SUMMON_ATTUMEN 15550
 
 struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
@@ -307,7 +307,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                 RandomYellTimer = 30000 + (rand()%31)*1000;
             } else RandomYellTimer -= diff;
 
-            if(m_creature->GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID) )
+            if(m_creature->GetUInt32Value(UNIT_FIELD_DISPLAYID) == MOUNTED_DISPLAYID)
             {
                 if(ChargeTimer < diff)
                 {

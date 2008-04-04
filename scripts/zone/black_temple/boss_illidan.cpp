@@ -775,11 +775,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     }
 
     /** To reduce the amount of code in UpdateAI, we can seperate them into different functions and simply call them from UpdateAI **/
-    void EnterPhase2(bool setHealth = false)
+    void EnterPhase2()
     {
-        if(setHealth)
-            m_creature->SetHealth(m_creature->GetMaxHealth()*0.65);
-
         DoYell(SAY_TAKEOFF, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_TAKEOFF);
 
@@ -844,11 +841,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         HasSummoned = true;
     }
 
-    void SummonMaiev(bool setHealth = false)
+    void SummonMaiev()
     {
-        if(setHealth)
-            m_creature->SetHealth((uint32)m_creature->GetMaxHealth()*0.3);
-
         TauntTimer += 4000;
         GlobalTimer += 4000;
 
@@ -874,11 +868,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         }
     }
 
-    void InitializeDeath(bool setHealth = false)
+    void InitializeDeath()
     {
-        if(setHealth)
-            m_creature->SetHealth((uint32)m_creature->GetMaxHealth()*0.01);
-
         DoCast(m_creature, SPELL_DEATH); // Animate his kneeling + stun him
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Don't let the players interrupt our talk!
         m_creature->GetMotionMaster()->Clear(false); // No moving!

@@ -381,29 +381,20 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         InCombat = false;
         DoYell(SAY_GATH_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_GATH_DEATH);
-        if(pInstance)
-        {
-            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
-        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
-        {    
-            damage /= 4;
-            for(uint8 i = 0; i < 3; i++)
+        damage /= 4;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            Unit* pUnit = NULL;
+            if(Council[i])
             {
                 Unit* pUnit = NULL;
-                if(Council[i])
-                {
-                    Unit* pUnit = NULL;
-                    pUnit = Unit::GetUnit((*m_creature), Council[i]);
-                    if(pUnit && (damage < pUnit->GetHealth()))
-                        pUnit->SetHealth(pUnit->GetHealth() - damage);
-                }
+                pUnit = Unit::GetUnit((*m_creature), Council[i]);
+                if(pUnit && (damage < pUnit->GetHealth()))
+                    pUnit->SetHealth(pUnit->GetHealth() - damage);
             }
         }
     }
@@ -625,30 +616,20 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
         DoYell(SAY_ZERE_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_ZERE_DEATH);
-
-        if(pInstance)
-        {
-            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Only one of us can be lootable.
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
-        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
-        {    
-            damage /= 4;
-            for(uint8 i = 0; i < 3; i++)
+        damage /= 4;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            Unit* pUnit = NULL;
+            if(Council[i])
             {
                 Unit* pUnit = NULL;
-                if(Council[i])
-                {
-                    Unit* pUnit = NULL;
-                    pUnit = Unit::GetUnit((*m_creature), Council[i]);
-                    if(pUnit && (damage < pUnit->GetHealth()))
-                        pUnit->SetHealth(pUnit->GetHealth() - damage);
-                }
+                pUnit = Unit::GetUnit((*m_creature), Council[i]);
+                if(pUnit && (damage < pUnit->GetHealth()))
+                    pUnit->SetHealth(pUnit->GetHealth() - damage);
             }
         }
     }
@@ -841,30 +822,20 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
         DoYell(SAY_MALA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_MALA_DEATH);
-
-        if(pInstance)
-        {
-            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable unless we are the last to die
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
-        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {          
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
-        {    
-            damage /= 4;
-            for(uint8 i = 0; i < 3; i++)
+        damage /= 4;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            Unit* pUnit = NULL;
+            if(Council[i])
             {
                 Unit* pUnit = NULL;
-                if(Council[i])
-                {
-                    Unit* pUnit = NULL;
-                    pUnit = Unit::GetUnit((*m_creature), Council[i]);
-                    if(pUnit && (damage < pUnit->GetHealth()))
-                        pUnit->SetHealth(pUnit->GetHealth() - damage);
-                }
+                pUnit = Unit::GetUnit((*m_creature), Council[i]);
+                if(pUnit && (damage < pUnit->GetHealth()))
+                    pUnit->SetHealth(pUnit->GetHealth() - damage);
             }
         }
     }
@@ -1050,30 +1021,20 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
         DoYell(SAY_VERA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_VERA_DEATH);
-
-        if(pInstance)
-        {
-            if(pInstance->GetData(DATA_COUNCIL_DEATH_COUNT) < 3)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if others are still alive
-            pInstance->SetData(DATA_COUNCIL_DEATH_COUNT, 1);
-        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {   
-        if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 1)
-        {    
-            damage /= 4;
-            for(uint8 i = 0; i < 3; i++)
+        damage /= 4;
+        for(uint8 i = 0; i < 3; i++)
+        {
+            Unit* pUnit = NULL;
+            if(Council[i])
             {
                 Unit* pUnit = NULL;
-                if(Council[i])
-                {
-                    Unit* pUnit = NULL;
-                    pUnit = Unit::GetUnit((*m_creature), Council[i]);
-                    if(pUnit && (damage < pUnit->GetHealth()))
-                        pUnit->SetHealth(pUnit->GetHealth() - damage);
-                }
+                pUnit = Unit::GetUnit((*m_creature), Council[i]);
+                if(pUnit && (damage < pUnit->GetHealth()))
+                    pUnit->SetHealth(pUnit->GetHealth() - damage);
             }
         }
     }
