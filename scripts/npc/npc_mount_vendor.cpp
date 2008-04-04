@@ -119,8 +119,7 @@ bool GossipHello_npc_mount_vendor(Player *player, Creature *_Creature)
             break;
         case 17584: //Torallius the Pack Handler
             if (player->GetReputationRank(930) != REP_EXALTED && race != RACE_DRAENEI)
-                //player->SEND_GOSSIP_MENU(5844, _Creature->GetGUID());//unknown id
-                player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+                player->SEND_GOSSIP_MENU(10239, _Creature->GetGUID());
             else 
                 canBuy = true;
             break;
