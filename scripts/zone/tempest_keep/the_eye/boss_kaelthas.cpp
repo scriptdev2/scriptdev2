@@ -208,6 +208,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         //reset encounter
         if(pInstance && (pInstance->GetData(DATA_KAELTHASEVENT) == 1 || pInstance->GetData(DATA_KAELTHASEVENT) == 3))

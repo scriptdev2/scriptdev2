@@ -23,54 +23,114 @@ EndScriptData */
 
 #include "../sc_defines.h"
 #include "../creature/simple_ai.h"
+#include "../../../../game/Map.h"
+#include "../../../../game/GridNotifiersImpl.h"
 
-#define AGGRO_YELL_1      "Me be killin you mon!"
-#define AGGRO_YELL_2      "Some random lines"
-#define AGGRO_YELL_3      "Aggro 3"
 
-#define SPECIAL_YELL_1      "Now die!"
+struct MANGOS_DLL_DECL testAI : public ScriptedAI
+{
+    testAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 Cleave_Timer;
+    bool InCombat;
+
+    void Reset()
+    {
+        Cleave_Timer = 5000;      //These times are probably wrong
+        InCombat = false;
+    }
+
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack() && who!= m_creature)
+        {
+            //Begin melee attack if we are within range
+            DoStartMeleeAttack(who);
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || m_creature->getVictim())
+            return;
+
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                //Begin melee attack if we are within range
+                DoStartMeleeAttack(who);
+            }
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if (Cleave_Timer < diff)
+        {
+            /*char test[128];
+            sprintf(test, "Found %d friendly units in 20 yard radius", GetNearByFriendlyUnits(20.0f).size());
+
+            DoYell(test, LANG_UNIVERSAL, NULL);*/
+
+            Cleave_Timer = 5000;
+        }else Cleave_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+/*
+    std::list<Unit *> GetNearByFriendlyUnits(float radius_check)
+    {
+        CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
+        Cell cell(p);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        //MaNGOS::WorldObjectWorker<MaNGOS::RespawnDo> worker(u_do);
+
+        std::list<Unit *> friends;
+        {
+            MaNGOS::AnyUnitInObjectRangeCheck u_check(m_creature, radius_check);
+            MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck> searcher(friends, u_check);
+
+            TypeContainerVisitor<MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
+            TypeContainerVisitor<MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+
+            CellLock<GridReadGuard> cell_lock(cell, p);
+            cell_lock->Visit(cell_lock, world_unit_searcher, *m_creature->GetMap());
+            cell_lock->Visit(cell_lock, grid_unit_searcher, *m_creature->GetMap());
+        }
+
+        for(std::list<Unit *>::iterator itr = friends.begin(); itr != friends.end();)
+        {
+            if(!m_creature->IsFriendlyTo(*itr))
+            {
+                std::list<Unit *>::iterator itr2 = itr;
+                ++itr;
+                friends.erase(itr2);
+            }
+            else
+                ++itr;
+        }
+
+        return friends;
+    }*/
+};
 
 CreatureAI* GetAI_test(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //
-    ai->Aggro_Text[0] = AGGRO_YELL_1;
-    ai->Aggro_Text[1] = AGGRO_YELL_2;
-    ai->Aggro_Text[2] = AGGRO_YELL_3;
-
-    //Flay (10% double attack)
-    ai->Spell[0].Enabled = true;                //Enabled
-    ai->Spell[0].Spell_Id = 32732;              //Flay (10% double attack)
-    ai->Spell[0].Cooldown = -1;                 //Infinite duration no need to cast again
-    ai->Spell[0].First_Cast = 1000;             //Cast this 1 second after we go into combat
-    ai->Spell[0].Cast_Target_Type = CAST_SELF;  //Self
-
-    //19643 //ms
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = 19643;
-    ai->Spell[1].Cooldown = 7000;
-    ai->Spell[1].First_Cast = 7000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //19471 // Charge
-    ai->Spell[2].Enabled = true;
-    ai->Spell[2].Spell_Id = 19471;
-    ai->Spell[2].Cooldown = 10000;
-    ai->Spell[2].First_Cast = 1000;
-    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_RANDOM;
-
-    //41472 //ARcane orb
-
-    ai->Spell[3].Enabled = true;
-    ai->Spell[3].Spell_Id = 34172;
-    ai->Spell[3].Cooldown = 16000;
-    ai->Spell[3].First_Cast = 16000;
-    ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_LAST_AGGRO;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new testAI (_Creature);
 }
 
 void AddSC_test()
