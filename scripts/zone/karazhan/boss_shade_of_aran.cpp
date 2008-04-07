@@ -208,19 +208,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, 3); // Completed
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {        
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            //Say our dialog
-            if (!InCombat)
-            {
                 switch(rand()%3)
                 {
                     case 0:
@@ -236,54 +225,6 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                         break;
                 }
-
-                if(pInstance)
-                    pInstance->SetData(DATA_SHADEOFARAN_EVENT, 1); // In Progress
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Say our dialog
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                        case 0:
-                            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                            break;
-                        case 1:
-                            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                            break;
-                        case 2:
-                            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                            break;
-                    }
-
-                    if(pInstance)
-                        pInstance->SetData(DATA_SHADEOFARAN_EVENT, 1); // In Progress
-                    InCombat = true;
-                }
-
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void FlameWreathEffect()
@@ -655,10 +596,10 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
     {
         CastTimer = 2000 + (rand()%3000);
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void UpdateAI(const uint32 diff)

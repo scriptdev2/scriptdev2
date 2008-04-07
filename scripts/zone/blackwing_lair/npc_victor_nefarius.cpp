@@ -213,16 +213,8 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

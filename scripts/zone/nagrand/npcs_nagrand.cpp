@@ -273,6 +273,10 @@ struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public Scripted
   {
   }
 
+  void Aggro(Unit* who)
+    {
+    }
+
   void MoveInLineOfSight(Unit *who)
   {
       if(!who)

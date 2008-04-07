@@ -151,55 +151,10 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_KILL);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin ranged attack because Ragnaros is rooted at all times
-            if (m_creature->Attack(who))
-            {
-                m_creature->AddThreat(who, 0.0f);
-                m_creature->resetAttackTimer();
-
-                if (who->GetTypeId() == TYPEID_PLAYER)
-                    m_creature->SetLootRecipient((Player*)who);
-            }
-
-            //Say our dialog on initial aggro
-            if (!InCombat)
-            {
                 DoYell(SAY_ARRIVAL_5,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_ARRIVAL_5);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (!HasAura)
-                {
-                    m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
-                    HasAura = true;
-                }
-
-                AttackStart(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

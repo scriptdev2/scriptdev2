@@ -18,6 +18,32 @@ bool ScriptedAI::IsVisible(Unit* who) const
     return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
 }
 
+void ScriptedAI::MoveInLineOfSight(Unit *who)
+{
+    if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+    {
+        if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+            return;
+
+        float attackRadius = m_creature->GetAttackDistance(who);
+        if(m_creature->IsWithinDistInMap(who, attackRadius))
+        {
+            // Check first that object is in an angle in front of this one before LoS check
+            if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+            {
+                AttackStart(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                
+                if (!InCombat)
+                {
+                    Aggro(who);
+                    InCombat = true;
+                }
+            }
+        }
+    }
+}
+
 void ScriptedAI::AttackStart(Unit* who)
 {
     if (!who)
@@ -27,6 +53,11 @@ void ScriptedAI::AttackStart(Unit* who)
     {
         //Begin attack
         DoStartMeleeAttack(who);
+        if (!InCombat)
+        {
+            Aggro(who);
+            InCombat = true;
+        }
     }
 }
 
@@ -54,11 +85,13 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->CombatStop();
     DoGoHome();
 
+    InCombat = false;
     Reset();
 }
 
 void ScriptedAI::JustRespawned()
 {
+    InCombat = false;
     Reset();
 }
 

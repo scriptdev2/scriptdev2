@@ -66,22 +66,10 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //DoGoHome();        
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     { 
-        if (!who)   
-            return;
-
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                InCombat = true;
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-            }
-        }
     }
 
     void KilledUnit(Unit *victim)

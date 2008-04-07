@@ -36,29 +36,14 @@ struct MANGOS_DLL_DECL mobs_direhorn_grimtotemAI : public ScriptedAI
     {
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
             ((Player*)Killer)->KilledMonster(23594, m_creature->GetGUID());
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mobs_direhorn_grimtotem(Creature *_Creature)
@@ -77,6 +62,10 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
     mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset()
+    {
+    }
+
+    void Aggro(Unit* who)
     {
     }
 

@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     bool SummonedDragons;
     bool SummonedOrcs;
     bool SummonedRend;
-    bool Aggro;
+    bool bAggro;
     bool InCombat;
     bool RootSelf;
     Creature *SummonedCreature;
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         SummonedDragons = false;
         SummonedOrcs= false;
         SummonedRend = false;
-        Aggro = false;
+        bAggro = false;
         InCombat = false;
         RootSelf = false;
 
@@ -83,37 +83,8 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE)
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                InCombat = true;
-
-            }
-        }
     }
 
     void SummonCreatureWithRandomTarget(uint32 creatureId)
@@ -143,11 +114,11 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             RootSelf = true;
         }
 
-        if (!Aggro && Line1Count == 0 && Line2Count == 0)
+        if (!bAggro && Line1Count == 0 && Line2Count == 0)
         {
             if (Aggro_Timer < diff)
             {
-                Aggro = true;
+                bAggro = true;
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9723);  // Visible now!
                 m_creature->setFaction(14);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -155,7 +126,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         }
 
         // Summon Dragon pack. 2 Dragons and 3 Whelps
-        if (!Aggro && !SummonedRend && Line1Count > 0) {
+        if (!bAggro && !SummonedRend && Line1Count > 0) {
             if (Dragons_Timer < diff) {
                 SummonCreatureWithRandomTarget(10372);
                 SummonCreatureWithRandomTarget(10372);
@@ -168,7 +139,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         }
 
         //Summon Orc pack. 1 Orc Handler 1 Elite Dragonkin and 3 Whelps
-        if (!Aggro && !SummonedRend && Line1Count == 0 && Line2Count > 0)
+        if (!bAggro && !SummonedRend && Line1Count == 0 && Line2Count > 0)
         {
             if (Orc_Timer < diff) {
                 SummonCreatureWithRandomTarget(10447);
@@ -182,7 +153,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         }
 
         // we take part in the fight
-        if (Aggro)
+        if (bAggro)
         {
             // CorrosiveAcid_Timer
             if (CorrosiveAcid_Timer < diff)

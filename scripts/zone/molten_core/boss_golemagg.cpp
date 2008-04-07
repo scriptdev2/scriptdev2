@@ -67,17 +67,8 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
     }
 
     void JustDied(Unit* Killer)
@@ -86,27 +77,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                InCombat = true;
-
-            }
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
@@ -185,40 +155,11 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     {
         Mangle_Timer = 7000;      //These times are probably wrong 
         Check_Timer = 1000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-        
-               
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        InCombat = false;    
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

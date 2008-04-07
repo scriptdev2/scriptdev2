@@ -93,9 +93,8 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
     }
 
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return; //ignore all attackstart commands
     }
 
     void MoveInLineOfSight(Unit *who) //MoveInLineOfSight is called if creature could see you, updated all 100 ms
@@ -230,9 +229,8 @@ struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
         }
     }
     
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return; //ignore all attackstart commands
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -456,28 +456,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
+        if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+            StartEvent();
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(Phase >= 4)
-            {
-                //Begin melee attack if we are within range
-                if (!InGravityLapse)
-                    DoStartMeleeAttack(who);
-            }
-            else
-            {
-                if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
-                    StartEvent();
-
-                //add to the threat list, so we can use SelectTarget
-                m_creature->AddThreat(who,0.0f);
-            }
-        }
     }
 
     //Extended vision range
@@ -1101,7 +1084,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         DoYell(SAY_THALADRED_DEATH, LANG_UNIVERSAL, NULL);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
@@ -1109,19 +1092,9 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin attack
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
                 DoYell(SAY_THALADRED_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_THALADRED_AGGRO);
                 m_creature->AddThreat(who, 5000000.0f);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -1202,7 +1175,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         DoYell(SAY_SANGUINAR_DEATH, LANG_UNIVERSAL, NULL);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
@@ -1210,18 +1183,8 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin attack
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
                 DoYell(SAY_SANGUINAR_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_SANGUINAR_AGGRO);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -1311,22 +1274,13 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
             return;
-
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin attack
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-                InCombat = true;
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -1437,7 +1391,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         DoYell(SAY_TELONICUS_DEATH, LANG_UNIVERSAL, NULL);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
@@ -1445,18 +1399,8 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin attack
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
                 DoYell(SAY_TELONICUS_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_TELONICUS_AGGRO);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -1530,7 +1474,7 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
         m_creature->setFaction(14);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
     }
 
@@ -1612,15 +1556,8 @@ struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who || IsEgg)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

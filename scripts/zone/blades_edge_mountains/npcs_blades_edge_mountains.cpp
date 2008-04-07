@@ -36,6 +36,10 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
     {
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())

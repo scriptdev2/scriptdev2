@@ -33,11 +33,11 @@ struct MANGOS_DLL_DECL beatencorpseAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void UpdateAI(const uint32 diff)

@@ -81,37 +81,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                InCombat = true;
-
-            }
-        }
     }
 
     void SummonShades(Unit* victim)
@@ -132,7 +103,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         Rand = 0;
         Summoned = DoSpawnCreature(15302, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
         if(Summoned)
-            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -153,7 +124,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+        return;
 
         //Sleep_Timer
         if (Sleep_Timer < diff)
@@ -186,7 +157,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
             //Only cast if we are behind
             if (!m_creature->HasInArc( M_PI, target))
-                DoCast(target,SPELL_TAILSWEEP);
+            DoCast(target,SPELL_TAILSWEEP);
             TailSweep_Timer = 2000;
         }else TailSweep_Timer -= diff;
 
@@ -321,44 +292,16 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                InCombat = true;
-
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+        return;
 
         //PoisonCloud_Timer
         if (PoisonCloud_Timer < diff)

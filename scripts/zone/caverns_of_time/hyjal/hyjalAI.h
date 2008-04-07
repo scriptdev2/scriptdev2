@@ -174,9 +174,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void EnterEvadeMode();
 
-    void AttackStart(Unit *who);
-
-    void MoveInLineOfSight(Unit *who);
+    void Aggro(Unit *who);
 
     void UpdateAI(const uint32 diff);
 

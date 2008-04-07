@@ -54,44 +54,10 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-            if (!InCombat)
-            {
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                InCombat = true;
-            }
-        }
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-
-                if (!InCombat)
-                {
-                    DoStartMeleeAttack(who);
-                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                    InCombat = true;
-                }
-            }
-        }
-    }  
 
     void UpdateAI(const uint32 diff)
     {
@@ -131,6 +97,10 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
     void Reset()
     {   
         Start = false;
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void UpdateAI(const uint32 diff)

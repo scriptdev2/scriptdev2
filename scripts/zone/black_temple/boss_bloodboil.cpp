@@ -123,52 +123,12 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         InCombat = false;
      }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                Reset();
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
                     if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(!who || !who->isAlive())
-            return;
-
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
-                    if(pInstance)
-                        pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
-                }
-            }
-        }
     }
 
     void KilledUnit(Unit *victim)

@@ -112,39 +112,10 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         m_creature->CastSpell(m_creature, SPELL_LEVEL_UP, true);
     }
  
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
- 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-        DoStartMeleeAttack(who);
-        InCombat = true;
-        }
     }
 
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
- 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
- 
-                DoStartMeleeAttack(who);
-                InCombat = true;
- 
-            }
-        }
-    }
- 
      void UpdateAI(const uint32 diff)
     {
 
@@ -305,37 +276,10 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     void Reset()
     {
         SunderArmor_Timer = 5000;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-        
-               
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
     
     void JustDied(Unit* Killer)

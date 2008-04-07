@@ -87,11 +87,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         HasYelled = false;
         DoingSpeach = false;
         InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void BeginSpeach(Unit* target)
@@ -116,47 +111,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_KILLTARGET);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            //Say our dialog
-            if (!InCombat)
-            {
                 DoCast(m_creature,SPELL_ESSENCEOFTHERED);
                 InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (!InCombat)
-                {
-                    DoCast(m_creature,SPELL_ESSENCEOFTHERED);
-                    InCombat = true;
-                }
-
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

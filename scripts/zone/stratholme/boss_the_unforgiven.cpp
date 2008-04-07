@@ -48,16 +48,8 @@ struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-            InCombat = true;
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

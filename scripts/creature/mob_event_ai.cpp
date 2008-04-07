@@ -726,7 +726,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (!who || who == m_creature)
             return;

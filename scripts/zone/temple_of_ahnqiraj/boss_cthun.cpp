@@ -122,22 +122,8 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         i = 0;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if (m_creature->Attack(who))
-            {
-                m_creature->AddThreat(who, 0.0f);
-                m_creature->resetAttackTimer();
-
-                if (who->GetTypeId() == TYPEID_PLAYER)
-                    m_creature->SetLootRecipient((Player*)who);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -368,22 +354,8 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-                        if (m_creature->Attack(who))
-            {
-                m_creature->AddThreat(who, 0.0f);
-                m_creature->resetAttackTimer();
-
-                if (who->GetTypeId() == TYPEID_PLAYER)
-                    m_creature->SetLootRecipient((Player*)who);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -438,22 +410,8 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-                        if (m_creature->Attack(who))
-            {
-                m_creature->AddThreat(who, 0.0f);
-                m_creature->resetAttackTimer();
-
-                if (who->GetTypeId() == TYPEID_PLAYER)
-                    m_creature->SetLootRecipient((Player*)who);
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

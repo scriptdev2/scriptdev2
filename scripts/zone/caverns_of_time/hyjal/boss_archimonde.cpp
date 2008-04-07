@@ -111,6 +111,10 @@ struct mob_ancient_wispAI : public ScriptedAI
         CheckTimer = 1000;
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void DamageTaken(Unit* done_by, uint32 &damage) { damage = 0; }
 
     void UpdateAI(const uint32 diff)
@@ -173,7 +177,7 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
         damage = 0;
     }
 
-    void AttackStart(Unit* who) { return; }
+    void Aggro(Unit* who) { return; }
 
     void MoveInLineOfSight(Unit* who)
     {
@@ -245,15 +249,8 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
         ArchimondeGUID = 0;
     }
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit* who)
@@ -389,23 +386,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         IsChanneling = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
                 m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

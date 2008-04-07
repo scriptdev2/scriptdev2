@@ -111,17 +111,8 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-      if (!InCombat)
-            {
                     switch(rand()%3)
                     {
                         case 0:  
@@ -136,48 +127,8 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                                DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
                         break;
                     }
-                InCombat = true;
-            }
-        }
     }
     
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                        case 0:  
-                               DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                        break;
-
-                        case 1:
-                               DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                        break;
-
-                        case 2:
-                               DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                        break;
-                    }
-
-                InCombat = true;
-                }
-
-            }
-        }
-    }
 
     void UpdateAI(const uint32 diff)
     {

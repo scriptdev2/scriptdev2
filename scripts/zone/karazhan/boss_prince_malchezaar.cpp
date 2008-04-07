@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "sc_creature.h"
 
-
 #define SAY_AGGRO           "Madness has brought you here to me. I shall be your undoing!"
 #define SOUND_AGGRO         9218
 #define SAY_SUMMON1         "You face not Malchezaar alone, but the legions I command!"
@@ -135,7 +134,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
     InfernalPoint *point;
 
     void Reset() {}
-    void AttackStart(Unit *who) {}
+    void Aggro(Unit *who) {}
     void MoveInLineOfSight(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
@@ -288,50 +287,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {        
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            //Say our dialog
-            if (!InCombat)
-            {
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                InCombat = true;
-            }
-        }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (!InCombat)
-                {
-                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
-                }
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 
     void InfernalCleanup()
     {

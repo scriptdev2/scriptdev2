@@ -115,6 +115,10 @@ struct MANGOS_DLL_DECL npc_steward_of_timeAI : public ScriptedAI
     {
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void UpdateAI(const uint32 diff)
     {
         WorldPacket data;

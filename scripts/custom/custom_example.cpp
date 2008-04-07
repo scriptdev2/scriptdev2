@@ -96,48 +96,11 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 
     //*** HANDLED FUNCTION *** 
     //Attack Start is called whenever someone hits us.
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        //We have to say who!= m_creature because currently AoE that apply dots will trigger the creature into attack itself
-        //Since AoEs casted by monsters hit themselves
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin attack
-            DoStartMeleeAttack(who);
-
             //Say some stuff
             DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,8280);
-        }
-    }
-
-    //*** HANDLED FUNCTION *** 
-    //Move in line of sight is called whenever any unit moves within our sight radius (something like 50 yards)
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-                    DoStartMeleeAttack(who);
-
-                //Say some stuff
-                DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,8280);
-            }
-        }
     }
 
     //*** HANDLED FUNCTION *** 

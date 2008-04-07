@@ -36,13 +36,11 @@ struct MANGOS_DLL_DECL SimpleAI : public ScriptedAI
 
     void Reset();
 
-    void AttackStart(Unit *who);
+    void Aggro(Unit *who);
 
     void KilledUnit(Unit *victim);
 
     void DamageTaken(Unit *killer, uint32 &damage);
-
-    void MoveInLineOfSight(Unit *who);
 
     void UpdateAI(const uint32 diff);
 

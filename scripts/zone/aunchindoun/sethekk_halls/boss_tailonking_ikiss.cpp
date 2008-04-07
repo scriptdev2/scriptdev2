@@ -74,11 +74,6 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         arcanevolley_timer = 5000; 
         sheep_timer = 7000;
         blink_timer = 1000;
@@ -118,17 +113,9 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature && !wait)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
+       
                 switch(rand()%3)
                 {
                     case 0:
@@ -147,9 +134,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                         break;
                 }
                 manashild_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
-                InCombat = true;
-            }
-        }
+                
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -166,28 +151,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
                 DoStartMeleeAttack(who);
 
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                        case 0:
-                            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                            break;
-
-                        case 1:
-                            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                            break;
-
-                        case 2:
-                            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                            break;
-                    }
-                    InCombat = true;
-                    manashild_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
-                }
+                Aggro(who);
             }else
             {
                 if(!intro)

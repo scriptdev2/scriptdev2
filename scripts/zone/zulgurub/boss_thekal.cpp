@@ -103,22 +103,10 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             pInstance->SetData(DATA_THEKAL_ALIVE, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-            //Say our dialog on initial aggro
-      if (!InCombat)
-            {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                InCombat = true;
-            }
-        }
     }
     
     void JustDied(Unit* Killer)
@@ -128,32 +116,6 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
             pInstance->SetData(DATA_THEKAL_DEATH, 0);
-    }
-    
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                      //Say our dialog on initial aggro
-                if (!InCombat)
-                {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                InCombat = true;
-                }
-
-            }
-        }
     }
 
      void UpdateAI(const uint32 diff)
@@ -331,50 +293,13 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             pInstance->SetData(DATA_LORKHAN_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        
-        
-            
-        
-         
-        
-        
-        
-        
-        
-        
-        
-        
-        
+ 
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
  
     void UpdateAI (const uint32 diff)
     {
@@ -520,51 +445,12 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             pInstance->SetData(DATA_ZATH_ALIVE, 0);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0); 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        
-        
-            
-           
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
  
     void UpdateAI (const uint32 diff)
     {

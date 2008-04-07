@@ -244,16 +244,8 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         DespawnTimer = 60000;
     }
    
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who || IsWayPoint || (who->GetTypeId() == TYPEID_PLAYER))
-            return;
-        
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who){ return; }
@@ -304,7 +296,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
     void Reset();
     void BeginEvent(Player *player);
-    void AttackStart(Unit *who);
+    void Aggro(Unit *who);
     void DamageTaken(Unit *done_by, uint32 &damage);
     void DeleteFromThreatList();
     void UpdateAI(const uint32 diff);
@@ -458,22 +450,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         TalkTimer = 0;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who || IsTalking || Phase == 2 || Phase == 4 || Phase == 6 || m_creature->HasAura(SPELL_KNEEL, 0))
-            return;
-        
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                Reset();
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -1378,20 +1356,8 @@ void npc_akama_illidanAI::BeginEvent(Player *player)
     }
 }
 
-void npc_akama_illidanAI::AttackStart(Unit *who)
+void npc_akama_illidanAI::Aggro(Unit *who)
 {
-    if((!who) || IsTalking)
-        return;
-
-    if(who->isTargetableForAttack() && who!= m_creature)
-    {
-        DoStartMeleeAttack(who);
-
-        if(!InCombat)
-        {
-            InCombat = true;
-        }
-    }
 }
 
 void npc_akama_illidanAI::DamageTaken(Unit *done_by, uint32 &damage)
@@ -1521,20 +1487,8 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
         IllidanGUID = 0;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-        }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -1627,7 +1581,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15882);
     }
    
-    void AttackStart(Unit *who){ return; }
+    void Aggro(Unit *who){}
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -1691,20 +1645,8 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
         InCombat = false;
     }
     
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-        }
     }
     
     void MoveInLineOfSight(Unit *who)
@@ -1800,20 +1742,8 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-        }
     }
     
     void MoveInLineOfSight(Unit *who)
@@ -1879,7 +1809,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
         DespawnTimer = 60000;
     }
    
-    void AttackStart(Unit *who){ return; }
+    void Aggro(Unit *who){ return; }
 
     void MoveInLineOfSight(Unit *who){ return; }
 
@@ -1912,7 +1842,7 @@ struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
         DespawnTimer = 15000;
     }
 
-    void AttackStart(Unit *who){ return; }
+    void Aggro(Unit *who){ return; }
 
     void MoveInLineOfSight(Unit *who){ return; }
 
@@ -1944,7 +1874,7 @@ struct MANGOS_DLL_DECL blade_of_azzinothAI : public ScriptedAI
     }
 
     // Do-Nothing-But-Stand-There.
-    void AttackStart(Unit* who) { return; }
+    void Aggro(Unit* who) { return; }
     void MoveInLineOfSight(Unit* who) { return; }
 };
 

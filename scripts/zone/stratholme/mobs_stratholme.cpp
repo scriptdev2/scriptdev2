@@ -42,10 +42,6 @@ struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         switch (rand()%4)
         {
@@ -62,6 +58,10 @@ struct MANGOS_DLL_DECL mob_freed_soulAI : public ScriptedAI
             DoSay(SAY_ZAPPED3,LANG_UNIVERSAL,NULL);
             break;
         }
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 };
 CreatureAI* GetAI_mob_freed_soul(Creature *_Creature)
@@ -85,12 +85,11 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
         Die_Timer = 10000;
         OkToDie = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         PlayerHolder = NULL;
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void SummonFreedSoul(Unit* victim)
@@ -174,13 +173,11 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
     {
         Die_Timer = 5000;
         OkToDie = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         PlayerHolder = NULL;
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void SummonRestlessSoul(Unit* victim)

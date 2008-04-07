@@ -84,18 +84,8 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_SLAY);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%3)
                 {
                 case 0:
@@ -113,9 +103,6 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                     break;
                 }
-                InCombat = true;
-            }
-        }
     }
 
     //Extended Visbility range for taunts

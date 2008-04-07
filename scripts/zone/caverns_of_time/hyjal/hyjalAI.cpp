@@ -62,42 +62,9 @@ void hyjalAI::EnterEvadeMode()
     DoGoHome();
 }
 
-void hyjalAI::AttackStart(Unit *who)
+void hyjalAI::Aggro(Unit *who)
 {        
-    if(!who)
-        return;
-
-    if(who->isTargetableForAttack() && who!= m_creature)
-    {
-        DoStartMeleeAttack(who);
-
-        if(!InCombat)
-        {
-            Talk(ATTACKED);
-            InCombat = true;
-        }
-    }
-}
-
-void hyjalAI::MoveInLineOfSight(Unit *who)
-{
-    if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-    {
-        float attackRadius = m_creature->GetAttackDistance(who);
-        if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-        {
-            if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-            if(who && who->isAlive())
-                m_creature->AddThreat(who, 1.0f);
-
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-        }
-    }
+    Talk(ATTACKED);
 }
 
 void hyjalAI::JustDied(Unit* killer)

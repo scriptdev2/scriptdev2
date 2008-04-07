@@ -136,17 +136,8 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         Enraged = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
                 if(pInstance)
                     pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
 
@@ -154,8 +145,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -123,6 +123,10 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         ReliquaryGUID = 0;
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if(damage >= m_creature->GetHealth())
@@ -175,7 +179,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 0);
+        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 0);
 
         SufferingGUID = 0;
         DesireGUID = 0;
@@ -199,9 +203,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         m_creature->GetMotionMaster()->Clear(false);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return;
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -212,15 +215,15 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
+                m_creature->AddThreat(who, 1.0f);
 
                 if(!InCombat)
                 {
                     if(pInstance)
-                        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
+                    pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
 
                     Phase = 1;
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
@@ -275,10 +278,10 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if(!Phase)
-            return;
+        return;
 
         if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Reset if event is begun and we don't have a threatlist
-            EnterEvadeMode();
+        EnterEvadeMode();
 
         if(Phase == 1)
         {
@@ -320,7 +323,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceSuffering = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
 
                 if(!EssenceSuffering || (!EssenceSuffering->isAlive()))
-                    EnterEvadeMode();
+                EnterEvadeMode();
 
                 if(!EndingPhase)
                 {
@@ -424,7 +427,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceDesire = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
 
                 if(!EssenceDesire || !EssenceDesire->isAlive())
-                    EnterEvadeMode();
+                EnterEvadeMode();
 
                 if(!EndingPhase && EssenceDesire)
                 {
@@ -527,7 +530,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceAnger = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
 
                 if(!EssenceAnger)
-                    EnterEvadeMode();
+                EnterEvadeMode();
 
                 if(m_creature->isAlive() && EssenceAnger)
                 {
@@ -588,83 +591,36 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
                 if(pUnit)
-                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!StatAuraGUID || (StatAuraGUID != who->GetGUID()))
-            {
-                if(StatAuraGUID)
-                {
-                    Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
-                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
-                }
-                StatAuraGUID = who->GetGUID();
-                who->CastSpell(who, AURA_OF_SUFFERING_ARMOR, true, 0, 0, m_creature->GetGUID());
-            }
-
-            if (!InCombat)
-            {
-                Reset();
-                DoCast(who, AURA_OF_SUFFERING, true);
-                DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    DoCast(who, AURA_OF_SUFFERING, true);
-                    DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE);
-                    InCombat = true;
-                }
-            }
-        }
+        Reset();
+        DoCast(who, AURA_OF_SUFFERING, true);
+        DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
+        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
-                break;
-            case 2:
-                DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
-                break;
+        case 0:
+            DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
+            break;
+        case 2:
+            DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
+            break;
         }
     }
 
@@ -677,17 +633,17 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
-            return; // No point continuing if empty threatlist.
+        return; // No point continuing if empty threatlist.
         std::list<Unit*> targets;
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
         for( ; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER)) // Only alive players
-                targets.push_back(pUnit);
+            targets.push_back(pUnit);
         }
         if(targets.empty())
-            return; // No targets added for some reason. No point continuing.
+        return; // No targets added for some reason. No point continuing.
         targets.sort(TargetDistanceOrder(m_creature)); // Sort players by distance.
         targets.resize(1); // Only need closest target.
         Unit* target = targets.front(); // Get the first target.
@@ -699,7 +655,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+        return;
 
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
@@ -708,25 +664,25 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
                 Unit* pUnit = NULL;
                 pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
                 if(pUnit)
-                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
 
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
             if(m_creature->getVictim())
-                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+            m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
             return;
         }
 
         // Prevent overlapping yells
         if(AggroYellTimer)
-            if(AggroYellTimer < diff)
-            {
-                DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
-                AggroYellTimer = 0;
-            }else AggroYellTimer -= diff;
+        if(AggroYellTimer < diff)
+        {
+            DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
+            AggroYellTimer = 0;
+        }else AggroYellTimer -= diff;
 
         //Supposed to be cast on nearest target
         if(FixateTimer < diff)
@@ -747,7 +703,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if(target)
-                DoCast(target, SPELL_SOUL_DRAIN);
+            DoCast(target, SPELL_SOUL_DRAIN);
             SoulDrainTimer = 60000;
         }else SoulDrainTimer -= diff;
 
@@ -788,47 +744,33 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                Reset();
-                DoCast(who, AURA_OF_DESIRE);
-                InCombat = true;
-            }
-        }
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(DESI_SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(DESI_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY2);
-                break;
-            case 2:
-                DoYell(DESI_SAY_SLAY3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY3);
-                break;
+        case 0:
+            DoYell(DESI_SAY_SLAY1,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(DESI_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY2);
+            break;
+        case 2:
+            DoYell(DESI_SAY_SLAY3,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY3);
+            break;
         }
     }
 
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
-            return;
+        return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -836,7 +778,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
@@ -859,12 +801,12 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+        return;
         
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
             if(m_creature->getVictim())
-                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+            m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
             return;
         }
 
@@ -923,28 +865,15 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                Reset();
-                DoCast(m_creature->getVictim(), AURA_OF_ANGER);
-                InCombat = true;
-            }
-        }
+        DoCast(m_creature->getVictim(), AURA_OF_ANGER);
     }
 
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
-            return;
+        return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -952,7 +881,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
@@ -977,13 +906,13 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
-                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
-                break;
+        case 0:
+            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
+            break;
         }
     }
 
@@ -992,7 +921,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+        return;
 
         if(!CheckedAggro)
         {
@@ -1001,12 +930,12 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         }
 
         if(AggroYellTimer)
-            if(AggroYellTimer < diff)
-            {
-                DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
-                AggroYellTimer = 0;
-            }else AggroYellTimer -= diff;
+        if(AggroYellTimer < diff)
+        {
+            DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
+            AggroYellTimer = 0;
+        }else AggroYellTimer -= diff;
 
         if(CheckTankTimer < diff)
         {
@@ -1035,7 +964,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                 if(target)
-                    DoCast(target, SPELL_SPITE);
+                DoCast(target, SPELL_SPITE);
 
             }
 
@@ -1054,7 +983,7 @@ void npc_enslaved_soulAI::JustDied(Unit *killer)
     {
         Creature* Reliquary = ((Creature*)Unit::GetUnit((*m_creature), ReliquaryGUID));
         if(Reliquary)
-            ((boss_reliquary_of_soulsAI*)Reliquary->AI())->SoulDeathCount++;
+        ((boss_reliquary_of_soulsAI*)Reliquary->AI())->SoulDeathCount++;
     }
 }
 

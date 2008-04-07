@@ -66,26 +66,10 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
         Consecration_Timer = 8000;
 
         InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     { 
-        if (!who)   
-            return;
-
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            //Boss Aggro Yells
-            if (!InCombat)
-            {
-                InCombat = true;
                 switch(rand()%2)
                 {
                 case 0:
@@ -97,8 +81,6 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
                     break;
                 }
-            }
-        }
     }
 
     void KilledUnit(Unit *victim)
@@ -120,39 +102,6 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    { 
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                if (!InCombat)
-                {
-                    InCombat = true;
-                    switch(rand()%2)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                        break;
-                    case 1:
-                        DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                        break;
-                    }
-                }
-            }
-        }        
     }
 
     void UpdateAI(const uint32 diff)

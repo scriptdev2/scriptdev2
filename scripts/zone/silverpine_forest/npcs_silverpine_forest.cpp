@@ -34,11 +34,11 @@ struct MANGOS_DLL_DECL npc_astor_hadrenAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->setFaction(68);
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void JustDied(Unit *who)

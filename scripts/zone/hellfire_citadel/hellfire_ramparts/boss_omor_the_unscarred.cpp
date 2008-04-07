@@ -109,17 +109,8 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_KILL_1);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%2)
                 {
                 case 0:
@@ -133,43 +124,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                     break;                    
                 }
                 InCombat = true;
-            }
-        }
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    switch(rand()%2)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break;
-                    }
-                    InCombat = true;
-                }
-            }
-        }
-    }  
 
     void UpdateAI(const uint32 diff)
     {

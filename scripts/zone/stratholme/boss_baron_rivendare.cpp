@@ -101,15 +101,8 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         m_creature->LoadCreaturesAddon();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
                 switch (rand()%6)
                 {
                 case 0:
@@ -131,25 +124,6 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
                     DoYell(SAY_5,LANG_UNIVERSAL,NULL);
                     break;
                 }
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

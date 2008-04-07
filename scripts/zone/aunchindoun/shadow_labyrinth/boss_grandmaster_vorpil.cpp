@@ -71,11 +71,6 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         InCombat = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         if(pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 0);
     }
@@ -131,18 +126,10 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 1);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            if(!InCombat)
+      
                 StartEvent();
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -159,8 +146,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-                if(!InCombat)
-                    StartEvent();
+
+                Aggro(who);
             }
         }
         else if (!Intro && m_creature->IsWithinDistInMap(who, 50)) //not sure about right radius

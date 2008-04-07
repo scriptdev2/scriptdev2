@@ -32,19 +32,8 @@ struct MANGOS_DLL_DECL npc_maur_grimtotemAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-//not start melee attack
-        }
     }
 };
 /*
@@ -76,20 +65,8 @@ struct MANGOS_DLL_DECL mob_searing_warlockAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)
@@ -183,20 +160,8 @@ struct MANGOS_DLL_DECL boss_bazzalanAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)

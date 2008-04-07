@@ -39,6 +39,10 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
     {
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void JustDied(Unit* Killer)
     {
         uint32 spawnCreatureID;
@@ -58,24 +62,6 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
 
         if(spawnCreatureID)
             DoSpawnCreature(spawnCreatureID,0,0,0,m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mob_webbed_creature(Creature *_Creature)

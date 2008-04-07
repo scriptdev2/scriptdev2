@@ -113,17 +113,8 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%3)
                 {
                 case 0:
@@ -141,10 +132,6 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
                     break;
                 }
-                InCombat = true;
-            }
-            
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -161,27 +148,7 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
                 DoStartMeleeAttack(who);
 
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break;
-
-                    case 2:
-                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;
-                    }
-                    InCombat = true;
-                }
+                Aggro(who);
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 150.0f))
             {
@@ -271,40 +238,14 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         Mortal_Strike_timer = 10000;
         InCombat = false;
      }
     
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
-
-
 
 
     void MoveInLineOfSight(Unit *who)

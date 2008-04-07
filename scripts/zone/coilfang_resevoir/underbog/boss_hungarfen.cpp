@@ -37,42 +37,11 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
     {
         Root = false;
         Mushroom_timer = 5000;     // 1 mushroom after 5s, then one per 10s.
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();       
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who != m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
-
 
     void UpdateAI(const uint32 diff)
     {
@@ -133,26 +102,10 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
         Scale = 0.1;           // start with small mushroomie
         Exploded = false;
         RootSelf = false;
+    }
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
-        // let's make mushrooms immune to CC effects to force 'em exploding &&frozen in place
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    void Aggro(Unit* who)
+    {
     }
 
     void UpdateAI(const uint32 diff) 

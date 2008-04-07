@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
 
     //Called if IsVisible(Unit *who) is true at each *who move
-    void MoveInLineOfSight(Unit *) {}
+    void MoveInLineOfSight(Unit *);
 
     //Called at each attack of m_creature by any victim
     void AttackStart(Unit *);
@@ -84,11 +84,18 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Pointer to creature we are manipulating
     Creature* m_creature;
 
+    //Bool for if we are in combat or not
+    bool InCombat;
+
     //*************
     //Pure virtual functions
     //*************
 
+    //Called at creature reset either by death or evade
     virtual void Reset() = 0;
+
+    //Called at creature aggro either by MoveInLOS or Attack Start
+    virtual void Aggro(Unit*) = 0;
 
     //*************
     //AI Helper Functions

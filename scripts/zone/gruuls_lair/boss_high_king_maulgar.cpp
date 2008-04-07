@@ -138,18 +138,9 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who || !pInstance)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            if(!InCombat)
                 StartEvent(who);
-        }
     }
 
     void GetCouncil()
@@ -174,27 +165,6 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
         pInstance->SetData(DATA_MAULGAREVENT, 1);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim() || !pInstance)
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-
-                if(!InCombat)
-                    StartEvent(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -302,55 +272,15 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            if(!InCombat)
-            {
-                InCombat = true;
                 if(pInstance)
                 {
                     pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
                     pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
-            }
-			DoStartMeleeAttack(who);
-        }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-
-                if(!InCombat)
-                {
-                    InCombat = true;
-                    DoStartMeleeAttack(who);
-                    if(pInstance)
-                    {
-                        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-                        pInstance->SetData(DATA_MAULGAREVENT, 1);
-                    }
-                }
-            }
-        }
-    }
 
     float DoCalculateRandomLocation()
     {
@@ -448,24 +378,13 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
                 if(pInstance)
                 {
                     pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
                     pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
-            }
-		    DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -585,25 +504,13 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            if(!InCombat)
-            {
-                InCombat = true;
                 if(pInstance)
                 {
                     pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
                     pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
-            }
-			DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -708,25 +615,13 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            if(!InCombat)
-            {
-                InCombat = true;
                 if(pInstance)
                 {
                     pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
                     pInstance->SetData(DATA_MAULGAREVENT, 1);
                 }
-            }
-			DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -32,9 +32,7 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
     void Reset();
 
-    void AttackStart(Unit *who);
-
-    void MoveInLineOfSight(Unit *who);
+    void Aggro(Unit *who);
 
     void UpdateAI(const uint32 diff);
 }; 

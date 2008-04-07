@@ -73,15 +73,9 @@ struct MANGOS_DLL_DECL mob_wailing_cavernsAI : public ScriptedAI
         DoGoHome();
     }
 
-	    void AttackStart(Unit *who)
+	    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {   
+        
                 if(m_creature->GetEntry() == 3840)
 				{
 				 DoCast(m_creature->getVictim(),SPELL_DRUIDBOLT);
@@ -89,11 +83,6 @@ struct MANGOS_DLL_DECL mob_wailing_cavernsAI : public ScriptedAI
 				 Rand = rand()%5000;
 				 Cast_Timer = Rand + 3000;
 				}
-
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)
@@ -369,19 +358,8 @@ struct MANGOS_DLL_DECL boss_mad_magglishAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)
@@ -459,21 +437,10 @@ struct MANGOS_DLL_DECL boss_lady_anacondraAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
                 DoPlaySoundToSet(m_creature,SOUND_AGGROLADY);
 				DoYell(SAY_AGGROLADY,LANG_UNIVERSAL,NULL);
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)
@@ -569,21 +536,10 @@ struct MANGOS_DLL_DECL boss_lord_cobrahnAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
                 DoPlaySoundToSet(m_creature,SOUND_AGGROCOBRAHN);
 				DoYell(SAY_AGGROCOBRAHN,LANG_UNIVERSAL,NULL);
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
     }
 
 	void MoveInLineOfSight(Unit *who)

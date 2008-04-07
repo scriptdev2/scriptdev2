@@ -67,6 +67,10 @@ struct MANGOS_DLL_DECL npc_invis_legion_teleporterAI : public ScriptedAI
         TeleTimer = 5000;
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || who->GetTypeId() != TYPEID_PLAYER)

@@ -40,54 +40,13 @@ void guardAI::Reset()
     //DoGoHome();
 }
 
-void guardAI::AttackStart(Unit *who)
+void guardAI::Aggro(Unit *who)
 {
-    if (!who)
-        return;
-
     //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
     if (who->GetTypeId() == TYPEID_PLAYER && !ZoneAttackMsgTimer)
     {
         m_creature->SendZoneUnderAttackMessage((Player*)who);
         ZoneAttackMsgTimer = 30000;
-    }
-
-    if (who->isTargetableForAttack() && who!= m_creature)
-    {
-        //Begin melee attack if we are within range
-        if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-            DoStartMeleeAttack(who);
-
-        InCombat = true;
-    }
-}
-
-void guardAI::MoveInLineOfSight(Unit *who)
-{
-    if (!who || m_creature->getVictim())
-        return;
-
-    if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && (m_creature->IsHostileTo(who) || who->IsHostileToPlayers()))
-    {
-        float attackRadius = m_creature->GetAttackDistance(who);
-        if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-        {
-            if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-            //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
-            if (who->GetTypeId() == TYPEID_PLAYER && !ZoneAttackMsgTimer)
-            {
-                m_creature->SendZoneUnderAttackMessage((Player*)who);
-                ZoneAttackMsgTimer = 30000;
-            }
-
-            //Begin melee attack if we are within range
-            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-                DoStartMeleeAttack(who);
-
-            InCombat = true;
-        }
     }
 }
 

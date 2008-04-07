@@ -34,12 +34,12 @@ struct MANGOS_DLL_DECL npc_deserter_agitatorAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         m_creature->setFaction(894);
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 };
 
@@ -216,6 +216,10 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
     void PatientDied(Unit* soldier);
     void PatientSaved(Unit* soldier, Player* player);
     void UpdateAI(const uint32 diff);
+
+    void Aggro(Unit* who)
+    {
+    }
 };
 
 /*#####
@@ -230,10 +234,6 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         Doctorguid = 0;
 
@@ -258,6 +258,10 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
                 m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.25));  //lower max health
                 break;
         }
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)

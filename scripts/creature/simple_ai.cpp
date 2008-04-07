@@ -68,27 +68,10 @@ SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
 void SimpleAI::Reset()
 {
     InCombat = false;
-
-    //m_creature->RemoveAllAuras();
-    //m_creature->DeleteThreatList();
-    //m_creature->CombatStop();
-    //DoGoHome();
 }
 
-void SimpleAI::AttackStart(Unit *who)
+void SimpleAI::Aggro(Unit *who)
 {
-    if (!who)
-        return;
-
-    if (who->isTargetableForAttack() && who!= m_creature)
-    {
-        //Begin melee attack if we are within range
-        DoStartMeleeAttack(who);
-
-        //Say our dialog
-        if (!InCombat)
-        {
-
             //Reset cast timers
             if (Spell[0].First_Cast >= 0)
                 Spell_Timer[0] = Spell[0].First_Cast;
@@ -132,38 +115,6 @@ void SimpleAI::AttackStart(Unit *who)
             //Random sound
             if (Aggro_Sound[random_text])
                 DoPlaySoundToSet(m_creature, Aggro_Sound[random_text]);
-
-            InCombat = true;
-        }
-    }
-}
-
-void SimpleAI::MoveInLineOfSight(Unit *who)
-{
-    if (!who || InCombat)
-        return;
-
-    //In combat so check if this creature is friendly
-    //And add it to the heal list
-    if (m_creature->getVictim())
-    {
-        //Heal code NYI
-    }
-
-    else
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                AttackStart(who);
-            }
-        }
 }
 
 void SimpleAI::KilledUnit(Unit *victim)

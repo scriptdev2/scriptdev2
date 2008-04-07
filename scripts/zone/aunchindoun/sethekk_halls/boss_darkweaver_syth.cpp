@@ -82,11 +82,6 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         flameshock_timer = 2000;
         arcaneshock_timer = 3000;
         frostshock_timer = 4000;
@@ -124,17 +119,9 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%3)
                 {
                 case 0:
@@ -152,48 +139,7 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
                     break;
                 }
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    switch(rand()%3)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break;
-
-                    case 2:
-                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;
-                    }
-                    InCombat = true;
-                }
-            }
-        }
+                
     }
 
     float DoCalculateRandomLocation()
@@ -359,15 +305,9 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
         flamebuffet_timer = 5000;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -448,15 +388,9 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
         arcanebuffet_timer = 5000;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
+        
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -537,15 +471,9 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
         frostbuffet_timer = 5000;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
+       
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -626,15 +554,9 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
         shadowbuffet_timer = 5000;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
+        
     }
 
     void MoveInLineOfSight(Unit *who)

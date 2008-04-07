@@ -63,25 +63,10 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         Enrage_Timer = 60000;
         InCombat = false;
         HasTaunted = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-            //Say our dialog on initial aggro
-            if (!InCombat)
-            {
                 switch (rand()%4)
                 {
                 case 0:
@@ -101,9 +86,6 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
                     break;
                 }
-                InCombat = true;
-            }
-        }
     }
 
     //Extended Visbility range for taunts

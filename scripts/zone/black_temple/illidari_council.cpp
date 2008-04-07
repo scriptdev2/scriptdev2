@@ -165,31 +165,12 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return;
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {       
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(!InCombat)
-                {
-                    if(pInstance)
+       if(pInstance)
                         pInstance->SetData(DATA_ILLIDARICOUNCIL, 1);
 
                     StartEvent(who);
-                    InCombat = true;
-                }
-            }
-        }
     }
 
     void StartEvent(Unit *target)
@@ -328,23 +309,12 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
                 Reset();
                 DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
                 InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -564,22 +534,10 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
                 Reset();
                 AggroYellTimer = 9000;
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -771,21 +729,8 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                Reset();
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -968,23 +913,11 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
-                Reset();
                 DoYell(SAY_VERA_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_VERA_AGGRO);
                 InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

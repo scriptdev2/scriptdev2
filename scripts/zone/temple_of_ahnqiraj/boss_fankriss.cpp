@@ -79,35 +79,8 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
             ((CreatureAI*)Spawn->AI())->AttackStart(victim);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-                DoStartMeleeAttack(who);
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && IsVisible(who) && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

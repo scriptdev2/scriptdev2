@@ -81,10 +81,10 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         Attumen = 0;
         Mount_Timer = 0;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void KilledUnit(Unit *victim)
@@ -222,11 +222,10 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         InCombat = false;
 
         ResetTimer = 2000;
+    }
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+    void Aggro(Unit* who)
+    {
     }
 
     void KilledUnit(Unit *victim)

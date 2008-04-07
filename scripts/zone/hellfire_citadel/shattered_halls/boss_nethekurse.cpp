@@ -109,17 +109,8 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%3)
                 {
                 case 0:
@@ -140,9 +131,6 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
                     break;                    
                 }
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -265,6 +253,10 @@ struct MANGOS_DLL_DECL mob_shadowfissureAI : public ScriptedAI
     {   
         start = false;
         stop_timer = 26000;
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void UpdateAI(const uint32 diff)

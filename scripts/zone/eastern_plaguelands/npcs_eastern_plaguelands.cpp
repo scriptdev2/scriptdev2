@@ -35,15 +35,10 @@ struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
     
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return;
     }
 
     void MoveInLineOfSight(Unit *who)

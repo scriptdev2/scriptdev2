@@ -45,9 +45,8 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
         spellHit = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return; //ignore all attackstart commands
     }
 
     void MoveInLineOfSight(Unit *who)

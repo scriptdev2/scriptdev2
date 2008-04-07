@@ -89,16 +89,9 @@ struct MANGOS_DLL_DECL mob_deadminesAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-				/* Defias Wizard */ 
 				if(m_creature->GetEntry() == 4418)
 				   {
 				      //Cast Shield when aggro
@@ -114,33 +107,6 @@ struct MANGOS_DLL_DECL mob_deadminesAI : public ScriptedAI
 					  DoPlaySoundToSet(m_creature,SOUND_COMPANION);
 			       }
 
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
-    }
-
-	void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-				/* Defias Blackguard */
-			    if (who->IsWithinLOSInMap(m_creature) && InCombat)
-                  if(m_creature->HasStealthAura())
-                     m_creature->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
 	void Summon(Unit* victim)
@@ -271,39 +237,10 @@ struct MANGOS_DLL_DECL boss_brainwashed_nobleAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-            DoStartMeleeAttack(who);
-        }
     }
 
-	void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-				
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget())
@@ -369,42 +306,12 @@ struct MANGOS_DLL_DECL boss_rhahkzorAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Say our dialog
-            if(!InCombat)
-            {
                 DoYell(SAY_AGGRORHAHKZOR,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRORHAHKZOR); 
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
     }
 
-	void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 
 	void SummonTaskmaster(Unit* victim)
      {
@@ -471,39 +378,10 @@ struct MANGOS_DLL_DECL boss_sneed_shredderAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            if(!InCombat)
-            {
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
     }
 
-	void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 
 	  void SummonSneed(Unit* victim)
     {
@@ -599,45 +477,10 @@ struct MANGOS_DLL_DECL boss_mrsmiteAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-		if (Chest)
-			return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Say our dialog
-            if(!InCombat)
-            {
                 DoYell(SAY_AGGROSMITE,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGROSMITE); 
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
-    }
-
-	void MoveInLineOfSight(Unit *who)
-    {    
-		if (Chest)
-			return;
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
-				DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -732,42 +575,12 @@ struct MANGOS_DLL_DECL boss_edwin_vancleefAI : public ScriptedAI
         DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Say our dialog
-            if(!InCombat)
-            {
                 DoYell(SAY_AGGROVANCLEEF,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGROVANCLEEF);
-                InCombat = true;
-            }
-
-            DoStartMeleeAttack(who);
-        }
     }
 
-	void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 	   void SummonAdds(Unit* victim)
     {
         Rand = rand()%3;

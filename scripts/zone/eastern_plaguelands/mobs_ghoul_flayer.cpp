@@ -35,10 +35,10 @@ struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void JustDied(Unit* Killer)
@@ -49,25 +49,6 @@ struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
             if( ((Player*)Killer)->GetQuestStatus(5211) == QUEST_STATUS_INCOMPLETE && !((Player*)Killer)->GetReqKillOrCastCurrentCount(5211, m_creature->GetEntry()) )
             {
                 SummonDarrowshireSpirit(m_creature->getVictim());
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
             }
         }
     }

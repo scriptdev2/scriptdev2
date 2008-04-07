@@ -246,42 +246,14 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             pInstance->SetData(DATA_LADYVASHJEVENT, 1);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
             //Begin melee attack if we are within range
             if(Phase != 2)
                 DoStartMeleeAttack(who);
 
             if(!InCombat)
                 StartEvent();
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(Phase != 2)
-                    DoStartMeleeAttack(who);
-
-                if(!InCombat)
-                    StartEvent();
-            }
-        }
     }
 
     void CastShootOrMultishot()
@@ -582,7 +554,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who) { return; }
+    void Aggro(Unit *who) { return; }
 
     void MoveInLineOfSight(Unit *who) { return; }
 
@@ -673,15 +645,8 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            m_creature->AddThreat(who, 0.1f);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -755,15 +720,8 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who && who != m_creature)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -892,7 +850,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void AttackStart(Unit *who) { return; }
+    void Aggro(Unit *who) { return; }
 
     void MoveInLineOfSight(Unit *who) { return; }
 

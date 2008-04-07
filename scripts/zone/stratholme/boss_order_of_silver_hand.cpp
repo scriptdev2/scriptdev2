@@ -83,6 +83,10 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
         }
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void JustDied(Unit* Killer)
     { 
         if(pInstance)
@@ -107,24 +111,6 @@ struct MANGOS_DLL_DECL boss_silver_hand_bossesAI : public ScriptedAI
             }
             if(pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
                 ((Player*)Killer)->KilledMonster(SH_QUEST_CREDIT,m_creature->GetGUID());
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-            }
         }
     }
 

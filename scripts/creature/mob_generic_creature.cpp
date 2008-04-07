@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
         //DoGoHome();
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
         if (!who)
             return;

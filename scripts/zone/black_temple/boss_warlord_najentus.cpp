@@ -115,9 +115,7 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who) { if(!InCombat) InCombat = true; }
-
-    void MoveInLineOfSight(Unit *who) { if(!InCombat) InCombat = true; }
+    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff) { if(InCombat) m_creature->SetInCombat(); }
 };
@@ -214,53 +212,14 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             damage = 0;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who || IsShielded)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 if(pInstance)
                     pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 Reset();
                 InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    if(pInstance)
-                        pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
-                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
-                }
-            }
-        }
     }
 
     // This is a workaround since we cannot summon GameObjects at will.

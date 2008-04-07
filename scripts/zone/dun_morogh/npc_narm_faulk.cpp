@@ -45,45 +45,13 @@ struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
         spellHit = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return; //ignore all attackstart commands
     }
 
     void MoveInLineOfSight(Unit *who)
     {
         return;
-        /*if(who && who->GetTypeId() == TYPEID_PLAYER)
-            if( ((Player*)who)->GetQuestStatus(1783) == QUEST_STATUS_INCOMPLETE && !((Player*)who)->GetReqKillOrCastCurrentCount(1783, m_creature->GetEntry()) )
-            {
-                UpdateData update_data;
-                WorldPacket packet;
-                
-                m_creature->BuildCreateUpdateBlockForPlayer(&update_data, ((Player*)who));
-                
-                ByteBuffer buf(500);
-                buf << UPDATETYPE_CREATE_OBJECT;
-                
-                buf << (uint8)0xFF << m_creature->GetGUID();
-                buf << m_creature->m_objectTypeId;
-
-                m_creature->_BuildMovementUpdate(&buf, m_creature->m_updateFlag, 0);
-
-                UpdateMask updateMask;
-                updateMask.SetCount( m_creature->m_valuesCount );
-                for( uint16 index = 0; index < m_creature->m_valuesCount; index++ )
-                {
-                    if(index == 152)
-                    if(GetUInt32Value(index) != 0)
-                        updateMask->SetBit(index);
-                }
-                m_creature->_SetCreateBits( &updateMask, target );
-                _BuildValuesUpdate( &buf, &updateMask, target );
-                data->AddUpdateBlock(buf);
-
-                update_data.BuildPacket(&packet);
-                ((Player*)who)->GetSession()->SendPacket(&packet);
-            }*/
     }
 
     void UpdateAI(const uint32 diff)

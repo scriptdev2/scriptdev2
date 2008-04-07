@@ -36,29 +36,14 @@ struct MANGOS_DLL_DECL mobs_gordunni_ogreAI : public ScriptedAI
     {
     }
 
+    void Aggro(Unit* who)
+    {
+    }
+
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
             ((Player*)Killer)->KilledMonster(23450, m_creature->GetGUID());
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mobs_gordunni_ogre(Creature *_Creature)
@@ -96,36 +81,10 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 };
 CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
 {
@@ -162,35 +121,8 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
@@ -266,13 +198,11 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
             }
         }
     }
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        return;
     }
     void MoveInLineOfSight(Unit *who)
     {
-        return;
     }
 };
 CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)

@@ -77,17 +77,8 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 switch(rand()%2)
                 {
                 case 0:
@@ -100,9 +91,6 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                     break;                    
                 }
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

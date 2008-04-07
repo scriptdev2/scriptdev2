@@ -116,19 +116,9 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
-                InCombat = true;
                 switch (rand()%3)
                 {
                 case 0:
@@ -148,51 +138,6 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
                 }
 
                 DoCast(who,SPELL_SHADOWFLAME_INITIAL);
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    InCombat = true;
-                    switch (rand()%3)
-                    {
-                    case 0:
-                        DoYell(SAY_XHEALTH,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_XHEALTH);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                        break;
-
-                    case 2:
-                        DoYell(SAY_SHADOWFLAME,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_SHADOWFLAME);
-                        break;
-                    }
-
-                    DoCast(who,SPELL_SHADOWFLAME_INITIAL);
-                }
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

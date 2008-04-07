@@ -66,45 +66,13 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         Icebolt_Count = 0;
         landoff = false;
         
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         //m_creature->ApplySpellMod(SPELL_FROST_AURA, SPELLMOD_DURATION, -1);
     }
     
-    void AttackStart(Unit *who)
-    {
-        if (!who)
-            return;
-            
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }        
+    void Aggro(Unit *who)
+    {    
     }
-    
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                InCombat = true;
-
-            }
-        }
-    }
-    
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget())

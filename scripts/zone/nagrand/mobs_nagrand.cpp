@@ -72,10 +72,10 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
     void Reset()
     {
         Spawn = false;
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+    }
+
+    void Aggro(Unit* who)
+    {
     }
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
@@ -94,25 +94,6 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
         }
         return;
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
-    }
 };
 CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 {
@@ -128,6 +109,10 @@ struct MANGOS_DLL_DECL mobs_kilsorrow_agentAI : public ScriptedAI
     mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset()
+    {
+    }
+
+    void Aggro(Unit* who)
     {
     }
 
@@ -225,18 +210,8 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-
-            if (!InCombat)
-            {
                 if (m_creature->HasAura(SPELL_VISUAL_SLEEP,0))
                     m_creature->RemoveAura(SPELL_VISUAL_SLEEP,0);
 
@@ -252,28 +227,6 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                     DoSay(LUMP_SAY1,LANG_UNIVERSAL,NULL);
                     break;
                 }
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

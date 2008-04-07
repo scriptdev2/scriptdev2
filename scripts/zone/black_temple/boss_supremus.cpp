@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     uint32 CheckTimer;
 
     void Reset();
-    void AttackStart(Unit *who);
+    void Aggro(Unit *who);
     void MoveInLineOfSight(Unit *who);
     void UpdateAI(const uint32 diff);
     void SetSupremusGUID(uint64 GUID);
@@ -61,15 +61,8 @@ void molten_flameAI::Reset()
     CheckTimer = 1000;
 }
 
-void molten_flameAI::AttackStart(Unit *who)
+void molten_flameAI::Aggro(Unit *who)
 {
-    if(!who)
-        return;
-
-    if(who->isTargetableForAttack() && who!= m_creature)
-    {
-        DoStartMeleeAttack(who);
-    }
 }
 
 void molten_flameAI::MoveInLineOfSight(Unit *who)
@@ -133,7 +126,7 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
     uint32 GeyserTimer;
 
     void Reset();
-    void AttackStart(Unit *who) {return;}
+    void Aggro(Unit *who) {return;}
     void MoveInLineOfSight(Unit *who) {return;}
     void UpdateAI(const uint32 diff);
     void SetSupremusGUID(uint64 guid);
@@ -240,23 +233,11 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         InCombat = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who)
-            return;
 
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-
-            if(!InCombat)
-            {
                 if(pInstance)
                     pInstance->SetData(DATA_SUPREMUSEVENT, 1);
-                Reset();
-                InCombat = true;
-            }
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

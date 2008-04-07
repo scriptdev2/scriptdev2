@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit *who) { return; }
+    void Aggro(Unit *who) { return; }
 
     void UpdateAI(const uint32 diff)
     {
@@ -179,15 +179,8 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         CheckTeronTimer = 5000;
     }
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!who || (who->GetGUID() == GhostGUID))
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
     
     void MoveInLineOfSight(Unit *who)
@@ -304,15 +297,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         Intro = false;
     }
 
-    void AttackStart(Unit *who)
+    void Aggro(Unit *who)
     {
-        if(!who || !InCombat)
-            return;
-
-        if(who->isTargetableForAttack() && who!= m_creature)
-        {
-            DoStartMeleeAttack(who);
-        }
     }
 
     void MoveInLineOfSight(Unit *who)

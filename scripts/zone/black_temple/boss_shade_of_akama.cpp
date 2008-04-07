@@ -110,9 +110,8 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
     void JustDied(Unit* killer);
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!InCombat) InCombat = true;
     }
 
     void MoveInLineOfSight(Unit* who)
@@ -157,17 +156,8 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
     void JustDied(Unit* killer);
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!who) return;
-           
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
-            
-            if(!InCombat) InCombat = true;
-        }
     }
 
     void MoveInLineOfSight(Unit* who)
@@ -268,29 +258,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         DoCast(m_creature, SPELL_PASSIVE_SHADOWFORM);
     }
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!who || IsBanished)
-            return;
-        
-        if(who->isTargetableForAttack() && who != m_creature)
-                DoStartMeleeAttack(who);
-    }
-
-    void MoveInLineOfSight(Unit* who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-            }
-        }
     }
 
     void SummonCreature()
@@ -546,13 +515,8 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         HasYelledTwice = false;
     }
 
-    void AttackStart(Unit* who)
+    void Aggro(Unit* who)
     {
-        if(!who)
-            return;
-
-        if(who->isTargetableForAttack() && who!=m_creature)
-            DoStartMeleeAttack(who);
     }
 
     void MoveInLineOfSight(Unit* who)
