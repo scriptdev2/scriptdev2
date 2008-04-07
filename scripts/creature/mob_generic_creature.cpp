@@ -21,7 +21,7 @@ SDComment: Should be replaced with core based AI
 SDCategory: Creatures
 EndScriptData */
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 
 
 #define GENERIC_CREATURE_COOLDOWN   5000
@@ -180,9 +180,6 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                         IsSelfRooted = true;
                     }
 
-                    //Face target
-                    DoFaceTarget(m_creature->getVictim());
-
                     //Cast spell
                     if (Healing) DoCastSpell(m_creature,info);
                     else DoCastSpell(m_creature->getVictim(),info);
@@ -195,7 +192,7 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
                 else if (IsSelfRooted)
                 {
                     //Cancel our current spell and then allow movement agian
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     IsSelfRooted = false;
                 }
             }

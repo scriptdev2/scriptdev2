@@ -46,7 +46,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\shared\;..\..\..\framework\;..\..\..\..\dep\include\"
+				AdditionalIncludeDirectories="..\..\..\..\dep\include\;..\..\..\shared\;..\..\..\framework\;..\..\..\game\;..\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;MANGOS_DEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				AdditionalIncludeDirectories="..\..\..\shared\;..\..\..\framework\;..\..\..\..\dep\include\"
+				AdditionalIncludeDirectories="..\..\..\..\dep\include\;..\..\..\shared\;..\..\..\framework\;..\..\..\game\;..\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -214,7 +214,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\shared\;..\..\..\framework\;..\..\..\..\dep\include\"
+				AdditionalIncludeDirectories="..\..\..\..\dep\include\;..\..\..\shared\;..\..\..\framework\;..\..\..\game\;..\include\"
 				PreprocessorDefinitions="WIN32;_DEBUG;MANGOS_DEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -299,7 +299,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/MP"
-				AdditionalIncludeDirectories="..\..\..\shared\;..\..\..\framework\;..\..\..\..\dep\include\"
+				AdditionalIncludeDirectories="..\..\..\..\dep\include\;..\..\..\shared\;..\..\..\framework\;..\..\..\game\;..\include\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -361,14 +361,6 @@
 		<Filter
 			Name="Scripts"
 			>
-			<File
-				RelativePath="..\scripts\sc_defines.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\scripts\sc_defines.h"
-				>
-			</File>
 			<Filter
 				Name="boss"
 				>
@@ -2301,6 +2293,30 @@
 					</File>
 				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Include"
+			>
+			<File
+				RelativePath="..\include\sc_creature.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\include\sc_creature.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\sc_gossip.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\sc_instance.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\sc_item.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\config.h"

@@ -21,8 +21,8 @@ SDComment: For quest 9364
 SDCategory: Azshara
 EndScriptData */
  
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
 {

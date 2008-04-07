@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Missing adds and event is impossible without Mind Control
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 //Razuvious - NO TEXT sound only
 //8852 aggro01 - Hah hah, I'm just getting warmed up!

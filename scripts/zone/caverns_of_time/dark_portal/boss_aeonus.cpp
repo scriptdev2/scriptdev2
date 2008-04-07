@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAND_BREATH       31478
 #define TIME_STOP         31422

@@ -21,10 +21,8 @@ SDComment: npcs burning steppes, quest related.
 SDCategory: Burning Steppes
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_ragged_john

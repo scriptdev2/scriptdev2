@@ -20,11 +20,10 @@ SD%Complete: 60
 SDComment: In Development
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_magtheridons_lair.h"
-#include "../../../../../../game/Player.h"
-#include "../../../../../../game/Map.h"
-#include "../../../../../../game/GameObject.h"
+#include "sc_gossip.h"
+#include "GameObject.h"
 
 //Spells
 #define SPELL_QUAKE                 30571

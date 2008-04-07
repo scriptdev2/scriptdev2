@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Event to activate Emberseer NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_FIRENOVA                23462    
 #define SPELL_FLAMEBUFFET             23341               

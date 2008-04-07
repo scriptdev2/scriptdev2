@@ -1,5 +1,8 @@
 #ifndef DEF_SERPENT_SHRINE_H
 #define DEF_SERPENT_SHRINE_H
+
+#include "sc_instance.h"
+
 #define DATA_CANSTARTPHASE3 1
 #define DATA_CARIBDIS 2
 #define DATA_HYDROSSTHEUNSTABLEEVENT 3

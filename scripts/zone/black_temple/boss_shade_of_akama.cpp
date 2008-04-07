@@ -21,11 +21,10 @@ SDComment: Problems with Channelers/Sorcerers displaying channel visual. Ending 
 SDCategory: Black Temple
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "TargetedMovementGenerator.h"
+#include "sc_gossip.h"
 
 struct Location
 {
@@ -615,7 +614,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                 else
                 {
                     m_creature->InterruptNonMeleeSpells(false);
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     StartCombat = true;
                 }
             }

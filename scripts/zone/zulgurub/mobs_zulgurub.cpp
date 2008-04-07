@@ -20,7 +20,7 @@ SD%Complete: 60
 SDComment: more Trashes + Timers
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)

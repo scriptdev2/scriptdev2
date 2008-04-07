@@ -21,9 +21,8 @@ SDComment: Quest support: 8304.
 SDCategory: Silithus
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*###
 ## npcs_rutgar_and_frankal

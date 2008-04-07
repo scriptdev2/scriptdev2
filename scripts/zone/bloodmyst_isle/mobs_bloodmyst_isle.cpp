@@ -21,8 +21,8 @@ SDComment: Quest Support: 9670
 SDCategory: Bloodmyst Isle
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## mob_webbed_creature

@@ -20,7 +20,7 @@ SD%Complete: 0
 SDComment: Place Holder
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_molten_core.h"
 
 #define ID_LUCIFRON     12118

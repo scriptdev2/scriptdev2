@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SHADOW_BOLT_VOLLEY    39175
 #define SPELL_DEATH_COIL            33130
@@ -94,15 +94,10 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             if (target)
-            {
-                DoFaceTarget(target);
                 DoCast(target,SPELL_SHADOW_BOLT_VOLLEY);
-            }
             else
-            {
-                DoFaceTarget(m_creature->getVictim());
                 DoCast(m_creature->getVictim(),SPELL_SHADOW_BOLT_VOLLEY);
-            }
+
             Shadow_Timer = RandTime(60);
         }else Shadow_Timer -= diff;
 
@@ -112,15 +107,10 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
 
             if (target)
-            {
-                DoFaceTarget(target);
                 DoCast(target,SPELL_DEATH_COIL);
-            }
             else
-            {
-                DoFaceTarget(m_creature->getVictim());
                 DoCast(m_creature->getVictim(),SPELL_DEATH_COIL);
-            }
+
             Death_Timer = RandTime(60);
         }else Death_Timer -= diff;
 
@@ -130,15 +120,10 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             if (target)
-            {
-                DoFaceTarget(target);
                 DoCast(target,SPELL_RAIN_OF_FIRE);
-            }
             else
-            {
-                DoFaceTarget(m_creature->getVictim());
                 DoCast(m_creature->getVictim(),SPELL_RAIN_OF_FIRE);
-            }
+
             Rain_Timer = RandTime(60);
         }else Rain_Timer -= diff;
 

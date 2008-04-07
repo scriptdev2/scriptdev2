@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 //--------------------------------------
 //Spells
 #define SPELL_SUNDER_ARMOR          30901
@@ -126,7 +126,6 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         {
             if (!InCombat)
             {
-                DoFaceTarget(m_creature->getVictim());
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 InCombat = true;
@@ -148,7 +147,6 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
                 if (!InCombat)
                 {
-                    DoFaceTarget(m_creature->getVictim());
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     InCombat = true;

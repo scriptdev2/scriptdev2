@@ -21,9 +21,9 @@ SDComment: VERIFY SCRIPT
 SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_shadow_labyrinth.h"
-#include "../../../../../../game/GameObject.h"
+#include "GameObject.h"
 
 #define ENCOUNTERS 4
 

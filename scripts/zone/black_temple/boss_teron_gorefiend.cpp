@@ -14,9 +14,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "TargetedMovementGenerator.h"
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend

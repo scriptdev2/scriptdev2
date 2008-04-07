@@ -21,8 +21,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 #define SPELL_MORTAL_WOUND 28467
@@ -90,7 +89,6 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
         }
     }
 
@@ -165,7 +163,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                     {
                         case 0:  
                         DoCast(target, SPELL_ROOT);
-                        ((Player*)target)->TeleportTo(531,-8106.0142,1289.2900,-74.419533,5.112);
+                        DoTeleportPlayer(target, -8106.0142,1289.2900,-74.419533,5.112);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
@@ -178,7 +176,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                             break;
                         case 1:
                         DoCast(target, SPELL_ROOT);
-                        ((Player*)target)->TeleportTo(531,-7990.135354,1155.1907,-78.849319,2.608);
+                        DoTeleportPlayer(target, -7990.135354,1155.1907,-78.849319,2.608);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
@@ -191,7 +189,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                             break;
                         case 2:
                         DoCast(target, SPELL_ROOT);
-                        ((Player*)target)->TeleportTo(531,-8159.7753,1127.9064,-76.868660,0.675);
+                        DoTeleportPlayer(target,-8159.7753,1127.9064,-76.868660,0.675);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);

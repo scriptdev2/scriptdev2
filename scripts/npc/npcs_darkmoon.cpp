@@ -31,9 +31,8 @@ EndScriptData */
 #define SPELL_AGI       23736                               //agi
 #define SPELL_FORTUNE   23765                               //faire fortune
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 bool GossipHello_npc_sayge(Player *player, Creature *_Creature)
 {

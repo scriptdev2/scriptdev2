@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulaman.h"
 
 // Jan'alai
@@ -374,7 +374,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             {             
                 DoYell(SAY_BERSERK, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_BERSERK);
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 DoCast(m_creature,SPELL_ENRAGE);
                 enrage_timer = 600000;             
             }else enrage_timer -=diff;

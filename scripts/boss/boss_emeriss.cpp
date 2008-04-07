@@ -21,7 +21,7 @@ SDComment: Teleport function & Mark of Nature missing
 SDCategory: Bosses
 EndScriptData */
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 
 
 #define SPELL_SLEEP                24777            

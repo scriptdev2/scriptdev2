@@ -20,7 +20,7 @@ SD%Complete: 90
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_molten_core.h"
 
 

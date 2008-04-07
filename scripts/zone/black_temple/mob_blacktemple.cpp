@@ -21,7 +21,7 @@ SDComment: All trash mobs for BT
 SDCategory: Black Temple
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_blacktemple(Creature *_Creature)

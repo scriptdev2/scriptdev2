@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Mind Control buggy. Spawns splitting too. Check function missing.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_ARCANE_EXPLOSION      25679
@@ -87,19 +87,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 //      DoGoHome();
     }
     
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
-
     void KilledUnit(Unit* victim)
     {
         switch(rand()%3)
@@ -239,17 +226,17 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             {
                 case 0:  
                        m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
-                       ResetThreat();
+                       DoResetThreat();
                 break;
 
                 case 1:
                        m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
-                       ResetThreat();
+                       DoResetThreat();
                 break;
                 
                 case 2:
                        m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
-                       ResetThreat();
+                       DoResetThreat();
                 break;
            }
 
@@ -271,7 +258,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -289,7 +276,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -307,7 +294,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -338,7 +325,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -356,7 +343,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -374,7 +361,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -405,7 +392,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -423,7 +410,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
@@ -441,7 +428,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
                        m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
                        Invisible = true;
-                       ResetThreat();
+                       DoResetThreat();
 
                        Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);

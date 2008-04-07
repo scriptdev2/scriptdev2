@@ -21,10 +21,8 @@ SDComment: Quest support: 9756 (gossip items text needed).
 SDCategory: Bloodmyst Isle
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_captured_sunhawk_agent

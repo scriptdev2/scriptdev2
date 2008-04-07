@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_CORROSIVEACID      20667
 #define SPELL_FREEZE             18763
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             {
                 // summon Rend and Change model to normal Gyth
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9806);     //Gyth model
                 m_creature->SummonCreature(10429, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 900000);
                 SummonedRend = true;

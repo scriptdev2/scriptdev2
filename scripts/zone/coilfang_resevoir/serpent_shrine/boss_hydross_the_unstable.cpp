@@ -20,7 +20,7 @@ SD%Complete: 90
 SDComment: Needs some corrections to switch radius and location
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 
 #define SWITCH_RADIUS             15

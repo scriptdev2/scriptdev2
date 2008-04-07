@@ -20,7 +20,7 @@ SD%Complete: 95
 SDComment: Spells buggy. Bloodsiphon will always do dmg no poison cloud check.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 
@@ -122,20 +122,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
             }
         }
     }
-    
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
-  
+      
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -330,7 +317,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                   {
                        //Cast
                        DoCast(m_creature,SPELL_ASPECT_OF_ARLOKK);
-                       ResetThreat();
+                       DoResetThreat();
 
                        //28-32 seconds until we should cast this agian
                        AspectOfArlokk_Timer = 28000 + rand()%4000;

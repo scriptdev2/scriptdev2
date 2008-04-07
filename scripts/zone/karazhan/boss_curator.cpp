@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Evocation may cause client crash (Core related)
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_AGGRO           "The Menagerie is for guests only."
 #define SOUND_AGGRO         9183

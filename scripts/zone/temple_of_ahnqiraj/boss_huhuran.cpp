@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_FRENZY 26051
 #define SPELL_BERSERK 26068
@@ -170,14 +170,14 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         //FrenzyBack_Timer
         if (Frenzy && FrenzyBack_Timer < diff)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             Frenzy = false;
             FrenzyBack_Timer = 15000;
         }else FrenzyBack_Timer -= diff;
 
         if ( !Berserk && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 31 )
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoTextEmote("is going berserk", NULL);
             DoCast(m_creature, SPELL_BERSERK);
             Berserk = true;

@@ -20,7 +20,7 @@ SD%Complete: 90
 SDComment: Missing adds spawn at death
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 

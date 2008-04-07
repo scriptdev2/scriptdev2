@@ -20,9 +20,9 @@ SD%Complete: 25
 SDComment: Ground Slam seriously messed up due to core problem
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_gruuls_lair.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "TargetedMovementGenerator.h"
 
 #define SPELL_GROWTH              36300
 #define SPELL_CAVE_IN             36240

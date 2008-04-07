@@ -21,8 +21,7 @@ SDComment: Teleport not included, spell reflect not effecting dots (Core problem
 SDCategory: Azshara
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
 
 #define SPELL_MARKOFFROST        23182            
 #define SPELL_MANASTORM          21097
@@ -71,19 +70,6 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         }
     }
 
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -120,11 +106,11 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
                  Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                  if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                  {
-                 ((Player*)pUnit)->TeleportTo(1, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+5, pUnit->GetOrientation());
+                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+5, pUnit->GetOrientation());
                  }
              }
 
-             ResetThreat();
+             DoResetThreat();
              Teleport_Timer = 30000;
         }else Teleport_Timer -= diff;
 

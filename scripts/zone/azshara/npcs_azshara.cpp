@@ -21,10 +21,8 @@ SDComment: npcs azshara, mostly quest related. Unknown relation between quest 27
 SDCategory: Azshara
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_loramus_thalipedes

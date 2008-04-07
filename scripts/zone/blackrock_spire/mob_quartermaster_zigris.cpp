@@ -21,8 +21,7 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Creature.h"
+#include "sc_creature.h"
 
 #define SPELL_SHOOT                22907            
 #define SPELL_STUNBOMB            16497

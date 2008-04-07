@@ -21,9 +21,8 @@ SDComment: Short custom scripting example
 SDCategory: Custom
 EndScriptData */
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 // **** This script is designed as an example for others to build on ****
 // **** Please modify whatever you'd like to as this script is only for developement ****
@@ -133,7 +132,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
                 //Begin melee attack if we are within range
                 if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                     DoStartMeleeAttack(who);
-                else DoStartRangedAttack(who);
 
                 //Say some stuff
                 DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
@@ -199,8 +197,6 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
         //Spell 1 timer
         if (Spell_1_Timer < diff)
         {
-            DoFaceTarget(m_creature->getVictim());
-
             //Cast spell one on our current target.
             if (rand()%50 > 10)
                 DoCast(m_creature->getVictim(),SPELL_ONE_ALT);

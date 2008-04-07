@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Trash mobs
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_gruuls_lair(Creature *_Creature)

@@ -20,10 +20,7 @@ SD%Complete: 95
 SDComment: Parqual Fintallas questions/'answers' might have more to it, need more info
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_parqual_fintallas

@@ -20,7 +20,7 @@ SD%Complete: 75
 SDComment: Teleport NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 #define SPELL_ARCANEEXPLOSION           19712
@@ -66,19 +66,6 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
             InCombat = true;
         }
     }
-
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -164,7 +151,7 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
         m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,true,0);
         DoCast(target,SPELL_ARCANEEXPLOSION);
-        ResetThreat();
+        DoResetThreat();
 
             Blink_Timer = 45000;
         }else Blink_Timer -= diff;

@@ -21,9 +21,9 @@ SDComment: Instance Data for Sethekk Halls instance
 SDCategory: Sethekk Halls
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_sethekk_halls.h"
-#include "../../../../../../game/GameObject.h"
+#include "GameObject.h"
 
 #define IKISS_DOOR          177203 //udb spawn
 

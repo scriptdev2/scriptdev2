@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Missing connection to containers, making fight impossible
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_steam_vault.h"
 
 #define SPELL_SPELL_REFLECTION  23920
@@ -162,15 +162,10 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if (target)
-            {
-                DoFaceTarget(target);
                 DoCast(target,SPELL_IMPALE);
-            }
             else
-            {
-                DoFaceTarget(m_creature->getVictim());
                 DoCast(m_creature->getVictim(), SPELL_IMPALE);
-            }
+
             Impale_Timer = RandTime(40);
         }else Impale_Timer -= diff;
 

@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun / Sethekk Halls
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_sethekk_halls.h"
 
 #define SPELL_BLINK                 38194

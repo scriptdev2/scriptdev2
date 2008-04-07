@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Adds MC NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 

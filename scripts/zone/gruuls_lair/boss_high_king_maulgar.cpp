@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: Verify that the script is working properly
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_gruuls_lair.h"
 
 #define SOUND_AGGRO              11367
@@ -788,7 +788,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         //SpellShield_Timer
         if(SpellShield_Timer < diff)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_SPELLSHIELD);
             SpellShield_Timer = 50000;
         }else SpellShield_Timer -= diff;
@@ -796,7 +796,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         //BlastWave_Timer
         if(BlastWave_Timer < diff)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_BLAST_WAVE);
             BlastWave_Timer = 60000;
         }else BlastWave_Timer -= diff;

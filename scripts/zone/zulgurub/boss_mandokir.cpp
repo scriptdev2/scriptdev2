@@ -21,7 +21,7 @@ SDComment: Ohgan function needs improvements.
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
  
 #define SPELL_CHARGE        24315

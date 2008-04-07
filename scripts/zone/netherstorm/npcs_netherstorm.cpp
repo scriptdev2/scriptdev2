@@ -20,10 +20,8 @@ SD%Complete: 99
 SDComment: misc npcs netherstorm, true text missing for gossip items. Script Veronia disabled due to core limitation.
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_protectorate_nether_drake

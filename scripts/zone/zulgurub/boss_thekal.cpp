@@ -20,7 +20,7 @@ SD%Complete: 95
 SDComment: Almost finished.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_MORTALCLEAVE        22859
@@ -130,18 +130,6 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
             pInstance->SetData(DATA_THEKAL_DEATH, 0);
     }
     
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -246,7 +234,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                         m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 40)));
                         m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
                         m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                        ResetThreat();
+                        DoResetThreat();
                         PhaseTwo = true;
                     }else Resurrect_Timer -= diff;
                 }
@@ -270,7 +258,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     DoCast(target,SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoStartMeleeAttack(target);
-                    ResetThreat();
+                    DoResetThreat();
                     
                     Charge_Timer = 15000 + rand()%7000;
                 }else Charge_Timer -= diff;

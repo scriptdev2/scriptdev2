@@ -20,9 +20,8 @@ SD%Complete: 0
 SDComment: Place Holder
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
-
+#include "sc_creature.h"
+#include "TargetedMovementGenerator.h"
 
 //Spells
 #define SPELL_ICEBOLT                  28522
@@ -144,7 +143,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                 if(Fly_Timer < diff)
         {
                     phase = 2;
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                     (*m_creature).GetMotionMaster()->Clear(false);
                     (*m_creature).GetMotionMaster()->Idle();

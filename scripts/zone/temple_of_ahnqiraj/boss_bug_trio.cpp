@@ -21,7 +21,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_CLEAVE        26350
@@ -282,20 +282,6 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         VemDead = false;
     }
 
-  void ResetThreat()
-  {
-      std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-      if(m_threatlist.empty())
-          return;
-      std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-      for(; itr != m_threatlist.end(); ++itr)
-      {
-          Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-          if(pUnit)
-              m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-      }
-  }
-
     void JustDied(Unit* Killer)
     {
         if(pInstance)
@@ -355,7 +341,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
             if (Fear_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_FEAR);
-                ResetThreat();
+                DoResetThreat();
                 Fear_Timer = 20000;
             }else Fear_Timer -= diff;
 

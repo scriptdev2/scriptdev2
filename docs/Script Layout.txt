@@ -1,7 +1,8 @@
 --- Script Layout ---
 A quick explination of the layout I hope everyone will follow for scriptdev2.
 
---- Folders ---
+--- Sub Folders ---
+
 Area - Contains scripts used solely by area triggers
 
 Boss - Boss scripts for bosses that are not zone specific

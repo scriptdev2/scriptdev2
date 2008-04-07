@@ -20,8 +20,7 @@ SD%Complete: 80
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
 
 #define SPELL_WEBTRAP           28622   //Spell is normally used by the webtrap on the wall NOT by Maexxna
 #define SPELL_WEBSPRAY          29484
@@ -183,15 +182,15 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                 switch(i)
                 {
                 case 0:
-                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
+                    DoTeleportPlayer(target, LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
                     Wrap = DoSpawnCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                     break;
                 case 1:
-                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
+                    DoTeleportPlayer(target, LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
                     Wrap = DoSpawnCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                     break;
                 case 2:
-                    ((Player*)target)->TeleportTo(target->GetMapId(), LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
+                    DoTeleportPlayer(target, LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
                     Wrap = DoSpawnCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                     break;
                 }

@@ -20,10 +20,9 @@ SD%Complete: 100
 SDComment: trash mobs for strat
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_gossip.h"
 
 // **** This script is still under Developement ****
 

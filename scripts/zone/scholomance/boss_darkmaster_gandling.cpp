@@ -20,8 +20,7 @@ SD%Complete: 99
 SDComment: Doors missing in instance script.
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
 
 #define SPELL_ARCANEMISSILES           22272    
 #define SPELL_SHADOWSHIELD             22417    //Not right ID. But 12040 is wrong either.      
@@ -159,7 +158,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                     switch(rand()%6)
                     {
                         case 0:  
-                        ((Player*)target)->TeleportTo(289,250.0696,0.3921,84.8408,3.149);
+                        DoTeleportPlayer(target, 250.0696,0.3921,84.8408,3.149);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,254.2325,0.3417,84.8407,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -169,7 +168,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                         case 1:
-                        ((Player*)target)->TeleportTo(289,181.4220,-91.9481,84.8410,1.608);
+                        DoTeleportPlayer(target, 181.4220,-91.9481,84.8410,1.608);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,184.0519,-73.5649,84.8407,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -181,7 +180,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                         case 2:
-                        ((Player*)target)->TeleportTo(289,95.1547,-1.8173,85.2289,0.043);
+                        DoTeleportPlayer(target, 95.1547,-1.8173,85.2289,0.043);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,100.9404,-1.8016,85.2289,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -191,7 +190,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                         case 3:
-                        ((Player*)target)->TeleportTo(289,250.0696,0.3921,72.6722,3.149);
+                        DoTeleportPlayer(target, 250.0696,0.3921,72.6722,3.149);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,240.34481,0.7368,72.6722,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -201,7 +200,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                         case 4:
-                        ((Player*)target)->TeleportTo(289,181.4220,-91.9481,70.7734,1.608);
+                        DoTeleportPlayer(target, 181.4220,-91.9481,70.7734,1.608);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,184.0519,-73.5649,70.7734,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -213,7 +212,7 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);
                             break;
                         case 5:
-                        ((Player*)target)->TeleportTo(289,106.1541,-1.8994,75.3663,0.043);
+                        DoTeleportPlayer(target, 106.1541,-1.8994,75.3663,0.043);
                         m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Summoned = m_creature->SummonCreature(16119,115.3945,-1.5555,75.3663,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
                         ((CreatureAI*)Summoned->AI())->AttackStart(target);

@@ -21,10 +21,8 @@ SDComment: Regular mount vendors all over the world. Display gossip if player do
 SDCategory: NPCs
 EndScriptData */
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/QuestDef.h"
-#include "../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_mount_vendor

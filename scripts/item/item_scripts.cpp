@@ -31,13 +31,11 @@ EndScriptData */
 # 
 #####*/
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/Creature.h"
-#include "../../../../game/Unit.h"
-#include "../../../../game/SpellMgr.h"
-#include "../../../../game/Spell.h"
-#include "../../../../shared/WorldPacket.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "SpellMgr.h"
+#include "Spell.h"
+#include "WorldPacket.h"
 
 /*#####
 # item_area_52_special

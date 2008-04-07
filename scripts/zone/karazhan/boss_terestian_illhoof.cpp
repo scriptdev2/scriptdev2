@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: VERIFY AND CLEANUP SCRIPT
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SUMMON_DEMONCHAINS    30120 // Summons demonic chains that maintain the ritual of sacrifice.
 #define SPELL_DEMON_CHAINS          30206 // Instant - Visual Effect 
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
         if (Amplify_Timer < diff)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(),SPELL_AMPLIFY_FLAMES);
 
             Amplify_Timer = 20000;

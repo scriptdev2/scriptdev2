@@ -21,10 +21,8 @@ SDComment: Quest support: 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Inva
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_drake_dealer_hurlunk

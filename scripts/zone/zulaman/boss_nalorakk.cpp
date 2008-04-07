@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: Todo: Trash Waves
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 //TODO: Trash Waves
 

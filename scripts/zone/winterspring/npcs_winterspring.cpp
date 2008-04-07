@@ -21,10 +21,8 @@ SDComment: Quest support: 5126 (Loraxs' tale missing proper gossip items text). 
 SDCategory: Winterspring
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_lorax

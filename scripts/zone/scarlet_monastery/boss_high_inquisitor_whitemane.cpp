@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Missing connection with commander mograine
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 

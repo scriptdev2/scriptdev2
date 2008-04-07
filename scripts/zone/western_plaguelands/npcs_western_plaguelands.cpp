@@ -21,9 +21,8 @@ SDComment: To obtain Vitreous Focuser (could use more spesifics about gossip ite
 SDCategory: Western Plaguelands
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 bool GossipHello_npcs_dithers_and_arbington(Player *player, Creature *_Creature)
 {

@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Missing revive
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_DIVINESHIELD2         1020
 #define SPELL_CRUSADERSTRIKE5       35395

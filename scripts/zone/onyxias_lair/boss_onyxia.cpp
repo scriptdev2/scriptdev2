@@ -20,9 +20,9 @@ SD%Complete: 50
 SDComment: Phase 2 has many errors. Recommend Rewrite of entire script.
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../shared/WorldPacket.h"
+#include "sc_creature.h"
+#include "TargetedMovementGenerator.h"
+#include "WorldPacket.h"
 
 #define SPELL_WINGBUFFET 18500
 #define SPELL_FLAMEBREATH 18435
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         counter = 0;        
 
         //        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
         m_creature->SetHover(false);
         (*m_creature).GetMotionMaster()->Clear(false);
         //m_creature->RemoveAllAuras();
@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             if (movement_timer < diff)
             {
                 //Inturrupt whatever we are casting then move to random position
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 uint32 position = rand()%9;
 
                 switch (position)
@@ -325,7 +325,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if ( phase == 1 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 61)
         {
             phase = 2;
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
             (*m_creature).GetMotionMaster()->Clear(false);
             (*m_creature).GetMotionMaster()->Idle();
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if ( phase == 2 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 41)
         {
             phase = 3;
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             SpecialMove(-65.8444,-213.809,-85.2985,5000);
             m_creature->Relocate(-65,-213,-85,0);
             //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);

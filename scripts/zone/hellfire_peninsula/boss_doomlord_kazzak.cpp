@@ -20,7 +20,7 @@ SD%Complete: 70
 SDComment: Using incorrect spell for Mark of Kazzak
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SHADOWVOLLEY                32963            
 #define SPELL_CLEAVE           27794             //Not sure if right ID

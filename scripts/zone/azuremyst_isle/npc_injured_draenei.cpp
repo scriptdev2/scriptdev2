@@ -21,7 +21,7 @@ SDComment: Cosmetic only
 SDCategory: Azuremyst Isle
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
 {

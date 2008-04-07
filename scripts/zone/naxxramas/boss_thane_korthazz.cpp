@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 //All horsemen
 #define SPELL_SHIELDWALL           29061

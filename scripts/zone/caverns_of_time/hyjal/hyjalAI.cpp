@@ -217,7 +217,7 @@ void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
     for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
     {
         (*itr)->CastSpell((*itr), SPELL_TELEPORT_VISUAL, true);
-        (*itr)->TeleportTo(m_creature->GetMapId(), X,Y,Z,(*itr)->GetOrientation());
+        DoTeleportPlayer((*itr), X,Y,Z,(*itr)->GetOrientation());
     }
 }
 

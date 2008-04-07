@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun / Sethekk Halls
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_FROST_SHOCK           37865
 #define SPELL_FLAME_SHOCK           34354

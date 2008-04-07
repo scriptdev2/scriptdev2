@@ -20,9 +20,8 @@ SD%Complete: 100
 SDComment: Just a story if not rewarded for quest
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
 {

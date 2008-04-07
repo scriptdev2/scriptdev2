@@ -22,7 +22,7 @@ SDCategory: Guards
 EndScriptData */
 
 #include "guard_ai.h"
-#include "../../../../game/TargetedMovementGenerator.h"
+#include "TargetedMovementGenerator.h"
 
 // **** This script is for use within every single guard to save coding time ****
 
@@ -57,7 +57,6 @@ void guardAI::AttackStart(Unit *who)
         //Begin melee attack if we are within range
         if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
             DoStartMeleeAttack(who);
-        else DoStartRangedAttack(who);
 
         InCombat = true;
     }
@@ -86,7 +85,6 @@ void guardAI::MoveInLineOfSight(Unit *who)
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
 
             InCombat = true;
         }
@@ -189,9 +187,6 @@ void guardAI::UpdateAI(const uint32 diff)
                     (*m_creature).GetMotionMaster()->Idle();
                 }
 
-                //Face target
-                DoFaceTarget(m_creature->getVictim());
-
                 //Cast spell
                 if (Healing) DoCastSpell(m_creature,info);
                 else DoCastSpell(m_creature->getVictim(),info);
@@ -204,7 +199,7 @@ void guardAI::UpdateAI(const uint32 diff)
             else if ((*m_creature).GetMotionMaster()->top()->GetMovementGeneratorType()!=TARGETED_MOTION_TYPE)
             {
                 //Cancel our current spell and then mutate new movement generator
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 (*m_creature).GetMotionMaster()->Clear(false);
                 (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
             }

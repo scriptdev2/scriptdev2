@@ -21,11 +21,9 @@ SDComment: Quest support: 10279 (Special flight path). Noggenfogger vendor
 SDCategory: Tanaris
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../shared/WorldPacket.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "WorldPacket.h"
 
 /*######
 ## npc_marin_noggenfogger

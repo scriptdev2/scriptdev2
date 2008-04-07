@@ -21,10 +21,8 @@ SDComment: Saber Lash missing, Fatal Attraction slightly incorrect; need to dama
 SDCategory: Black Temple
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../shared/WorldPacket.h"
 
 //Spells
 #define SPELL_BEAM_SINISTER     40859
@@ -224,11 +222,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 TargetGUID[i] = pUnit->GetGUID();
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
                 //Use work around packet to prevent player from being dropped from combat
-                WorldPacket data;
-                ((Player*)pUnit)->BuildTeleportAckMsg(&data, X, Y, Z, pUnit->GetOrientation());
-                ((Player*)pUnit)->GetSession()->SendPacket(&data);
-                ((Player*)pUnit)->SetPosition( X, Y, Z, pUnit->GetOrientation(), true);
-                //((Player*)pUnit)->TeleportTo(m_creature->GetMapId(), X, Y, Z, pUnit->GetOrientation());
+                //WorldPacket data;
+                //((Player*)pUnit)->BuildTeleportAckMsg(&data, X, Y, Z, pUnit->GetOrientation());
+                //((Player*)pUnit)->GetSession()->SendPacket(&data);
+                //((Player*)pUnit)->SetPosition( X, Y, Z, pUnit->GetOrientation(), true);
+                //((Player*)pUnit)DoTeleportPlayer(m_creature->GetMapId(), X, Y, Z, pUnit->GetOrientation());
             }
         }
     }

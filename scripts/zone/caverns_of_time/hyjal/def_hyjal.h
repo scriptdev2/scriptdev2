@@ -1,5 +1,8 @@
 #ifndef DEF_HYJAL_H
 #define DEF_HYJAL_H
+
+#include "sc_instance.h"
+
 #define DATA_ANETHERON 1
 #define DATA_ANETHERONEVENT 2
 #define DATA_ARCHIMONDE 3

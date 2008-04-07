@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Missing model id for Mushrooms
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 // Hungarfen
 

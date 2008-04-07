@@ -14,7 +14,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 // Spells of Jandice Barov
 
@@ -145,7 +145,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         {
 
             //Inturrupt any spell casting
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             m_creature->setFaction(35);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model

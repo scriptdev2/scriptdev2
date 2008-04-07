@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_steam_vault.h"
 
 #define SPELL_LIGHTNING_CLOUD       25033

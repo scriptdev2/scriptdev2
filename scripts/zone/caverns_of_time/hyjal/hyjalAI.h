@@ -14,11 +14,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "../../../sc_defines.h"
-#include "../../../../../../game/Player.h"
-#include "../../../../../../game/Group.h"
-#include "../../../../../../game/GossipDef.h"
-#include "../../../../../../game/Map.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "sc_instance.h"
 
 // Trash Mobs summoned in waves
 #define NECROMANCER         17899

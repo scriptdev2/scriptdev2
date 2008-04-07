@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_MAGMASPLASH                13880            
 #define SPELL_SPAWNSOFBAELGAR            13895

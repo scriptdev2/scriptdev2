@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun / Mana Tombs
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_EARTHQUAKE                33919
 #define SPELL_CRYSTAL_PRISON            32361

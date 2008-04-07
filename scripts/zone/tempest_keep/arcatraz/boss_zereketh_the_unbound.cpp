@@ -1,4 +1,4 @@
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_arcatraz.h"
 
 #define SPELL_SEED_OF_CORRUPTION 36123

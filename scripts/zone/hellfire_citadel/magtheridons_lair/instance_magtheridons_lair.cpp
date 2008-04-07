@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_magtheridons_lair.h"
 
 struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance

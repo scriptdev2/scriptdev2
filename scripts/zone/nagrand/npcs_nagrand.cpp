@@ -21,10 +21,8 @@ SDComment: Quest support: 9991, 10107, 10108, 10044, 10172, 10646, 10085. TextId
 SDCategory: Nagrand
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_altruis_the_sufferer

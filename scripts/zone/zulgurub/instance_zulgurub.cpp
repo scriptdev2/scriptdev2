@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: Missing reset function after killing a boss for Ohgan, Thekal.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance

@@ -1,5 +1,8 @@
 #ifndef DEF_MOLTEN_CORE_H
 #define DEF_MOLTEN_CORE_H
+
+#include "sc_instance.h"
+
 #define DATA_FLAMEWAKERPRIEST 1
 #define DATA_GARRISDEAD 2
 #define DATA_GEDDONISDEAD 3

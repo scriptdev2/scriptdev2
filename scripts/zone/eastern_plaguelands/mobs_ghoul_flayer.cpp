@@ -20,9 +20,8 @@ SD%Complete: 100
 SDComment: For Darroshire Spirits (5211)
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 // **** This script is still under Developement ****
 

@@ -21,10 +21,8 @@ SDComment: Quest support: 10873, 10896, 11096.
 SDCategory: Terokkar Forest
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## mobs_gordunni_ogre

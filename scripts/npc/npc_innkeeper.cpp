@@ -22,10 +22,8 @@ SDCategory: NPCs
 EndScriptData */
 
  
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/GossipDef.h"
-//#include "../../../../game/GameEvent.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
  
 #define HALLOWEEN_EVENTID       12
 #define SPELL_TRICK_OR_TREATED  24755

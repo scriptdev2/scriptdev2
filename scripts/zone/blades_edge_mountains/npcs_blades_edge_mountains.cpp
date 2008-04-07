@@ -21,10 +21,8 @@ SDComment: Quest support: 10556, 10682, 10980. Ogri'la->Skettis Flight. (npc_dar
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_daranelle

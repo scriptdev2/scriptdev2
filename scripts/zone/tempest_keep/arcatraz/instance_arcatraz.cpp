@@ -20,9 +20,9 @@ SD%Complete: 0
 SDComment: VERIFY SCRIPT
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_arcatraz.h"
-#include "../../../../../../game/GameObject.h"
+#include "GameObject.h"
 
 #define ENCOUNTERS 4
 

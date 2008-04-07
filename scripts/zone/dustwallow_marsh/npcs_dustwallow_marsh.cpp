@@ -21,10 +21,8 @@ SDComment: Quest support: 11180, 558, 11126, 6622, 6624 (Includes Triage for Hor
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_deserter_agitator

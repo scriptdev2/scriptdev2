@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_AGGRO1          "You are mine now!"
 #define SAY_AGGRO2          "I see you!"

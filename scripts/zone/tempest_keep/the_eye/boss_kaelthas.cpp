@@ -21,10 +21,10 @@ SDComment: SQL, phase 2, phase 3, Mind Control, taunt immunity
 EndScriptData */
 
 #include "def_the_eye.h"
-#include "../../../sc_defines.h"
-#include "../../../../../../game/Player.h"
-#include "../../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../../shared/WorldPacket.h"
+#include "sc_creature.h"
+#include "Player.h"
+#include "TargetedMovementGenerator.h"
+#include "WorldPacket.h"
 
 //Phase 2 spells (Not used)
 #define SPELL_SUMMON_WEAPONS              36976
@@ -267,19 +267,6 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         }
     }
 
-    void ResetThreat()
-    {
-        Unit* pUnit = NULL;
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator i = m_threatlist.begin();
-        for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
-        {
-            pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit)
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (DelayRes_Timer)
@@ -290,7 +277,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
                 Unit* Target = Unit::GetUnit((*m_creature), DelayRes_Target);
                 if (!Target)Target = m_creature->getVictim();
-                ResetThreat();
+                DoResetThreat();
                 AttackStart(Target);
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*Target));
@@ -366,19 +353,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
-    }
-
-    void ResetThreat()
-    {
-        Unit* pUnit = NULL;
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator i = m_threatlist.begin();
-        for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
-        {
-            pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit)
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-        }
     }
 
     void PrepareAdvisors()
@@ -991,12 +965,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                                 {
                                     //Use work around packet to prevent player from being dropped from combat
-                                    WorldPacket data;
-                                    ((Player*)pUnit)->BuildTeleportAckMsg(&data, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation());
-                                    ((Player*)pUnit)->GetSession()->SendPacket(&data);
-                                    ((Player*)pUnit)->SetPosition( GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation(), true);
-                                    //((Player*)pUnit)->TeleportTo(m_creature->GetMapId(), GRAVITY_X, GRAVITY_Y, GRAVITY_Z+15.0f, pUnit->GetOrientation());
-                                }
+                                    DoTeleportPlayer(pUnit, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation());
+                               }
                             }
                             GravityLapse_Timer = 500;
                             ++GravityLapse_Phase;
@@ -1032,11 +1002,11 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                     data << uint32(0);
                                     pUnit->SendMessageToSet(&data, true);
 
-                                    //m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
+                                    m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
                                     //Gravity lapse - needs an exception in Spell system to work
 
-                                    //pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true);
-                                    //pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true);
+                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true, 0, 0, m_creature->GetGUID());
+                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true, 0, 0, m_creature->GetGUID());
                                 }
                             }
                             GravityLapse_Timer = 10000;
@@ -1074,7 +1044,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             DoStartMeleeAttack(m_creature->getVictim());
                             m_creature->GetMotionMaster()->Clear();
                             m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
-                            ResetThreat();
+                            DoResetThreat();
                             break;
                         }
                     }else GravityLapse_Timer -= diff;
@@ -1188,7 +1158,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
             {
-                ResetThreat();
+                DoResetThreat();
                 m_creature->AddThreat(target, 5000000.0f);
                 DoTextEmote(EMOTE_THALADRED_GAZE, target);
                 Gaze_Timer = 8500;

@@ -21,9 +21,8 @@ SDComment: To obtain Cenarion Beacon
 SDCategory: Felwood
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npcs_riverbreeze_and_silversky

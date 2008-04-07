@@ -21,9 +21,8 @@ SDComment: Quest support: 11156, 11180
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## mobs_direhorn_grimtotem

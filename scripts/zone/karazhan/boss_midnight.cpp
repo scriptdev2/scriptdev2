@@ -20,8 +20,8 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "sc_creature.h"
+#include "TargetedMovementGenerator.h"
 
 #define SAY_MIDNIGHT_KILL "Well done Midnight!"
 #define SOUND_MIDNIGHT_KILL 9173 

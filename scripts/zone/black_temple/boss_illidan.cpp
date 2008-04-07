@@ -22,12 +22,11 @@ SDCategory: Black Temple
 EndScriptData */
 
 /******** Includes ************/
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../shared/WorldPacket.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "TargetedMovementGenerator.h"
+#include "sc_gossip.h"
+#include "WorldPacket.h"
 
 /************* Quotes and Sounds ***********************/
 // Gossip for when a player clicks Akama
@@ -448,7 +447,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         TauntTimer = 30000; // This timer may be off.
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 21135);
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
@@ -562,7 +561,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     /** This will handle the cast of eye blast **/
     void CastEyeBlast()
     {
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
         DoYell(SAY_EYE_BLAST, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_EYE_BLAST);
         uint32 initial = rand()%4;
@@ -629,19 +628,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if(pUnit && pUnit->isAlive()) // Check if pUnit exists and is alive
                 pUnit->CastSpell(pUnit, SPELL_FLAME_BURST_EFFECT, true); // Have the player cast the flame burst effect on themself
-        }
-    }
-
-    void ResetThreat()
-    {
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator i = m_threatlist.begin();
-        for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i) // Go through threatlist and set threat to -100% for everyone in it.
-        {
-            Unit* pUnit = NULL;
-            pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit)
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
         }
     }
 
@@ -723,7 +709,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         AnimationTimer = DemonTransformation[count].timer;
         uint32 size = DemonTransformation[count].size;
 
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
 
         if(DemonTransformation[count].phase != 8)
         {
@@ -764,12 +750,12 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         if(count == 7)
         {
-            ResetThreat();
+            DoResetThreat();
             m_creature->RemoveAurasDueToSpell( SPELL_DEMON_FORM );
         }
         else if(count == 4)
         {
-            ResetThreat();
+            DoResetThreat();
             DoCast(m_creature, SPELL_DEMON_FORM);
         }
     }
@@ -846,7 +832,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         TauntTimer += 4000;
         GlobalTimer += 4000;
 
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); // Interrupt any of our spells
+        m_creature->InterruptNonMeleeSpells(false); // Interrupt any of our spells
         Creature* Maiev = NULL; // Summon Maiev near Illidan
         Maiev = m_creature->SummonCreature(MAIEV_SHADOWSONG, m_creature->GetPositionX() + 10, m_creature->GetPositionY() + 5, m_creature->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 0);
         if(Maiev)
@@ -1163,7 +1149,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 Glaive->DealDamage(Glaive, Glaive->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false); // No point letting the Glaives continue to exist
                             GlaiveGUID[i] = 0;
                             LandTimer = 10000; // Prepare for landin!
-                            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL); // Interrupt any spells we might be doing *cough* DArk Barrage *cough*
+                            m_creature->InterruptNonMeleeSpells(false); // Interrupt any spells we might be doing *cough* DArk Barrage *cough*
                         }
                     }
                 }
@@ -1173,7 +1159,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 if(FlyTimer < diff)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     uint32 random = rand()%5;
                     Move(Flight[random].x, Flight[random].y, Flight[random].z, 3000, m_creature);
                     FlyTimer = 15000;
@@ -1182,7 +1168,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
                 if(FireballTimer < diff)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
                     FireballTimer = 7000;
                     GlobalTimer += 1500;
@@ -1190,7 +1176,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
                 if(DarkBarrageTimer < diff)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DARK_BARRAGE);
                     DarkBarrageTimer = 41000;
                     GlobalTimer += 9000;
@@ -1253,7 +1239,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
             if(ShadowDemonTimer < diff)
             {
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 Creature* ShadowDemon = NULL;
                 for(uint8 i = 0; i < 4; i++)
                 {

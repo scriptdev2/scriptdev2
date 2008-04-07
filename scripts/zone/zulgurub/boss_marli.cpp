@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: Charging healers and casters not working. Perhaps wrong Spell Timers.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
@@ -104,18 +104,6 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
             pInstance->SetData(DATA_MARLI_DEATH, 0);
     }
     
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -204,7 +192,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
                     DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB); 
-                    ResetThreat(); 
+                    DoResetThreat(); 
                     PhaseTwo = true;
                     Transform_Timer = 35000 + rand()%25000;
                 }else Transform_Timer -= diff;

@@ -21,9 +21,8 @@ SDComment: Quest support: 10502, 10503, 10504, 10505
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## mobs_bladespire_ogre

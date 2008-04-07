@@ -20,9 +20,8 @@ SD%Complete: 35
 SDComment: Barnes: Not fully complete. Berthold: needs testing
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 #include "def_karazhan.h"
 
 

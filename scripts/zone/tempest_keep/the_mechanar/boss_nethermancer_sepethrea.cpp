@@ -20,8 +20,8 @@ SD%Complete: 100
 SDComment:
 EndScriptData */
 
-#include "../../../sc_defines.h"
-#include "../../../../../../game/TargetedMovementGenerator.h"
+#include "sc_creature.h"
+#include "TargetedMovementGenerator.h"
 
 // Spells to be casted
 #define SPELL_SUMMON_RAGIN_FLAMES       35275

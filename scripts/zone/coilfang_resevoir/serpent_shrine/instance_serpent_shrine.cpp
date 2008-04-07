@@ -20,7 +20,7 @@ SD%Complete: 0
 SDComment: VERIFY SCRIPT
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 
 #define ENCOUNTERS 6

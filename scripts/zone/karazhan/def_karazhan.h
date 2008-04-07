@@ -1,5 +1,8 @@
 #ifndef DEF_KARAZHAN_H
 #define DEF_KARAZHAN_H
+
+#include "sc_instance.h"
+
 #define DATA_ATTUMEN_EVENT          1
 #define DATA_MOROES_EVENT           2
 #define DATA_MAIDENOFVIRTUE_EVENT   3

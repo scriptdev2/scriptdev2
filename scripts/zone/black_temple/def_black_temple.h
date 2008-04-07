@@ -1,5 +1,8 @@
 #ifndef DEF_BLACK_TEMPLE_H
 #define DEF_BLACK_TEMPLE_H
+
+#include "sc_instance.h"
+
 #define DATA_AKAMA                       1
 #define DATA_AKAMA_SHADE                 2
 #define DATA_GATHIOSTHESHATTERER         3

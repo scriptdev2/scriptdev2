@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blasted Lands
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SHADOWVOLLEY          21341
 #define SPELL_CLEAVE                20677

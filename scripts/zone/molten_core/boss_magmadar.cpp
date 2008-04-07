@@ -20,7 +20,7 @@ SD%Complete: 75
 SDComment: Conflag on ground nyi, fear causes issues without VMAPs
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 #define SPELL_FRENZY                28371

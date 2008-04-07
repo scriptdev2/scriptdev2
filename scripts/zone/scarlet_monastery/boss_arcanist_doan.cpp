@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 #define SPELL_POLYMORPH                 12826
@@ -93,7 +93,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
         }
     }
 

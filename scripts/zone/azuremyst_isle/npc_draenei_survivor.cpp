@@ -21,7 +21,7 @@ SDComment: For quest 9283
 SDCategory: Azuremyst Isle
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include <cmath>
 
 #define HEAL1        "The last thing I remember is the ship falling and us getting into the pods. I'll go see how I can help. Thank you!"

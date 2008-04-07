@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: Some issues with hateful strike inturrupting the melee swing timer. Probably core issue.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_AGGRO1      "Patchwerk want to play!"
 #define SAY_AGGRO2      "Kel'Thuzad make Patchwerk his Avatar of War!"

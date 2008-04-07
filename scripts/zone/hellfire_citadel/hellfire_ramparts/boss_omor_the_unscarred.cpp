@@ -20,7 +20,7 @@ SD%Complete: 70
 SDComment: Missing MT air knockback and float
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SHADOW_WHIP        30638
 #define SPELL_TREACHEROUS_AURA    30695

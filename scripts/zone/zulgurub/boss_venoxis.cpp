@@ -21,7 +21,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_HOLY_FIRE     23860
@@ -102,18 +102,6 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             pInstance->SetData(DATA_VENOXIS_DEATH, 0);
     }
 
-    void ResetThreat()
-    {
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-
-        for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-        {
-            Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-            if(pUnit)
-                (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-        }
-
-    }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -208,14 +196,14 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
             {
                 if(!PhaseTwo)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(m_creature,SPELL_SNAKE_FORM);
                     m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
                     const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 25)));
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 25)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                    ResetThreat();
+                    DoResetThreat();
                     PhaseTwo = true;
                 }
 
@@ -238,7 +226,7 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
                 {
                     if (!InBerserk)
                     {
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                        m_creature->InterruptNonMeleeSpells(false);
                         DoCast(m_creature, SPELL_BERSERK);
                         InBerserk = true;
                     }

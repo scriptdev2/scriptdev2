@@ -21,10 +21,10 @@ SDComment: Using a creature workaround instead of a GO for Impaling Spine.
 SDCategory: Black Temple
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/GameObject.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "GameObject.h"
+#include "TargetedMovementGenerator.h"
 
 //Aggro
 #define SAY_AGGRO       "You will die, in the name of Lady Vashj!"
@@ -394,7 +394,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if(TidalShieldTimer < diff)
         {
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature, SPELL_SHIELD_VISUAL, true);
             // DoCast(m_creature, SPELL_TIDAL_SHIELD);
             m_creature->GetMotionMaster()->Clear();

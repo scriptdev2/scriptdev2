@@ -20,7 +20,7 @@ SD%Complete: 75
 SDComment: HP not linked. Spells buggy.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_HEAL_BROTHER          7393
@@ -83,19 +83,6 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 //        m_creature->CombatStop();
 //        DoGoHome();
     }
-
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
 
     void JustDied(Unit* Killer)
     {
@@ -231,7 +218,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
                     DoCast(m_creature, SPELL_TWIN_TELEPORT);
                     Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
                     m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
-                    ResetThreat();     
+                    DoResetThreat();     
 
                 Teleport_Timer = 30000;
                }else Teleport_Timer -= diff;

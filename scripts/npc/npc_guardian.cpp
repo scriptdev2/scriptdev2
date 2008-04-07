@@ -21,7 +21,7 @@ SDComment: GuardianAI used to prevent players from accessing off-limits areas
 SDCategory: NPCs
 EndScriptData */
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_DEATHTOUCH                5
 #define SAY_AGGRO                        "This area is closed!"

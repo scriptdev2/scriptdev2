@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SHADOWBOLTVOLLEY                20741            
 #define SPELL_BONESHIELD                27688

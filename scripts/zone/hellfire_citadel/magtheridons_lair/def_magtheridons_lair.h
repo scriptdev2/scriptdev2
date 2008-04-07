@@ -1,5 +1,8 @@
 #ifndef DEF_MAGTHERIDONS_LAIR_H
 #define DEF_MAGTHERIDONS_LAIR_H
+
+#include "sc_instance.h"
+
 #define DATA_EVENT_STARTER 1
 #define DATA_MAGTHERIDON 2
 #define DATA_MAGTHERIDON_EVENT_ENDED 3

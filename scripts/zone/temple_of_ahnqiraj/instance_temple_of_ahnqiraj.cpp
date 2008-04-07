@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment:
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance

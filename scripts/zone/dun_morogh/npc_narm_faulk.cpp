@@ -20,8 +20,8 @@ SD%Complete: 50
 SDComment: Core keeps breaking support for this quest
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 // **** This script is still under Developement ****
 

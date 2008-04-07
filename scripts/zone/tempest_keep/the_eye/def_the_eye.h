@@ -1,5 +1,8 @@
 #ifndef DEF_THE_EYE_H
 #define DEF_THE_EYE_H
+
+#include "sc_instance.h"
+
 #define DATA_ALAREVENT 1
 #define DATA_ASTROMANCER 2
 #define DATA_GRANDASTROMANCERCAPERNIAN 3

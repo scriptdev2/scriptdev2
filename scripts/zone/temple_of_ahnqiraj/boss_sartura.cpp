@@ -25,7 +25,7 @@ To do:
 Change to random attack for 5seconds
 */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_WHIRLWIND 37641
 #define SPELL_ENRAGE 28798
@@ -59,7 +59,6 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
         }
     }
 

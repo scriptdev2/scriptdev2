@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_FROSTBOLT                21369
 #define SPELL_ICEARMOR             18100       //This is actually a buff he gives himself

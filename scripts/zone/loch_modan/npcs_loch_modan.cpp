@@ -20,10 +20,8 @@ SD%Complete: 100
 SDComment: argue with pebblebitty to get to searing gorge
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_mountaineer_pebblebitty

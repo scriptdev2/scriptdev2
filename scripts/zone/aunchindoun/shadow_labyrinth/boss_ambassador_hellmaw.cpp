@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
 
 #define CORROSIVE_ACID  23313

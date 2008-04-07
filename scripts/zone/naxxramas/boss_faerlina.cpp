@@ -19,7 +19,7 @@ SD%Complete: 50
 SDComment: Without Mindcontrol boss cannot be defeated
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_GREET           "Your old lives, your mortal desires, mean nothing. You are acolytes of the master now, and you will serve the cause without question! The greatest glory is to die in the master's service!"
 #define SAY_AGGRO1          "Slay them in the master's name!"

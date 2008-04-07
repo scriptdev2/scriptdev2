@@ -21,9 +21,8 @@ SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell
 SDCategory: NPCs
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_archmage_malin

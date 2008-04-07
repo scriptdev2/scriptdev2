@@ -20,10 +20,9 @@ SD%Complete: 50
 SDComment: Missing Multishot, pet, Totems, Windfury, Whirlwind
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
-#include "../../../../../../game/Player.h"
-#include "../../../../../../game/Group.h"
+#include "sc_gossip.h"
 
 //Karathress spells
 #define SPELL_CATACLYSMIC_BOLT     38441

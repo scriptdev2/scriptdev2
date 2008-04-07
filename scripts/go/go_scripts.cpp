@@ -21,9 +21,9 @@ SDComment: Quest support: 4285, 4287, 4288 (crystal pylons in un'goro). Field_Re
 SDCategory: Game Objects
 EndScriptData */
  
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/GameObject.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
+#include "GameObject.h"
  
 /*######
 ## go_crystal_pylons (3x)

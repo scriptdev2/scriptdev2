@@ -23,9 +23,8 @@ EndScriptData */
 
 //*** NEEDS ADDITIOINAL REVIEW ***
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 #define SPELL_ESSENCEOFTHERED       23513
 #define SPELL_FLAMEBREATH           23461       

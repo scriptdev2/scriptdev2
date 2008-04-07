@@ -2,17 +2,13 @@
 Simple list of things we need to do.
 
 --- ScriptDev2 Framework ---
-
-- Rewrite simple scripts to use SimpleAI class instead of their current defined class which wastes resources and compile time. 
+Move all text out of C++ code and into SD2 database.
 
 --- Scripting with Priorities ---
-1) Boss AI scripts
-2) Specific NPC scripts
-3) Event scripts
-4) Spell and Item scripts
+1) Boss AI and Boss Event scripts
+2) Specific NPC AI, Gossip, Quest, Event scripts
+3) Spell and Item scripts
 
 --- Core Problems ---
 
-- Unable to write new movement generators (you shouldn't need to though)
-- Spell scripts are only controllable by the core
-- Events/EventScripts are only controllable by the core
+- Spell scripts are only scriptable within the core. Spell scripts should be done in SD2 since they are very specialized.

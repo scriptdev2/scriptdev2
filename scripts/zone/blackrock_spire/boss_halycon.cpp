@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_CROWDPUMMEL       10887   
 #define SPELL_MIGHTYBLOW        14099     

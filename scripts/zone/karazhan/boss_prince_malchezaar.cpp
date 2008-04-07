@@ -21,9 +21,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/ObjectAccessor.h"
+#include "sc_creature.h"
 
 
 #define SAY_AGGRO           "Madness has brought you here to me. I shall be your undoing!"

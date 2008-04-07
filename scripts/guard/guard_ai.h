@@ -15,7 +15,7 @@
 */
 
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 
 // **** This script is for use within every single guard to save coding time ****
 

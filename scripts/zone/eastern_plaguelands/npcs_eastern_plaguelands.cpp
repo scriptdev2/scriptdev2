@@ -20,10 +20,8 @@ SD%Complete: 90
 SDComment: npcs eastern plaguelands, mostly quest related.
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_darrowshire_spirit

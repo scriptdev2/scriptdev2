@@ -20,9 +20,8 @@ SD%Complete: 100
 SDComment: misc mobs, mostly related to quest
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## mobs_dragonmaw_orcs

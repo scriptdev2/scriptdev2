@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: Mind control no support
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_ACID_SPRAY        38153 // heroic 38973 ??? 38153
 #define SPELL_EXPLODING_BREAKER    30925 

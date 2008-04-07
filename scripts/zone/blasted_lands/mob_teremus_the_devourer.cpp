@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blasted Lands
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_FLAMEBREATH                20712      
 #define SPELL_SOULCONSUMPTION             12667  

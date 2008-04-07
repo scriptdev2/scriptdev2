@@ -20,9 +20,8 @@ SD%Complete: 90
 SDComment: Water globules don't explode properly
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
-#include "../../../../../../game/Player.h"
 
 #define SPELL_TIDAL_WAVE             37730
 #define SPELL_WATERY_GRAVE           38049
@@ -190,7 +189,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         }
     }
 
-    void ApplyWateryGrave(Player *player, uint8 pos)
+    void ApplyWateryGrave(Unit *player, uint8 pos)
     {
         float x, y, z;
 
@@ -221,7 +220,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             break;
         }
 
-        player->TeleportTo(548, x, y, z+1, player->GetOrientation());
+        DoTeleportPlayer(player, x, y, z+1, player->GetOrientation());
         DoCast(player, SPELL_WATERY_GRAVE);
     }
 
@@ -324,7 +323,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if(target && (target->GetTypeId() == TYPEID_PLAYER) && !target->HasAura(SPELL_WATERY_GRAVE, 0) && target->IsWithinDistInMap(m_creature, 50))
-                        ApplyWateryGrave(((Player*)target), i);
+                        ApplyWateryGrave(target, i);
                 }
 
                 switch(rand()%2)

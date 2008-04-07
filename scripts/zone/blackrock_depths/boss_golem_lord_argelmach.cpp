@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_CHAINLIGHTNING                16033            
 #define SPELL_SHOCK            16034

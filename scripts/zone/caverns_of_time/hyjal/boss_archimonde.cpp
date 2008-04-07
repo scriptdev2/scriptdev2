@@ -20,10 +20,10 @@ SD%Complete: 95
 SDComment: Doomfires not completely offlike due to core limitations for random moving.
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_hyjal.h"
-#include "../../../../../../game/TargetedMovementGenerator.h"
-#include "../../../../../../game/SpellAuras.h"
+#include "TargetedMovementGenerator.h"
+//#include "../../../../../../game/SpellAuras.h"
 
 #define SPELL_DENOUEMENT_WISP      32124
 #define SPELL_ANCIENT_SPARK        39349
@@ -593,16 +593,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     spell = SPELL_SOUL_CHARGE_GREEN;
                     break;
             }
-
-            if(m_creature->HasAura(spell, 0))
-            {
-                Aura* aur = m_creature->GetAura(spell, 0);
-                if(aur)
-                {
-                    totalStacks += aur->GetAuraSlot();
-                    aur->SetAuraDuration(120000);
-                }
-            }
         }
 
         if(!totalStacks)
@@ -616,7 +606,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void UnleashSoulCharge()
     {
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
         bool HasCast = false;
         uint32 chargeSpell = 0;
         uint32 unleashSpell = 0;
@@ -659,7 +649,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
                     if(Nordrassil)
                     {
-                        DoFaceTarget(Nordrassil);
                         DoCast(Nordrassil, SPELL_DRAIN_WORLD_TREE);
                         IsChanneling = true;
                     }

@@ -43,10 +43,9 @@ EndScriptData */
  * 
  *******************************************************/
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 #include "guard_ai.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/GossipDef.h"
+#include "sc_gossip.h"
 
 //script spesific action
 #define GOSSIP_ACTION_TAVERN                  101

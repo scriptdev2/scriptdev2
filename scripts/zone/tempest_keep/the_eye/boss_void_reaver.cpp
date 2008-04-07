@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_the_eye.h"
 
 #define SPELL_POUNDING              34162
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if(Berserk_Timer < diff)
         {
             if (m_creature->IsNonMeleeSpellCasted(false))
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
 
             DoCast(m_creature,SPELL_BERSERK);
             Berserk_Timer = 600000;

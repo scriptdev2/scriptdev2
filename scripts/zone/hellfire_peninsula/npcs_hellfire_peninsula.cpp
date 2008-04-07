@@ -21,10 +21,8 @@ SDComment: Quest support: 10129, 10146, 10162, 10163, 10340, 10346, 10347, 10382
 SDCategory: Hellfire Peninsula
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_wing_commander_dabiree

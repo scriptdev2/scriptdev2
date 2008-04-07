@@ -20,10 +20,8 @@ SD%Complete: 100
 SDComment: for quest 925
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 bool GossipHello_npc_cairne_bloodhoof(Player *player, Creature *_Creature)
 {

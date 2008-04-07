@@ -20,7 +20,7 @@ SD%Complete: 90
 SDComment: Using wrong death coil spell
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_DEATH_COIL    30500 // fear you only 2 meters in the air (core bug but better than fear under the map)
 #define SPELL_DARK_SPIN     30502 // core bug spell attack caster :D

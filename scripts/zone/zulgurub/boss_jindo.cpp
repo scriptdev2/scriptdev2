@@ -20,10 +20,8 @@ SD%Complete: 85
 SDComment: Mind Control not working because of core bug. Shades visible for all.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
-#include "../../../../../game/Player.h"
-
 
 
 #define SPELL_BRAINWASHTOTEM            24262   
@@ -189,7 +187,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             if (target && target->GetTypeId() == TYPEID_PLAYER) 
             {
             
-            ((Player*)target)->TeleportTo(309,-11583.7783,-1249.4278,77.5471,4.745);
+            DoTeleportPlayer(target, -11583.7783,-1249.4278,77.5471,4.745);
             m_creature->getThreatManager().modifyThreatPercent(target,-100);
 
             Skeletons = m_creature->SummonCreature(14826, target->GetPositionX()+2, target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);

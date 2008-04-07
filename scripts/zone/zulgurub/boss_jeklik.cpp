@@ -20,7 +20,7 @@ SD%Complete: 85
 SDComment: Problem in finding the right flying batriders for spawning and making them fly.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
@@ -112,18 +112,6 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
     }
     
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -216,7 +204,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 if(!PhaseTwo)
                 {
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15219);
-                    ResetThreat();
+                    DoResetThreat();
                     PhaseTwo = true;
                 }
 
@@ -238,14 +226,14 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 
                 if(PhaseTwo && ChainMindFlay_Timer < diff)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
                     ChainMindFlay_Timer = 15000 + rand()%15000;
                 }ChainMindFlay_Timer -=diff;
                 
                 if(PhaseTwo && GreaterHeal_Timer < diff)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(m_creature,SPELL_GREATERHEAL);
                     GreaterHeal_Timer = 25000 + rand()%10000;
                 }GreaterHeal_Timer -=diff;
@@ -307,7 +295,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
 
         if (who->isTargetableForAttack() && who!= m_creature)
         {
-             DoStartRangedAttack(who);
+             DoStartMeleeAttack(who);
         }
     }
 

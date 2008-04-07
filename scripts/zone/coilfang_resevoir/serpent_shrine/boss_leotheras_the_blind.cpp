@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Missing Inner Demons
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 
 #define SPELL_WHIRLWIND         40653

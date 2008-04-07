@@ -22,7 +22,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_PUTRIDBREATH             21080        
 #define SPELL_SMOKEBOMB                  8817              

@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_TOXICVOLLEY           21687
 #define SPELL_UPPERCUT              22916
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
 
             //Inturrupt any spell casting
             //m_creature->m_canMove = true;
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             m_creature->setFaction(35);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model

@@ -21,8 +21,8 @@ SDComment: Used for Testing Item Scripts
 SDCategory: Items
 EndScriptData */
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 extern void LoadDatabase();
 
 bool ItemUse_item_test(Player *player, Item* _Item, SpellCastTargets const& targets)

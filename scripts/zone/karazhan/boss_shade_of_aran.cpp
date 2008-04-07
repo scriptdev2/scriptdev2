@@ -20,7 +20,7 @@ SD%Complete: 95
 SDComment: Flame wreath missing cast animation, mods won't triggere. Drinking may cause client crash (core related)
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 #include "def_karazhan.h"
 
@@ -348,7 +348,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         if(!Drinking && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
             Drinking = true;
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
 
             DoYell(SAY_DRINK, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_DRINK);
@@ -624,7 +624,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             return;
 
         //Inturrupt effect
-        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+        m_creature->InterruptNonMeleeSpells(false);
 
         //Normally we would set the cooldown equal to the spell duration
         //but we do not have access to the DurationStore

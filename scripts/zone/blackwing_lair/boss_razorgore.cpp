@@ -26,7 +26,7 @@ EndScriptData */
 //Razorgore Phase 2 Script
 //Phase 1 script with adds NYI
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_NPC_DEATH "If I fall into the abyss I'll take all of you mortals with me..."
 #define SOUND_NPC_DEATH 8278
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         if (WarStomp_Timer < diff)
         {
             //Cast
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
             //20-30 seconds until we should cast this agian

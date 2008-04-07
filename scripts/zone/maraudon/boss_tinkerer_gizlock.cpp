@@ -21,7 +21,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_GOBLINGUN             21910   // NOt sure about right id!     
 #define SPELL_BOMB                  22334              

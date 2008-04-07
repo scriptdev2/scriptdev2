@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: All non-boss mobs in SSC
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)

@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment:
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 // Spells to be casted
 #define SPELL_SHADOW_POWER 35322

@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: CHECK SQL
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 //Dathrohan spells
 #define SPELL_CRUSADERSHAMMER    17286 //AOE stun

@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: 
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 // **** This script is still under Developement ****
 

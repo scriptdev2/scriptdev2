@@ -1,5 +1,8 @@
 #ifndef DEF_ZULGURUB_H
 #define DEF_ZULGURUB_H
+
+#include "sc_instance.h"
+
 #define DATA_ARLOKKISDEAD 1
 #define DATA_ARLOKK_DEATH 2
 #define DATA_JEKLIKISDEAD 3

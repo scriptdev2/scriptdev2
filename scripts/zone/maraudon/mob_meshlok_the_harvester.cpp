@@ -21,7 +21,7 @@ SDComment:
 EndScriptData */
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_WARSTOMP             21080        
 #define SPELL_STRIKE                  8817              

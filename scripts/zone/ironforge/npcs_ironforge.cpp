@@ -21,9 +21,8 @@ SDComment: Quest support: 3702
 SDCategory: NPCs
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_royal_historian_archesonus

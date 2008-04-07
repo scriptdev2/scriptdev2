@@ -29,6 +29,11 @@ libmangosscript_la_SOURCES = \
 ScriptMgr.cpp \
 ScriptMgr.h \
 config.h \
+include/sc_creature.cpp \
+include/sc_creature.h \
+include/sc_gossip.h \
+include/sc_instance.h \
+include/sc_item.h \
 scripts/boss/boss_emeriss.cpp \
 scripts/boss/boss_lethon.cpp \
 scripts/boss/boss_taerar.cpp \
@@ -52,8 +57,6 @@ scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
 scripts/npc/npc_professions.cpp \
 scripts/npc/npcs_darkmoon.cpp \
-scripts/sc_defines.cpp \
-scripts/sc_defines.h \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
@@ -61,8 +64,8 @@ scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
-scripts/zone/aunchindoun/sethekk_halls/instance_sethekk_halls.cpp \
 scripts/zone/aunchindoun/sethekk_halls/def_sethekk_halls.h \
+scripts/zone/aunchindoun/sethekk_halls/instance_sethekk_halls.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \

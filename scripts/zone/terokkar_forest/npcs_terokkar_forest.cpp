@@ -21,10 +21,8 @@ SDComment: Quest support: 0. Skettis->Ogri'la Flight
 SDCategory: Terokkar Forest
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_skyguard_handler_deesak

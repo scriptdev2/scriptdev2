@@ -20,7 +20,7 @@ SD%Complete: 30
 SDComment: Correct spawning and Event NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 // Adds NYI

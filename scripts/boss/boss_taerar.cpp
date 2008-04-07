@@ -21,7 +21,7 @@ SDComment: Mark of Nature & Teleport NYI
 SDCategory: Bosses
 EndScriptData */
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 
 //Spells of Taerar
 
@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             {
 
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 //m_creature->m_canMove = false;
@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             {
 
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 //m_creature->m_canMove = false;
@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             if (Summon3_Timer < diff)
             {
                 //Inturrupt any spell casting
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
                 m_creature->setFaction(35);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 //m_creature->m_canMove = false;

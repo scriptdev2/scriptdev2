@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun / Shadow Labyrinth
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SPELL_SONIC_BOOM           33666
 #define SPELL_SONIC_BOOM_CAST      38796

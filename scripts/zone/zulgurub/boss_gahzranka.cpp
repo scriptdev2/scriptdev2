@@ -20,7 +20,7 @@ SD%Complete: 85
 SDComment: Massive Geyser with knockback not working. Spell buggy.
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 
@@ -61,20 +61,7 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
             InCombat = true;
         }
     }
-    
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
-  
+      
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -116,7 +103,7 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_MASSIVEGEYSER);
-            ResetThreat();
+            DoResetThreat();
 
             //22-32 seconds until we should cast this agian
             MassiveGeyser_Timer = 22000 + rand()%10000;

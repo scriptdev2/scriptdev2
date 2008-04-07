@@ -21,9 +21,8 @@ SDComment: For Quest 4921
 SDCategory: Barrens
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 struct MANGOS_DLL_DECL beatencorpseAI : public ScriptedAI
 {

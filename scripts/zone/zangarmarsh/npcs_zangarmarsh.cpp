@@ -21,10 +21,8 @@ SDComment: Quest support: 9785, 9803. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npcs_ashyen_and_keleth

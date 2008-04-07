@@ -21,10 +21,10 @@ SDComment: Script used for testing
 SDCategory: Custom
 EndScriptData */
 
-#include "../sc_defines.h"
+#include "sc_creature.h"
 #include "../creature/simple_ai.h"
-#include "../../../../game/Map.h"
-#include "../../../../game/GridNotifiersImpl.h"
+#include "Map.h"
+#include "GridNotifiersImpl.h"
 
 
 struct MANGOS_DLL_DECL testAI : public ScriptedAI

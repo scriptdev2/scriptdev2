@@ -20,7 +20,7 @@ SD%Complete: 75
 SDComment: Intro Dialog and event NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 // Intro dialog is NYI
@@ -159,7 +159,14 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         if (who->isTargetableForAttack() && who!= m_creature)
         {
             //Begin ranged attack because Ragnaros is rooted at all times
-            DoStartRangedAttack(who);
+            if (m_creature->Attack(who))
+            {
+                m_creature->AddThreat(who, 0.0f);
+                m_creature->resetAttackTimer();
+
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SetLootRecipient((Player*)who);
+            }
 
             //Say our dialog on initial aggro
             if (!InCombat)
@@ -190,17 +197,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                     HasAura = true;
                 }
 
-
-                //Begin ranged attack because Ragnaros is rooted at all times
-                DoStartRangedAttack(who);
-
-                //Say our dialog on initial aggro
-                if (!InCombat)
-                {
-                    DoYell(SAY_ARRIVAL_5,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_ARRIVAL_5);
-                    InCombat = true;
-                }
+                AttackStart(who);
             }
         }
     }
@@ -296,7 +293,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
             //is not very well supported in the core
             //so added normaly spawning and banish workaround and attack again after 90 secs.
 
-            m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+            m_creature->InterruptNonMeleeSpells(false);
             //Root self
             DoCast(m_creature,23973);
             m_creature->setFaction(35);

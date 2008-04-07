@@ -22,8 +22,8 @@ SDCategory: Creatures
 EndScriptData */
 
 #include "mob_event_ai.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/TargetedMovementGenerator.h"
+//#include "../../../../game/Player.h"
+#include "TargetedMovementGenerator.h"
 
 #define EVENT_UPDATE_TIME   500
 #define SPELL_RUN_AWAY      8225
@@ -79,14 +79,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     uint32 AttackDistance;                  //Distance to attack from
     float AttackAngle;                      //Angle of attack
 
-    void AttackTarget(Unit* pTarget)
+    void AttackTarget(Unit* pTarget, bool Follow)
     {
         if (!pTarget)
             return;
 
         if ( m_creature->Attack(pTarget) )
         {
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
+            if (Follow)
+                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
             m_creature->AddThreat(pTarget, 0.0f);
             m_creature->resetAttackTimer();
 
@@ -769,8 +770,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         //Begin melee attack if we are within range
         if (CombatMovementEnabled)
-            AttackTarget(who);
-        else DoStartRangedAttack(who);
+            AttackTarget(who, true);
+        else AttackTarget(who, false);
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -21,9 +21,8 @@ SDComment: Quest support: 30, 272, 5929, 5930. Special Flight Paths for Druid cl
 SDCategory: Moonglade
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_bunthen_plainswind

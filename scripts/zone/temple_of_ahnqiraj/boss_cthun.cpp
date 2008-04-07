@@ -20,7 +20,9 @@ SD%Complete: 10
 SDComment: Missing Phase 2 and eye beam phase
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
+#include "sc_instance.h"
+#include "Player.h"
 
 #define PI                          3.14
 
@@ -118,21 +120,24 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         DarkGlareAngle = 0;
 
         i = 0;
-
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void AttackStart(Unit *who)
     {
-        /*if (!who)
-        return;
+        if (!who)
+            return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
-        DoStartRangedAttack(who);*/
+        {
+            if (m_creature->Attack(who))
+            {
+                m_creature->AddThreat(who, 0.0f);
+                m_creature->resetAttackTimer();
+
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SetLootRecipient((Player*)who);
+            }
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -145,7 +150,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             m_creature->AddThreat(who,1.0f);
 
             // Attack
-            DoStartRangedAttack(who);
+           AttackStart(who);
         }
     }
 
@@ -158,33 +163,39 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             //WisperTimer
             if (WisperTimer < diff)
             {
-                //Play random sound to the zone
-                switch (rand()%8)
+                std::list<Player*>::iterator i = m_creature->GetMap()->GetPlayers().begin();
+
+                for (;i != m_creature->GetMap()->GetPlayers().end(); ++i)
                 {
-                case 0:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_1);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_2);
-                    break;
-                case 2:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_3);
-                    break;
-                case 3:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_4);
-                    break;
-                case 4:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_5);
-                    break;
-                case 5:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_6);
-                    break;
-                case 6:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_7);
-                    break;
-                case 7:
-                    DoPlaySoundToSet(m_creature,RND_WISPER_8);
-                    break;
+                    //Play random sound to the zone
+                    switch (rand()%8)
+                    {
+                    case 0:
+                        (*i)->PlaySoundA(RND_WISPER_1, true);
+                        break;
+                    case 1:
+                        (*i)->PlaySoundA(RND_WISPER_2, true);
+                        break;
+                    case 2:
+                        (*i)->PlaySoundA(RND_WISPER_3, true);
+                        break;
+                    case 3:
+                        (*i)->PlaySoundA(RND_WISPER_4, true);
+                        break;
+                    case 4:
+                        (*i)->PlaySoundA(RND_WISPER_5, true);
+                        break;
+                    case 5:
+                        (*i)->PlaySoundA(RND_WISPER_6, true);
+                        break;
+                    case 6:
+                        (*i)->PlaySoundA(RND_WISPER_7, true);
+                        break;
+                    case 7:
+                        (*i)->PlaySoundA(RND_WISPER_8, true);
+                        break;
+                    }
+
                 }
 
                 //One random wisper every 90 - 300 seconds
@@ -201,12 +212,11 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             if (BeamTimer < diff)
             {
                 //SPELL_GREEN_BEAM
-
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
                 {
-                    m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                    m_creature->InterruptNonMeleeSpells(false);
                     DoCast(target,SPELL_GREEN_BEAM);
 
                     //Correctly update our target
@@ -264,7 +274,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 //Switch to Dark Beam
                 Phase = 1;
 
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
 
                 //Select random target for dark beam to start on
                 Unit* target = NULL;
@@ -329,7 +339,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
                 ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
 
-                m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                m_creature->InterruptNonMeleeSpells(false);
 
                 //Remove Red coloration from c'thun
                 m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
@@ -364,7 +374,16 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
-            DoStartRangedAttack(who);
+        {
+                        if (m_creature->Attack(who))
+            {
+                m_creature->AddThreat(who, 0.0f);
+                m_creature->resetAttackTimer();
+
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SetLootRecipient((Player*)who);
+            }
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -425,7 +444,16 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
             return;
 
         if (who->isTargetableForAttack() && who!= m_creature)
-            DoStartRangedAttack(who);
+        {
+                        if (m_creature->Attack(who))
+            {
+                m_creature->AddThreat(who, 0.0f);
+                m_creature->resetAttackTimer();
+
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SetLootRecipient((Player*)who);
+            }
+        }
     }
 
     void MoveInLineOfSight(Unit *who)

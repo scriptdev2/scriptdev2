@@ -35,24 +35,8 @@ but preferred to do this from mangos)
 no difference here (except that default npc_text is chosen from `gameobject_template`.`data2` (for GO type2, different dataN for a few others)
 */
 
-#include "../sc_defines.h"
-#include "../../../../game/Player.h"
-#include "../../../../game/QuestDef.h"
-#include "../../../../game/GossipDef.h"
-
-/*
-http://forums.worldofwarcraft.com/thread.html?topicId=388089082&sid=1
-http://img72.imageshack.us/img72/953/relearningdslwkq2.jpg
-http://usaochan.sakura.ne.jp/harapekosoul/modules/wordpress/attach/WoWScrnShot_061607_215434.jpg
-*/
-/*
-update `creature_template` set `ScriptName` = 'npc_prof_alchemy' where `entry` in (17909, 19052, 22427);
-update `creature_template` set `ScriptName` = 'npc_prof_blacksmith' where `entry` in (5164, 11145, 11146, 11176, 11177, 11178, 11191, 11192, 11193);
-update `creature_template` set `ScriptName` = 'npc_prof_leather' where `entry` in (7866, 7867, 7868, 7869, 7870, 7871);
-update `creature_template` set `ScriptName` = 'npc_prof_tailor' where `entry` in (22208, 22212, 22213);
-
-update `gameobject_template` set `ScriptName` = 'go_soothsaying_for_dummies' where `entry` = 177226;
-*/
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*###
 # to be removed from here (->ncp_text). This is data for database projects.

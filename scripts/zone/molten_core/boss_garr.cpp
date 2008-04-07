@@ -20,7 +20,7 @@ SD%Complete: 50
 SDComment: Adds NYI
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 

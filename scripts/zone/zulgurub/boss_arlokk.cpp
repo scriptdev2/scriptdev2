@@ -22,7 +22,7 @@ EndScriptData */
 
 
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_SHADOWWORDPAIN       23952
@@ -111,18 +111,6 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
             pInstance->SetData(DATA_ARLOKK_DEATH, 0);
     }
 
-  void ResetThreat()
-  {
-    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
- 
-    for(uint32 i = 0; i <= (m_threatlist.size()-1); i++)
-    {
-      Unit* pUnit = SelectUnit(SELECT_TARGET_TOPAGGRO, i);
-      if(pUnit)
-        (m_creature->getThreatManager()).modifyThreatPercent(pUnit, -99);
-    }
- 
-  }
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
@@ -197,7 +185,7 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
               m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  //Invisble Model
               m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
               //m_creature->CombatStop();
-              ResetThreat();
+              DoResetThreat();
               VanishedOnce = true;
               Vanish_Timer = 45000;
               Visible_Timer = 6000;

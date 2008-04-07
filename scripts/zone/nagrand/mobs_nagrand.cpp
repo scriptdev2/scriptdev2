@@ -21,11 +21,9 @@ SDComment: Quest support: 9849, 9918, 9935, 9935. Gurok, mini outdoor boss
 SDCategory: Nagrand
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_gossip.h"
 
 /*######
 ## mob_gurok_the_usurper

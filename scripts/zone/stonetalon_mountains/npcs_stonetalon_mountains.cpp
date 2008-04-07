@@ -20,10 +20,8 @@ SD%Complete: 95
 SDComment: Braug Dimspirits questions/'answers' might have more to it, need more info.
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/QuestDef.h"
-#include "../../../../../game/GossipDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_braug_dimspirit

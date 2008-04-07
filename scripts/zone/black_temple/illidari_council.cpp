@@ -21,9 +21,9 @@ SDComment: Workarounds for Spellstealing Dampen Magic and Circle of Healing. Nee
 SDCategory: Black Temple
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "../../../../../game/TargetedMovementGenerator.h"
+#include "TargetedMovementGenerator.h"
 
 // High Nethermancer Zerevor's spells
 #define SPELL_FLAMESTRIKE          41481
@@ -1039,21 +1039,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         }
     }
 
-    void ResetThreat()
-    {
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        std::list<HostilReference*>::iterator i = m_threatlist.begin();
-        for(i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
-        {
-            Unit* pUnit = NULL;
-            pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit)
-            {
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-            }
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -1102,7 +1087,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if(target)
                 {
-                    ResetThreat();
+                    DoResetThreat();
                     m_creature->AddThreat(target, 500000.0f); // Chase a unit. Check before DoMeleeAttackIfReady prevents from attacking
                    (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
                 }
@@ -1120,7 +1105,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
                 DoCast(m_creature->getVictim(), SPELL_DEADLY_POISON);
                 (*m_creature).GetMotionMaster()->Clear();
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                ResetThreat();
+                DoResetThreat();
                 m_creature->AddThreat(m_creature->getVictim(), 3000.0f); // Make Veras attack his target for a while, he will cast Envenom 4 seconds after.
                 DeadlyPoisonTimer += 6000;
                 VanishTimer = 90000;

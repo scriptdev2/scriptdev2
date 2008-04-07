@@ -312,7 +312,7 @@ void SimpleAI::UpdateAI(const uint32 diff)
                 if (target)
                 {
                     if (m_creature->IsNonMeleeSpellCasted(false))
-                        m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
+                        m_creature->InterruptNonMeleeSpells(false);
 
                     DoCast(target, Spell[i].Spell_Id);
 

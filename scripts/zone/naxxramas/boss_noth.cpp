@@ -20,7 +20,7 @@ SD%Complete: 40
 SDComment: Missing Balcony stage
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 #define SAY_AGGRO1 "Glory to the master!"
 #define SAY_AGGRO2 "Your life is forfeit!"

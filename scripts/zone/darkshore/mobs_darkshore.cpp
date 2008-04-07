@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: All nomal mobs in darkshore
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 /*######
 ## mob_lunaclaw

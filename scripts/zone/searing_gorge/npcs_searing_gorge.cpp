@@ -21,10 +21,8 @@ SDComment: Quest support: 3377, 3441 (More accurate info on Kalaran needed). Lot
 SDCategory: Searing Gorge
 EndScriptData */
 
-#include "../../sc_defines.h"
-#include "../../../../../game/Player.h"
-#include "../../../../../game/GossipDef.h"
-#include "../../../../../game/QuestDef.h"
+#include "sc_creature.h"
+#include "sc_gossip.h"
 
 /*######
 ## npc_kalaran_windblade

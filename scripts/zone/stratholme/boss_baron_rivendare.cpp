@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: aura applied/defined in database
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 // **** This script is still under Developement ****
 

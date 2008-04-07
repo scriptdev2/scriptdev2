@@ -20,14 +20,14 @@ SD%Complete: 99
 SDComment: Missing blizzlike Shield Generators coords
 EndScriptData */
 
-#include "../../../sc_defines.h"
+#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 #include "../../../creature/simple_ai.h"
-#include "../../../../../../game/GameObject.h"
-#include "../../../../../../game/Player.h"
-#include "../../../../../../game/Spell.h"
-#include "../../../../../../game/Item.h"
-#include "../../../../../../game/TargetedMovementGenerator.h"
+#include "Player.h"
+#include "GameObject.h"
+#include "Item.h"
+#include "Spell.h"
+#include "TargetedMovementGenerator.h"
 
 #define SPELL_MULTI_SHOT              38310
 #define SPELL_SHOCK_BLAST             38509

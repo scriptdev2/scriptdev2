@@ -20,7 +20,7 @@ SD%Complete: 100
 SDComment: VERIFY SCRIPT AND SQL
 EndScriptData */
 
-#include "../../sc_defines.h"
+#include "sc_creature.h"
 
 
 
@@ -66,7 +66,6 @@ struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
             //Begin melee attack if we are within range
             if (m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
                 DoStartMeleeAttack(who);
-            else DoStartRangedAttack(who);
             
             pTarget = who;
         }
