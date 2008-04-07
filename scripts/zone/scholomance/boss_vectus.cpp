@@ -18,6 +18,7 @@
 SDName: Boss_Vectus
 SD%Complete: 100
 SDComment: 
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

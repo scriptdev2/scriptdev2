@@ -18,6 +18,7 @@
 SDName: boss_timmy_the_cruel
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

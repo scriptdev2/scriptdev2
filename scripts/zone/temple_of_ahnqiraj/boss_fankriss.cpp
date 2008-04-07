@@ -18,6 +18,7 @@
 SDName: boss_fankriss
 SD%Complete: 100
 SDComment: 
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 

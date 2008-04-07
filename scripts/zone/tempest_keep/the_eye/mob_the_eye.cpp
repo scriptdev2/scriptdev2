@@ -18,6 +18,7 @@
 SDName: mob_the_eye
 SD%Complete: 100
 SDComment: Trash mobs for TK: The Eye
+SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
 #include "sc_creature.h"

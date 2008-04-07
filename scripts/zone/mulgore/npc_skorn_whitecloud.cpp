@@ -18,6 +18,7 @@
 SDName: Npc_Skorn_Whitecloud
 SD%Complete: 100
 SDComment: Just a story if not rewarded for quest
+SDCategory: Mulgore
 EndScriptData */
 
 #include "sc_creature.h"

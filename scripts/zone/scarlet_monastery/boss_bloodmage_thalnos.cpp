@@ -18,6 +18,7 @@
 SDName: Boss_Bloodmage_Thalnos
 SD%Complete: 100
 SDComment: 
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: boss_crimson_hammersmith
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Instance_Scholomance
 SD%Complete: 100
 SDComment: 
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

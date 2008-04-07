@@ -18,6 +18,7 @@
 SDName: boss_darhrohan_balnazzar
 SD%Complete: 100
 SDComment: CHECK SQL
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

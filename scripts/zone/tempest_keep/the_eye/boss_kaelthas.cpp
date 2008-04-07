@@ -18,6 +18,7 @@
 SDName: boss_Kaelthas
 SD%Complete: 60
 SDComment: SQL, phase 2, phase 3, Mind Control, taunt immunity
+SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
 #include "def_the_eye.h"

@@ -18,6 +18,7 @@
 SDName: boss_wailing_caverns
 SD%Complete: 70
 SDComment: Wailing Caverns bosses
+SDCategory: Wailing Caverns
 EndScriptData */
 
 #include "sc_creature.h"

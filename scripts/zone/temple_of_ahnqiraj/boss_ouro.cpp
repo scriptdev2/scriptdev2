@@ -2,6 +2,7 @@
 SDName: boss_ouro
 SD%Complete: 100
 SDComment: place holder
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #define SPELL_SWEEP             26103

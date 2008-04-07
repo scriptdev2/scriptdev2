@@ -18,6 +18,7 @@
 SDName: mob_uldaman
 SD%Complete: 100
 SDComment: Uldaman trash mobs
+SDCategory: Uldaman
 EndScriptData */
 
 #include "sc_creature.h"

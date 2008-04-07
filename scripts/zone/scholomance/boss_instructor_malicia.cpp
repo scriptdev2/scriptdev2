@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: Boss_Jandice_Barov
+SDName: Boss_instructormalicia
 SD%Complete: 100
 SDComment: 
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

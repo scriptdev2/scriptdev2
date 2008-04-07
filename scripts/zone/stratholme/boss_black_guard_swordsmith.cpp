@@ -18,6 +18,7 @@
 SDName: boss_black_guard_swordsmith
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

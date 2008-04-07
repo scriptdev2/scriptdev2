@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: instance_zulaman
+SD%Complete: 80
+SDComment: 
+SDCategory: Zul'Aman
+EndScriptData */
+
 #include "sc_creature.h"
 #include "def_zulaman.h"
 

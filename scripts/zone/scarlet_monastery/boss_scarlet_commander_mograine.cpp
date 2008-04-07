@@ -18,6 +18,7 @@
 SDName: Boss_Scarlet_Commander_Mograine
 SD%Complete: 100
 SDComment: Missing revive
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

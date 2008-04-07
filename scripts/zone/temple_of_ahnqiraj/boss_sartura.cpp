@@ -18,6 +18,7 @@
 SDName: boss_sartura
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 /*

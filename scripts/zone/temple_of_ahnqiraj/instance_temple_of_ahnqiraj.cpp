@@ -17,7 +17,8 @@
 /* ScriptData
 SDName: instance_temple_of_ahnqiraj
 SD%Complete: 80
-SDComment:
+SDComment: 
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"

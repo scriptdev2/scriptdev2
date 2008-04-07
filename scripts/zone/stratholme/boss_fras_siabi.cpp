@@ -18,6 +18,7 @@
 SDName: boss_fras_siabi
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Lorekeeper_Polkelt
 SD%Complete: 100
 SDComment: 
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

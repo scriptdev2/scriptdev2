@@ -18,6 +18,7 @@
 SDName: Instance_The_Eye
 SD%Complete: 100
 SDComment: 
+SDCategory: Tempest Keep, The Eye
 EndScriptData */
  
 #include "sc_creature.h"

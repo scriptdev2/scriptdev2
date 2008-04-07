@@ -18,6 +18,7 @@
 SDName: npc_caine_bloodhoof
 SD%Complete: 100
 SDComment: for quest 925
+SDCategory: Thunder Bluff
 EndScriptData */
 
 #include "sc_creature.h"

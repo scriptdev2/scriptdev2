@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */   
 
+/* ScriptData
+SDName: boss_cthun
+SD%Complete: 10
+SDComment: Missing Phase 2 and eye beam phase
+SDCategory: Tempest Keep, The Eye
+EndScriptData */
+
 #include "sc_creature.h"
 #include "def_the_eye.h"
 

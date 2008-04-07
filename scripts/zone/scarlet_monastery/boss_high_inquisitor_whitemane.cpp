@@ -18,6 +18,7 @@
 SDName: Boss_High_Inquistor_Whitmane
 SD%Complete: 50
 SDComment: Missing connection with commander mograine
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

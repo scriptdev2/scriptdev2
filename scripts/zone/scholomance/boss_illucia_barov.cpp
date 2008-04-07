@@ -18,6 +18,7 @@
 SDName: Boss_Illucia_Barov
 SD%Complete: 100
 SDComment: 
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

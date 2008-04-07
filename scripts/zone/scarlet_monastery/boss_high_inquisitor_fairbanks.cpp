@@ -18,6 +18,7 @@
 SDName: Boss_High_Inquisitor_Faribanks
 SD%Complete: 100
 SDComment: 
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

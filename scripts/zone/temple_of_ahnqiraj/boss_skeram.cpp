@@ -18,6 +18,7 @@
 SDName: Boss_Skeram
 SD%Complete: 50
 SDComment: Mind Control buggy. Spawns splitting too. Check function missing.
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"

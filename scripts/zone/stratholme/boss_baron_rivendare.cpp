@@ -18,6 +18,7 @@
 SDName: boss_baron_rivendare
 SD%Complete: 100
 SDComment: aura applied/defined in database
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

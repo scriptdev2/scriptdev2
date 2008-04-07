@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: npcs_netherstorm
+SDName: Npcs_netherstorm
 SD%Complete: 99
-SDComment: misc npcs netherstorm, true text missing for gossip items. Script Veronia disabled due to core limitation.
+SDComment: Quest support: 10438. (Script Veronia disabled due to core limitation)
+SDCategory: Netherstorm
 EndScriptData */
 
 #include "sc_creature.h"

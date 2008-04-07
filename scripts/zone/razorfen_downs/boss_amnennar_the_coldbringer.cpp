@@ -18,6 +18,7 @@
 SDName: Boss_Amnennar_the_coldbringer
 SD%Complete: 100
 SDComment: 
+SDCategory: Razorfen Downs
 EndScriptData */
 
 #include "sc_creature.h"

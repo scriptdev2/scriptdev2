@@ -18,6 +18,7 @@
 SDName: boss_malor_the_zelous
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

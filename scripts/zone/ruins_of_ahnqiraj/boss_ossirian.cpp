@@ -2,6 +2,7 @@
 SDName: Boss_Ossirian
 SD%Complete: 0
 SDComment: Place holder
+SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
 //Ossirian

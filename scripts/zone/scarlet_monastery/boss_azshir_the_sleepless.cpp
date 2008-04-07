@@ -18,6 +18,7 @@
 SDName: Boss_Azshir_the_Sleepless
 SD%Complete: 100
 SDComment: 
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

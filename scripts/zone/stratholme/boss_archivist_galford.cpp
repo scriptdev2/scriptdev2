@@ -18,6 +18,7 @@
 SDName: boss_archivist_galford
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

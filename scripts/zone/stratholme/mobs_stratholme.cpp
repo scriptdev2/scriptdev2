@@ -18,6 +18,7 @@
 SDName: mobs_stratholme
 SD%Complete: 100
 SDComment: trash mobs for strat
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

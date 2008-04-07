@@ -18,6 +18,7 @@
 SDName: boss_maleki_the_pallid
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

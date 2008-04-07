@@ -18,6 +18,7 @@
 SDName: Boss_Doomwalker
 SD%Complete: 100
 SDComment: 
+SDCategory: Shadowmoon Valley
 EndScriptData */
 
 #include "sc_creature.h"

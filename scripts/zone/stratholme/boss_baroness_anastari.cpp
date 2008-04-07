@@ -18,6 +18,7 @@
 SDName: boss_baroness_anastari
 SD%Complete: 90
 SDComment: MC disabled
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

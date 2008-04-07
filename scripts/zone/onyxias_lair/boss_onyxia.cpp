@@ -18,6 +18,7 @@
 SDName: Boss_Onyxia
 SD%Complete: 50
 SDComment: Phase 2 has many errors. Recommend Rewrite of entire script.
+SDCategory: Onyxia's Lair
 EndScriptData */
 
 #include "sc_creature.h"

@@ -17,7 +17,8 @@
 /* ScriptData
 SDName: Npcs_Stonetalon_Mountains
 SD%Complete: 95
-SDComment: Braug Dimspirits questions/'answers' might have more to it, need more info.
+SDComment: Quest support: 6627 (Braug Dimspirits questions/'answers' might have more to it, need more info)
+SDCategory: Stonetalon Mountains
 EndScriptData */
 
 #include "sc_creature.h"

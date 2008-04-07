@@ -18,6 +18,7 @@
 SDName: Boss_Arcanist_Doan
 SD%Complete: 100
 SDComment: 
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: boss_huhuran
 SD%Complete: 100
 SDComment: 
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Npcs_Undercity
 SD%Complete: 95
 SDComment: Parqual Fintallas questions/'answers' might have more to it, need more info
+SDCategory: Undercity
 EndScriptData */
 
 #include "sc_gossip.h"

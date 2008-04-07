@@ -18,6 +18,7 @@
 SDName: Instance_arcatraz
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
 #include "sc_creature.h"

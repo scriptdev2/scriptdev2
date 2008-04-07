@@ -18,6 +18,7 @@
 SDName: boss_postmaster_malown
 SD%Complete: 50
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Darkmaster_Gandling
 SD%Complete: 99
 SDComment: Doors missing in instance script.
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

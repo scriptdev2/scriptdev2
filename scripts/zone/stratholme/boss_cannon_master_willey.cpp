@@ -18,6 +18,7 @@
 SDName: boss_cannon_master_willey
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"

@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: mobs_stranglethorn_vale
 SD%Complete: 100
-SDComment: trash mobs in STV
+SDComment: Quest support: 592
+SDCategory: Stranglethorn Vale
 EndScriptData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
-
-// **** This script is still under Developement ****
 
 /*######
 ## mob_yenniku

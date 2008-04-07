@@ -18,6 +18,7 @@
 SDName: boss_cthun
 SD%Complete: 10
 SDComment: Missing Phase 2 and eye beam phase
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"
@@ -157,28 +158,28 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     switch (rand()%8)
                     {
                     case 0:
-                        (*i)->PlaySoundA(RND_WISPER_1, true);
+                        (*i)->PlaySound(RND_WISPER_1, true);
                         break;
                     case 1:
-                        (*i)->PlaySoundA(RND_WISPER_2, true);
+                        (*i)->PlaySound(RND_WISPER_2, true);
                         break;
                     case 2:
-                        (*i)->PlaySoundA(RND_WISPER_3, true);
+                        (*i)->PlaySound(RND_WISPER_3, true);
                         break;
                     case 3:
-                        (*i)->PlaySoundA(RND_WISPER_4, true);
+                        (*i)->PlaySound(RND_WISPER_4, true);
                         break;
                     case 4:
-                        (*i)->PlaySoundA(RND_WISPER_5, true);
+                        (*i)->PlaySound(RND_WISPER_5, true);
                         break;
                     case 5:
-                        (*i)->PlaySoundA(RND_WISPER_6, true);
+                        (*i)->PlaySound(RND_WISPER_6, true);
                         break;
                     case 6:
-                        (*i)->PlaySoundA(RND_WISPER_7, true);
+                        (*i)->PlaySound(RND_WISPER_7, true);
                         break;
                     case 7:
-                        (*i)->PlaySoundA(RND_WISPER_8, true);
+                        (*i)->PlaySound(RND_WISPER_8, true);
                         break;
                     }
 

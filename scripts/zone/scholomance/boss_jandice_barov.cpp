@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_jandicebarov
+SD%Complete: 100
+SDComment: 
+SDCategory: Scholomance
+EndScriptData */
+
 #include "sc_creature.h"
 
 // Spells of Jandice Barov

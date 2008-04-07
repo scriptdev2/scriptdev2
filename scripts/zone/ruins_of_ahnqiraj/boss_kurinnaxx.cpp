@@ -18,6 +18,7 @@
 SDName: Boss_Kurinnaxx
 SD%Complete: 100
 SDComment: VERIFY SCRIPT AND SQL
+SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"

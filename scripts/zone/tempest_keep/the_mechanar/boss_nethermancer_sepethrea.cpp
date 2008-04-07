@@ -17,7 +17,8 @@
 /* ScriptData
 SDName: Boss Nethermancer Sepethrea
 SD%Complete: 100
-SDComment:
+SDComment: 
+SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
 #include "sc_creature.h"

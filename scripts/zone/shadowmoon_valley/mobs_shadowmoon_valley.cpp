@@ -18,6 +18,7 @@
 SDName: mobs_shadowmoon_valley
 SD%Complete: 100
 SDComment: misc mobs, mostly related to quest
+SDCategory: Shadowmoon Valley
 EndScriptData */
 
 #include "sc_creature.h"

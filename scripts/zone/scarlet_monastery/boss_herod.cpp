@@ -18,6 +18,7 @@
 SDName: Boss_Herod
 SD%Complete: 90
 SDComment: Missing adds spawn at death
+SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "sc_creature.h"

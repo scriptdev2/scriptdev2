@@ -18,6 +18,7 @@
 SDName: mob_jadespine_basilisk
 SD%Complete: 100
 SDComment: 
+SDCategory: Uldaman
 EndScriptData */
 
 #include "sc_creature.h"

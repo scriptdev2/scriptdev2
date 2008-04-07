@@ -18,6 +18,7 @@
 SDName: Boss_Janalai
 SD%Complete: 100
 SDComment: 
+SDCategory: Zul'Aman
 EndScriptData */
 
 #include "sc_creature.h"

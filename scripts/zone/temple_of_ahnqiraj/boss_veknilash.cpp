@@ -18,6 +18,7 @@
 SDName: boss_veknilash
 SD%Complete: 75
 SDComment: HP not linked. Spells buggy.
+SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "sc_creature.h"

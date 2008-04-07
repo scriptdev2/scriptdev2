@@ -18,6 +18,7 @@
 SDName: Boss_Nalorakk
 SD%Complete: 80
 SDComment: Todo: Trash Waves
+SDCategory: Zul'Aman
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,7 +18,7 @@
 SDName: Npcs_Stormwind_City
 SD%Complete: 100
 SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell 42711). Receive emote General Marcus
-SDCategory: NPCs
+SDCategory: Stormwind City
 EndScriptData */
 
 #include "sc_creature.h"

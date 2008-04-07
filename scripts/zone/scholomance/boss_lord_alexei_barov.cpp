@@ -18,6 +18,7 @@
 SDName: Boss_Lord_Alexei_Barov
 SD%Complete: 100
 SDComment: aura applied/defined in database
+SDCategory: Scholomance
 EndScriptData */
 
 #include "sc_creature.h"

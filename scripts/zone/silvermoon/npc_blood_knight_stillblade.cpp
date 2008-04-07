@@ -18,6 +18,7 @@
 SDName: npc_blood_knight_stillblade
 SD%Complete: 100
 SDComment: For paladin quest
+SDCategory: Silvermoon City
 EndScriptData */
 
 #include "sc_creature.h"

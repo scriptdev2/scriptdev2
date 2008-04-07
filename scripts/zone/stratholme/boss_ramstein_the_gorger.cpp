@@ -18,6 +18,7 @@
 SDName: boss_ramstein_the_gorger
 SD%Complete: 100
 SDComment: 
+SDCategory: Stratholme
 EndScriptData */
 
 #include "sc_creature.h"
