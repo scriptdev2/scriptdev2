@@ -75,8 +75,7 @@ scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azshara/npcs_azshara.cpp \
-scripts/zone/azuremyst_isle/npc_draenei_survivor.cpp \
-scripts/zone/azuremyst_isle/npc_injured_draenei.cpp \
+scripts/zone/azuremyst_isle/npcs_azuremyst_isle.cpp \
 scripts/zone/barrens/npc_beaten_corpse.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \
 scripts/zone/black_temple/boss_illidan.cpp \

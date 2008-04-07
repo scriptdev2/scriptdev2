@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -15,14 +15,19 @@
 */
 
 /* ScriptData
-SDName: npc_draenei_survivor
+SDName: Npcs_Azuremyst_Isle
 SD%Complete: 100
-SDComment: For quest 9283
+SDComment: Quest support: 9283, 9554 (Special flight path, SCRIPT NOT IN USE YET). Injured Draenei cosmetic only
 SDCategory: Azuremyst Isle
 EndScriptData */
 
 #include "sc_creature.h"
+#include "sc_gossip.h"
 #include <cmath>
+
+/*######
+## draenei_survivor
+######*/
 
 #define HEAL1        "The last thing I remember is the ship falling and us getting into the pods. I'll go see how I can help. Thank you!"
 #define HEAL2        "$C, Where am I? Who are you? Oh no! What happened to the ship?."
@@ -203,12 +208,107 @@ CreatureAI* GetAI_draenei_survivor(Creature *_Creature)
     return new draenei_survivorAI (_Creature);
 }
 
+/*######
+## injured_draenei
+######*/
 
-void AddSC_draenei_survivor()
+struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
+{
+    injured_draeneiAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+        //m_creature->RemoveAllAuras();
+        //m_creature->DeleteThreatList();
+        //DoGoHome();
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+        m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
+        switch (rand()%2)
+        {
+            case 0: m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1); break;
+            case 1: m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3); break;
+        }
+    }
+    
+    void AttackStart(Unit *who)
+    {
+        return; //ignore all attackstart commands
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        return; //ignore everyone around them (won't aggro anything)
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        return;
+    }
+
+};
+CreatureAI* GetAI_injured_draenei(Creature *_Creature)
+{
+    return new injured_draeneiAI (_Creature);
+}
+
+/*######
+## npc_susurrus
+######*/
+
+/*
+UPDATE `creature_template` SET `ScriptName` = 'npc_susurrus' WHERE `entry` = 17435;
+*/
+
+bool GossipHello_npc_susurrus(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->HasItemCount(23843,1,true))
+        player->ADD_GOSSIP_ITEM(0, "I am ready.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (action == GOSSIP_ACTION_INFO_DEF)
+    {
+        player->CLOSE_GOSSIP_MENU();
+
+        std::vector<uint32> nodes;
+
+        nodes.resize(2);
+        nodes[0] = 92;                                      //from susurrus
+        nodes[1] = 91;                                      //end at exodar
+        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 506
+    }
+    return true;
+}
+
+/*######
+## 
+######*/
+
+void AddSC_npcs_azuremyst_isle()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="draenei_survivor";
     newscript->GetAI = GetAI_draenei_survivor;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="injured_draenei";
+    newscript->GetAI = GetAI_injured_draenei;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_susurrus";
+    newscript->pGossipHello =   &GossipHello_npc_susurrus;
+    newscript->pGossipSelect =  &GossipSelect_npc_susurrus;
     m_scripts[nrscripts++] = newscript;
 }

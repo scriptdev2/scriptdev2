@@ -122,8 +122,7 @@ extern void AddSC_mobs_spitelashes();
 extern void AddSC_npcs_azshara();
 
 //Azuremyst Isle
-extern void AddSC_injured_draenei();
-extern void AddSC_draenei_survivor();
+extern void AddSC_npcs_azuremyst_isle();
 
 //Badlands
 //Barrens
@@ -969,8 +968,7 @@ void ScriptsInit()
     AddSC_npcs_azshara();
 
     //Azuremyst Isle
-    AddSC_injured_draenei();
-    AddSC_draenei_survivor();
+    AddSC_npcs_azuremyst_isle();
 
     //Badlands
     //Barrens

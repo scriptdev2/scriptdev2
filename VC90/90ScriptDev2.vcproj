@@ -1484,11 +1484,7 @@
 					Name="Azuremyst Isle"
 					>
 					<File
-						RelativePath="..\scripts\zone\azuremyst_isle\npc_draenei_survivor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\azuremyst_isle\npc_injured_draenei.cpp"
+						RelativePath="..\scripts\zone\azuremyst_isle\npcs_azuremyst_isle.cpp"
 						>
 					</File>
 				</Filter>

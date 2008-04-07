@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
+SDComment: Quest support: 10583, 10601, 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -51,6 +51,9 @@ bool GossipSelect_npc_drake_dealer_hurlunk(Player *player, Creature *_Creature, 
 ## npc_invis_legion_teleporter
 ######*/
 
+#define SPELL_TELE_A_TO   37387
+#define SPELL_TELE_H_TO   37389
+
 struct MANGOS_DLL_DECL npc_invis_legion_teleporterAI : public ScriptedAI
 {
     npc_invis_legion_teleporterAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -83,15 +86,13 @@ struct MANGOS_DLL_DECL npc_invis_legion_teleporterAI : public ScriptedAI
             if(PlayerGuid)
             {
                 Player* player = ((Player*)Unit::GetUnit((*m_creature), PlayerGuid));
-                if(m_creature->GetDistance(player)<4)
+
+                if(m_creature->GetDistance(player)<3)
                 {
                     if(player->GetTeam()== ALLIANCE && player->GetQuestRewardStatus(10589))
-                        player->CastSpell(player,37387,false);
+                        player->CastSpell(player,SPELL_TELE_A_TO,false);
                     if(player->GetTeam()== HORDE && player->GetQuestRewardStatus(10604))
-                        player->CastSpell(player,37389,false);
-                    //return? Cannot confirm this same npc should also be the one controlling return
-                    /*if(player->GetQuestRewardStatus(10589) || player->GetQuestRewardStatus(10604))
-                        player->CastSpell(player,37532,false);*/
+                        player->CastSpell(player,SPELL_TELE_H_TO,false);
                 }
                 PlayerGuid=0;
             }
@@ -102,6 +103,47 @@ struct MANGOS_DLL_DECL npc_invis_legion_teleporterAI : public ScriptedAI
 CreatureAI* GetAI_npc_invis_legion_teleporter(Creature *_Creature)
 {
     return new npc_invis_legion_teleporterAI (_Creature);
+}
+
+/*######
+## npc_flanis_swiftwing_and_kagrosh
+######*/
+
+bool GossipHello_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(10583) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(30658,1,true))
+        player->ADD_GOSSIP_ITEM( 0, "Take Flanis's Pack", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (player->GetQuestStatus(10601) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(30659,1,true))
+        player->ADD_GOSSIP_ITEM( 0, "Take Kagrosh's Pack", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    {
+	    ItemPosCountVec dest;
+        uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 30658, 1, false);
+        if( msg == EQUIP_ERR_OK )
+        {
+            player->StoreNewItem( dest, 30658, 1, true);
+            player->PlayerTalkClass->ClearMenus();
+        }
+    }
+    if (action == GOSSIP_ACTION_INFO_DEF+2)
+    {
+	    ItemPosCountVec dest;
+        uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 30659, 1, false);
+        if( msg == EQUIP_ERR_OK )
+        {
+            player->StoreNewItem( dest, 30659, 1, true);
+            player->PlayerTalkClass->ClearMenus();
+        }
+    }
+    return true;
 }
 
 /*######
@@ -155,6 +197,12 @@ void AddSC_npcs_shadowmoon_valley()
     newscript = new Script;
     newscript->Name="npc_invis_legion_teleporter";
     newscript->GetAI = GetAI_npc_invis_legion_teleporter;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npcs_flanis_swiftwing_and_kagrosh";
+    newscript->pGossipHello =  &GossipHello_npcs_flanis_swiftwing_and_kagrosh;
+    newscript->pGossipSelect = &GossipSelect_npcs_flanis_swiftwing_and_kagrosh;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
