@@ -18,6 +18,7 @@
 SDName: Mob_Razorlash
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 

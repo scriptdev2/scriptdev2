@@ -18,6 +18,7 @@
 SDName: Boss_Tinkerer_Gizlock
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 

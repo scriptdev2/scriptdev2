@@ -18,6 +18,7 @@
 SDName: NPC_Narm_Faulk
 SD%Complete: 50
 SDComment: Core keeps breaking support for this quest
+SDCategory: Dun Morogh
 EndScriptData */
 
 #include "sc_creature.h"

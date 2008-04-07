@@ -14,16 +14,16 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "sc_creature.h"
-#include "def_shadow_labyrinth.h"
-#include "../../../creature/simple_ai.h"
-
 /* ScriptData
 SDName: Boss_Blackheart_the_Inciter
 SD%Complete: 75
 SDComment: Incite Chaos NYI since core lacks Mind Control support
-SDCategory: Auchindoun / Shadow Labyrinth
+SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
+
+#include "sc_creature.h"
+#include "def_shadow_labyrinth.h"
+#include "../../../creature/simple_ai.h"
 
 //#define SPELL_INCITE_CHAOS    33684
 #define SPELL_CHARGE          24408

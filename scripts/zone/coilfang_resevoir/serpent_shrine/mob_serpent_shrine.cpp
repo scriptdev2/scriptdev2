@@ -18,6 +18,7 @@
 SDName: Mob_Serpent_Shrine
 SD%Complete: 100
 SDComment: All non-boss mobs in SSC
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

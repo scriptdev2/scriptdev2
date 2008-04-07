@@ -18,6 +18,7 @@
 SDName: npcs_karazhan
 SD%Complete: 35
 SDComment: Barnes: Not fully complete. Berthold: needs testing
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

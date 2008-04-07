@@ -18,6 +18,7 @@
 SDName: Boss_Deadmines
 SD%Complete: 50
 SDComment: Deadmines bosses
+SDCategory: Deadmines
 EndScriptData */
 
 #include "sc_creature.h"

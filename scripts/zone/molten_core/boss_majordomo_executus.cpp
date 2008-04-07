@@ -18,6 +18,7 @@
 SDName: Boss_MajorDomo_Executus
 SD%Complete: 30
 SDComment: Correct spawning and Event NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

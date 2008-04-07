@@ -19,6 +19,7 @@
 SDName: Boss_Prince_Malchezzar
 SD%Complete: 100
 SDComment: 
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

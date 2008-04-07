@@ -18,6 +18,7 @@
 SDName: Boss_Gehennas
 SD%Complete: 100
 SDComment: Adds MC NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

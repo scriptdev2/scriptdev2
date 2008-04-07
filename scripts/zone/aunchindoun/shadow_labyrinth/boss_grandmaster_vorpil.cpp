@@ -14,16 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "sc_creature.h"
-#include "def_shadow_labyrinth.h"
-
 /* ScriptData
 SDName: Boss_Grandmaster_Vorpil
 SD%Complete: 50
 SDComment: Missing Void Rifts, Void Traveler, and Draw Shadows
-SDCategory: Auchindoun / Shadow Labyrinth
+SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
+#include "sc_creature.h"
+#include "def_shadow_labyrinth.h"
 
 #define SPELL_DRAW_SHADOW_VISUAL       33563 // right but only animation works / too complex, it's useless implement it
 #define SPELL_SHADOW_BOLT_VOLLEY       32963

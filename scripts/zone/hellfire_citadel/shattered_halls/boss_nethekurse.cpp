@@ -18,6 +18,7 @@
 SDName: Boss_Nethekurse
 SD%Complete: 90
 SDComment: Using wrong death coil spell
+SDCategory: Hellfire Citadel, Shattered Halls
 EndScriptData */
 
 #include "sc_creature.h"

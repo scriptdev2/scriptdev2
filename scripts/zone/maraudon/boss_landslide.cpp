@@ -18,6 +18,7 @@
 SDName: Boss_Landslide
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 #include "sc_creature.h"

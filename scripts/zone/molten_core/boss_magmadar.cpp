@@ -18,6 +18,7 @@
 SDName: Boss_Magmadar
 SD%Complete: 75
 SDComment: Conflag on ground nyi, fear causes issues without VMAPs
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

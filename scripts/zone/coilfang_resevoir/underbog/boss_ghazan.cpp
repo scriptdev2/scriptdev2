@@ -18,6 +18,7 @@
 SDName: Boss_Ghazan
 SD%Complete: 100
 SDComment: 
+SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
 #include "sc_creature.h"

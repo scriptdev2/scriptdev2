@@ -18,6 +18,7 @@
 SDName: Boss_Shazzrah
 SD%Complete: 75
 SDComment: Teleport NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

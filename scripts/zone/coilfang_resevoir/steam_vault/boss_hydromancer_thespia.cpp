@@ -18,6 +18,7 @@
 SDName: Boss_Hydromancer_Thespia
 SD%Complete: 100
 SDComment: 
+SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
 #include "sc_creature.h"

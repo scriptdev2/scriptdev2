@@ -18,6 +18,7 @@
 SDName: Boss_High_King_Maulgar
 SD%Complete: 80
 SDComment: Verify that the script is working properly
+SDCategory: Gruul's Lair
 EndScriptData */
 
 #include "sc_creature.h"

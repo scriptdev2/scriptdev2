@@ -18,6 +18,7 @@
 SDName: Boss_Pyroguard_Emberseer
 SD%Complete: 100
 SDComment: Event to activate Emberseer NYI
+SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "sc_creature.h"

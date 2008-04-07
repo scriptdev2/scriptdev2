@@ -18,6 +18,7 @@
 SDName: Boss_Rokmar
 SD%Complete: 100
 SDComment: 
+SDCategory: Coilfang Resevoir, Slave Pens
 EndScriptData */
  
 #include "sc_creature.h"

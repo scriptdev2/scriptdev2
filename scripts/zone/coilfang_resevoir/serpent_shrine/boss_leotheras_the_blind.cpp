@@ -18,6 +18,7 @@
 SDName: Boss_Leotheras_The_Blind
 SD%Complete: 50
 SDComment: Missing Inner Demons
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

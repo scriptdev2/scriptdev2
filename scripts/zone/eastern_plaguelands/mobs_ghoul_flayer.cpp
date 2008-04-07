@@ -18,6 +18,7 @@
 SDName: Mobs_Ghoul_Flayer
 SD%Complete: 100
 SDComment: For Darroshire Spirits (5211)
+SDCategory: Eastern Plaguelands
 EndScriptData */
 
 #include "sc_creature.h"

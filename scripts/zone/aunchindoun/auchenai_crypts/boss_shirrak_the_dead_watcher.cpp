@@ -18,7 +18,7 @@
 SDName: Boss_Shirrak_the_dead_watcher
 SD%Complete: 100
 SDComment: 
-SDCategory: Auchindoun / Auchenai Crypts
+SDCategory: Auchindoun, Auchenai Crypts
 EndScriptData */
 
 #include "sc_creature.h"

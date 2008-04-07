@@ -18,6 +18,7 @@
 SDName: Boss_Golemagg
 SD%Complete: 90
 SDComment: 
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

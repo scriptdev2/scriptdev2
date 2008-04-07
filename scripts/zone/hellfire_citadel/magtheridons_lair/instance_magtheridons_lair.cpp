@@ -18,6 +18,7 @@
 SDName: Instance_Magtheridons_Lair
 SD%Complete: 100
 SDComment: 
+SDCategory: Hellfire Citadel, Magtheridon's lair
 EndScriptData */
 
 #include "sc_creature.h"

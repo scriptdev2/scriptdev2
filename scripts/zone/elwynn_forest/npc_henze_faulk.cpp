@@ -18,6 +18,7 @@
 SDName: Npc_Henze_Faulk
 SD%Complete: 50
 SDComment: Core keeps breaking support for this quest
+SDCategory: Elwynn Forest
 EndScriptData */
 
 #include "sc_creature.h"

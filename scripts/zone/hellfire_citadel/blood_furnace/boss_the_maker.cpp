@@ -18,6 +18,7 @@
 SDName: Boss_The_Maker
 SD%Complete: 80
 SDComment: Mind control no support
+SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
 #include "sc_creature.h"

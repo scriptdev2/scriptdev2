@@ -18,7 +18,7 @@
 SDName: Boss_DarkWeaver_Syth
 SD%Complete: 100
 SDComment: 
-SDCategory: Auchindoun / Sethekk Halls
+SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "sc_creature.h"

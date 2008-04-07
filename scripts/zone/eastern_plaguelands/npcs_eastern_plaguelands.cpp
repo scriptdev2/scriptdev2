@@ -18,6 +18,7 @@
 SDName: npcs_eastern_plaguelands
 SD%Complete: 90
 SDComment: npcs eastern plaguelands, mostly quest related.
+SDCategory: Eastern Plaguelands
 EndScriptData */
 
 #include "sc_creature.h"

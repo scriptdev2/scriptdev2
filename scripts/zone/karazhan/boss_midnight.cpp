@@ -18,6 +18,7 @@
 SDName: Boss_Midnight
 SD%Complete: 100
 SDComment: 
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

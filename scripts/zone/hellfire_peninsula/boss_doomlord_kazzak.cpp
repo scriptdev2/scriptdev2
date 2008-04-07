@@ -18,6 +18,7 @@
 SDName: Boss_Doomlord_Kazzak
 SD%Complete: 70
 SDComment: Using incorrect spell for Mark of Kazzak
+SDCategory: Hellfire Peninsula
 EndScriptData */
 
 #include "sc_creature.h"

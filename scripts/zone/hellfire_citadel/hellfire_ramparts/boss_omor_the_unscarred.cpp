@@ -18,6 +18,7 @@
 SDName: Boss_Omar_The_Unscarred
 SD%Complete: 70
 SDComment: Missing MT air knockback and float
+SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
 #include "sc_creature.h"

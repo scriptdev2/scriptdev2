@@ -18,6 +18,7 @@
 SDName: Boss_Rotgrip
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 

@@ -18,6 +18,7 @@
 SDName: Boss_Warlord_Kalithres
 SD%Complete: 50
 SDComment: Missing connection to containers, making fight impossible
+SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
 #include "sc_creature.h"

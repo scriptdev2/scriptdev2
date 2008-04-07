@@ -18,6 +18,7 @@
 SDName: Mob_Gruuls_Lair
 SD%Complete: 100
 SDComment: Trash mobs
+SDCategory: Gruul's Lair
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Instance_Gruuls_Lair
 SD%Complete: 100
 SDComment: 
+SDCategory: Gruul's Lair
 EndScriptData */
 
 #include "sc_creature.h"

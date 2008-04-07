@@ -18,6 +18,7 @@
 SDName: Boss_Garr
 SD%Complete: 50
 SDComment: Adds NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

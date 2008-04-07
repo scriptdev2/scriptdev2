@@ -18,6 +18,7 @@
 SDName: Boss_Hydross_The_Unstable
 SD%Complete: 90
 SDComment: Needs some corrections to switch radius and location
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

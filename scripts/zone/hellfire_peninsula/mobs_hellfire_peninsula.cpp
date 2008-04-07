@@ -18,6 +18,7 @@
 SDName: mobs_hellfire_peninsula
 SD%Complete: 100
 SDComment: misc mobs, mostly related to quest
+SDCategory: Hellfire Peninsula
 EndScriptData */
 
 #include "sc_creature.h"

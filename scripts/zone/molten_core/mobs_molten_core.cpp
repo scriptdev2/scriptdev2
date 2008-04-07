@@ -13,7 +13,14 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
- 
+
+/* ScriptData
+SDName: Mobs_Molten_Core
+SD%Complete: 100
+SDComment: 
+SDCategory: Molten Core
+EndScriptData */
+
 #include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 

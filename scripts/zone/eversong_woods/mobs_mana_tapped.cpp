@@ -18,6 +18,7 @@
 SDName: Mobs_Mana_Tapped
 SD%Complete: 100
 SDComment: For quest 8346
+SDCategory: Eversong Woods
 EndScriptData */
 
 #include "sc_creature.h"

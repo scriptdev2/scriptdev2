@@ -18,6 +18,7 @@
 SDName: Boss_Morogrim_Tidewalker
 SD%Complete: 90
 SDComment: Water globules don't explode properly
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

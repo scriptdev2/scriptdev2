@@ -18,6 +18,7 @@
 SDName: Boss_Hungarfen
 SD%Complete: 100
 SDComment: Missing model id for Mushrooms
+SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
 #include "sc_creature.h"

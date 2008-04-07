@@ -18,6 +18,7 @@
 SDName: Boss_Maiden_of_Virtue
 SD%Complete: 100
 SDComment: 
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

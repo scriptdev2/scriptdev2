@@ -18,6 +18,7 @@
 SDName: Boss_Curator
 SD%Complete: 100
 SDComment: Evocation may cause client crash (Core related)
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

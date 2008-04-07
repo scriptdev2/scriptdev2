@@ -18,6 +18,7 @@
 SDName: Boss_Ragnaros
 SD%Complete: 75
 SDComment: Intro Dialog and event NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Lady_Vashj
 SD%Complete: 99
 SDComment: Missing blizzlike Shield Generators coords
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

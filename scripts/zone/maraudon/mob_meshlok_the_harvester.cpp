@@ -18,6 +18,7 @@
 SDName: Mob_Meshlok_The_Harvester
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 

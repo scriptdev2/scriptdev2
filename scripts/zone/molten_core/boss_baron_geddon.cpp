@@ -18,6 +18,7 @@
 SDName: Boss_Baron_Geddon
 SD%Complete: 100
 SDComment: 
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

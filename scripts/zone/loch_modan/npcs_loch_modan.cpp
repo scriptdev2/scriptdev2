@@ -17,7 +17,8 @@
 /* ScriptData
 SDName: npcs_loch_modan
 SD%Complete: 100
-SDComment: argue with pebblebitty to get to searing gorge
+SDComment: Quest support: 3181 (only to argue with pebblebitty to get to searing gorge, before quest rewarded)
+SDCategory: Loch Modan
 EndScriptData */
 
 #include "sc_creature.h"

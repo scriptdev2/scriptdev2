@@ -18,6 +18,7 @@
 SDName: Boss_Sulfuron_Harbringer
 SD%Complete: 80
 SDComment: Adds NYI
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

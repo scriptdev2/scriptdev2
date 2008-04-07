@@ -18,7 +18,7 @@
 SDName: Npcs_Ironforge
 SD%Complete: 100
 SDComment: Quest support: 3702
-SDCategory: NPCs
+SDCategory: Ironforge
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Boss_Magtheridon
 SD%Complete: 60
 SDComment: In Development
+SDCategory: Hellfire Citadel, Magtheridon's lair
 EndScriptData */
 
 #include "sc_creature.h"

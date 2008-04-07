@@ -18,6 +18,7 @@
 SDName: Boss_Terestian_Illhoof
 SD%Complete: 80
 SDComment: VERIFY AND CLEANUP SCRIPT
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

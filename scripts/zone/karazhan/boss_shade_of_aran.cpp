@@ -18,6 +18,7 @@
 SDName: Boss_Shade_of_Aran
 SD%Complete: 95
 SDComment: Flame wreath missing cast animation, mods won't triggere. Drinking may cause client crash (core related)
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

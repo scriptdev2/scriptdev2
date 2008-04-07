@@ -18,6 +18,7 @@
 SDName: Instance_Karazhan
 SD%Complete: 0
 SDComment: 
+SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"

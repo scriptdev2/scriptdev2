@@ -18,6 +18,7 @@
 SDName: Mob_Celebras_the_Cursed
 SD%Complete: 100
 SDComment: 
+SDCategory: Maraudon
 EndScriptData */
 
 

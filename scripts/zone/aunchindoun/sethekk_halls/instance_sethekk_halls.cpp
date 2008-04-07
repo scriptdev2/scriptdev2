@@ -18,7 +18,7 @@
 SDName: Instance - Sethekk Halls
 SD%Complete: 50
 SDComment: Instance Data for Sethekk Halls instance
-SDCategory: Sethekk Halls
+SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "sc_creature.h"

@@ -18,6 +18,7 @@
 SDName: Instance_Serpent_Shrine
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

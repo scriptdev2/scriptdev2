@@ -17,7 +17,8 @@
 /* ScriptData
 SDName: Mobs_Darkshore
 SD%Complete: 100
-SDComment: All nomal mobs in darkshore
+SDComment: Quest support: 
+SDCategory: Darkshore
 EndScriptData */
 
 #include "sc_creature.h"

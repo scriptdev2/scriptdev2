@@ -18,6 +18,7 @@
 SDName: Boss_Broggok
 SD%Complete: 100
 SDComment: 
+SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
 #include "sc_creature.h"

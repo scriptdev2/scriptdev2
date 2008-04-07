@@ -18,6 +18,7 @@
 SDName: Instance_Molten_Core
 SD%Complete: 0
 SDComment: Place Holder
+SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"

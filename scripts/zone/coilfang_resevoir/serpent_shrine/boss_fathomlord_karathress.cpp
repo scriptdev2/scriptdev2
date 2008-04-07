@@ -18,6 +18,7 @@
 SDName: Boss_Fathomlord_Karathress
 SD%Complete: 50
 SDComment: Missing Multishot, pet, Totems, Windfury, Whirlwind
+SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "sc_creature.h"

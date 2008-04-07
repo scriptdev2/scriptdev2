@@ -18,6 +18,7 @@
 SDName: Boss_Kelidan_The_Breaker
 SD%Complete: 60
 SDComment: 
+SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
 #include "sc_creature.h"

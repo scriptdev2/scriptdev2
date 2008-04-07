@@ -14,14 +14,14 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "sc_creature.h"
-
-
 /* ScriptData
 SDName: Boss_Watchkeeper_Gargolmar
 SD%Complete: 70
 SDComment: Missing adds to heal him
+SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
+
+#include "sc_creature.h"
 
 //Adds NYI
 
