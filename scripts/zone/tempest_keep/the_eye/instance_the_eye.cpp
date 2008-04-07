@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
  
-#include "sc_creature.h"
 #include "def_the_eye.h"
 
 #define ENCOUNTERS 5

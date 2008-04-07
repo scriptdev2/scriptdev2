@@ -21,7 +21,6 @@ SDComment: VERIFY SCRIPT
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 
 #define ENCOUNTERS 6

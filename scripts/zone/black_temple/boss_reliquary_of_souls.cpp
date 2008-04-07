@@ -21,7 +21,6 @@ SDComment: Persistent Area Auras for each Essence (Aura of Suffering, Aura of De
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
 

@@ -28,12 +28,16 @@ EndScriptData */
 
 #define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
 
+#define QUEST_REDEEMING_THE_DEAD        9685
+#define SPELL_SHIMMERING_VESSEL         31225
+#define SPELL_REVIVE_SELF               32343
+
 struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 {
+    npc_blood_knight_stillbladeAI(Creature *c) : ScriptedAI(c) {Reset();}
+
     uint32 lifeTimer;
     bool spellHit;
-
-    npc_blood_knight_stillbladeAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset()
     {
@@ -68,9 +72,11 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if(Spellkind->Id == 31225 && !spellHit)
+        if((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit && 
+            (Hitter->GetTypeId() == TYPEID_PLAYER) && (((Player*)Hitter)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
         {
-            DoCast(m_creature,32343);
+            ((Player*)Hitter)->CompleteQuest(QUEST_REDEEMING_THE_DEAD);
+            DoCast(m_creature,SPELL_REVIVE_SELF);
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             //m_creature->RemoveAllAuras();

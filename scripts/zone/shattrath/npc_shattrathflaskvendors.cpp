@@ -21,7 +21,6 @@ SDComment: Provides flasks to people exalted with 3 factions
 SDCategory: Shattrath City
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*

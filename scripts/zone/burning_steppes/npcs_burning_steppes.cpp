@@ -21,7 +21,6 @@ SDComment: npcs burning steppes, quest related.
 SDCategory: Burning Steppes
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

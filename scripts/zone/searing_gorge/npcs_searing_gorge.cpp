@@ -21,7 +21,6 @@ SDComment: Quest support: 3377, 3441 (More accurate info on Kalaran needed). Lot
 SDCategory: Searing Gorge
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

@@ -1,6 +1,7 @@
 #ifndef DEF_GRUULS_LAIR_H
 #define DEF_GRUULS_LAIR_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_BLINDEYETHESEER 1

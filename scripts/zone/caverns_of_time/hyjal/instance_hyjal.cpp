@@ -20,7 +20,6 @@ SD%Complete: 100
 SDComment: Instance Data Scripts and functions to acquire mobs and set encounter status for use in various Hyjal Scripts
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_hyjal.h"
 
 #define ENCOUNTERS     5

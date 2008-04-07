@@ -21,7 +21,6 @@ SDComment: Problems with Channelers/Sorcerers displaying channel visual. Ending 
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
 #include "sc_gossip.h"

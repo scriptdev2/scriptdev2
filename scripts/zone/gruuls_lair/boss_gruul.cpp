@@ -21,7 +21,6 @@ SDComment: Ground Slam seriously messed up due to core problem
 SDCategory: Gruul's Lair
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_gruuls_lair.h"
 #include "TargetedMovementGenerator.h"
 

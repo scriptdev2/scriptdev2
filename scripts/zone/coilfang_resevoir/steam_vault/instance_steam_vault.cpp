@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_steam_vault.h"
 #include "GameObject.h"
 

@@ -21,7 +21,6 @@ SDComment: Missing blizzlike Shield Generators coords
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 #include "../../../creature/simple_ai.h"
 #include "Player.h"

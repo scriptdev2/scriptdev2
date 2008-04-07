@@ -21,7 +21,6 @@ SDComment: Missing connection to containers, making fight impossible
 SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_steam_vault.h"
 
 #define SPELL_SPELL_REFLECTION  23920

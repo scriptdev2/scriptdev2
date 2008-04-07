@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_karazhan.h"
 #include "GameObject.h"
 

@@ -21,7 +21,6 @@ SDComment: Workarounds for Spellstealing Dampen Magic and Circle of Healing. Nee
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
 

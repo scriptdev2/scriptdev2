@@ -21,7 +21,6 @@ SDComment: Adds NYI
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_molten_core.h"
 
 

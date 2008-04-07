@@ -41,7 +41,19 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
 
     ai->Reset();
     ai->SetFaction(ALLIANCE);
+
+    ai->Spell[0].SpellId = SPELL_BLIZZARD;
+    ai->Spell[0].Cooldown = 15000 + rand()%20000;
+    ai->Spell[0].TargetType = TARGETTYPE_RANDOM;
     
+    ai->Spell[1].SpellId = SPELL_PYROBLAST;
+    ai->Spell[1].Cooldown = 2000 + rand()%7000;
+    ai->Spell[1].TargetType = TARGETTYPE_RANDOM;
+
+    ai->Spell[2].SpellId = SPELL_SUMMON_ELEMENTALS;
+    ai->Spell[2].Cooldown = 15000 + rand()%30000;
+    ai->Spell[2].TargetType = TARGETTYPE_SELF;
+
     return ai;
 }
 
@@ -91,6 +103,14 @@ CreatureAI* GetAI_npc_thrall(Creature *_Creature)
     ai->Reset();
     ai->EnterEvadeMode();
     ai->SetFaction(HORDE);
+
+    ai->Spell[0].SpellId = SPELL_CHAIN_LIGHTNING;
+    ai->Spell[0].Cooldown = 2000 + rand()%5000;
+    ai->Spell[0].TargetType = TARGETTYPE_VICTIM;
+
+    ai->Spell[1].SpellId = SPELL_SUMMON_DIRE_WOLF;
+    ai->Spell[1].Cooldown = 6000 + rand()%35000;
+    ai->Spell[1].TargetType = TARGETTYPE_RANDOM;
 
     return ai;
 }

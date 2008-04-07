@@ -21,7 +21,6 @@ SDComment: VERIFY SCRIPT
 SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_arcatraz.h"
 #include "GameObject.h"
 

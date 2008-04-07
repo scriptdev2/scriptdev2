@@ -1,6 +1,7 @@
 #ifndef DEF_STEAM_VAULT_H
 #define DEF_STEAM_VAULT_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_HYDROMANCERTHESPIAEVENT 1

@@ -1,6 +1,7 @@
 #ifndef DEF_THE_EYE_H
 #define DEF_THE_EYE_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_ALAREVENT 1

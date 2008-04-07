@@ -1,6 +1,7 @@
 #ifndef DEF_SCHOLOMANCE_H
 #define DEF_SCHOLOMANCE_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_CANSPAWNGANDLING 1

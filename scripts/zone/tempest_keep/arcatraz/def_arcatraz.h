@@ -1,6 +1,7 @@
 #ifndef DEF_ARCATRAZ_H
 #define DEF_ARCATRAZ_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_DALLIAHTHEDOOMSAYEREVENT 1

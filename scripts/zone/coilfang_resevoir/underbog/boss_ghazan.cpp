@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
 
 /*

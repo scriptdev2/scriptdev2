@@ -21,7 +21,6 @@ SDComment: Uldaman trash mobs
 SDCategory: Uldaman
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_uldaman(Creature *_Creature)

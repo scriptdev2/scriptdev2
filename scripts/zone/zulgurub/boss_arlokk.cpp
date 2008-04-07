@@ -18,6 +18,7 @@
 SDName: boss_Arlokk
 SD%Complete: 95
 SDComment: Wrong cleave and red aura is missing.
+SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "sc_creature.h"

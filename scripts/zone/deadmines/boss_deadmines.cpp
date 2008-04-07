@@ -21,7 +21,6 @@ SDComment: Deadmines bosses
 SDCategory: Deadmines
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_boss_deadmines(Creature *_Creature)

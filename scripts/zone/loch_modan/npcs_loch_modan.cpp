@@ -21,7 +21,6 @@ SDComment: Quest support: 3181 (only to argue with pebblebitty to get to searing
 SDCategory: Loch Modan
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

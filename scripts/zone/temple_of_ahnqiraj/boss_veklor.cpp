@@ -21,7 +21,6 @@ SDComment: HP not linked. Spells buggy.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_HEAL_BROTHER          7393
@@ -49,7 +48,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 {
     boss_veklorAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -173,14 +172,12 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
             //Casting Heal to brother
             if(Heal_Timer < diff)
             {
-                    if(pInstance)
-                    {    
-
-                     Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
-                     DoCast(pVeknilash, SPELL_HEAL_BROTHER);
-
-
-                    }
+                if(pInstance)
+                {    
+                    Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
+                    if(pVeknilash)
+                        DoCast(pVeknilash, SPELL_HEAL_BROTHER);
+                }
                        
                 Heal_Timer = 3000;
             }else Heal_Timer -= diff;
@@ -192,8 +189,12 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
                 {    
                     DoCast(m_creature, SPELL_TWIN_TELEPORT);
                     Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
-                    m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
-                    DoResetThreat();     
+                    if(pVeknilash)
+                    {
+                        m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
+                        m_creature->SendMoveToPacket(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), false, 0);
+                        DoResetThreat();
+                    }
 
                 Teleport_Timer = 30000;
                }else Teleport_Timer -= diff;

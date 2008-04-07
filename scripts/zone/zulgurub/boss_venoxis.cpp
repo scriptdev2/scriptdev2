@@ -18,10 +18,10 @@
 SDName: boss_venoxis
 SD%Complete: 100
 SDComment:
+SDCategory: Zul'Gurub
 EndScriptData */
 
 
-#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_HOLY_FIRE     23860

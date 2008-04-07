@@ -22,7 +22,6 @@ SDCategory: Black Temple
 EndScriptData */
 
 /******** Includes ************/
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
 #include "sc_gossip.h"
@@ -848,12 +847,14 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 Maiev->GetMotionMaster()->Idle();
             }
         }
-        // Since we killed Akama before, summon him now.
-        Creature* Akama = DoSpawnCreature(AKAMA, 10, 10, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
+        // Since we killed Akama before, respawn him now
+        Creature* Akama = ((Creature*)Unit::GetUnit((*m_creature), AkamaGUID));
         if(Akama)
         {
-            AkamaGUID = Akama->GetGUID(); // Overwrite old GUID
-            //Akama->SetVisibility(VISIBILITY_OFF); // Invisible for now, we'll make him visible during his turn to talk
+            if(Akama->isDead())
+                Akama->Respawn();
+
+            Akama->SetVisibility(VISIBILITY_OFF); // Invisible for now, we'll make him visible during his turn to talk
             Akama->SetUInt32Value(UNIT_NPC_FLAGS, 0); // So they don't make him restart the event ~~
         }
         IsTalking = true;
@@ -894,8 +895,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 ((npc_akama_illidanAI*)Akama->AI())->AttackStart(m_creature); // Akama starts attacking us
                             }
                         }
-                        //m_creature->RemoveAllAuras(); // Remove any auras we have on us
-                        m_creature->setFaction(14); // Make him hostile after Intro is done.
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // We are now attackable!
                         break;
                     case 11:
@@ -935,9 +934,13 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             Creature* Akama = ((Creature*)Unit::GetUnit((*m_creature), AkamaGUID));
                             if(Akama) // Make Akama visible and move towards us for the final talk.
                             {
+                                Akama->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
                                 Akama->SetVisibility(VISIBILITY_ON);
-                                Akama->GetMotionMaster()->Clear(false);
-                                Akama->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
+                                float PosX = m_creature->GetPositionX() + 10;
+                                float PosY = m_creature->GetPositionY() - 10;
+                                float PosZ = m_creature->GetPositionZ();
+                                Akama->SendMonsterMove(PosX, PosY, PosZ, 0, false, 3000);
+                                Akama->Relocate(PosX, PosY, PosZ);
                             }
                         }
                         break;

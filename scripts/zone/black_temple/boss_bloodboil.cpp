@@ -21,9 +21,7 @@ SDComment: Bloodboil not working correctly, missing enrage
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 
 //Spells
 #define SPELL_ACID_GEYSER        40630

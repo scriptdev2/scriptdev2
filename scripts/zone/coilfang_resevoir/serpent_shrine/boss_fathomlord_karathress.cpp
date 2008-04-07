@@ -21,9 +21,9 @@ SDComment: Missing Multishot, pet, Totems, Windfury, Whirlwind
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_serpent_shrine.h"
-#include "sc_gossip.h"
+#include "Map.h"
+#include "Player.h"
 
 //Karathress spells
 #define SPELL_CATACLYSMIC_BOLT     38441
@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 {
     boss_fathomlord_karathressAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Advisors[0] = 0;
         Advisors[1] = 0;
         Advisors[2] = 0;
@@ -196,29 +196,18 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             //need to spawn if only pre quest done
             bool needspawn = false;
 
-            //if killer don't need quest search for player in group who can take quest
-            if(((Player*)killer)->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE && ((Player*)killer)->GetQuestRewardStatus(OLUM_PRE_QUEST))
-            {
-                needspawn = true;
-            }
-            else
-            {
-                Group *KillerGroup = ((Player*)killer)->GetGroup();
+            std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
 
-                if(KillerGroup)
+            if(PlayerList.empty())
+                return;
+
+            for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+            {
+                //Check if anyone has the quest
+                if(((*itr)->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE) && ((*itr)->GetQuestRewardStatus(OLUM_PRE_QUEST)))
                 {
-                    Player *GroupMember;
-                    const Group::MemberSlotList members = KillerGroup->GetMemberSlots();
-                    for(Group::member_citerator itr = members.begin(); itr!= members.end(); itr ++)
-                    {
-                        GroupMember = (Player*)(Unit::GetUnit((*m_creature),itr->guid));
-
-                        if(GroupMember && GroupMember->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE && GroupMember->GetQuestRewardStatus(OLUM_PRE_QUEST) && m_creature->IsWithinLOSInMap(GroupMember))
-                        {
-                            needspawn = true;
-                            break; //stop itteration
-                        }
-                    }
+                    needspawn = true;
+                    break;
                 }
             }
             if(needspawn)
@@ -228,7 +217,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                StartEvent(who);
+        StartEvent(who);
     }
 
     void UpdateAI(const uint32 diff)
@@ -290,7 +279,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 {
     boss_fathomguard_sharkkisAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -315,21 +304,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
-
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
     void JustDied(Unit *victim)
@@ -346,12 +320,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                }
+        if(pInstance)
+        {
+            pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -427,7 +400,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 {
     boss_fathomguard_tidalvessAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -450,21 +423,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
-
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
     void JustDied(Unit *victim)
@@ -481,38 +439,10 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if(pInstance)
         {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                if(!InCombat)
-                {
-                    InCombat = true;
-
-                    if(pInstance)
-                    {
-                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                    }
-                }
-            }
+            pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
         }
     }
 
@@ -554,7 +484,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 {
     boss_fathomguard_caribdisAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -581,21 +511,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
-
-        
-        
-        
-         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
 
     void JustDied(Unit *victim)
@@ -612,38 +527,10 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                    pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if(pInstance)
         {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-                if(!InCombat)
-                {
-                    InCombat = true;
-
-                    if(pInstance)
-                    {
-                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                    }
-                }
-            }
+            pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
+            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
         }
     }
 

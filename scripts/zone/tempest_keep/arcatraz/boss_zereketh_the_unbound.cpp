@@ -21,7 +21,6 @@ SDComment: boss_zereketh_the_unbound, mob_zerekethvoidzone
 SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_arcatraz.h"
 
 #define SPELL_SEED_OF_CORRUPTION 36123

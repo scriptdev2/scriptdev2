@@ -18,9 +18,9 @@
 SDName: boss_hakkar
 SD%Complete: 95
 SDComment: Spells buggy. Bloodsiphon will always do dmg no poison cloud check.
+SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 {
     boss_hakkarAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
     
@@ -291,10 +291,6 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 
             CheckArlokk_Timer = 1000;
         }else CheckArlokk_Timer -= diff;
-        
-        
-        
-
 
         DoMeleeAttackIfReady();
     }

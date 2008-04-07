@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Zul'Aman
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_zulaman.h"
 
 #define ENCOUNTERS     1

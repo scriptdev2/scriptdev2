@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_steam_vault.h"
 
 #define SPELL_LIGHTNING_CLOUD       25033

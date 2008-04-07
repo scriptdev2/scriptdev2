@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_the_eye.h"
 
 #define SPELL_POUNDING              34162
@@ -35,12 +34,16 @@ EndScriptData */
 #define SAY_SLAY2               "Imbecile life form, no longer functional."
 #define SAY_SLAY3               "Threat neutralized."
 #define SAY_DEATH               "Systems... shutting... down..."
+#define SAY_POUNDING1           "Alternative measure commencing..."
+#define SAY_POUNDING2           "Calculating force parameters..."
 
 #define SOUND_AGGRO             11213
 #define SOUND_SLAY1             11215
 #define SOUND_SLAY2             11216
 #define SOUND_SLAY3             11217
 #define SOUND_DEATH             11214
+#define SOUND_POUNDING1         11218
+#define SOUND_POUNDING2         11219
 
 #define CREATURE_ORB_TARGET     19577
 
@@ -48,7 +51,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 {
     boss_void_reaverAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -126,6 +129,17 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if(Pounding_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_POUNDING);
+            switch(rand()%2)
+            {
+                case 0:
+                    DoPlaySoundToSet(m_creature, SOUND_POUNDING1);
+                    DoYell(SAY_POUNDING1, LANG_UNIVERSAL, NULL);
+                    break;
+                case 1:
+                    DoPlaySoundToSet(m_creature, SOUND_POUNDING2);
+                    DoYell(SAY_POUNDING2, LANG_UNIVERSAL, NULL);
+                    break;
+            }
             Pounding_Timer = 12000;
         }else Pounding_Timer -= diff;
 

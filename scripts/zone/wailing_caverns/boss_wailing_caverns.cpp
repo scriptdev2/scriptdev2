@@ -21,7 +21,6 @@ SDComment: Wailing Caverns bosses
 SDCategory: Wailing Caverns
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_wailing_caverns(Creature *_Creature)

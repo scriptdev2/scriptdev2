@@ -1,6 +1,7 @@
 #ifndef DEF_BLACK_TEMPLE_H
 #define DEF_BLACK_TEMPLE_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_AKAMA                       1

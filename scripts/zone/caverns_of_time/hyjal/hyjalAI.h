@@ -14,9 +14,7 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
-#include "sc_instance.h"
+#include "def_hyjal.h"
 
 // Trash Mobs summoned in waves
 #define NECROMANCER         17899
@@ -40,6 +38,19 @@
 
 #define WORLDSTATE_WAVES        2842
 #define WORLDSTATE_ENEMIES      2453
+
+#define SOUND_AZGALOR_DEATH     10986
+#define SPEECH_AZGALOR_DEATH    "All of your efforts have been in vaid, for the draining of the World Tree has already begun! Soon, the heart of your world shall beat no more!"
+
+/*** Spells for Jaina ***/
+#define SPELL_BRILLIANCE_AURA     31260 // The database must handle this spell via creature_addon
+#define SPELL_BLIZZARD            31266
+#define SPELL_PYROBLAST           31263
+#define SPELL_SUMMON_ELEMENTALS   31264
+
+/** Thrall spells **/
+#define SPELL_CHAIN_LIGHTNING     31330
+#define SPELL_SUMMON_DIRE_WOLF    31331
 
 struct Wave
 {
@@ -121,6 +132,13 @@ enum EncounterType
     ENCOUNTER_COMPLETE          = 3,
 };
 
+enum TargetType
+{
+    TARGETTYPE_SELF     = 0,
+    TARGETTYPE_RANDOM   = 1,
+    TARGETTYPE_VICTIM   = 2,
+};
+
 struct Yells
 {
     uint32 id; // used to determine if it's attack yells, etc.
@@ -195,6 +213,8 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     uint32 GetInstanceData(uint32 Event);
 
     void Talk(uint32 id);
+
+    void UpdateWorldState(uint32 field, uint32 value);
 public:    
     ScriptedInstance* pInstance;
 
@@ -205,12 +225,21 @@ public:
     uint32 WaveCount;
     uint32 CheckBossTimer;
     uint32 Faction;
+    uint32 EnemyCount;
 
     bool EventBegun;
     bool FirstBossDead;
     bool SecondBossDead;
     bool Summon;
 
+    struct Spell
+    {
+        uint32 SpellId;
+        uint32 Cooldown;
+        uint32 TargetType;
+    }Spell[3];
+
 private:
     bool InCombat;
+    uint32 SpellTimer[3];
 };

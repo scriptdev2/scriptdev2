@@ -18,6 +18,7 @@
 SDName: boss_Jeklik
 SD%Complete: 85
 SDComment: Problem in finding the right flying batriders for spawning and making them fly.
+SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "sc_creature.h"

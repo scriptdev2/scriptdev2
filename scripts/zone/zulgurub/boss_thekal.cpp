@@ -18,9 +18,9 @@
 SDName: boss_Thekal
 SD%Complete: 95
 SDComment: Almost finished.
+SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_MORTALCLEAVE        22859

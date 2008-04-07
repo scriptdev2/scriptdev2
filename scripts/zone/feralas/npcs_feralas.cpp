@@ -21,7 +21,6 @@ SDComment: Quest support: 3520
 SDCategory: Feralas
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

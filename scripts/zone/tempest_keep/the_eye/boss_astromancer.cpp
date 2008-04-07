@@ -21,7 +21,6 @@ SDComment: Missing Phase 2 and eye beam phase
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_the_eye.h"
 
 #define SPELL_ARCANE_MISSILES                 39414 //33031

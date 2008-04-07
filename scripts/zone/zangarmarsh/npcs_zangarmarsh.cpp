@@ -21,7 +21,6 @@ SDComment: Quest support: 9785, 9803. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

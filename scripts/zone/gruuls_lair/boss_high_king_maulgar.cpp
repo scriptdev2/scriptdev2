@@ -21,7 +21,6 @@ SDComment: Verify that the script is working properly
 SDCategory: Gruul's Lair
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_gruuls_lair.h"
 
 #define SOUND_AGGRO              11367
@@ -58,7 +57,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
     boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Council[0] = 0;
         Council[1] = 0;
         Council[2] = 0;
@@ -245,7 +244,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 {
     boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -347,7 +346,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 {
     boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -477,7 +476,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 {
     boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -586,7 +585,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 {
     boss_krosh_firehandAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -678,7 +677,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         if(GreaterFireball_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_GREATER_FIREBALL);
-            GreaterFireball_Timer = 4000;
+            GreaterFireball_Timer = 2000;
         }else GreaterFireball_Timer -= diff;
 
         //SpellShield_Timer
@@ -686,7 +685,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_SPELLSHIELD);
-            SpellShield_Timer = 50000;
+            SpellShield_Timer = 30000;
         }else SpellShield_Timer -= diff;
 
         //BlastWave_Timer

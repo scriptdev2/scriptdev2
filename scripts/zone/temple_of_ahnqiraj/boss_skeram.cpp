@@ -21,7 +21,6 @@ SDComment: Mind Control buggy. Spawns splitting too. Check function missing.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_ARCANE_EXPLOSION      25679
@@ -63,6 +62,9 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     bool Images75;
     bool Images50;
     bool Images25;
+    bool IsImage75;
+    bool IsImage50;
+    bool IsImage25;
     bool Invisible;
 
     void Reset()
@@ -71,12 +73,15 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         EarthShock_Timer = 2000;
         FullFillment_Timer = 8000;
         Blink_Timer = 10000;
-        Invisible_Timer = 2000;
+        Invisible_Timer = 2500;
 
         InCombat = false;
         Images75 = false;
         Images50 = false;
         Images25 = false;
+        IsImage75 = false;
+        IsImage50 = false;
+        IsImage25 = false;
         Invisible = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -143,8 +148,8 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
 
-            //10-25 seconds until we should cast this agian
-            ArcaneExplosion_Timer = 10000 + rand()%15000;
+            //10-20 seconds until we should cast this agian
+            ArcaneExplosion_Timer = 10000 + rand()%10000;
         }else ArcaneExplosion_Timer -= diff;
 
         //If we are within range melee the target
@@ -197,217 +202,268 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         }else Blink_Timer -= diff;
         
         //Summoning 2 Images and teleporting to a random position on 75% health
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75 && !Images75 )
+        if ( !Images75 && !IsImage75 )
         {
-            DoPlaySoundToSet(m_creature,SOUND_SPLIT);
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            switch(rand()%3)
+            if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 75)
             {
-                case 0:  
+                DoPlaySoundToSet(m_creature,SOUND_SPLIT);
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+                switch(rand()%3)
+                {
+                    case 0:  
                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
+                       m_creature->Relocate(-8340.782227,2083.814453,125.648788,0);
                        Invisible = true;
                        DoResetThreat();
 
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
 
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target);            
-                break;
+                       Image->AI()->AttackStart(target);    
 
-                case 1:
+                       Invisible = true;
+                       Images75 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage75 = true;
+                    break;
+
+                    case 1:
                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
+                       m_creature->Relocate(-8341.546875,2118.504639,133.058151,0);
                        Invisible = true;
                        DoResetThreat();
 
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
                        
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
-                break;
+
+                       Invisible = true;
+                       Images75 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage75 = true;
+                    break;
                 
-                case 2:
+                    case 2:
                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
+                       m_creature->Relocate(-8318.822266,2058.231201,133.058151,0);
                        Invisible = true;
                        DoResetThreat();
 
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
 
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
-                break;
-           }
-            Invisible = true;
-            Images75 = true;
+
+                       Invisible = true;
+                       Images75 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage75 = true;
+                    break;
+               }
+            }
         }
         
         //Summoning 2 Images and teleporting to a random position on 50% health
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50 && !Images50 )
+        if (!Images50 && !IsImage50)
         {
-            DoPlaySoundToSet(m_creature,SOUND_SPLIT);
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        
-            switch(rand()%3)
+            if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 50 )
             {
-                case 0:  
-                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
-                       Invisible = true;
-                       DoResetThreat();
-
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target);                
-                break;
-
-                case 1:
-                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
-                       Invisible = true;
-                       DoResetThreat();
-
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-                break;
-                
-                case 2:
-                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
-                       Invisible = true;
-                       DoResetThreat();
-
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-                break;
-           }
-            Invisible = true;
-            Images50 = true;
-        }
-
-        //Summoning 2 Images and teleporting to a random position on 25% health
-        if ( (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25 && !Images25 )
-        {
-            DoPlaySoundToSet(m_creature,SOUND_SPLIT);
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                DoPlaySoundToSet(m_creature,SOUND_SPLIT);
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
         
-            switch(rand()%3)
-            {
-                case 0:  
+                switch(rand()%3)
+                {
+                    case 0:  
                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8340.782227,2119.878418,1118.175102,0);
+                       m_creature->Relocate(-8340.782227,2083.814453,125.648788,0);
                        Invisible = true;
                        DoResetThreat();
 
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
 
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target);                   
-                break;
+                       Image->AI()->AttackStart(target);        
 
-                case 1:
+                       Invisible = true;
+                       Images50 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage50 = true;    
+                    break;
+
+                    case 1:
                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8319.326172,2057.827637,118.175087,0);
+                       m_creature->Relocate(-8341.546875,2118.504639,133.058151,0);
                        Invisible = true;
                        DoResetThreat();
 
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-
-                       Image = m_creature->SummonCreature(15263,-8349.873047,2079.848145,88.152451,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 5);
-                       Image->AI()->AttackStart(target); 
-                break;
-                
-                case 2:
-                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
-                       m_creature->Relocate(-8349.873047,2079.848145,88.152451,0);
-                       Invisible = true;
-                       DoResetThreat();
-
-                       Image = m_creature->SummonCreature(15263,-8340.782227,2119.878418,1118.175102,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-                       Image->SetHealth(m_creature->GetHealth() / 20);
                        Image->AI()->AttackStart(target); 
                        
-                       Image = m_creature->SummonCreature(15263,-8319.326172,2057.827637,118.175087,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                        Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
                        Image->SetHealth(m_creature->GetHealth() / 5);
                        Image->AI()->AttackStart(target); 
-                break;
-           }
-            Invisible = true;
-            Images25 = true;
-        }
+
+                       Invisible = true;
+                       Images50 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage50 = true;
+                    break;
+                
+                   case 2:
+                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+                       m_creature->Relocate(-8318.822266,2058.231201,133.058151,0);
+                       Invisible = true;
+                       DoResetThreat();
+
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Invisible = true;
+                       Images50 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage50 = true;
+                    break;
+               }
+            }
+       }    
+
+        //Summoning 2 Images and teleporting to a random position on 25% health
+        if (!Images25 && !IsImage25)
+        {
+            if ((int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5) == 25 )
+            {
+                DoPlaySoundToSet(m_creature,SOUND_SPLIT);
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        
+                switch(rand()%3)
+                {
+                    case 0:  
+                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+                       m_creature->Relocate(-8340.782227,2083.814453,125.648788,0);
+                       Invisible = true;
+                       DoResetThreat();
+
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target);  
+
+                       Invisible = true;
+                       Images25 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage25 = true;          
+                    break;
+
+                    case 1:
+                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+                       m_creature->Relocate(-8341.546875,2118.504639,133.058151,0);
+                       Invisible = true;
+                       DoResetThreat();
+
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+                       
+                       Image = m_creature->SummonCreature(15263,-8318.822266,2058.231201,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Invisible = true;
+                       Images25 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage25 = true;
+                    break;
+                
+                    case 2:
+                       m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                       m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // Invisible Model
+                       m_creature->Relocate(-8318.822266,2058.231201,133.058151,0);
+                       Invisible = true;
+                       DoResetThreat();
+
+                       Image = m_creature->SummonCreature(15263,-8340.782227,2083.814453,125.648788,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Image = m_creature->SummonCreature(15263,-8341.546875,2118.504639,133.058151,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                       Image->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+                       Image->SetHealth(m_creature->GetHealth() / 5);
+                       Image->AI()->AttackStart(target); 
+
+                       Invisible = true;
+                       Images25 = true;
+                       if (Image)
+                       ((boss_skeramAI*)Image->AI())->IsImage25 = true;
+                    break;
+               }
+            }
+        }    
         
         //Invisible_Timer
-        if (Invisible && Invisible_Timer < diff)
+        if (Invisible) 
         {
-            //Making Skeram visible after telporting
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15345);  // Skeram Model
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            if (Invisible_Timer < diff)
+            {
+                //Making Skeram visible after telporting
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15345);  // Skeram Model
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-            //10-25 seconds until we should cast this agian
-            Invisible_Timer = 2000;
-            Invisible = false;
-        }else Invisible_Timer -= diff;
+                //10-25 seconds until we should cast this agian
+                Invisible_Timer = 2500;
+                Invisible = false;
+            }else Invisible_Timer -= diff;
+       }
 
         DoMeleeAttackIfReady();
     }

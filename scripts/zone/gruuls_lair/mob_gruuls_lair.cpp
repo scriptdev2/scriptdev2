@@ -21,7 +21,6 @@ SDComment: Trash mobs
 SDCategory: Gruul's Lair
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_gruuls_lair(Creature *_Creature)

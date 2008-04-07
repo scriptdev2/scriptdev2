@@ -22,7 +22,6 @@ SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"
-#include "../../creature/simple_ai.h"
 
 
 // Adds NYI

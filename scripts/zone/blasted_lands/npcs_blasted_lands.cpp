@@ -21,7 +21,6 @@ SDComment: Quest support: 2784, 2801, 3628. Missing some texts for Fallen Hero. 
 SDCategory: Blasted Lands
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 #define GOSSIP_ITEM_USHER "I wish to to visit the Rise of the Defiler."

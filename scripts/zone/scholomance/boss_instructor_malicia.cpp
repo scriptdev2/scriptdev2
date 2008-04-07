@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_scholomance.h"
 
 #define SPELL_CALLOFGRAVES         17831

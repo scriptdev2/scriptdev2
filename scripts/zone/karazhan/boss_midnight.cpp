@@ -60,7 +60,7 @@ EndScriptData */
 //Spells
 
 #define SPELL_SHADOWCLEAVE 29832
-#define SPELL_INTAGIBLE_PRESENCE 29833
+#define SPELL_INTANGIBLE_PRESENCE 29833
 #define SPELL_BERSERKER_CHARGE 26561 //Only when mounted
 
 #define MOUNTED_DISPLAYID   16040
@@ -287,7 +287,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 
             if(CurseTimer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_INTAGIBLE_PRESENCE);
+                DoCast(m_creature->getVictim(), SPELL_INTANGIBLE_PRESENCE);
                 CurseTimer = 30000;
             } else CurseTimer -= diff;
 

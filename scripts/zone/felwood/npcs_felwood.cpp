@@ -21,7 +21,6 @@ SDComment: To obtain Cenarion Beacon
 SDCategory: Felwood
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

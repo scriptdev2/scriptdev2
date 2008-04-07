@@ -75,7 +75,6 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         Amplify_Timer = 0;      
 
         InCombat = false;
-        Broken = false;
 
         //m_creature->RemoveAllAuras();
         //m_creature->DeleteThreatList();

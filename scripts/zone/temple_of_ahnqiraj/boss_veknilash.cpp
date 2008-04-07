@@ -21,7 +21,6 @@ SDComment: HP not linked. Spells buggy.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_HEAL_BROTHER          7393
@@ -48,7 +47,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
 {
     boss_veknilashAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         EnterEvadeMode();
     }
 
@@ -159,14 +158,12 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
             //Casting Heal to brother
             if(Heal_Timer < diff)
             {
-                    if(pInstance)
-                    {    
-
-                     Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
-                     DoCast(pVeklor, SPELL_HEAL_BROTHER);
-
-
-                    }
+                if(pInstance)
+                {    
+                    Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
+                    if(pVeklor)
+                        DoCast(pVeklor, SPELL_HEAL_BROTHER);
+                }
                        
                 Heal_Timer = 3000;
             }else Heal_Timer -= diff;
@@ -178,8 +175,12 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
                 {    
                     DoCast(m_creature, SPELL_TWIN_TELEPORT);
                     Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
-                    m_creature->Relocate(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), 0);    
-                    DoResetThreat();   
+                    if(pVeklor)
+                    {
+                        m_creature->Relocate(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), 0);    
+                        m_creature->SendMoveToPacket(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), false, 0);
+                        DoResetThreat();   
+                    }
 
                     Teleport_Timer = 30000;
                 }else Teleport_Timer -= diff;

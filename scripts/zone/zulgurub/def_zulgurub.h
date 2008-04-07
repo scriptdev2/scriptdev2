@@ -1,6 +1,7 @@
 #ifndef DEF_ZULGURUB_H
 #define DEF_ZULGURUB_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_ARLOKKISDEAD 1

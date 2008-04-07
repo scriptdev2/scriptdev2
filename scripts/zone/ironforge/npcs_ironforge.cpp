@@ -21,7 +21,6 @@ SDComment: Quest support: 3702
 SDCategory: Ironforge
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

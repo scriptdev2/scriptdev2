@@ -18,9 +18,9 @@
 SDName: boss_Marli
 SD%Complete: 80
 SDComment: Charging healers and casters not working. Perhaps wrong Spell Timers.
+SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911

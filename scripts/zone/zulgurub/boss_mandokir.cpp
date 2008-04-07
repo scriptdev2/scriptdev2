@@ -18,6 +18,7 @@
 SDName: boss_Mandokir
 SD%Complete: 90
 SDComment: Ohgan function needs improvements.
+SDCategory: Zul'Gurub
 EndScriptData */
 
 
@@ -240,19 +241,15 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
 
                 //Mortal Strike if target below 50% hp
-                if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
+        if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
         {
            if (MortalStrike_Timer < diff)
            {
-                               
-                      DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
+               DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
                       
-                      MortalStrike_Timer = 18000;
-                   }else MortalStrike_Timer -= diff;
-                }
-                     
-
- 
+               MortalStrike_Timer = 18000;
+           }else MortalStrike_Timer -= diff;
+        }
             }
             
             DoMeleeAttackIfReady();

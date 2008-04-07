@@ -1,6 +1,8 @@
 #ifndef DEF_HYJAL_H
 #define DEF_HYJAL_H
 
+#include "sc_creature.h"
+#include "sc_gossip.h"
 #include "sc_instance.h"
 
 #define DATA_ANETHERON 1

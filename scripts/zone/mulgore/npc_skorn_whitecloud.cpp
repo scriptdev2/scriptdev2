@@ -21,7 +21,6 @@ SDComment: Just a story if not rewarded for quest
 SDCategory: Mulgore
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)

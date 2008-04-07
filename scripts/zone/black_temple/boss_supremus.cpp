@@ -21,7 +21,6 @@ SDComment: Missing Enrage
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
 
@@ -333,11 +332,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         {
             if(HurtfulStrikeTimer < diff)
             {
-                Unit* target = NULL;
-                target = CalculateHurtfulStrikeTarget();
-
-                if(target && target->isAlive())
-                    DoCast(target, SPELL_HURTFUL_STRIKE);
+                DoCast(CalculateHurtfulStrikeTarget(), SPELL_HURTFUL_STRIKE);
                 HurtfulStrikeTimer = 20000 +rand()%31*1000;
             }else HurtfulStrikeTimer -= diff;
 

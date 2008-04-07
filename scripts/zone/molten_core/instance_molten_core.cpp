@@ -21,7 +21,6 @@ SDComment: Place Holder
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_molten_core.h"
 
 #define ID_LUCIFRON     12118
@@ -243,12 +242,6 @@ public:
         if(type == DATA_GOLEMAGG_DEATH)
             IsBossDied[7] = true;
     }
-
-
-    //Virtual functions that are not used
-    Creature* GetUnit(char *identifier) { return NULL; };
-    GameObject* GetGO(char *identifier) { return NULL; };
-
 };
 
 InstanceData* GetInstance_instance_molten_core(Map *_Map)

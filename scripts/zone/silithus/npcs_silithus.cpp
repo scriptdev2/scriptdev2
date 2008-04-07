@@ -21,7 +21,6 @@ SDComment: Quest support: 8304.
 SDCategory: Silithus
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*###

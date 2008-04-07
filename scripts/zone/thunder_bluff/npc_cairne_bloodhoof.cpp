@@ -21,7 +21,6 @@ SDComment: for quest 925
 SDCategory: Thunder Bluff
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 bool GossipHello_npc_cairne_bloodhoof(Player *player, Creature *_Creature)

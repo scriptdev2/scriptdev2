@@ -21,7 +21,6 @@ SDComment: In Development
 SDCategory: Hellfire Citadel, Magtheridon's lair
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_magtheridons_lair.h"
 #include "sc_gossip.h"
 #include "GameObject.h"
@@ -407,16 +406,16 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 //Manticron Cube
 bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
 {
-    //Can't use this here
-    if (!_GO->GetMap()->GetInstanceData())
+    ScriptedInstance* pInst = (ScriptedInstance*)_GO->GetInstanceData();
+
+    Unit* pUnit = NULL;
+    if(pInst)
+        pUnit = Unit::GetUnit(*_GO, pInst->GetData64(DATA_MAGTHERIDON));
+    else
     {
-        _GO->TextEmote("Mantricon Cube: NO INSTANCE", 0);
+        _GO->TextEmote("Manticron Cube: NO INSTANCE", 0);
         return true;
     }
-
-    ScriptedInstance* pInst = (ScriptedInstance*)_GO->GetMap()->GetInstanceData();
-
-    Unit* pUnit = Unit::GetUnit(*_GO, pInst->GetData64(DATA_MAGTHERIDON));
 
     if (!pUnit || !pUnit->isAlive() || !player)
     {

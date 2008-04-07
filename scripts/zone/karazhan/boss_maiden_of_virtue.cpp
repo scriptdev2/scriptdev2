@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
     {
         Repentance_Timer    = 30000+(rand()%15000);
         Holyfire_Timer      = 8000+(rand()%17000);
-        Holywrath_Timer   = 20000+(rand()%10000);
+        Holywrath_Timer     = 20000+(rand()%10000);
         Holyground_Timer    = 3000;
 
         InCombat = false;
@@ -73,7 +73,6 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void KilledUnit(Unit* Victim)
     {
-
         if(rand()%2) return;
 
         switch(rand()%3)
@@ -113,7 +112,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         if (Holyground_Timer < diff)
         {
-            m_creature->CastSpell(m_creature, SPELL_HOLYGROUND, true); //Triggered so it doesn't interrupt her at all
+            DoCast(m_creature, SPELL_HOLYGROUND, true); //Triggered so it doesn't interrupt her at all
             Holyground_Timer = 3000;
         }else Holyground_Timer -= diff;
 
@@ -162,10 +161,11 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
             if (target)
+            {
                 DoCast(target,SPELL_HOLYWRATH);
-            else
-                DoCast(m_creature->getVictim(),SPELL_HOLYWRATH); 
-            Holywrath_Timer = 20000+(rand()%10000); //20-30 secs sounds nice
+
+                Holywrath_Timer = 20000+(rand()%10000); //20-30 secs sounds nice
+            }
         }else Holywrath_Timer -= diff;
 
         DoMeleeAttackIfReady();

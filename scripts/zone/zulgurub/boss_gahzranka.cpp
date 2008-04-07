@@ -18,6 +18,7 @@
 SDName: Boss_Gahz'ranka
 SD%Complete: 85
 SDComment: Massive Geyser with knockback not working. Spell buggy.
+SDCategory: Zul'Gurub
 EndScriptData */
 
 #include "sc_creature.h"

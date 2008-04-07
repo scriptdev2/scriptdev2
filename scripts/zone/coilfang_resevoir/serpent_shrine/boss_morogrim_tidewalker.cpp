@@ -21,7 +21,6 @@ SDComment: Water globules don't explode properly
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_serpent_shrine.h"
 
 #define SPELL_TIDAL_WAVE             37730

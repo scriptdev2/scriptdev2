@@ -1,6 +1,7 @@
 #ifndef DEF_STRATHOLME_H
 #define DEF_STRATHOLME_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define TYPE_SH_AELMAR          1

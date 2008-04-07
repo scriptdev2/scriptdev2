@@ -22,7 +22,6 @@ SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
 #include "def_the_eye.h"
-#include "sc_creature.h"
 #include "Player.h"
 #include "TargetedMovementGenerator.h"
 #include "WorldPacket.h"

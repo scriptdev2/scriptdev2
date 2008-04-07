@@ -22,7 +22,6 @@ SDCategory: Blackwing Lair
 EndScriptData */
 
 #include "sc_creature.h"
-#include "sc_gossip.h"
 
 #define SAY_AGGRO               "Well done, my minions. The mortals' courage begins to wane! Now, let's see how they contend with the true Lord of Blackrock Spire!"
 #define SAY_DEATH               "This cannot be! I am the Master here! You mortals are nothing to my kind! DO YOU HEAR? NOTHING!"

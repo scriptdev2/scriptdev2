@@ -526,7 +526,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                         axe->setFaction(m_creature->getFaction());
                         axes[i] = axe->GetGUID();
                         axe->AI()->AttackStart(target);
-                        axe->getThreatManager().tauntApply(target);
+                        // axe->getThreatManager().tauntApply(target); //Taunt Apply and fade out does not work properly
+                        axe->AddThreat(target, 10000000.0f); // So we'll use a hack to add a lot of threat to our target
                     }
                 }
 
@@ -560,8 +561,11 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                         Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
                         if(axe)
                         {
-                            axe->getThreatManager().tauntFadeOut(axe->getVictim());
-                            axe->getThreatManager().tauntApply(target);
+                            float threat = axe->getThreatManager().getThreat(axe->getVictim());
+                            axe->getThreatManager().modifyThreatPercent(axe->getVictim(), -100);
+                            axe->AddThreat(target, threat);
+                            //axe->getThreatManager().tauntFadeOut(axe->getVictim());
+                            //axe->getThreatManager().tauntApply(target);
                         }
                     }
                 }

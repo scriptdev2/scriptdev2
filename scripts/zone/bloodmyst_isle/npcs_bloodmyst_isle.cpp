@@ -21,7 +21,6 @@ SDComment: Quest support: 9756 (gossip items text needed).
 SDCategory: Bloodmyst Isle
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######

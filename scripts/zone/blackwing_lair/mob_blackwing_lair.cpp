@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Blackwing Lair
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_blackwing_lair(Creature *_Creature)

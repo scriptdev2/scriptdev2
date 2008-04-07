@@ -96,8 +96,6 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(victim, SOUND_KILL2);
             break;
-        case 2:
-            break;
         }
     }
 

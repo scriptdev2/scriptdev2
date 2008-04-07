@@ -21,7 +21,6 @@ SDComment: All non-boss mobs in SSC
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_serpentshrine_cavern(Creature *_Creature)

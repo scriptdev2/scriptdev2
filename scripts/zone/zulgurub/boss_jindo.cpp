@@ -18,9 +18,9 @@
 SDName: Boss_Jin'do the Hexxer
 SD%Complete: 85
 SDComment: Mind Control not working because of core bug. Shades visible for all.
+SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_zulgurub.h"
 
 

@@ -1,6 +1,7 @@
 #ifndef DEF_KARAZHAN_H
 #define DEF_KARAZHAN_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_ATTUMEN_EVENT          1

@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Coilfang Resevoir, Slave Pens
 EndScriptData */
  
-#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
  
 #define SPELL_WATTER_SPIT     40086

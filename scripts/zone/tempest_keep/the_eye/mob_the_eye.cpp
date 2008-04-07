@@ -21,7 +21,6 @@ SDComment: Trash mobs for TK: The Eye
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
-#include "sc_creature.h"
 #include "../../../creature/simple_ai.h"
 
 CreatureAI* GetAI_mob_the_eye(Creature *_Creature)

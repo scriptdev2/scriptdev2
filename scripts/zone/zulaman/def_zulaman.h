@@ -1,6 +1,7 @@
 #ifndef DEF_ZULAMAN_H
 #define DEF_ZULAMAN_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_JANALAI 1

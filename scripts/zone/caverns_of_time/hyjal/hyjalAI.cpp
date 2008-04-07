@@ -52,6 +52,9 @@ void hyjalAI::Reset()
 
     /** Flags **/
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+
+    /** Initialize spells **/
+    memset(Spell, 0, sizeof(Spell));
 }
 
 void hyjalAI::EnterEvadeMode()
@@ -59,11 +62,19 @@ void hyjalAI::EnterEvadeMode()
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
     m_creature->CombatStop();
+    m_creature->LoadCreaturesAddon();
     DoGoHome();
 }
 
 void hyjalAI::Aggro(Unit *who)
-{        
+{
+    if(Spell[0].Cooldown)
+        SpellTimer[0] = Spell[0].Cooldown;
+    if(Spell[1].Cooldown)
+        SpellTimer[1] = Spell[1].Cooldown;
+    if(Spell[2].Cooldown)
+        SpellTimer[2] = Spell[2].Cooldown;
+
     Talk(ATTACKED);
 }
 
@@ -100,17 +111,20 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
     Creature* pCreature = m_creature->SummonCreature(entry, X, Y, Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 45000);
     if(pCreature)
     {
-        if(PlayerGUID)
-        {
-            Unit* pUnit = Unit::GetUnit((*m_creature), PlayerGUID);
-            if(pUnit)
-            {
-                pCreature->AddThreat(pUnit, 10.0f);
-                pCreature->AI()->AttackStart(pUnit);
-            }
-        }
+        EnemyCount++; // Increment Enemy Count to be used in World States
+        std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
 
+        if(PlayerList.empty())
+            return;
+
+        for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+        {
+            pCreature->AddThreat((*itr), 1.0f);
+            if((*itr)->GetGUID() == PlayerGUID)
+                pCreature->AI()->AttackStart((*itr)); // Attack whoever clicked.
+        }
         pCreature->AddThreat(m_creature, 1.0f);
+
         if(IsBoss)
         {
             if(!FirstBossDead)
@@ -123,7 +137,7 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
 
 void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
 {
-    if(rand()%6 == 0) // 1 in 6 chance we give a rally yell. Not sure if the chance is Blizzlike.
+    if(rand()%4 == 0) // 1 in 4 chance we give a rally yell. Not sure if the chance is Blizzlike.
         Talk(RALLY);
 
     if(wave[Count].IsBoss)
@@ -167,9 +181,21 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
          SummonCreature(wave[Count].Mob18);
 
      if(!wave[Count].IsBoss)
-        NextWaveTimer = wave[Count].WaveTimer;
+     {
+         //uint32 stateValue = Count+1;
+         //if(FirstBossDead)
+         //    stateValue -= 9; // Subtract 8 from it to give the proper wave number if we are greater than 8
+         //UpdateWorldState(WORLDSTATE_WAVES, stateValue); // Set world state to our current wave number
+         //UpdateWorldState(WORLDSTATE_ENEMY, 1);
+         //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount);
+         NextWaveTimer = wave[Count].WaveTimer;
+     }
      else
      {
+         //UpdateWorldState(0, WORLDSTATE_WAVES); // Set world state for waves to 0 to disable it.
+         //UpdateWorldState(1, WORLDSTATE_ENEMY);
+         //UpdateWorldState(0, WORLDSTATE_ENEMYCOUNT); // Set World State for enemies invading to 1.
+         //UpdateWorldState(1, WORLDSTATE_ENEMYCOUNT);
          Summon = false;
          CheckBossTimer = 1000;
      }
@@ -180,6 +206,17 @@ void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
     std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
     if(PlayerList.empty())
         return;
+
+    if(Faction == 1) // Horde
+    {
+        Creature* Echo = DoSpawnCreature(13083, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 5000);
+        if(Echo)
+        {
+            Echo->SetVisibility(VISIBILITY_OFF);
+            DoPlaySoundToSet(Echo, SOUND_AZGALOR_DEATH);
+            ((ScriptedAI*)Echo->AI())->DoYell(SPEECH_AZGALOR_DEATH, LANG_UNIVERSAL, NULL);
+        }
+    }
 
     for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
     {
@@ -199,6 +236,8 @@ void hyjalAI::StartEvent(Player* player)
         CheckBossTimer = 5000;
         PlayerGUID = player->GetGUID();
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0);
+        //UpdateWorldState(0, WORLDSTATE_WAVES);
+        //UpdateWorldState(0, WORLDSTATE_ENEMY);
     }
 }
 
@@ -261,6 +300,12 @@ void hyjalAI::Talk(uint32 id)
         DoPlaySoundToSet(m_creature, Sound);
 }
 
+// Core patch required.
+//void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
+//{
+//    m_creature->GetMap()->UpdateWorldState(field, value);
+//}
+
 void hyjalAI::UpdateAI(const uint32 diff)
 {
     if(!EventBegun) return;
@@ -300,6 +345,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
                     CheckBossTimer = 0;
                     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
                     BossGUID[i] = 0;
+                    //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 0);// Reset world state for enemies to disable it 
                 }
             }
         }
@@ -307,6 +353,39 @@ void hyjalAI::UpdateAI(const uint32 diff)
     }else CheckBossTimer -= diff;
 
     if(!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
+
+    for(uint8 i = 0; i < 3; ++i)
+    {
+        if(Spell[i].SpellId)
+        {
+            if(SpellTimer[i] < diff)
+            {
+                if(m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                Unit* target = NULL;
+                
+                switch(Spell[i].TargetType)
+                {
+                    case TARGETTYPE_SELF:
+                        target = m_creature;
+                        break;
+                    case TARGETTYPE_RANDOM:
+                        target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                        break;
+                    case TARGETTYPE_VICTIM:
+                        target = m_creature->getVictim();
+                        break;
+                }
+
+                if(target && target->isAlive())
+                {
+                    DoCast(target, Spell[i].SpellId);
+                    SpellTimer[i] = Spell[i].Cooldown;
+                }
+            }else SpellTimer[i] -= diff;
+        }
+    }
 
     DoMeleeAttackIfReady();
 }
