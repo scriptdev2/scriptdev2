@@ -108,6 +108,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_loramus_thalipedes' WHERE `en
 
 /* AZUREMYST ISLE */
 UPDATE `creature_template` SET `ScriptName` = 'injured_draenei' WHERE `entry` = 16971;
+UPDATE `creature_template` SET `ScriptName` = 'npc_susurrus' WHERE `entry` = 17435;
 
 /* BADLANDS */
 
@@ -536,6 +537,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_kelthuzad' WHERE `entry` = 1
 
 /* NETHERSTORM */
 UPDATE `creature_template` SET `ScriptName` = 'npc_protectorate_nether_drake' WHERE `entry` = 20903;
+UPDATE `creature_template` SET `ScriptName` = 'npc_veronia' WHERE `entry` = 20162;
 
 /* ONYXIA'S LAIR */
 UPDATE `creature_template` SET `ScriptName` = 'boss_onyxia' WHERE `entry` = 10184;
@@ -820,6 +822,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_witch_doctor_mauari' WHERE `e
 /* ZANGARMARSH */
 UPDATE `creature_template` SET `ScriptName` = 'npcs_ashyen_and_keleth' WHERE `entry` IN (17900, 17901);
 UPDATE `creature_template` SET `ScriptName` = 'npc_elder_kuruti' WHERE `entry` = 18197;
+UPDATE `creature_template` SET `ScriptName` = 'npc_mortog_steamhead' WHERE `entry` = 23373;
 
 /* ZUL'FARRAK */
 

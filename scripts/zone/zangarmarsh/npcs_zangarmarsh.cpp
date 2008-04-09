@@ -158,9 +158,31 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature *_Creature, uint32 s
 }
 
 /*######
-## AddSC
+## npc_mortog_steamhead
 ######*/
 
+bool GossipHello_npc_mortog_steamhead(Player *player, Creature *_Creature)
+{
+    if (_Creature->isVendor() && player->GetReputationRank(942) == REP_EXALTED)
+        player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_mortog_steamhead(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if (action == GOSSIP_ACTION_TRADE)
+    {
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    }
+    return true;
+}
+
+/*######
+## AddSC
+######*/
 
 void AddSC_npcs_zangarmarsh()
 {
@@ -176,5 +198,11 @@ void AddSC_npcs_zangarmarsh()
     newscript->Name="npc_elder_kuruti";
     newscript->pGossipHello =  &GossipHello_npc_elder_kuruti;
     newscript->pGossipSelect = &GossipSelect_npc_elder_kuruti;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_mortog_steamhead";
+    newscript->pGossipHello =  &GossipHello_npc_mortog_steamhead;
+    newscript->pGossipSelect = &GossipSelect_npc_mortog_steamhead;
     m_scripts[nrscripts++] = newscript;
 }

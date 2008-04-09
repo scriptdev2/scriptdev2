@@ -110,8 +110,7 @@ bool GossipHello_npc_mount_vendor(Player *player, Creature *_Creature)
             break;
         case 16264: //Winaestra
             if (player->GetReputationRank(911) != REP_EXALTED && race != RACE_BLOODELF)
-                //player->SEND_GOSSIP_MENU(5844, _Creature->GetGUID());//unknown id
-                player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+                player->SEND_GOSSIP_MENU(10305, _Creature->GetGUID());
             else 
                 canBuy = true;
             break;

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Azuremyst_Isle
 SD%Complete: 100
-SDComment: Quest support: 9283, 9554 (Special flight path, SCRIPT NOT IN USE YET). Injured Draenei cosmetic only
+SDComment: Quest support: 9283, 9554(special flight path, proper model for mount missing). Injured Draenei cosmetic only
 SDCategory: Azuremyst Isle
 EndScriptData */
 
@@ -253,10 +253,6 @@ CreatureAI* GetAI_injured_draenei(Creature *_Creature)
 ## npc_susurrus
 ######*/
 
-/*
-UPDATE `creature_template` SET `ScriptName` = 'npc_susurrus' WHERE `entry` = 17435;
-*/
-
 bool GossipHello_npc_susurrus(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
@@ -281,7 +277,7 @@ bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sende
         nodes.resize(2);
         nodes[0] = 92;                                      //from susurrus
         nodes[1] = 91;                                      //end at exodar
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 506
+        player->ActivateTaxiPathTo(nodes,22460);            //TaxiPath 506. This is NOT correct model to use, but closest found so far.
     }
     return true;
 }
