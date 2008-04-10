@@ -13,10 +13,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
 /* ScriptData
 SDName: Boss_Faerlina
 SD%Complete: 50
 SDComment: Without Mindcontrol boss cannot be defeated
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

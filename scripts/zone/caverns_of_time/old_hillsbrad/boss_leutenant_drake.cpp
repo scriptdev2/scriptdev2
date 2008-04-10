@@ -18,6 +18,7 @@
 SDName: Boss_Luetenant_Drake
 SD%Complete: 100
 SDComment: 
+SDCategory: Caverns of Time, Old Hillsbrad
 EndScriptData */
 
 #include "sc_creature.h"

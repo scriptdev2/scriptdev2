@@ -2,6 +2,7 @@
 SDName: Boss_Stalagg
 SD%Complete: 0
 SDComment: Merge with Thaddius
+SDCategory: Naxxramas
 EndScriptData */
 
 //Stalagg

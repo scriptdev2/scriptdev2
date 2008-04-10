@@ -35,6 +35,14 @@ but preferred to do this from mangos)
 no difference here (except that default npc_text is chosen from `gameobject_template`.`data2` (for GO type2, different dataN for a few others)
 */
 
+/*
+UPDATE `creature_template` SET `ScriptName` = 'npc_prof_alchemy' WHERE `entry` IN (17909, 19052, 22427);
+UPDATE `creature_template` SET `ScriptName` = 'npc_prof_blacksmith' WHERE `entry` IN (5164, 11145, 11146, 11176, 11177, 11178, 11191, 11192, 11193);
+UPDATE `creature_template` SET `ScriptName` = 'npc_prof_leather' WHERE `entry` IN (7866, 7867, 7868, 7869, 7870, 7871);
+UPDATE `creature_template` SET `ScriptName` = 'npc_prof_tailor' WHERE `entry` IN (22208, 22212, 22213);
+-- UPDATE `gameobject_template` SET `ScriptName` = 'go_soothsaying_for_dummies' WHERE `entry` = 177226;
+*/ 
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
@@ -66,8 +74,6 @@ no difference here (except that default npc_text is chosen from `gameobject_temp
 # gossip item and box texts
 ###*/
 
-#define GOSSIP_YES                  "Yes, i am sure, please continue" //temporary
-
 #define GOSSIP_LEARN_POTION         "Please teach me how to become a Master of Potions, Lauranna"
 #define GOSSIP_UNLEARN_POTION       "I wish to unlearn Potion Mastery"
 #define GOSSIP_LEARN_TRANSMUTE      "Please teach me how to become a Master of Transmutations, Zarevhi"
@@ -82,6 +88,7 @@ no difference here (except that default npc_text is chosen from `gameobject_temp
 #define GOSSIP_ARMOR_LEARN          "Please teach me how to become a Armorsmith"
 #define GOSSIP_ARMOR_UNLEARN        "I wish to unlearn the art of Armorsmithing"
 
+#define GOSSIP_UNLEARN_SMITH_SPEC   "I wish to unlearn my blacksmith specialty"
 #define BOX_UNLEARN_ARMORORWEAPON   "Do you really want to unlearn your blacksmith specialty and lose all associated recipes? \n Cost: "
 
 #define GOSSIP_LEARN_HAMMER         "Please teach me how to become a Hammersmith, Lilith"
@@ -188,7 +195,7 @@ no difference here (except that default npc_text is chosen from `gameobject_temp
 #define S_UNLEARN_POTION        41563
 
 /*###
-# some formulas to calculate unlearning cost
+# formulas to calculate unlearning cost
 ###*/
 
 int32 DoLearnCost(Player *player)                           //tailor, alchemy
@@ -216,6 +223,109 @@ int32 DoLowUnlearnCost(Player *player)                      //blacksmith
         return 50000;
     else
         return 100000;
+}
+
+/*###
+# unlearning related profession spells
+###*/
+
+void ProfessionUnlearnSpells(Player *player, uint32 type)
+{
+	switch (type)
+    {
+        case 36436: // S_UNLEARN_WEAPON
+            player->removeSpell(10003); // The Shatterer
+            player->removeSpell(10007); // Phantom Blade 
+            player->removeSpell(10011); // Blight
+            player->removeSpell(36125); // Light Earthforged Blade
+            player->removeSpell(36128); // Light Emberforged Hammer
+            player->removeSpell(36126); // Light Skyforged Axe
+            player->removeSpell(10015); // Truesilver Champion 
+            break;
+        case 36435: // S_UNLEARN_ARMOR
+            player->removeSpell(9974);  // Truesilver Breastplate 
+            player->removeSpell(9954);  // Truesilver Gauntlets
+            player->removeSpell(36122); // Earthforged Leggings 
+            player->removeSpell(36155); // Windforged Leggings
+            player->removeSpell(36129); // Heavy Earthforged Breastplate 
+            player->removeSpell(36130); // Stormforged Hauberk 
+            player->removeSpell(34533); // Breastplate of Kings
+            player->removeSpell(34529); // Nether Chain Shirt 
+            player->removeSpell(34534); // Bulwark of Kings 
+            player->removeSpell(36257); // Bulwark of the Ancient Kings 
+            player->removeSpell(36256); // Embrace of the Twisting Nether
+            player->removeSpell(34530); // Twisting Nether Chain Shirt
+            player->removeSpell(36124); // Windforged Leggings 
+            break;
+        case 36441: // S_UNLEARN_HAMMER
+            player->removeSpell(36262); // Dragonstrike 
+            player->removeSpell(34546); // Dragonmaw
+            player->removeSpell(34545); // Drakefist Hammer
+            player->removeSpell(36136); // Lavaforged Warhammer
+            player->removeSpell(34547); // Thunder 
+            player->removeSpell(34567); // Deep Thunder 
+            player->removeSpell(36263); // Stormherald
+            player->removeSpell(36137); // Great Earthforged Hammer 
+            break;
+        case 36439: // S_UNLEARN_AXE
+            player->removeSpell(36260); // Wicked Edge of the Planes 
+            player->removeSpell(34562); // Black Planar Edge 
+            player->removeSpell(34541); // The Planar Edge 
+            player->removeSpell(36134); // Stormforged Axe 
+            player->removeSpell(36135); // Skyforged Great Axe 
+            player->removeSpell(36261); // Bloodmoon 
+            player->removeSpell(34543); // Lunar Crescent 
+            player->removeSpell(34544); // Mooncleaver 
+            break;
+        case 36438: // S_UNLEARN_SWORD
+            player->removeSpell(36258); // Blazefury 
+            player->removeSpell(34537); // Blazeguard 
+            player->removeSpell(34535); // Fireguard 
+            player->removeSpell(36131); // Windforged Rapier 
+            player->removeSpell(36133); // Stoneforged Claymore 
+            player->removeSpell(34538); // Lionheart Blade 
+            player->removeSpell(34540); // Lionheart Champion 
+            player->removeSpell(36259); // Lionheart Executioner 
+            break;
+        case 36434: // S_UNLEARN_DRAGON
+            player->removeSpell(36076); // Dragonstrike Leggings
+            player->removeSpell(36079); // Golden Dragonstrike Breastplate
+            player->removeSpell(35576); // Ebon Netherscale Belt
+            player->removeSpell(35577); // Ebon Netherscale Bracers
+            player->removeSpell(35575); // Ebon Netherscale Breastplate
+            player->removeSpell(35582); // Netherstrike Belt
+            player->removeSpell(35584); // Netherstrike Bracers
+            player->removeSpell(35580); // Netherstrike Breastplate
+            break;
+        case 36328: // S_UNLEARN_ELEMENTAL
+            player->removeSpell(36074); // Blackstorm Leggings
+            player->removeSpell(36077); // Primalstorm Breastplate
+            player->removeSpell(35590); // Primalstrike Belt
+            player->removeSpell(35591); // Primalstrike Bracers
+            player->removeSpell(35589); // Primalstrike Vest
+            break;
+        case 36433: // S_UNLEARN_TRIBAL
+            player->removeSpell(35585); // Windhawk Hauberk
+            player->removeSpell(35587); // Windhawk Belt
+            player->removeSpell(35588); // Windhawk Bracers
+            player->removeSpell(36078); // Living Crystal Breastplate
+            break;
+        case 41299: // S_UNLEARN_SPELLFIRE
+            player->removeSpell(26752); // Spellfire Belt
+            player->removeSpell(26753); // Spellfire Gloves
+            player->removeSpell(26754); // Spellfire Robe
+            break;
+        case 41558: // S_UNLEARN_MOONCLOTH
+            player->removeSpell(26760); // Primal Mooncloth Belt
+            player->removeSpell(26761); // Primal Mooncloth Shoulders
+            player->removeSpell(26762); // Primal Mooncloth Robe
+            break;
+        case 41559: // S_UNLEARN_SHADOWEAVE
+            player->removeSpell(26756); // Frozen Shadoweave Shoulders
+            player->removeSpell(26757); // Frozen Shadoweave Boots
+            player->removeSpell(26758); // Frozen Shadoweave Robe
+            break;
+    }
 }
 
 /*###
@@ -521,6 +631,7 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         else if(player->GetMoney() >= DoLowUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_WEAPON, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_WEAPON);
             player->ModifyMoney(-DoLowUnlearnCost(player));
             _Creature->CastSpell(player, S_REP_ARMOR, true);
             player->CLOSE_GOSSIP_MENU();
@@ -533,6 +644,7 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         if(player->GetMoney() >= DoLowUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_ARMOR, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_ARMOR);
             player->ModifyMoney(-DoLowUnlearnCost(player));
             _Creature->CastSpell(player, S_REP_WEAPON, true);
         }else{
@@ -558,6 +670,7 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_HAMMER, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_HAMMER);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -568,6 +681,7 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_AXE, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_AXE);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -578,6 +692,7 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_SWORD, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_SWORD);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -620,7 +735,7 @@ void SendConfirmUnlearn_npc_prof_blacksmith(Player *player, Creature *_Creature,
             case 11178:                                     //Borgosh Corebender
             case 5164:                                      //Grumnus Steelshaper
             case 11177:                                     //Okothos Ironrager
-                player->ADD_GOSSIP_ITEM_EXTENDED( 0, GOSSIP_YES, GOSSIP_SENDER_CHECK, action,               BOX_UNLEARN_ARMORORWEAPON, DoLowUnlearnCost(player));
+                player->ADD_GOSSIP_ITEM_EXTENDED( 0, GOSSIP_UNLEARN_SMITH_SPEC, GOSSIP_SENDER_CHECK, action, BOX_UNLEARN_ARMORORWEAPON, DoLowUnlearnCost(player));
                 player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());   //unknown textID (TALK_UNLEARN_AXEORWEAPON)
                 break;
 
@@ -724,6 +839,7 @@ void SendActionMenu_npc_prof_leather(Player *player, Creature *_Creature, uint32
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_DRAGON, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_DRAGON);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -734,6 +850,7 @@ void SendActionMenu_npc_prof_leather(Player *player, Creature *_Creature, uint32
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_ELEMENTAL, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_ELEMENTAL);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -744,6 +861,7 @@ void SendActionMenu_npc_prof_leather(Player *player, Creature *_Creature, uint32
         if(player->GetMoney() >= DoMedUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_TRIBAL, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_TRIBAL);
             player->ModifyMoney(-DoMedUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -892,6 +1010,7 @@ void SendActionMenu_npc_prof_tailor(Player *player, Creature *_Creature, uint32 
         if(player->GetMoney() >= DoHighUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_SPELLFIRE, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_SPELLFIRE);
             player->ModifyMoney(-DoHighUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -902,6 +1021,7 @@ void SendActionMenu_npc_prof_tailor(Player *player, Creature *_Creature, uint32 
         if(player->GetMoney() >= DoHighUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_MOONCLOTH, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_MOONCLOTH);
             player->ModifyMoney(-DoHighUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);
@@ -912,6 +1032,7 @@ void SendActionMenu_npc_prof_tailor(Player *player, Creature *_Creature, uint32 
         if(player->GetMoney() >= DoHighUnlearnCost(player))
         {
             _Creature->CastSpell(player, S_UNLEARN_SHADOWEAVE, true);
+            ProfessionUnlearnSpells(player, S_UNLEARN_SHADOWEAVE);
             player->ModifyMoney(-DoHighUnlearnCost(player));
         }else{
             player->SendBuyError( BUY_ERR_NOT_ENOUGHT_MONEY, _Creature, 0, 0);

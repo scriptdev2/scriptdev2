@@ -18,6 +18,7 @@
 SDName: Boss_Patchwerk
 SD%Complete: 100
 SDComment: Some issues with hateful strike inturrupting the melee swing timer. Probably core issue.
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

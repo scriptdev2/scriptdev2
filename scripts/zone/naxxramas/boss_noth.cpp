@@ -18,6 +18,7 @@
 SDName: Boss_Noth
 SD%Complete: 40
 SDComment: Missing Balcony stage
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

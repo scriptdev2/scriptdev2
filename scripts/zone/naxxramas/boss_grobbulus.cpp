@@ -2,6 +2,7 @@
 SDName: Boss_Grobbulus
 SD%Complete: 0
 SDComment: Place holder
+SDCategory: Naxxramas
 EndScriptData */
 
 /*Poison Cloud 26590

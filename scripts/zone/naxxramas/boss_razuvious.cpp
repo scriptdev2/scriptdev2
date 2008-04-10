@@ -18,6 +18,7 @@
 SDName: Boss_Razuvious
 SD%Complete: 50
 SDComment: Missing adds and event is impossible without Mind Control
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

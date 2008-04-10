@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: mobs_shadowmoon_valley
+SDName: Mobs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: misc mobs, mostly related to quest
+SDComment: Quest support: 10836, 10702, 10703.
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -71,25 +71,6 @@ struct MANGOS_DLL_DECL mobs_shadowmoon_valley_wildlifeAI : public ScriptedAI
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
             ((Player*)Killer)->KilledMonster(21978, m_creature->GetGUID());
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mobs_shadowmoon_valley_wildlife(Creature *_Creature)

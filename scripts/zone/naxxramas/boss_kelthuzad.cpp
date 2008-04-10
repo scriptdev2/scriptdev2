@@ -18,6 +18,7 @@
 SDName: Boss_KelThuzud
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

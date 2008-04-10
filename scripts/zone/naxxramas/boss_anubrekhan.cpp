@@ -18,6 +18,7 @@
 SDName: Boss_Anubrekhan
 SD%Complete: 100
 SDComment: 
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

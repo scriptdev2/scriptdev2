@@ -18,6 +18,7 @@
 SDName: Boss_Sapphiron
 SD%Complete: 0
 SDComment: Place Holder
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

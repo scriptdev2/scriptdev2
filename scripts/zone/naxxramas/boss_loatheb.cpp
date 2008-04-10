@@ -18,6 +18,7 @@
 SDName: Boss_Loatheb
 SD%Complete: 100
 SDComment: 
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"

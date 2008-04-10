@@ -2,6 +2,7 @@
 SDName: Boss_Gothik
 SD%Complete: 0
 SDComment: Placeholder
+SDCategory: Naxxramas
 EndScriptData */
 
 //Gothik

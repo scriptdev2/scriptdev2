@@ -2,6 +2,7 @@
 SDName: Boss_Thaddius
 SD%Complete: 0
 SDComment: Merge Feugen & Stalagg with this script
+SDCategory: Naxxramas
 EndScriptData */
 
 //Thaddus

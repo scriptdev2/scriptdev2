@@ -2289,6 +2289,26 @@ bool GossipSelect_guard_orgrimmar(Player *player, Creature *_Creature, uint32 se
     return true;
 }
 
+bool ReceiveEmote_guard_orgrimmar(Player *player, Creature *_Creature, uint32 emote) 
+{
+    if(player->GetTeam() == HORDE)
+    {
+        switch(emote)
+        {
+            case EMOTE_ONESHOT_KISS:
+                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_FLEX);
+                break;
+            case EMOTE_ONESHOT_WAVE:
+                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                break;
+            case EMOTE_ONESHOT_SALUTE:
+                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                break;
+        }
+    }
+    return true;
+}
+
 /*******************************************************
  * guard_orgrimmar end
  *******************************************************/
@@ -3743,6 +3763,7 @@ void AddSC_guards()
     newscript->Name="guard_orgrimmar";
     newscript->pGossipHello          = &GossipHello_guard_orgrimmar;
     newscript->pGossipSelect         = &GossipSelect_guard_orgrimmar;
+    newscript->pReceiveEmote         = &ReceiveEmote_guard_orgrimmar;
     newscript->GetAI = GetAI_guard_orgrimmar;
     m_scripts[nrscripts++] = newscript;
 

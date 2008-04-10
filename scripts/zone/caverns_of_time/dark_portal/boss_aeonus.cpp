@@ -18,6 +18,7 @@
 SDName: Boss_Aeonus
 SD%Complete: 100
 SDComment: 
+SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
 #include "sc_creature.h"

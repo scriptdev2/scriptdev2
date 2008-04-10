@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: Archimonde
+SDName: Boss_Archimonde
 SD%Complete: 95
 SDComment: Doomfires not completely offlike due to core limitations for random moving.
+SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "sc_creature.h"

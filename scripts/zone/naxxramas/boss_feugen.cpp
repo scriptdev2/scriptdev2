@@ -2,6 +2,7 @@
 SDName: Boss_Feugen
 SD%Complete: 0
 SDComment: Merge with Thaddius
+SDCategory: Naxxramas
 EndScriptData */
 
 //Feugen

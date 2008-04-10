@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: npcs_burning_steppes
+SDName: Npcs_Burning_Steppes
 SD%Complete: 100
-SDComment: npcs burning steppes, quest related.
+SDComment: Quest support: 4224
 SDCategory: Burning Steppes
 EndScriptData */
 

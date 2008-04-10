@@ -2,6 +2,7 @@
 SDName: Boss_Heigan
 SD%Complete: 0
 SDComment: Place Holder
+SDCategory: Naxxramas
 EndScriptData */
 
 //Lotheb or Heigan?

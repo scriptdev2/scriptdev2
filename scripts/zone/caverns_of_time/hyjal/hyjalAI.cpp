@@ -14,6 +14,13 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: HyjalAI
+SD%Complete: 100
+SDComment: 
+SDCategory: Caverns of Time, Mount Hyjal
+EndScriptData */
+
 #include "hyjalAI.h"
 
 hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
