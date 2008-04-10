@@ -184,11 +184,11 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_prof_tailor' WHERE `entry` IN
 
 #define S_TRANSMUTE             28672
 #define S_ELIXIR                28677
-#define S_POTION                26801
+#define S_POTION                28675
 
 #define S_LEARN_TRANSMUTE       28674
 #define S_LEARN_ELIXIR          28678
-#define S_LEARN_POTION          26800
+#define S_LEARN_POTION          28676
     
 #define S_UNLEARN_TRANSMUTE     41565
 #define S_UNLEARN_ELIXIR        41564
