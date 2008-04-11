@@ -112,7 +112,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     bool InCombat;
     bool Enraged;
-    bool HasSummonedBomb;
 
     void Reset()
     {
@@ -137,39 +136,14 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                    pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
+        if(pInstance)
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
 
-                Reset();
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                InCombat = true;
+        Reset();
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        InCombat = true;
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    if(pInstance)
-                        pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
-                }
-            }
-        }
-    }    
 
     void KilledUnit(Unit *victim)
     {
@@ -209,12 +183,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             {
                 TargetGUID[i] = pUnit->GetGUID();
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
-                //Use work around packet to prevent player from being dropped from combat
-                //WorldPacket data;
-                //((Player*)pUnit)->BuildTeleportAckMsg(&data, X, Y, Z, pUnit->GetOrientation());
-                //((Player*)pUnit)->GetSession()->SendPacket(&data);
-                //((Player*)pUnit)->SetPosition( X, Y, Z, pUnit->GetOrientation(), true);
-                //((Player*)pUnit)DoTeleportPlayer(m_creature->GetMapId(), X, Y, Z, pUnit->GetOrientation());
+                DoTeleportPlayer(pUnit, X, Y, Z, pUnit->GetOrientation());
             }
         }
     }
@@ -311,6 +280,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                         pUnit = Unit::GetUnit((*m_creature), TargetGUID[i]);
                         if(pUnit)
                             pUnit->CastSpell(pUnit, SPELL_ATTRACTION, true);
+                        TargetGUID[i] = 0;
                     }
                 }
 

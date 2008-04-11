@@ -58,10 +58,10 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     uint32 Encounters[ENCOUNTERS];
 
     uint32 OperaEvent; // 0 - OZ, 1 - RAJ, 2 - HOOD
-    uint32 BarnesIntro; // 0 - Not Complete, 1 - In Progress, 2 - Complete
 
-    GameObject* Curtain;
-    GameObject* Door;
+    uint64 CurtainGUID;
+    uint64 DoorGUID;
+    uint64 TerestianGUID;
 
     void Initialize()
     {
@@ -69,10 +69,10 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             Encounters[i] = NOT_STARTED;
 
         OperaEvent = rand()%3; // This never gets altered.
-        BarnesIntro = 0;
 
-        Curtain = NULL;
-        Door = NULL;
+        CurtainGUID     = 0;
+        DoorGUID        = 0;        
+        TerestianGUID   = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -121,9 +121,27 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
             case DATA_OPERA_PERFORMANCE:
                 return OperaEvent;
+        }
 
-            case DATA_BARNES_INTRO:
-                return BarnesIntro;
+        return 0;
+    }
+
+    void OnCreatureCreate(Creature *creature, uint32 entry)
+    {
+        switch(entry)
+        {
+            case 15688:
+                TerestianGUID = creature->GetGUID();
+                break;
+        }
+    }
+
+    uint64 GetData64(uint32 identifier)
+    {
+        switch(identifier)
+        {
+            case DATA_TERESTIAN:
+                return TerestianGUID;
         }
 
         return 0;
@@ -176,32 +194,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_NETHERBANE_EVENT:
                  Encounters[10] = data;
                  break;
-
-            case DATA_BARNES_INTRO:
-                BarnesIntro = data;
-                CheckStatus();
-                break;
-
         }
-    }
-
-    void CheckStatus()
-    {
-        switch(BarnesIntro)
-        {
-            case 1: // In Progress
-                SetGOState(Door, 1);
-                break;
-            case 2: // Complete
-                SetGOState(Curtain, 1);
-                break;
-        }
-    }
-
-    void SetGOState(GameObject* go, uint32 state)
-    {
-        if(go)
-            go->SetUInt32Value(GAMEOBJECT_STATE, state);
     }
 
     void OnObjectCreate(GameObject* go)
@@ -209,10 +202,10 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         switch(go->GetEntry())
         {
             case 183932:
-                Curtain = go;
+                CurtainGUID = go->GetGUID();
                 break;
             case 184278:
-                Door = go;
+                DoorGUID = go->GetGUID();
                 break;
         }
     }

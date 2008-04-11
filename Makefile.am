@@ -57,6 +57,7 @@ scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
 scripts/npc/npc_professions.cpp \
 scripts/npc/npcs_darkmoon.cpp \
+scripts/npc/npcs_special.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \

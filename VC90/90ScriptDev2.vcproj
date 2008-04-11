@@ -276,6 +276,10 @@
 					RelativePath="..\scripts\npc\npcs_darkmoon.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\scripts\npc\npcs_special.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="servers"

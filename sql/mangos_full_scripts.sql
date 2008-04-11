@@ -450,6 +450,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_aran_elemental' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'mob_aran_blizzard' WHERE `entry` = 17161;
 UPDATE `creature_template` SET `ScriptName` = 'mob_homunculus' WHERE `entry` = 16539;
 UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229;
+UPDATE `creature_template` SET `ScriptName` = 'mob_demon_chain' WHERE `entry` = 17248;
 UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;
 UPDATE `creature_template` SET `ScriptName` = 'npc_berthold' WHERE `entry` = 16153;
 
@@ -507,6 +508,7 @@ UPDATE `creature_template` SET `ScriptName` = 'skorn_whitecloud' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'mob_gurok_the_usurper' WHERE `entry` = 18182;
 UPDATE `creature_template` SET `ScriptName` = 'mob_shattered_rumbler' WHERE `entry` = 17157;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_kilsorrow_agent' WHERE `entry` IN (17146, 17147, 17148, 18397, 18658);
+UPDATE `creature_template` SET `ScriptName` = 'mob_sunspring_villager' WHERE `entry` = 18240;
 UPDATE `creature_template` SET `ScriptName` = 'npc_altruis_the_sufferer' WHERE `entry` = 18417;
 UPDATE `creature_template` SET `ScriptName` = 'npc_greatmother_geyah' WHERE `entry` = 18141;
 UPDATE `creature_template` SET `ScriptName` = 'npc_lantresor_of_the_blade' WHERE `entry` = 18261;

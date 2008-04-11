@@ -82,6 +82,7 @@ extern void AddSC_item_scripts();
 extern void AddSC_item_test();
 
 // -- NPC --
+extern void AddSC_npcs_special();
 extern void AddSC_npc_guardian();
 extern void AddSC_npc_mount_vendor();
 extern void AddSC_npc_professions();
@@ -927,6 +928,7 @@ void ScriptsInit()
     AddSC_item_test();
 
     // -- NPC --
+    AddSC_npcs_special();
     AddSC_npc_guardian();
     AddSC_npc_mount_vendor();
     AddSC_npc_professions();

@@ -88,25 +88,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         TeronGUID = 0;
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                {
-                    InCombat = true;
-                    m_creature->AddThreat(who, 1.0f);
-                }
-            }
-        }
-    }
-
     void Aggro(Unit *who) { return; }
 
     void UpdateAI(const uint32 diff)
@@ -115,6 +96,8 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         {
             if(TeronGUID)
             {
+                DoZoneInCombat();
+
                 Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
                 if((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
@@ -393,8 +376,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /************************************************************************/
         /** NOTE FOR FUTURE DEVELOPER: PROPERLY IMPLEMENT THE GHOST PORTION *****/
         /**  ONLY AFTER MaNGOS FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
-        /**   THE CURRENT CODE IN THIS FUNCTION IS ONLY THE BEGINNING       *****/
-        /**   OF WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE  *****/
+        /**   THE CURRENT CODE IN THIS FUNCTION IS ONLY THE BEGINNING OF    *****/
+        /**    WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE    *****/
         /************************************************************************/
 
         Unit* Ghost = NULL;

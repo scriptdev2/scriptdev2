@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Mobs_Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9849, 9918, 9935, 9935. Gurok, mini outdoor boss
+SDComment: Quest support: 9849, 9918, 9935, 9935, 9874. Gurok, mini outdoor boss.
 SDCategory: Nagrand
 EndScriptData */
 
@@ -293,6 +293,39 @@ bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, u
     return true;
 }
 
+/*####
+# mob_sunspring_villager
+####*/
+
+struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
+{
+    mob_sunspring_villagerAI(Creature *c) : ScriptedAI(c) {Reset();}
+		
+    void Reset()
+    {
+		m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
+
+    }
+
+    void Aggro(Unit *who)
+    {
+    }
+
+    void SpellHit(Unit *caster, const SpellEntry *spell)
+    {
+        if(spell->Id == 32146)
+		{
+			m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+			m_creature->RemoveCorpse();
+		}
+    }
+};
+CreatureAI* GetAI_mob_sunspring_villager(Creature *_Creature)
+{
+    return new mob_sunspring_villagerAI (_Creature);
+}
+
 /*######
 ## AddSC
 ######*/
@@ -321,5 +354,10 @@ void AddSC_mobs_nagrand()
     newscript->GetAI = GetAI_mob_lump;
     newscript->pGossipHello =  &GossipHello_mob_lump;
     newscript->pGossipSelect = &GossipSelect_mob_lump;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_sunspring_villager";
+    newscript->GetAI = GetAI_mob_sunspring_villager;
     m_scripts[nrscripts++] = newscript;
 }

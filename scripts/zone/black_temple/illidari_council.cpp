@@ -167,9 +167,9 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     void Aggro(Unit *who)
     {
        if(pInstance)
-                        pInstance->SetData(DATA_ILLIDARICOUNCIL, 1);
+           pInstance->SetData(DATA_ILLIDARICOUNCIL, 1);
 
-                    StartEvent(who);
+       StartEvent(who);
     }
 
     void StartEvent(Unit *target)
@@ -310,33 +310,10 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                Reset();
-                DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
-                InCombat = true;
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
-                    InCombat = true;
-                }
-            }
-        }
+        Reset();
+        DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
+        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -535,30 +512,8 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                Reset();
-                AggroYellTimer = 9000;
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    AggroYellTimer = 9000;
-                    InCombat = true;
-                }
-            }
-        }
+        Reset();
+        AggroYellTimer = 9000;
     }
 
     void KilledUnit(Unit *victim)
@@ -730,28 +685,8 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                    m_creature->AddThreat(who, 1.0f);
-
-                if(!InCombat)
-                {
-                    AggroYellTimer = 5500;
-                    InCombat = true;
-                }
-            }
-        }
+        AggroYellTimer = 5500;
+        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -914,9 +849,8 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_VERA_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_VERA_AGGRO);
-                InCombat = true;
+        AggroYellTimer = 3000;
+        InCombat = true;
     }
 
     void MoveInLineOfSight(Unit *who)

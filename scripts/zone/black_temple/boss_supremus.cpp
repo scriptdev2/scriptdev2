@@ -129,7 +129,6 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who) {return;}
     void UpdateAI(const uint32 diff);
     void SetSupremusGUID(uint64 guid);
-    float CalculateRandomCoord();
 };
 
 void npc_volcanoAI::Reset()
@@ -147,38 +146,8 @@ void npc_volcanoAI::SetSupremusGUID(uint64 guid)
         SupremusGUID = guid;
 }
 
-float npc_volcanoAI::CalculateRandomCoord()
-{
-    float coord = 0;
-    switch(rand()%2)
-    {
-        case 0:
-            coord += rand()%7;
-            break;
-        case 1:
-            coord -= rand()%7;
-            break;
-    }
-    return coord;
-}
-
 void npc_volcanoAI::UpdateAI(const uint32 diff)
 {
-    // Workaround for the visual of the fireball that is spammed around the volcano.
-    if(FireballTimer < diff)
-    {
-        float X = CalculateRandomCoord();
-        float Y = CalculateRandomCoord();
-        Creature* Target = DoSpawnCreature(24550, X, Y, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 600);
-        if(Target)
-        {
-            Target->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Make it invisible
-            DoCast(Target, SPELL_VOLCANIC_FIREBALL);
-            Target->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        }
-        FireballTimer = 500;
-    }else FireballTimer -= diff;
-
     if(CheckTimer < diff)
     {
         if(SupremusGUID)
@@ -234,35 +203,12 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        if(pInstance)
+            pInstance->SetData(DATA_SUPREMUSEVENT, 1);
 
-                if(pInstance)
-                    pInstance->SetData(DATA_SUPREMUSEVENT, 1);
+        InCombat = true;
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartMeleeAttack(who);
-
-                if (!InCombat)
-                {
-                    if(pInstance)
-                        pInstance->SetData(DATA_SUPREMUSEVENT, 1);
-                    InCombat = true;
-                }
-            }
-        }
-    }
 
     void JustDied(Unit *killer)
     {
@@ -272,7 +218,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             pInstance->SetData(DATA_SUPREMUSEVENT, 3);
     }
 
-    uint32 CalculateRandomCoord(float initial)
+    float CalculateRandomCoord(float initial)
     {
         float coord = 0;
 
@@ -382,13 +328,9 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                     DoCast(target, SPELL_VOLCANIC_ERUPTION);
                     ((npc_volcanoAI*)Volcano->AI())->SetSupremusGUID(m_creature->GetGUID());
                 }
-                            
-                switch(rand()%3)
-                {
-                    case 0:
-                        DoTextEmote("roars and the ground begins to crack open!", NULL);
-                        break;
-                }
+                
+                DoTextEmote("roars and the ground begins to crack open!", NULL);
+                
                 SummonVolcanoTimer = 10000;
             }else SummonVolcanoTimer -= diff;
         }
