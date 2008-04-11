@@ -83,7 +83,7 @@ bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32
                 if(rand()%30 == 0)
                 {
                     _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                    _Creature->MonsterTextEmote(CLUCK_ENDTEXT, 0);
+                    _Creature->MonsterTextEmote(CLUCK_TEXT1, 0);
                 }
             }
         }

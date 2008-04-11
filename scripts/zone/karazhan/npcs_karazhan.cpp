@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public ScriptedAI
             return;
 
         Event = pInstance->GetData(DATA_OPERA_PERFORMANCE);
-        pInstance->SetData(DATA_BARNES_INTRO, 1); // IN Progress
+        //pInstance->SetData(DATA_BARNES_INTRO, 1); // IN Progress
 
         IsTalking = false;
         TalkCount = 0;
@@ -252,8 +252,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public ScriptedAI
                     WalkCount--;
                     if(!WalkCount)
                     {
-                        if(pInstance)
-                            pInstance->SetData(DATA_BARNES_INTRO, 2); // Complete
+                        //if(pInstance)
+                            //pInstance->SetData(DATA_BARNES_INTRO, 2); // Complete
                         m_creature->RemoveAurasDueToSpell(SPELL_TUXEDO);
                         IsWalking = false;
                     }
