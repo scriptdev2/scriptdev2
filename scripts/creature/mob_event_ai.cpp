@@ -88,6 +88,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             if (Follow)
                 m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
+            
             m_creature->AddThreat(pTarget, 0.0f);
             m_creature->resetAttackTimer();
 
@@ -729,51 +730,58 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        if (!who || who == m_creature)
-            return;
-
-        if (!InCombat)
+        //Check for on combat start events
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            //Check for on combat start events
-            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            switch ((*i).Event.event_type)
             {
-                switch ((*i).Event.event_type)
-                {
-                case EVENT_T_AGGRO:
-                    ProcessEvent(*i, who);
-                    break;
+            case EVENT_T_AGGRO:
+                ProcessEvent(*i, who);
+                break;
 
-                    //Reset all in combat timers
-                case EVENT_T_TIMER_REPEAT:
-                    if ((*i).Event.event_param3_s > 0)
-                        (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
-                    else (*i).Time = (*i).Event.event_param2;                 
+                //Reset all in combat timers
+            case EVENT_T_TIMER_REPEAT:
+                if ((*i).Event.event_param3_s > 0)
+                    (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
+                else (*i).Time = (*i).Event.event_param2;                 
 
-                    (*i).Enabled = true;
-                    break;
-                case EVENT_T_TIMER_SINGLE:
-                    (*i).Time = (*i).Event.event_param1;
-                    (*i).Enabled = true;
-                    break;
+                (*i).Enabled = true;
+                break;
+            case EVENT_T_TIMER_SINGLE:
+                (*i).Time = (*i).Event.event_param1;
+                (*i).Enabled = true;
+                break;
 
-                    //All normal events need to be re-enabled and their time set to 0
-                default:
-                    (*i).Enabled = true;
-                    (*i).Time = 0;
-                    break;
-                }
+                //All normal events need to be re-enabled and their time set to 0
+            default:
+                (*i).Enabled = true;
+                (*i).Time = 0;
+                break;
             }
-
-            EventUpdateTime = EVENT_UPDATE_TIME;
-            EventDiff = 0;
         }
 
-        InCombat = true; 
+        EventUpdateTime = EVENT_UPDATE_TIME;
+        EventDiff = 0;
+    }
 
-        //Begin melee attack if we are within range
-        if (CombatMovementEnabled)
-            AttackTarget(who, true);
-        else AttackTarget(who, false);
+    void AttackStart(Unit *who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin melee attack if we are within range
+            if (CombatMovementEnabled)
+                AttackTarget(who, true);
+            else AttackTarget(who, false);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -808,8 +816,16 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                //Begin attack if we are within range
-                AttackStart(who);
+                //Begin melee attack if we are within range
+                if (CombatMovementEnabled)
+                    AttackTarget(who, true);
+                else AttackTarget(who, false);
+
+                if (!InCombat)
+                {
+                    Aggro(who);
+                    InCombat = true;
+                }
             }
         }
     }
