@@ -110,7 +110,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     uint32 EnrageTimer;
     uint32 ExplosionCount;
 
-    bool InCombat;
     bool Enraged;
 
     void Reset()
@@ -130,7 +129,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         EnrageTimer = 600000;
         ExplosionCount = 0;
 
-        InCombat = false;
         Enraged = false;
     }
 
@@ -142,7 +140,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         Reset();
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -165,7 +162,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 3);
 
-        InCombat = false;
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }

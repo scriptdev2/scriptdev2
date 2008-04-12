@@ -40,7 +40,6 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
     uint32 CrowdPummel_Timer;
     uint32 MightyBlow_Timer;
     uint32 Dazed_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -48,12 +47,6 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
         CrowdPummel_Timer = 13000;
         MightyBlow_Timer = 11000;
         Dazed_Timer = 7000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -59,19 +59,12 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
     uint32 MagicReflection_Timer;
     uint32 DamageReflection_Timer;
     uint32 Blastwave_Timer;
-    bool InCombat;
 
     void Reset()
     {
         MagicReflection_Timer =  30000;      //Damage reflection first so we alternate
         DamageReflection_Timer = 15000;
         Blastwave_Timer = 10000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit* victim)

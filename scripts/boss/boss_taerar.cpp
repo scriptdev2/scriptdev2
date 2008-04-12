@@ -57,7 +57,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
     int RandX;
     int RandY;
     Creature* Summoned;
-    bool InCombat;
     bool Shades;
 
     void Reset()
@@ -72,7 +71,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         Summon2_Timer = 0;
         Summon3_Timer = 0;
         Shades_Timer = 60000;                               //The time that Taerar is banished
-        InCombat = false;
         Shades = false; 
 
         //m_creature->RemoveAllAuras();
@@ -278,18 +276,11 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
 
     uint32 PoisonCloud_Timer;
     uint32 PosionBreath_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         PoisonCloud_Timer = 8000;
         PosionBreath_Timer = 12000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

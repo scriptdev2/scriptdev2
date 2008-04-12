@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
     uint32 Heal_Timer;
     uint32 PrayerOfHealing_Timer;
     uint32 Shield_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -47,7 +46,6 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
         Heal_Timer = 35000;
         PrayerOfHealing_Timer = 25000;
         Shield_Timer = 3000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

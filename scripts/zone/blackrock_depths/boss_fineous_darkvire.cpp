@@ -36,18 +36,11 @@ struct MANGOS_DLL_DECL boss_fineous_darkvireAI : public ScriptedAI
 
     uint32 HolyShock_Timer;
     uint32 Kick_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         HolyShock_Timer = 5000;
         Kick_Timer = 12000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

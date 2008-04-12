@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
     uint32 WingBuffet_Timer;
     uint32 ShadowOfEbonroc_Timer;
     uint32 Heal_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -44,7 +43,6 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         WingBuffet_Timer = 30000;
         ShadowOfEbonroc_Timer = 45000;
         Heal_Timer = 2000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

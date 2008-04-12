@@ -37,14 +37,12 @@ struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
     uint32 Shoot_Timer;
     uint32 StunBomb_Timer;
     uint32 Dazed_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         Shoot_Timer = 1000;
         StunBomb_Timer = 16000;
         Dazed_Timer = 24000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

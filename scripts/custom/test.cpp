@@ -32,12 +32,10 @@ struct MANGOS_DLL_DECL testAI : public ScriptedAI
     testAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cleave_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Cleave_Timer = 5000;      //These times are probably wrong
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

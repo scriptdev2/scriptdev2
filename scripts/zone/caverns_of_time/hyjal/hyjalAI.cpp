@@ -52,7 +52,6 @@ void hyjalAI::Reset()
 
     /** Bools **/
     EventBegun = false;
-    InCombat = false;
     FirstBossDead = false;
     SecondBossDead = false;
     Summon = false;

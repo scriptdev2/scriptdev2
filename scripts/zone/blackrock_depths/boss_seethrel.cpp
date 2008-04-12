@@ -42,7 +42,6 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
     uint32 Blizzard_Timer;
     uint32 FrostNova_Timer;
     uint32 FrostWard_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -51,7 +50,6 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
         Blizzard_Timer = 18000;
         FrostNova_Timer = 12000;
         FrostWard_Timer = 25000;
-        InCombat = false;
 
         m_creature->CastSpell(m_creature,SPELL_FROSTARMOR,true);
     }

@@ -60,22 +60,13 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     uint32 Corrupion_Timer;
     bool Firenova;
 
-    bool InCombat;
-
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         ShadowVolley_Timer = 1000;
         BurningNova_Timer = 10000;
         Corrupion_Timer = 5000;
         Firenova = false;
-
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

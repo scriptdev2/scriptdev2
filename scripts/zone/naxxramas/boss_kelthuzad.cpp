@@ -183,7 +183,6 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
     uint32 Phase1_Timer;
     bool Phase2;
     bool Phase3;
-    bool InCombat;
     
     void Reset()
     {
@@ -208,12 +207,6 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         Phase1_Timer = 310000; //Phase 1 lasts 5 minutes and 10 seconds
         Phase2 = false;
         Phase3 = false;
-        InCombat = false;        
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit()

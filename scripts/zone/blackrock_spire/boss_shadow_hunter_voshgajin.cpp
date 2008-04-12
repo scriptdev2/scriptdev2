@@ -34,14 +34,12 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
     uint32 CurseOfBlood_Timer;
     uint32 Hex_Timer;
     uint32 Cleave_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         CurseOfBlood_Timer = 2000;
         Hex_Timer = 8000;
         Cleave_Timer = 14000;
-        InCombat = false;
 
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }

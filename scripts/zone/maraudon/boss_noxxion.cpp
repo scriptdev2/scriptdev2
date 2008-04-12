@@ -34,7 +34,6 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
     uint32 Uppercut_Timer;
     uint32 Adds_Timer;
     uint32 Invisible_Timer;
-    bool InCombat;
     bool Invisible;
     int Rand;
     int RandX;
@@ -47,14 +46,7 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         Uppercut_Timer = 16000;
         Adds_Timer = 19000;
         Invisible_Timer = 15000;                            //Too much too low?
-        InCombat = false;
         Invisible = false;
-        //m_creature->m_canMove = true;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

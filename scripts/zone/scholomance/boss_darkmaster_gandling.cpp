@@ -58,7 +58,6 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
     uint32 Curse_Timer;
     uint32 Teleport_Timer;
     Creature *Summoned;
-    bool InCombat;
 
     void Reset()
     {       
@@ -66,12 +65,6 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
         ShadowShield_Timer = 12000;
         Curse_Timer = 2000;
         Teleport_Timer = 16000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

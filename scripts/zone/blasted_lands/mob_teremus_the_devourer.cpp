@@ -34,14 +34,12 @@ struct MANGOS_DLL_DECL boss_teremusthedevourerAI : public ScriptedAI
     uint32 FlameBreath_Timer;
     uint32 SoulConsumption_Timer;
     uint32 ResistAll_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FlameBreath_Timer = 5000;
         SoulConsumption_Timer = 20000;
         ResistAll_Timer = 2000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

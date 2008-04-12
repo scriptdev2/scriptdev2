@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
     uint32 Immolate_Timer;
     uint32 CurseOfWeakness_Timer;
     uint32 DemonArmor_Timer;
-    bool InCombat;
     bool Voidwalkers;
     int Rand;
     int RandX;
@@ -52,13 +51,7 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         Immolate_Timer = 18000;
         CurseOfWeakness_Timer = 5000;
         DemonArmor_Timer = 16000;
-        InCombat = false;
         Voidwalkers = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

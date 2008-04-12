@@ -34,19 +34,12 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 FlameBuffet_Timer;
-    bool InCombat;
 
     void Reset()
     {
         ShadowFlame_Timer = 30000;      //These times are probably wrong
         WingBuffet_Timer = 24000;
-        FlameBuffet_Timer = 5000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();        
+        FlameBuffet_Timer = 5000;      
     }
 
     void Aggro(Unit *who)

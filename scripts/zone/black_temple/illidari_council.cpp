@@ -134,11 +134,8 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 
     uint32 CheckTimer;
 
-    bool InCombat;
-
     void Reset()
     {     
-        InCombat = false;
         CheckTimer = 2000;
 
         Creature* Member;
@@ -156,8 +153,6 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         }
         if(pInstance)
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT,0);
-
-        InCombat = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -293,7 +288,6 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
     uint32 BlessingTimer;
 
     bool AcquiredGUIDs;
-    bool InCombat;
 
     void Reset()
     {
@@ -304,8 +298,6 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         SealTimer = 40000;
         AuraTimer = 90000;
         BlessingTimer = 60000;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
@@ -313,7 +305,6 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
         Reset();
         DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -324,7 +315,6 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        InCombat = false;
         DoYell(SAY_GATH_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_GATH_DEATH);
     }
@@ -493,7 +483,6 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
     uint32 ArcaneExplosionTimer;
 
     bool AcquiredGUIDs;
-    bool InCombat;
 
     void Reset()
     {
@@ -506,8 +495,6 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
         ArcaneExplosionTimer = 14000;
         Cooldown = 0;
         AggroYellTimer = 0;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
@@ -524,8 +511,6 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        InCombat = false;
-
         DoYell(SAY_ZERE_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_ZERE_DEATH);
     }
@@ -668,7 +653,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
     uint32 AggroYellTimer;
 
     bool AcquiredGUIDs;
-    bool InCombat;
 
     void Reset()
     {
@@ -679,14 +663,11 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         DivineWrathTimer = 40000;
         ReflectiveShieldTimer = 0;
         AggroYellTimer = 0;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
     {
         AggroYellTimer = 5500;
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -697,8 +678,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        InCombat = false;
-
         DoYell(SAY_MALA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_MALA_DEATH);
     }
@@ -826,7 +805,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
     uint32 AggroYellTimer;
 
     bool AcquiredGUIDs;
-    bool InCombat;
     bool HasVanished;
 
     void Reset()
@@ -843,14 +821,11 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
         HasVanished = false;
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
     {
         AggroYellTimer = 3000;
-        InCombat = true;
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -869,7 +844,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
                 if(!InCombat)
                 {
                     AggroYellTimer = 3000;
-                    InCombat = true;
                 }
             }
         }
@@ -883,8 +857,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        InCombat = false;
-
         DoYell(SAY_VERA_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_VERA_DEATH);
     }

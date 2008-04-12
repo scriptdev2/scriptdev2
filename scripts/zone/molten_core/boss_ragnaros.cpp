@@ -115,7 +115,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
     bool HasYelledMagmaBurst;
     bool HasSubmergedOnce;
     bool WasBanished; 
-    bool InCombat;
     bool HasAura;
 
     void Reset()
@@ -131,13 +130,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         HasYelledMagmaBurst = false;
         HasSubmergedOnce = false;
         WasBanished = false; 
-        InCombat = false;
-
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
         HasAura = true;

@@ -78,7 +78,6 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
     //uint32 sythfrost_timer;
     //uint32 sythshadow_timer;
 
-    bool InCombat;
 
     void Reset()
     {   
@@ -91,7 +90,6 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         summon75 = false;
         summon50 = false;
         summon25 = false;
-        InCombat = false;
     }
 
     void JustDied(Unit* Killer)
@@ -289,17 +287,8 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
     uint32 flameshock_timer;
     uint32 flamebuffet_timer;
 
-    bool InCombat;
-
     void Reset()
-    {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
+    {
 
         flameshock_timer = 2500;
         flamebuffet_timer = 5000;
@@ -372,18 +361,8 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
     uint32 arcaneshock_timer;
     uint32 arcanebuffet_timer;
 
-    bool InCombat;
-
     void Reset()
-    {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-
+    {
         arcaneshock_timer = 2500;
         arcanebuffet_timer = 5000;
     }
@@ -455,18 +434,8 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
     uint32 frostshock_timer;
     uint32 frostbuffet_timer;
 
-    bool InCombat;
-
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-
         frostshock_timer = 2500;
         frostbuffet_timer = 5000;
     }
@@ -538,18 +507,8 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
     uint32 shadowshock_timer;
     uint32 shadowbuffet_timer;
 
-    bool InCombat;
-
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
-        
-        
-
         shadowshock_timer = 2500;
         shadowbuffet_timer = 5000;
     }

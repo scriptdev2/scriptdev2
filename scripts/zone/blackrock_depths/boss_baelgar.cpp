@@ -33,18 +33,11 @@ struct MANGOS_DLL_DECL boss_baelgarAI : public ScriptedAI
 
     uint32 MagmaSplash_Timer;
     uint32 SpawnOfBaelgar_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         MagmaSplash_Timer = 12000;
         SpawnOfBaelgar_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

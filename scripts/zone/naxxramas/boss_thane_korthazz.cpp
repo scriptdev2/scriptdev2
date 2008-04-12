@@ -57,7 +57,6 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
     uint32 Meteor_Timer;
     bool ShieldWall1;
     bool ShieldWall2;
-    bool InCombat;
 
     void Reset()
     {       
@@ -65,7 +64,6 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         Meteor_Timer = 30000; // wrong
         ShieldWall1 = true;
         ShieldWall2 = true;
-        InCombat = false;
     }
 
     void InitialYell()

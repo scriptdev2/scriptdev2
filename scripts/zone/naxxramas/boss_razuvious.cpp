@@ -60,14 +60,12 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
     uint32 UnbalancingStrike_Timer;
     uint32 DisruptingShout_Timer;
     uint32 CommandSound_Timer;
-    bool InCombat;
 
     void Reset()
     {
         UnbalancingStrike_Timer = 30000;    //30 seconds
         DisruptingShout_Timer = 25000;      //25 seconds
         CommandSound_Timer = 40000;         //40 seconds
-        InCombat = false;
     }
 
     void KilledUnit(Unit* Victim)

@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
     uint32 Chilled_Timer;
     uint32 FrostNova_Timer;
     uint32 ArcaneBolt_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -47,12 +46,6 @@ struct MANGOS_DLL_DECL boss_skulAI : public ScriptedAI
         Chilled_Timer = 23000;
         FrostNova_Timer = 8000;
         ArcaneBolt_Timer = 11000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

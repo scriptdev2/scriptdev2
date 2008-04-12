@@ -35,14 +35,12 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
     uint32 Inferno_Timer;
     uint32 IgniteMana_Timer;
     uint32 LivingBomb_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Inferno_Timer = 45000;      //These times are probably wrong
         IgniteMana_Timer = 30000;
         LivingBomb_Timer = 35000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

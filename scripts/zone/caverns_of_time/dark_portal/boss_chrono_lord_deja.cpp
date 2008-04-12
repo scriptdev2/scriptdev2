@@ -48,19 +48,10 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
     uint32 ArcaneBlast_Timer;
     uint32 TimeLapse_Timer;
 
-    bool InCombat;
-
     void Reset()
     { 
         ArcaneBlast_Timer = 20000;
         TimeLapse_Timer = 15000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

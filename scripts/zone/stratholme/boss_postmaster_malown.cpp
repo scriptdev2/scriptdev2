@@ -48,7 +48,6 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
     uint32 CurseOfTongues_Timer;
     uint32 CallOfTheGrave_Timer;
     bool HasYelled;
-    bool InCombat;
 
     void Reset()
     {
@@ -58,12 +57,6 @@ struct MANGOS_DLL_DECL boss_postmaster_malownAI : public ScriptedAI
         CurseOfTongues_Timer = 22000;
         CallOfTheGrave_Timer = 25000;
         HasYelled = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

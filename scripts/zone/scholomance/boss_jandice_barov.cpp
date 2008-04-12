@@ -42,7 +42,6 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     uint32 Illusion_Timer;
     //uint32 Illusioncounter;
     uint32 Invisible_Timer;
-    bool InCombat;
     bool Invisible;
     int Rand;
     int RandX;
@@ -54,13 +53,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         CurseOfBlood_Timer = 15000;
         Illusion_Timer = 30000;
         Invisible_Timer = 3000;                             //Too much too low?
-        InCombat = false;
         Invisible = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -174,18 +167,10 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
     mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cleave_Timer;
-    bool InCombat;
 
     void Reset()
     {
-        Cleave_Timer = 4000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+        Cleave_Timer = 4000;       
     }
 
     void Aggro(Unit *who)
@@ -206,8 +191,6 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartMeleeAttack(who);
-                InCombat = true;
-
             }
         }
     }

@@ -55,8 +55,6 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
     uint32 DevotionAura_Timer;
     uint32 Consecration_Timer;
 
-    bool InCombat;
-
     void Reset()
     { 
         Holy_Light_Timer = 30000;
@@ -65,8 +63,6 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
         HolyShield_Timer = 240000;
         DevotionAura_Timer = 60000;
         Consecration_Timer = 8000;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

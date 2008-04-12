@@ -33,7 +33,6 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
 
     uint32 FireBlast_Timer;
     uint32 Spirit_Timer;
-    bool InCombat;
     int Rand;
     int RandX;
     int RandY;
@@ -43,12 +42,6 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
     {
         FireBlast_Timer = 2000;
         Spirit_Timer = 24000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -59,7 +59,6 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     uint32 Curse_Timer;
     uint32 Wrath_Timer;
     uint32 Summon_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -67,7 +66,6 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         Curse_Timer = 4000;
         Wrath_Timer = 9000;
         Summon_Timer = 12000;
-        InCombat = false;
     }
 
 

@@ -85,15 +85,11 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 
     uint32 AmplifyTimer;
 
-    bool InCombat;
-
     void Reset()
     {
         TerestianGUID = 0;
 
         AmplifyTimer = 0;      
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
@@ -182,7 +178,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     bool SummonedPortals;
     bool Berserk;
-    bool InCombat;
 
     void Reset()
     {
@@ -205,7 +200,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         SummonedPortals     = false;
         Berserk             = false;
-        InCombat            = false;
     }
 
     void Aggro(Unit* who)
@@ -351,13 +345,9 @@ struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
 
     uint32 FireboltTimer;
 
-    bool InCombat;
-
     void Reset()
     {
         FireboltTimer = 3000;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

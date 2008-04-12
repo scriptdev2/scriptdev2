@@ -37,18 +37,11 @@ struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 
     uint32 FieryBurst_Timer;
     uint32 WarStomp_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FieryBurst_Timer = 5000;
         WarStomp_Timer =0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

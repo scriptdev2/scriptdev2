@@ -145,7 +145,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     uint8 Phase;
 
     bool Entangle;
-    bool InCombat;
 
     void Reset()
     {
@@ -164,12 +163,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         Phase = 0;
 
         Entangle = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_LADYVASHJEVENT, 0);
@@ -239,7 +232,6 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             break;
         }
 
-        InCombat = true;
         Phase = 1;
 
         if(pInstance)
@@ -251,9 +243,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             //Begin melee attack if we are within range
             if(Phase != 2)
                 DoStartMeleeAttack(who);
-
-            if(!InCombat)
-                StartEvent();
+            
+            StartEvent();
     }
 
     void CastShootOrMultishot()

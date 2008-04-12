@@ -38,25 +38,17 @@ struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
     uint32 HandOfThaurissan_Timer;
     uint32 AvatarOfFlame_Timer;
 //    uint32 Counter;
-    bool InCombat;
  
     void Reset()
     {       
         HandOfThaurissan_Timer = 4000;
         AvatarOfFlame_Timer = 25000;
 //        Counter= 0;
-        InCombat = false;
- 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
  
     void Aggro(Unit *who)
     {
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                InCombat = true;
     }
  
     void KilledUnit(Unit* victim)

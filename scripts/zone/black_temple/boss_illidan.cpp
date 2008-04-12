@@ -289,7 +289,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     uint64 IllidanGUID;
 
     /* Generic */
-    bool InCombat;
     bool IsTalking;
     uint32 TalkCount;
 
@@ -314,7 +313,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     ScriptedInstance* pInstance;
 
     /** Generic **/
-    bool InCombat;
     bool IsTalking;
     bool HasSummoned;
     uint32 Phase;
@@ -443,7 +441,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         IsTalking = false;
-        InCombat = false;
         
         TalkCount = 0;
         TalkTimer = 0;
@@ -476,7 +473,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, 3); // Completed
         IsTalking = false;
-        InCombat = false;
         TalkCount = 0;
         TalkTimer = 0;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1319,7 +1315,6 @@ void npc_akama_illidanAI::Reset()
     TalkTimer = 0;
     TalkCount = 0;
  
-    InCombat = false;
     IsTalking = false;
 
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1); // Gossip flag
@@ -1328,7 +1323,6 @@ void npc_akama_illidanAI::Reset()
 
 void npc_akama_illidanAI::BeginEvent(Player *player)
 {
-    InCombat = true;
 
     if(pInstance)
         IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
@@ -1343,13 +1337,11 @@ void npc_akama_illidanAI::BeginEvent(Player *player)
             m_creature->SetInCombat();
             ((boss_illidan_stormrageAI*)Illidan->AI())->TalkCount = 0; // First line of Akama-Illidan convo
             ((boss_illidan_stormrageAI*)Illidan->AI())->IsTalking = true; // Begin Talking
-            ((boss_illidan_stormrageAI*)Illidan->AI())->InCombat = true; // Set Illidan in combat
             ((boss_illidan_stormrageAI*)Illidan->AI())->AkamaGUID = m_creature->GetGUID();
             m_creature->SetUInt64Value(UNIT_FIELD_TARGET, Illidan->GetGUID());
             if(player)
                 Illidan->AddThreat(player, 1000.0f);
             IsTalking = true; // Prevent Akama from starting to attack him
-            InCombat = true;
             m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Prevent players from talking again
             Illidan->GetMotionMaster()->Clear(false);
             Illidan->GetMotionMaster()->Idle();
@@ -1475,8 +1467,6 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset(); 
     };
-
-    bool InCombat;
     
     uint32 TauntTimer;
     uint64 IllidanGUID;
@@ -1485,7 +1475,6 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 
     void Reset()
     {
-        InCombat = false;
         TauntTimer = 12000;
         IllidanGUID = 0;
     }
@@ -1527,8 +1516,6 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if (!InCombat) InCombat = true;
 
                 DoStartMeleeAttack(who);
             }
@@ -1637,15 +1624,11 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
     uint32 SummonBlazeTimer;
     uint32 ChargeTimer;
 
-    bool InCombat;
-
     void Reset()
     {
         FlameBlastTimer = 15000 + rand()%15000;
         SummonBlazeTimer = 10000 + rand()%20000;
         ChargeTimer = 5000;
-
-        InCombat = false;
     }
     
     void Aggro(Unit *who)
@@ -1716,13 +1699,9 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 
     uint64 TargetGUID;
 
-    bool InCombat;
-
     void Reset()
     {
         TargetGUID = 0;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

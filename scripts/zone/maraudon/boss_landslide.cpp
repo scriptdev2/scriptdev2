@@ -33,7 +33,6 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
     uint32 KnockBack_Timer;
     uint32 WarStomp_Timer;
     uint32 Adds_Timer;
-    bool InCombat;
     int Rand;
     int RandX;
     int RandY;
@@ -44,12 +43,6 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         KnockBack_Timer = 8000;
         WarStomp_Timer = 2000;
         Adds_Timer = 0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

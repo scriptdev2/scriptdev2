@@ -63,7 +63,6 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
     uint32 Slam_Timer;
     uint32 Fireball11_Timer;
     uint32 ConeOfCold5_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -77,12 +76,6 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
         Slam_Timer = 20000;
         Fireball11_Timer = 30000;
         ConeOfCold5_Timer = 40000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

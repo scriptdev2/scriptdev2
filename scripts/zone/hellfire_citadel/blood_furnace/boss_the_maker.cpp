@@ -53,21 +53,12 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     uint32 Domination_Timer;
     uint32 Knockdown_Timer;
 
-    bool InCombat;
-
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         AcidSpray_Timer = 10000;
         ExplodingBreaker_Timer = 4000;
         Domination_Timer = 120000;
         Knockdown_Timer    = 6000;
-
-        InCombat = false;
 
     }
 

@@ -38,14 +38,12 @@ struct MANGOS_DLL_DECL phalanxAI : public ScriptedAI
     uint32 ThunderClap_Timer;
     uint32 FireballVolley_Timer;
     uint32 MightyBlow_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         ThunderClap_Timer = 12000;
         FireballVolley_Timer =0;
         MightyBlow_Timer = 15000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

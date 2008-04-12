@@ -37,7 +37,6 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
     uint32 Cleave_Timer;
     uint32 Confliguration_Timer;
     uint32 Thunderclap_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -45,7 +44,6 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
         Cleave_Timer = 8000;
         Confliguration_Timer = 15000;
         Thunderclap_Timer = 17000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

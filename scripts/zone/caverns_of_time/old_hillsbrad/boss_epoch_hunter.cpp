@@ -59,21 +59,12 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
     uint32 Knockback_Timer;
     uint32 Mda_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         SandBreath_Timer = 25000;
         ImpendingDoom_Timerr = 30000;
         Knockback_Timer = 35000;
         Mda_Timer = 40000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

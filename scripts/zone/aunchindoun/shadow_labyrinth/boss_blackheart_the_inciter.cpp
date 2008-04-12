@@ -58,14 +58,10 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
     uint32 Charge_Timer;
     uint32 Knockback_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         Charge_Timer = 20000;
         Knockback_Timer = 15000;
-
-        InCombat = false;
 
         if(pInstance)
             pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 0);
@@ -120,8 +116,6 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
             break;
         }
-
-        InCombat = true;
 
         if(pInstance)
             pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 1);

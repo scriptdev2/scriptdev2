@@ -82,7 +82,6 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
     //    uint32 RaiseDead_Timer;
     uint32 SummonSkeletons_Timer;
     Creature *Summoned;
-    bool InCombat;
 
     void Reset()
     {
@@ -91,13 +90,6 @@ struct MANGOS_DLL_DECL boss_baron_rivendareAI : public ScriptedAI
         MortalStrike_Timer = 12000;
         //        RaiseDead_Timer = 30000;
         SummonSkeletons_Timer = 34000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        
-        //DoGoHome();
 
         m_creature->LoadCreaturesAddon();
     }

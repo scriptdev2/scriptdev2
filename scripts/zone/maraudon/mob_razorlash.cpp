@@ -36,20 +36,12 @@ struct MANGOS_DLL_DECL razorlashAI : public ScriptedAI
     uint32 Puncture_Timer;
     uint32 Cleave_Timer;
     uint32 ThornVolley_Timer;
-    bool InCombat;
-
 
     void Reset()
     {       
         Puncture_Timer = 12000;
         Cleave_Timer = 6000;
         ThornVolley_Timer = 19000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

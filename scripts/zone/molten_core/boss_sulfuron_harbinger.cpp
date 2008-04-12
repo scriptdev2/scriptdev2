@@ -48,7 +48,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
     uint32 Knockdown_Timer;
     uint32 Flamespear_Timer;
     ScriptedInstance *pInstance;
-    bool InCombat;
 
     void Reset()
     {
@@ -56,12 +55,6 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         Inspire_Timer = 13000;
         Knockdown_Timer = 6000;
         Flamespear_Timer = 2000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -134,7 +127,6 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
     uint32 Heal_Timer;
     uint32 ShadowWordPain_Timer;
     uint32 Immolate_Timer;
-    bool InCombat;
 
     ScriptedInstance *pInstance;
 
@@ -142,8 +134,7 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
     {
         Heal_Timer = 15000+rand()%15000;     
         ShadowWordPain_Timer = 2000;
-        Immolate_Timer = 8000;
-        InCombat = false;  
+        Immolate_Timer = 8000; 
     }
 
     void Aggro(Unit *who)

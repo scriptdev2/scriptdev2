@@ -52,7 +52,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
     uint32 PerformingGroundSlam;
     uint32 HurtfulStrike_Timer;
     uint32 Reverberation_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -65,7 +64,6 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         PerformingGroundSlam= false;
         HurtfulStrike_Timer= 8000;
         Reverberation_Timer= 60000+45000;
-        InCombat = false;
 
         if(pInstance)
             pInstance->SetData(DATA_GRUULEVENT, 0);

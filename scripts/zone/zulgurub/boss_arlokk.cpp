@@ -52,7 +52,6 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
     Creature *Panther;   
     uint32 Counter;
     
-    bool InCombat;
     bool PhaseTwo;
     bool VanishedOnce;
 
@@ -69,14 +68,9 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         Counter = 0;
 
         markedTarget = NULL;
-        InCombat = false;
         PhaseTwo = false;
         VanishedOnce = false;
 
-    //m_creature->RemoveAllAuras();
-    //m_creature->DeleteThreatList();
-    //m_creature->CombatStop();
-    //DoGoHome();
     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15218);
     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     

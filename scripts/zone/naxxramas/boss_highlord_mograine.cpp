@@ -63,7 +63,6 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     uint32 RighteousFire_Timer;
     bool ShieldWall1;
     bool ShieldWall2;
-    bool InCombat;
 
     void Reset()
     {       
@@ -71,7 +70,6 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
         RighteousFire_Timer = 2000; // applied approx 1 out of 4 attacks
         ShieldWall1 = true;
         ShieldWall2 = true;
-        InCombat = false;
     }
 
     void InitialYell()

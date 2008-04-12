@@ -47,7 +47,6 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
     uint32 Cleave_Timer;
     uint32 Knockaway_Timer;
     bool Summoned;
-    bool InCombat;
     Creature *SummonedCreature;
 
     void Reset()
@@ -57,12 +56,6 @@ struct MANGOS_DLL_DECL boss_overlordwyrmthalakAI : public ScriptedAI
         Cleave_Timer = 6000;
         Knockaway_Timer = 12000;
         Summoned = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -70,7 +70,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     Unit* target;
  
     bool endWatch;
-    bool InCombat;
     bool someWatched;
     bool RaptorDead;
     bool CombatStart;
@@ -93,16 +92,10 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         watchTarget = NULL;
         target = NULL;
  
-        InCombat = false;
         someWatched = false;
         endWatch = false;
         RaptorDead = false;
         CombatStart = false;
- 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop(); 
-        //DoGoHome();
 
         DoCast(m_creature, 23243); 
    }

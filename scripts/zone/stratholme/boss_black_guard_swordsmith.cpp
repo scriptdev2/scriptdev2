@@ -39,18 +39,11 @@ struct MANGOS_DLL_DECL boss_black_guard_swordsmithAI : public ScriptedAI
 
     uint32 Dazed_Timer;
     uint32 BansheeCurse_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Dazed_Timer = 6000;
         BansheeCurse_Timer = 10000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

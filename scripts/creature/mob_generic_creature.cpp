@@ -33,62 +33,20 @@ struct MANGOS_DLL_DECL generic_creatureAI : public ScriptedAI
     uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
     uint32 BuffTimer;           //This variable keeps track of buffs
     bool IsSelfRooted;
-    bool InCombat;
 
     void Reset()
     {
         GlobalCooldown = 0;
         BuffTimer = 0;          //Rebuff as soon as we can
         IsSelfRooted = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack() && who!= m_creature)
-        {
-            //Begin melee attack if we are within range
-            DoStartMeleeAttack(who);
             if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
             {
                 IsSelfRooted = true;
             }
-
-            InCombat = true;
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
-                if (!m_creature->IsWithinDistInMap(who, ATTACK_DISTANCE))
-                {
-                    IsSelfRooted = true;
-                }
-
-                InCombat = true;
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

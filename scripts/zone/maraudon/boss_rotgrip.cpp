@@ -32,17 +32,9 @@ struct MANGOS_DLL_DECL boss_rotgripAI : public ScriptedAI
 
     uint32 Puncture_Timer;
 
-    bool InCombat;
-
     void Reset()
     {       
         Puncture_Timer = 6000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

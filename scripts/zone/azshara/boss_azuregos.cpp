@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
     uint32 Reflect_Timer;
     uint32 Cleave_Timer;
     uint32 Enrage_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -49,7 +48,6 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         Reflect_Timer = 25000;
         Cleave_Timer = 7000;
         Enrage_Timer = 0;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

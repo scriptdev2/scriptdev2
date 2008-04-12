@@ -36,14 +36,12 @@ struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
     uint32 WhirlWind_Timer;
     uint32 Cleave_Timer;
     uint32 Thunderclap_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         WhirlWind_Timer = 20000;
         Cleave_Timer = 5000;
-        Thunderclap_Timer = 9000;
-        InCombat = false;      
+        Thunderclap_Timer = 9000;     
     }
 
     void Aggro(Unit *who)

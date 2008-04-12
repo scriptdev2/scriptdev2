@@ -67,7 +67,6 @@ SimpleAI::SimpleAI(Creature *c) : ScriptedAI(c)
 
 void SimpleAI::Reset()
 {
-    InCombat = false;
 }
 
 void SimpleAI::Aggro(Unit *who)
@@ -211,9 +210,6 @@ void SimpleAI::DamageTaken(Unit *killer, uint32 &damage)
     //Target is ok, cast a spell on it
     if (target)
         DoCast(target, Death_Spell);
-
-    //Allow reset of variables on next AttackStart
-    InCombat = false;
 }
 
 void SimpleAI::UpdateAI(const uint32 diff)

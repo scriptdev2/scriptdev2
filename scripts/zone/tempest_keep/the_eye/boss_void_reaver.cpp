@@ -61,7 +61,6 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     uint32 ArcaneOrb_Timer;
     uint32 KnockAway_Timer;
     uint32 Berserk_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -69,12 +68,6 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         ArcaneOrb_Timer = 3000;
         KnockAway_Timer = 30000;
         Berserk_Timer = 600000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, 0);

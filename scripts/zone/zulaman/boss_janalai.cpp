@@ -132,7 +132,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     uint64 FireBombGUIDs[40];
     uint64 ThrowControllerGUID;
 
-    bool InCombat;
     bool bombing;
 
 
@@ -140,8 +139,6 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     {
         if(pInstance)
             pInstance->SetData(DATA_JANALAIEVENT, 0);
-
-        InCombat = false;
 
         fire_breath_timer = 8000;
         bomb_timer = 30000;

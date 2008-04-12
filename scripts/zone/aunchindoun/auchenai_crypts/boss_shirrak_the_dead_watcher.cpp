@@ -34,19 +34,12 @@ struct MANGOS_DLL_DECL boss_shirrak_the_dead_watcherAI : public ScriptedAI
     uint32 Inhabitmagic_Timer;
     uint32 Attractmagic_Timer;
     uint32 Carnivorousbite_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         Inhabitmagic_Timer = 2000;
         Attractmagic_Timer = 10000;
         Carnivorousbite_Timer = 11000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

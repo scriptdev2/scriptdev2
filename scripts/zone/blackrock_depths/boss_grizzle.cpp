@@ -37,18 +37,11 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
 
     uint32 GroundTremor_Timer;
     uint32 Frenzy_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         GroundTremor_Timer = 12000;
         Frenzy_Timer =0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

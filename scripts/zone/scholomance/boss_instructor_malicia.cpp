@@ -41,8 +41,6 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
     uint32 FlashCounter;
     uint32 TouchCounter;
 
-    bool InCombat;
-
     void Reset()
     {       
         CallOfGraves_Timer = 4000;
@@ -52,12 +50,6 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         HealingTouch_Timer = 45000;
         FlashCounter = 0;
         TouchCounter = 0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

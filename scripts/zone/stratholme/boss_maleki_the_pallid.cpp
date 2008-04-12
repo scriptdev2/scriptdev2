@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
     uint32 Frostbolt_Timer;
     uint32 IceTomb_Timer;
     uint32 DrainLife_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -47,12 +46,6 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         Frostbolt_Timer = 1000;
         IceTomb_Timer = 16000;
         DrainLife_Timer = 31000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

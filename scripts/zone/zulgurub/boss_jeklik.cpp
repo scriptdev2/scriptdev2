@@ -59,7 +59,6 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
     Creature *Bat;
     Creature *FlyingBat;
-    bool InCombat;
     bool PhaseTwo;
 
     void Reset()
@@ -74,13 +73,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         GreaterHeal_Timer = 50000;
         SpawnFlyingBats_Timer = 10000;
 
-        InCombat = false;
         PhaseTwo = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

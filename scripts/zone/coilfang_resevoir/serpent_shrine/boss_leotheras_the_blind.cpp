@@ -76,7 +76,6 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     bool DemonForm;
     bool IsFinalForm;
-    bool InCombat;
 
     uint64 Demon;
 
@@ -88,19 +87,12 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         DemonForm = false;
         IsFinalForm = false;
-        InCombat = false;
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
-
-        
     }
 
     void StartEvent()
@@ -110,8 +102,6 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 1);
-
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -260,32 +250,20 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 {
     boss_leotheras_the_blind_demonformAI(Creature *c) : ScriptedAI(c)
     {
-        InCombat = false;
         EnterEvadeMode();
     }
 
     uint32 ChaosBlast_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         ChaosBlast_Timer = 1000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void StartEvent()
     {
         DoYell(SAY_FREE, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_FREE);
-
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)

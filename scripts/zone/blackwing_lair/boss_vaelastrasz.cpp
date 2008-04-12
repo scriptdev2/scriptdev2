@@ -71,7 +71,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     uint32 TailSwipe_Timer;
     bool HasYelled;
     bool DoingSpeach;
-    bool InCombat;
 
     void Reset()
     {
@@ -86,7 +85,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         TailSwipe_Timer = 20000;
         HasYelled = false;
         DoingSpeach = false;
-        InCombat = false;
     }
 
     void BeginSpeach(Unit* target)
@@ -114,7 +112,6 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
     void Aggro(Unit *who)
     {
                 DoCast(m_creature,SPELL_ESSENCEOFTHERED);
-                InCombat = true;
     }
 
     void UpdateAI(const uint32 diff)

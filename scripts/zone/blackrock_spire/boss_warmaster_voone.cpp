@@ -43,7 +43,6 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
     uint32 Pummel_Timer;
     uint32 ThrowAxe_Timer;
     uint32 Dazed_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -54,7 +53,6 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         Pummel_Timer = 32000;
         ThrowAxe_Timer = 1000;
         Dazed_Timer = 25000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

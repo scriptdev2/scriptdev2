@@ -35,19 +35,12 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
     uint32 Frostbreath_Timer;
     uint32 MassiveGeyser_Timer;
     uint32 Slam_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Frostbreath_Timer = 8000;
         MassiveGeyser_Timer = 25000;
         Slam_Timer = 17000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

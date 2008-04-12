@@ -90,7 +90,6 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     bool Berserking;
     bool ChangedToBear;
     bool ChangedToTroll;
-    bool InCombat;
 
     void Reset()
     {       
@@ -107,19 +106,12 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         Berserking = false;
         ChangedToBear = false;
         ChangedToTroll = true;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
     {
-                DoYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_AGGRO);
-                InCombat = true;
+        DoYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_YELL_AGGRO);
     }
 
     void KilledUnit(Unit* victim)    

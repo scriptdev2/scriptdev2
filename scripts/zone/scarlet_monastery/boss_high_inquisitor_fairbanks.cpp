@@ -23,8 +23,6 @@ EndScriptData */
 
 #include "sc_creature.h"
 
-
-
 #define SPELL_SLEEP2                    1090
 #define SPELL_CURSEOFBLOOD              16098
 #define SPELL_SMITE                     6060
@@ -45,7 +43,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
     uint32 CurseOfBlood_Timer;
     uint32 DevouringPlague3_Timer;
     uint32 MindBlast5_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -56,12 +53,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_fairbanksAI : public ScriptedAI
         CurseOfBlood_Timer = 45000;
         DevouringPlague3_Timer = 60000;
         MindBlast5_Timer = 20000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

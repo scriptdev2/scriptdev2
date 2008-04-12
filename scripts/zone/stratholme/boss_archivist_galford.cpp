@@ -38,19 +38,12 @@ struct MANGOS_DLL_DECL boss_archivist_galfordAI : public ScriptedAI
     uint32 FireNova_Timer;
     uint32 BurningWinds_Timer;
     uint32 Pyroblast_Timer;
-    bool InCombat;
 
     void Reset()
     {
         FireNova_Timer = 15000;
         BurningWinds_Timer = 10000;
         Pyroblast_Timer = 3000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -30,17 +30,10 @@ struct MANGOS_DLL_DECL mob_jadespine_basiliskAI : public ScriptedAI
     mob_jadespine_basiliskAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Cslumber_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Cslumber_Timer = 2000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

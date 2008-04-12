@@ -95,7 +95,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     uint32 PhaseChangeTimer;
 
     bool Phase1;
-    bool InCombat;
 
     void Reset()
     {
@@ -118,15 +117,13 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
         Phase1 = true;
 
-        InCombat = false;
-     }
+    }
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                InCombat = true;
-                    if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
     }
 
     void KilledUnit(Unit *victim)
@@ -149,7 +146,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 3);
 
-        InCombat = false;
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 

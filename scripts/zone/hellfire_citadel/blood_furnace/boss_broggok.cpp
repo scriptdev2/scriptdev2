@@ -39,20 +39,11 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     uint32 PoisonSpawn_Timer;
     uint32 PoisonBolt_Timer;
 
-    bool InCombat;
-
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         AcidSpray_Timer = 10000;
         PoisonSpawn_Timer = 5000;
         PoisonBolt_Timer = 7000;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

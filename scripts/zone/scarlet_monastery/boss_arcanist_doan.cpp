@@ -54,7 +54,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     uint32 Blink_Timer;
     uint32 Fireball_Timer;
     uint32 ManaShield4_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -68,12 +67,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         Blink_Timer = 40000;
         Fireball_Timer = 6000;
         ManaShield4_Timer = 70000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

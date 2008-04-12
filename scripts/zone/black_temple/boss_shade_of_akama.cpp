@@ -94,12 +94,9 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
     uint64 ShadeGUID;
 
-    bool InCombat;
-
     void Reset()
     {
         ShadeGUID = 0;
-        InCombat = false;
     }
 
     void SetShadeGUID(uint64 guid)
@@ -114,9 +111,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit* who)
-    {
-        if(!InCombat) InCombat = true;
-        
+    {        
         if(!ShadeGUID)
         {
             if(pInstance)
@@ -143,14 +138,12 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
     uint64 ShadeGUID;
 
     bool StartBanishing;
-    bool InCombat;
 
     void Reset()
     {
         ShadeGUID = 0;
 
         StartBanishing = false;
-        InCombat = false;
     }
 
     void JustDied(Unit* killer);
@@ -161,7 +154,6 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(!InCombat) InCombat = true;
     }
 
     void UpdateAI(const uint32 diff)
@@ -213,7 +205,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     bool Enrage;
     bool SummonedChannelers;
     bool IsBanished;
-    bool InCombat;
     bool HasKilledAkama;
 
     void Reset()
@@ -245,7 +236,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
         Enrage = false;
         IsBanished = true;
-        InCombat = false;
         HasKilledAkama = false;
         
         m_creature->SetVisibility(VISIBILITY_ON);
@@ -492,7 +482,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
     uint32 CheckTimer;
     uint32 CastSoulRetrieveTimer;
 
-    bool InCombat;
     bool EventBegun;
     bool ShadeHasDied;
     bool StartCombat;
@@ -506,7 +495,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         CheckTimer = 2000;
         CastSoulRetrieveTimer = 0;
 
-        InCombat = false;
         EventBegun = false;
         ShadeHasDied = false;
         StartCombat = false;
@@ -533,7 +521,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             pInstance->SetData(DATA_SHADEOFAKAMAEVENT, 1); // In Progress
             m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Prevent players from trying to restart event
             ((boss_shade_of_akamaAI*)Shade->AI())->SetAkamaGUID(m_creature->GetGUID());
-            ((boss_shade_of_akamaAI*)Shade->AI())->InCombat = true;
             ((boss_shade_of_akamaAI*)Shade->AI())->SetSelectableChannelers();
             if(pl)
                 Shade->AddThreat(pl, 1.0f);

@@ -55,7 +55,6 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
     uint32 HolyWrath_Timer;
     bool ShieldWall1;
     bool ShieldWall2;
-    bool InCombat;
 
     void Reset()
     {       
@@ -63,7 +62,6 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
         HolyWrath_Timer = 12000; // right
         ShieldWall1 = true;
         ShieldWall2 = true;
-        InCombat = false;
     }
 
     void InitialYell()

@@ -100,7 +100,6 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
     float defaultsize;
     
     bool AppearDelay;
-    bool InCombat;
 
     uint8 Phase;
     
@@ -123,7 +122,6 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         AppearDelay = false;
         MarkOfTheSolarian_Timer=45000;
         Jump_Timer=8000;
-        InCombat = false;
         Phase = 1;
         
         if(pInstance)
@@ -143,9 +141,6 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         
         if(pInstance)
             pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 1);
-            
-        InCombat = true;
-        
     }
     
     void KIlledUnit(Unit *victim)

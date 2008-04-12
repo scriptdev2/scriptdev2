@@ -44,19 +44,12 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
     uint32 CheckAdds_Timer;
     uint64 Add[8];
     bool Enraged[8];
-    bool InCombat;
 
     void Reset()
     {
         AntiMagicPulse_Timer = 25000;      //These times are probably wrong
         MagmaShackles_Timer = 15000;
         CheckAdds_Timer = 2000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

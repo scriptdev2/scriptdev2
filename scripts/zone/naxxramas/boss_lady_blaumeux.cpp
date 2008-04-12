@@ -57,7 +57,6 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
     uint32 VoidZone_Timer;
     bool ShieldWall1;
     bool ShieldWall2;
-    bool InCombat;
 
     void Reset()
     {       
@@ -65,12 +64,6 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         VoidZone_Timer = 12000; // right
         ShieldWall1 = true;
         ShieldWall2 = true;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void InitialYell()

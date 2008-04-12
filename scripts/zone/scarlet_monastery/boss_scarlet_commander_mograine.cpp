@@ -52,8 +52,6 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
     uint32 Consecration3_Timer;
     uint32 BlessingOfWisdom_Timer;
     uint32 BlessingOfProtection3_Timer;
-    bool InCombat;
-
     void Reset()
     {
         Heal_Timer = 80000;
@@ -63,12 +61,6 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
         Consecration3_Timer = 30000;
         BlessingOfWisdom_Timer = 45000;
         BlessingOfProtection3_Timer = 45000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

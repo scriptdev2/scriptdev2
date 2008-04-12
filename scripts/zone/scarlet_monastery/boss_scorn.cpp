@@ -37,7 +37,6 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
     uint32 FrostboltVolley_Timer;
     uint32 MindFlay_Timer;
     uint32 FrostNova_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -45,12 +44,6 @@ struct MANGOS_DLL_DECL boss_scornAI : public ScriptedAI
         FrostboltVolley_Timer = 30000;
         MindFlay_Timer = 30000;
         FrostNova_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

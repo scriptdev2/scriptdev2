@@ -41,7 +41,6 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
     uint32 ManaBurn_Timer;
     uint32 PsychicScream_Timer;
     uint32 ShadowShield_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -49,12 +48,6 @@ struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
         ManaBurn_Timer = 14000;
         PsychicScream_Timer = 32000;
         ShadowShield_Timer = 8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

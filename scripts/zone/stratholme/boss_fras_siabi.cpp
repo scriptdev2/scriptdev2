@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_fras_siabiAI : public ScriptedAI
     uint32 Dazed_Timer;
     uint32 FlameBreath_Timer;
     uint32 DemoralizingShout_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -46,12 +45,6 @@ struct MANGOS_DLL_DECL boss_fras_siabiAI : public ScriptedAI
         Dazed_Timer = 11000;
         FlameBreath_Timer = 15000;
         DemoralizingShout_Timer = 6000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

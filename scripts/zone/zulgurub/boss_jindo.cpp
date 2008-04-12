@@ -63,8 +63,6 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     Creature *HealingWard;
     
     ScriptedInstance *pInstance;
-    
-    bool InCombat;
 
     void Reset()
     {
@@ -73,12 +71,6 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         Hex_Timer = 8000;
         Delusions_Timer = 10000;
         Teleport_Timer = 5000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

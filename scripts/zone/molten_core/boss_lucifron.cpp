@@ -35,19 +35,12 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
     uint32 ImpendingDoom_Timer;
     uint32 LucifronCurse_Timer;
     uint32 ShadowShock_Timer;
-    bool InCombat;
 
     void Reset()
     {
         ImpendingDoom_Timer = 10000;        //Initial cast after 10 seconds so the debuffs alternate
         LucifronCurse_Timer = 20000;        //Initial cast after 20 seconds
         ShadowShock_Timer = 6000;           //6 seconds
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

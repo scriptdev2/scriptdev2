@@ -35,19 +35,12 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
     uint32 Rend_Timer;
     uint32 Cleave_Timer;
     uint32 Frenzy_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         Rend_Timer = 8000;
         Cleave_Timer = 9000;
         Frenzy_Timer =0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

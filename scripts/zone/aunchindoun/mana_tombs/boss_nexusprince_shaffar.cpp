@@ -68,23 +68,17 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
     uint32 frostbolt_timer;
     uint32 frostnova_timer;
 
-    bool InCombat;
     bool HasTaunted;
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+
         beacon_timer = 10000;
         firebolt_timer = 8000;
         frostbolt_timer = 4000;
         frostnova_timer = 7000;
 
         HasTaunted = false;
-        InCombat = false;
     }
 
     void JustDied(Unit* Killer)

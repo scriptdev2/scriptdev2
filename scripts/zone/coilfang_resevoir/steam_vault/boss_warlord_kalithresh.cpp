@@ -51,20 +51,11 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     uint32 Rage_Timer;
     int RandTime(int time) { return ((rand()%time)*1000); }
 
-    bool InCombat;
-
     void Reset()
     {
         Reflection_Timer = 10000;
         Impale_Timer = 30000;
         Rage_Timer = 60000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);
@@ -105,8 +96,6 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
             DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
             break;
         }
-
-        InCombat = true;
 
         if(pInstance)
             pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 1);

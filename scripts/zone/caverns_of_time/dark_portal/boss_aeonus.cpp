@@ -49,20 +49,11 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
     uint32 TimeStop_Timer; 
     uint32 Frenzy_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         SandBreath_Timer = 30000;
         TimeStop_Timer = 40000;
         Frenzy_Timer = 120000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

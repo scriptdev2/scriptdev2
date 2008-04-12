@@ -32,7 +32,6 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
 
     uint32 Immolate_Timer;
     uint32 VeilofShadow_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -40,12 +39,6 @@ struct MANGOS_DLL_DECL boss_lordalexeibarovAI : public ScriptedAI
         Immolate_Timer = 7000;
         VeilofShadow_Timer = 15000;
 
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
         m_creature->LoadCreaturesAddon();
     }
 

@@ -35,18 +35,11 @@ struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
 
     uint32 Frostbolt_Timer;
     uint32 Chilled_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Frostbolt_Timer = 1000;
         Chilled_Timer = 7000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -68,7 +61,6 @@ struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }

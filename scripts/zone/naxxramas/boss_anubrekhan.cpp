@@ -57,7 +57,6 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
     uint32 Impale_Timer;
     uint32 LocustSwarm_Timer;
     uint32 Summon_Timer;
-    bool InCombat;
     bool HasTaunted;
 
     void Reset()
@@ -65,12 +64,6 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
         Impale_Timer = 15000;                       //15 seconds
         LocustSwarm_Timer = 80000 + (rand()%40000); //Random time between 80 seconds and 2 minutes for initial cast      
         Summon_Timer = LocustSwarm_Timer + 45000;   //45 seconds after initial locust swarm
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)
@@ -150,7 +143,6 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                         DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
                         break;
                     }
-                    InCombat = true;
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))

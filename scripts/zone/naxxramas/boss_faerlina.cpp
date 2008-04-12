@@ -55,7 +55,6 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     uint32 PoisonBoltVolley_Timer;
     uint32 RainOfFire_Timer;
     uint32 Enrage_Timer;
-    bool InCombat;
     bool HasTaunted;
 
     void Reset()
@@ -63,7 +62,6 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         PoisonBoltVolley_Timer = 8000;
         RainOfFire_Timer = 16000;
         Enrage_Timer = 60000;
-        InCombat = false;
         HasTaunted = false;
     }
 
@@ -135,7 +133,6 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
                         DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
                         break;
                     }
-                    InCombat = true;
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))

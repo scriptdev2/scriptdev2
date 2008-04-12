@@ -32,19 +32,11 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 
     uint32 Knockaway_Timer;
     uint32 Countercharge_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Countercharge_Timer = 9000;
         Knockaway_Timer = 25000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

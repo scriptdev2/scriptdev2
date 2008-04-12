@@ -36,13 +36,11 @@ struct MANGOS_DLL_DECL boss_verekAI : public ScriptedAI
 
     uint32 FrostBolt_Timer;
     uint32 FrostNova_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FrostBolt_Timer = 8000;
         FrostNova_Timer = 2000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

@@ -50,7 +50,6 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 	int RandX;
 	int RandY;
 	Creature* Summoned;
-	bool InCombat;
 
 	void Reset()
 	{       
@@ -61,14 +60,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 		LightningWave_Timer = 12000;
 		SummonDruids1_Timer = 0;
 		SummonDruids2_Timer = 0;
-		SummonDruids3_Timer = 0;
-		InCombat = false;
-
-		//m_creature->RemoveAllAuras();
-		//m_creature->DeleteThreatList();
-		//m_creature->CombatStop();
-		//DoGoHome();
-		
+		SummonDruids3_Timer = 0;	
 	}
 
 	void Aggro(Unit *who)
@@ -220,17 +212,10 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
 	mob_dementeddruidsAI(Creature *c) : ScriptedAI(c) {Reset();}
 
 	uint32 MoonFire_Timer;
-	bool InCombat;
 
 	void Reset()
 	{
 		MoonFire_Timer = 3000;
-		InCombat = false;
-
-		//m_creature->RemoveAllAuras();
-		//m_creature->DeleteThreatList();
-		//m_creature->CombatStop();
-		//DoGoHome();
 	}
 
 	void Aggro(Unit *who)

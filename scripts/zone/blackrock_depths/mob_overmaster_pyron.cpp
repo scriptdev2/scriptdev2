@@ -35,13 +35,11 @@ struct MANGOS_DLL_DECL overmaster_pyronAI : public ScriptedAI
 
     uint32 FireNova_Timer;
     uint32 FireBlast_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FireNova_Timer = 15000;
         FireBlast_Timer = 8000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

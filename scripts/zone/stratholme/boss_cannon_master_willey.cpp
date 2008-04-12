@@ -84,7 +84,6 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
     uint32 Pummel_Timer;
     uint32 Shoot_Timer;
     uint32 SummonRifleman_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -92,12 +91,6 @@ struct MANGOS_DLL_DECL boss_cannon_master_willeyAI : public ScriptedAI
         Pummel_Timer = 7000;
         KnockAway_Timer = 11000;
         SummonRifleman_Timer = 15000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit* Victim)

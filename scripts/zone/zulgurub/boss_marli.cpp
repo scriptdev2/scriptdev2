@@ -53,7 +53,6 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
     uint32 TransformBack_Timer;
 
     Creature *Spider;
-    bool InCombat;
     bool Spawned;
     bool PhaseTwo;
 
@@ -67,14 +66,8 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         Transform_Timer = 45000;
         TransformBack_Timer = 25000;
 
-        InCombat = false;
         Spawned = false;
         PhaseTwo = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

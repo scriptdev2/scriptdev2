@@ -46,7 +46,6 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
     int RandX;
     int RandY;
     Creature* Summoned;
-    bool InCombat;
 
     void Reset()
     {
@@ -57,7 +56,6 @@ struct MANGOS_DLL_DECL boss_kruulAI : public ScriptedAI
         VoidBolt_Timer = 30000;
         Rage_Timer = 60000;                                 //Cast rage after 1 minute
         Hound_Timer = 8000; 
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

@@ -35,18 +35,12 @@ struct MANGOS_DLL_DECL boss_tinkerergizlockAI : public ScriptedAI
 
     uint32 GoblinGun_Timer;
     uint32 Bomb_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         GoblinGun_Timer = 6000;
         Bomb_Timer = 12000;
-        InCombat = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

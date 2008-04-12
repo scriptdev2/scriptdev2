@@ -60,21 +60,15 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
     uint32 seedofcorruption_timer;
     uint32 shadownova_timer;
     uint32 voidzone_timer;
-    bool InCombat;
     bool wait;
     uint32 wait_timer;
 
     void Reset()
     { 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         seedofcorruption_timer = 10000;
         shadownova_timer = 15000;
         voidzone_timer = 5000;
-        InCombat = false;
         wait = false;
         wait_timer = 0;
 

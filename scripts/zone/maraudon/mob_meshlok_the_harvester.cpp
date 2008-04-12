@@ -33,18 +33,11 @@ struct MANGOS_DLL_DECL meshlok_the_harvesterAI : public ScriptedAI
 
     uint32 WarStomp_Timer;
     uint32 Strike_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         WarStomp_Timer = 9000;
         Strike_Timer = 7000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

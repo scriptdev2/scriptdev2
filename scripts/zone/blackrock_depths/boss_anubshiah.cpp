@@ -42,8 +42,6 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
     uint32 CurseOfWeakness_Timer;
     uint32 DemonArmor_Timer;
     uint32 EnvelopingWeb_Timer;
-    bool InCombat;
-
 
     void Reset()
     {       
@@ -52,14 +50,6 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
         CurseOfWeakness_Timer = 12000;
         DemonArmor_Timer = 3000;
         EnvelopingWeb_Timer = 16000;
-        InCombat = false;
-
-
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

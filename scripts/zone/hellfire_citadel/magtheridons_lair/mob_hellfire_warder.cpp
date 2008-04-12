@@ -35,8 +35,6 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
     uint32 Death_Timer;
     uint32 Rain_Timer;
 
-    bool InCombat;
-
     int RandTime(int time) {return ((rand()%time)*1000);}
 
     void Reset()
@@ -44,14 +42,6 @@ struct MANGOS_DLL_DECL mob_hellfire_warderAI : public ScriptedAI
         Shadow_Timer = 10000;
         Death_Timer = 50000;
         Rain_Timer = 30000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

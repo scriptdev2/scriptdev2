@@ -90,7 +90,6 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     uint32 Earthquake_Timer;
     uint32 WateryGlobules_Timer;
 
-    bool InCombat;
     bool Earthquake;
     bool Phase2;
 
@@ -101,14 +100,8 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         Earthquake_Timer = 30000;
         WateryGlobules_Timer = 0;
 
-        InCombat = false;
         Earthquake = false;
         Phase2 = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
@@ -118,8 +111,6 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     {
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-
-        InCombat = true;
 
         if(pInstance)
             pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 1); 

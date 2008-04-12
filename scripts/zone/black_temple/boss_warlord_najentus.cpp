@@ -77,15 +77,11 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
     {
         Reset();
     }
-
-    bool InCombat;
     
     uint64 SpineVictimGUID;
 
     void Reset()
     {
-        InCombat = false;
-
         SpineVictimGUID = 0;
     }
 
@@ -140,7 +136,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     uint64 SpineTargetGUID;
 
-    bool InCombat;
     bool IsShielded;
 
     void Reset()
@@ -160,8 +155,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 0);
-
-        InCombat = false;
     }
 
     void KilledUnit(Unit *victim)
@@ -186,8 +179,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
-
-        InCombat = false;
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -214,12 +205,11 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                    pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                Reset();
-                InCombat = true;
+        if(pInstance)
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        Reset();
     }
 
     // This is a workaround since we cannot summon GameObjects at will.

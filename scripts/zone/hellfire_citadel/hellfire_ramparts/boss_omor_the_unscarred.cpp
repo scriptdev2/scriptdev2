@@ -71,22 +71,11 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     uint32 OrbitalStrike_Timer;
     bool Summoned;
 
-    bool InCombat;
-
     void Reset()
     {   
-        if (InCombat)
-        {
-            DoYell(SAY_WIPE,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_WIPE);
-        }
+        DoYell(SAY_WIPE,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_WIPE);
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
-        InCombat = false;
         ShadowWhip_Timer = 1000;
         Reflect_Timer = 1000;
         TreacherousAura_Timer = 2000;
@@ -124,7 +113,6 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                     break;                    
                 }
-                InCombat = true;
     }
 
     void UpdateAI(const uint32 diff)

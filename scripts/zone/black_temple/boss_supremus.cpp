@@ -40,7 +40,6 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     }
 
     uint64 SupremusGUID;
-    bool InCombat;
     bool TargetLocked;
     uint32 CheckTimer;
 
@@ -56,7 +55,6 @@ void molten_flameAI::Reset()
 {
     SupremusGUID = 0;
     TargetLocked = false;
-    InCombat = false;
     CheckTimer = 1000;
 }
 
@@ -118,7 +116,6 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 {
     npc_volcanoAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    bool InCombat;
     uint32 CheckTimer;
     uint64 SupremusGUID;
     uint32 FireballTimer;
@@ -133,7 +130,6 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 
 void npc_volcanoAI::Reset()
 {
-    InCombat = false;
     CheckTimer = 1000;
     SupremusGUID = 0;
     FireballTimer = 500;
@@ -183,7 +179,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     uint32 SummonVolcanoTimer;
     uint32 HurtfulStrikeTimer;
 
-    bool InCombat;
     bool Phase1;
 
     void Reset()
@@ -198,22 +193,17 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         SummonVolcanoTimer = 5000;
 
         Phase1 = true;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
     {
         if(pInstance)
             pInstance->SetData(DATA_SUPREMUSEVENT, 1);
-
-        InCombat = true;
     }
 
 
     void JustDied(Unit *killer)
     {
-        InCombat = false;
-
         if(pInstance)
             pInstance->SetData(DATA_SUPREMUSEVENT, 3);
     }

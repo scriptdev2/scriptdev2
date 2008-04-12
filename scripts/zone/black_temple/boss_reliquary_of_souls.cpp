@@ -171,7 +171,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     uint32 SummonSoulTimer;
     uint32 AnimationTimer;
 
-    bool InCombat;
     bool IsDead;
     bool EndingPhase;
 
@@ -194,7 +193,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
         IsDead = false;
         EndingPhase = false;
-        InCombat = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -228,7 +226,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
-                    InCombat = true;
                 }
             }
         }
@@ -271,7 +268,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        InCombat = false;
     }
 
     void UpdateAI(const uint32 diff)
@@ -567,8 +563,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     uint32 EnrageTimer;
     uint32 SoulDrainTimer;
 
-    bool InCombat;
-
     void Reset()
     {
         StatAuraGUID = 0;
@@ -577,7 +571,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         FixateTimer = 5000;
         EnrageTimer = 30000;
         SoulDrainTimer = 150000;
-        InCombat = false;
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -601,7 +594,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         Reset();
         DoCast(who, AURA_OF_SUFFERING, true);
         DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)
@@ -625,7 +617,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        InCombat = false;
     }
 
     void CastFixate()
@@ -718,16 +709,12 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     uint32 DeadenTimer;
     uint32 SoulShockTimer;
 
-    bool InCombat;
-
     void Reset()
     {
         AggroYellTimer = 5000;
         RuneShieldTimer = 60000;
         DeadenTimer = 15000;
         SoulShockTimer = 40000;
-
-        InCombat = false;
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -785,7 +772,6 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
                 if (!InCombat)
                 {
                     DoCast(who, AURA_OF_DESIRE);
-                    InCombat = true;
                 }
             }
         }
@@ -793,7 +779,6 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
-        InCombat = false;
     }
 
     void UpdateAI(const uint32 diff)
@@ -849,7 +834,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     uint32 SpiteTimer;
 
     bool CheckedAggro;
-    bool InCombat;
 
     void Reset()
     {
@@ -861,7 +845,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         SpiteTimer = 30000;
 
         CheckedAggro = false;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)
@@ -888,7 +871,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
                 if (!InCombat)
                 {
                     DoCast(who, AURA_OF_ANGER);
-                    InCombat = true;
                 }
             }
         }
@@ -896,7 +878,6 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        InCombat = false;
         DoYell(ANGER_SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,ANGER_SOUND_DEATH);
     }

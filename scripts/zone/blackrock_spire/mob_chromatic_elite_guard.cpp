@@ -30,12 +30,10 @@ struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
     mob_chromatic_elite_guardAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 KnockDown_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         KnockDown_Timer = 20000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

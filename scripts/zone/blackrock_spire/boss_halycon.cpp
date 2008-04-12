@@ -39,19 +39,12 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
     uint32 CrowdPummel_Timer;
     uint32 MightyBlow_Timer;
     bool Summoned;
-    bool InCombat;
 
     void Reset()
     {       
         CrowdPummel_Timer = 8000;
         MightyBlow_Timer = 14000;
         Summoned = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

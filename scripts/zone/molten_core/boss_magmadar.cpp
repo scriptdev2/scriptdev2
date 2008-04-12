@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
     uint32 LavaBreath_Timer;
     uint32 Panic_Timer;
     uint32 Lavabomb_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -47,12 +46,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         LavaBreath_Timer = 7000;
         Panic_Timer = 20000;
         Lavabomb_Timer = 12000;
-        InCombat = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
     }
 

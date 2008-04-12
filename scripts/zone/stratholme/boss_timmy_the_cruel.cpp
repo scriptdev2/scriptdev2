@@ -36,19 +36,12 @@ struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
     boss_timmy_the_cruelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 RavenousClaw_Timer;
-    bool InCombat;
     bool HasYelled;
 
     void Reset()
     {
         RavenousClaw_Timer = 10000;
-        InCombat = false;
         HasYelled = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -76,7 +69,6 @@ struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
 
                 //Begin melee attack if we are within range
                 DoStartMeleeAttack(who);
-                InCombat = true;
             }
         }
     }

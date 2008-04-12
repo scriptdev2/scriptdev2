@@ -61,7 +61,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
     uint32 HolySmite6_Timer;
     uint32 HolyFire5_Timer;
     uint32 MindBlast6_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -73,12 +72,6 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         HolySmite6_Timer = 10000;
         HolyFire5_Timer = 20000;
         MindBlast6_Timer = 6000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

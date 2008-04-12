@@ -49,15 +49,12 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     uint32 darkshell_timer;
     uint32 voidblast_counter;
 
-    bool InCombat;
 
     void Reset()
     {   
         voidblast_timer = 10000;
         darkshell_timer = 15000;
         voidblast_counter = 0;
-
-        InCombat = false;
     }
 
     void JustDied(Unit* Killer)

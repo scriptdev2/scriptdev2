@@ -49,7 +49,6 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     uint32 Fly2_Timer;
     uint32 Beserk_Timer;
     uint32 phase;
-    bool InCombat;
     bool landoff;
     uint32 land_Timer;
     
@@ -62,7 +61,6 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
         Icebolt_Timer = 4000;
         land_Timer = 2000;
         Beserk_Timer = 0;
-        InCombat = false;
         phase = 1;
         Icebolt_Count = 0;
         landoff = false;

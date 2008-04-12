@@ -77,7 +77,6 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
     uint32 Frenzy_Timer;
     uint32 Enrage_Timer;
     uint32 Summon_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -87,7 +86,6 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         Frenzy_Timer = 15000;
         Enrage_Timer = 304000;
         Summon_Timer = 10000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

@@ -189,7 +189,6 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 {
     ScriptedInstance* pInstance;
     bool FakeDeath;
-    bool InCombat;
     uint32 DelayRes_Timer;
     uint64 DelayRes_Target;
 
@@ -202,7 +201,6 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     void Reset()
     {
         FakeDeath = false;
-        InCombat = false;
         DelayRes_Timer = 0;
         DelayRes_Target = 0;
 
@@ -297,7 +295,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         AdvisorGuid[1] = 0;
         AdvisorGuid[2] = 0;
         AdvisorGuid[3] = 0;
-        InCombat = false;
         Reset();
     }
 
@@ -318,7 +315,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     uint32 Phase_Timer; //generic timer
     uint32 PyrosCasted;
 
-    bool InCombat;
     bool InGravityLapse;
     bool IsCastingFireball;
     bool ChainPyros;
@@ -345,8 +341,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
         if(InCombat)
             PrepareAdvisors();
-
-        InCombat = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
@@ -399,7 +393,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
             {
-                InCombat = true;
                 DoStartMeleeAttack(target);
             }
         }else 
@@ -750,7 +743,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if(target)
                     {
-                        InCombat = true;
                         DoStartMeleeAttack(target);
                     }
                     Phase_Timer = 30000;

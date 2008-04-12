@@ -39,7 +39,6 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
     uint32 SunderingCleave_Timer;
     uint32 KnockAway_Timer;
     bool HasYelled;
-    bool InCombat;
 
     void Reset()
     {       
@@ -48,12 +47,6 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
         SunderingCleave_Timer = 40000;
         KnockAway_Timer = 32000;
         HasYelled = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

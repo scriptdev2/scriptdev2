@@ -35,19 +35,12 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
     uint32 FireShield_Timer;
     uint32 BlastWave_Timer;
     uint32 Frenzy_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FireShield_Timer = 2000;
         BlastWave_Timer = 14000;
         Frenzy_Timer = 0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

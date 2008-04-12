@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
     uint32 MothersMilk_Timer;
     uint32 Posion_Timer;
     uint32 WebExplosion_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -46,12 +45,6 @@ struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
         MothersMilk_Timer = 30000;
         Posion_Timer = 4000;
         WebExplosion_Timer = 60000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

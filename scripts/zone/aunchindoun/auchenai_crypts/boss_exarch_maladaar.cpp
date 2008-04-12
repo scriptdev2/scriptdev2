@@ -64,23 +64,16 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     uint32 Ribbon_of_Souls_timer;
     uint32 Summon_Dark_Side_timer;
    
-    bool InCombat;
     bool HasTaunted;
     bool HasYelled;
     bool Avatar_summoned;
     
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         Fear_timer = 20000;
         Ribbon_of_Souls_timer = 5000;
         Summon_Dark_Side_timer = 15000;
-       
-        InCombat = false;
+
         HasTaunted = false;
         HasYelled = false;
         Avatar_summoned = false;
@@ -233,14 +226,11 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
     mob_avatar_of_martyredAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 Mortal_Strike_timer;
-    
-    bool InCombat;
 
     void Reset()
     {   
 
         Mortal_Strike_timer = 10000;
-        InCombat = false;
      }
     
     void Aggro(Unit *who)

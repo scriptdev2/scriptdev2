@@ -35,18 +35,11 @@ struct MANGOS_DLL_DECL boss_hearthsinger_forrestenAI : public ScriptedAI
 
     uint32 Shoot_Timer;
     uint32 MultiShot_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Shoot_Timer = 1000;
         MultiShot_Timer = 5000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

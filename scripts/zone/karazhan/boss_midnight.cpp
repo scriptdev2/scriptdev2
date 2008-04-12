@@ -197,15 +197,12 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 {
     boss_attumenAI(Creature *c) : ScriptedAI(c) 
     {
-        InCombat = false;
         Phase = 1;
 
         CleaveTimer = 10000 + (rand()%6)*1000;
         CurseTimer = 30000;
         RandomYellTimer = 30000 + (rand()%31)*1000; //Occasionally yell
         ChargeTimer = 20000;
-
-        
     }
 
     uint64 Midnight;
@@ -216,12 +213,8 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     uint32 ChargeTimer; //only when mounted
     uint32 ResetTimer;
 
-    bool InCombat;
-
     void Reset()
     {
-        InCombat = false;
-
         ResetTimer = 2000;
     }
 

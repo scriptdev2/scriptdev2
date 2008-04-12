@@ -41,7 +41,6 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
     uint32 ManaBurn_Timer;
     uint32 ShadowShield_Timer;
     uint32 Strike_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -49,12 +48,6 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
         ManaBurn_Timer = 3000;
         ShadowShield_Timer = 8000;
         Strike_Timer = 12000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

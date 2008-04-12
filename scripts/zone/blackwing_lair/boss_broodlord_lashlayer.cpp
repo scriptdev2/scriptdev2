@@ -42,7 +42,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
     uint32 MortalStrike_Timer;
     uint32 KnockBack_Timer;
     uint32 LeashCheck_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -51,13 +50,6 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         MortalStrike_Timer = 20000;
         KnockBack_Timer = 30000;
         LeashCheck_Timer = 2000;
-        InCombat = false;
-
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

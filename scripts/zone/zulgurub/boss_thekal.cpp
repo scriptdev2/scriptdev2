@@ -72,7 +72,6 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     uint32 Resurrect_Timer;
 
     ScriptedInstance *pInstance;
-    bool InCombat;
     bool Enraged;
     bool PhaseTwo;
     bool WasDead;
@@ -89,15 +88,9 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         Check_Timer = 10000; 
         Resurrect_Timer = 10000;
 
-        InCombat = false;
         Enraged = false;
         PhaseTwo = false;
         WasDead = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_THEKAL_ALIVE, 0);

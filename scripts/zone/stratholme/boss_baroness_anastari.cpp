@@ -40,7 +40,6 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     uint32 BansheeCurse_Timer;
     uint32 Silence_Timer;
     //uint32 Possess_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -48,12 +47,6 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         BansheeCurse_Timer = 11000;
         Silence_Timer = 13000;
         //Possess_Timer = 35000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -36,18 +36,11 @@ struct MANGOS_DLL_DECL boss_malor_the_zealousAI : public ScriptedAI
 
     uint32 GroundSmash_Timer;
     bool LayOnHands;
-    bool InCombat;
 
     void Reset()
     {
         GroundSmash_Timer = 4000;
         LayOnHands = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

@@ -101,7 +101,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
     uint32 NecroticPoison_Timer;
     uint32 SummonSpiderling_Timer;
     bool Enraged;
-    bool InCombat;
 
     void Reset()
     {
@@ -111,8 +110,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         NecroticPoison_Timer = 30000;   //30 seconds
         SummonSpiderling_Timer = 30000; //30 sec init, 40 sec normal
         Enraged = false;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

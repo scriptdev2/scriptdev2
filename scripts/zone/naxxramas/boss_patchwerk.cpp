@@ -49,7 +49,6 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
     uint32 Enrage_Timer;
     uint32 Slimebolt_Timer;
     bool Enraged;
-    bool InCombat;
 
     void Reset()
     {
@@ -57,12 +56,6 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
         Enrage_Timer = 420000;              //7 minutes 420,000
         Slimebolt_Timer = 450000;           //7.5 minutes 450,000
         Enraged = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

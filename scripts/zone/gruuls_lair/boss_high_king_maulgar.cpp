@@ -73,7 +73,6 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     uint32 Charging_Timer;
 
     bool Phase2;
-    bool InCombat;
 
     uint64 Council[4];
 
@@ -100,16 +99,9 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             }
         }
 
-        InCombat = false;
-
         //reset encounter
         if (pInstance)
             pInstance->SetData(DATA_MAULGAREVENT, 0);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit()
@@ -161,8 +153,6 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        InCombat = true;
-
         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
         pInstance->SetData(DATA_MAULGAREVENT, 1);
     }
@@ -177,7 +167,6 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             if(target)
             {
                 DoStartMeleeAttack(target);
-                InCombat = true;
 
                 GetCouncil();
 
@@ -253,19 +242,10 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     ScriptedInstance* pInstance; 
 
-    bool InCombat;
-
     void Reset()
     {
         DarkDecay_Timer = 10000;
         Summon_Timer = 15000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -310,7 +290,6 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             if(target)
             {
                 DoStartMeleeAttack(target);
-                InCombat = true;
             }
         }
 
@@ -357,21 +336,12 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     ScriptedInstance* pInstance; 
 
-    bool InCombat;
-
     void Reset()
     {
         GreatherPolymorph_Timer = 5000;
         LightningBolt_Timer = 10000;
         ArcaneShock_Timer = 20000;
         ArcaneExplosion_Timer = 30000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -402,7 +372,6 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    InCombat = true;
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
@@ -424,7 +393,6 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             if(target)
             {
                 DoStartMeleeAttack(target);
-                InCombat = true;
             }
         }
 
@@ -485,19 +453,10 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     ScriptedInstance* pInstance; 
 
-    bool InCombat;
-
     void Reset()
     {
         GreaterPowerWordShield_Timer = 5000;
         Heal_Timer = 30000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -528,7 +487,6 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    InCombat = true;
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
@@ -550,7 +508,6 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             if(target)
             {
                 DoStartMeleeAttack(target);
-                InCombat = true;
             }
         }
 
@@ -595,20 +552,11 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     ScriptedInstance* pInstance; 
 
-    bool InCombat;
-
     void Reset()
     {
         GreaterFireball_Timer = 1000;
         SpellShield_Timer = 5000;
         BlastWave_Timer = 20000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         //reset encounter
         if (pInstance)
@@ -639,7 +587,6 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    InCombat = true;
                     DoStartMeleeAttack(who);
                     if(pInstance)
                     {
@@ -661,7 +608,6 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             if(target)
             {
                 DoStartMeleeAttack(target);
-                InCombat = true;
             }
         }
 

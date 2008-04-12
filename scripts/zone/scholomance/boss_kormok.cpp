@@ -35,7 +35,6 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
     uint32 BoneShield_Timer;
     uint32 Minion_Timer;
     uint32 Mage_Timer;
-    bool InCombat;
     bool Mages;
     int Rand1;
     int Rand1X;
@@ -52,13 +51,7 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
         BoneShield_Timer = 2000;
         Minion_Timer = 15000;
         Mage_Timer = 0;
-        InCombat = false;
         Mages = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

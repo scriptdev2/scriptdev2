@@ -167,20 +167,13 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
     uint32 Reset_Timer;
     uint32 Spear_Throw_Timer;
-    bool InCombat;
     bool bReset;
     
     void Reset()
     {
         Reset_Timer = 60000;
         Spear_Throw_Timer = 2000;
-        InCombat = false;
         bReset = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
         m_creature->setFaction(1711);                       //hostile

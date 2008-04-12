@@ -36,19 +36,12 @@ struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
     uint32 SinisterStrike_Timer;
     uint32 BackStab_Timer;
     uint32 Gouge_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         SinisterStrike_Timer = 8000;
         BackStab_Timer = 12000;
         Gouge_Timer = 6000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

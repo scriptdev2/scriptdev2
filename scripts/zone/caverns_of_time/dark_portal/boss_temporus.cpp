@@ -49,22 +49,10 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
 
-    bool InCombat;
-
     void Reset()
     { 
         Haste_Timer = 20000;
-        SpellReflection_Timer = 40000;
-
-        InCombat = false;
-
-        //Immune to taunt
-        //
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();        
+        SpellReflection_Timer = 40000;     
     }
 
     void Aggro(Unit *who)
@@ -125,7 +113,6 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
                 {
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    InCombat = true;
                 }
             }    
         }        

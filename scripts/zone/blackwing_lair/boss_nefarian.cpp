@@ -81,7 +81,6 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
     uint32 TailLash_Timer;
     uint32 ClassCall_Timer;
     bool Phase3;
-    bool InCombat;
 
     void Reset()
     {
@@ -92,12 +91,6 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
         TailLash_Timer = 10000;
         ClassCall_Timer = 35000;        //35-40 seconds
         Phase3 = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

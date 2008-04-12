@@ -38,19 +38,12 @@ struct MANGOS_DLL_DECL boss_lord_incendiusAI : public ScriptedAI
     uint32 FireStorm_Timer;
     uint32 MightyBlow_Timer;
     uint32 Curse_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FireStorm_Timer = 6000;
         MightyBlow_Timer = 22000;
         Curse_Timer = 16000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

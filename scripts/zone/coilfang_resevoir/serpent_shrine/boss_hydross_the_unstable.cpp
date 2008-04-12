@@ -98,7 +98,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     uint32 MarkOfHydross_Count;
     uint32 MarkOfCorruption_Count;
 
-    bool InCombat;
     bool CorruptedForm;
     bool HasSpawnedInvisible;
 
@@ -118,16 +117,10 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         // despawn invisible trigger
         DespawnCreatureIfExists(Invisible);
 
-        InCombat = false;
         CorruptedForm = false;
         HasSpawnedInvisible = false;
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CLEAN);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
@@ -140,8 +133,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 1);
-
-        InCombat = true;
     }
 
     void KilledUnit(Unit *victim)

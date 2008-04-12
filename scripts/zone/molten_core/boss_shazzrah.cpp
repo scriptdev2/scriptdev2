@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
     uint32 DeadenMagic_Timer;
     uint32 Countspell_Timer;
     uint32 Blink_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -47,12 +46,6 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
         DeadenMagic_Timer = 24000;
         Countspell_Timer = 15000; 
         Blink_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

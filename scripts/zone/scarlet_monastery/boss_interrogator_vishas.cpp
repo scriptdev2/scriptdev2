@@ -43,18 +43,11 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
     uint32 Yell_Timer;
     uint32 PowerWordShield_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Yell_Timer = 6000000;
         PowerWordShield_Timer = 60000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

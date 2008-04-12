@@ -221,7 +221,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
     uint64 enfeeble_health[5];
     
     uint32 phase;
-    bool InCombat;
 
     void Reset()
     {
@@ -245,13 +244,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         InfernalCleanupTimer = 47000;
         AxesTargetSwitchTimer = 7500 + rand()%12500;
         phase = 1;
-
-        InCombat = false;
-        
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)

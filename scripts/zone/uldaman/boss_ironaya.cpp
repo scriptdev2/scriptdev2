@@ -38,19 +38,12 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
     uint32 Arcing_Timer;
     bool hasCastedWstomp;
     bool hasCastedKnockaway;
-    bool InCombat;
 
     void Reset()
     {
         Arcing_Timer = 3000;
         hasCastedKnockaway = false;
         hasCastedWstomp = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

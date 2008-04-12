@@ -52,22 +52,12 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
     uint32 MortalStrike_Timer;
     uint32 ExplodingShout_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         Whirlwind_Timer = 20000;
         Fear_Timer = 30000;
         MortalStrike_Timer = 45000;
-        ExplodingShout_Timer = 25000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+        ExplodingShout_Timer = 25000;        
     }
 
     void Aggro(Unit *who)

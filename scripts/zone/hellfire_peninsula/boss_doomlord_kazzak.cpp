@@ -41,7 +41,6 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     uint32 VoidBolt_Timer;
     uint32 MarkOfKazzak_Timer;
     uint32 Rage_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -51,12 +50,6 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         VoidBolt_Timer = 30000;
         MarkOfKazzak_Timer = 25000;
         Rage_Timer = 55000;                //Cast 55
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

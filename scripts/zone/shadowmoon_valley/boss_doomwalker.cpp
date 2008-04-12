@@ -71,7 +71,6 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
     uint32 Quake_Timer; 
     uint32 Armor_Timer;
 
-    bool InCombat;
     bool InEnrage;
 
     void Reset()
@@ -82,13 +81,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         Quake_Timer     = 60000;
         Overrun_Timer   = 120000;
 
-        InCombat = false;
-        InEnrage = false;
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+        InEnrage = false;        
     }
 
     void KilledUnit(Unit* Victim)

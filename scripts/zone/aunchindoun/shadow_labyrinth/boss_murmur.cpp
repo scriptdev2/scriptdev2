@@ -37,16 +37,12 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 Resonance_Timer;
     bool SonicBoomVisual;
 
-    bool InCombat;
-
     void Reset()
     {
         SonicBoom_Timer = 30000;
         MurmursTouch_Timer = 20000;
         Resonance_Timer = 10000;
         SonicBoomVisual = false;
-
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

@@ -149,8 +149,6 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     bool Drinking;
     bool DrinkInturrupted;
 
-    bool InCombat;
-
     void Reset()
     {
         SecondarySpellTimer = 5000;
@@ -174,14 +172,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         Drinking = false;
         DrinkInturrupted = false;
 
-        InCombat = false;
-
         if(pInstance)
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, 0); // Not in progress
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void KilledUnit(Unit *victim)

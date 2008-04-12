@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
     uint32 EntanglingRoots_Timer;
     uint32 TwistedTranquility_Timer;
     uint32 Adds_Timer;
-    bool InCombat;
     int Rand;
     int RandX;
     int RandY;
@@ -48,12 +47,6 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         EntanglingRoots_Timer = 2000;
         TwistedTranquility_Timer = 20000;
         Adds_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

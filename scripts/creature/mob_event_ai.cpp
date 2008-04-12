@@ -68,7 +68,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     //Variables used by EventAI for handling events
     std::list<EventHolder> EventList;       //Holder for events (stores enabled, time, and eventid)
-    bool InCombat;                          //Combat var
     uint32 EventUpdateTime;                 //Time between event updates
     uint32 EventDiff;                       //Time between the last event call
 
@@ -626,6 +625,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void JustRespawned()
     {
+        InCombat = false;
         Reset();
 
         //Handle Spawned Events
@@ -642,8 +642,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void Reset()
     {
-        InCombat = false;
-
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
 
@@ -676,6 +674,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         DoGoHome();
         m_creature->LoadCreaturesAddon();
 
+        InCombat = false;
         Reset();
 
         //Handle Evade events
@@ -693,6 +692,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
+        InCombat = false;
         Reset();
 
         //Handle Evade events
@@ -762,11 +762,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     break;
                 }
             }
-            InCombat = true;
 
             EventUpdateTime = EVENT_UPDATE_TIME;
             EventDiff = 0;
         }
+
+        InCombat = true; 
 
         //Begin melee attack if we are within range
         if (CombatMovementEnabled)

@@ -51,7 +51,6 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
     uint32 Dispell_Timer;
     uint32 TargetInRange;
 
-    bool InCombat;
     bool PhaseTwo;
     bool InBerserk;
 
@@ -66,14 +65,8 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         Dispell_Timer = 35000;
         TargetInRange = 0;
 
-        InCombat = false;
         PhaseTwo = false;
         InBerserk= false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

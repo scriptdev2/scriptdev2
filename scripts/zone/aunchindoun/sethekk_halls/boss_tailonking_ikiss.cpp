@@ -70,8 +70,6 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
     bool wait;
     bool intro;
 
-    bool InCombat;
-
     void Reset()
     {   
         arcanevolley_timer = 5000; 
@@ -81,7 +79,6 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
         wait = false;
         intro = false;
         sheep = 0;
-        InCombat = false;
         manashild = false;
     }
 

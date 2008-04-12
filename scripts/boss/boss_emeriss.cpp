@@ -44,7 +44,6 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
     uint32 CorruptionofEarth1_Timer;
     uint32 CorruptionofEarth2_Timer;
     uint32 CorruptionofEarth3_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -55,14 +54,7 @@ struct MANGOS_DLL_DECL boss_emerissAI : public ScriptedAI
         VolatileInfection_Timer = 12000;
         CorruptionofEarth1_Timer = 0;
         CorruptionofEarth2_Timer = 0;
-        CorruptionofEarth3_Timer = 0;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+        CorruptionofEarth3_Timer = 0;      
     }
 
     void Aggro(Unit *who)

@@ -80,5 +80,4 @@ public:
 
 protected:
     uint32 Spell_Timer[10];
-    bool InCombat;
 };

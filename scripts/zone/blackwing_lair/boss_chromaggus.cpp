@@ -198,7 +198,6 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
     uint32 Affliction_Timer;
     uint32 Frenzy_Timer;
     bool Enraged;
-    bool InCombat;
 
     void Reset()
     {
@@ -211,7 +210,6 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         Frenzy_Timer = 15000;
 
         Enraged = false;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

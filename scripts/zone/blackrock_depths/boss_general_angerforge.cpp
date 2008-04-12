@@ -37,7 +37,6 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
     uint32 HamString_Timer;
     uint32 Cleave_Timer;
     uint32 Adds_Timer;
-    bool InCombat;
     bool Medics;
     int Rand1;
     int Rand1X;
@@ -54,13 +53,8 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         HamString_Timer = 12000;
         Cleave_Timer = 16000;
         Adds_Timer = 0;
-        InCombat = false;
         Medics = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

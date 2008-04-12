@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
     uint32 MoltenBlast_Timer;
     uint32 FireWard_Timer;
     uint32 SearingTotem_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -46,12 +45,6 @@ struct MANGOS_DLL_DECL boss_pyromancer_loregrainAI : public ScriptedAI
         MoltenBlast_Timer = 20000;
         FireWard_Timer = 8000;
         SearingTotem_Timer = 2000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

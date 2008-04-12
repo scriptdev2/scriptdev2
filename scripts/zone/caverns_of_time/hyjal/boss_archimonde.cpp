@@ -354,7 +354,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     uint32 CheckDistanceTimer;
     uint32 GlobalSoulChargeCooldown; // This prevents spamming Soul Charges too quickly.
 
-    bool InCombat;
     bool SoulCharged;
     bool Enraged;
     bool BelowTenPercent;
@@ -379,7 +378,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         CheckDistanceTimer = 30000; // This checks if he's too close to the World Tree (75 yards from a point on the tree), if true then he will enrage
         GlobalSoulChargeCooldown = 0;
 
-        InCombat = false;
         SoulCharged = false;
         Enraged = false;
         BelowTenPercent = false;
@@ -392,7 +390,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                InCombat = true;
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -417,7 +414,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                     if(pInstance)
                         pInstance->SetData(DATA_ARCHIMONDEEVENT, 1);
-                    InCombat = true;
                 }
             }
         }

@@ -45,7 +45,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
     uint32 KnockAway_Timer;
     uint32 Slow_Timer;
     uint32 Dazed_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -57,12 +56,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
         KnockAway_Timer = 18000;
         Slow_Timer = 24000;
         Dazed_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

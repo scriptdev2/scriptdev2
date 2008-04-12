@@ -31,7 +31,7 @@ void ScriptedAI::MoveInLineOfSight(Unit *who)
             // Check first that object is in an angle in front of this one before LoS check
             if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
             {
-                AttackStart(who);
+                DoStartMeleeAttack(who);
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 
                 if (!InCombat)
@@ -53,6 +53,7 @@ void ScriptedAI::AttackStart(Unit* who)
     {
         //Begin attack
         DoStartMeleeAttack(who);
+
         if (!InCombat)
         {
             Aggro(who);

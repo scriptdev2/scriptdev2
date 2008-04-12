@@ -62,13 +62,9 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     uint32 ShadowBoltVolley_Timer;
     bool Intro;
 
-    bool InCombat;
-
     void Reset()
     {
         ShadowBoltVolley_Timer = 15000;
-
-        InCombat = false;
 
         if(pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 0);
@@ -118,8 +114,6 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
             break;
         }
-
-        InCombat = true;
 
         if(pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, 1);

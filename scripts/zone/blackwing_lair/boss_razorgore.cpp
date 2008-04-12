@@ -46,7 +46,6 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
     uint32 WarStomp_Timer;
     uint32 FireballVolley_Timer;
     uint32 Conflagration_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -54,7 +53,6 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         WarStomp_Timer = 35000;
         FireballVolley_Timer = 7000;
         Conflagration_Timer = 12000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

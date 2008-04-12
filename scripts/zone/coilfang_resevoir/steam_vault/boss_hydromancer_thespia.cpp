@@ -58,20 +58,11 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     uint32 LungBurst_Timer;
     uint32 EnvelopingWinds_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         LightningCloud_Timer = 28000;
         LungBurst_Timer = 7000;
         EnvelopingWinds_Timer = 9000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras(); 
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         if(pInstance)
             pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 0);
@@ -125,15 +116,13 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             break;   
         }
 
-        InCombat = true;
-
         if(pInstance)
             pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 1);
     }
 
     void Aggro(Unit *who)
     {
-                StartEvent();
+        StartEvent();
     }
 
     void UpdateAI(const uint32 diff)

@@ -97,7 +97,6 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
     uint32 ShadowBoltVolley_Timer;
     //    uint32 MindControl_Timer;
     bool Transformed;
-    bool InCombat;
 
     void Reset()
     {
@@ -112,15 +111,10 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
         ShadowBoltVolley_Timer = 9000;
         //        MindControl_Timer = 10000;
         Transformed = false;
-        InCombat = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,10545);
         m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.00f);
         
-        //DoGoHome();
     }
 
     void JustDied(Unit* Victim)

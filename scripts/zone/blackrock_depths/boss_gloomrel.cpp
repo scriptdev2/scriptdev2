@@ -37,21 +37,14 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
     uint32 HamString_Timer;
     uint32 Cleave_Timer;
     uint32 MortalStrike_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         HamString_Timer = 19000;
         Cleave_Timer = 6000;
         MortalStrike_Timer = 10000;
-        InCombat = false;
 
         m_creature->setFaction(734);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

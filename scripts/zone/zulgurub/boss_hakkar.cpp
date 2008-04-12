@@ -73,7 +73,6 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
     ScriptedInstance *pInstance;
     
     bool Enraged;
-    bool InCombat;
 
     void Reset()
     {
@@ -96,12 +95,6 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         AspectOfArlokk_Timer = 16000;        
         
         Enraged = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
 

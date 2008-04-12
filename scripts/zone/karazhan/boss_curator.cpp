@@ -69,7 +69,6 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     uint32 HatefulBoltTimer;
     uint32 BerserkTimer;
 
-    bool InCombat;
     bool Enraged;
     bool Evocating;
 
@@ -80,8 +79,6 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         BerserkTimer = 720000; //12 minutes
         Enraged = false;
         Evocating = false;
-
-        InCombat = false;
     }
 
     void KilledUnit(Unit *victim)

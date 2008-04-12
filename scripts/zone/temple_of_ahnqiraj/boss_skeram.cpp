@@ -57,8 +57,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
     Creature *Image;
 
-    
-    bool InCombat;
     bool Images75;
     bool Images50;
     bool Images25;
@@ -75,7 +73,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         Blink_Timer = 10000;
         Invisible_Timer = 2500;
 
-        InCombat = false;
         Images75 = false;
         Images50 = false;
         Images25 = false;
@@ -86,11 +83,6 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15345);  // Skeram Model
-
-//      m_creature->RemoveAllAuras();
-//      m_creature->DeleteThreatList();
-//      m_creature->CombatStop();
-//      DoGoHome();
     }
     
     void KilledUnit(Unit* victim)

@@ -34,14 +34,12 @@ struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
     uint32 FireNova_Timer;
     uint32 FlameBuffet_Timer;
     uint32 PyroBlast_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         FireNova_Timer = 6000;
         FlameBuffet_Timer = 3000;
-        PyroBlast_Timer = 14000;
-        InCombat = false;      
+        PyroBlast_Timer = 14000;     
     }
 
     void Aggro(Unit *who)

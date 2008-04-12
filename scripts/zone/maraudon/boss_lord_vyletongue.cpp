@@ -32,18 +32,11 @@ struct MANGOS_DLL_DECL boss_lord_vyletongueAI : public ScriptedAI
 
     uint32 PutridBreath_Timer;
     uint32 SmokeBomb_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         PutridBreath_Timer = 14000;
         SmokeBomb_Timer = 8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

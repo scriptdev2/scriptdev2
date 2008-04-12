@@ -45,7 +45,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
     bool SummonedOrcs;
     bool SummonedRend;
     bool bAggro;
-    bool InCombat;
     bool RootSelf;
     Creature *SummonedCreature;
 
@@ -62,7 +61,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         SummonedOrcs= false;
         SummonedRend = false;
         bAggro = false;
-        InCombat = false;
         RootSelf = false;
 
         // how many times should the two lines of summoned creatures be spawned
@@ -73,12 +71,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         else
             Line2Count = 2;
 
-        //m_creature->m_canMove = true;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);  //Invisible for event start
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }

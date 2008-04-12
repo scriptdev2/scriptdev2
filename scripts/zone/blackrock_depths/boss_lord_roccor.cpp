@@ -36,19 +36,11 @@ struct MANGOS_DLL_DECL boss_lord_roccorAI : public ScriptedAI
     uint32 FlameShock_Timer;
     uint32 EarthShock_Timer;
     uint32 GroundTremor_Timer;
-    bool InCombat;
-
     void Reset()
     {       
         FlameShock_Timer = 18000;
         EarthShock_Timer = 7000;
         GroundTremor_Timer = 14000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

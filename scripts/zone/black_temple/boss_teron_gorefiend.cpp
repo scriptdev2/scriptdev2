@@ -74,8 +74,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         Reset();
     }
 
-    bool InCombat;
-
     uint32 CheckTeronTimer;
     uint32 ShadowBoltTimer;
     uint64 TeronGUID;
@@ -83,7 +81,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
     void Reset()
     {
         CheckTeronTimer = 5000;
-        InCombat = false;
         ShadowBoltTimer = 12000;
         TeronGUID = 0;
     }
@@ -253,7 +250,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     uint64 AggroTargetGUID;
     uint64 GhostGUID; // Player that gets killed by Shadow of Death and gets turned into a ghost
 
-    bool InCombat;
     bool Intro;
     bool HasEnraged;
 
@@ -273,7 +269,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Start off unattackable so that the intro is done properly
     
-        InCombat = false;
         AggroTimer = 20000;
         AggroTargetGUID = 0;
         Intro = false;
@@ -334,7 +329,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_TERONGOREFIENDEVENT, 3);
 
-        InCombat = false;
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
@@ -414,7 +408,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-                InCombat = true;
                 Intro = false;
                 if(AggroTargetGUID)
                 {

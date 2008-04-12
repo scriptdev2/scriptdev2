@@ -34,19 +34,12 @@ struct MANGOS_DLL_DECL boss_golemlordargelmachAI : public ScriptedAI
     uint32 ChainLightning_Timer;
     uint32 Shock_Timer;
     uint32 LightningShield_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         ChainLightning_Timer = 14000;
         Shock_Timer = 6000;
         LightningShield_Timer = 2000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

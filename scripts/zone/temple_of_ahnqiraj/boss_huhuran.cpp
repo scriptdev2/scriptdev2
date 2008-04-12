@@ -43,7 +43,6 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
     bool Frenzy;
     bool Berserk;
-    bool InCombat;
 
     void Reset()
     {
@@ -56,12 +55,6 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
         Frenzy = false;
         Berserk = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

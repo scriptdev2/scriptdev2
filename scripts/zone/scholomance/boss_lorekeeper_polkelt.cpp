@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
     uint32 Darkplague_Timer;
     uint32 CorrosiveAcid_Timer;
     uint32 NoxiousCatalyst_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -44,12 +43,6 @@ struct MANGOS_DLL_DECL boss_lorekeeperpolkeltAI : public ScriptedAI
         Darkplague_Timer = 8000;
         CorrosiveAcid_Timer = 45000;
         NoxiousCatalyst_Timer = 35000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

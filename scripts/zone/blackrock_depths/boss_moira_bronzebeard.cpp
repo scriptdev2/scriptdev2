@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     uint32 MindBlast_Timer;
     uint32 ShadowWordPain_Timer;
     uint32 Smite_Timer;
-    bool InCombat;
     Unit* PlayerHolder;
     Unit* Target;
     bool Heal;
@@ -55,12 +54,6 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         MindBlast_Timer = 16000;
         ShadowWordPain_Timer = 2000;
         Smite_Timer = 8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

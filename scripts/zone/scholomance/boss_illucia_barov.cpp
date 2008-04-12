@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
     uint32 ShadowShock_Timer;
     uint32 Silence_Timer;
     uint32 Fear_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -44,12 +43,6 @@ struct MANGOS_DLL_DECL boss_illuciabarovAI : public ScriptedAI
         ShadowShock_Timer = 9000;
         Silence_Timer = 5000;
         Fear_Timer = 30000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)

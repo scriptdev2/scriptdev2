@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
     uint32 Boulder_Timer;
     uint32 Knockdown_Timer;
     uint32 RepulsiveGaze_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -46,13 +45,6 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         Boulder_Timer = 2000;
         Knockdown_Timer = 18000;
         RepulsiveGaze_Timer = 23000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 
     void Aggro(Unit *who)

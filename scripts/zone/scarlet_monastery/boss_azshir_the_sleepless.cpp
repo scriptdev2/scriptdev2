@@ -36,19 +36,12 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
     uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
     uint32 Terrify_Timer;
-    bool InCombat;
 
     void Reset()
     {
         SoulSiphon_Timer = 1;
         CallOftheGrave_Timer = 30000;
         Terrify_Timer = 20000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

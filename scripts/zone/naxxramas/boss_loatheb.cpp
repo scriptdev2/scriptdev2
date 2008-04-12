@@ -76,8 +76,6 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
     uint32 RemoveCurse_Timer;
     uint32 Summon_Timer;
 
-    bool InCombat;
-
     void Reset()
     {       
         CorruptedMind_Timer = 4000;
@@ -85,14 +83,7 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         InevitableDoom_Timer = 120000;
         InevitableDoom5mins_Timer = 300000;
         RemoveCurse_Timer = 30000;
-        Summon_Timer = 8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        
+        Summon_Timer = 8000;        
     }
 
 

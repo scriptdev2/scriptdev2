@@ -40,7 +40,6 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
     uint32 Fear_Timer;
     uint32 ChillNova_Timer;
     uint32 FrostVolley_Timer;
-    bool InCombat;
 
     void Reset()
     {       
@@ -50,12 +49,7 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         Freeze_Timer = 18000;
         FrostVolley_Timer = 24000;
         Fear_Timer = 45000;
-        InCombat = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
         m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 

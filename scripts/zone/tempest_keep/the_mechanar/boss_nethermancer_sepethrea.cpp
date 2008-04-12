@@ -61,23 +61,13 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
     uint32 knockback_Timer;
     uint32 solarburn_Timer;
 
-    bool InCombat;
-
     void Reset()    
-    {        
-        //m_creature->RemoveAllAuras();        
-        //m_creature->DeleteThreatList();        
-        //m_creature->CombatStop();
-        //DoGoHome();        
-       
-
+    {
         frost_attack_Timer = 10000;        
         arcane_blast_Timer = 15000;
         dragons_breath_Timer = 20000;
         knockback_Timer = 25000;
         solarburn_Timer = 30000;
-
-        InCombat = false;
     }  
 
     void Aggro(Unit *who)    
@@ -195,7 +185,6 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
     uint32 inferno_Timer;
     uint32 flame_timer;
 
-    bool InCombat;
     bool onlyonce;
 
     void Reset()

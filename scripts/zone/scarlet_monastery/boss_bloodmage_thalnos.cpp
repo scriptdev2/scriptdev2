@@ -49,7 +49,6 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
     uint32 FlameSpike_Timer;
     uint32 FireNova_Timer;
     uint32 Yell_Timer;
-    bool InCombat;
 
     void Reset()
     {
@@ -59,12 +58,6 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
         ShadowBolt5_Timer = 20000;
         FlameSpike_Timer = 20000;
         FireNova_Timer = 10000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

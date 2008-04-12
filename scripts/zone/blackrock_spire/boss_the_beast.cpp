@@ -35,14 +35,12 @@ struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
     uint32 Flamebreak_Timer;
     uint32 Immolate_Timer;
     uint32 TerrifyingRoar_Timer;
-    bool InCombat;
 
     void Reset()
     {       
         Flamebreak_Timer = 12000;
         Immolate_Timer = 3000;
         TerrifyingRoar_Timer = 23000;
-        InCombat = false;
     }
 
     void Aggro(Unit *who)

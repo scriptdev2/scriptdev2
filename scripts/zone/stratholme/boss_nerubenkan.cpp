@@ -38,7 +38,6 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
     uint32 PierceArmor_Timer;
     uint32 VirulentPoison_Timer;
     uint32 RaiseUndeadScarab_Timer;
-    bool InCombat;
     int Rand;
     int RandX;
     int RandY;
@@ -50,12 +49,6 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         EncasingWebs_Timer = 7000;
         PierceArmor_Timer = 19000;
         RaiseUndeadScarab_Timer = 11000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

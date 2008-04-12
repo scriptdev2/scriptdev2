@@ -56,22 +56,15 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
     uint32 MortalWound_Timer;
     uint32 Retaliation_Timer;
 
-    bool InCombat;
     bool HasTaunted;
     bool YelledForHeal;
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
         Surge_Timer = 5000;
         MortalWound_Timer = 4000;
         Retaliation_Timer = 5000;
 
-        InCombat = false;
         HasTaunted = false;
         YelledForHeal = false;
 
@@ -121,7 +114,6 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
                         DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                         break;
                     }
-                    InCombat = true;
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))

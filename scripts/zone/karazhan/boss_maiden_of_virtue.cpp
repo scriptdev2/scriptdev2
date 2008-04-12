@@ -53,22 +53,12 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
     uint32 Holywrath_Timer;
     uint32 Holyground_Timer;
 
-    bool InCombat;
-
     void Reset()
     {
         Repentance_Timer    = 30000+(rand()%15000);
         Holyfire_Timer      = 8000+(rand()%17000);
         Holywrath_Timer     = 20000+(rand()%10000);
         Holyground_Timer    = 3000;
-
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-
-        //DoGoHome();
     }
 
     void KilledUnit(Unit* Victim)

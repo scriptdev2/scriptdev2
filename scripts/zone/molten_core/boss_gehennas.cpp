@@ -35,19 +35,12 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
     uint32 ShadowBolt_Timer;
     uint32 RainOfFire_Timer;
     uint32 GehennasCurse_Timer;
-    bool InCombat;
 
     void Reset()
     {
         ShadowBolt_Timer = 6000;
         RainOfFire_Timer = 10000;
         GehennasCurse_Timer = 12000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

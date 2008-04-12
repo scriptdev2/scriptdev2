@@ -32,12 +32,6 @@ void guardAI::Reset()
 {
     GlobalCooldown = 0;
     BuffTimer = 0;          //Rebuff as soon as we can
-    InCombat = false;
-
-    //m_creature->RemoveAllAuras();
-    //m_creature->DeleteThreatList();
-    //m_creature->CombatStop();
-    //DoGoHome();
 }
 
 void guardAI::Aggro(Unit *who)

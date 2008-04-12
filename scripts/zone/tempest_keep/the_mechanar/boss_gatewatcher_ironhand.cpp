@@ -52,22 +52,13 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 
     uint32 Shadow_Power_Timer;    
     uint32 Jackhammer_Timer;
-    uint32 Stream_of_Machine_Fluid_Timer;    
-
-    bool InCombat;     
+    uint32 Stream_of_Machine_Fluid_Timer;        
 
     void Reset()    
-    {        
-        //m_creature->RemoveAllAuras();        
-        //m_creature->DeleteThreatList();        
-        //m_creature->CombatStop();
-        //DoGoHome();        
-
+    {         
         Shadow_Power_Timer = 25000;        
         Jackhammer_Timer = 45000;
         Stream_of_Machine_Fluid_Timer = 55000;
-
-        InCombat = false;
 
     }     
     void Aggro(Unit *who)    

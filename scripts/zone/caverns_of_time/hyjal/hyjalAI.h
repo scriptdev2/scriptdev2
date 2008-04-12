@@ -240,6 +240,5 @@ public:
     }Spell[3];
 
 private:
-    bool InCombat;
     uint32 SpellTimer[3];
 };

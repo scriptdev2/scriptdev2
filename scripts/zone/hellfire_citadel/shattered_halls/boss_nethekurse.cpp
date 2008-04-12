@@ -67,18 +67,10 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     uint32 shadowfissure_timer;
     bool onlyonce;
 
-    bool InCombat;
     bool HasTaunted;
 
     void Reset()
     {   
-        //m_creature->RemoveAllAuras(); 
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
-        InCombat = false;
-
         deathcoil_timer = 20000;
         shadowfissure_timer = 8000;
         HasTaunted = false;
@@ -167,7 +159,6 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
                         DoYell(SAY_AGGRO_3,LANG_UNIVERSAL,NULL);
                         break;
                     }
-                    InCombat = true;
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
