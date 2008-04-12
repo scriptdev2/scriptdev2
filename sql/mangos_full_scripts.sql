@@ -88,6 +88,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_shirrak_the_dead_watcher' WH
 UPDATE `creature_template` SET `ScriptName` = 'boss_exarch_maladaar' WHERE `entry` = 18373;
 
 /* SETHEKK HALLS */
+UPDATE `instance_template` SET `script` = 'instance_sethekk_halls' WHERE `map` = 556;
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_fire' WHERE `entry` = 19203;
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_arcane' WHERE `entry` = 19205;
 UPDATE `creature_template` SET `ScriptName` = 'mob_syth_frost' WHERE `entry` = 19204;
