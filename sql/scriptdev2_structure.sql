@@ -54,6 +54,7 @@ CREATE TABLE `eventai_summons` (
 `position_z` float NOT NULL default '0',
 `orientation` float NOT NULL default '0',
 `spawntimesecs` int(11) unsigned NOT NULL default '120',
+`comment` varchar(255) NOT NULL default '' COMMENT 'Summon Comment',
 PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='EventAI Summoning Locations';
 
