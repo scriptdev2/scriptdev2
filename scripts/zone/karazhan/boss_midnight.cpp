@@ -197,6 +197,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
 {
     boss_attumenAI(Creature *c) : ScriptedAI(c) 
     {
+        Reset();
         Phase = 1;
 
         CleaveTimer = 10000 + (rand()%6)*1000;

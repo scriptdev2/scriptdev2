@@ -127,7 +127,7 @@ static InfernalPoint InfernalPoints[] =
 struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
 {
     netherspite_infernalAI(Creature *c) : ScriptedAI(c) ,
-        malchezaar(0), HellfireTimer(0), CleanupTimer(0), point(NULL) {}
+        malchezaar(0), HellfireTimer(0), CleanupTimer(0), point(NULL) {Reset();}
 
     uint32 HellfireTimer;
     uint32 CleanupTimer;

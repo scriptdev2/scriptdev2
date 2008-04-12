@@ -42,7 +42,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     Mob_EventAI(Creature *c, std::list<EventHolder> pEventList) : ScriptedAI(c) 
     {
         EventList = pEventList;
-        EnterEvadeMode();
         Phase = 0;
         CombatMovementEnabled = true;
         MeleeEnabled = true;
@@ -59,6 +58,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 break;
             }
         }
+
+        Reset();
     }
 
     ~Mob_EventAI()

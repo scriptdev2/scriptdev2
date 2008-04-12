@@ -52,7 +52,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
 {
-    boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {EnterEvadeMode();HasTaunted = false;}
+    boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 Impale_Timer;
     uint32 LocustSwarm_Timer;

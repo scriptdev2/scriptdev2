@@ -62,7 +62,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 {
-    boss_omor_the_unscarredAI(Creature *c) : ScriptedAI(c) {InCombat = false; EnterEvadeMode();}   
+    boss_omor_the_unscarredAI(Creature *c) : ScriptedAI(c) {Reset();}   
 
     uint32 ShadowWhip_Timer;
     uint32 TreacherousAura_Timer;

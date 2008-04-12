@@ -53,7 +53,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
 {
-    boss_nethermancer_sepethreaAI(Creature *c) : ScriptedAI(c) { EnterEvadeMode(); } 
+    boss_nethermancer_sepethreaAI(Creature *c) : ScriptedAI(c) { Reset(); } 
 
     uint32 frost_attack_Timer;
     uint32 arcane_blast_Timer;

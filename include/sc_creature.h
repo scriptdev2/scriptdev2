@@ -41,7 +41,7 @@ enum SelectAggroTarget
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    ScriptedAI(Creature* creature) : m_creature(creature) {}
+    ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false) {}
     ~ScriptedAI() {}
 
     //*************

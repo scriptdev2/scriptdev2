@@ -48,7 +48,7 @@ EndScriptData */
 // Gatewatcher Iron-Hand AI
 struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 {    
-    boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)    { EnterEvadeMode(); }     
+    boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)    { Reset(); }     
 
     uint32 Shadow_Power_Timer;    
     uint32 Jackhammer_Timer;
