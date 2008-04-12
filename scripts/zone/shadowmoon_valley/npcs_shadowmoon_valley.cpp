@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10583, 10601, 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
+SDComment: Quest support: 10519, 10583, 10601, 10814. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -41,9 +41,8 @@ bool GossipHello_npc_drake_dealer_hurlunk(Player *player, Creature *_Creature)
 bool GossipSelect_npc_drake_dealer_hurlunk(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
-    {
         player->SEND_VENDORLIST( _Creature->GetGUID() );
-    }
+
     return true;
 }
 
@@ -188,6 +187,74 @@ bool GossipSelect_npc_neltharaku(Player *player, Creature *_Creature, uint32 sen
     return true;
 }
 
+/*######
+## npc_oronok
+######*/
+
+#define GOSSIP_ORONOK1 "I am ready to hear your story, Oronok."
+#define GOSSIP_ORONOK2 "How do I find the cipher?"
+#define GOSSIP_ORONOK3 "How do you know all of this?"
+#define GOSSIP_ORONOK4 "Yet what? What is it, Oronok?"
+#define GOSSIP_ORONOK5 "Continue, please."
+#define GOSSIP_ORONOK6 "So what of the cipher now? And your boys?"
+#define GOSSIP_ORONOK7 "I will find your boys and the cipher, Oronok."
+
+bool GossipHello_npc_oronok_tornheart(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+    if (_Creature->isVendor())
+        player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+    
+    if (player->GetQuestStatus(10519) == QUEST_STATUS_INCOMPLETE)
+    {
+        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+        player->SEND_GOSSIP_MENU(10312, _Creature->GetGUID());
+    }else
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_oronok_tornheart(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_TRADE:
+            player->SEND_VENDORLIST( _Creature->GetGUID() );
+            break;
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(10313, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(10314, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(10315, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(10316, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(10317, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            player->SEND_GOSSIP_MENU(10318, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+6:
+            player->CLOSE_GOSSIP_MENU();
+            player->CompleteQuest(10519);
+            break;
+    }
+    return true;
+}
+
 void AddSC_npcs_shadowmoon_valley()
 {
     Script *newscript;
@@ -213,5 +280,11 @@ void AddSC_npcs_shadowmoon_valley()
     newscript->Name="npc_neltharaku";
     newscript->pGossipHello =  &GossipHello_npc_neltharaku;
     newscript->pGossipSelect = &GossipSelect_npc_neltharaku;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_oronok_tornheart";
+    newscript->pGossipHello =  &GossipHello_npc_oronok_tornheart;
+    newscript->pGossipSelect = &GossipSelect_npc_oronok_tornheart;
     m_scripts[nrscripts++] = newscript;
 }

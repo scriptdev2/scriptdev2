@@ -601,6 +601,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_drake_dealer_hurlunk' WHERE `
 UPDATE `creature_template` SET `ScriptName` = 'npc_invis_legion_teleporter' WHERE `entry` = 21807;
 UPDATE `creature_template` SET `ScriptName` = 'npcs_flanis_swiftwing_and_kagrosh' WHERE `entry` IN (21725, 21727);
 UPDATE `creature_template` SET `ScriptName` = 'npc_neltharaku' WHERE `entry` = 21657;
+UPDATE `creature_template` SET `ScriptName` = 'npc_oronok_tornheart' WHERE `entry` = 21183;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_dragonmaw_orc' WHERE `entry` IN (21717, 21718, 21719, 21720, 22331);
 UPDATE `creature_template` SET `ScriptName` = 'mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878, 21879);
 /* Doomwalker */
