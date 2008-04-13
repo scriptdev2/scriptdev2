@@ -929,7 +929,7 @@ bool ItemUse_item_tainted_core(Player *player, Item* _Item, SpellCastTargets con
             pInstance->SetData(identifier, 1);
 
             //remove this item
-            player->RemoveItemCount(31088, 1, true);
+            player->DestroyItemCount(31088, 1, true);
         }
     }
     return true;
