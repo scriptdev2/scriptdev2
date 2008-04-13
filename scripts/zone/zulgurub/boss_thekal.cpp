@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     
                     }
 
-                Check_Timer = 10000;
+                Check_Timer = 5000;
                 }else Check_Timer -= diff;
         
         
@@ -381,7 +381,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     }
                     }
 
-            Check_Timer = 10000;
+            Check_Timer = 5000;
         }else Check_Timer -= diff;
         
         if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
@@ -519,7 +519,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                     }
                     }
 
-            Check_Timer = 10000;
+            Check_Timer = 5000;
         }else Check_Timer -= diff;
         
         if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)

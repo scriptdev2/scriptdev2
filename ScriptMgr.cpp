@@ -563,6 +563,10 @@ extern void AddSC_boss_thekal();
 extern void AddSC_boss_arlokk();
 extern void AddSC_boss_jindo();
 extern void AddSC_boss_hakkar();
+extern void AddSC_boss_grilek();
+extern void AddSC_boss_hazzarah();
+extern void AddSC_boss_renataki();
+extern void AddSC_boss_wushoolay();
 extern void AddSC_mobs_zulgurub();
 extern void AddSC_instance_zulgurub();
 //Zul'Aman
@@ -1411,6 +1415,10 @@ void ScriptsInit()
     AddSC_boss_arlokk();
     AddSC_boss_jindo();
     AddSC_boss_hakkar();
+    AddSC_boss_grilek();
+    AddSC_boss_hazzarah();
+    AddSC_boss_renataki();
+    AddSC_boss_wushoolay();
     AddSC_mobs_zulgurub();
     AddSC_instance_zulgurub();
 

@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
         SpawnStartSpiders_Timer = 1000;
         PoisonVolley_Timer = 15000;
         SpawnSpider_Timer = 30000;
-        Charge_Timer = 2500;
+        Charge_Timer = 1500;
         Aspect_Timer = 12000;
         Transform_Timer = 45000;
         TransformBack_Timer = 25000;
@@ -141,7 +141,6 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 if(!PhaseTwo && Transform_Timer < diff)
                 {
                     DoCast(m_creature,SPELL_SPIDER_FORM);   
-                    DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB);
                     const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
@@ -163,9 +162,18 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                 {
                 
                     Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    
-                    DoCast(target, SPELL_CHARGE);
+                    int i = 0 ;            
+                    while (i < 3) // max 3 tries to get a random target with power_mana
+                    {
+                        ++i;
+                        target = SelectUnit(SELECT_TARGET_RANDOM,1); //not aggro leader
+                        if (target)
+                        if (target->getPowerType() == POWER_MANA) 
+                        i=3;
+                        }
+                    if (target)     
+                    DoCast(target, SPELL_CHARGE);    
+                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);         
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoStartMeleeAttack(target);
                    

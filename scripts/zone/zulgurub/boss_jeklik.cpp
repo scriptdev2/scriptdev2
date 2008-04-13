@@ -109,9 +109,10 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                 
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    
-                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoCast(target,SPELL_CHARGE);
+
+                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0); 
+                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoStartMeleeAttack(target);
                     
                     Charge_Timer = 15000 + rand()%15000;

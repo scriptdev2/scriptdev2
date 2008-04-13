@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
 
     void Reset()
     {       
-        Sleep_Timer = 15000;
+        Sleep_Timer = 15000 + rand()%5000;
         NoxiousBreath_Timer = 8000;
         TailSweep_Timer = 4000;
         //MarkOfNature_Timer = 45000;
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             if (target)DoCast(target,SPELL_SLEEP);
 
             //14 seconds
-            Sleep_Timer = 14000;
+            Sleep_Timer = 8000 + rand()%7000;
         }else Sleep_Timer -= diff;
 
         //NoxiousBreath_Timer
@@ -185,8 +185,8 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
 
-            //18 seconds until we should cast this agian
-            BellowingRoar_Timer = 30000;
+            //20-30 seconds until we should cast this agian
+            BellowingRoar_Timer = 20000 + rand()%10000;
         } else BellowingRoar_Timer -= diff;
 
 

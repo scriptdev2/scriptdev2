@@ -175,6 +175,8 @@ public:
         {
             case DATA_SULFURON:
                 return Sulfuron;
+            case DATA_GOLEMAGG:
+                return Sulfuron;
 
             case DATA_FLAMEWAKERPRIEST:
                 return FlamewakerPriest;

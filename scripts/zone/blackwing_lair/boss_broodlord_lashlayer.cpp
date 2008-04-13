@@ -85,8 +85,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-            //8-12 seconds until we should cast this agian
-            Cleave_Timer = 8000 + rand()%4000;
+            //7 seconds until we should cast this agian
+            Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
         // BlastWave
@@ -95,8 +95,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);                
 
-            //35 seconds until we should cast this again
-            BlastWave_Timer = 12000;
+            //8-16 seconds until we should cast this again
+            BlastWave_Timer = 8000 + rand()%8000;
         }else BlastWave_Timer -= diff;
 
         //MortalStrike_Timer

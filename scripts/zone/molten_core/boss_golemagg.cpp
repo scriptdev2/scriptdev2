@@ -204,11 +204,11 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
             if(pInstance)
             {    
 
-                    if(pInstance->GetData(DATA_GOLEMAGGISDEAD))
-                    //remove
-                    m_creature->setDeathState(JUST_DIED);
-                    m_creature->RemoveCorpse();
-                    m_creature->setFaction(35);
+                    Unit *pGolemagg = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_GOLEMAGG));
+                    if(!pGolemagg || !pGolemagg->isAlive())
+                    {
+                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, true);
+                    }
             }
 
             Check_Timer = 1000;

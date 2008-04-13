@@ -184,22 +184,27 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             //Cast
             DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
 
-            //25 seconds until we should cast this again
+            //4-8 seconds until we should cast this again
             FlameBreath_Timer = 4000 + rand()%4000;
         }else FlameBreath_Timer -= diff;
 
-        //BurningAdrenalineCaster_Timer (NOT YET IMPLEMENTED due to the fact that we can't randomly select a target yet)
+        //BurningAdrenalineCaster_Timer
         if (BurningAdrenalineCaster_Timer < diff)
         {
-            //Cast
-            //DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
             Unit* target = NULL;
 
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            if (target)
-                DoCast(target,SPELL_BURNINGADRENALINE);
-
+            int i = 0 ;            
+            while (i < 3) // max 3 tries to get a random target with power_mana
+            {
+                ++i;
+                target = SelectUnit(SELECT_TARGET_RANDOM,1); //not aggro leader
+                if (target)
+                    if (target->getPowerType() == POWER_MANA) 
+                        i=3;
+            }
+            if (target) // cast on self (see below)
+                target->CastSpell(target,SPELL_BURNINGADRENALINE,1);
+ 
             //15 seconds until we should cast this agian
             BurningAdrenalineCaster_Timer = 15000;
         }else BurningAdrenalineCaster_Timer -= diff;
@@ -207,8 +212,10 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         //BurningAdrenalineTank_Timer
         if (BurningAdrenalineTank_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_BURNINGADRENALINE);
+            // have the victim cast the spell on himself otherwise the third effect aura will be applied 
+            // to Vael instead of the player
+            
+            m_creature->getVictim()->CastSpell(m_creature->getVictim(),SPELL_BURNINGADRENALINE,1);
 
             //45 seconds until we should cast this agian
             BurningAdrenalineTank_Timer = 45000;

@@ -20,6 +20,8 @@ UPDATE `gameobject_template` SET `ScriptName` = 'go_field_repair_bot_74A' where 
 UPDATE `gameobject_template` SET `ScriptName` = 'go_northern_crystal_pylon' WHERE `entry` = 164955;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_western_crystal_pylon' WHERE `entry` = 164956;
 UPDATE `gameobject_template` SET `ScriptName` = 'go_eastern_crystal_pylon' WHERE `entry` = 164957;
+UPDATE `gameobject_template` SET `ScriptName` = 'go_tablet_of_madness' WHERE `entry` = 180368;
+
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName` = 'guard_azuremyst' WHERE `entry` = 18038;
@@ -212,7 +214,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_pyroguard_emberseer' WHERE `
 /* BLACKWING LAIR */
 UPDATE `instance_template` SET `script` = 'instance_blackwing_lair' WHERE `map` = 469;
 /* Trash Mobs */
-UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264, 12557);
+UPDATE `creature_template` SET `ScriptName` = 'mob_blackwing_lair' WHERE `entry` IN (14265, 12457, 13996, 12459, 14261, 14263, 12467, 12463, 12461, 12464, 12460, 12465, 14262, 14264, 12557, 12468);
 /* Bosses */
 UPDATE `creature_template` SET `ScriptName` = 'boss_razorgore' WHERE `entry` = 12435;
 UPDATE `creature_template` SET `ScriptName` = 'boss_vaelastrasz' WHERE `entry` = 13020;
@@ -848,7 +850,11 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_healing_ward' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName` = 'mob_spawn_of_marli' WHERE `entry` = 15041;
 UPDATE `creature_template` SET `ScriptName` = 'mob_batrider' WHERE `entry` = 14965;
 UPDATE `creature_template` SET `ScriptName` = 'mob_shade_of_jindo' WHERE `entry` = 14986;
-UPDATE `creature_template` SET `Scriptname` = 'mobs_zulgurub' WHERE `entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750);
+UPDATE `creature_template` SET `ScriptName` = 'boss_grilek' WHERE `entry` = 15082;
+UPDATE `creature_template` SET `ScriptName` = 'boss_hazzarah' WHERE `entry` = 15083;
+UPDATE `creature_template` SET `ScriptName` = 'boss_renataki' WHERE `entry` = 15084;
+UPDATE `creature_template` SET `ScriptName` = 'boss_wushoolay' WHERE `entry` = 15085;
+UPDATE `creature_template` SET `Scriptname` = 'mobs_zulgurub' WHERE `entry` IN  (11340 ,11352 , 11350, 11830, 11372, 11351, 14750, 14883);
 
 
 /* EOF */

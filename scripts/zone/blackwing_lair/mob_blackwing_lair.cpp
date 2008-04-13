@@ -140,6 +140,15 @@ CreatureAI* GetAI_mob_blackwing_lair(Creature *_Creature)
         ai->Spell[3].First_Cast = 20000;
         ai->Spell[3].Cast_Target_Type = CAST_HOSTILE_TARGET;
         break;
+        //Death Talon Hatcher
+    case 12468:
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = 22442;           //Growing Flames
+        ai->Spell[0].Cooldown = 4000;
+        ai->Spell[0].CooldownRandomAddition = 3000;
+        ai->Spell[0].First_Cast = 2000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+        break;
         //Death Talon Flamescale
     case 12463:
 
@@ -149,6 +158,14 @@ CreatureAI* GetAI_mob_blackwing_lair(Creature *_Creature)
         ai->Spell[0].CooldownRandomAddition = 4000;
         ai->Spell[0].First_Cast = 3000;
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+        ai->Spell[1].Enabled = true;
+        ai->Spell[1].Spell_Id = 22911;           //Charge
+        ai->Spell[1].Cooldown = 8000;
+        ai->Spell[1].CooldownRandomAddition = 4000;
+        ai->Spell[1].First_Cast = 8000;
+        ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM;
+
         break;
         //Death Talon Overseer
     case 12461:

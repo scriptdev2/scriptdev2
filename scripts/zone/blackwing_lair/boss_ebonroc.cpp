@@ -26,7 +26,7 @@ EndScriptData */
 #define SPELL_SHADOWFLAME           22539
 #define SPELL_WINGBUFFET            18500
 #define SPELL_SHADOWOFEBONROC       23340
-#define SPELL_HEAL                  23394    //Thea Heal spell of his Shadow
+#define SPELL_HEAL                  41386    //Thea Heal spell of his Shadow
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
         ShadowFlame_Timer = 15000;      //These times are probably wrong
         WingBuffet_Timer = 30000;
         ShadowOfEbonroc_Timer = 45000;
-        Heal_Timer = 2000;
+        Heal_Timer = 1000;
     }
 
     void Aggro(Unit *who)
@@ -70,8 +70,8 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
             //Cast Wing Buffet
             DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
 
-            //30 seconds until we should cast this agian
-            WingBuffet_Timer = 30000;
+            //25 seconds until we should cast this agian
+            WingBuffet_Timer = 25000;
         }else WingBuffet_Timer -= diff;
 
         //Shadow of Ebonroc Timer
@@ -80,19 +80,22 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
             //Cast Shadow of Ebonroc
             DoCast(m_creature->getVictim(),SPELL_SHADOWOFEBONROC);
 
-            //30-40 seconds until we should cast this agian
-            ShadowOfEbonroc_Timer = 30000 + rand()%10000;
+            //25-35 seconds until we should cast this agian
+            ShadowOfEbonroc_Timer = 25000 + rand()%10000;
         }else ShadowOfEbonroc_Timer -= diff;
 
 
-        if (m_creature->getVictim()->HasAura(SPELL_SHADOWOFEBONROC,0) && Heal_Timer < diff)
+        if (m_creature->getVictim()->HasAura(SPELL_SHADOWOFEBONROC,0))
         {
-            //Cast Shadow of Ebonroc
-            DoCast(m_creature, SPELL_HEAL);
+            if (Heal_Timer < diff)
+            {
+                //Cast Shadow of Ebonroc
+                DoCast(m_creature, SPELL_HEAL);
 
-            //2-4 seconds until we should cast this agian
-            Heal_Timer = 20000 + rand()%2000;
-        }else Heal_Timer -= diff;
+                //1-3 seconds until we should cast this agian
+                Heal_Timer = 1000 + rand()%2000;
+            }else Heal_Timer -= diff;
+       }     
 
         DoMeleeAttackIfReady();
     }

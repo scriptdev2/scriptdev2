@@ -113,23 +113,6 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
      void UpdateAI(const uint32 diff)
     {
 
-        //Checking if Ohgan is dead. If yes Mandokir will enrage.
-        if(Check_Timer < diff)
-        {
-            if(pInstance)
-            {    
-                if (!RaptorDead)
-                {
-                    if(pInstance->GetData(DATA_OHGANISDEAD))
-                    DoCast(m_creature, SPELL_ENRAGE);
-                    RaptorDead = true;
-                }
-
-            }
-
-            Check_Timer = 1000;
-        }else Check_Timer -= diff;
-
         if (!m_creature->SelectHostilTarget())
             return;
  
@@ -240,11 +223,29 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
            {
                DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
                       
-               MortalStrike_Timer = 18000;
+               MortalStrike_Timer = 15000;
            }else MortalStrike_Timer -= diff;
         }
             }
-            
+        //Checking if Ohgan is dead. If yes Mandokir will enrage.
+        if(Check_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                if(pInstance->GetData(DATA_OHGANISDEAD))
+                {
+                    if (!RaptorDead)
+                    {               
+                        DoCast(m_creature, SPELL_ENRAGE);
+                        RaptorDead = true;
+                    }
+
+               }
+            }
+
+            Check_Timer = 1000;
+        }else Check_Timer -= diff;
+                    
             DoMeleeAttackIfReady();
         }
     }

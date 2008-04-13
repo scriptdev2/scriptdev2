@@ -79,11 +79,10 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         if (WarStomp_Timer < diff)
         {
             //Cast
-            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
 
             //20-30 seconds until we should cast this agian
-            WarStomp_Timer = 20000 + rand()%10000;
+            WarStomp_Timer = 15000 + rand()%10000;
         }else WarStomp_Timer -= diff;
 
         //FireballVolley_Timer

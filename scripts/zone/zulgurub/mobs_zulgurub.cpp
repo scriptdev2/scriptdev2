@@ -118,6 +118,22 @@ CreatureAI* GetAI_mobs_zulgurub(Creature *_Creature)
         ai->Spell[0].First_Cast = -50;
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
         break;
+        //Voodo Slave
+    case 14883:
+        ai->Spell[0].Enabled = true;               
+        ai->Spell[0].Spell_Id = 24669;      //Fire Rain       
+        ai->Spell[0].Cooldown = 10000;                 
+        ai->Spell[0].First_Cast = 7000;
+        ai->Spell[0].CooldownRandomAddition = 15000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_RANDOM; 
+
+        ai->Spell[1].Enabled = true;               
+        ai->Spell[1].Spell_Id = 24670;      //Summon Inferno       
+        ai->Spell[1].Cooldown = 60000;                 
+        ai->Spell[1].First_Cast = 30000;
+        ai->Spell[1].CooldownRandomAddition = 30000;
+        ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_RANDOM; 
+        break;
     }
 
     ai->EnterEvadeMode();

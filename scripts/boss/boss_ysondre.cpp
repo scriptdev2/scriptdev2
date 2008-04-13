@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 
 	void Reset()
 	{       
-		Sleep_Timer = 15000;
+		Sleep_Timer = 15000 + rand()%5000;
 		NoxiousBreath_Timer = 8000;
 		TailSweep_Timer = 4000;
 		//MarkOfNature_Timer = 45000;
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
 			if (target)DoCast(target,SPELL_SLEEP);
 
 			//14 seconds
-			Sleep_Timer = 14000;
+			Sleep_Timer = 8000 + rand()%7000;
 		}else Sleep_Timer -= diff;
 
 		//NoxiousBreath_Timer

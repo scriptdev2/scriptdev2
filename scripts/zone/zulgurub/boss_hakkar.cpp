@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_hakkar
 SD%Complete: 95
-SDComment: Spells buggy. Bloodsiphon will always do dmg no poison cloud check.
+SDComment: Blood siphon spell buggy cause of Core Issue.
 SDCategory: Zul'Gurub
 EndScriptData */
 
@@ -25,7 +25,7 @@ EndScriptData */
 
 
 #define SPELL_BLOODSIPHON            24322
-#define SPELL_CORRUPTEDBLOOD         24328                  //Not working. Need to be fixed.
+#define SPELL_CORRUPTEDBLOOD         24328           
 #define SPELL_CAUSEINSANITY          24327                  //Not working disabled.                      
 #define SPELL_WILLOFHAKKAR           24178
 #define SPELL_ENRAGE                 24318
@@ -88,11 +88,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         CheckThekal_Timer = 4000;
         CheckArlokk_Timer = 5000;
     
-        AspectOfJeklik_Timer = 8000;
-        AspectOfVenoxis_Timer = 4000;
-        AspectOfMarli_Timer = 22000;
-        AspectOfThekal_Timer = 25000;
-        AspectOfArlokk_Timer = 16000;        
+        AspectOfJeklik_Timer = 4000;
+        AspectOfVenoxis_Timer = 7000;
+        AspectOfMarli_Timer = 15000;
+        AspectOfThekal_Timer = 24000;
+        AspectOfArlokk_Timer = 18000;        
         
         Enraged = false;
     }
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_JEKLIK);
 
                        //14-21 seconds until we should cast this agian
-                       AspectOfJeklik_Timer = 14000 + rand()%7000;
+                       AspectOfJeklik_Timer = 10000 + rand()%4000;
                  }else AspectOfJeklik_Timer -= diff;
                  
               }
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_VENOXIS);
 
                        //17-20 seconds until we should cast this agian
-                       AspectOfVenoxis_Timer = 17000 + rand()%3000;
+                       AspectOfVenoxis_Timer = 8000;
                  }else AspectOfVenoxis_Timer -= diff;
                  
               }
@@ -229,14 +229,14 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_MARLI);
 
                        //12-21 seconds until we should cast this agian
-                       AspectOfMarli_Timer = 12000 + rand()%9000;
+                       AspectOfMarli_Timer = 10000;
                  }else AspectOfMarli_Timer -= diff;
                  
               }
             }
 
-            CheckJeklik_Timer = 1000;
-        }else CheckJeklik_Timer -= diff;
+            CheckMarli_Timer = 1000;
+        }else CheckMarli_Timer -= diff;
         
         //Checking if Thekal is dead. If not we cast his Aspect
         if(CheckThekal_Timer < diff)
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoCast(m_creature,SPELL_ASPECT_OF_THEKAL);
 
                        //14-21 seconds until we should cast this agian
-                       AspectOfThekal_Timer = 30000;
+                       AspectOfThekal_Timer = 25000;
                  }else AspectOfThekal_Timer -= diff;
                  
               }
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoResetThreat();
 
                        //28-32 seconds until we should cast this agian
-                       AspectOfArlokk_Timer = 28000 + rand()%4000;
+                       AspectOfArlokk_Timer = 15000 + rand()%5000;
                  }else AspectOfArlokk_Timer -= diff;
                  
               }

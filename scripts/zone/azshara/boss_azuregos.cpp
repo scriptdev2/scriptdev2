@@ -25,9 +25,11 @@ EndScriptData */
 
 #define SPELL_MARKOFFROST        23182            
 #define SPELL_MANASTORM          21097
-#define SPELL_REFLECT            30969               //Works fine but not for Dot Spells
-#define SPELL_CLEAVE              8255                //Perhaps not right ID
-#define SPELL_ENRAGE             28747
+#define SPELL_CHILL              21098
+#define SPELL_FROSTBREATH        21099
+#define SPELL_REFLECT            22067              //Old one was 30969               
+#define SPELL_CLEAVE              8255             //Perhaps not right ID
+#define SPELL_ENRAGE             23537
 
 struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 {
@@ -35,19 +37,25 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 
     uint32 MarkOfFrost_Timer;
     uint32 ManaStorm_Timer;
+    uint32 Chill_Timer;
+    uint32 Breath_Timer;
     uint32 Teleport_Timer;
     uint32 Reflect_Timer;
     uint32 Cleave_Timer;
     uint32 Enrage_Timer;
+    bool Enraged;
 
     void Reset()
     {       
         MarkOfFrost_Timer = 35000;
-        ManaStorm_Timer = 10000;
+        ManaStorm_Timer = 5000 + rand()%12000;
+        Chill_Timer = 10000 + rand()%20000;
+        Breath_Timer = 2000 + rand()%6000;
         Teleport_Timer = 30000;
-        Reflect_Timer = 25000;
+        Reflect_Timer = 15000 + rand()%15000;
         Cleave_Timer = 7000;
         Enrage_Timer = 0;
+        Enraged = false;
     }
 
     void Aggro(Unit *who)
@@ -71,7 +79,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
                  Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                  if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                  {
-                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+5, pUnit->GetOrientation());
+                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
                  }
              }
 
@@ -79,24 +87,47 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
              Teleport_Timer = 30000;
         }else Teleport_Timer -= diff;
 
-        //MarkOfFrost_Timer
-        if (MarkOfFrost_Timer < diff)
+//        //MarkOfFrost_Timer
+//        if (MarkOfFrost_Timer < diff)
+//        {
+//            //Cast
+//            DoCast(m_creature->getVictim(),SPELL_MARKOFFROST);
+//
+//            //30 seconds
+//            MarkOfFrost_Timer = 25000;
+//        }else MarkOfFrost_Timer -= diff;
+
+        //Chill_Timer
+        if (Chill_Timer < diff)
         {
             //Cast
-            DoCast(m_creature->getVictim(),SPELL_MARKOFFROST);
+            DoCast(m_creature->getVictim(),SPELL_CHILL);
 
-            //30 seconds
-            MarkOfFrost_Timer = 25000;
-        }else MarkOfFrost_Timer -= diff;
+            //13-25 seconds until we should cast this agian
+            Chill_Timer = 13000 + rand()%12000;
+        }else Chill_Timer -= diff;
+
+        //Breath_Timer
+        if (Breath_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature->getVictim(),SPELL_FROSTBREATH);
+
+            //8-12 seconds until we should cast this agian
+            Breath_Timer = 10000 + rand()%5000;
+        }else Breath_Timer -= diff;
 
         //ManaStorm_Timer
         if (ManaStorm_Timer < diff)
         {
             //Cast
-            DoCast(m_creature->getVictim(),SPELL_MANASTORM);
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+               DoCast(target,SPELL_MANASTORM);
 
-            //15 seconds until we should cast this agian
-            ManaStorm_Timer = 10000;
+            //8-13 seconds until we should cast this agian
+            ManaStorm_Timer = 7500 + rand()%5000;
         }else ManaStorm_Timer -= diff;
 
 
@@ -106,8 +137,8 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
             //Cast
             DoCast(m_creature,SPELL_REFLECT);
 
-            //45 seconds until we should cast this agian
-            Reflect_Timer = 45000;
+            //15-35 seconds until we should cast this agian
+            Reflect_Timer = 20000 + rand()%15000;
         }else Reflect_Timer -= diff;
 
         //Cleave_Timer
@@ -122,14 +153,13 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
 
 
         //Enrage_Timer
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26)
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 26 && !Enraged)
         {
             //Cast
-            DoCast(m_creature,SPELL_ENRAGE);                    
+            DoCast(m_creature, SPELL_ENRAGE);                    
 
-            //22 seconds until we should cast this agian
-            Enrage_Timer = 30000;  
-        }else Enrage_Timer -= diff;
+            Enraged = true;  
+        }
 
         DoMeleeAttackIfReady();
     }

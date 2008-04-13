@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 
     void Reset()
     {
-        ShadowFlame_Timer = 24000;      //These times are probably wrong
+        ShadowFlame_Timer = 21000;      //These times are probably wrong
         WingBuffet_Timer = 35000;
         Frenzy_Timer = 10000;
     }
@@ -67,6 +67,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
+            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
 
             //25 seconds till recast
             WingBuffet_Timer = 25000;
@@ -79,7 +80,7 @@ struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
             DoCast(m_creature,SPELL_FRENZY);
 
             //cast this every 10-15 seconds
-            Frenzy_Timer = 10000 + (rand()%5000);
+            Frenzy_Timer = 8000 + (rand()%2000);
         }else Frenzy_Timer -= diff;
 
         DoMeleeAttackIfReady();
