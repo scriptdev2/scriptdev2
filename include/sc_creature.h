@@ -81,6 +81,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at creature respawn
     void JustRespawned();
 
+    //Called at waypoint reached or PointMovement end
+    void MovementInform(uint32, uint32){}
+
     //Pointer to creature we are manipulating
     Creature* m_creature;
 

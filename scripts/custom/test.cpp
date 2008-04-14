@@ -22,86 +22,61 @@ SDCategory: Custom
 EndScriptData */
 
 #include "sc_creature.h"
-#include "../creature/simple_ai.h"
-#include "Map.h"
-#include "GridNotifiersImpl.h"
+#include "../npc/npc_escortAI.h"
+#include "sc_gossip.h"
 
-
-struct MANGOS_DLL_DECL testAI : public ScriptedAI
+void TestCallBack(Creature* c, Player*, uint32)
 {
-    testAI(Creature *c) : ScriptedAI(c) {Reset();}
+    c->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, NULL);
+}
 
-    uint32 Cleave_Timer;
+void TestCallBack2(Creature* c, Player*, uint32)
+{
+    c->Say("Watchout!", LANG_UNIVERSAL, NULL);
+    Creature* temp = c->SummonCreature(3099, c->GetPositionX()+5, c->GetPositionY()+7, c->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
 
-    void Reset()
-    {
-        Cleave_Timer = 5000;      //These times are probably wrong
-    }
+    temp->AI()->AttackStart(c);
+}
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        if (Cleave_Timer < diff)
-        {
-            /*char test[128];
-            sprintf(test, "Found %d friendly units in 20 yard radius", GetNearByFriendlyUnits(20.0f).size());
-
-            DoYell(test, LANG_UNIVERSAL, NULL);*/
-
-            Cleave_Timer = 5000;
-        }else Cleave_Timer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-/*
-    std::list<Unit *> GetNearByFriendlyUnits(float radius_check)
-    {
-        CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(p);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        //MaNGOS::WorldObjectWorker<MaNGOS::RespawnDo> worker(u_do);
-
-        std::list<Unit *> friends;
-        {
-            MaNGOS::AnyUnitInObjectRangeCheck u_check(m_creature, radius_check);
-            MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck> searcher(friends, u_check);
-
-            TypeContainerVisitor<MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
-            TypeContainerVisitor<MaNGOS::UnitListSearcher<MaNGOS::AnyUnitInObjectRangeCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
-
-            CellLock<GridReadGuard> cell_lock(cell, p);
-            cell_lock->Visit(cell_lock, world_unit_searcher, *m_creature->GetMap());
-            cell_lock->Visit(cell_lock, grid_unit_searcher, *m_creature->GetMap());
-        }
-
-        for(std::list<Unit *>::iterator itr = friends.begin(); itr != friends.end();)
-        {
-            if(!m_creature->IsFriendlyTo(*itr))
-            {
-                std::list<Unit *>::iterator itr2 = itr;
-                ++itr;
-                friends.erase(itr2);
-            }
-            else
-                ++itr;
-        }
-
-        return friends;
-    }*/
-};
+void TestCallBack3(Creature* c, Player*, uint32)
+{
+    c->Say("ARG HEART ATTACK!", LANG_UNIVERSAL, NULL);
+}
 
 CreatureAI* GetAI_test(Creature *_Creature)
 {
-    return new testAI (_Creature);
+    npc_escortAI* testAI = new npc_escortAI(_Creature);
+
+    testAI->AddWaypoint(0, 1231, -4419, 23);
+    testAI->AddWaypoint(1, 1198, -4440, 23, 0, (EscortAICallback)TestCallBack);
+    testAI->AddWaypoint(2, 1208, -4392, 23);
+    testAI->AddWaypoint(3, 1231, -4419, 23, 5000, (EscortAICallback)TestCallBack2);
+    testAI->AddWaypoint(4, 1208, -4392, 23, 2000, (EscortAICallback)TestCallBack3);
+
+    return (CreatureAI*)testAI;
+}
+
+bool GossipHello_npc_test(Player *player, Creature *_Creature)
+{
+    player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
+    _Creature->prepareGossipMenu(player,0);
+
+    player->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, "Click to Test Escort", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1,"",0);
+
+    _Creature->sendPreparedGossip( player );
+    return true;
+}
+ 
+bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((npc_escortAI*)(_Creature->AI()))->Start(false, true);
+
+        return true;    // prevent mangos core handling
+    }
+    return false;       // the player didn't select "trick or treat" or cheated, normal core handling
 }
 
 void AddSC_test()
@@ -110,5 +85,7 @@ void AddSC_test()
     newscript = new Script;
     newscript->Name="test";
     newscript->GetAI = GetAI_test;
+    newscript->pGossipHello          = &GossipHello_npc_test;
+    newscript->pGossipSelect         = &GossipSelect_npc_test;
     m_scripts[nrscripts++] = newscript;
 }

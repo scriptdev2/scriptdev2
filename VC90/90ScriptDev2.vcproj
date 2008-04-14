@@ -257,6 +257,14 @@
 				Name="npc"
 				>
 				<File
+					RelativePath="..\scripts\npc\npc_escortAI.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\scripts\npc\npc_escortAI.h"
+					>
+				</File>
+				<File
 					RelativePath="..\scripts\npc\npc_guardian.cpp"
 					>
 				</File>

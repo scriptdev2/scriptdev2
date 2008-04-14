@@ -20,7 +20,7 @@
 SUBDIRS = sql
 
 ## CPP flags for includes, defines, etc.
-AM_CPPFLAGS = $(MYSQL_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/ -I$(srcdir)/../../game/ -I$(srcdir)/include/
+AM_CPPFLAGS = $(MYSQL_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/
 
 ## Build MaNGOS script library as shared library.
 # libmangosscript shared library will later be reused by world server daemon.
@@ -52,6 +52,8 @@ scripts/guard/guard_ai.h \
 scripts/guard/guards.cpp \
 scripts/item/item_scripts.cpp \
 scripts/item/item_test.cpp \
+scripts/npc/npc_escortAI.cpp \
+scripts/npc/npc_escortAI.h \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_mount_vendor.cpp \
