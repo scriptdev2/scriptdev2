@@ -7,6 +7,8 @@
 
 #define WP_LAST_POINT   -1
 
+#ifdef WIN32
+
 bool npc_escortAI::IsVisible(Unit* who) const
 {
     if (!who)
@@ -225,3 +227,4 @@ void npc_escortAI::Start(bool Attack, bool Defend)
     IsBeingEscorted = true;
     ReconnectWP = false;
 }
+#endif
