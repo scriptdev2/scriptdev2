@@ -1,8 +1,8 @@
 #include "Creature.h"
 #include "CreatureAI.h"
+#include "../../ScriptMgr.h"
 
-#ifdef WIN32
-typedef void (__stdcall *EscortAICallback)(Creature*, Player*, uint32);
+FUNC_PTR(EscortAICallback ,__stdcall ,void ,(Creature*, Player*, uint32))
 
 struct Escort_Waypoint
 {
@@ -73,4 +73,3 @@ private:
     bool InCombat;
     bool ReconnectWP;
 };
-#endif

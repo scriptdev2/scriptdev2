@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef CONFIG_H
-#define CONFIG_H
-#endif
+#ifndef SC_CONFIG_H
+#define SC_CONFIG_H
 
 #include "../../framework/Platform/CompilerDefs.h"
 
@@ -58,4 +57,6 @@
 #else
   #define _FULLVERSION _VERSION " (Unix)"
   #define _SCRIPTDEV2_CONFIG  "@prefix@/etc/scriptdev2.conf"
+#endif
+
 #endif

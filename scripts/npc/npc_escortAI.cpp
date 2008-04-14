@@ -1,4 +1,3 @@
-#include "..\ScriptMgr.h"
 #include "npc_escortAI.h"
 #include "TargetedMovementGenerator.h"
 #include "PointMovementGenerator.h"
@@ -6,8 +5,6 @@
 #define VISIBLE_RANGE 26.46f
 
 #define WP_LAST_POINT   -1
-
-#ifdef WIN32
 
 bool npc_escortAI::IsVisible(Unit* who) const
 {
@@ -227,4 +224,3 @@ void npc_escortAI::Start(bool Attack, bool Defend)
     IsBeingEscorted = true;
     ReconnectWP = false;
 }
-#endif

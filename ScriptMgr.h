@@ -75,4 +75,11 @@ extern Script *m_scripts[MAX_SCRIPTS];
 
 //Localized text function
 const char* GetLocalizedText(uint32 Entry);
+
+#if COMPILER == COMPILER_GNU
+#define FUNC_PTR(name,callconvention,returntype,parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
+#else
+#define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(callconvention *name)parameters;
+#endif
+
 #endif

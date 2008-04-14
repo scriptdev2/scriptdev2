@@ -42,7 +42,6 @@ void TestCallBack3(Creature* c, Player*, uint32)
 {
     c->Say("ARG HEART ATTACK!", LANG_UNIVERSAL, NULL);
 }
-#ifdef WIN32
 CreatureAI* GetAI_test(Creature *_Creature)
 {
     npc_escortAI* testAI = new npc_escortAI(_Creature);
@@ -55,7 +54,6 @@ CreatureAI* GetAI_test(Creature *_Creature)
 
     return (CreatureAI*)testAI;
 }
-#endif
 bool GossipHello_npc_test(Player *player, Creature *_Creature)
 {
     player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
@@ -84,9 +82,7 @@ void AddSC_test()
     Script *newscript;
     newscript = new Script;
     newscript->Name="test";
-#ifdef WIN32
     newscript->GetAI = GetAI_test;
-#endif
     newscript->pGossipHello          = &GossipHello_npc_test;
     newscript->pGossipSelect         = &GossipSelect_npc_test;
     m_scripts[nrscripts++] = newscript;
