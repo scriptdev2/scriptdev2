@@ -5,6 +5,7 @@
 #define VISIBLE_RANGE 26.46f
 
 #define WP_LAST_POINT   -1
+#define MAX_PLAYER_DISTANCE 50
 
 bool npc_escortAI::IsVisible(Unit* who) const
 {
@@ -175,6 +176,33 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             WaitTimer = 0;
         }else WaitTimer -= diff;
 
+    //Check if player is within range
+    if (IsBeingEscorted && !InCombat && PlayerGUID)
+        if (PlayerTimer < diff)
+        {
+            Unit* p = Unit::GetUnit(*m_creature, PlayerGUID);
+            
+            if (!p || m_creature->GetDistance(p) > MAX_PLAYER_DISTANCE)
+            {
+                JustDied(m_creature);
+                IsBeingEscorted = false;
+                
+                error_log("SD2: EscortAI Evaded back to spawn point because player was to far away or not found");
+
+                m_creature->setDeathState(JUST_DIED);
+                m_creature->SetHealth(0);
+                m_creature->CombatStop();
+                m_creature->DeleteThreatList();
+                m_creature->Respawn();
+                m_creature->GetMotionMaster()->Clear(true);
+
+                //Re-Enable gossip
+                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
+
+            PlayerTimer = 1000;
+        }else PlayerTimer -= diff;
+
     //Check if we have a current target
     if( m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
     {
@@ -233,7 +261,10 @@ void npc_escortAI::AddWaypoint(uint32 id, float x, float y, float z, uint32 Wait
 void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
 {
     if (InCombat)
+    {
+        error_log("SD2 ERROR: EscortAI attempt to Start while in combat");
         return;
+    }
 
     if (WaypointList.empty())
     {

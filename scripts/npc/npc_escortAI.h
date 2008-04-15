@@ -32,7 +32,7 @@ public:
     virtual void Reset() = 0;
 
     // CreatureAI functions
-    npc_escortAI(Creature *c) : m_creature(c), IsBeingEscorted(false) {m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);}
+    npc_escortAI(Creature *c) : m_creature(c), IsBeingEscorted(false), InCombat(false), PlayerTimer(1000) {m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);}
 
     bool IsVisible(Unit*) const;
 
@@ -62,6 +62,7 @@ protected:
 
 private:
     uint32 WaitTimer;
+    uint32 PlayerTimer;
 
     struct
     {        

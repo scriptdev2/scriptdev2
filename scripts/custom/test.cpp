@@ -82,10 +82,15 @@ public:
         ChatTimer = 4000;
     }
 
-    void JustDied(Unit*)
+    void JustDied(Unit* killer)
     {
         if (IsBeingEscorted)
-            m_creature->Say("...no...how could you let me died $N", LANG_UNIVERSAL, PlayerGUID);
+        {
+            //killer = m_creature when player got to far from creature
+            if (killer == m_creature)
+                m_creature->Whisper(PlayerGUID, "How dare you leave me like that! I hate you! =*(");
+            else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
+        }
         else m_creature->Say("ugh...", LANG_UNIVERSAL, NULL);
     }
 
