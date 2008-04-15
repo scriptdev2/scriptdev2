@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "TargetedMovementGenerator.h"
-#include "WorldPacket.h"
+#include "PointMovementGenerator.h"
 
 #define SPELL_WINGBUFFET 18500
 #define SPELL_FLAMEBREATH 18435
@@ -74,12 +74,10 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
     uint32 reset_timer;
     uint32 phase;
     uint32 counter;
-    Creature* Summoned;
 
 
     void Reset()
     {
-
         swingcounter = 0;
         flamebreath_timer = 20000;
         cleave_timer = 15000;
@@ -112,8 +110,8 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                counter = 1;
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        counter = 1;
     }
 
     void UpdateAI(const uint32 diff)
@@ -172,47 +170,23 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 switch (position)
                 {
-                case 0:
-                    SpecialMove(-65.8444,-213.809,-60.2985,5000);
-                    m_creature->Relocate(-65,-213,-60,0);
-                    break;
-                case 1:
-                    SpecialMove(22.8739,-217.152,-60.0548,5000);
-                    m_creature->Relocate(22,-217,-60,0);
-                    break;
-                case 2:
-                    SpecialMove(-33.5561,-182.682,-60.9457,5000);
-                    m_creature->Relocate(-33,-182,-60,0);
-                    break;
-                case 3:
-                    SpecialMove(-31.4963,-250.123,-60.1278,5000);
-                    m_creature->Relocate(-31,-250,-60,0);
-                    break;
-                case 4:
-                    SpecialMove(-2.78999,-181.431,-60.8962,5000);
-                    m_creature->Relocate(-2,-181,-60,0);
-                    break;
-                case 5:
-                    SpecialMove(-54.9415,-232.242,-60.5555,5000);
-                    m_creature->Relocate(-54,-232,-60,0);
-                    break;
-                case 6:
-                    SpecialMove(-65.2653,-194.879,-60.6718,5000);
-                    m_creature->Relocate(-65,-194,-60,0);
-                    break;
-                case 7:
-                    SpecialMove(10.5665,-241.478,-60.9426,5000);    
-                    m_creature->Relocate(10,-241,-60,0);
-                    break;
-                case 8:
-                    //1 in 9 chance that we cast deepbreath instead of moving
-                    if ( rand() % 10 <= 4 )
-                    {
-                        DoTextEmote("takes a deep breath...",NULL);
-                        DoCast(m_creature->getVictim(),SPELL_DEEPBREATH);
+                    case 0: SpecialMove(-65.8444,-213.809,-60.2985); break;
+                    case 1: SpecialMove(22.8739,-217.152,-60.0548);  break;
+                    case 2: SpecialMove(-33.5561,-182.682,-60.9457); break;
+                    case 3: SpecialMove(-31.4963,-250.123,-60.1278); break;
+                    case 4: SpecialMove(-2.78999,-181.431,-60.8962); break;
+                    case 5: SpecialMove(-54.9415,-232.242,-60.5555); break;
+                    case 6: SpecialMove(-65.2653,-194.879,-60.6718); break;
+                    case 7: SpecialMove(10.5665,-241.478,-60.9426);  break;
+                    case 8:
+                        //1 in 9 chance that we cast deepbreath instead of moving
+                        if ( rand() % 10 <= 4 )
+                        {
+                            DoTextEmote("takes a deep breath...",NULL);
+                            DoCast(m_creature->getVictim(),SPELL_DEEPBREATH);
+                        }
+                        break;
                     }
-                    break;
-                }
 
                 DoCast(m_creature,11010);//hover?
                 movement_timer = 25000;
@@ -235,6 +209,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                Creature* Summoned = NULL;
 
                 Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
@@ -273,7 +248,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             //Bellowing roar every 20-30 seconds in phase 3
             if (bellowingroar_timer < diff && phase == 3)
             {
-
                 DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
                 bellowingroar_timer = 20000 + rand()%10000;
             }else bellowingroar_timer -= diff;
@@ -291,8 +265,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             m_creature->SetHover(true);
             DoCast(m_creature,18430);//Dragon hover?
             DoYell(SAY_PHASE_2_TRANS,LANG_UNIVERSAL,NULL);
-            SpecialMove(-65.8444,-213.809,-60.2985,5000);
-            m_creature->Relocate(-65,-213,-60,0);
+            SpecialMove(-65.8444,-213.809,-60.2985);
         }
 
         //Phase 2 to Phase 3 transition at 40%
@@ -300,8 +273,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             phase = 3;
             m_creature->InterruptNonMeleeSpells(false);
-            SpecialMove(-65.8444,-213.809,-85.2985,5000);
-            m_creature->Relocate(-65,-213,-85,0);
+            SpecialMove(-65.8444,-213.809,-85.2985);
             //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
             m_creature->SetHover(false);
@@ -328,27 +300,33 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         }
     }
 
-    void SpecialMove(float X, float Y, float Z, uint32 Time)
+    void SpecialMove(float X, float Y, float Z)
     {
-        WorldPacket data( SMSG_MONSTER_MOVE, (41+m_creature->GetPackGUID().size()) );
-        data.append(m_creature->GetPackGUID());
-
-        data << m_creature->GetPositionX() << m_creature->GetPositionY() << m_creature->GetPositionZ();
-        // unknown field - unrelated to orientation
-        // seems to increment about 1000 for every 1.7 seconds
-        // for now, we'll just use mstime
-        data << getMSTime();
-
-        data << uint8(0);                                // walkback when walking from A to B
-        data << uint32(0x0200);          // flags
-        /* Flags:
-        512: Floating, moving without walking/running
-        */
-        data << Time;                                           // Time in between points
-        data << uint32(1);                                      // 1 single waypoint
-        data << X << Y << Z;                  // the single waypoint Point B
-        m_creature->SendMessageToSet( &data, true );
+        m_creature->GetMotionMaster()->Clear();
+        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, X, Y, Z));
     }
+
+    //void SpecialMove(float X, float Y, float Z, uint32 Time)
+    //{
+    //    WorldPacket data( SMSG_MONSTER_MOVE, (41+m_creature->GetPackGUID().size()) );
+    //    data.append(m_creature->GetPackGUID());
+
+    //    data << m_creature->GetPositionX() << m_creature->GetPositionY() << m_creature->GetPositionZ();
+    //    // unknown field - unrelated to orientation
+    //    // seems to increment about 1000 for every 1.7 seconds
+    //    // for now, we'll just use mstime
+    //    data << getMSTime();
+
+    //    data << uint8(0);                                // walkback when walking from A to B
+    //    data << uint32(0x0200);          // flags
+    //    /* Flags:
+    //    512: Floating, moving without walking/running
+    //    */
+    //    data << Time;                                           // Time in between points
+    //    data << uint32(1);                                      // 1 single waypoint
+    //    data << X << Y << Z;                  // the single waypoint Point B
+    //    m_creature->SendMessageToSet( &data, true );
+    //}
 };
 CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)
 {

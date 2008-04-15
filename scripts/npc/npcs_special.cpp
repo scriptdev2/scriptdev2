@@ -92,6 +92,7 @@ bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32
             if(emote == EMOTE_ONESHOT_CHEER)
             {
                 _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
                 player->CompleteQuest(QUEST_CLUCK);
             }
         }

@@ -23,12 +23,13 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "def_sethekk_halls.h"
+#include "PointMovementGenerator.h"
 
 #define SPELL_BLINK                 38194
 #define SPELL_ARCANE_VOLLEY         36738
 #define SPELL_POLYMORPH             12826
 #define SPELL_ARCANE_EXPLOSION      38197
-#define SPELL_MANA_SHILD            38151
+#define SPELL_MANA_SHIELD            38151
 
 #define SAY_INTRO                   "<squawk>..Trinkets yes pretty Trinkets..<squawk>..power, great power.<squawk>..power in Trinkets..<squawk>"
 #define SOUND_INTRO                 10557
@@ -62,10 +63,10 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
     uint32 sheep_timer;
     uint32 blink_timer;
     uint32 wait_timer;
-    uint32 manashild_timer;
+    uint32 manashield_timer;
     uint32 sheep;
 
-    bool manashild;
+    bool manashield;
     bool blink;
     bool wait;
     bool intro;
@@ -79,7 +80,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
         wait = false;
         intro = false;
         sheep = 0;
-        manashild = false;
+        manashield = false;
     }
 
     void JustDied(Unit* Killer)
@@ -130,7 +131,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                         DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
                         break;
                 }
-                manashild_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
+                manashield_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
                 
     }
 
@@ -168,12 +169,12 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
         
         if(!wait)
         {   
-            if(!manashild)
-                if(manashild_timer < diff)
+            if(!manashield)
+                if(manashield_timer < diff)
                 {     
-                        DoCast(m_creature,SPELL_MANA_SHILD);
-                        manashild = true;
-                }else manashild_timer -= diff;
+                        DoCast(m_creature,SPELL_MANA_SHIELD);
+                        manashield = true;
+                }else manashield_timer -= diff;
 
             if(arcanevolley_timer < diff)
             {

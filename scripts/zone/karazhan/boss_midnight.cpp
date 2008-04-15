@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "TargetedMovementGenerator.h"
+#include "PointMovementGenerator.h"
 
 #define SAY_MIDNIGHT_KILL "Well done Midnight!"
 #define SOUND_MIDNIGHT_KILL 9173 
@@ -175,13 +176,17 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         float newX = m_creature->GetPositionX() + cos(angle)*(distance/2) ;
         float newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
         float newZ = 50;
-        m_creature->Relocate(newX,newY,newZ,angle);
-        m_creature->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
+        //m_creature->Relocate(newX,newY,newZ,angle);
+        //m_creature->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
+        m_creature->GetMotionMaster()->Clear();
+        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, newX, newY, newZ));
         distance += 10;
         newX = m_creature->GetPositionX() + cos(angle)*(distance/2) ;
         newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
-        pAttumen->Relocate(newX,newY,newZ,-angle);
-        pAttumen->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
+        pAttumen->GetMotionMaster()->Clear();
+        pAttumen->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, newX, newY, newZ));
+        //pAttumen->Relocate(newX,newY,newZ,-angle);
+        //pAttumen->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
         Mount_Timer = 1000;
     }
 

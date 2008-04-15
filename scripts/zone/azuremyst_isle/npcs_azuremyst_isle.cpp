@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
+#include "PointMovementGenerator.h"
 #include <cmath>
 
 /*######
@@ -72,25 +73,25 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3); //ley down
     }
 
-    void CreatureMove(float DestX, float DestY, float DestZ)
-    {
-        float FromX = m_creature->GetPositionX();
-        float FromY = m_creature->GetPositionY();
-        float FromZ = m_creature->GetPositionZ();
+    //void CreatureMove(float DestX, float DestY, float DestZ)
+    //{
+    //    float FromX = m_creature->GetPositionX();
+    //    float FromY = m_creature->GetPositionY();
+    //    float FromZ = m_creature->GetPositionZ();
 
-        float dx = DestX - FromX;
-        float dy = DestY - FromY;
-        float dz = DestZ - FromZ;
-        double dist = ::sqrt((dx*dx) + (dy*dy) + (dz*dz));
-        double speed = m_creature->GetSpeed(MOVE_RUN);
+    //    float dx = DestX - FromX;
+    //    float dy = DestY - FromY;
+    //    float dz = DestZ - FromZ;
+    //    double dist = ::sqrt((dx*dx) + (dy*dy) + (dz*dz));
+    //    double speed = m_creature->GetSpeed(MOVE_RUN);
 
-        if(speed<=0)
-            speed = 2.5f;
-        speed *= 0.001f;
+    //    if(speed<=0)
+    //        speed = 2.5f;
+    //    speed *= 0.001f;
 
-        uint32 TotalTime = static_cast<uint32>( dist/speed + 0.5 );
-        m_creature->SendMonsterMove(DestX,DestY,DestZ,0,true,TotalTime);
-    }
+    //    uint32 TotalTime = static_cast<uint32>( dist/speed + 0.5 );
+    //    m_creature->SendMonsterMove(DestX,DestY,DestZ,0,true,TotalTime);
+    //}
 
 
     void Aggro(Unit *who)
@@ -161,8 +162,9 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
         {
             if(isMove)
             {
-                (*m_creature).GetMotionMaster()->Clear();
-                CreatureMove(-4115.053711f,-13754.831055f,73.508949f);
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, -4115.053711f, -13754.831055f, 73.508949f));
+                //CreatureMove(-4115.053711f,-13754.831055f,73.508949f);
                 isMove = false;
             }
 

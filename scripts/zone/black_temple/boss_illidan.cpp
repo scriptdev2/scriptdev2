@@ -24,8 +24,8 @@ EndScriptData */
 /******** Includes ************/
 #include "def_black_temple.h"
 #include "TargetedMovementGenerator.h"
+#include "PointMovementGenerator.h"
 #include "sc_gossip.h"
-#include "WorldPacket.h"
 
 /************* Quotes and Sounds ***********************/
 // Gossip for when a player clicks Akama
@@ -230,14 +230,14 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 {
     demonfireAI(Creature *c) : ScriptedAI(c) {Reset();}
    
-    bool IsWayPoint;
+    bool IsTrigger;
 
     uint32 DemonFireTimer;
     uint32 DespawnTimer;
 
     void Reset()
     {
-        IsWayPoint = false;
+        IsTrigger = false;
 
         DemonFireTimer = 0;
         DespawnTimer = 60000;
@@ -251,7 +251,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(IsWayPoint)
+        if(IsTrigger)
             return;
 
         if(DemonFireTimer < diff)
@@ -547,43 +547,22 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         float final_X = EyeBlast[final].x;
         float final_Y = EyeBlast[final].y;
         float final_Z = EyeBlast[final].z;
-        Creature* BlastTrigger = NULL; // This mob will have fun running across the summit and spawning Demon Fires
-        BlastTrigger = m_creature->SummonCreature(DEMON_FIRE, initial_X, initial_Y, initial_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
-        Creature* BlueFlame = NULL; // This mob just does the Blue Flame animation. It follows close behind BlastTrigger...cosmetics ftw.
-        BlueFlame = m_creature->SummonCreature(DEMON_FIRE, initial_X,initial_Y,initial_Z,0,TEMPSUMMON_TIMED_DESPAWN,40000);
-        Creature* MoveTarget = NULL; // This is the mob that BlastTrigger will run towards.
-        MoveTarget = m_creature->SummonCreature(DEMON_FIRE,final_X,final_Y,final_Z,0,TEMPSUMMON_TIMED_DESPAWN, 40000);
-        if(BlastTrigger)
+        for(uint8 i = 0; i < 2; ++i)
         {
-            DoCast(BlastTrigger, SPELL_BLUE_BEAM);
-            GlobalTimer += 15000;
-            BlastTrigger->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Give him an empty skin so that players don't see a random infernal running around.
-            BlastTrigger->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE); // No point letting them target the mob either ^^;;
-            BlastTrigger->CastSpell(BlastTrigger, SPELL_EYE_BLAST_TRIGGER, true);
-            if(BlueFlame)
+            Creature* Trigger = NULL;
+            Trigger = m_creature->SummonCreature(DEMON_FIRE, initial_X, initial_Y, initial_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
+            if(Trigger)
             {
-                BlueFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Same reason as BlastTrigger
-                BlueFlame->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE); // Blah blah blah.
-                BlueFlame->CastSpell(BlueFlame, SPELL_EYE_BLAST, true);
-                //BlueFlame->GetMotionMaster()->Clear(false);
-                //BlueFlame->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*BlastTrigger));
-                //BlueFlame->AddThreat(BlastTrigger, 1000000.0f);
-                //BlueFlame->AI()->AttackStart(BlastTrigger);
-                //BlueFlame->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*BlastTrigger));
-                BlastTrigger->SetHealth(100000); // Just so it won't die when attacked.
-                BlueFlame->SetHealth(100000);
-            }
-            if(MoveTarget)
-            {
-                ((demonfireAI*)MoveTarget->AI())->IsWayPoint = true;
-                MoveTarget->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Same reason as above two mobs...
-                MoveTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE); // You know why...
-                //BlastTrigger->GetMotionMaster()->Clear(false);
-                //BlastTrigger->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*MoveTarget));
-                BlastTrigger->AddThreat(MoveTarget, 100000.0f);
-                BlastTrigger->AI()->AttackStart(MoveTarget);
-                BlastTrigger->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*MoveTarget));
-                MoveTarget->SetHealth(100000); // Same reason as BlastTrigger->SetHealth
+                ((demonfireAI*)Trigger->AI())->IsTrigger = true;
+                Trigger->GetMotionMaster()->Clear(false);
+                Trigger->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, final_X, final_Y, final_Z));
+                if(!i)
+                {
+                    DoCast(Trigger, SPELL_BLUE_BEAM);
+                    Trigger->CastSpell(Trigger, SPELL_EYE_BLAST_TRIGGER, true);
+                }
+                else
+                    Trigger->CastSpell(Trigger, SPELL_EYE_BLAST, true);
             }
         }
     }
@@ -653,25 +632,27 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         }
     }
     
-    void Move(float X, float Y, float Z, uint32 Time, Unit* c, uint32 flags = 0x0200)
+    void Move(float X, float Y, float Z, Creature* _Creature)
     {
-        WorldPacket data( SMSG_MONSTER_MOVE, (41+c->GetPackGUID().size()) );
-        data.append(c->GetPackGUID());
+        _Creature->GetMotionMaster()->Clear(false);
+        _Creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, X, Y, Z));
+        //WorldPacket data( SMSG_MONSTER_MOVE, (41+c->GetPackGUID().size()) );
+        //data.append(c->GetPackGUID());
 
-        data << c->GetPositionX() << c->GetPositionY() << c->GetPositionZ();
-        // unknown field - unrelated to orientation
-        // seems to increment about 1000 for every 1.7 seconds
-        // for now, we'll just use mstime
-        data << getMSTime();
+        //data << c->GetPositionX() << c->GetPositionY() << c->GetPositionZ();
+        //// unknown field - unrelated to orientation
+        //// seems to increment about 1000 for every 1.7 seconds
+        //// for now, we'll just use mstime
+        //data << getMSTime();
 
-        data << uint8(0);                                // walkback when walking from A to B
-        data << uint32(flags);          // flags
+        //data << uint8(0);                                // walkback when walking from A to B
+        //data << uint32(flags);          // flags
 
-        data << Time;                                           // Time in between points
-        data << uint32(1);                                      // 1 single waypoint
-        data << X << Y << Z;                                    // the single waypoint Point B
-        c->SendMessageToSet( &data, true );
-        c->Relocate(X, Y, Z);
+        //data << Time;                                           // Time in between points
+        //data << uint32(1);                                      // 1 single waypoint
+        //data << X << Y << Z;                                    // the single waypoint Point B
+        //c->SendMessageToSet( &data, true );
+        //c->Relocate(X, Y, Z);
     }
 
     void HandleDemonTransformAnimation(uint32 count)
@@ -935,8 +916,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 float PosX = m_creature->GetPositionX() + 10;
                                 float PosY = m_creature->GetPositionY() - 10;
                                 float PosZ = m_creature->GetPositionZ();
-                                Akama->SendMonsterMove(PosX, PosY, PosZ, 0, false, 3000);
-                                Akama->Relocate(PosX, PosY, PosZ);
+                                Akama->GetMotionMaster()->Clear(false);
+                                Akama->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, PosX, PosY, PosZ));
                             }
                         }
                         break;
@@ -1029,7 +1010,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     // It spawns multiple flames sometimes. Therefore, we'll do this manually.
                     // DoCast(m_creature->getVictim(), SPELL_FLAME_CRASH);
                     m_creature->HandleEmoteCommand(402);
-                    Creature* FlameCrash = DoSpawnCreature(FLAME_CRASH, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
+                    DoSpawnCreature(FLAME_CRASH, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
                     FlameCrashTimer = 35000;
                     GlobalTimer += 2000;
                 }else FlameCrashTimer -= diff;
@@ -1138,7 +1119,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     m_creature->InterruptNonMeleeSpells(false);
                     uint32 random = rand()%5;
-                    Move(Flight[random].x, Flight[random].y, Flight[random].z, 3000, m_creature);
+                    Move(Flight[random].x, Flight[random].y, Flight[random].z, m_creature);
                     FlyTimer = 15000;
                     GlobalTimer = 1000;
                 }else FlyTimer -= diff;
@@ -1289,7 +1270,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     float X = CageTrap[random].x;
                     float Y = CageTrap[random].y;
                     float Z = CageTrap[random].z;
-                    Move(X, Y, Z, 0, Maiev); // Move Maiev there via our workaround
+                    Maiev->SendMoveToPacket(X, Y, Z, false, 0);
+                    Maiev->Relocate(X, Y, Z, Maiev->GetOrientation());
                     Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true); // Make it look like she 'teleported'
                     Maiev->CastSpell(Maiev, SPELL_CAGE_TRAP_SUMMON, false); // summon the trap!
                 }
