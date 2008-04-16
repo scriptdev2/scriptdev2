@@ -629,7 +629,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         {            
             if(delete_timer < diff)
             {
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 delete_timer = 10000;
             }else delete_timer -=diff;         
         }
@@ -707,7 +707,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
         if(delete_timer < diff && !(pInstance->GetData(DATA_JANALAIEVENT) == 1))
         {
             if(!(m_creature->getVictim()))
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             delete_timer = 10000;
         }else delete_timer -=diff;   
 

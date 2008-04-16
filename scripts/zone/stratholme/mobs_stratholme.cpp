@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL mob_restless_soulAI : public ScriptedAI
     {
         if (PlayerHolder && OkToDie && Die_Timer < diff)
         {
-            PlayerHolder->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            PlayerHolder->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
         else Die_Timer -= diff;
 
@@ -237,7 +237,7 @@ struct MANGOS_DLL_DECL mobs_spectral_ghostly_citizenAI : public ScriptedAI
     {
         if (PlayerHolder && OkToDie && Die_Timer < diff)
         {
-            PlayerHolder->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            PlayerHolder->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
         else Die_Timer -= diff;
 

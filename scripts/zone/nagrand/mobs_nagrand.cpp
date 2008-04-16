@@ -309,7 +309,7 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
     {
         if(spell->Id == 32146)
 		{
-			m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+			m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 			m_creature->RemoveCorpse();
 		}
     }

@@ -97,10 +97,10 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
 
                 Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
                 if((Teron) && (!Teron->isAlive() || Teron->IsInEvadeMode()))
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             else
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
             CheckTeronTimer = 5000;
         }else CheckTeronTimer -= diff;
@@ -221,7 +221,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         {
             Creature* Teron = ((Creature*)Unit::GetUnit((*m_creature), TeronGUID));
             if(!Teron || !Teron->isAlive() || Teron->IsInEvadeMode())
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
             CheckTeronTimer = 5000;
         }else CheckTeronTimer -= diff;
@@ -379,7 +379,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             Ghost = Unit::GetUnit((*m_creature), GhostGUID);
         if(Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
         {
-            Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             for(uint8 i = 0; i < 4; i++)
             {
                 Creature* Construct = NULL;

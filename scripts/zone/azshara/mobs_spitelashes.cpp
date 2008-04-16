@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
         // we mustn't remove the creature in the same round in which we cast the summon spell, otherwise there will be no summons
         if(spellhit && morphtimer>=5000)
         {
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 m_creature->RemoveCorpse(); //you don't see any corpse on off.
                 EnterEvadeMode();   //spellhit will be set to false
         }

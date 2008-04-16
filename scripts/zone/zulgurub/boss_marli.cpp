@@ -146,7 +146,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
                     m_creature->UpdateDamagePhysical(BASE_ATTACK);
                     DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB); 
-                    DoResetThreat(); 
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
                     PhaseTwo = true;
                     Transform_Timer = 35000 + rand()%25000;
                 }else Transform_Timer -= diff;
@@ -173,8 +173,8 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                         }
                     if (target)     
                     DoCast(target, SPELL_CHARGE);    
-                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);         
-                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+//                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);         
+//                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoStartMeleeAttack(target);
                    
                     Charge_Timer = 8000;

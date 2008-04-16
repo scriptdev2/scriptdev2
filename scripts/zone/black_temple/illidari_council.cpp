@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             //    if(pInstance)
             //        pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
 
-            //    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            //    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             //}
 
             // Don't allow players to pull one of the council's members, aggro another members' target if none present
@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 if(pInstance)
                     pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
 
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             CheckTimer = 2000;
         }else CheckTimer -= diff;

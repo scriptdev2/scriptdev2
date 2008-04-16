@@ -263,7 +263,7 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         if(DespawnTimer < diff)
         {
             m_creature->SetVisibility(VISIBILITY_OFF);
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else DespawnTimer -= diff;
 
         DoMeleeAttackIfReady();
@@ -364,7 +364,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 Unit* Flame = Unit::GetUnit((*m_creature), FlameGUID[i]);
                 if(Flame)
                 {
-                    Flame->DealDamage(Flame, Flame->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                    Flame->DealDamage(Flame, Flame->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     Flame->SetVisibility(VISIBILITY_OFF);
                 }
                 FlameGUID[i] = 0;
@@ -375,7 +375,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 Unit* Glaive = Unit::GetUnit((*m_creature), GlaiveGUID[i]);
                 if(Glaive)
                 {
-                    Glaive->DealDamage(Glaive, Glaive->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                    Glaive->DealDamage(Glaive, Glaive->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     Glaive->SetVisibility(VISIBILITY_OFF);
                 }
                 GlaiveGUID[i] = 0;
@@ -931,11 +931,11 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             {
                                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
                                 Maiev->SetVisibility(VISIBILITY_OFF); // Close enough....
-                                Maiev->DealDamage(Maiev, Maiev->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                                Maiev->DealDamage(Maiev, Maiev->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                             }
                         }
                         IsTalking = false;
-                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false); // Now we kill ourself
+                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // Now we kill ourself
                         break;
                 }
                 Talk(TalkCount); // This function does most of the talking
@@ -1104,7 +1104,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             Unit* Glaive = NULL;
                             Glaive = Unit::GetUnit((*m_creature), GlaiveGUID[i]);
                             if(Glaive)
-                                Glaive->DealDamage(Glaive, Glaive->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false); // No point letting the Glaives continue to exist
+                                Glaive->DealDamage(Glaive, Glaive->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // No point letting the Glaives continue to exist
                             GlaiveGUID[i] = 0;
                             LandTimer = 10000; // Prepare for landin!
                             m_creature->InterruptNonMeleeSpells(false); // Interrupt any spells we might be doing *cough* DArk Barrage *cough*
@@ -1406,7 +1406,7 @@ void npc_akama_illidanAI::UpdateAI(const uint32 diff)
                             break;
                         case 3:
                             DeleteFromThreatList();
-                            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                             break;
                     }
                 }else TalkTimer -= diff;
@@ -1580,7 +1580,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
             if(DespawnTimer < diff)
             {
                 m_creature->SetVisibility(VISIBILITY_OFF); // So that players don't see the sparkly effect when we die.
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }else DespawnTimer -= diff;
         }
     }
@@ -1717,7 +1717,7 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
         }
             // Kill our target if we're very close.
         if(m_creature->IsWithinDistInMap(m_creature->getVictim(), 3))
-            m_creature->DealDamage(m_creature->getVictim(), m_creature->getVictim()->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            m_creature->DealDamage(m_creature->getVictim(), m_creature->getVictim()->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
     }
 };
 struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
@@ -1748,7 +1748,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
         if(DespawnTimer < diff)
         {
             m_creature->SetVisibility(VISIBILITY_OFF); // So that players don't see the sparkly effect when we die.
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else DespawnTimer -= diff;
     }
 };
@@ -1781,7 +1781,7 @@ struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
         if(DespawnTimer < diff)
         {
             m_creature->SetVisibility(VISIBILITY_OFF);
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else DespawnTimer -= diff;
     }
 };

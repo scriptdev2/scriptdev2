@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 if(Channeler && Channeler->isAlive())
                 {
                     Channeler->SetVisibility(VISIBILITY_OFF);
-                    Channeler->DealDamage(Channeler, Channeler->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                    Channeler->DealDamage(Channeler, Channeler->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 }
                 ChannelerGUID[i] = 0;
             }
@@ -412,7 +412,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     if(Akama && Akama->isAlive())
                     {
                         //10 % less health every few seconds.
-                        m_creature->DealDamage(Akama, Akama->GetMaxHealth()/10, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                        m_creature->DealDamage(Akama, Akama->GetMaxHealth()/10, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                         ReduceHealthTimer = Enrage ? 5000 : 12000; // Reduce health more rapidly if enraged
                     }
                     else

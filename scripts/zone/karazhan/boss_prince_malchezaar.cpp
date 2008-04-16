@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             if(pInfernal && pInfernal->isAlive())
             {
                 pInfernal->SetVisibility(VISIBILITY_OFF);
-                pInfernal->DealDamage(pInfernal, pInfernal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                pInfernal->DealDamage(pInfernal, pInfernal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
         }
         infernals.clear();
@@ -308,7 +308,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         {
             Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
             if(axe && axe->isAlive())
-                axe->DealDamage(axe, axe->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                axe->DealDamage(axe, axe->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             axes[i] = 0;
         }
     }

@@ -90,8 +90,8 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
     
         AspectOfJeklik_Timer = 4000;
         AspectOfVenoxis_Timer = 7000;
-        AspectOfMarli_Timer = 15000;
-        AspectOfThekal_Timer = 24000;
+        AspectOfMarli_Timer = 12000;
+        AspectOfThekal_Timer = 8000;
         AspectOfArlokk_Timer = 18000;        
         
         Enraged = false;
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoCast(m_creature,SPELL_ASPECT_OF_THEKAL);
 
                        //14-21 seconds until we should cast this agian
-                       AspectOfThekal_Timer = 25000;
+                       AspectOfThekal_Timer = 15000;
                  }else AspectOfThekal_Timer -= diff;
                  
               }
@@ -276,7 +276,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
                        DoResetThreat();
 
                        //28-32 seconds until we should cast this agian
-                       AspectOfArlokk_Timer = 15000 + rand()%5000;
+                       AspectOfArlokk_Timer = 10000 + rand()%5000;
                  }else AspectOfArlokk_Timer -= diff;
                  
               }

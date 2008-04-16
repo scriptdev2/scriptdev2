@@ -34,8 +34,8 @@ EndScriptData */
 #define SOUND_EGGS_BREAK3 8277
 
 #define SPELL_CLEAVE                22540
-#define SPELL_WARSTOMP              27758       //Warstomp causes 1k dmg but doesn't knockback
-#define SPELL_FIREBALLVOLLEY        29922       //Our fireball doesn't leave a dot
+#define SPELL_WARSTOMP              24375      
+#define SPELL_FIREBALLVOLLEY        22425       //This fireball does not enouph dmg so we will castcustom
 #define SPELL_CONFLAGRATION         23023
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
@@ -88,8 +88,11 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         //FireballVolley_Timer
         if (FireballVolley_Timer < diff)
         {
+       
+            int damage = 1400 + rand()%1800;
             //Cast
-            DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
+            //DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
+            m_creature->CastCustomSpell(m_creature->getVictim(), SPELL_FIREBALLVOLLEY, &damage, NULL, NULL, false, NULL, NULL, m_creature->GetGUID());  
 
             //10-15 seconds until we should cast this agian
             FireballVolley_Timer = 12000 + rand()%3000;

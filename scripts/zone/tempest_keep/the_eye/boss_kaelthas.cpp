@@ -444,7 +444,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             pCreature = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[i]));
             if(pCreature)
             {
-                pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
         }
     }
@@ -1489,7 +1489,7 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
             {
                 m_creature->InterruptNonMeleeSpells(false);
                 DoCast(m_creature, SPELL_FLAME_STRIKE_DMG);
-            }else m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            }else m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
             KillSelf = true;
             Timer = 1000;

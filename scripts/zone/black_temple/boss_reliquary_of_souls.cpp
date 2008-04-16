@@ -532,7 +532,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if(!EssenceAnger->isAlive())
                     {
                         AngerGUID = 0;
-                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     }
                 }
             }
@@ -726,7 +726,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
         else
         {
-            done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, false);
+            done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
     }
 
