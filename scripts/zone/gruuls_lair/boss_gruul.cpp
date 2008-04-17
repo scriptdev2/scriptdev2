@@ -182,7 +182,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                                 target->RemoveAurasDueToSpell(SPELL_STONED);
                                 
                                 if(target->GetTypeId() == TYPEID_PLAYER)
-                                    target->CastSpell(target, SPELL_SHATTER_EFFECT, true, NULL, NULL, m_creature->GetGUID());
+                                    target->CastSpell(target, SPELL_SHATTER_EFFECT, false, NULL, NULL, m_creature->GetGUID());
                             }
 
                         }

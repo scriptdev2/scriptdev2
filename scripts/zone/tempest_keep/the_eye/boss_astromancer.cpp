@@ -264,7 +264,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                         {
                             if(currentUnit->IsWithinDistInMap(target,MIN_RANGE_FOR_DOT_JUMP)&&currentUnit->isAlive()&&currentUnit!=target)
                             {
-                                m_creature->CastSpell(currentUnit,SPELL_MARK_OF_THE_ASTROMANCER,true,0,0,m_creature->GetGUID());
+                                m_creature->CastSpell(currentUnit,SPELL_MARK_OF_THE_ASTROMANCER, false,0,0,m_creature->GetGUID());
 
                                 Jump_Timer=8000;
                                 WrathTarget=currentUnit->GetGUID();

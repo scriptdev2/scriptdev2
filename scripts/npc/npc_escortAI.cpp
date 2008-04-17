@@ -140,7 +140,9 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             if (ReconnectWP)
             {
                 //Correct movement speed
-                m_creature->setMoveRunFlag(Run);
+                if (Run)
+                    m_creature->SetUnitMovementFlag(MOVEMENT_FLAG_RUN);
+                else m_creature->RemoveUnitMovementFlag(MOVEMENT_FLAG_RUN);
 
                 //Continue with waypoints
                 m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z ));
@@ -282,7 +284,9 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     CurrentWP = WaypointList.begin();
 
     //Set initial speed
-    m_creature->setMoveRunFlag(Run);
+    if (Run)
+        m_creature->SetUnitMovementFlag(MOVEMENT_FLAG_RUN);
+    else m_creature->RemoveUnitMovementFlag(MOVEMENT_FLAG_RUN);
     
     //Start WP
     m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z ));

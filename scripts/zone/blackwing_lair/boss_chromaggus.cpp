@@ -67,6 +67,7 @@ EndScriptData */
 #define SPELL_FRENZY            28371
 #define SPELL_ENRAGE            28747
 
+#define TEMP_MUTATE_WHISPER     "[SD2 Debug] You would be mind controlled here!"
 
 struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
 {
@@ -287,55 +288,66 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
         //Affliction_Timer
         if (Affliction_Timer < diff)
         {
-            //Pick a random target then cast a random debuff
-            //Currently there is no ability to select a random target
-            //So we will just leave this code out
-            //DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
-            Unit* target = NULL;
+            uint32 SpellAfflict = 0;
 
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            if (target)
+            switch (rand()%5)
             {
-                switch (rand()%5)
+            case 0:
+                SpellAfflict = SPELL_BROODAF_BLUE;
+                break;
+
+            case 1:
+                SpellAfflict = SPELL_BROODAF_BLACK;
+                break;
+
+            case 2:
+                SpellAfflict = SPELL_BROODAF_RED;
+                break;
+
+            case 3:
+                SpellAfflict = SPELL_BROODAF_BRONZE;
+                break;
+
+            case 4:
+                SpellAfflict = SPELL_BROODAF_GREEN;
+                break;
+            }
+
+            std::list<HostilReference*>::iterator i;
+
+            for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
+            {
+                Unit* pUnit = NULL;
+                pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+
+                if(pUnit)
                 {
-                case 0:
-                    DoCast(target,SPELL_BROODAF_BLUE);
-                    break;
+                    //Cast affliction
+                    DoCast(pUnit, SpellAfflict, true);
 
-                case 1:
-                    DoCast(target,SPELL_BROODAF_BLACK);
-                    break;
+                    //Chromatic mutation if target is effected by all afflictions
+                    if (pUnit->HasAura(SPELL_BROODAF_BLUE,0) 
+                        && pUnit->HasAura(SPELL_BROODAF_BLACK,0) 
+                        && pUnit->HasAura(SPELL_BROODAF_RED,0) 
+                        && pUnit->HasAura(SPELL_BROODAF_BRONZE,0) 
+                        && pUnit->HasAura(SPELL_BROODAF_GREEN,0))
+                    {
+                        //target->RemoveAllAuras();
+                        //DoCast(target,SPELL_CHROMATIC_MUT_1);
 
-                case 2:
-                    DoCast(target,SPELL_BROODAF_RED);
-                    break;
+                        //Chromatic mutation is causing issues
+                        //Assuming it is caused by a lack of core support for Charm
+                        //So instead we instant kill our target
 
-                case 3:
-                    DoCast(target,SPELL_BROODAF_BRONZE);
-                    break;
+                        //WORKAROUND
+                        if (pUnit->GetTypeId() == TYPEID_PLAYER)
+                        {
+                            m_creature->MonsterWhisper(pUnit->GetGUID(), TEMP_MUTATE_WHISPER);
+                            pUnit->CastSpell(pUnit, 5, false);
+                        }
 
-                case 4:
-                    DoCast(target,SPELL_BROODAF_GREEN);
-                    break;
+                    }
                 }
-
-                //Chromatic mutation if target is effected by all afflictions
-                if (target->HasAura(SPELL_BROODAF_BLUE,0) 
-                    && target->HasAura(SPELL_BROODAF_BLACK,0) 
-                    && target->HasAura(SPELL_BROODAF_RED,0) 
-                    && target->HasAura(SPELL_BROODAF_BRONZE,0) 
-                    && target->HasAura(SPELL_BROODAF_GREEN,0))
-                {
-                    //target->RemoveAllAuras();
-
-                    //Chromatic mutation is causing issues
-                    //Assuming it is caused by a lack of core support for Charm
-                    //So instead we instant kill our target
-                    //DoCast(target,SPELL_CHROMATIC_MUT_1);
-                    target->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_NORMAL, NULL, true);
-                }
-
             }
 
             //10 seconds until we should cast this agian

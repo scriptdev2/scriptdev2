@@ -579,7 +579,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if(pUnit && pUnit->isAlive()) // Check if pUnit exists and is alive
-                pUnit->CastSpell(pUnit, SPELL_FLAME_BURST_EFFECT, true); // Have the player cast the flame burst effect on themself
+                pUnit->CastSpell(pUnit, SPELL_FLAME_BURST_EFFECT, false); // Have the player cast the flame burst effect on themself
         }
     }
 

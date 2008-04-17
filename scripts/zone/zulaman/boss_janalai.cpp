@@ -303,14 +303,15 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature,SOUND_FIRE_BOMBS);
                 throwBombs();
                 bombing = true;
+
                 //Teleport every Player into the middle
                 Unit* Temp = NULL; 
                 std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                 for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
                 {
                     Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
-                    if (Temp)
-                        DoCast(Temp,SPELL_SUMMONALL,true);
+                    if (Temp && m_creature->GetDistance(Temp) > 30.0)
+                        DoTeleportPlayer(Temp, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0);
                 }
                 DoCast(m_creature,SPELL_TELETOCENTER,true);// only Effect Spell
                 DoCast(m_creature,SPELL_FIRE_BOMB_CHANNEL,false);

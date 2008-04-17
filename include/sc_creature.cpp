@@ -457,7 +457,7 @@ void ScriptedAI::DoResetThreat()
 
 void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float o)
 {
-    if (pUnit->GetTypeId() != TYPEID_PLAYER)
+    if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
         return;
 
     //Use work around packet to prevent player from being dropped from combat
