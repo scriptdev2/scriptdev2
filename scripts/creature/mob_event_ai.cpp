@@ -841,7 +841,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     //If spell id matches (or no spell id) & if spell school matches (or no spell school)
                     if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
-                        if ((*i).Event.event_param2_s == -1 || pSpell->School == (*i).Event.event_param2)
+                        if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
                             ProcessEvent(*i, pUnit);
                 }
                 break;
