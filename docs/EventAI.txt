@@ -132,3 +132,4 @@ So for example the number "3"(11 in binary) would mean that this cast should bot
 (bit#   Internal Name                  Discription)
 0       CAST_INTURRUPT_PREVIOUS        Interrupts any previous spell casting (basicaly makes sure that this spell goes off)
 1       CAST_TRIGGERED                 Forces the spell to be instant cast and require no mana/reagents.
+2       CAST_FORCE_CAST                Forces spell to cast even if the player is possibly out of range or the creature is possibly out of mana

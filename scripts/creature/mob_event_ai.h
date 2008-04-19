@@ -94,6 +94,7 @@ enum CastFlags
 {
     CAST_INTURRUPT_PREVIOUS = 0x01,
     CAST_TRIGGERED          = 0x02,
+    CAST_FORCE_CAST         = 0x04,
 };
 
 struct EventAI_Event

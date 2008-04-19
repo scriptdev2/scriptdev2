@@ -390,7 +390,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (param3 & CAST_INTURRUPT_PREVIOUS || !m_creature->IsNonMeleeSpellCasted(false))
                 {
                     m_creature->InterruptNonMeleeSpells(false);
-                    m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+
+                    if ((param3 & CAST_FORCE_CAST) || CanCast(target, GetSpellStore()->LookupEntry(param1)))
+                        m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
                 }
             }
             break;
