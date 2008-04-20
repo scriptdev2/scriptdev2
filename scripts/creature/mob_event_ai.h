@@ -54,7 +54,7 @@ enum Action_Types
     ACTION_T_SUMMON                 = 12,   //CreatureID, Target, Duration in ms
     ACTION_T_THREAT_SINGLE_PCT      = 13,   //Threat%, Target
     ACTION_T_THREAT_ALL_PCT         = 14,   //Threat%
-    ACTION_T_QUEST_COMPLETE         = 15,   //QuestID, Target
+    ACTION_T_QUEST_EVENT            = 15,   //QuestID, Target
     ACTION_T_CASTCREATUREGO         = 16,   //QuestID, SpellId, Target
     ACTION_T_SET_UNIT_FIELD         = 17,   //Field_Number, Value, Target
     ACTION_T_SET_UNIT_FLAG          = 18,   //Flags (may be more than one field OR'd together), Target
@@ -65,13 +65,14 @@ enum Action_Types
     ACTION_T_INC_PHASE              = 23,   //Value (may be negative to decrement phase, should not be 0)
     ACTION_T_EVADE                  = 24,   //No Params
     ACTION_T_FLEE                   = 25,   //No Params
-    ACTION_T_QUEST_COMPLETE_ALL     = 26,   //QuestID
+    ACTION_T_QUEST_EVENT_ALL        = 26,   //QuestID
     ACTION_T_CASTCREATUREGO_ALL     = 27,   //QuestId, SpellId
     ACTION_T_REMOVEAURASFROMSPELL   = 28,   //Target, Spellid
     ACTION_T_RANGED_MOVEMENT        = 29,   //Distance, Angle
     ACTION_T_RANDOM_PHASE           = 30,   //PhaseId1, PhaseId2, PhaseId3
     ACTION_T_RANDOM_PHASE_RANGE     = 31,   //PhaseMin, PhaseMax
     ACTION_T_SUMMON_ID              = 32,   //CreatureId, Target, SpawnId
+    ACTION_T_KILLED_MONSTER         = 33,   //CreatureId, Target
 
     ACTION_T_END,
 };
@@ -155,4 +156,5 @@ struct EventAI_Summon
 };
 
 extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
+
 

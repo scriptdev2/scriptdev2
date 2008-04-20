@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     boss_thekalAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 MortalCleave_Timer;
@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
                     
                     DoCast(target,SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartMeleeAttack(target);
+                    DoStartAttackAndMovement(target);
                     DoResetThreat();
                     
                     Charge_Timer = 15000 + rand()%7000;
@@ -255,7 +255,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
     mob_zealot_lorkhanAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 Shield_Timer;
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
     mob_zealot_zathAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 SweepingStrikes_Timer;

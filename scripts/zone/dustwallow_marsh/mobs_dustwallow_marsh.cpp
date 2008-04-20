@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

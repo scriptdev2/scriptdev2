@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
     boss_golemaggAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 Pyroblast_Timer;
@@ -136,7 +136,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     mob_core_ragerAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 Mangle_Timer;
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

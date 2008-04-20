@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         //say intro only one time
         Intro = false;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
 
                 Aggro(who);
             }

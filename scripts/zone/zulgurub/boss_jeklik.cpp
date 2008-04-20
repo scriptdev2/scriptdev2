@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
                     m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0); 
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartMeleeAttack(target);
+                    DoStartAttackAndMovement(target);
                     
                     Charge_Timer = 15000 + rand()%15000;
                 }else Charge_Timer -= diff;
@@ -223,7 +223,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     mob_batriderAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -261,7 +261,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
 
             }
         }

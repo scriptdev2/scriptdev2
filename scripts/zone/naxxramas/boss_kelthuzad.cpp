@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
         GuardiansOfIcecrown[3] = 0;
         GuardiansOfIcecrown[4] = 0;
         GuardiansOfIcecrown_Count = 0;
-        EnterEvadeMode();
+        Reset();
     }
 
     uint64 GuardiansOfIcecrown[5];    

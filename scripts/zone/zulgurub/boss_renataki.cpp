@@ -41,7 +41,6 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 
     bool Invisible;
     bool Ambushed;
-    bool InCombat;
 
     void Reset()
     {
@@ -53,12 +52,6 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 
         Invisible = false;
         Ambushed = false;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -131,7 +124,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
                 if (target) 
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
 
                 //7-20 seconds
                 Aggro_Timer = 7000 + rand()%13000;

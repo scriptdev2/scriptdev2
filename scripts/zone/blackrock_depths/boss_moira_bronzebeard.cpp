@@ -42,14 +42,9 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     Unit* Target;
     bool Heal;
 
-    void InitialSpawn()
-    {
-        Target = NULL;
-        EnterEvadeMode();
-    }
-
     void Reset()
     {
+        Target = NULL;
         Heal_Timer = 12000;      //These times are probably wrong
         MindBlast_Timer = 16000;
         ShadowWordPain_Timer = 2000;

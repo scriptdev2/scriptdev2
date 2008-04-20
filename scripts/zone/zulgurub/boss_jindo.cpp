@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     boss_jindoAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 BrainWashTotem_Timer;
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     mob_healing_wardAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 Heal_Timer;
@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
                 if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -244,7 +244,7 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
     mob_shade_of_jindoAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 ShadowShock_Timer;
@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
                 if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

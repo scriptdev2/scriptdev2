@@ -135,6 +135,50 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         HasAura = true;
     }
 
+    void AttackStart(Unit* who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackAndMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
+    }
+
+    void MoveInLineOfSight(Unit* who)
+    {
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        {
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if(m_creature->IsWithinDistInMap(who, attackRadius))
+            {
+                // Check first that object is in an angle in front of this one before LoS check
+                if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+                {
+                    DoStartAttackNoMovement(who);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                    if (!InCombat)
+                    {
+                        Aggro(who);
+                        InCombat = true;
+                    }
+                }
+            }
+        }
+    }
+
     void KilledUnit(Unit* victim)
     {
         if (rand()%5)
@@ -146,8 +190,8 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_ARRIVAL_5,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_ARRIVAL_5);
+        DoYell(SAY_ARRIVAL_5,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_ARRIVAL_5);
     }
 
     void UpdateAI(const uint32 diff)
@@ -250,34 +294,15 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            
-            
+
+
 
             if (!HasSubmergedOnce)
             {
                 DoYell(SAY_REINFORCEMENTS1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS1);
-                
+
                 // summon 10 elementals
-                Unit* target = NULL;
-                for(int i = 0; i < 9;i++)
-                {
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
-               }
-
-            HasSubmergedOnce = true;
-            WasBanished = true;
-            DoCast(m_creature,SPELL_RAGSUBMERGE);
-            Attack_Timer = 90000;
-
-            }else
-            {
-                //Say our dialog
-                DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
-                
                 Unit* target = NULL;
                 for(int i = 0; i < 9;i++)
                 {
@@ -286,9 +311,28 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
                     ((CreatureAI*)Summoned->AI())->AttackStart(target);
                 }
 
-            WasBanished = true;
-            DoCast(m_creature,SPELL_RAGSUBMERGE);
-            Attack_Timer = 90000;
+                HasSubmergedOnce = true;
+                WasBanished = true;
+                DoCast(m_creature,SPELL_RAGSUBMERGE);
+                Attack_Timer = 90000;
+
+            }else
+            {
+                //Say our dialog
+                DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
+
+                Unit* target = NULL;
+                for(int i = 0; i < 9;i++)
+                {
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    Summoned = m_creature->SummonCreature(12143,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+                    ((CreatureAI*)Summoned->AI())->AttackStart(target);
+                }
+
+                WasBanished = true;
+                DoCast(m_creature,SPELL_RAGSUBMERGE);
+                Attack_Timer = 90000;
             }
 
             //3 minutes until we should cast this agian

@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     boss_mandokirAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
  
     uint32 Watch_Timer;
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                         {
                             DoCast(watchTarget,SPELL_CHARGE);
                             m_creature->SendMonsterMove(watchTarget->GetPositionX(), watchTarget->GetPositionY(), watchTarget->GetPositionZ(), 0, true,1);
-                            DoStartMeleeAttack(watchTarget);
+                            DoStartAttackAndMovement(watchTarget);
                         }
                     }
                 }
@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     mob_ohganAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 SunderArmor_Timer;
@@ -293,7 +293,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
                 if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

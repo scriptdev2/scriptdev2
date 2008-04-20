@@ -63,15 +63,6 @@ void hyjalAI::Reset()
     memset(Spell, 0, sizeof(Spell));
 }
 
-void hyjalAI::EnterEvadeMode()
-{
-    m_creature->RemoveAllAuras();
-    m_creature->DeleteThreatList();
-    m_creature->CombatStop();
-    m_creature->LoadCreaturesAddon();
-    DoGoHome();
-}
-
 void hyjalAI::Aggro(Unit *who)
 {
     if(Spell[0].Cooldown)

@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         Murloc_entries[3] = 21920; //Tidewalker Lurker
         Murloc_entries[4] = 21226; //Tidewalker Shaman
         Murloc_entries[5] = 21225; //Tidewalker Warrior
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -369,7 +369,7 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
             if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-            DoStartMeleeAttack(who);
+            DoStartAttackAndMovement(who);
         }
     }
 

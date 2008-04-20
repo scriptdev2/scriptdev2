@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         Council[1] = 0;
         Council[2] = 0;
         Council[3] = 0;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
 
                 GetCouncil();
 
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if(target)
-                    DoStartMeleeAttack(target);
+                    DoStartAttackAndMovement(target);
 
                 Charging_Timer = 20000;
             }else Charging_Timer -= diff;
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 DarkDecay_Timer;
@@ -289,7 +289,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -326,7 +326,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
     boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 GreatherPolymorph_Timer;
@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartMeleeAttack(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -392,7 +392,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -445,7 +445,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
     boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 GreaterPowerWordShield_Timer;
@@ -487,7 +487,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartMeleeAttack(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -507,7 +507,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -543,7 +543,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
     boss_krosh_firehandAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 GreaterFireball_Timer;
@@ -587,7 +587,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartMeleeAttack(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -607,7 +607,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 

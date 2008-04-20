@@ -463,7 +463,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -1499,7 +1499,7 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

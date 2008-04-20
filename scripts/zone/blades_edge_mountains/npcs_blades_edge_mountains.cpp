@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

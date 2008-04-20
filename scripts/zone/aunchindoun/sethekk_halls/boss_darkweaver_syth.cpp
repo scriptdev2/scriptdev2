@@ -311,7 +311,7 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -384,7 +384,7 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -457,7 +457,7 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -530,7 +530,7 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

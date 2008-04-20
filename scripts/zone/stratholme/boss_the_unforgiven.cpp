@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL boss_the_unforgivenAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

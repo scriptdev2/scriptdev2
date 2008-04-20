@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         Advisors[0] = 0;
         Advisors[1] = 0;
         Advisors[2] = 0;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         Enrage_Timer = 600000; //10 minutes
 
         //respawn advisors if died
-        if(InCombat)
+        /*if(InCombat)
         {
             Creature *pCreature;
             for(uint8 i = 0; i < 4; i++)
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                     pCreature->AI()->EnterEvadeMode();
                 }
             }
-        }
+        }*/
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
@@ -218,7 +218,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
 
                 GetAdvisors();
 
@@ -268,7 +268,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
     boss_fathomguard_sharkkisAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -319,7 +319,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
                 if(!InCombat)
                 {
                     if(pInstance)
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
     boss_fathomguard_tidalvessAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -422,7 +422,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -451,7 +451,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
     boss_fathomguard_caribdisAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -500,7 +500,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
 
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }
 

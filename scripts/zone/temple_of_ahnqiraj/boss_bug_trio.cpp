@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
     boss_kriAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
     boss_vemAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
                 {
                     DoCast(target, SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartMeleeAttack(target);
+                    DoStartAttackAndMovement(target);
                 }
                    
                 Charge_Timer = 8000 + rand()%8000;
@@ -227,7 +227,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
     boss_yaujAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

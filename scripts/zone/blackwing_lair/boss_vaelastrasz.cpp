@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         c->SetUInt32Value(UNIT_NPC_FLAGS,1);
         c->setFaction(35);
         c->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        EnterEvadeMode();
+        Reset();
     }
 
     uint64 PlayerGUID;
@@ -144,7 +144,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     m_creature->SetHealth(int(m_creature->GetMaxHealth()*.3));
                     if (PlayerGUID && Unit::GetUnit((*m_creature),PlayerGUID))
                     {
-                        DoStartMeleeAttack(Unit::GetUnit((*m_creature),PlayerGUID));
+                        DoStartAttackAndMovement(Unit::GetUnit((*m_creature),PlayerGUID));
                         DoCast(m_creature,SPELL_ESSENCEOFTHERED);
                     }
 

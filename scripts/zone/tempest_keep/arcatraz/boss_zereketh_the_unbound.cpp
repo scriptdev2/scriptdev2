@@ -53,7 +53,7 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
     boss_zerekethAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;

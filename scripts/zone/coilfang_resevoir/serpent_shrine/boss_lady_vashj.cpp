@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     boss_lady_vashjAI (Creature *c) : ScriptedAI(c) 
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
             //Begin melee attack if we are within range
             if(Phase != 2)
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             
             StartEvent();
     }
@@ -526,7 +526,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     mob_enchanted_elementalAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -538,11 +538,6 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     {
         Check_Timer = 5000;
         Movement_Timer = 500;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who) { return; }
@@ -605,7 +600,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     mob_tainted_elementalAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -617,11 +612,6 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     {
         PoisonBolt_Timer = 5000+rand()%5000;
         Despawn_Timer = 30000;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void JustDied(Unit *killer)
@@ -691,7 +681,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
     mob_fathom_sporebatAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -704,11 +694,6 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
         m_creature->setFaction(14);
         ToxicSpore_Timer = 5000;
         Check_Timer = 1000;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -728,7 +713,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }
@@ -819,7 +804,7 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
     mob_shield_generator_channelAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -831,11 +816,6 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
     {
         Check_Timer = 1000;
         Channeled = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

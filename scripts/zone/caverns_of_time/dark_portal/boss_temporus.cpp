@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
                 if (!InCombat)
                 {
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);

@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Demon = 0;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -250,7 +250,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 {
     boss_leotheras_the_blind_demonformAI(Creature *c) : ScriptedAI(c)
     {
-        EnterEvadeMode();
+        Reset();
     }
 
     uint32 ChaosBlast_Timer;
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
 
                 if(!InCombat)
                     StartEvent();

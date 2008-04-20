@@ -393,7 +393,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
             {
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
             }
         }else 
         {
@@ -478,7 +478,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
             else if(who->isAlive())
             {
@@ -743,7 +743,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if(target)
                     {
-                        DoStartMeleeAttack(target);
+                        DoStartAttackAndMovement(target);
                     }
                     Phase_Timer = 30000;
                 }else Phase_Timer -= diff;
@@ -908,7 +908,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         DoCast(m_creature, SPELL_EXPLODE);
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                         Phase = 6;
-                        DoStartMeleeAttack(m_creature->getVictim());
+                        DoStartAttackAndMovement(m_creature->getVictim());
                         m_creature->GetMotionMaster()->Clear();
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
 
@@ -1016,7 +1016,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             InGravityLapse = false;
                             GravityLapse_Timer = 60000;
                             GravityLapse_Phase = 0;
-                            DoStartMeleeAttack(m_creature->getVictim());
+                            DoStartAttackAndMovement(m_creature->getVictim());
                             m_creature->GetMotionMaster()->Clear();
                             m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
                             DoResetThreat();
@@ -1249,7 +1249,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         DoYell(SAY_CAPERNIAN_DEATH, LANG_UNIVERSAL, NULL);
     }
 
-    void DoStartMeleeAttack(Unit *victim)
+    void DoStartAttackAndMovement(Unit *victim)
     {
         if (!victim)
             return;

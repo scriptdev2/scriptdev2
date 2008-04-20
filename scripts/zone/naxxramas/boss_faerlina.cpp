@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
                 //Say our dialog on initial aggro
                 if (!InCombat)
                 {

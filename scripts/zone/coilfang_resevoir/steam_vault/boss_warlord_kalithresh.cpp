@@ -41,7 +41,7 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     boss_warlord_kalithreshAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;

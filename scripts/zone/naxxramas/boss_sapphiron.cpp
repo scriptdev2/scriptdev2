@@ -36,7 +36,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 {
     boss_sapphironAI(Creature* c) : ScriptedAI(c)
     {
-        EnterEvadeMode();    
+        Reset();    
     }
     
     uint32 Icebolt_Count;

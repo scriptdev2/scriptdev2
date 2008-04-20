@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     ~ScriptedAI() {}
 
     //*************
-    //CreatureAI Functions to be Scripted
+    //CreatureAI Functions
     //*************
 
     //Called if IsVisible(Unit *who) is true at each *who move
@@ -84,6 +84,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at waypoint reached or PointMovement end
     void MovementInform(uint32, uint32){}
 
+    //*************
+    // Variables
+    //*************
+
     //Pointer to creature we are manipulating
     Creature* m_creature;
 
@@ -105,7 +109,10 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
 
     //Start attack of victim and go to him
-    void DoStartMeleeAttack(Unit* victim, float distance = 0, float angle = 0);
+    void DoStartAttackAndMovement(Unit* victim, float distance = 0, float angle = 0);
+
+    //Start attack on victim but do not move
+    void DoStartAttackNoMovement(Unit* victim);
 
     //Do melee swing of current victim if in rnage and ready and not casting
     void DoMeleeAttackIfReady();
@@ -127,9 +134,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Creature Text emote
     void DoTextEmote(const char* text, Unit* target);
-
-    //Go back to spawn point
-    void DoGoHome();
 
     //Plays a sound to all nearby players
     void DoPlaySoundToSet(Unit* unit, uint32 sound);

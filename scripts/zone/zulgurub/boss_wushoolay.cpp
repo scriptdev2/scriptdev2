@@ -34,18 +34,11 @@ struct MANGOS_DLL_DECL boss_wushoolayAI : public ScriptedAI
 
     uint32 LightningCloud_Timer;
     uint32 LightningWave_Timer;
-    bool InCombat;
 
     void Reset()
     {
         LightningCloud_Timer = 5000 + rand()%5000;
         LightningWave_Timer = 8000 + rand()%8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

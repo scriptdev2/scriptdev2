@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
     boss_veknilashAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;

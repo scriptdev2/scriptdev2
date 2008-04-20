@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
     boss_hakkarAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
     
     uint32 BloodSiphon_Timer;

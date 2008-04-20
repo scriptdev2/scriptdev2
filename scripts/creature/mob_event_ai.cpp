@@ -437,7 +437,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             break;
 
-        case ACTION_T_QUEST_COMPLETE:
+        case ACTION_T_QUEST_EVENT:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
 
@@ -531,7 +531,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 m_creature->CastSpell(m_creature, SPELL_RUN_AWAY, true);
             }
             break;
-        case ACTION_T_QUEST_COMPLETE_ALL:
+        case ACTION_T_QUEST_EVENT_ALL:
             {
                 Unit* Temp = NULL;
 
@@ -624,6 +624,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     pCreature->AI()->AttackStart(target);
             }
             break;
+
+        case ACTION_T_KILLED_MONSTER:
+            {
+                Unit* target = GetTargetByType(param2, pActionInvoker);
+
+                if (target && target->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)target)->KilledMonster(param1, m_creature->GetGUID());
+            }
+            break;
         };
     }
 
@@ -675,8 +684,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-        DoGoHome();
         m_creature->LoadCreaturesAddon();
+        if(m_creature->isAlive())
+            m_creature->GetMotionMaster()->TargetedHome();
 
         InCombat = false;
         Reset();

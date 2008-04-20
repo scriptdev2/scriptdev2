@@ -36,7 +36,6 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
     uint32 ManaBurn_Timer;
     uint32 Sleep_Timer;
     uint32 Illusions_Timer;
-    bool InCombat;
     Creature* Illusion;
 
     void Reset()
@@ -44,12 +43,6 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
         ManaBurn_Timer = 4000 + rand()%6000;
         Sleep_Timer = 10000 + rand()%8000;
         Illusions_Timer = 10000 + rand()%8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)

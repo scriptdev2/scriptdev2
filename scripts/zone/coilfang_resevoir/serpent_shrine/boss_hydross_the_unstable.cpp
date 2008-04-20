@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Invisible = NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance* pInstance; 

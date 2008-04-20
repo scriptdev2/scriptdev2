@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     boss_janalaiAI(Creature *c) : ScriptedAI(c)
     { 
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -434,10 +434,7 @@ CreatureAI* GetAI_boss_janalaiAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 {
-    mob_jandalai_firebombAI(Creature *c) : ScriptedAI(c)
-    { 
-        EnterEvadeMode();
-    }
+    mob_jandalai_firebombAI(Creature *c) : ScriptedAI(c){Reset();}
 
 
     uint32 bomb_timer;
@@ -475,7 +472,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
     mob_amanishi_hatcherAI(Creature *c) : ScriptedAI(c)
     { 
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -647,7 +644,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
     mob_hatchlingAI(Creature *c) : ScriptedAI(c)
     { 
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -684,7 +681,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

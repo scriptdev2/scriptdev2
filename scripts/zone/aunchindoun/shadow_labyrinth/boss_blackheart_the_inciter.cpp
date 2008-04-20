@@ -50,7 +50,7 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
     boss_blackheart_the_inciterAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;

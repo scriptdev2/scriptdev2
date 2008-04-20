@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
                 
                 Aggro(who);
             }
@@ -254,7 +254,7 @@ struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }  

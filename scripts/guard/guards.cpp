@@ -513,7 +513,7 @@ struct MANGOS_DLL_DECL guard_contested : public guardAI
                         DoCastSpell(who, spell);
                     }
                 }
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
         

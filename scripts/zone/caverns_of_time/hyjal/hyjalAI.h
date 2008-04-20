@@ -190,8 +190,6 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void Reset();
 
-    void EnterEvadeMode();
-
     void Aggro(Unit *who);
 
     void UpdateAI(const uint32 diff);

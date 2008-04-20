@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
     boss_veklorAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;

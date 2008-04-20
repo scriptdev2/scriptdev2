@@ -31,7 +31,7 @@ void ScriptedAI::MoveInLineOfSight(Unit *who)
             // Check first that object is in an angle in front of this one before LoS check
             if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
             {
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 
                 if (!InCombat)
@@ -52,7 +52,7 @@ void ScriptedAI::AttackStart(Unit* who)
     if (who->isTargetableForAttack())
     {
         //Begin attack
-        DoStartMeleeAttack(who);
+        DoStartAttackAndMovement(who);
 
         if (!InCombat)
         {
@@ -84,7 +84,10 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
     m_creature->CombatStop();
-    DoGoHome();
+    m_creature->LoadCreaturesAddon();
+
+    if(m_creature->isAlive())
+        m_creature->GetMotionMaster()->TargetedHome();
 
     InCombat = false;
     Reset();
@@ -96,7 +99,7 @@ void ScriptedAI::JustRespawned()
     Reset();
 }
 
-void ScriptedAI::DoStartMeleeAttack(Unit* victim, float distance, float angle)
+void ScriptedAI::DoStartAttackAndMovement(Unit* victim, float distance, float angle)
 {
     if (!victim)
         return;
@@ -111,6 +114,22 @@ void ScriptedAI::DoStartMeleeAttack(Unit* victim, float distance, float angle)
             m_creature->SetLootRecipient((Player*)victim);
     }
 }
+
+void ScriptedAI::DoStartAttackNoMovement(Unit* victim)
+{
+    if (!victim)
+        return;
+
+    if ( m_creature->Attack(victim) )
+    {
+        m_creature->AddThreat(victim, 0.0f);
+        m_creature->resetAttackTimer();
+
+        if (victim->GetTypeId() == TYPEID_PLAYER)
+            m_creature->SetLootRecipient((Player*)victim);
+    }
+}
+
 
 void ScriptedAI::DoMeleeAttackIfReady()
 {
@@ -168,15 +187,6 @@ void ScriptedAI::DoTextEmote(const char* text, Unit* target)
 {
     if (target)m_creature->TextEmote(text, target->GetGUID());
     else m_creature->TextEmote(text, 0);
-}
-
-void ScriptedAI::DoGoHome()
-{
-    if( !m_creature->getVictim() && m_creature->isAlive() )
-    {
-        if( (*m_creature).GetMotionMaster()->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE )
-            m_creature->GetMotionMaster()->TargetedHome();
-    }
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)

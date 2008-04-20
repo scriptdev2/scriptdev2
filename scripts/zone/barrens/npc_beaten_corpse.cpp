@@ -28,7 +28,7 @@ struct MANGOS_DLL_DECL beatencorpseAI : public ScriptedAI
 {
     beatencorpseAI(Creature *c): ScriptedAI(c)
     {
-        EnterEvadeMode();
+        Reset();
     }
 
     void Reset()

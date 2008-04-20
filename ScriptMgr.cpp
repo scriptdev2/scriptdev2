@@ -783,7 +783,7 @@ void LoadDatabase()
                                 error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j, temp.action[j].param3);
                     case ACTION_T_SUMMON:
                     case ACTION_T_THREAT_SINGLE_PCT:
-                    case ACTION_T_QUEST_COMPLETE:
+                    case ACTION_T_QUEST_EVENT:
                     case ACTION_T_SET_UNIT_FLAG:
                     case ACTION_T_REMOVE_UNIT_FLAG:
                         if (temp.action[j].param2 >= TARGET_T_END)
@@ -814,10 +814,14 @@ void LoadDatabase()
 
                     case ACTION_T_EVADE:
                     case ACTION_T_FLEE:
-                    case ACTION_T_QUEST_COMPLETE_ALL:
+                    case ACTION_T_QUEST_EVENT_ALL:
                     case ACTION_T_CASTCREATUREGO_ALL:
                         break;
 
+                    case ACTION_T_KILLED_MONSTER:
+                        if (temp.action[j].type != EVENT_T_DEATH)
+                            outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j);
+                        break;
                     }
 
                     if (temp.action[j].type >= ACTION_T_END)

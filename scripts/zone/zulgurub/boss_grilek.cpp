@@ -35,18 +35,11 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 
     uint32 Avartar_Timer;
     uint32 GroundTremor_Timer;
-    bool InCombat;
 
     void Reset()
     {
         Avartar_Timer = 15000 + rand()%10000;
         GroundTremor_Timer = 8000 + rand()%8000;
-        InCombat = false;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -70,7 +63,7 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
                 if (target) 
-                DoStartMeleeAttack(target);
+                DoStartAttackAndMovement(target);
 
                 //25-35 seconds until we should cast this agian
                 Avartar_Timer = 25000 + rand()%10000;

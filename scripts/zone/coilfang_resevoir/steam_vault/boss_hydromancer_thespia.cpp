@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     boss_thespiaAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        EnterEvadeMode();
+        Reset();
     }
 
     ScriptedInstance *pInstance;
@@ -196,7 +196,7 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

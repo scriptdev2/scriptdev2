@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
                     DoCast(target, SPELL_CHARGE);    
 //                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);         
 //                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartMeleeAttack(target);
+                    DoStartAttackAndMovement(target);
                    
                     Charge_Timer = 8000;
                 }else Charge_Timer -= diff;
@@ -236,7 +236,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
                 if(who->HasStealthAura())
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
             }
         }
     }

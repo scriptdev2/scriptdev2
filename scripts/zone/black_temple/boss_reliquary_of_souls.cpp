@@ -767,7 +767,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
 
                 if (!InCombat)
                 {
@@ -866,7 +866,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                DoStartMeleeAttack(who);
+                DoStartAttackAndMovement(who);
 
                 if (!InCombat)
                 {
