@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
         if (who->isTargetableForAttack())
         {
             //Begin attack
-            DoStartAttackAndMovement(who);
+            DoStartAttackNoMovement(who);
 
             if (!InCombat)
             {

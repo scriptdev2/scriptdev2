@@ -98,13 +98,11 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     uint32 DarkGlareTick;
     uint32 DarkGlareTickTimer;
     float DarkGlareAngle;
-    uint32 i;
-
 
     void Reset()
     {
         //One random wisper every 90 - 300 seconds
-        WisperTimer = 90000;
+        WisperTimer = 10000; //90000;
 
         //Phase information
         PhaseTimer = 50000;         //
@@ -119,25 +117,53 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         DarkGlareTick = 0;
         DarkGlareTickTimer = 1000;
         DarkGlareAngle = 0;
-
-        i = 0;
     }
 
     void Aggro(Unit *who)
     {
     }
 
+    void AttackStart(Unit* who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackNoMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         //We simply use this function to find players until we can use Map->GetPlayers()
-
-        if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
+        if (who && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
         {
             //Add them to our threat list
             m_creature->AddThreat(who,1.0f);
 
             // Attack
-           AttackStart(who);
+            if (!m_creature->getVictim())
+                AttackStart(who);
+        }
+    }
+
+    void SpawnEyeTentacle(float x, float y)
+    {
+        Unit* Spawned;
+        Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+x,m_creature->GetPositionY()+y,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
+        if (Spawned)
+        {
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+                Spawned->AddThreat(target,1.0f);
         }
     }
 
@@ -241,14 +267,15 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 Unit* target = NULL;
                 Unit* Spawned = NULL;
 
-                //1
-                Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+10,m_creature->GetPositionY()-10,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
-                if (Spawned)
-                {
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if (target)
-                        Spawned->AddThreat(target,1.0f);
-                }
+                SpawnEyeTentacle(0, 20); //south
+                SpawnEyeTentacle(10, 10); //south west
+                SpawnEyeTentacle(20, 0); //west
+                SpawnEyeTentacle(10, -10); //north west
+
+                SpawnEyeTentacle(0, -20); //north
+                SpawnEyeTentacle(-10, -10); //north east
+                SpawnEyeTentacle(-20, 0); // east
+                SpawnEyeTentacle(-10, 10); // south east
 
                 //No point actually putting a timer here since
                 //These shouldn't trigger agian until after phase shifts
@@ -281,9 +308,9 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 //Add red coloration to C'thun
                 DoCast(m_creature,SPELL_RED_COLORATION);
 
-                //Set emote state
-                m_creature->setEmoteState(i);
-                i++;
+                //Freeze animation
+                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
+                m_creature->setEmoteState(53);
 
                 //Darkbeam for 35 seconds
                 PhaseTimer = 35000;
@@ -306,9 +333,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 
                     //Set angle and cast
                     m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+                    m_creature->StopMoving();
 
                     //
-                    DoCast(NULL, SPELL_DARK_GLARE);
+                    m_creature->CastSpell(NULL, SPELL_DARK_GLARE, false);
 
                     //Increase tick
                     DarkGlareTick++;
@@ -331,6 +359,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 //Remove Red coloration from c'thun
                 m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
 
+                //Freeze animation
+                m_creature->setEmoteState(0);
+                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+
                 //Eye Beam for 50 seconds
                 PhaseTimer = 50000;
             }else PhaseTimer -= diff;
@@ -348,25 +380,42 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
     {
         //Mind flay half a second after we spawn
         MindflayTimer = 500;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
     {
     }
 
+    void AttackStart(Unit* who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackNoMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
+    }
+
     void MoveInLineOfSight(Unit *who)
     {
         //We simply use this function to find players until we can use Map->GetPlayers()
 
-        if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
+        if (who && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
         {
             //Add them to our threat list
-            m_creature->AddThreat(who,0.0f);
+            m_creature->AddThreat(who,1.0f);
+
+            // Attack
+            if (!m_creature->getVictim())
+                AttackStart(who);
         }
     }
 
@@ -404,15 +453,28 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         GroundRuptureTimer = 500;
         HamstringTimer = 2000;
         EvadeTimer = 5000;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
     {
+    }
+
+    void AttackStart(Unit* who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackNoMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -422,7 +484,11 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
         {
             //Add them to our threat list
-            m_creature->AddThreat(who,0.0f);
+            m_creature->AddThreat(who,1.0f);
+
+            // Attack
+            if (!m_creature->getVictim())
+                AttackStart(who);
         }
     }
 
