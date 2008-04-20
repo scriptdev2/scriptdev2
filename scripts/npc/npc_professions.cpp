@@ -332,9 +332,9 @@ void ProfessionUnlearnSpells(Player *player, uint32 type)
 # start menues alchemy
 ###*/
 
-bool IsAlchQuestRewarded(Player *player)
+bool HasAlchemySpell(Player *player)
 {
-    if (player->GetQuestRewardStatus(10899) || player->GetQuestRewardStatus(10902) || player->GetQuestRewardStatus(10897))
+    if(player->HasSpell(S_TRANSMUTE) || player->HasSpell(S_ELIXIR) || player->HasSpell(S_POTION))
         return true;
 
     return false;
@@ -351,28 +351,31 @@ bool GossipHello_npc_prof_alchemy(Player *player, Creature *_Creature)
 
     uint32 eCreature = _Creature->GetEntry();
 
-    if(player->HasSkill(SKILL_ALCHEMY) && player->GetBaseSkillValue(SKILL_ALCHEMY)>=350 && player->getLevel() > 67 )
+    if (player->HasSkill(SKILL_ALCHEMY) && player->GetBaseSkillValue(SKILL_ALCHEMY)>=350 && player->getLevel() > 67)
     {
-        switch (eCreature)
+        if (player->GetQuestRewardStatus(10899) || player->GetQuestRewardStatus(10902) || player->GetQuestRewardStatus(10897))
         {
-        case 22427:                                         //Zarevhi
-            if(IsAlchQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_TRANSMUTE,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 1);
-            if(player->HasSpell(S_TRANSMUTE))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_TRANSMUTE,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 4);
-            break;
-        case 19052:                                         //Lorokeem
-            if(IsAlchQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_ELIXIR,       GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 2);
-            if(player->HasSpell(S_ELIXIR))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_ELIXIR,     GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 5);
-            break;
-        case 17909:                                         //Lauranna Thar'well
-            if(IsAlchQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_POTION,       GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 3);
-            if(player->HasSpell(S_POTION))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_POTION,     GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 6);
-            break;
+            switch (eCreature)
+            {
+            case 22427:                                     //Zarevhi
+                if (!HasAlchemySpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_TRANSMUTE,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 1);
+                if (player->HasSpell(S_TRANSMUTE))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_TRANSMUTE,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 4);
+                break;
+            case 19052:                                     //Lorokeem
+                if (!HasAlchemySpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_ELIXIR,       GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 2);
+                if (player->HasSpell(S_ELIXIR))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_ELIXIR,     GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 5);
+                break;
+            case 17909:                                     //Lauranna Thar'well
+                if (!HasAlchemySpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_POTION,       GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 3);
+                if (player->HasSpell(S_POTION))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_POTION,     GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 6);
+                break;
+            }
         }
     }
 
@@ -915,9 +918,9 @@ bool GossipSelect_npc_prof_leather(Player *player, Creature *_Creature, uint32 s
 # start menues tailoring
 ###*/
 
-bool IsTailQuestRewarded(Player *player)
+bool HasTailorSpell(Player *player)
 {
-    if (player->GetQuestRewardStatus(10831) || player->GetQuestRewardStatus(10832) || player->GetQuestRewardStatus(10833))
+    if (player->HasSpell(S_MOONCLOTH) || player->HasSpell(S_SHADOWEAVE) || player->HasSpell(S_SPELLFIRE))
         return true;
 
     return false;
@@ -929,33 +932,36 @@ bool GossipHello_npc_prof_tailor(Player *player, Creature *_Creature)
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
         player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS,   GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-    if(_Creature->isTrainer())
+    if (_Creature->isTrainer())
         player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM_TRAINER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
     uint32 eCreature = _Creature->GetEntry();
                                                             //TAILORING SPEC
-    if(player->HasSkill(SKILL_TAILORING) && player->GetBaseSkillValue(SKILL_TAILORING)>=350 && player->getLevel() > 59 )
+    if (player->HasSkill(SKILL_TAILORING) && player->GetBaseSkillValue(SKILL_TAILORING)>=350 && player->getLevel() > 59)
     {
-        switch (eCreature)
+        if (player->GetQuestRewardStatus(10831) || player->GetQuestRewardStatus(10832) || player->GetQuestRewardStatus(10833))
         {
-        case 22213:                                         //Gidge Spellweaver
-            if(IsTailQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_SPELLFIRE,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 1);
-            if(player->HasSpell(S_SPELLFIRE))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_SPELLFIRE,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 4);
-            break;
-        case 22208:                                         //Nasmara Moonsong
-            if(IsTailQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_MOONCLOTH,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 2);
-            if(player->HasSpell(S_MOONCLOTH))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_MOONCLOTH,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 5);
-            break;
-        case 22212:                                         //Andrion Darkspinner
-            if(IsTailQuestRewarded(player))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_SHADOWEAVE,   GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 3);
-            if(player->HasSpell(S_SHADOWEAVE))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_SHADOWEAVE, GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 6);
-            break;
+            switch (eCreature)
+            {
+            case 22213:                                     //Gidge Spellweaver
+                if (!HasTailorSpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_SPELLFIRE,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 1);
+                if (player->HasSpell(S_SPELLFIRE))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_SPELLFIRE,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 4);
+                break;
+            case 22208:                                     //Nasmara Moonsong
+                if (!HasTailorSpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_MOONCLOTH,    GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 2);
+                if (player->HasSpell(S_MOONCLOTH))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_MOONCLOTH,  GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 5);
+                break;
+            case 22212:                                     //Andrion Darkspinner
+                if (!HasTailorSpell(player))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_LEARN_SHADOWEAVE,   GOSSIP_SENDER_LEARN,    GOSSIP_ACTION_INFO_DEF + 3);
+                if (player->HasSpell(S_SHADOWEAVE))
+                    player->ADD_GOSSIP_ITEM( 0, GOSSIP_UNLEARN_SHADOWEAVE, GOSSIP_SENDER_UNLEARN,  GOSSIP_ACTION_INFO_DEF + 6);
+                break;
+            }
         }
     }
 
