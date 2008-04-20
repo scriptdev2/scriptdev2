@@ -184,7 +184,7 @@ bool GossipSelect_npc_neltharaku(Player *player, Creature *_Creature, uint32 sen
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             player->CLOSE_GOSSIP_MENU();
-            player->CompleteQuest(10814);
+            player->AreaExploredOrEventHappens(10814);
             break;
     }
     return true;
@@ -252,7 +252,7 @@ bool GossipSelect_npc_oronok_tornheart(Player *player, Creature *_Creature, uint
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
             player->CLOSE_GOSSIP_MENU();
-            player->CompleteQuest(10519);
+            player->AreaExploredOrEventHappens(10519);
             break;
     }
     return true;

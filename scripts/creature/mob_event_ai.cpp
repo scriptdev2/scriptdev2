@@ -442,7 +442,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)target)->CompleteQuest(param1);
+                    ((Player*)target)->AreaExploredOrEventHappens(param1);
             }
             break;
 
@@ -540,7 +540,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
                     if (Temp && Temp->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)Temp)->CompleteQuest(param1);
+                        ((Player*)Temp)->AreaExploredOrEventHappens(param1);
                 }
             }
             break;

@@ -79,7 +79,7 @@ bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature *_Creature, 
             break;
         case GOSSIP_ACTION_INFO_DEF+21:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(9991);
+            player->AreaExploredOrEventHappens(9991);
             break;
 
         case GOSSIP_ACTION_INFO_DEF+30:
@@ -88,7 +88,7 @@ bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature *_Creature, 
             break;
         case GOSSIP_ACTION_INFO_DEF+31:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(10646);
+            player->AreaExploredOrEventHappens(10646);
             break;
     }
     return true;
@@ -166,7 +166,7 @@ bool GossipSelect_npc_greatmother_geyah(Player *player, Creature *_Creature, uin
             player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:
-            player->CompleteQuest(10044);
+            player->AreaExploredOrEventHappens(10044);
             player->CLOSE_GOSSIP_MENU();
             break;
 
@@ -191,7 +191,7 @@ bool GossipSelect_npc_greatmother_geyah(Player *player, Creature *_Creature, uin
             player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 15:
-            player->CompleteQuest(10172);
+            player->AreaExploredOrEventHappens(10172);
             player->CLOSE_GOSSIP_MENU();
             break;
     }
@@ -250,9 +250,9 @@ bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature *_Creature
         case GOSSIP_ACTION_INFO_DEF+7:
             player->SEND_GOSSIP_MENU(9369, _Creature->GetGUID());
             if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE)
-                player->CompleteQuest(10107);
+                player->AreaExploredOrEventHappens(10107);
             if (player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
-                player->CompleteQuest(10108);
+                player->AreaExploredOrEventHappens(10108);
             break;
     }
     return true;

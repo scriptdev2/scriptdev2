@@ -376,9 +376,9 @@ void npc_doctorAI::PatientSaved(Unit* soldier, Player* player)
             if(PatientSavedCount == 15)
             {
                 if(player->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE)
-                    player->CompleteQuest(6624);
+                    player->AreaExploredOrEventHappens(6624);
                 else if(player->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE)
-                    player->CompleteQuest(6622);
+                    player->AreaExploredOrEventHappens(6622);
 
                 Event = false;
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

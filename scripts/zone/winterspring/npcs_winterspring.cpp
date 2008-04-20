@@ -66,7 +66,7 @@ bool GossipSelect_npc_lorax(Player *player, Creature *_Creature, uint32 sender, 
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(5126);
+            player->AreaExploredOrEventHappens(5126);
             break;
     }
     return true;

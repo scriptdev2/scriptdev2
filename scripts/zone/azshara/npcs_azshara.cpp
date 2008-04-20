@@ -50,7 +50,7 @@ bool GossipSelect_npc_loramus_thalipedes(Player *player, Creature *_Creature, ui
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(2744);
+            player->AreaExploredOrEventHappens(2744);
             break;
 
         case GOSSIP_ACTION_INFO_DEF+2:
@@ -75,7 +75,7 @@ bool GossipSelect_npc_loramus_thalipedes(Player *player, Creature *_Creature, ui
             break;
         case GOSSIP_ACTION_INFO_DEF+25:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(3141);
+            player->AreaExploredOrEventHappens(3141);
             break;
     }
     return true;

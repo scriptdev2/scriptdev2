@@ -95,7 +95,7 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature *_Creature, uint32
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->SEND_GOSSIP_MENU(10533, _Creature->GetGUID());
-        player->CompleteQuest(10682);
+        player->AreaExploredOrEventHappens(10682);
     }
     return true;
 }

@@ -118,7 +118,7 @@ bool GossipSelect_npc_tirion_fordring(Player *player, Creature *_Creature, uint3
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(5742);
+            player->AreaExploredOrEventHappens(5742);
             break;
     }
     return true;

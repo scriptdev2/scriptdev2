@@ -90,7 +90,7 @@ bool GossipSelect_npc_ragged_john(Player *player, Creature *_Creature, uint32 se
             break;
         case GOSSIP_ACTION_INFO_DEF+11:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(4224);
+            player->AreaExploredOrEventHappens(4224);
             break;
     }
     return true;

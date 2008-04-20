@@ -38,7 +38,7 @@ bool GOHello_go_northern_crystal_pylon(Player *player, GameObject* _GO)
     }
 
     if (player->GetQuestStatus(4285) == QUEST_STATUS_INCOMPLETE)
-        player->CompleteQuest(4285);
+        player->AreaExploredOrEventHappens(4285);
 
     return true;
 }
@@ -52,7 +52,7 @@ bool GOHello_go_eastern_crystal_pylon(Player *player, GameObject* _GO)
     }
 
     if (player->GetQuestStatus(4287) == QUEST_STATUS_INCOMPLETE)
-        player->CompleteQuest(4287);
+        player->AreaExploredOrEventHappens(4287);
 
     return true;
 }
@@ -66,7 +66,7 @@ bool GOHello_go_western_crystal_pylon(Player *player, GameObject* _GO)
     }
 
     if (player->GetQuestStatus(4288) == QUEST_STATUS_INCOMPLETE)
-        player->CompleteQuest(4288);
+        player->AreaExploredOrEventHappens(4288);
 
     return true;
 }

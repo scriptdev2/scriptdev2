@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1640);
+                ((Player*)done_by)->AreaExploredOrEventHappens(1640);
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1447);
+                ((Player*)done_by)->AreaExploredOrEventHappens(1447);
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
@@ -275,7 +275,7 @@ bool GossipSelect_npc_lady_katrana_prestor(Player *player, Creature *_Creature, 
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(4185);
+            player->AreaExploredOrEventHappens(4185);
             break;
     }
     return true;

@@ -54,7 +54,7 @@ bool GossipSelect_npc_kalaran_windblade(Player *player, Creature *_Creature, uin
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(3441);
+            player->AreaExploredOrEventHappens(3441);
             break;
     }
     return true;
@@ -121,7 +121,7 @@ bool GossipSelect_npc_zamael_lunthistle(Player *player, Creature *_Creature, uin
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(3377);
+            player->AreaExploredOrEventHappens(3377);
             break;
     }
     return true;

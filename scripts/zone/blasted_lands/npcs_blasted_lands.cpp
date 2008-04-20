@@ -92,7 +92,7 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player *player, Creature *_Creature, 
         case GOSSIP_ACTION_INFO_DEF+11:
             player->SEND_GOSSIP_MENU(1411, _Creature->GetGUID());
             if (player->GetQuestStatus(2784) == QUEST_STATUS_INCOMPLETE)
-                player->CompleteQuest(2784);
+                player->AreaExploredOrEventHappens(2784);
             if (player->GetTeam() == ALLIANCE)
             {
                 player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_FALLEN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -126,7 +126,7 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player *player, Creature *_Creature, 
             break;
         case GOSSIP_ACTION_INFO_DEF+26:
             player->CLOSE_GOSSIP_MENU();
-            player->CompleteQuest(2801);
+            player->AreaExploredOrEventHappens(2801);
             break;
     }
     return true;

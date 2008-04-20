@@ -59,7 +59,7 @@ bool GossipSelect_npc_braug_dimspirit(Player *player, Creature *_Creature, uint3
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
         player->PlayerTalkClass->CloseGossip();
-        player->CompleteQuest(6627);
+        player->AreaExploredOrEventHappens(6627);
     }
     return true;
 }

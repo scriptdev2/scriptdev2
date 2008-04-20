@@ -71,7 +71,7 @@ bool GossipSelect_npc_royal_historian_archesonus(Player *player, Creature *_Crea
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(3702);
+            player->AreaExploredOrEventHappens(3702);
             break;
     }
     return true;

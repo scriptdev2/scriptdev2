@@ -74,7 +74,7 @@ bool GossipSelect_npc_kharan_mighthammer(Player *player, Creature *_Creature, ui
             break;
         case GOSSIP_ACTION_INFO_DEF+8:
             player->PlayerTalkClass->CloseGossip();
-            player->CompleteQuest(4342);
+            player->AreaExploredOrEventHappens(4342);
             break;
     }
     return true;

@@ -56,7 +56,7 @@ bool GossipSelect_npc_parqual_fintallas(Player *player, Creature *_Creature, uin
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
         player->PlayerTalkClass->CloseGossip();
-        player->CompleteQuest(6628);
+        player->AreaExploredOrEventHappens(6628);
     }
     return true;
 }
