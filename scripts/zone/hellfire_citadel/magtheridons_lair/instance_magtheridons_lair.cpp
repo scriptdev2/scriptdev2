@@ -34,6 +34,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
     void Initialize()
     {
         Magtheridon = 0;
+        EventStarter = 0;
         EncounterInProgress = false;
     }
 
@@ -85,6 +86,7 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 
             case DATA_MAGTHERIDON_EVENT_ENDED:
                 EncounterInProgress = false;
+                EventStarter = 0;
                 break;
         }
     }

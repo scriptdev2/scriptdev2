@@ -198,6 +198,14 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         Reset();
     }
 
+    bool IsVisible(Unit* who) const
+    {
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+            return false;
+
+        return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
+    }
+
     void Reset()
     {
         FakeDeath = false;
@@ -1089,21 +1097,6 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
                 m_creature->AddThreat(who, 5000000.0f);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                AttackStart(who);
-            }
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         advisorbase_ai::UpdateAI(diff);
@@ -1179,23 +1172,6 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
                 DoPlaySoundToSet(m_creature, SOUND_SANGUINAR_AGGRO);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-
-                //Begin attack
-                AttackStart(who);
-            }
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         advisorbase_ai::UpdateAI(diff);
@@ -1249,20 +1225,21 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         DoYell(SAY_CAPERNIAN_DEATH, LANG_UNIVERSAL, NULL);
     }
 
-    void DoStartAttackAndMovement(Unit *victim)
+    void AttackStart(Unit* who)
     {
-        if (!victim)
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
             return;
 
-        if ( m_creature->Attack(victim) )
+        if (who->isTargetableForAttack())
         {
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*victim, CAPERNIAN_DISTANCE, M_PI/2));
+            //Begin attack
+            DoStartAttackAndMovement(who, CAPERNIAN_DISTANCE, M_PI/2);
 
-            m_creature->AddThreat(victim, 0.0f);
-            m_creature->resetAttackTimer();
-
-            if (victim->GetTypeId() == TYPEID_PLAYER)
-                m_creature->SetLootRecipient((Player*)victim);
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
         }
     }
 
@@ -1273,22 +1250,6 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
         if (!who || FakeDeath)
             return;
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                //Begin attack
-                AttackStart(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -1393,22 +1354,6 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 
                 DoYell(SAY_TELONICUS_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_TELONICUS_AGGRO);
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                //Begin attack
-                AttackStart(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)

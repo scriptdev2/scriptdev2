@@ -23,19 +23,29 @@ EndScriptData */
 
 #include "def_magtheridons_lair.h"
 #include "sc_gossip.h"
+#include "sc_instance.h"
 #include "GameObject.h"
+#include "WorldPacket.h"
 
-//Spells
-#define SPELL_QUAKE                 30571
+//Phase 2 Spells
+#define SPELL_QUAKE_PROC            30571
+#define SPELL_QUAKE                 30576  //must be cast with 30561 as the proc spell
 #define SPELL_BLASTNOVA             30616        
-
-#define SPELL_CLEAVE                29561
-
+#define SPELL_CLEAVE                30619
 #define SPELL_BERSERK               27680
-#define SPELL_BANISH                40825
-
 #define SPELL_DEBRIS                30631
 #define SPELL_CAMERA_SHAKE          36455
+
+//Banish
+#define SPELL_SHADOW_CAGE           30205
+
+//Player version of the banish
+#define SPELL_SHADOW_CAGE_2         30168
+
+//Spell that is cast on players from the cube
+#define SPELL_SHADOW_GRASP          30410
+#define SPELL_SHADOW_GRASP_UKN      30166
+#define SPELL_SHADOW_GRASP_VIS      30207
 
 //Dialog
 #define SAY_AGGRO                   "Thank you for releasing me. Now...die!"
@@ -57,6 +67,8 @@ EndScriptData */
 #define SOUND_DEATH                 10258 
 
 #define EMOTE_BERSERK               "becomes enraged!"
+#define EMOTE_BLASTNOVA             "begins to cast Blast Nova!"
+#define EMOTE_BEGIN                 "%s's bonds begin to weaken!"
 
 //Spawned objects
 #define SPELL_COLLAPSE              34233   //This spell casted by the "cave in" type object
@@ -70,7 +82,7 @@ EndScriptData */
 //#define MOB_HELLFIRE_CHANNELLER    17256
 
 #define SPELL_SOUL_TRANSFER         30531
-#define SPELL_SHADOW_BOLT_VOLLEY    39175
+#define SPELL_SHADOW_BOLT_VOLLEY    30510
 #define SPELL_DARK_MENDING          30528
 #define SPELL_HELLFIRE_CHANNELING   31059
 #define SPELL_HELLFIRE_CAST_VISUAL  24207
@@ -78,24 +90,19 @@ EndScriptData */
 
 #define SPELL_BURNING_ABYSSAL       30511
 
-/*
-
 // Unkown sounds
+uint32 RandomSound[] = {10247, 10248, 10249, 10250, 10251, 10252};
 
-ProgressSounds[0] = 10247;
-ProgressSounds[1] = 10248;
-ProgressSounds[2] = 10249;
-ProgressSounds[3] = 10250;
-ProgressSounds[4] = 10251;
-ProgressSounds[5] = 10252;
-*/
 
 struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 {
     boss_magtheridonAI(Creature *c) : ScriptedAI(c) 
     {
+        pInst = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
     }
+
+    ScriptedInstance* pInst;
 
     uint32 Phase1_Timer;
     uint32 Cleave_Timer;
@@ -104,26 +111,30 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     uint32 QuakePhase;
     uint32 Collapse_Timer;
     uint32 Berserk_Timer;
-
+    bool Banished;
     bool Phase3;
+
+    uint32 RandChat_Timer;
 
     void Reset()
     {
-        Phase1_Timer = 1000;      //120000 - 2 minutes
+        RandChat_Timer = 90000;
+
+        Phase1_Timer = 0;
         Cleave_Timer = 15000;
         Berserk_Timer = 1200000;     //20 minutes
         BlastNova_Timer = 60000;
         Quake_Timer = 40000;
         QuakePhase = 0;
         Collapse_Timer = 0;
+        Banished = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+        m_creature->setFaction(35);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->CastSpell(m_creature, SPELL_SHADOW_CAGE, false);
 
-        //m_creature->setFaction(35);
-        //m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
     }
 
     void KilledUnit(Unit* victim)
@@ -142,27 +153,52 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     {
     }
 
+    void MoveInLineOfSight(Unit*)
+    {
+    }
+
     void UpdateAI(const uint32 diff)
     {
+        if (!InCombat && !Phase1_Timer)
+            if (RandChat_Timer < diff)
+            {
+                uint32 p = rand()%5;
+                DoPlaySoundToSet(m_creature, RandomSound[p]);
 
-        //REPLACE WITH EVENT CHECK!!!
-        //if (false)
-        //    return;
+                RandChat_Timer = 90000;
+            }else RandChat_Timer -= diff;
+
+
+        if (!InCombat && !Phase1_Timer && pInst->GetData64(DATA_EVENT_STARTER))
+        {
+            //Unbanish self after 2 minutes
+            Phase1_Timer = 12000;
+            DoTextEmote(EMOTE_BEGIN, NULL);
+            return;
+        }
 
         //Phase timer
         if (Phase1_Timer)
-            if (Phase1_Timer < diff)
+            if (Phase1_Timer <= diff)
             {
                 m_creature->setFaction(14);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                //m_creature->RemoveAllAuras();
+                DoYell(SAY_FREED, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_FREED);
+                m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE);
+                AttackStart(Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)));
 
                 Phase1_Timer = 0;
             }else 
             {
+                if (!Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)))
+                {
+                    Phase1_Timer = 0;
+                    return;
+                }
+
                 Phase1_Timer -= diff;
                 return;
             }
@@ -170,6 +206,23 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
+
+        //Interrupt Blast Nova
+        if (m_creature->HasAura(SPELL_SHADOW_GRASP_VIS, 0) && m_creature->HasAura(SPELL_BLASTNOVA, 0) && !Banished)
+        {
+            DoYell(SAY_BANISH, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_BANISH);     
+            m_creature->RemoveAurasDueToSpell(SPELL_BLASTNOVA);
+            m_creature->InterruptNonMeleeSpells(false);
+            DoCast(m_creature, SPELL_SHADOW_CAGE_2);
+            Banished = true;
+        }
+
+        if (Banished && !m_creature->HasAura(SPELL_SHADOW_GRASP_VIS, 0))
+        {
+            Banished = false;
+            m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE_2);
+        }
 
         //Berserk_Timer
         if (Berserk_Timer < diff)
@@ -191,21 +244,10 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         //Quake_Timer
         if (Quake_Timer < diff)
         {
-            switch (QuakePhase)
-            {
+            int32 i = SPELL_QUAKE_PROC;
+            m_creature->CastCustomSpell(m_creature, SPELL_QUAKE, &i, 0, 0, false);
 
-            case 8:
-            case 9:
-                QuakePhase = 0;
-                Quake_Timer = 40000;
-                break;
-
-            default:
-                DoCast(m_creature, SPELL_QUAKE);
-                Quake_Timer = 1200;
-                QuakePhase++;
-                break;
-            }
+            Quake_Timer = 40000;
 
         }else Quake_Timer -= diff;
 
@@ -214,9 +256,8 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         {
             //Inturrupt Quake if it is casting
             m_creature->InterruptNonMeleeSpells(false);
-            if (QuakePhase)
-                QuakePhase = 8;
 
+            DoTextEmote(EMOTE_BLASTNOVA, NULL);
             DoCast(m_creature, SPELL_BLASTNOVA);
 
             BlastNova_Timer = 40000;
@@ -238,81 +279,59 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 {
-    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) 
+    {
+        pInst = (ScriptedInstance*)m_creature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* pInst;
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DarkMending_Timer;
     uint32 Fear_Timer;
     uint32 Infernal_Timer;
-    std::list<uint64> FriendlyList;
 
     bool InfernalSpawned;
 
     void Reset()
     {
-        ShadowBoltVolley_Timer = 10000;
+        ShadowBoltVolley_Timer = 8000 + rand()%2000;
         DarkMending_Timer = 30000;
-        Fear_Timer = 20000;
-        Infernal_Timer = 30000;
+        Fear_Timer = 15000 + rand()%5000;
+        Infernal_Timer = 20000 + rand()%5000;
 
         InfernalSpawned = false;
 
-        FriendlyList.clear();
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-
-        //DoGoHome();
-
-        // Must be scripted - don't know how.....
-        //DoCast(m_creature,SPELL_HELLFIRE_CHANNELING);
-        //DoCast(m_creature,SPELL_HELLFIRE_CAST_VISUAL);
-    }
-
-    bool ListContains(std::list<uint64> &plist, uint64 element)
-    {
-        if (plist.empty())
-            return false;
-
-        std::list<uint64>::iterator i;
-        for (i = plist.begin(); i!=plist.end(); ++i)
-        {
-            if ((*i) == element)
-                return true;
-        }
-
-        return false;
+        //Suprisingly this works very well, but only if the channelers are spawned after magtheridon
+        DoCast(m_creature, SPELL_SHADOW_GRASP_VIS);
+        pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
     }
 
     void Aggro(Unit *who)
     {
-    }
+        m_creature->InterruptNonMeleeSpells(false);
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who) return;
-
-        if (!m_creature->IsHostileTo(who) && !ListContains(FriendlyList, who->GetGUID()))
-            FriendlyList.push_back(who->GetGUID());
-
-        if (m_creature->getVictim())
+        if (pInst->GetData64(DATA_EVENT_STARTER))
             return;
 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura()) who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+        pInst->SetData64(DATA_EVENT_STARTER, who->GetGUID());
+        pInst->SetData(DATA_MAGTHERIDON_EVENT_STARTED, true);
+    }
 
-                DoStartAttackAndMovement(who);
-            }
-        }
+    void MoveInLineOfSight(Unit*)
+    {
     }
 
     void UpdateAI(const uint32 diff)
     {
+        if (!InCombat && pInst->GetData64(DATA_EVENT_STARTER))
+        {
+            m_creature->InterruptNonMeleeSpells(false);
+            AttackStart(Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)));
+            return;
+        }
+
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
@@ -330,32 +349,11 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         {
             if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
             {
-                //If no friends then heal self
-                if (FriendlyList.empty())
-                    DoCast(m_creature, SPELL_DARK_MENDING);
-
-                //Cast Dark Mending on the target with the lowest
-                //amount of HP within 30 yards (cast range)
-                uint32 LowestHP = 0;
-                Unit* pLowestHPTarget = NULL;
-                Unit* pTemp = NULL;
-
-                std::list<uint64>::iterator i;
-
-                for (i = FriendlyList.begin(); i!=FriendlyList.end(); ++i)
-                {
-                    pTemp = Unit::GetUnit((*m_creature),(*i));
-                    if (pTemp && pTemp->isAlive() && pTemp->GetHealth() < LowestHP && m_creature->GetDistance2dSq(pTemp) < 900)
-                    {
-                        LowestHP = pTemp->GetHealth();
-                        pLowestHPTarget = pTemp;
-                    }
-                }
-
                 //Cast on ourselves if we are lower then lowest hp friendly unit
-                if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
+                /*if (pLowestHPTarget && LowestHP < m_creature->GetHealth())
                     DoCast(pLowestHPTarget, SPELL_DARK_MENDING);
-                else DoCast(m_creature, SPELL_DARK_MENDING);
+                else*/
+                DoCast(m_creature, SPELL_DARK_MENDING);
             }
 
             DarkMending_Timer = 10000 + (rand() % 10000);
@@ -381,19 +379,6 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
             if (target)
                 DoCast(target, SPELL_BURNING_ABYSSAL);
-
-            /*Creature* Infernal = m_creature->SummonCreature(CREATURE_INFERNAL, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 60000);
-
-            if (Infernal)
-            {
-                Infernal->setFaction(m_creature->getFaction());
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-                if (target)
-                    Infernal->AI()->AttackStart(target);
-            }*/
 
             InfernalSpawned = true;
         }else Infernal_Timer -= diff;
@@ -424,7 +409,8 @@ bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
     }
 
     player->InterruptNonMeleeSpells(false);
-    //player->CastSpell(pUnit, ?, false);
+    player->CastSpell(pUnit, SPELL_SHADOW_GRASP, true);
+    player->CastSpell(pUnit, SPELL_SHADOW_GRASP_VIS, false);
 
     _GO->Say("Mantricon Cube Clicked", LANG_UNIVERSAL, 0);
     return true;
