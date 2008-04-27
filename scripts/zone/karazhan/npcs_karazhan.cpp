@@ -376,7 +376,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             float PosX = Spawns[index][1];
             Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
             if(pCreature)
+            {
+                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // In case database has bad flags
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            }
             debug_log("SD2: Barnes Opera Event - Summoned creature (%d) at %f %f %f", entry, PosX, SPAWN_Y, SPAWN_Z);
         }
 
