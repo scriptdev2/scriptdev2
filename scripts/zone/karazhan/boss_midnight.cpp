@@ -153,8 +153,11 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                     {
                         pAttumen->SetUInt32Value(UNIT_FIELD_DISPLAYID, MOUNTED_DISPLAYID);
                         pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        pAttumen->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pAttumen->getVictim()));
-                        pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
+                        if(pAttumen->getVictim())
+                        {
+                            pAttumen->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pAttumen->getVictim()));
+                            pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
+                        }
                         pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
                     }
                 } else Mount_Timer -= diff;
