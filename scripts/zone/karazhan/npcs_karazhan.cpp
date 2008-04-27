@@ -27,7 +27,7 @@ EndScriptData */
 #include "Map.h"
 #include "PointMovementGenerator.h"
 #include "WorldPacket.h"
-#include "../../npc/npc_escortai.h"
+#include "../../npc/npc_escortAI.h"
 
 /*######
 # npc_barnesAI
