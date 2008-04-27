@@ -456,7 +456,6 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_kilrek' WHERE `entry` = 17229
 UPDATE `creature_template` SET `ScriptName` = 'mob_demon_chain' WHERE `entry` = 17248;
 UPDATE `creature_template` SET `ScriptName` = 'netherspite_infernal' WHERE `entry` = 17646;
 UPDATE `creature_template` SET `ScriptName` = 'npc_berthold' WHERE `entry` = 16153;
--- Moroes
 update creature_template set scriptname = "boss_moroes" where entry = 15687;
 update creature_template set scriptname = "boss_baroness_dorothea_millstipe" where entry = 19875;
 update creature_template set scriptname = "boss_baron_rafe_dreuger" where entry = 19874;
@@ -470,6 +469,7 @@ update creature_template set scriptname = "boss_strawman" where entry = 17543;
 update creature_template set scriptname = "boss_tinhead" where entry = 17547;
 update creature_template set scriptname = "boss_roar" where entry = 17546;
 update creature_template set scriptname = "boss_crone" where entry = 18168;
+update creature_template set scriptname = "mob_cyclone" where entry = 18412;
 update creature_template set scriptname = "npc_grandmother" where entry = 17603;
 update creature_template set scriptname = "boss_bigbadwolf" where entry = 17521;
 

@@ -134,7 +134,8 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->CastSpell(m_creature, SPELL_SHADOW_CAGE, false);
 
-        pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
+        if(pInst)
+            pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
     }
 
     void KilledUnit(Unit* victim)
@@ -169,7 +170,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             }else RandChat_Timer -= diff;
 
 
-        if (!InCombat && !Phase1_Timer && pInst->GetData64(DATA_EVENT_STARTER))
+        if (!InCombat && !Phase1_Timer && pInst && pInst->GetData64(DATA_EVENT_STARTER))
         {
             //Unbanish self after 2 minutes
             Phase1_Timer = 12000;
@@ -305,14 +306,15 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
         //Suprisingly this works very well, but only if the channelers are spawned after magtheridon
         DoCast(m_creature, SPELL_SHADOW_GRASP_VIS);
-        pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
+        if(pInst)
+            pInst->SetData(DATA_MAGTHERIDON_EVENT_ENDED, false);
     }
 
     void Aggro(Unit *who)
     {
         m_creature->InterruptNonMeleeSpells(false);
 
-        if (pInst->GetData64(DATA_EVENT_STARTER))
+        if(!pInst || pInst->GetData64(DATA_EVENT_STARTER))
             return;
 
         pInst->SetData64(DATA_EVENT_STARTER, who->GetGUID());
@@ -325,7 +327,7 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!InCombat && pInst->GetData64(DATA_EVENT_STARTER))
+        if (!InCombat && pInst && pInst->GetData64(DATA_EVENT_STARTER))
         {
             m_creature->InterruptNonMeleeSpells(false);
             AttackStart(Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)));

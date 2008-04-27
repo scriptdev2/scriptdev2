@@ -436,7 +436,6 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 {
     mob_jandalai_firebombAI(Creature *c) : ScriptedAI(c){Reset();}
 
-
     uint32 bomb_timer;
 
     void Reset()
@@ -448,9 +447,11 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
         bomb_timer = 12000;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
+
+    void AttackStart(Unit* who) {}
+
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {

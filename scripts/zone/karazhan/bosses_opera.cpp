@@ -58,7 +58,7 @@ EndScriptData */
 #define SPELL_CHAIN_LIGHTNING   32337
 
 // Cyclone
-#define SPELL_KNOCKBACK         29538
+#define SPELL_KNOCKBACK         32334
 #define SPELL_CYCLONE_VISUAL    32332
 
 /** Creature Entries **/
@@ -70,7 +70,7 @@ EndScriptData */
 #define SAY_DOROTHEE_DEATH	        "Oh at last, at last. I can go home."
 #define SOUND_DOROTHEE_DEATH	    9190
 #define SAY_DOROTHEE_SUMMON	        "Don't let them hurt us, Tito! Oh, you won't, will you?"
-#define SOUND_DOROTHEE_SUMMON	    9193
+#define SOUND_DOROTHEE_SUMMON	    9191
 #define SAY_DOROTHEE_TITO_DEATH     "Tito, oh Tito, no!"
 #define SOUND_DOROTHEE_TITO_DEATH	9192
 #define SAY_DOROTHEE_AGGRO	        "Oh dear, we simply must find a way home! The old wizard could be our only hope! Strawman, Roar, Tinhead, will you... wait! Oh golly, look! We have visitors!"
@@ -641,17 +641,10 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
         Reset();
     }
 
-    uint64 TargetGUID;
-    uint32 RefreshTimer;
-
     uint32 MoveTimer;
 
     void Reset()
     {
-        TargetGUID = 0;
-
-        RefreshTimer = 0;
-
         MoveTimer = 1000;
     }
 
@@ -659,32 +652,20 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(!RefreshTimer && who && who != m_creature && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(who, 5))
-        {
-            RefreshTimer = 2000;
-            TargetGUID = who->GetGUID();
-        }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if(RefreshTimer)
-            if(RefreshTimer < diff)
-            {
-                if(TargetGUID)
-                {
-                    Unit* target = Unit::GetUnit((*m_creature), TargetGUID);
-                    if(target)
-                        DoCast(target, SPELL_KNOCKBACK);
-                }
-                RefreshTimer = 0;
-            }else RefreshTimer -= diff;
+        if(!m_creature->HasAura(SPELL_KNOCKBACK, 0))
+            DoCast(m_creature, SPELL_KNOCKBACK, true);
 
         if(MoveTimer < diff)
         {
             float x,y,z;
             m_creature->GetPosition(x,y,z);
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, x+rand()%20, y+rand()%20, z));
+            float PosX, PosY, PosZ;
+            m_creature->GetRandomPoint(x,y,z,10, PosX, PosY, PosZ);
+            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, PosX, PosY, PosZ));
             MoveTimer = 5000 + rand()%3000;
         }else MoveTimer -= diff;
     }
@@ -819,7 +800,12 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_WOLF_DEATH);
 
         if(pInstance)
+        {
             pInstance->SetData(DATA_OPERA_EVENT, DONE);
+            GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT));
+            if(Door)
+                Door->UseDoorOrButton();
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -981,8 +967,11 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
 {
     boss_julianneAI(Creature* c) : ScriptedAI(c)
     {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
+
+    ScriptedInstance* pInstance;
 
     uint64 RomuloGUID;
 
@@ -1043,6 +1032,14 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
     {
         DoYell(SAY_JULIANNE_DEATH02, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_JULIANNE_DEATH02);
+
+        if(pInstance)
+        {
+            pInstance->SetData(DATA_OPERA_EVENT, DONE);
+            GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT));
+            if(Door)
+                Door->UseDoorOrButton();
+        }
     }
 
     void KilledUnit(Unit* victim)
