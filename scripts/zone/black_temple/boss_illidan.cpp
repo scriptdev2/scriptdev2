@@ -1008,7 +1008,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             if(TauntTimer < diff) // His random taunt/yell timer.
             {
-                uint32 random = rand()%5;
+                uint32 random = rand()%4;
                 char* yell = RandomTaunts[random].text;
                 uint32 soundid = RandomTaunts[random].sound;
                 if(yell)

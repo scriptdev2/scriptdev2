@@ -275,7 +275,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         if(PerformanceReady)
         {
             if(CurtainTimer)
-                if(CurtainTimer < diff)
+                if(CurtainTimer <= diff)
                 {
                     PrepareEncounter();
                     if(!pInstance)
