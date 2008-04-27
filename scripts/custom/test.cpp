@@ -41,12 +41,12 @@ public:
         switch (i)
         {
         case 1:
-            m_creature->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, NULL);
+            m_creature->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, 0);
             break;
 
         case 3:
             {
-                m_creature->Say("Wild Felboar attack!", LANG_UNIVERSAL, NULL);
+                m_creature->Say("Wild Felboar attack!", LANG_UNIVERSAL, 0);
                 Creature* temp = m_creature->SummonCreature(21878, m_creature->GetPositionX()+5, m_creature->GetPositionY()+7, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
 
                 temp->AI()->AttackStart(m_creature);
@@ -61,7 +61,7 @@ public:
                 Unit* temp = Unit::GetUnit(*m_creature, PlayerGUID);
                 if (temp)
                 {
-                    temp->MonsterSay("Bye Bye!", LANG_UNIVERSAL, NULL);
+                    temp->MonsterSay("Bye Bye!", LANG_UNIVERSAL, 0);
                     temp->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
                 }
             }
@@ -73,7 +73,7 @@ public:
     {
         if (IsBeingEscorted)
             m_creature->Say("Help $N! I'm under attack!", LANG_UNIVERSAL, PlayerGUID);
-        else m_creature->Say("Die scum!", LANG_UNIVERSAL, NULL);
+        else m_creature->Say("Die scum!", LANG_UNIVERSAL, 0);
     }
 
     void Reset()
@@ -91,7 +91,7 @@ public:
                 m_creature->Whisper(PlayerGUID, "How dare you leave me like that! I hate you! =*(");
             else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
         }
-        else m_creature->Say("ugh...", LANG_UNIVERSAL, NULL);
+        else m_creature->Say("ugh...", LANG_UNIVERSAL, 0);
     }
 
     void UpdateAI(const uint32 diff)
@@ -104,7 +104,7 @@ public:
         {
             if (DeathCoilTimer < diff)
             {
-                m_creature->Say("Taste death!", LANG_UNIVERSAL, NULL);
+                m_creature->Say("Taste death!", LANG_UNIVERSAL, 0);
                 m_creature->CastSpell(m_creature->getVictim(), 33130, false);
 
                 DeathCoilTimer = 4000;
@@ -117,11 +117,11 @@ public:
                 {
                     if (m_creature->HasAura(3593, 0))
                     {
-                        m_creature->Say("Fireworks!", LANG_UNIVERSAL, NULL);
+                        m_creature->Say("Fireworks!", LANG_UNIVERSAL, 0);
                         m_creature->CastSpell(m_creature, 11540, false);
                     }else
                     {
-                        m_creature->Say("Hmm, I think I could use a buff", LANG_UNIVERSAL, NULL);
+                        m_creature->Say("Hmm, I think I could use a buff", LANG_UNIVERSAL, 0);
                         m_creature->CastSpell(m_creature, 3593, false);
                     }
 

@@ -256,7 +256,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_TERONGOREFIENDEVENT, 0);
+            pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
 
         IncinerateTimer = 40000;
         SummonDoomBlossomTimer = 12000;
@@ -297,7 +297,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
                 if(pInstance)
-                    pInstance->SetData(DATA_TERONGOREFIENDEVENT, 1);
+                    pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
 
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoYell(SAY_INTRO,LANG_UNIVERSAL,NULL);
@@ -327,7 +327,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData(DATA_TERONGOREFIENDEVENT, 3);
+            pInstance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
 
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);

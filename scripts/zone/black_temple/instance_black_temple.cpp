@@ -26,14 +26,6 @@ EndScriptData */
 
 #define ENCOUNTERS     8
 
-enum EncounterState
-{
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
-
 /* Black Temple encounters:
 0 - High Warlord Naj'entus event
 1 - Supremus Event

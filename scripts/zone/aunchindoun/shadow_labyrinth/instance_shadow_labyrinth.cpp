@@ -97,13 +97,6 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         return 0;
     }
 
-    void OpenDoor(GameObject *go)
-    {
-        //open the door
-        go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetUInt32Value(GAMEOBJECT_STATE, 0);
-    }
-
     void SetData(uint32 type, uint32 data)
     {
         switch(type)
@@ -117,7 +110,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 {
                     Encounters[1] = false;
                     if(RefectoryDoor)
-                        OpenDoor(RefectoryDoor);
+                        RefectoryDoor->UseDoorOrButton();
                 }
                 else
                     Encounters[1] = (data) ? true : false;
@@ -127,7 +120,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 {
                     Encounters[2] = false;
                     if(ScreamingHallDoor)
-                        OpenDoor(ScreamingHallDoor);
+                        ScreamingHallDoor->UseDoorOrButton();
                 }
                 else
                     Encounters[2] = (data) ? true : false;

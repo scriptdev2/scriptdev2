@@ -21,10 +21,10 @@ SDComment: Doomfires not completely offlike due to core limitations for random m
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_hyjal.h"
 #include "TargetedMovementGenerator.h"
-//#include "../../../../../../game/SpellAuras.h"
+#include "PointMovementGenerator.h"
+#include "SpellAuras.h"
 
 #define SPELL_DENOUEMENT_WISP      32124
 #define SPELL_ANCIENT_SPARK        39349
@@ -131,7 +131,7 @@ struct mob_ancient_wispAI : public ScriptedAI
             if(ArchimondeGUID)
             {
                 Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID);
-                if(Archimonde && (((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2))
+                if(Archimonde)
                 {
                     if((((Archimonde->GetHealth()*100) / Archimonde->GetMaxHealth()) < 2) || !Archimonde->isAlive())
                         DoCast(m_creature, SPELL_DENOUEMENT_WISP);
@@ -299,11 +299,25 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
 
         if(ChangeTargetTimer < diff)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(target && target->isAlive())
+            Unit* target = NULL;
+            switch(rand()%2)
             {
-                m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
-                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                case 0: // stalk player
+                    target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    if(target && target->isAlive())
+                    {
+                        m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
+                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                    }
+                    break;
+
+                case 1: // random location
+                    float x = 0;
+                    float y = 0;
+                    float z = 0;
+                    m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), rand()%20, x, y, z);
+                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, x, y, z));
+                    break;
             }
             ChangeTargetTimer = 5000;
         }else ChangeTargetTimer -= diff;
@@ -363,7 +377,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, 0);
+            pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
 
         DrainNordrassilTimer = 0;
         FearTimer = 40000;
@@ -387,36 +401,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-    }
+        m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if(who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
-
-                if(!InCombat)
-                {
-                    m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                    if(pInstance)
-                        pInstance->SetData(DATA_ARCHIMONDEEVENT, 1);
-                }
-            }
-        }
+        if(pInstance)
+            pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -473,7 +463,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, 3);
+            pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
     }
 
     bool CanUseFingerOfDeath()
@@ -576,6 +566,11 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     spell = SPELL_SOUL_CHARGE_GREEN;
                     break;
             }
+            if(Aura* aur = m_creature->GetAura(spell, 0))
+            {
+                totalStacks += aur->GetAuraSlot();
+                aur->SetAuraDuration(120000);
+            }
         }
 
         if(!totalStacks)
@@ -625,6 +620,15 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         if(!InCombat)
         {
+            if(pInstance)
+            {
+                // Do not let the raid skip straight to Archimonde. Visible only if Anetheron is finished.
+                if((pInstance->GetData(DATA_ANETHERONEVENT) < 3) && (m_creature->GetVisibility() != VISIBILITY_OFF))
+                    m_creature->SetVisibility(VISIBILITY_OFF);
+                else if((pInstance->GetData(DATA_ANETHERONEVENT) >= 3) && (m_creature->GetVisibility() != VISIBILITY_ON))
+                    m_creature->SetVisibility(VISIBILITY_ON);
+            }
+
             if(DrainNordrassilTimer < diff)
             {
                 if(!IsChanneling)

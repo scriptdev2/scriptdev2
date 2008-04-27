@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-           pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 0);
+           pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
 
         TargetGUID = 0;
 
@@ -123,7 +123,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-        if(pInstance) pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 1);
+        if(pInstance)
+            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -144,7 +145,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, 3);
+            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
 
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
@@ -238,8 +239,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 {
                     (m_creature->getThreatManager()).modifyThreatPercent(target, -40);
                     DoCast(target, SPELL_KNOCKBACK);
+                    KnockbackTimer = 22000;
                 }
-                KnockbackTimer = 22000;
             }else KnockbackTimer -= diff;
 
             if(AcidicWoundTimer < diff)
@@ -280,7 +281,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     m_creature->TauntApply(target);
                     // m_creature->AddThreat(target, 50000000.0f); // Add a lot of threat since TauntApply does not work properly.
                     DoCast(target, SPELL_FEL_RAGE_TARGET, true);
-                    DoCast(m_creature, SPELL_INSIGNIFIGANCE, true); // If VMaps is disabled, this spell can call the whole instance
+                    DoCast(m_creature, SPELL_INSIGNIFIGANCE, true); // If VMaps are disabled, this spell can call the whole instance
                     /* These spells do not work, comment them out for now.
                     DoCast(target, SPELL_FEL_RAGE_2, true);
                     DoCast(target, SPELL_FEL_RAGE_3, true);*/
@@ -312,6 +313,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 
                 //if(TargetGUID)
                     //RevertThreatOnTarget(TargetGUID);
+                TargetGUID = 0;
                 Phase1 = true;
                 BloodboilTimer = 10000;
                 BloodboilCount = 0;

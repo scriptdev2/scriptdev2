@@ -124,14 +124,6 @@ static Location HordeBase[]=
     {5547.218, -2574.589, 1479.194}
 };
 
-enum EncounterType
-{
-    ENCOUNTER_NOT_STARTED       = 0,
-    ENCOUNTER_IN_PROGRESS       = 1,
-    ENCOUNTER_FAILED            = 2,
-    ENCOUNTER_COMPLETE          = 3,
-};
-
 enum TargetType
 {
     TARGETTYPE_SELF     = 0,
@@ -152,7 +144,7 @@ enum YellId
     BEGIN        = 1,
     INCOMING     = 2,
     RALLY        = 3,
-    FAILED       = 4,
+    FAIL         = 4,
     SUCCESS      = 5,
     DEATH        = 6,
 };
@@ -165,7 +157,7 @@ static Yells JainaQuotes[]=
     {BEGIN, "Hold them back as long as possible", 11050},
     {RALLY, "Don't give up! We must prevail!", 11006},
     {RALLY, "We must hold strong!", 11051},
-    {FAILED, "We are lost. Fall back!", 11009},
+    {FAIL, "We are lost. Fall back!", 11009},
     {SUCCESS, "We have won valuable time. Now we must pull back!", 11011},
     {DEATH, "I did... my best.", 11010},
 };
@@ -179,7 +171,7 @@ static Yells ThrallQuotes[]=
     {RALLY, "Hold them back! Do not falter!", 11030},
     {RALLY, "Victory or death!", 11059},
     {RALLY, "Do not give an inch of ground!", 11060},
-    {FAILED, "It is over. Withdraw! We have failed.", 11033},
+    {FAIL, "It is over. Withdraw! We have failed.", 11033},
     {SUCCESS, "We have played our part and done well. It is up to the others now.", 11035},
     {DEATH, "Uraaa...", 11034},
 };

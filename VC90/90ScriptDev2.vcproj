@@ -1708,6 +1708,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\karazhan\bosses_opera.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\karazhan\def_karazhan.h"
 						>
 					</File>
@@ -2127,6 +2131,18 @@
 						RelativePath="..\scripts\zone\zulaman\instance_zulaman.cpp"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Isle of Quel&apos;Danas"
+					>
+					<Filter
+						Name="Sunwell Plateau"
+						>
+					</Filter>
+					<Filter
+						Name="Magister&apos;s Terrace"
+						>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

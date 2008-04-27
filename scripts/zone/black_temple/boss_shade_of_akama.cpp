@@ -106,9 +106,9 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
     void JustDied(Unit* killer);
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
+
+    void AttackStart(Unit* who) {}
 
     void MoveInLineOfSight(Unit* who)
     {        
@@ -119,11 +119,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
         }
     }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if(InCombat)
-            m_creature->SetInCombat();
-    }
+    void UpdateAI(const uint32 diff) {}
 };
 
 struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
@@ -148,19 +144,14 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
     void JustDied(Unit* killer);
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
-    void MoveInLineOfSight(Unit* who)
-    {
-    }
+    void AttackStart(Unit* who) {}
+
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
-        if(InCombat)
-            m_creature->SetInCombat();
-        
         if(ShadeGUID)
         {
             Unit* Shade = Unit::GetUnit((*m_creature), ShadeGUID);
@@ -170,7 +161,8 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
                 {
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->Idle();
-                    DoCast(Shade, SPELL_BEAM);
+                    Shade->CastSpell(m_creature, SPELL_BEAM, true);
+                    DoCast(m_creature, SPELL_BEAM, true);
                 }
             }
         }else
@@ -245,10 +237,20 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         m_creature->GetMotionMaster()->Idle();
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
         DoCast(m_creature, SPELL_PASSIVE_SHADOWFORM);
+
+        /*if(pInstance)
+            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);*/
     }
 
-    void Aggro(Unit* who)
+    void Aggro(Unit* who){}
+
+    void AttackStart(Unit* who)
     {
+        if(!who || IsBanished)
+            return;
+        
+        if(who->isTargetableForAttack() && who != m_creature)
+            DoStartAttackAndMovement(who);
     }
 
     void SummonCreature()
@@ -323,7 +325,8 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 {
                     Channeler->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     Channeler->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Channeler->CastSpell(m_creature, SPELL_BEAM, false);
+                    DoCast(Channeler, SPELL_BEAM, true);
+                    Channeler->CastSpell(Channeler, SPELL_BEAM, true);
                     ((mob_ashtongue_channelerAI*)Channeler->AI())->SetShadeGUID(m_creature->GetGUID());
                     ChannelerGUID[i] = Channeler->GetGUID();
                 }
@@ -518,7 +521,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         Creature* Shade = ((Creature*)Unit::GetUnit((*m_creature), ShadeGUID));
         if(Shade)
         {
-            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, 1); // In Progress
+            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
             m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Prevent players from trying to restart event
             ((boss_shade_of_akamaAI*)Shade->AI())->SetAkamaGUID(m_creature->GetGUID());
             ((boss_shade_of_akamaAI*)Shade->AI())->SetSelectableChannelers();
@@ -554,6 +557,8 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
         if(ShadeHasDied)
         {
+            if(pInstance)
+                pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
             //TODO: Cosmetics for Shade's death
         }
 

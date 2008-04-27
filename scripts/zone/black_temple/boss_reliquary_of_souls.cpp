@@ -83,7 +83,7 @@ EndScriptData */
 #define AURA_OF_DESIRE                  41350
 #define SPELL_RUNE_SHIELD               41431
 #define SPELL_DEADEN                    41410
-#define SPELL_Soul_SHOCK                41426
+#define SPELL_SOUL_SHOCK                41426
 
 #define AURA_OF_ANGER                   41337
 #define SPELL_SELF_SEETHE               41364
@@ -95,6 +95,8 @@ EndScriptData */
 #define SPELL_SOUL_RELEASE              41542
 #define SPELL_RESTORE_MANA              32848
 #define SPELL_RESTORE_HEALTH            25329
+
+#define CREATURE_ENSLAVED_SOUL          23469
 
 struct Position
 {
@@ -177,7 +179,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 0);
+            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
 
         SufferingGUID = 0;
         DesireGUID = 0;
@@ -200,9 +202,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         m_creature->GetMotionMaster()->Clear(false);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -212,15 +212,12 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                if(who && who->isAlive())
-                m_creature->AddThreat(who, 1.0f);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 if(!InCombat)
                 {
                     if(pInstance)
-                    pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, 1);
+                        pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
 
                     Phase = 1;
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
@@ -236,7 +233,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         uint32 random = rand()%6;
         float x = Coords[random].x;
         float y = Coords[random].y;
-        Creature* Soul = m_creature->SummonCreature(23469, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
+        Creature* Soul = m_creature->SummonCreature(CREATURE_ENSLAVED_SOUL, x, y, m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
         if (target && Soul)
         {
@@ -268,15 +265,19 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
     void JustDied(Unit* killer)
     {
+        if(pInstance)
+            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
+
+        InCombat = false;
     }
 
     void UpdateAI(const uint32 diff)
     {
         if(!Phase)
-        return;
+            return;
 
         if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Reset if event is begun and we don't have a threatlist
-        EnterEvadeMode();
+            EnterEvadeMode();
 
         if(Phase == 1)
         {
@@ -422,7 +423,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceDesire = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
 
                 if(!EssenceDesire || !EssenceDesire->isAlive())
-                EnterEvadeMode();
+                    EnterEvadeMode();
 
                 if(!EndingPhase && EssenceDesire)
                 {
@@ -583,7 +584,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
                 if(pUnit)
-                pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
     }
@@ -600,18 +601,18 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
-            break;
-        case 2:
-            DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
-            break;
+            case 0:
+                DoYell(SUFF_SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SUFF_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY2);
+                break;
+            case 2:
+                DoYell(SUFF_SAY_SLAY3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_SLAY3);
+                break;
         }
     }
 
@@ -654,7 +655,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
                 Unit* pUnit = NULL;
                 pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
                 if(pUnit)
-                pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
+                    pUnit->RemoveAurasDueToSpell(AURA_OF_SUFFERING_ARMOR);
             }
         }
 
@@ -667,12 +668,12 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
         // Prevent overlapping yells
         if(AggroYellTimer)
-        if(AggroYellTimer < diff)
-        {
-            DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
-            AggroYellTimer = 0;
-        }else AggroYellTimer -= diff;
+            if(AggroYellTimer < diff)
+            {
+                DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
+                AggroYellTimer = 0;
+            }else AggroYellTimer -= diff;
 
         //Supposed to be cast on nearest target
         if(FixateTimer < diff)
@@ -738,18 +739,18 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(DESI_SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(DESI_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY2);
-            break;
-        case 2:
-            DoYell(DESI_SAY_SLAY3,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY3);
-            break;
+            case 0:
+                DoYell(DESI_SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(DESI_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY2);
+                break;
+            case 2:
+                DoYell(DESI_SAY_SLAY3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, DESI_SOUND_SLAY3);
+                break;
         }
     }
 
@@ -790,7 +791,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
             if(m_creature->getVictim())
-            m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
             return;
         }
 
@@ -808,7 +809,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
 
         if(SoulShockTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_Soul_SHOCK);
+            DoCast(m_creature->getVictim(), SPELL_SOUL_SHOCK);
             SoulShockTimer = 40000;
             if(rand()%2 == 0)
             {

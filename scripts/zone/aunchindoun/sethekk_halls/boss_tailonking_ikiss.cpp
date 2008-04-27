@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "def_sethekk_halls.h"
-#include "PointMovementGenerator.h"
 
 #define SPELL_BLINK                 38194
 #define SPELL_ARCANE_VOLLEY         36738
@@ -214,7 +213,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                         float Y = target->GetPositionY();
                         float Z = target->GetPositionZ();
                         m_creature->Relocate(X,Y,Z);
-                        m_creature->SendMonsterMove(X, Y, Z, 0, true, 1000);
+                        m_creature->SendMonsterMove(X, Y, Z, 0, true, 0);
                         blink = true;
                     }
                 }else blink_timer -= diff;

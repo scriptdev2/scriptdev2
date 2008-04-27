@@ -25,14 +25,6 @@ EndScriptData */
 
 #define ENCOUNTERS     1
 
-enum EncounterState
-{
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
-
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
     instance_zulaman(Map *Map) : ScriptedInstance(Map) {Initialize();};

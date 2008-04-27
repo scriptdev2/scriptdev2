@@ -184,7 +184,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, 0);
+            pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
 
         HurtfulStrikeTimer = 20000;
         SummonFlameTimer = 20000;
@@ -198,14 +198,14 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         if(pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, 1);
+            pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
     }
 
 
     void JustDied(Unit *killer)
     {
         if(pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, 3);
+            pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
     }
 
     float CalculateRandomCoord(float initial)

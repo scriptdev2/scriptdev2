@@ -23,9 +23,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 
-
-
-#define SPELL_SUMMONSCARLETHOUND        16174
+#define SPELL_SUMMONSCARLETHOUND        17164
 #define SPELL_ENRAGE                    28747
 
 #define SAY_AGGRO                       "Release the hounds!"

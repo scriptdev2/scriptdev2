@@ -119,18 +119,18 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                 SetMidnight(pAttumen, m_creature->GetGUID());
                 switch(rand()%3)
                 {    
-                case 0:
-                    pAttumen->Yell(SAY_APPEAR1, LANG_UNIVERSAL, 0);
-                    DoPlaySoundToSet(m_creature, SOUND_APPEAR1);
-                    break;
-                case 1:    
-                    pAttumen->Yell(SAY_APPEAR2, LANG_UNIVERSAL, 0);
-                    DoPlaySoundToSet(m_creature, SOUND_APPEAR2);
-                    break;
-                case 2:
-                    pAttumen->Yell(SAY_APPEAR3, LANG_UNIVERSAL, 0);
-                    DoPlaySoundToSet(m_creature, SOUND_APPEAR3);
-                    break;
+                    case 0:
+                        pAttumen->Yell(SAY_APPEAR1, LANG_UNIVERSAL, 0);
+                        DoPlaySoundToSet(m_creature, SOUND_APPEAR1);
+                        break;
+                    case 1:    
+                        pAttumen->Yell(SAY_APPEAR2, LANG_UNIVERSAL, 0);
+                        DoPlaySoundToSet(m_creature, SOUND_APPEAR2);
+                        break;
+                    case 2:
+                        pAttumen->Yell(SAY_APPEAR3, LANG_UNIVERSAL, 0);
+                        DoPlaySoundToSet(m_creature, SOUND_APPEAR3);
+                        break;
                 }   
             }
         }
@@ -232,12 +232,12 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL1);
-        case 1:
-            DoYell(SAY_KILL2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL2);
+            case 0:
+                DoYell(SAY_KILL1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL1);
+            case 1:
+                DoYell(SAY_KILL2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL2);
         }
     }
 
@@ -258,8 +258,6 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
             if(ResetTimer <= diff)
             {
                 ResetTimer = 0;
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->SetVisibility(VISIBILITY_OFF);
                 Unit *pMidnight = Unit::GetUnit(*m_creature, Midnight);
                 if(pMidnight)
                 {
@@ -294,14 +292,14 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
             {
                 switch(rand()%2)
                 {
-                case 0:
-                    DoYell(SAY_RANDOM1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_RANDOM1);
-                    break;
-                case 1:
-                    DoYell(SAY_RANDOM2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_RANDOM2);
-                    break;
+                    case 0:
+                        DoYell(SAY_RANDOM1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_RANDOM1);
+                        break;
+                    case 1:
+                        DoYell(SAY_RANDOM2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_RANDOM2);
+                        break;
                 }
                 RandomYellTimer = 30000 + (rand()%31)*1000;
             } else RandomYellTimer -= diff;

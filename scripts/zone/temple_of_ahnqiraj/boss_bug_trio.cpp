@@ -26,10 +26,9 @@ EndScriptData */
 #define SPELL_CLEAVE        26350
 #define SPELL_TOXIC_VOLLEY  25812
 #define SPELL_POISON_CLOUD  38718         //Only Spell with right dmg.
-#define SPELL_ENRAGE        28131
+#define SPELL_ENRAGE        25790
 
 #define SPELL_CHARGE        25821
-#define SPELL_ENRAGE        19953
 #define SPELL_KNOCKBACK     26027
 
 #define SPELL_HEAL      25807

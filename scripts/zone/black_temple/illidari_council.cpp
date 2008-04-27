@@ -152,18 +152,15 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             }
         }
         if(pInstance)
-            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT,0);
+            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, NOT_STARTED);
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit *who)  
     {
-       if(pInstance)
-           pInstance->SetData(DATA_ILLIDARICOUNCIL, 1);
-
        StartEvent(who);
     }
 
@@ -189,7 +186,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 }
             }
 
-            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 1);
+            pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, IN_PROGRESS);
         }
     }
     void UpdateAI(const uint32 diff)
@@ -212,14 +209,6 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             if(Council[3])
                 Veras = ((Creature*)Unit::GetUnit((*m_creature), Council[3]));
             
-            //if((!Gathios || !Gathios->isAlive()) && (!Zerevor || !Zerevor->isAlive()) && (!Malande || !Malande->isAlive()) && (!Veras |!Veras->isAlive()))
-            //{
-            //    if(pInstance)
-            //        pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
-
-            //    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            //}
-
             // Don't allow players to pull one of the council's members, aggro another members' target if none present
             if(Gathios && Gathios->isAlive() && !Gathios->SelectHostilTarget())
                 Gathios->AddThreat(Veras->getVictim(), 1.0f);
@@ -257,7 +246,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             if(DeathCheck > 3)
             {                
                 if(pInstance)
-                    pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, 3); // Completed
+                    pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, DONE); // Completed
 
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }

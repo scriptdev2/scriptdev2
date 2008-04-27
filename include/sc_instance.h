@@ -5,6 +5,14 @@
 #include "InstanceData.h"
 #include "Map.h"
 
+enum EncounterState
+{
+    NOT_STARTED   = 0,
+    IN_PROGRESS   = 1,
+    FAILED        = 2,
+    DONE          = 3
+};
+
 class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
 {
     public:

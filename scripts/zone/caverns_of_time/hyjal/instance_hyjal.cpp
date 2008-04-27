@@ -25,14 +25,6 @@ EndScriptData */
 
 #define ENCOUNTERS     5
 
-enum EncounterState
-{
-    NOT_STARTED   = 0,
-    IN_PROGRESS   = 1,
-    FAILED        = 2,
-    DONE          = 3
-};
-
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event
 1 - Anetheron event

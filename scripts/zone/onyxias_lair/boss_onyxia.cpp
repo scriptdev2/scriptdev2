@@ -22,312 +22,197 @@ SDCategory: Onyxia's Lair
 EndScriptData */
 
 #include "sc_creature.h"
-#include "TargetedMovementGenerator.h"
 #include "PointMovementGenerator.h"
 
-#define SPELL_WINGBUFFET 18500
-#define SPELL_FLAMEBREATH 18435
-#define SPELL_CLEAVE 19983
-#define SPELL_TAILSWEEP 25653
-#define SPELL_ENGULFINGFLAMES 20019                  
-#define SPELL_DEEPBREATH 23461
-#define SPELL_BELLOWINGROAR 18431
+#define SPELL_WINGBUFFET            18500
+#define SPELL_FLAMEBREATH           18435
+#define SPELL_CLEAVE                19983
+#define SPELL_TAILSWEEP             25653
+#define SPELL_ENGULFINGFLAMES       20019                  
+#define SPELL_DEEPBREATH            23461
+#define SPELL_BELLOWINGROAR         18431
 
 //These spells below arn't supported in the core yet
-#define SPELL_SUMMONWHELP  17646
-#define SPELL_SUMMON_MULTI_WHELPS 20171
+#define SPELL_SUMMONWHELP           17646
+#define SPELL_SUMMON_MULTI_WHELPS   20171
 
 #define SAY_AGGRO           "How fortuitous. Usually, I must leave my lair to feed."
 #define SAY_KILL            "Learn your place mortal!"
 #define SAY_PHASE_2_TRANS   "I'll incinerate you from above!"
 #define SAY_PHASE_3_TRANS   "It seems you'll need another lesson!"
 
+static float MovementLocations[7][3]=
+{
+    {-65.8444, -213.809, -60.2985},
+    {22.87639, -217.152, -60.0548},
+    {-33.5561, -182.682, -60.9457},
+    {-31.4963, -250.123, -60.1278},
+    {-2.78999, -181.431, -60.8962},
+    {-54.9415, -232.242, -60.5555},
+    {10.56655, -241.478, -60.9426},
+};
 
-#define ADD_1X -30.127
-#define ADD_1Y -254.463
-#define ADD_1Z -89.440
+static float SpawnLocations[4][3]=
+{
+    {-30.127, -254.463, -89.440},
+    {-30.817, -177.106, -89.258},
+    {14.480, -241.560, -85.6300},
+    {17.372, -190.840, -85.2810},
+};
 
-#define ADD_2X -30.817
-#define ADD_2Y -177.106
-#define ADD_2Z -89.258
-
-#define ADD_3X 14.480
-#define ADD_3Y -241.560
-#define ADD_3Z -85.630
-
-#define ADD_4X 17.372
-#define ADD_4Y -190.840
-#define ADD_4Z -85.281
+#define CREATURE_WHELP      11262
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
-    boss_onyxiaAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_onyxiaAI(Creature* c) : ScriptedAI(c) {Reset();}
 
-    uint32 swingcounter;
-    uint32 flamebreath_timer;
-    uint32 cleave_timer;
-    uint32 tailsweep_timer;
-    uint32 movement_timer;
-    uint32 engulfingflames_timer;
-    uint32 whelpspawn_timer;
-    uint32 bellowingroar_timer;
-    uint32 reset_timer;
-    uint32 phase;
-    uint32 counter;
+    uint32 Phase;
 
+    uint32 FlameBreathTimer;
+    uint32 CleaveTimer;
+    uint32 TailSweepTimer;
+    uint32 MovementTimer;
+    uint32 EngulfingFlamesTimer;
+    uint32 SummonWhelpsTimer;
+    uint32 BellowingRoarTimer;
+    uint32 WingBuffetTimer;
 
     void Reset()
     {
-        swingcounter = 0;
-        flamebreath_timer = 20000;
-        cleave_timer = 15000;
-        tailsweep_timer = 3000;
-        movement_timer = 10000;
-        engulfingflames_timer = 15000;
-        whelpspawn_timer = 45000;
-        bellowingroar_timer = 0;
-        phase = 1;
-        counter = 0;        
+        Phase = 1;
 
-        //        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
-        m_creature->InterruptNonMeleeSpells(false);
-        m_creature->SetHover(false);
-        (*m_creature).GetMotionMaster()->Clear(false);
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-        // not working
+        FlameBreathTimer = 20000;
+        TailSweepTimer = 2000;
+        CleaveTimer = 15000;
+        MovementTimer = 5000;
+        EngulfingFlamesTimer = 15000;
+        SummonWhelpsTimer = 45000;
+        BellowingRoarTimer = 30000;
+        WingBuffetTimer = 17000;
     }
 
-    void KilledUnit(Unit* victim)
+    void Aggro(Unit* who)
     {
-        if (rand()%5)
-            return;
-
-        DoYell(SAY_KILL,LANG_UNIVERSAL,NULL);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
     }
 
-    void Aggro(Unit *who)
+    void KilledUnit(Unit *victim)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        counter = 1;
+        DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //Cast phase 1 spells in phase 1 and phase 3
-        if (phase == 1 || phase == 3)
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (Phase == 1))
         {
-            //Flamebreath every 15 seconds
-            if (flamebreath_timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
-                flamebreath_timer = 15000;
-            }else flamebreath_timer -= diff;
-
-            //Cleave every 7 seconds
-            if (cleave_timer < diff)
-            {    
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                cleave_timer = 7000;
-            }else cleave_timer -= diff;
-
-            //Tailsweep every 2 seconds
-            if (tailsweep_timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-                //Only cast if we are behind
-                if (!m_creature->HasInArc( M_PI, target))
-                    DoCast(target,SPELL_TAILSWEEP);
-                tailsweep_timer = 20000;
-
-            }else tailsweep_timer -= diff;
+            Phase = 2;
+            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
+            m_creature->SetUnitMovementFlag(MOVEMENT_FLAG_SWIM_FLY);
+            m_creature->GetMotionMaster()->Clear(false);
+            m_creature->GetMotionMaster()->Idle();
+            m_creature->SetHover(true);
+            DoYell(SAY_PHASE_2_TRANS, LANG_UNIVERSAL, NULL);
         }
 
-
-        //Phase 2 only spells
-        if (phase == 2)
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40) && (Phase == 2))
         {
-            //Replay the take off animation if we aren't hovering
-            if (!m_creature->isHover())
+            Phase = 3;
+            m_creature->RemoveUnitMovementFlag(MOVEMENT_FLAG_SWIM_FLY);
+            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
+            m_creature->SetHover(false);
+            DoYell(SAY_PHASE_3_TRANS, LANG_UNIVERSAL, NULL);
+        }
+
+        if(Phase == 1 || Phase == 3)
+        {
+            if(FlameBreathTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_FLAMEBREATH);
+                FlameBreathTimer = 15000;
+            }else FlameBreathTimer -= diff;
+
+            if(TailSweepTimer < diff)
+            {
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                if(target && !m_creature->HasInArc(M_PI, target))
+                    DoCast(target, SPELL_TAILSWEEP);
+
+                TailSweepTimer = 10000;
+            }else TailSweepTimer -= diff;
+
+            if(CleaveTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_CLEAVE);
+                CleaveTimer = 10000;
+            }else CleaveTimer -= diff;
+
+            if(WingBuffetTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_WINGBUFFET);
+                WingBuffetTimer = 7000 + ((rand()%8)*1000);
+            }else WingBuffetTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+
+        if(Phase == 2)
+        {
+            if(!m_creature->isHover())
             {
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                 m_creature->SetHover(true);
             }
 
-            //Random movement every 25 seconds
-            if (movement_timer < diff)
-            {
-                //Inturrupt whatever we are casting then move to random position
-                m_creature->InterruptNonMeleeSpells(false);
-                uint32 position = rand()%9;
+            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != POINT_MOTION_TYPE))
+                m_creature->GetMotionMaster()->Clear(false);
 
-                switch (position)
+            if(MovementTimer < diff)
+            {
+                uint32 random = rand()%8;
+                if(random < 7)
+                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, MovementLocations[random][1], MovementLocations[random][2], MovementLocations[random][3]));
+                else
                 {
-                    case 0: SpecialMove(-65.8444,-213.809,-60.2985); break;
-                    case 1: SpecialMove(22.8739,-217.152,-60.0548);  break;
-                    case 2: SpecialMove(-33.5561,-182.682,-60.9457); break;
-                    case 3: SpecialMove(-31.4963,-250.123,-60.1278); break;
-                    case 4: SpecialMove(-2.78999,-181.431,-60.8962); break;
-                    case 5: SpecialMove(-54.9415,-232.242,-60.5555); break;
-                    case 6: SpecialMove(-65.2653,-194.879,-60.6718); break;
-                    case 7: SpecialMove(10.5665,-241.478,-60.9426);  break;
-                    case 8:
-                        //1 in 9 chance that we cast deepbreath instead of moving
-                        if ( rand() % 10 <= 4 )
-                        {
-                            DoTextEmote("takes a deep breath...",NULL);
-                            DoCast(m_creature->getVictim(),SPELL_DEEPBREATH);
-                        }
-                        break;
-                    }
+                    DoTextEmote("takes a deep breath", NULL);
+                    DoCast(m_creature->getVictim(), SPELL_DEEPBREATH);
+                }
+                MovementTimer = 25000;
+            }else MovementTimer -= diff;
 
-                DoCast(m_creature,11010);//hover?
-                movement_timer = 25000;
-            }else movement_timer -= diff;
-
-            //Random Engulfing Flames every 8 seconds
-            if (engulfingflames_timer < diff)
+            if(EngulfingFlamesTimer < diff)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    DoCast(target,SPELL_ENGULFINGFLAMES);
-                engulfingflames_timer = 8000;
-            }else engulfingflames_timer -= diff;
+                DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_ENGULFINGFLAMES);
+                EngulfingFlamesTimer = 10000;
+            }else EngulfingFlamesTimer -= diff;
 
-            //Spawn 6 whelps every 45 seconds
-            if (whelpspawn_timer < diff)
+            if(SummonWhelpsTimer < diff)
             {
-                //No core support yet so just say some text
-                DoYell("Come my children!!",LANG_UNIVERSAL,NULL);
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                Creature* Summoned = NULL;
-
-                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-                Summoned = m_creature->SummonCreature(11262,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
-                ((CreatureAI*)Summoned->AI())->AttackStart(target);
-
-
-                whelpspawn_timer = 45000;
-            }else whelpspawn_timer -= diff;
-        }
-
-
-        //Phase 3 only spells
-        if (phase == 3)
-        {
-            //Bellowing roar every 20-30 seconds in phase 3
-            if (bellowingroar_timer < diff && phase == 3)
-            {
-                DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
-                bellowingroar_timer = 20000 + rand()%10000;
-            }else bellowingroar_timer -= diff;
-        }
-
-        //Phase 1 to Phase 2 transition at 60%
-        if ( phase == 1 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 61)
-        {
-            phase = 2;
-            m_creature->InterruptNonMeleeSpells(false);
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-            (*m_creature).GetMotionMaster()->Clear(false);
-            (*m_creature).GetMotionMaster()->Idle();
-            DoCast(m_creature,11010);//hover?
-            m_creature->SetHover(true);
-            DoCast(m_creature,18430);//Dragon hover?
-            DoYell(SAY_PHASE_2_TRANS,LANG_UNIVERSAL,NULL);
-            SpecialMove(-65.8444,-213.809,-60.2985);
-        }
-
-        //Phase 2 to Phase 3 transition at 40%
-        if ( phase == 2 && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 41)
-        {
-            phase = 3;
-            m_creature->InterruptNonMeleeSpells(false);
-            SpecialMove(-65.8444,-213.809,-85.2985);
-            //m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,EMOTE_STATE_STAND);
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-            m_creature->SetHover(false);
-            (*m_creature).GetMotionMaster()->Clear(false);
-            (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
-            DoYell(SAY_PHASE_3_TRANS,LANG_UNIVERSAL,NULL);
-        }
-
-        //If we are within range melee the target and not in phase 2
-        if( phase!=2 && m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            if( m_creature->isAttackReady() )
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-
-                //Do a wing buffet once every 12 attacks in phase 1 and 3
-                if (swingcounter > 12 && m_creature->getVictim())
+                uint32 max = rand()%20;
+                for(uint8 i = 0; i < max; ++i)
                 {
-                    DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
-                    swingcounter = 0;
-                }else swingcounter++;
-            }
+                    uint8 random = rand()%4;
+                    Creature* Whelp = m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[random][1], SpawnLocations[random][2], SpawnLocations[random][3], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                    if(Whelp)
+                        Whelp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
+                }
+                SummonWhelpsTimer = 45000;
+            }else SummonWhelpsTimer -= diff;
+        }
+
+        if(Phase == 3)
+        {
+            if(BellowingRoarTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
+                BellowingRoarTimer = 30000;
+            }else BellowingRoarTimer -= diff;
         }
     }
-
-    void SpecialMove(float X, float Y, float Z)
-    {
-        m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, X, Y, Z));
-    }
-
-    //void SpecialMove(float X, float Y, float Z, uint32 Time)
-    //{
-    //    WorldPacket data( SMSG_MONSTER_MOVE, (41+m_creature->GetPackGUID().size()) );
-    //    data.append(m_creature->GetPackGUID());
-
-    //    data << m_creature->GetPositionX() << m_creature->GetPositionY() << m_creature->GetPositionZ();
-    //    // unknown field - unrelated to orientation
-    //    // seems to increment about 1000 for every 1.7 seconds
-    //    // for now, we'll just use mstime
-    //    data << getMSTime();
-
-    //    data << uint8(0);                                // walkback when walking from A to B
-    //    data << uint32(0x0200);          // flags
-    //    /* Flags:
-    //    512: Floating, moving without walking/running
-    //    */
-    //    data << Time;                                           // Time in between points
-    //    data << uint32(1);                                      // 1 single waypoint
-    //    data << X << Y << Z;                  // the single waypoint Point B
-    //    m_creature->SendMessageToSet( &data, true );
-    //}
 };
+
 CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)
 {
     return new boss_onyxiaAI (_Creature);

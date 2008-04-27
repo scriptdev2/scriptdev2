@@ -21,10 +21,11 @@ SDComment: Using a creature workaround instead of a GO for Impaling Spine.
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_black_temple.h"
 #include "GameObject.h"
 #include "TargetedMovementGenerator.h"
+#include "Map.h"
+#include "WorldPacket.h"
 
 //Aggro
 #define SAY_AGGRO       "You will die, in the name of Lady Vashj!"
@@ -71,6 +72,8 @@ EndScriptData */
 #define SPELL_HURL_SPINE               39948
 #define SPELL_SHIELD_VISUAL            37136
 
+#define DISPLAYID_SPINE         7362
+
 struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
 {
     mob_najentus_spineAI(Creature *c) : ScriptedAI(c)
@@ -113,7 +116,7 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
 
     void Aggro(Unit *who) {}
 
-    void UpdateAI(const uint32 diff) { if(InCombat) m_creature->SetInCombat(); }
+    void UpdateAI(const uint32 diff) { }
 };
 
 struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
@@ -131,10 +134,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     uint32 SpecialYellTimer;
     uint32 TidalShieldTimer;
     uint32 ImpalingSpineTimer;
+    uint32 ImpalingSpineGOTimer;
     uint32 CheckTimer; // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
     uint32 DispelShieldTimer; // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
 
     uint64 SpineTargetGUID;
+    uint64 SpineGUID;
 
     bool IsShielded;
 
@@ -148,13 +153,15 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         SpecialYellTimer = 45000 + (rand()%76)*1000;
         TidalShieldTimer = 60000;
         ImpalingSpineTimer = 45000;
+        ImpalingSpineGOTimer = ImpalingSpineTimer + 5000; // TODO: Set this by distance
         CheckTimer = 2000;
         DispelShieldTimer = 30000;
 
         SpineTargetGUID = 0;
+        SpineGUID = 0;
 
         if(pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 0);
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -175,7 +182,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 3);
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
@@ -206,10 +213,10 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         if(pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, 1);
+            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
+
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-        Reset();
     }
 
     // This is a workaround since we cannot summon GameObjects at will.
@@ -226,6 +233,29 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             ((mob_najentus_spineAI*)Spine->AI())->SetSpineVictimGUID(target->GetGUID());
             SpineTargetGUID = target->GetGUID();
         }
+    }
+
+    void SummonImpalingSpine(Unit* target)
+    {
+        if(!pInstance || !target)
+            return;
+
+        SpineGUID = pInstance->GetData64(DATA_NAJENTUS_SPINE);
+        if(!SpineGUID)
+            return;
+
+        GameObject* Spine = GameObject::GetGameObject((*m_creature), SpineGUID);
+        if(!Spine)
+            return;
+
+        float x = target->GetPositionX();
+        float y = target->GetPositionY();
+        float z = target->GetPositionZ();
+        Spine->Relocate(x, y, z, Spine->GetOrientation());
+        Spine->SetFloatValue(GAMEOBJECT_POS_X, x);
+        Spine->SetFloatValue(GAMEOBJECT_POS_Y, y);
+        Spine->SetFloatValue(GAMEOBJECT_POS_Z, z);
+        Spine->SetUInt32Value(GAMEOBJECT_DISPLAYID, DISPLAYID_SPINE);
     }
 
     void RemoveImpalingSpine()
@@ -259,7 +289,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if(IsShielded)
         {
-            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->Idle();
             if(!m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                 DoCast(m_creature, SPELL_SHIELD_VISUAL);
@@ -324,8 +354,11 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             if(target && (target->GetTypeId() == TYPEID_PLAYER))
             {
                 DoCast(target, SPELL_IMPALING_SPINE);
-                DoImpalingSpineWorkaround(target);
+                //DoImpalingSpineWorkaround(target);
+                SpineTargetGUID = target->GetGUID();
+                SummonImpalingSpine(target);
                 ImpalingSpineTimer = 45000;
+                ImpalingSpineGOTimer = 1000; // TODO: Set this by distance to player instead.
             
                 switch(rand()%2)
                 {
@@ -341,12 +374,25 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             }
         }else ImpalingSpineTimer -= diff;
 
+        /*
+        if(ImpalingSpineGOTimer < diff)
+        {
+            if(SpineTargetGUID)
+            {
+                Unit* target = Unit::GetUnit((*m_creature), SpineTargetGUID);
+                if(target && target->isAlive())
+                    SummonImpalingSpine(target);
+            }
+            ImpalingSpineTimer = 45000;
+            ImpalingSpineGOTimer = ImpalingSpineTimer + 1000;
+        }else ImpalingSpineGOTimer -= diff;*/
+
         if(TidalShieldTimer < diff)
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature, SPELL_SHIELD_VISUAL, true);
             // DoCast(m_creature, SPELL_TIDAL_SHIELD);
-            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->Idle();
             IsShielded = true;
             TidalShieldTimer = 60000;

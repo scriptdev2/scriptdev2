@@ -34,7 +34,7 @@ EndScriptData
 #define CLUCK_TEXT1         "looks up at you quizzically. Maybe you should inspect it?"
 #define CLUCK_TEXT2         "starts pecking at the feed"
 #define FACTION_FRIENDLY    35
-#define FACTION_CHICKEN     12
+#define FACTION_CHICKEN     31
 
 struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
 {
@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         if(m_creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER))
         {
             if(ResetFlagTimer < diff)
-                Reset();
+                EnterEvadeMode();
             else ResetFlagTimer -= diff;
         }
 
@@ -93,7 +93,6 @@ bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32
             {
                 _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
                 _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
-                player->CompleteQuest(QUEST_CLUCK);
             }
         }
     }

@@ -82,8 +82,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 {
     boss_hydross_the_unstableAI(Creature *c) : ScriptedAI(c) 
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        Invisible = NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -101,7 +100,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     bool CorruptedForm;
     bool HasSpawnedInvisible;
 
-    Creature *Invisible;
+    uint64 InvisibleGUID;
 
     void Reset()
     {
@@ -115,7 +114,8 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         MarkOfCorruption_Count = 0;
 
         // despawn invisible trigger
-        DespawnCreatureIfExists(Invisible);
+        DespawnCreatureIfExists(InvisibleGUID);
+        InvisibleGUID = 0;
 
         CorruptedForm = false;
         HasSpawnedInvisible = false;
@@ -141,28 +141,30 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             switch(rand()%2)
             {
                 case 0:
-                DoYell(SAY_CORRUPT_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY1);
-                break;
+                    DoYell(SAY_CORRUPT_SLAY1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY1);
+                    break;
 
                 case 1:
-                DoYell(SAY_CORRUPT_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY2);
-                break;
+                    DoYell(SAY_CORRUPT_SLAY2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY2);
+                    break;
             }
         else
+        {
             switch(rand()%2)
             {
                 case 0:
-                DoYell(SAY_CLEAN_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY1);
-                break;
+                    DoYell(SAY_CLEAN_SLAY1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY1);
+                    break;
 
                 case 1:
-                DoYell(SAY_CLEAN_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY2);
-                break;
+                    DoYell(SAY_CLEAN_SLAY2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY2);
+                    break;
             }
+        }
     }
 
     void JustDied(Unit *victim)
@@ -182,18 +184,22 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
 
         // despawn invisible trigger
-        DespawnCreatureIfExists(Invisible);
+        DespawnCreatureIfExists(InvisibleGUID);
     }
 
     void Aggro(Unit *who)
     {
-                StartEvent();
+        StartEvent();
     }
 
-    void DespawnCreatureIfExists(Creature *pUnit)
+    void DespawnCreatureIfExists(uint64 GUID)
     {
-        if(pUnit && pUnit->isAlive())
-            pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        if(GUID)
+        {
+            Unit* pUnit = Unit::GetUnit((*m_creature), GUID);
+            if(pUnit && pUnit->isAlive())
+                pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -202,17 +208,15 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         if(!HasSpawnedInvisible)
             if(Invisible_Timer < diff)
             {
-                Invisible = m_creature->SummonCreature(12999, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-
+                Creature* Invisible = m_creature->SummonCreature(12999, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 if(Invisible)
                 {
                     //Root self
                     Invisible->CastSpell(Invisible, 33356, true);
 
-                    //Make super invis
-                    Invisible->CastSpell(Invisible, 8149, true);
-
-                }else DoYell("Unable to spawn invisible trigger", LANG_UNIVERSAL, NULL);
+                    Invisible->SetVisibility(VISIBILITY_OFF);
+                    InvisibleGUID = Invisible->GetGUID();
+                }else DoTextEmote("Unable to spawn invisible trigger", NULL);
 
                 HasSpawnedInvisible = true;
             }else Invisible_Timer -= diff;
@@ -233,25 +237,15 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     switch(MarkOfCorruption_Count)
                     {
-                        case 0:
-                        mark_spell = SPELL_MARK_OF_CORRUPTION1;
-                        break;
+                        case 0: mark_spell = SPELL_MARK_OF_CORRUPTION1; break;
 
-                        case 1:
-                        mark_spell = SPELL_MARK_OF_CORRUPTION2;
-                        break;
+                        case 1: mark_spell = SPELL_MARK_OF_CORRUPTION2; break;
 
-                        case 2:
-                        mark_spell = SPELL_MARK_OF_CORRUPTION3;
-                        break;
+                        case 2: mark_spell = SPELL_MARK_OF_CORRUPTION3; break;
 
-                        case 3:
-                        mark_spell = SPELL_MARK_OF_CORRUPTION4;
-                        break;
+                        case 3: mark_spell = SPELL_MARK_OF_CORRUPTION4; break;
 
-                        case 4:
-                        mark_spell = SPELL_MARK_OF_CORRUPTION5;
-                        break;
+                        case 4: mark_spell = SPELL_MARK_OF_CORRUPTION5; break;
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
@@ -276,6 +270,10 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             //PosCheck_Timer
             if(PosCheck_Timer < diff)
             {
+                Unit* Invisible = NULL;
+                if(InvisibleGUID)
+                    Invisible = Unit::GetUnit((*m_creature), InvisibleGUID);
+
                 if(Invisible && m_creature->IsWithinDistInMap(Invisible, SWITCH_RADIUS))
                 {
                     // switch to clean form
@@ -294,7 +292,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
 
                     
-                     // disabled
+                    m_creature->SetMeleeDamageSchool(SPELL_SCHOOL_FROST);
                 }
 
                 PosCheck_Timer = 5000;
@@ -312,25 +310,15 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     switch(MarkOfHydross_Count)
                     {
-                        case 0:
-                        mark_spell = SPELL_MARK_OF_HYDROSS1;
-                        break;
+                        case 0:  mark_spell = SPELL_MARK_OF_HYDROSS1; break;
 
-                        case 1:
-                        mark_spell = SPELL_MARK_OF_HYDROSS2;
-                        break;
+                        case 1:  mark_spell = SPELL_MARK_OF_HYDROSS2; break;
 
-                        case 2:
-                        mark_spell = SPELL_MARK_OF_HYDROSS3;
-                        break;
+                        case 2:  mark_spell = SPELL_MARK_OF_HYDROSS3; break;
 
-                        case 3:
-                        mark_spell = SPELL_MARK_OF_HYDROSS4;
-                        break;
+                        case 3:  mark_spell = SPELL_MARK_OF_HYDROSS4; break;
 
-                        case 4:
-                        mark_spell = SPELL_MARK_OF_HYDROSS5;
-                        break;
+                        case 4:  mark_spell = SPELL_MARK_OF_HYDROSS5; break;
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
@@ -355,6 +343,10 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             //PosCheck_Timer
             if(PosCheck_Timer < diff)
             {
+                Unit* Invisible = NULL;
+                if(InvisibleGUID)
+                    Invisible = Unit::GetUnit((*m_creature), InvisibleGUID);
+
                 if(Invisible && !m_creature->IsWithinDistInMap(Invisible, SWITCH_RADIUS))
                 {
                     // switch to corrupted form
@@ -372,8 +364,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
                     Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
 
-                     // disabled
-                    
+                    m_creature->SetMeleeDamageSchool(SPELL_SCHOOL_NATURE);
                 }
 
                 PosCheck_Timer = 5000;

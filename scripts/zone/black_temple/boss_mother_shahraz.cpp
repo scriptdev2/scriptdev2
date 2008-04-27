@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 0);
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
 
         for(uint8 i = 0; i<3; i++)
             TargetGUID[i] = 0;
@@ -135,7 +135,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         if(pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 1);
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
         Reset();
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, 3);
+            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);

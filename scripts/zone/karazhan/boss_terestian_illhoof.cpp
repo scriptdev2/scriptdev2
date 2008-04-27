@@ -58,7 +58,7 @@ EndScriptData */
 #define SOUND_SUMMON2       9331
 
 #define CREATURE_DEMONCHAINS    17248
-#define CREATURE_HOMUNCULUS     16539
+#define CREATURE_FIENDISHIMP    17267
 #define CREATURE_PORTAL         17265
 
 #define SACRIFICE_X     -11240.599
@@ -146,7 +146,8 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
     }
 
     void Aggro(Unit* who) {}
-    void MoveInLineOfSight(Unit* who) {return;}
+    void AttackStart(Unit* who) {}
+    void MoveInLineOfSight(Unit* who) {}
 
     void JustDied(Unit *killer)
     {
@@ -169,13 +170,16 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     ScriptedInstance *pInstance;
 
+    uint64 KilrekGUID;
     uint64 PortalGUID[2];
 
+    uint32 CheckKilrekTimer;
     uint32 SacrificeTimer;
     uint32 ShadowboltTimer;
     uint32 SummonTimer;
     uint32 BerserkTimer;
 
+    bool SummonKilrek;
     bool SummonedPortals;
     bool Berserk;
 
@@ -193,6 +197,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             }
         }
 
+        CheckKilrekTimer    =  5000;
         SacrificeTimer      = 30000;
         ShadowboltTimer     =  5000;
         SummonTimer         = 10000;
@@ -200,6 +205,9 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         SummonedPortals     = false;
         Berserk             = false;
+
+        if(pInstance)
+            pInstance->SetData(DATA_TERESTIAN_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit* who)
@@ -208,7 +216,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
-            pInstance->SetData(DATA_TERESTIAN_EVENT, 1); // In Progress
+            pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS); // In Progress
     }
 
     void KilledUnit(Unit *victim)
@@ -244,13 +252,38 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData(DATA_TERESTIAN_EVENT, 3); // Complete
+            pInstance->SetData(DATA_TERESTIAN_EVENT, DONE); // Complete
     }
 
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
             return;
+
+        if(CheckKilrekTimer < diff)
+        {
+            if(!pInstance)
+                return;
+
+            CheckKilrekTimer = 5000;
+
+            Creature* Kilrek = ((Creature*)Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KILREK)));
+            if(SummonKilrek && Kilrek)
+            {
+                Kilrek->Respawn();
+                Kilrek->AI()->AttackStart(m_creature->getVictim());
+
+                SummonKilrek = false;
+                return;
+            }
+
+            if(!Kilrek || !Kilrek->isAlive())
+            {
+                SummonKilrek = true;
+                CheckKilrekTimer = 45000;
+            }
+
+        }else CheckKilrekTimer -= diff;
 
         if(SacrificeTimer < diff)
         {
@@ -316,16 +349,20 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                     X = PORTAL_X1;
                     Y = PORTAL_Y1;
                     break;
+     
                 case 1:
                     X = PORTAL_X2;
                     Y = PORTAL_Y2;
                     break;
             }
 
-            Creature* Homunculus = m_creature->SummonCreature(CREATURE_HOMUNCULUS, X, Y, PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
-            if(Homunculus)
-                Homunculus->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
-            SummonTimer = 2000;
+            Creature* Imp = m_creature->SummonCreature(CREATURE_FIENDISHIMP, X, Y, PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
+            if(Imp)
+            {
+                Imp->AddThreat(m_creature->getVictim(), 1.0f);
+                Imp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
+            }
+            SummonTimer = 5000;
         }else SummonTimer -= diff;
 
         if(!Berserk)
@@ -339,9 +376,9 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
     }
 };
 
-struct MANGOS_DLL_DECL mob_homunculusAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
 {
-    mob_homunculusAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_karazhan_impAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FireboltTimer;
 
@@ -375,9 +412,9 @@ CreatureAI* GetAI_mob_kilrek(Creature *_Creature)
     return new mob_kilrekAI (_Creature);
 }
 
-CreatureAI* GetAI_mob_homunculus(Creature *_Creature)
+CreatureAI* GetAI_mob_karazhan_imp(Creature *_Creature)
 {
-    return new mob_homunculusAI (_Creature);
+    return new mob_karazhan_impAI (_Creature);
 }
 
 CreatureAI* GetAI_mob_demon_chain(Creature *_Creature)
@@ -399,8 +436,8 @@ void AddSC_boss_terestian_illhoof()
     m_scripts[nrscripts++] = newscript;
     
     newscript = new Script;
-    newscript->Name="mob_homunculus";
-    newscript->GetAI = GetAI_mob_homunculus;
+    newscript->Name="mob_karazhan_imp";
+    newscript->GetAI = GetAI_mob_karazhan_imp;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

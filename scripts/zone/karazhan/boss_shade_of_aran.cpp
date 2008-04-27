@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         DrinkInturrupted = false;
 
         if(pInstance)
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, 0); // Not in progress
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED); // Not in progress
     }
 
     void KilledUnit(Unit *victim)
@@ -197,26 +197,29 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         DoPlaySoundToSet(NULL, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, 3); // Completed
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE); // Completed
     }
 
     void Aggro(Unit *who)
     {        
-                switch(rand()%3)
-                {
-                    case 0:
-                        DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                        break;
-                    case 1:
-                        DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                        break;
-                    case 2:
-                        DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                        break;
-                }
+        switch(rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                break;
+        }
+
+        if(pInstance)
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, IN_PROGRESS);
     }
 
     void FlameWreathEffect()
@@ -257,10 +260,6 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
-        //Prevent Movement while casting
-        if (m_creature->IsNonMeleeSpellCasted(false) && !m_creature->GetMotionMaster()->empty())
-            m_creature->GetMotionMaster()->Clear();
 
         //Cooldowns for casts
         if (ArcaneCooldown)
@@ -462,8 +461,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, SOUND_BLIZZARD2);
                 }
 
-                Unit* Spawn = NULL;
-                Spawn = m_creature->SummonCreature(CREATURE_ARAN_BLIZZARD, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
+                Creature* Spawn = NULL;
+                Spawn = DoSpawnCreature(CREATURE_ARAN_BLIZZARD, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
                 if (Spawn)
                 {
                     Spawn->setFaction(m_creature->getFaction());
@@ -544,7 +543,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
     void DamageTaken(Unit* pAttacker, uint32 &damage)
     {
-        if (!DrinkInturrupted && Drinking && damage > 0)
+        if (!DrinkInturrupted && Drinking && damage)
             DrinkInturrupted = true;
     }
 
@@ -587,16 +586,12 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
     void Reset()
     {
         CastTimer = 2000 + (rand()%3000);
-
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
