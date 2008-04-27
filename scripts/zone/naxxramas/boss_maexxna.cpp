@@ -150,15 +150,15 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                 {
                 case 0:
                     DoTeleportPlayer(target, LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
-                    Wrap = DoSpawnCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    Wrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
                     break;
                 case 1:
                     DoTeleportPlayer(target, LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
-                    Wrap = DoSpawnCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    Wrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
                     break;
                 case 2:
                     DoTeleportPlayer(target, LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
-                    Wrap = DoSpawnCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    Wrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
                     break;
                 }
                 if(Wrap)
@@ -168,7 +168,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                 }
             }
         }
-
     }
 
 
@@ -245,7 +244,6 @@ CreatureAI* GetAI_boss_maexxna(Creature *_Creature)
 {
     return new boss_maexxnaAI (_Creature);
 }
-
 
 void AddSC_boss_maexxna()
 {
