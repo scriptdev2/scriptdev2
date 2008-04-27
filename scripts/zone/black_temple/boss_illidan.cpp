@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_illidan_stormrage
 SD%Complete: 90
-SDComment: Eye Blast is buggy, some workarounds for Flame Crash, Flame Burst (damage portion) and Parasitic Shadowfiend, unable to summon GOs.
+SDComment: Some workarounds for Flame Crash, Flame Burst (damage portion) and Parasitic Shadowfiend, unable to summon GOs.
 SDCategory: Black Temple
 EndScriptData */
 
@@ -580,7 +580,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(!i)
                     Trigger->CastSpell(Trigger, SPELL_EYE_BLAST_TRIGGER, true);
                 else
-                    Trigger->CastSpell(Trigger, SPELL_EYE_BLAST, true);
+                    DoCast(Trigger, SPELL_EYE_BLAST, true);
             }
         }
     }
