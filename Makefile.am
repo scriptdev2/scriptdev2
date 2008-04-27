@@ -217,11 +217,10 @@ scripts/zone/karazhan/boss_nightbane.cpp \
 scripts/zone/karazhan/boss_prince_malchezaar.cpp \
 scripts/zone/karazhan/boss_shade_of_aran.cpp \
 scripts/zone/karazhan/boss_terestian_illhoof.cpp \
+scripts/zone/karazhan/bosses_opera.cpp \
 scripts/zone/karazhan/def_karazhan.h \
 scripts/zone/karazhan/instance_karazhan.cpp \
-scripts/zone/karazhan/boss_moroes.cpp \
 scripts/zone/karazhan/npcs_karazhan.cpp \
-scripts/zone/karazhan/bosses_opera.cpp \
 scripts/zone/loch_modan/npcs_loch_modan.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_lord_vyletongue.cpp \
