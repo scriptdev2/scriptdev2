@@ -80,23 +80,23 @@ struct MANGOS_DLL_DECL boss_herodAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
 
-                //Activate Berserker Stance
-                DoCast(m_creature,SPELL_BERSERKERSTANCE);
+        //Activate Berserker Stance
+        DoCast(m_creature,SPELL_BERSERKERSTANCE);
 
-                //Switch between 2 different charge methods
-                switch (rand()%2)
-                {
-                case 0:
-                    DoCast(m_creature,SPELL_RUSHINGCHARGE);
-                    break;
+        //Switch between 2 different charge methods
+        switch (rand()%2)
+        {
+        case 0:
+            DoCast(m_creature,SPELL_RUSHINGCHARGE);
+            break;
 
-                case 1:
-                    DoCast(m_creature,SPELL_RUSHINGCHARGE1);
-                    break;
-                }
+        case 1:
+            DoCast(m_creature,SPELL_RUSHINGCHARGE1);
+            break;
+        }
     }
 
     void UpdateAI(const uint32 diff)

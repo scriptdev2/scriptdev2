@@ -34,7 +34,7 @@ EndScriptData */
 #define SPELL_MANGLE                    19820    
 #define SPELL_AEGIS                     20620       //This is self casted whenever we are below 50%
 
-#define SAY_AEGIS                   "Core Rager refuses to die while its master is in trouble"
+#define EMOTE_AEGIS                   "refuses to die while its master is in trouble"
 
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
@@ -193,17 +193,15 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
             //Cast AEGIS
             if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
             {
-
-                    DoCast(m_creature,SPELL_AEGIS);
-                    DoYell(SAY_AEGIS,LANG_UNIVERSAL,NULL);
+                DoCast(m_creature,SPELL_AEGIS);
+                DoTextEmote(EMOTE_AEGIS, NULL);
             }
 
         //Check_Timer
         if(Check_Timer < diff)
         {
             if(pInstance)
-            {    
-
+            {
                     Unit *pGolemagg = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_GOLEMAGG));
                     if(!pGolemagg || !pGolemagg->isAlive())
                     {

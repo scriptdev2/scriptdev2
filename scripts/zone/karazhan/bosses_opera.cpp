@@ -136,6 +136,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 
     uint32 WaterBoltTimer;
     uint32 FearTimer;
+    uint32 SummonTitoTimer;
 
     bool SummonedTito;
     bool TitoDied;
@@ -147,6 +148,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
 
         WaterBoltTimer = 5000;
         FearTimer = 15000;
+        SummonTitoTimer = 47500;
 
         SummonedTito = false;
         TitoDied = false;
@@ -210,8 +212,12 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
             FearTimer = 30000;
         }else FearTimer -= diff;
 
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50) && !SummonedTito)
+        if(!SummonedTito)
+        {
+            if(SummonTitoTimer < diff)
                 SummonTito();
+            else SummonTitoTimer -= diff;
+        }
 
         DoMeleeAttackIfReady();
     }
@@ -456,9 +462,9 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
         {
             if(RustTimer < diff)
             {
+                RustCount++;
                 DoTextEmote("begins to rust", NULL);
                 DoCast(m_creature, SPELL_RUST);
-                RustCount++;
                 RustTimer = 6000;
             }else RustTimer -= diff;
         }
@@ -615,6 +621,9 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
+
+        if(m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
 
         if(CycloneTimer < diff)
         {
@@ -1003,6 +1012,9 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         EternalAffectionTimer = 25000;
         PowerfulAttractionTimer = 5000;
 
+        if(IsFakingDeath)
+            Resurrect(m_creature);
+
         IsFakingDeath = false;
         SummonedRomulo = false;
         RomuloDead = false;
@@ -1085,6 +1097,9 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
         DaringTimer = 20000;
         DeadlySwatheTimer = 25000;
         PoisonThrustTimer = 10000;
+
+        if(IsFakingDeath)
+            Resurrect(m_creature);
 
         IsFakingDeath = false;
         JulianneDead = false;
