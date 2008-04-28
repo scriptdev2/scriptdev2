@@ -353,7 +353,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {        
         if(AggroTimer)
-            if(AggroTimer < diff)
+            if(AggroTimer <= diff)
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                 AggroTimer = 0;
@@ -536,7 +536,7 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if(AggroTimer)
-            if(AggroTimer < diff)
+            if(AggroTimer <= diff)
             {
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
                 AggroTimer = 0;
