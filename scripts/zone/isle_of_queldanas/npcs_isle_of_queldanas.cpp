@@ -51,7 +51,7 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
         nodes.resize(2);
         nodes[0] = 209;                                     //from ayren
         nodes[1] = 210;                                     //end at ayren
-        player->ActivateTaxiPathTo(nodes,25044);            //TaxiPath 779
+        player->ActivateTaxiPathTo(nodes,22840);            //TaxiPath 779
     }
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
@@ -62,7 +62,7 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
         nodes.resize(2);
         nodes[0] = 211;                                     //from ayren
         nodes[1] = 212;                                     //end at unrestrained dragonhawk
-        player->ActivateTaxiPathTo(nodes,25044);            //TaxiPath 784
+        player->ActivateTaxiPathTo(nodes,22840);            //TaxiPath 784
     }
     return true;
 }
@@ -91,7 +91,7 @@ bool GossipSelect_npc_unrestrained_dragonhawk(Player *player, Creature *_Creatur
         nodes.resize(2);
         nodes[0] = 212;                                     //from unrestrained dragonhawk
         nodes[1] = 211;                                     //end at ayren
-        player->ActivateTaxiPathTo(nodes,25044);            //TaxiPath 788
+        player->ActivateTaxiPathTo(nodes,22840);            //TaxiPath 788
     }
     return true;
 }
