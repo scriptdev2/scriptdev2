@@ -127,7 +127,7 @@ extern void AddSC_npcs_azuremyst_isle();
 
 //Badlands
 //Barrens
-extern void AddSC_npc_beaten_corpse();
+extern void AddSC_npcs_the_barrens();
 
 //Black Temple
 extern void AddSC_mob_blacktemple();
@@ -290,6 +290,8 @@ extern void AddSC_npcs_felwood();
 extern void AddSC_npcs_feralas();
 
 //Ghostlands
+extern void AddSC_npcs_ghostlands();
+
 //Gnomeregan
 //Gruul's Lair
 extern void AddSC_boss_gruul();
@@ -323,6 +325,9 @@ extern void AddSC_npcs_hellfire_peninsula();
 //Hinterlands
 //Ironforge
 extern void AddSC_npcs_ironforge();
+
+//Isle of Quel'Danas
+extern void AddSC_npcs_isle_of_queldanas();
 
 //Karazhan
 extern void AddSC_boss_attumen();
@@ -534,6 +539,7 @@ extern void AddSC_npc_cairne_bloodhoof();
 extern void AddSC_boss_ironaya();
 extern void AddSC_mob_jadespine_basilisk();
 extern void AddSC_mob_uldaman();
+extern void AddSC_npcs_uldaman();
 
 //Undercity
 extern void AddSC_npcs_undercity();
@@ -984,7 +990,7 @@ void ScriptsInit()
 
     //Badlands
     //Barrens
-    AddSC_npc_beaten_corpse();
+    AddSC_npcs_the_barrens();
 
     //Black Temple
     AddSC_mob_blacktemple();
@@ -1147,6 +1153,8 @@ void ScriptsInit()
     AddSC_npcs_feralas();
 
     //Ghostlands
+    AddSC_npcs_ghostlands();
+
     //Gnomeregan
     //Gruul's Lair
     AddSC_boss_gruul();
@@ -1180,6 +1188,9 @@ void ScriptsInit()
     //Hinterlands
     //Ironforge
     AddSC_npcs_ironforge();
+
+    //Isle of Quel'Danas
+    AddSC_npcs_isle_of_queldanas();
 
     //Karazhan
     AddSC_boss_attumen();
@@ -1392,6 +1403,7 @@ void ScriptsInit()
     AddSC_boss_ironaya();
     AddSC_mob_jadespine_basilisk();
     AddSC_mob_uldaman();
+    AddSC_npcs_uldaman();
 
     //Undercity
     AddSC_npcs_undercity();

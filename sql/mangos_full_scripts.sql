@@ -118,6 +118,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_susurrus' WHERE `entry` = 174
 
 /* BARRENS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_beaten_corpse' WHERE `entry` = 10668;
+UPDATE `creature_template` SET `ScriptName` = 'npc_sputtervalve' WHERE `entry` = 3442;
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script` = 'instance_black_temple' WHERE `map` = 564;
@@ -346,7 +347,6 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_restless_apparition' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'mobs_direhorn_grimtotem' WHERE `entry` = 23595;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_risen_husk_spirit' WHERE `entry` IN (23554, 23555);
 
-
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'mobs_ghoul_flayer' WHERE `entry` IN (8530, 8531, 8532);
 UPDATE `creature_template` SET `ScriptName` = 'npc_darrowshire_spirit' WHERE `entry` = 11064;
@@ -365,7 +365,8 @@ UPDATE `creature_template` SET `ScriptName` = 'npcs_riverbreeze_and_silversky' W
 UPDATE `creature_template` SET `ScriptName` = 'npc_screecher_spirit' WHERE `entry` = 8612;
 
 /* GHOSTLANDS */
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_blood_knight_dawnstar' WHERE `entry` = 17832;
+UPDATE `creature_template` SET `ScriptName` = 'npc_budd_nedreck' WHERE `entry` = 23559;
 
 /* GNOMEREGAN */
 
@@ -425,7 +426,11 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_gryphoneer_windbellow' WHERE 
 
 
 /* IRONFORGE */
+UPDATE `creature_template` SET `ScriptName` = 'npc_royal_historian_archesonus' WHERE `entry` = 8879;
 
+/* ISLE OF QUEL'DANAS */
+UPDATE `creature_template` SET `ScriptName` = 'npc_ayren_cloudbreaker' WHERE `entry` = 25059;
+UPDATE `creature_template` SET `ScriptName` = 'npc_unrestrained_dragonhawk' WHERE `entry` = 25236;
 
 /* KARAZHAN */
 UPDATE `instance_template` SET `script` = 'instance_karazhan' WHERE `map` = 532;
@@ -728,6 +733,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_freed_soul' WHERE `entry` = 1
 /* TANARIS */
 UPDATE `creature_template` SET `ScriptName` = 'npc_marin_noggenfogger' WHERE `entry` = 7564;
 UPDATE `creature_template` SET `ScriptName` = 'npc_steward_of_time' WHERE `entry` = 20142;
+UPDATE `creature_template` SET `ScriptName` = 'npc_stone_watcher_of_norgannon' WHERE `entry` = 7918;
 
 /* TELDRASSIL */
 
@@ -809,13 +815,10 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_cairne_bloodhoof' WHERE `entr
 
 
 /* ULDAMAN */
-/* Uldaman Trash Mobs */
+UPDATE `creature_template` SET `ScriptName` = 'boss_ironaya' WHERE `entry` = 7228;
 UPDATE `creature_template` SET `ScriptName` = 'mob_uldaman' WHERE `entry` IN (4847,4852,4853,4854,4860,4861,6910,7011,7012,7022,7030,7078,7291);
 UPDATE `creature_template` SET `ScriptName` = 'mob_jadespine_basilisk' WHERE `entry` = 4863;
-
-/* Uldaman Boss Ironaya */
-UPDATE `creature_template` SET `ScriptName` = 'boss_ironaya' WHERE `entry` = 7228;
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_lore_keeper_of_norgannon' WHERE `entry` = 7172;
 
 /* UN'GORO CRATER */
 

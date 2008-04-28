@@ -15,9 +15,9 @@
 */   
 
 /* ScriptData
-SDName: boss_cthun
-SD%Complete: 10
-SDComment: Missing Phase 2 and eye beam phase
+SDName: boss_astromancer
+SD%Complete: 75
+SDComment: 
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 

@@ -79,7 +79,7 @@ scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/mobs_spitelashes.cpp \
 scripts/zone/azshara/npcs_azshara.cpp \
 scripts/zone/azuremyst_isle/npcs_azuremyst_isle.cpp \
-scripts/zone/barrens/npc_beaten_corpse.cpp \
+scripts/zone/barrens/npcs_the_barrens.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \
 scripts/zone/black_temple/boss_illidan.cpp \
 scripts/zone/black_temple/boss_mother_shahraz.cpp \
@@ -189,6 +189,7 @@ scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
+scripts/zone/ghostlands/npcs_ghostlands.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/def_gruuls_lair.h \
@@ -208,6 +209,7 @@ scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
 scripts/zone/hellfire_peninsula/npcs_hellfire_peninsula.cpp \
 scripts/zone/ironforge/npcs_ironforge.cpp \
+scripts/zone/isle_of_queldanas/npcs_isle_of_queldanas.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
 scripts/zone/karazhan/boss_maiden_of_virtue.cpp \
 scripts/zone/karazhan/boss_midnight.cpp \
@@ -370,6 +372,7 @@ scripts/zone/thunder_bluff/npc_cairne_bloodhoof.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
+scripts/zone/uldaman/npcs_uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
 scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \

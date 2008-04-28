@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Tanaris
 SD%Complete: 100
-SDComment: Quest support: 10279 (Special flight path). Noggenfogger vendor
+SDComment: Quest support: 2954, 10279(Special flight path). Noggenfogger vendor
 SDCategory: Tanaris
 EndScriptData */
 
@@ -134,6 +134,55 @@ CreatureAI* GetAI_npc_steward_of_time(Creature *_Creature)
 }
 
 /*######
+## npc_stone_watcher_of_norgannon
+######*/
+
+bool GossipHello_npc_stone_watcher_of_norgannon(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestStatus(2954) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "What function do you serve?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->SEND_GOSSIP_MENU(1674, _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_stone_watcher_of_norgannon(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM( 0, "What are the Plates of Uldum?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(1675, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "Where are the Plates of Uldum?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(1676, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM( 0, "Excuse me? We've been \"reschedueled for visitations\"? What does that mean?!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(1677, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM( 0, "So, what's inside Uldum?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(1678, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM( 0, "I will return when i have the Plates of Uldum.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(1679, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->CLOSE_GOSSIP_MENU();
+            player->AreaExploredOrEventHappens(2954);
+            break;
+    }
+    return true;
+}
+
+/*######
 ## AddSC
 ######*/
 
@@ -153,5 +202,11 @@ void AddSC_npcs_tanaris()
     newscript->pGossipHello          = &GossipHello_npc_steward_of_time;
     newscript->pGossipSelect         = &GossipSelect_npc_steward_of_time;
     newscript->pQuestAccept          = &QuestAccept_npc_steward_of_time;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_stone_watcher_of_norgannon";
+    newscript->pGossipHello =  &GossipHello_npc_stone_watcher_of_norgannon;
+    newscript->pGossipSelect = &GossipSelect_npc_stone_watcher_of_norgannon;
     m_scripts[nrscripts++] = newscript;
 }

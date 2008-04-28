@@ -305,7 +305,7 @@
 					Name="Barrens"
 					>
 					<File
-						RelativePath="..\scripts\zone\barrens\npc_beaten_corpse.cpp"
+						RelativePath="..\scripts\zone\barrens\npcs_the_barrens.cpp"
 						>
 					</File>
 				</Filter>
@@ -1344,6 +1344,10 @@
 						RelativePath="..\scripts\zone\uldaman\mob_uldaman.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\uldaman\npcs_uldaman.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Un&apos;Goro Crater"
@@ -1500,6 +1504,10 @@
 				<Filter
 					Name="Ghostlands"
 					>
+					<File
+						RelativePath="..\scripts\zone\ghostlands\npcs_ghostlands.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Blade&apos;s Edge Mountains"
@@ -2072,6 +2080,10 @@
 				<Filter
 					Name="Isle of Quel&apos;Danas"
 					>
+					<File
+						RelativePath="..\scripts\zone\isle_of_queldanas\npcs_isle_of_queldanas.cpp"
+						>
+					</File>
 					<Filter
 						Name="Sunwell Plateau"
 						>

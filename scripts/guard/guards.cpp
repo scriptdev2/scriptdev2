@@ -3131,6 +3131,23 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
     return true;
 }
 
+bool ReceiveEmote_guard_stormwind(Player *player, Creature *_Creature, uint32 emote) 
+{
+    if(player->GetTeam() == ALLIANCE)
+    {
+        switch(emote)
+        {
+            case EMOTE_ONESHOT_WAVE:
+                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                break;
+            case EMOTE_ONESHOT_SALUTE:
+                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                break;
+        }
+    }
+    return true;
+}
+
 /*******************************************************
  * guard_stormwind end
  *******************************************************/
@@ -3785,6 +3802,7 @@ void AddSC_guards()
     newscript->Name="guard_stormwind";
     newscript->pGossipHello          = &GossipHello_guard_stormwind;
     newscript->pGossipSelect         = &GossipSelect_guard_stormwind;
+    newscript->pReceiveEmote         = &ReceiveEmote_guard_stormwind;
     newscript->GetAI = GetAI_guard_stormwind;
     m_scripts[nrscripts++] = newscript;
 
