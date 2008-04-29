@@ -39,9 +39,6 @@
 #define WORLDSTATE_WAVES        2842
 #define WORLDSTATE_ENEMIES      2453
 
-#define SOUND_AZGALOR_DEATH     10986
-#define SPEECH_AZGALOR_DEATH    "All of your efforts have been in vaid, for the draining of the World Tree has already begun! Soon, the heart of your world shall beat no more!"
-
 /*** Spells for Jaina ***/
 #define SPELL_BRILLIANCE_AURA     31260 // The database must handle this spell via creature_addon
 #define SPELL_BLIZZARD            31266
@@ -197,8 +194,6 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     void SummonNextWave(Wave wave[18], uint32 Count, uint32 faction);
 
     void StartEvent(Player* player);
-    
-    void SetInstanceData(uint32 Event, uint32 data);
 
     uint32 GetInstanceData(uint32 Event);
 

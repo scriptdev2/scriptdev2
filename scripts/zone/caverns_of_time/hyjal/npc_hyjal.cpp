@@ -22,7 +22,6 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "hyjalAI.h"
-#include "def_hyjal.h"
 
 #define GOSSIP_ITEM_BEGIN_ALLY  "We are ready to defend the Alliance base."
 #define GOSSIP_ITEM_ANETHERON   "The defenses are holding up; we can continue."
@@ -87,15 +86,11 @@ bool GossipSelect_npc_jaina_proudmoore(Player *player, Creature *_Creature, uint
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_RAGEWINTERCHILLEVENT, IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_RAGEWINTERCHILLEVENT, DONE);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_ANETHERONEVENT, IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_ANETHERONEVENT, DONE);
             ((hyjalAI*)_Creature->AI())->TeleportRaid(player, HORDEBASE_X, HORDEBASE_Y, HORDEBASE_Z);
             break;
     }
@@ -151,15 +146,11 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_KAZROGALEVENT, IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_KAZROGALEVENT, DONE);
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_AZGALOREVENT, IN_PROGRESS);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->SetInstanceData(DATA_AZGALOREVENT, DONE);
             ((hyjalAI*)_Creature->AI())->TeleportRaid(player, NIGHTELFBASE_X, NIGHTELFBASE_Y, NIGHTELFBASE_Z);
             break;
     }

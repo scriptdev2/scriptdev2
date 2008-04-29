@@ -782,7 +782,7 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
     uint32 SwipeTimer;
 
     uint64 HoodGUID;
-    uint32 TempThreat;
+    float TempThreat;
 
     bool IsChasing;
 

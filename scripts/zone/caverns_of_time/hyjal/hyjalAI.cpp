@@ -46,7 +46,11 @@ void hyjalAI::Reset()
     /** Set faction properly based on creature entry**/
     switch(m_creature->GetEntry())
     {
-        case 17772: Faction = 0; break;
+        case 17772: 
+            Faction = 0; 
+            DoCast(m_creature, SPELL_BRILLIANCE_AURA, true);
+            break;
+
         case 17852: Faction = 1; break;
     }
 
@@ -206,13 +210,7 @@ void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
 
     if(Faction == 1) // Horde
     {
-        Creature* Echo = DoSpawnCreature(13083, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 5000);
-        if(Echo)
-        {
-            Echo->SetVisibility(VISIBILITY_OFF);
-            DoPlaySoundToSet(Echo, SOUND_AZGALOR_DEATH);
-            ((ScriptedAI*)Echo->AI())->DoYell(SPEECH_AZGALOR_DEATH, LANG_UNIVERSAL, NULL);
-        }
+
     }
 
     for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
@@ -236,15 +234,6 @@ void hyjalAI::StartEvent(Player* player)
         //UpdateWorldState(0, WORLDSTATE_WAVES);
         //UpdateWorldState(0, WORLDSTATE_ENEMY);
     }
-}
-
-void hyjalAI::SetInstanceData(uint32 Event, uint32 data)
-{
-    if(!Event || !data)
-        return;
-
-    if(pInstance)
-        pInstance->SetData(Event, data);
 }
 
 uint32 hyjalAI::GetInstanceData(uint32 Event)

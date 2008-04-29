@@ -50,6 +50,50 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 
     }
 
+    void AttackStart(Unit* who)
+    {
+        if (!who)
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackNoMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
+    }
+
+    void MoveInLineOfSight(Unit* who)
+    {
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        {
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if(m_creature->IsWithinDistInMap(who, attackRadius))
+            {
+                // Check first that object is in an angle in front of this one before LoS check
+                if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+                {
+                    DoStartAttackNoMovement(who);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                    if (!InCombat)
+                    {
+                        Aggro(who);
+                        InCombat = true;
+                    }
+                }
+            }
+        }
+    }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

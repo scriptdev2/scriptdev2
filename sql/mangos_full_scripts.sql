@@ -252,9 +252,14 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_ragged_john' WHERE `entry` = 
 
 /* MT. HYJAL */
 UPDATE `instance_template` SET `script` = 'instance_hyjal' WHERE `map` = 534;
-UPDATE creature_template SET ScriptName = 'npc_tyrande_whisperwind' WHERE `entry` = 17948;
-UPDATE creature_template SET ScriptName = 'npc_thrall' WHERE `entry`  = 17852;
-UPDATE creature_template SET ScriptName = 'npc_jaina_proudmoore' WHERE `entry` = 17772;
+UPDATE `creature_template` SET `ScriptName` = 'boss_rage_winterchill' WHERE `entry` = 17767;
+UPDATE `creature_template` SET `ScriptName` = 'boss_anetheron' WHERE `entry` = 17808;
+UPDATE `creature_template` SET `ScriptName` = 'boss_kazrogal' WHERE `entry` = 17888;
+UPDATE `creature_template` SET `ScriptName` = 'boss_azgalor' WHERE `entry` = 17842;
+UPDATE `creature_template` SET `ScriptName` = 'mob_echo_of_archimonde' WHERE `entry` = 13083;
+UPDATE `creature_template` SET `ScriptName` = 'npc_tyrande_whisperwind' WHERE `entry` = 17948;
+UPDATE `creature_template` SET `ScriptName` = 'npc_thrall' WHERE `entry`  = 17852;
+UPDATE `creature_template` SET `ScriptName` = 'npc_jaina_proudmoore' WHERE `entry` = 17772;
 
 /* OLD HILLSBRAD */
 UPDATE `creature_template` SET `ScriptName` = 'boss_lieutenant_drake' WHERE `entry` = 17848;

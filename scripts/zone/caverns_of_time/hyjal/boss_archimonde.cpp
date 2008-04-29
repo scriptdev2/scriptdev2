@@ -315,7 +315,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                     float x = 0;
                     float y = 0;
                     float z = 0;
-                    m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), rand()%20, x, y, z);
+                    m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 40, x, y, z);
                     m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, x, y, z));
                     break;
             }
@@ -622,10 +622,10 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if(pInstance)
             {
-                // Do not let the raid skip straight to Archimonde. Visible only if Anetheron is finished.
-                if((pInstance->GetData(DATA_ANETHERONEVENT) < 3) && (m_creature->GetVisibility() != VISIBILITY_OFF))
+                // Do not let the raid skip straight to Archimonde. Visible only if Azagalor is finished.
+                if((pInstance->GetData(DATA_AZGALOREVENT) < 3) && (m_creature->GetVisibility() != VISIBILITY_OFF))
                     m_creature->SetVisibility(VISIBILITY_OFF);
-                else if((pInstance->GetData(DATA_ANETHERONEVENT) >= 3) && (m_creature->GetVisibility() != VISIBILITY_ON))
+                else if((pInstance->GetData(DATA_AZGALOREVENT) >= 3) && (m_creature->GetVisibility() != VISIBILITY_ON))
                     m_creature->SetVisibility(VISIBILITY_ON);
             }
 

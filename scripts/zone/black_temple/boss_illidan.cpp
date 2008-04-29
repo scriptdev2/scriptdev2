@@ -86,9 +86,9 @@ EndScriptData */
 
 // Non-Illidan spells
 #define SPELL_HEALING_POTION            40535 // Akama uses this to heal himself to full.
-#define SPELL_GREEN_BEAM                39165 // Glaives cast it on Flames. Not sure if this is the right spell.
-#define SPELL_BLUE_BEAM                 40225 // We'll make Illidan use this to channel Eye Blast. Don't know the right ID
+#define SPELL_GREEN_BEAM                39857 // Glaives cast it on Flames. Not sure if this is the right spell.
 #define SPELL_SHADOW_DEMON_PASSIVE      41079 // Adds the "shadowform" aura to Shadow Demons.
+#define SPELL_CONSUME_SOUL              41080 // Once the Shadow Demons reach their target, they use this to kill them
 #define SPELL_PARALYZE                  41083 // Shadow Demons cast this on their target
 #define SPELL_PURPLE_BEAM               39123 // Purple Beam connecting Shadow Demon to their target
 #define SPELL_CAGE_TRAP_DUMMY           40761 // Put this in DB for cage trap GO.
@@ -254,6 +254,8 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
     {
         if(IsTrigger)
             return;
+
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         if(DemonFireTimer < diff)
         {
@@ -1269,7 +1271,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     DoCast(m_creature, SPELL_FLAME_BURST);
                     FlameBurstTimer = 22000;
-                    DoFlameBurstExplosion();
+                    //DoFlameBurstExplosion();
                     GlobalTimer += 1000;
                 }else FlameBurstTimer -= diff;
             }else GlobalTimer -= diff;
@@ -1752,7 +1754,7 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
         }
             // Kill our target if we're very close.
         if(m_creature->IsWithinDistInMap(m_creature->getVictim(), 3))
-            m_creature->DealDamage(m_creature->getVictim(), m_creature->getVictim()->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            DoCast(m_creature->getVictim(), SPELL_CONSUME_SOUL);
     }
 };
 struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
