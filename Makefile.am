@@ -340,6 +340,7 @@ scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/def_stratholme.h \
 scripts/zone/stratholme/instance_stratholme.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
+scripts/zone/tanaris/mobs_tanaris.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \

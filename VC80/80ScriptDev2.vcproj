@@ -1372,6 +1372,10 @@
 					Name="Tanaris"
 					>
 					<File
+						RelativePath="..\scripts\zone\tanaris\mobs_tanaris.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\tanaris\npcs_tanaris.cpp"
 						>
 					</File>

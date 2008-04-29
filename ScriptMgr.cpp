@@ -495,6 +495,7 @@ extern void AddSC_instance_stratholme();
 
 //Sunken Temple
 //Tanaris
+extern void AddSC_mobs_tanaris();
 extern void AddSC_npcs_tanaris();
 
 //Teldrassil
@@ -1359,6 +1360,7 @@ void ScriptsInit()
 
     //Sunken Temple
     //Tanaris
+    AddSC_mobs_tanaris();
     AddSC_npcs_tanaris();
 
     //Teldrassil
