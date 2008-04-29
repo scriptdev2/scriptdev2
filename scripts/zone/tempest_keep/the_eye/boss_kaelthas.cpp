@@ -198,13 +198,53 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         Reset();
     }
 
-    bool IsVisible(Unit* who) const
+    void MoveInLineOfSight(Unit *who)
     {
         if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
-            return false;
+            return;
 
-        return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        {
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if(m_creature->IsWithinDistInMap(who, attackRadius))
+            {
+                // Check first that object is in an angle in front of this one before LoS check
+                if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+                {
+                    DoStartAttackAndMovement(who);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                    if (!InCombat)
+                    {
+                        Aggro(who);
+                        InCombat = true;
+                    }
+                }
+            }
+        }
     }
+
+    void AttackStart(Unit* who)
+    {
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+            return;
+
+        if (who->isTargetableForAttack())
+        {
+            //Begin attack
+            DoStartAttackAndMovement(who);
+
+            if (!InCombat)
+            {
+                Aggro(who);
+                InCombat = true;
+            }
+        }
+    }
+
 
     void Reset()
     {
@@ -978,18 +1018,18 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                                 if(pUnit)
                                 {
+                                    m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
+                                    //Gravity lapse - needs an exception in Spell system to work
+
+                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true, 0, 0, m_creature->GetGUID());
+                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true, 0, 0, m_creature->GetGUID());
+
                                     //Using packet workaround
                                     WorldPacket data(12);
                                     data.SetOpcode(SMSG_FLY_MODE_START);
                                     data.append(pUnit->GetPackGUID());
                                     data << uint32(0);
                                     pUnit->SendMessageToSet(&data, true);
-
-                                    m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
-                                    //Gravity lapse - needs an exception in Spell system to work
-
-                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true, 0, 0, m_creature->GetGUID());
-                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true, 0, 0, m_creature->GetGUID());
                                 }
                             }
                             GravityLapse_Timer = 10000;
