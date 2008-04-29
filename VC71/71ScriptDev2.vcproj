@@ -1016,6 +1016,22 @@
 				<Filter
 					Name="Shadowfang Keep"
 					>
+					<File
+						RelativePath="..\scripts\zone\shadowfang_keep\boss_shadowfang_keep.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowfang_keep\def_shadowfang_keep.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowfang_keep\instance_shadowfang_keep.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\shadowfang_keep\npcs_shadowfang_keep.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Stonetalon Mountains"

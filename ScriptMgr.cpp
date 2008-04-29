@@ -442,6 +442,10 @@ extern void AddSC_instance_scholomance();
 extern void AddSC_npcs_searing_gorge();
 
 //Shadowfang keep
+extern void AddSC_boss_shadowfang_keep();
+extern void AddSC_npcs_shadowfang_keep();
+extern void AddSC_instance_shadowfang_keep();
+
 //Shadowmoon Valley
 extern void AddSC_boss_doomwalker();
 extern void AddSC_mobs_shadowmoon_valley();
@@ -1307,6 +1311,10 @@ void ScriptsInit()
     AddSC_npcs_searing_gorge();
 
     //Shadowfang keep
+    AddSC_boss_shadowfang_keep();
+    AddSC_npcs_shadowfang_keep();
+    AddSC_instance_shadowfang_keep();
+
     //Shadowmoon Valley
     AddSC_boss_doomwalker();
     AddSC_mobs_shadowmoon_valley();

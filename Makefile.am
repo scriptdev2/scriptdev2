@@ -307,6 +307,10 @@ scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/scholomance/def_scholomance.h \
 scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
+scripts/zone/shadowfang_keep/boss_shadowfang_keep.cpp \
+scripts/zone/shadowfang_keep/def_shadowfang_keep.h \
+scripts/zone/shadowfang_keep/instance_shadowfang_keep.cpp \
+scripts/zone/shadowfang_keep/npcs_shadowfang_keep.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
