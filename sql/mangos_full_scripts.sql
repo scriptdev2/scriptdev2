@@ -842,6 +842,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_wailing_caverns' WHERE `entr
 
 /* WESTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName` = 'npcs_dithers_and_arbington' WHERE `entry` IN (11056, 11057);
+UPDATE `creature_template` SET `ScriptName` = 'npc_the_scourge_cauldron' WHERE `entry` = 11152;
 
 /* WESTFALL */
 

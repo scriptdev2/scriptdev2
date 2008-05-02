@@ -17,11 +17,16 @@
 /* ScriptData
 SDName: Npcs_Western_Plaguelands
 SD%Complete: 90
-SDComment: To obtain Vitreous Focuser (could use more spesifics about gossip items)
+SDComment: Quest support: 5216,5219,5222,5225,5229,5231,5233,5235. To obtain Vitreous Focuser (could use more spesifics about gossip items)
 SDCategory: Western Plaguelands
 EndScriptData */
 
+#include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## npcs_dithers_and_arbington
+######*/
 
 bool GossipHello_npcs_dithers_and_arbington(Player *player, Creature *_Creature)
 {
@@ -74,6 +79,82 @@ bool GossipSelect_npcs_dithers_and_arbington(Player *player, Creature *_Creature
     return true;
 }
 
+/*######
+## npc_the_scourge_cauldron
+######*/
+
+struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
+{
+    npc_the_scourge_cauldronAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset() {}
+
+    void Aggro(Unit* who) {}
+
+    void DoDie()
+    {
+        //summoner dies here
+        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        //override any database `spawntimesecs` to prevent duplicated summons
+        uint32 rTime = m_creature->GetRespawnDelay();
+        if( rTime<600 )
+            m_creature->SetRespawnDelay(600);
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || who->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        if(who->GetTypeId() == TYPEID_PLAYER)
+        {
+            switch(m_creature->GetAreaId())
+            {
+                case 199:                                   //felstone
+                    if( ((Player*)who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE || 
+                        ((Player*)who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE )
+                    {
+                        DoSpawnCreature(11075,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        DoDie();
+                    } 
+                    break;
+                case 200:                                   //dalson
+                    if( ((Player*)who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE || 
+                        ((Player*)who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE )
+                    {
+                        DoSpawnCreature(11077,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        DoDie();
+                    }
+                    break;
+                case 201:                                   //gahrron
+                    if( ((Player*)who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE || 
+                        ((Player*)who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE )
+                    {
+                        DoSpawnCreature(11078,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        DoDie();
+                    }
+                    break;
+                case 202:                                   //writhing
+                    if( ((Player*)who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE || 
+                        ((Player*)who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE )
+                    {
+                        DoSpawnCreature(11076,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        DoDie();
+                    }
+                    break;
+            }
+        }
+    }
+};
+CreatureAI* GetAI_npc_the_scourge_cauldron(Creature *_Creature)
+{
+    return new npc_the_scourge_cauldronAI (_Creature);
+}
+
+/*######
+## 
+######*/
+
 void AddSC_npcs_western_plaguelands()
 {
     Script *newscript;
@@ -82,5 +163,10 @@ void AddSC_npcs_western_plaguelands()
     newscript->Name="npcs_dithers_and_arbington";
     newscript->pGossipHello = &GossipHello_npcs_dithers_and_arbington;
     newscript->pGossipSelect = &GossipSelect_npcs_dithers_and_arbington;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_the_scourge_cauldron";
+    newscript->GetAI = GetAI_npc_the_scourge_cauldron;
     m_scripts[nrscripts++] = newscript;
 }
