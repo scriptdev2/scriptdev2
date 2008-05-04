@@ -746,7 +746,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetHover(true); // We now hover!
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // So players don't shoot us down
         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF); // Animate our take off!
-        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_UNK1);
+        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0); // We no longer wear the glaives! 
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0); // since they are now channeling the flames
         m_creature->GetMotionMaster()->Clear(false); // Stop moving!
@@ -1087,7 +1087,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     {
                         //m_creature->SetHover(false);
                         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND); // anndddd touchdown!
-                        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_UNK1);
+                        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
                         Phase = 3;
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // We should let the raid fight us =)
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim())); // Chase our victim!
