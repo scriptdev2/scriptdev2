@@ -110,19 +110,17 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             Phase = 2;
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-            m_creature->SetUnitMovementFlag(MOVEMENT_FLAG_SWIM_FLY);
+            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_UNK1);
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->Idle();
-            m_creature->SetHover(true);
             DoYell(SAY_PHASE_2_TRANS, LANG_UNIVERSAL, NULL);
         }
 
         if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40) && (Phase == 2))
         {
             Phase = 3;
-            m_creature->RemoveUnitMovementFlag(MOVEMENT_FLAG_SWIM_FLY);
+            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_UNK1);
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-            m_creature->SetHover(false);
             DoYell(SAY_PHASE_3_TRANS, LANG_UNIVERSAL, NULL);
         }
 
