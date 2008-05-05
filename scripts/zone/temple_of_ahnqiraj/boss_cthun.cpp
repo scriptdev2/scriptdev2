@@ -75,7 +75,7 @@ EndScriptData */
 #define MOB_EYE_TENTACLE                    15726
 
 //Phase 2 (body of c'thun)
-#define BOSS_CTHUN                          15727
+#define SPELL_TRANSFORM                     26232
 #define MOB_GIANT_CLAW_TENTACLE             15728
 #define MOB_GIANT_EYE_TENTACLE              15334
 #define MOB_FLESH_TENTACLE_UKN              15802
@@ -99,6 +99,12 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     uint32 DarkGlareTickTimer;
     float DarkGlareAngle;
 
+    //Phase transition
+    uint64 HoldPlayer;
+
+    //Body Phase
+    bool Weakened;
+
     void Reset()
     {
         //One random wisper every 90 - 300 seconds
@@ -117,6 +123,11 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         DarkGlareTick = 0;
         DarkGlareTickTimer = 1000;
         DarkGlareAngle = 0;
+
+        HoldPlayer = 0;
+
+        //Start with 99% damage reduce
+        Weakened = false;
     }
 
     void Aggro(Unit *who)
@@ -218,154 +229,215 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
             return;
         }
 
-        //Eye Beam phase
-        if (Phase == 0)
+        switch (Phase)
         {
-            //BeamTimer
-            if (BeamTimer < diff)
+
+        case 0:
             {
-                //SPELL_GREEN_BEAM
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)
+                //BeamTimer
+                if (BeamTimer < diff)
                 {
-                    m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(target,SPELL_GREEN_BEAM);
+                    //SPELL_GREEN_BEAM
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)
+                    {
+                        m_creature->InterruptNonMeleeSpells(false);
+                        DoCast(target,SPELL_GREEN_BEAM);
 
-                    //Correctly update our target
-                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
-                }
+                        //Correctly update our target
+                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+                    }
 
-                //Beam every 3 seconds
-                BeamTimer = 3000;
-            }else BeamTimer -= diff;
+                    //Beam every 3 seconds
+                    BeamTimer = 3000;
+                }else BeamTimer -= diff;
 
-            //ClawTentacleTimer
-            if (ClawTentacleTimer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if (target)
+                //ClawTentacleTimer
+                if (ClawTentacleTimer < diff)
                 {
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if (target)
+                    {
+                        Unit* Spawned = NULL;
+
+                        //Spawn claw tentacle on the random target
+                        Spawned = m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+
+                        if (Spawned)
+                            Spawned->AddThreat(target,1.0f);
+                    }
+
+                    //One claw tentacle every 12.5 seconds
+                    ClawTentacleTimer = 12500;
+                }else ClawTentacleTimer -= diff;
+
+                //EyeTentacleTimer
+                if (EyeTentacleTimer < diff)
+                {
+                    //Spawn the 8 Eye Tentacles in the corret spots
+                    Unit* target = NULL;
                     Unit* Spawned = NULL;
 
-                    //Spawn claw tentacle on the random target
-                    Spawned = m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+                    SpawnEyeTentacle(0, 20); //south
+                    SpawnEyeTentacle(10, 10); //south west
+                    SpawnEyeTentacle(20, 0); //west
+                    SpawnEyeTentacle(10, -10); //north west
 
-                    if (Spawned)
-                        Spawned->AddThreat(target,1.0f);
-                }
+                    SpawnEyeTentacle(0, -20); //north
+                    SpawnEyeTentacle(-10, -10); //north east
+                    SpawnEyeTentacle(-20, 0); // east
+                    SpawnEyeTentacle(-10, 10); // south east
 
-                //One claw tentacle every 12.5 seconds
-                ClawTentacleTimer = 12500;
-            }else ClawTentacleTimer -= diff;
+                    //No point actually putting a timer here since
+                    //These shouldn't trigger agian until after phase shifts
+                    EyeTentacleTimer = 45000;
+                }else EyeTentacleTimer -= diff;
 
-            //EyeTentacleTimer
-            if (EyeTentacleTimer < diff)
-            {
-                //Spawn the 8 Eye Tentacles in the corret spots
-                Unit* target = NULL;
-                Unit* Spawned = NULL;
-
-                SpawnEyeTentacle(0, 20); //south
-                SpawnEyeTentacle(10, 10); //south west
-                SpawnEyeTentacle(20, 0); //west
-                SpawnEyeTentacle(10, -10); //north west
-
-                SpawnEyeTentacle(0, -20); //north
-                SpawnEyeTentacle(-10, -10); //north east
-                SpawnEyeTentacle(-20, 0); // east
-                SpawnEyeTentacle(-10, 10); // south east
-
-                //No point actually putting a timer here since
-                //These shouldn't trigger agian until after phase shifts
-                EyeTentacleTimer = 45000;
-            }else EyeTentacleTimer -= diff;
-
-            //PhaseTimer
-            if (PhaseTimer < diff)
-            {
-                //Switch to Dark Beam
-                Phase = 1;
-
-                m_creature->InterruptNonMeleeSpells(false);
-
-                //Select random target for dark beam to start on
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)
+                //PhaseTimer
+                if (PhaseTimer < diff)
                 {
-                    //Correctly update our target
-                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+                    //Switch to Dark Beam
+                    Phase = 1;
 
-                    //Face our target
-                    DarkGlareAngle = m_creature->GetAngle(target);
-                    DarkGlareTickTimer = 1000;
-                    DarkGlareTick = 0;
-                }
+                    m_creature->InterruptNonMeleeSpells(false);
 
-                //Add red coloration to C'thun
-                DoCast(m_creature,SPELL_RED_COLORATION);
+                    //Select random target for dark beam to start on
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-                //Freeze animation
-                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
-                m_creature->setEmoteState(53);
+                    if (target)
+                    {
+                        //Correctly update our target
+                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
 
-                //Darkbeam for 35 seconds
-                PhaseTimer = 35000;
-            }else PhaseTimer -= diff;
+                        //Face our target
+                        DarkGlareAngle = m_creature->GetAngle(target);
+                        DarkGlareTickTimer = 1000;
+                        DarkGlareTick = 0;
+                    }
 
+                    //Add red coloration to C'thun
+                    DoCast(m_creature,SPELL_RED_COLORATION);
+
+                    //Freeze animation
+                    m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
+                    m_creature->setEmoteState(53);
+
+                    //Darkbeam for 35 seconds
+                    PhaseTimer = 35000;
+                }else PhaseTimer -= diff;
+
+            }
+            break;
+        case 1:
+            {
+                //EyeTentacleTimer
+                if (DarkGlareTick < 35)
+                    if (DarkGlareTickTimer < diff)
+                    {
+
+                        //SPELL_DARK_GLARE
+                        DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
+
+                        //Remove any target
+                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+
+                        //Set angle and cast
+                        m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+                        m_creature->StopMoving();
+
+                        //
+                        m_creature->CastSpell(NULL, SPELL_DARK_GLARE, false);
+
+                        //Increase tick
+                        DarkGlareTick++;
+
+                        //1 second per tick
+                        DarkGlareTickTimer = 1000;
+                    }else DarkGlareTickTimer -= diff;
+
+                //PhaseTimer
+                if (PhaseTimer < diff)
+                {
+                    //Switch to Eye Beam
+                    Phase = 0;
+                    BeamTimer = 3000;
+                    EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
+                    ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
+
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                    //Remove Red coloration from c'thun
+                    m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
+
+                    //Freeze animation
+                    m_creature->setEmoteState(0);
+                    m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+
+                    //Eye Beam for 50 seconds
+                    PhaseTimer = 50000;
+                }else PhaseTimer -= diff;
+            }break;
+
+            //Transition phase
+        case 2:
+            {
+                //PhaseTimer
+                if (PhaseTimer < diff)
+                {
+                    //Switch
+                    Phase = 3;
+
+                    //Switch to c'thun model
+                    DoCast(m_creature, SPELL_TRANSFORM, true);
+
+                    //Emerging phase
+                    AttackStart(Unit::GetUnit(*m_creature, HoldPlayer));
+                    DoZoneInCombat();
+
+                    PhaseTimer = 0;
+                }else PhaseTimer -= diff;
+
+            }break;
+
+            //Next phase
+        case 3:
+            {
+
+
+            }break;
         }
-        //Dark Beam phase
-        else if (Phase == 1)
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage) 
+    {
+        if (Phase > 3)
+            return;
+
+        //Reduce damage by 99%, this is not done by a spell that I can find
+        //At one time I know there was a spell for this though called Hardened Carapace
+        if (Phase == 3 && !Weakened)
         {
-            //EyeTentacleTimer
-            if (DarkGlareTick < 35)
-                if (DarkGlareTickTimer < diff)
-                {
+            if (damage / 99 > 0) damage/= 99;
+            else damage = 1;
+        }
 
-                    //SPELL_DARK_GLARE
-                    DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
+        if (damage > m_creature->GetHealth())
+        {
+            //Death animation/respawning
+            Phase = 2;
+            m_creature->SetHealth(0);
+            PhaseTimer = 12000;
+            damage = 0;
 
-                    //Remove any target
-                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
-
-                    //Set angle and cast
-                    m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
-                    m_creature->StopMoving();
-
-                    //
-                    m_creature->CastSpell(NULL, SPELL_DARK_GLARE, false);
-
-                    //Increase tick
-                    DarkGlareTick++;
-
-                    //1 second per tick
-                    DarkGlareTickTimer = 1000;
-                }else DarkGlareTickTimer -= diff;
-
-            //PhaseTimer
-            if (PhaseTimer < diff)
-            {
-                //Switch to Eye Beam
-                Phase = 0;
-                BeamTimer = 3000;
-                EyeTentacleTimer = 45000;   //Always spawns 5 seconds before Dark Beam
-                ClawTentacleTimer = 12500;  //4 per Eye beam phase (unsure if they spawn durring Dark beam)
-
-                m_creature->InterruptNonMeleeSpells(false);
-
-                //Remove Red coloration from c'thun
-                m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
-
-                //Freeze animation
-                m_creature->setEmoteState(0);
-                m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
-
-                //Eye Beam for 50 seconds
-                PhaseTimer = 50000;
-            }else PhaseTimer -= diff;
+            m_creature->InterruptNonMeleeSpells(true);
+            m_creature->RemoveAllAuras();
+            m_creature->DeleteThreatList();
+            m_creature->CombatStop();
+            
+            HoldPlayer = done_by->GetGUID();
         }
     }
 };

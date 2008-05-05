@@ -24,7 +24,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "def_zulgurub.h"
- 
+
 #define SPELL_CHARGE        24315
 #define SPELL_CLEAVE        20691
 #define SPELL_FEAR        29321
@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Reset();
     }
- 
+
     uint32 Watch_Timer;
     uint32 TargetInRange;
     uint32 Cleave_Timer;
@@ -62,18 +62,16 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
     float targetX;
     float targetY;
     float targetZ;
-    
+
     ScriptedInstance *pInstance;
-        
-    Creature *Raptor;
-    Unit* watchTarget;
-    Unit* target;
- 
+
     bool endWatch;
     bool someWatched;
     bool RaptorDead;
     bool CombatStart;
- 
+
+    uint64 WatchTarget;
+
     void Reset()
     {
         Watch_Timer = 33000;
@@ -88,164 +86,170 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         targetZ = 0.0;
         TargetInRange = 0;
 
- 
-        watchTarget = NULL;
-        target = NULL;
- 
+        WatchTarget = 0;
+
         someWatched = false;
         endWatch = false;
         RaptorDead = false;
         CombatStart = false;
 
         DoCast(m_creature, 23243); 
-   }
- 
+    }
+
     void KilledUnit(Unit* victim)
     {
         DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
         m_creature->CastSpell(m_creature, SPELL_LEVEL_UP, true);
     }
- 
+
     void Aggro(Unit *who)
     {
     }
 
-     void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff)
     {
 
         if (!m_creature->SelectHostilTarget())
             return;
- 
+
         if( m_creature->getVictim() && m_creature->isAlive())
         {
             if(!CombatStart) 
             {
-                m_creature->Unmount();   //At combat Start Mandokir is mounted so we must unmount it first
+                //At combat Start Mandokir is mounted so we must unmount it first
+                m_creature->Unmount();
+                
                 //And summon his raptor
-                Raptor = m_creature->SummonCreature(14988, m_creature->getVictim()->GetPositionX(), m_creature->getVictim()->GetPositionY(), m_creature->getVictim()->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);     
+                m_creature->SummonCreature(14988, m_creature->getVictim()->GetPositionX(), m_creature->getVictim()->GetPositionY(), m_creature->getVictim()->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);     
                 CombatStart = true;
             }
-        
+
             if (Watch_Timer < diff) //Every 20 Sec Mandokir will check this
             {
-                if(watchTarget) //If someone is watched and If the Position of the watched target is different from the one stored, or are attacking, mandokir will charge him
+                if(WatchTarget) //If someone is watched and If the Position of the watched target is different from the one stored, or are attacking, mandokir will charge him
                 {
-                    if( targetX != watchTarget->GetPositionX() || 
-                        targetY != watchTarget->GetPositionY() ||
-                        targetZ != watchTarget->GetPositionZ() ||
-                        watchTarget->isAttacking())
+                    Unit* pUnit = Unit::GetUnit(*m_creature, WatchTarget);
+                    
+                    if( pUnit && (
+                        targetX != pUnit->GetPositionX() || 
+                        targetY != pUnit->GetPositionY() ||
+                        targetZ != pUnit->GetPositionZ() ||
+                        pUnit->isAttacking()))
                     {
-                        if(m_creature->IsWithinDistInMap(target, ATTACK_DISTANCE))
+                        if(m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
                         {
-                            DoCast(watchTarget,24316);
+                            DoCast(pUnit,24316);
                         }
                         else
                         {
-                            DoCast(watchTarget,SPELL_CHARGE);
-                            m_creature->SendMonsterMove(watchTarget->GetPositionX(), watchTarget->GetPositionY(), watchTarget->GetPositionZ(), 0, true,1);
-                            DoStartAttackAndMovement(watchTarget);
+                            DoCast(pUnit,SPELL_CHARGE);
+                            m_creature->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true,1);
+                            DoStartAttackAndMovement(pUnit);
                         }
                     }
                 }
                 someWatched = false;
                 Watch_Timer = 20000;
             }else Watch_Timer -= diff;
- 
- 
+
+
             if ((Watch_Timer < 8000) && !someWatched) //8 sec(cast time + expire time) before the check for the watch effect mandokir will cast watch debuff on a random target
             {
-                watchTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoYell(SAY_WATCH, LANG_UNIVERSAL, watchTarget);
-                DoCast(watchTarget, SPELL_WATCH);
+                Unit* p = SelectUnit(SELECT_TARGET_RANDOM,0);
+                DoYell(SAY_WATCH, LANG_UNIVERSAL, p);
+                DoCast(p, SPELL_WATCH);
+                WatchTarget = p->GetGUID();
                 someWatched = true;
                 endWatch = true;
             }
- 
+
             if ((Watch_Timer < 1000) && endWatch) //1 sec before the debuf expire, store the target position
             {
-
-                targetX = watchTarget->GetPositionX();
-                targetY = watchTarget->GetPositionY();
-                targetZ = watchTarget->GetPositionZ();
+                Unit* pUnit = Unit::GetUnit(*m_creature, WatchTarget);
+                if (pUnit)
+                {
+                    targetX = pUnit->GetPositionX();
+                    targetY = pUnit->GetPositionY();
+                    targetZ = pUnit->GetPositionZ();
+                }
                 endWatch = false;
             }
- 
+
             if(!someWatched)
             {
- 
 
                 //Cleave
-        if (Cleave_Timer < diff)
-        {
+                if (Cleave_Timer < diff)
+                {
 
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+                    DoCast(m_creature->getVictim(),SPELL_CLEAVE);
 
-        //7 Seconds
-        Cleave_Timer = 7000;
-        }else Cleave_Timer -= diff;
+                    //7 Seconds
+                    Cleave_Timer = 7000;
+                }else Cleave_Timer -= diff;
 
                 //Whirlwind
-        if (Whirlwind_Timer < diff)
-        {
+                if (Whirlwind_Timer < diff)
+                {
 
-                DoCast(m_creature,SPELL_WHIRLWIND);
+                    DoCast(m_creature,SPELL_WHIRLWIND);
 
-        //18 Seconds
-        Whirlwind_Timer = 18000;
-        }else Whirlwind_Timer -= diff;
+                    //18 Seconds
+                    Whirlwind_Timer = 18000;
+                }else Whirlwind_Timer -= diff;
 
 
                 //If more then 3 targets in melee range mandokir will cast fear
-        if (Fear_Timer < diff)    
-        {
-                    
-                TargetInRange = 0;
-                
-                for(int i=0; i<10; i++)
+                if (Fear_Timer < diff)    
                 {
-                target = SelectUnit(SELECT_TARGET_TOPAGGRO,i);
-                if(target)
-                if(m_creature->IsWithinDistInMap(target, ATTACK_DISTANCE))
-                TargetInRange++;
-                }
-                if(TargetInRange > 3)
-                DoCast(m_creature->getVictim(),SPELL_FEAR);
-                
-                Fear_Timer = 4000;
+                    TargetInRange = 0;
+
+                    std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                    for(; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+                    {
+                        Unit* pUnit = Unit::GetUnit(*m_creature, (*i)->getUnitGuid());
+                        if(pUnit && m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
+                            TargetInRange++;
+                    }
+
+                    if(TargetInRange > 3)
+                        DoCast(m_creature->getVictim(),SPELL_FEAR);
+
+                    Fear_Timer = 4000;
                 }else Fear_Timer -=diff;
-                
+
 
 
                 //Mortal Strike if target below 50% hp
-        if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
-        {
-           if (MortalStrike_Timer < diff)
-           {
-               DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
-                      
-               MortalStrike_Timer = 15000;
-           }else MortalStrike_Timer -= diff;
-        }
-            }
-        //Checking if Ohgan is dead. If yes Mandokir will enrage.
-        if(Check_Timer < diff)
-        {
-            if(pInstance)
-            {    
-                if(pInstance->GetData(DATA_OHGANISDEAD))
+                if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
                 {
-                    if (!RaptorDead)
-                    {               
-                        DoCast(m_creature, SPELL_ENRAGE);
-                        RaptorDead = true;
-                    }
+                    if (MortalStrike_Timer < diff)
+                    {
+                        DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
 
-               }
+                        MortalStrike_Timer = 15000;
+                    }else MortalStrike_Timer -= diff;
+                }
             }
+            //Checking if Ohgan is dead. If yes Mandokir will enrage.
+            if(Check_Timer < diff)
+            {
+                if(pInstance)
+                {    
+                    if(pInstance->GetData(DATA_OHGANISDEAD))
+                    {
+                        if (!RaptorDead)
+                        {               
+                            DoCast(m_creature, SPELL_ENRAGE);
+                            RaptorDead = true;
+                        }
 
-            Check_Timer = 1000;
-        }else Check_Timer -= diff;
-                    
+                    }
+                }
+
+                Check_Timer = 1000;
+            }else Check_Timer -= diff;
+
             DoMeleeAttackIfReady();
         }
     }
@@ -260,10 +264,10 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Reset();
     }
-    
+
     uint32 SunderArmor_Timer;
     ScriptedInstance *pInstance;
- 
+
     void Reset()
     {
         SunderArmor_Timer = 5000;
@@ -272,7 +276,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     void Aggro(Unit *who)
     {
     }
-    
+
     void JustDied(Unit* Killer)
     {
         ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
@@ -280,36 +284,17 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
             pInstance->SetData(DATA_OHGAN_DEATH, 0);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
- 
     void UpdateAI (const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-     
+
         //SunderArmor_Timer
         if(SunderArmor_Timer < diff)
         {
+            DoCast(m_creature->getVictim(), SPELL_SUNDERARMOR);
 
-           DoCast(m_creature->getVictim(), SPELL_SUNDERARMOR);
-            
             SunderArmor_Timer = 10000 + rand()%5000;
         }else SunderArmor_Timer -= diff;
 
