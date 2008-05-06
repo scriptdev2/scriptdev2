@@ -328,7 +328,7 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mech
 bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
 {
     //No target so we can't cast
-    if (!Target)
+    if (!Target || !Spell)
         return false;
 
     //Silenced so we can't cast

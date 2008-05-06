@@ -391,8 +391,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     m_creature->InterruptNonMeleeSpells(false);
 
-                    if ((param3 & CAST_FORCE_CAST) || CanCast(target, GetSpellStore()->LookupEntry(param1)))
-                        m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+                   const SpellEntry* tSpell = GetSpellStore()->LookupEntry(param1);
+
+                    if (tSpell)
+                    {
+                        if ((param3 & CAST_FORCE_CAST) || CanCast(target, tSpell))
+                            m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+
+                    }else error_log("SD2: EventAI creature %d attempt to cast spell that doesn't exist %d", m_creature->GetCreatureInfo()->Entry, param1);
                 }
             }
             break;
