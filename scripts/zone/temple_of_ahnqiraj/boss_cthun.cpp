@@ -686,8 +686,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 
                 //EyeTentacleTimer
                 if (EyeTentacleTimer < diff)
-                {
-                    
+                {                    
                     //Spawn the 8 Eye Tentacles in the corret spots
                     SpawnEyeTentacle(0, 25, true); //south
                     SpawnEyeTentacle(12, 12, true); //south west
@@ -794,6 +793,11 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
                     //Not weakened so reduce damage by 99%
                     if (damage / 99 > 0) damage/= 99;
                     else damage = 1;
+
+                    //Prevent death in non-weakened state
+                    if (damage >= m_creature->GetHealth())
+                        damage = 0;
+
                     return;
                 }
                 break;
