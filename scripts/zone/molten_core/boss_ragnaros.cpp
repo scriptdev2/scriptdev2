@@ -99,9 +99,9 @@ EndScriptData */
 #define ADD_8Z -229.683182
 #define ADD_8O 4.693108
 
-struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 {
-    boss_ragnarosAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_ragnarosAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
 
     uint32 WrathOfRagnaros_Timer;
     uint32 HandOfRagnaros_Timer;
@@ -133,50 +133,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public ScriptedAI
 
         m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
         HasAura = true;
-    }
-
-    void AttackStart(Unit* who)
-    {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack())
-        {
-            //Begin attack
-            DoStartAttackNoMovement(who);
-
-            if (!InCombat)
-            {
-                Aggro(who);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit* who)
-    {
-        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
-        {
-            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if(m_creature->IsWithinDistInMap(who, attackRadius))
-            {
-                // Check first that object is in an angle in front of this one before LoS check
-                if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
-                {
-                    DoStartAttackNoMovement(who);
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                    if (!InCombat)
-                    {
-                        Aggro(who);
-                        InCombat = true;
-                    }
-                }
-            }
-        }
     }
 
     void KilledUnit(Unit* victim)

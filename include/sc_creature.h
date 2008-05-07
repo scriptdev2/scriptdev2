@@ -159,4 +159,17 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Checks if you can cast the specified spell
     bool CanCast(Unit* Target, SpellEntry const *Spell);
 };
+
+
+struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
+{
+    Scripted_NoMovementAI(Creature* creature) : ScriptedAI(creature) {}
+
+    //Called if IsVisible(Unit *who) is true at each *who move
+    void MoveInLineOfSight(Unit *);
+
+    //Called at each attack of m_creature by any victim
+    void AttackStart(Unit *);
+};
+
 #endif

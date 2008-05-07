@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: boss_cthun
-SD%Complete: 10
-SDComment: Missing Phase 2 and eye beam phase
+SD%Complete: 95
+SDComment: Darkglare tracking issue
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
@@ -60,12 +60,14 @@ EndScriptData */
 //Giant Claw Tentacles 
 #define SPELL_MASSIVE_GROUND_RUPTURE        26100
 //Also casts Hamstring
+#define SPELL_THRASH                        3391
 
 //Giant Eye Tentacles
 //CHAIN CASTS "SPELL_GREEN_BEAM"
 
 //Stomach Spells
-#define SPELL_EXIT_STOMACH_KNOCKBACK        26230
+#define SPELL_MOUTH_TENTACLE                26332
+#define SPELL_EXIT_STOMACH_KNOCKBACK        25383
 #define SPELL_DIGESTIVE_ACID                26476
 
 //Mobs used for spawning
@@ -75,17 +77,73 @@ EndScriptData */
 #define MOB_EYE_TENTACLE                    15726
 
 //Phase 2 (body of c'thun)
+#define MOB_BODY_OF_CTHUN                   15809
+
 #define SPELL_TRANSFORM                     26232
+
 #define MOB_GIANT_CLAW_TENTACLE             15728
 #define MOB_GIANT_EYE_TENTACLE              15334
-#define MOB_FLESH_TENTACLE_UKN              15802
+#define MOB_FLESH_TENTACLE                  15802
 
-struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
+//Text emote
+#define EMOTE_WEAKENED                      "is weakened!"
+
+//Stomach Teleport positions
+#define STOMACH_X                           -8562.0f
+#define STOMACH_Y                           2037.0f
+#define STOMACH_Z                           -70.0f
+#define STOMACH_O                           5.05f
+
+//Flesh tentacle positions
+#define TENTACLE_POS1_X                     -8571.0f
+#define TENTACLE_POS1_Y                     1990.0f
+#define TENTACLE_POS1_Z                     -98.0f
+#define TENTACLE_POS1_O                     1.22f
+
+#define TENTACLE_POS2_X                     -8525.0f
+#define TENTACLE_POS2_Y                     1994.0f
+#define TENTACLE_POS2_Z                     -98.0f
+#define TENTACLE_POS2_O                     2.12f
+
+//Kick out position
+#define KICK_X                              -8545.0f
+#define KICK_Y                              1984.0f
+#define KICK_Z                              -96.0f
+
+struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
 {
-    eye_of_cthunAI(Creature *c) : ScriptedAI(c) {Reset();}
+    flesh_tentacleAI(Creature *c) : Scripted_NoMovementAI(c), Parent(0) {Reset();}
 
+    uint64 Parent;
+    uint32 CheckTimer;
+
+    void SpawnedByCthun(uint64 p)
+    {
+        Parent = p;
+    }
+
+    void Reset()
+    {
+        CheckTimer = 1000;
+    }
+
+    void Aggro(Unit *who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff);
+
+    void JustDied(Unit* killer);
+};
+
+struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
+{
+    eye_of_cthunAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
+
+    //Out of combat whisper timer
     uint32 WisperTimer; 
 
+    //Global variables
     uint32 PhaseTimer;
     uint32 Phase;
 
@@ -98,21 +156,31 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
     uint32 DarkGlareTick;
     uint32 DarkGlareTickTimer;
     float DarkGlareAngle;
+    bool ClockWise;
 
     //Phase transition
     uint64 HoldPlayer;
 
     //Body Phase
-    bool Weakened;
+    uint8 FleshTentaclesKilled;
+    uint32 GiantClawTentacleTimer;
+    uint32 GiantEyeTentacleTimer;
+    uint32 StomachAcidTimer;
+    uint32 StomachEnterTimer;
+    uint32 StomachEnterVisTimer;
+    uint64 StomachEnterTarget;
+
+    //Stomach map, bool = true then in stomach
+    HM_NAMESPACE::hash_map<uint64, bool> Stomach_Map;
 
     void Reset()
     {
         //One random wisper every 90 - 300 seconds
-        WisperTimer = 10000; //90000;
+        WisperTimer = 90000;
 
         //Phase information
-        PhaseTimer = 50000;         //
-        Phase = 0;                  //0 - eye, 1 - dark, 3 - death transition
+        PhaseTimer = 50000;         //First dark glare in 50 seconds
+        Phase = 0;                  //0 - eye beams, 1 - dark glare, 2 - death transition, 3 - body,
 
         //Eye beam phase 50 seconds
         BeamTimer = 3000;
@@ -123,59 +191,85 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
         DarkGlareTick = 0;
         DarkGlareTickTimer = 1000;
         DarkGlareAngle = 0;
+        ClockWise = false;
 
+        //No hold player for transition
         HoldPlayer = 0;
 
-        //Start with 99% damage reduce
-        Weakened = false;
+        //Body Phase
+        FleshTentaclesKilled = 0;
+        GiantClawTentacleTimer = 30000;     //30 seconds into body phase (1 min repeat)
+        GiantEyeTentacleTimer = 60000;      //60 seconds into body phase (1 min repeat)
+        StomachAcidTimer = 4000;            //Every 4 seconds
+        StomachEnterTimer = 10000;          //Every 10 seconds
+        StomachEnterVisTimer = 0;    //Always 3.5 seconds after Stomach Enter Timer
+        StomachEnterTarget = 0;      //Target to be teleported to stomach
+
+        //Clear players in stomach and outside
+        Stomach_Map.clear();
+
+        //Reset flags
+        m_creature->SetName("Eye of C'thun");
+        m_creature->RemoveAurasDueToSpell(SPELL_TRANSFORM);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE | UNIT_FLAG_ANIMATION_FROZEN);
     }
 
     void Aggro(Unit *who)
     {
+        DoZoneInCombat();
     }
 
-    void AttackStart(Unit* who)
+    void SpawnEyeTentacle(float x, float y, bool NoStomach)
     {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack())
-        {
-            //Begin attack
-            DoStartAttackNoMovement(who);
-
-            if (!InCombat)
-            {
-                Aggro(who);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        //We simply use this function to find players until we can use Map->GetPlayers()
-        if (who && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
-        {
-            //Add them to our threat list
-            m_creature->AddThreat(who,1.0f);
-
-            // Attack
-            if (!m_creature->getVictim())
-                AttackStart(who);
-        }
-    }
-
-    void SpawnEyeTentacle(float x, float y)
-    {
-        Unit* Spawned;
-        Spawned = m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+x,m_creature->GetPositionY()+y,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
+        Creature* Spawned;
+        Spawned = (Creature*)m_creature->SummonCreature(MOB_EYE_TENTACLE,m_creature->GetPositionX()+x,m_creature->GetPositionY()+y,m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,500);
         if (Spawned)
         {
-            Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            Unit* target;
+
+            if (NoStomach)
+                target = SelectRandomNotStomach();
+            else target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
             if (target)
-                Spawned->AddThreat(target,1.0f);
+                Spawned->AI()->AttackStart(target);
         }
+    }
+
+    Unit* SelectRandomNotStomach()
+    {
+        if (Stomach_Map.empty())
+            return NULL;
+
+        HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+
+        std::list<Unit*> temp;
+        std::list<Unit*>::iterator j;
+
+        //Get all players in map
+        while (i != Stomach_Map.end())
+        {
+            //Check for valid player
+            Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+
+            //Only units out of stomach
+            if (pUnit && i->second == false)
+            {
+                temp.push_back(pUnit);
+            }
+            ++i;
+        }
+
+        if (temp.empty())
+            return NULL;
+
+        j = temp.begin();
+
+        //Get random but only if we have more than one unit on threat list
+        if (temp.size() > 1)
+            advance ( i , rand() % (temp.size() - 1) );
+
+        return *j;
     }
 
     void UpdateAI(const uint32 diff)
@@ -223,7 +317,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 }
 
                 //One random wisper every 90 - 300 seconds
-                WisperTimer = 10000;//90000 + (rand()% 210000);
+                WisperTimer = 90000 + (rand()% 210000);
             }else WisperTimer -= diff;
 
             return;
@@ -260,13 +354,13 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (target)
                     {
-                        Unit* Spawned = NULL;
+                        Creature* Spawned = NULL;
 
                         //Spawn claw tentacle on the random target
-                        Spawned = m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+                        Spawned = (Creature*)m_creature->SummonCreature(MOB_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,500);
 
                         if (Spawned)
-                            Spawned->AddThreat(target,1.0f);
+                            Spawned->AI()->AttackStart(target);
                     }
 
                     //One claw tentacle every 12.5 seconds
@@ -277,18 +371,15 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 if (EyeTentacleTimer < diff)
                 {
                     //Spawn the 8 Eye Tentacles in the corret spots
-                    Unit* target = NULL;
-                    Unit* Spawned = NULL;
+                    SpawnEyeTentacle(0, 20, false); //south
+                    SpawnEyeTentacle(10, 10, false); //south west
+                    SpawnEyeTentacle(20, 0, false); //west
+                    SpawnEyeTentacle(10, -10, false); //north west
 
-                    SpawnEyeTentacle(0, 20); //south
-                    SpawnEyeTentacle(10, 10); //south west
-                    SpawnEyeTentacle(20, 0); //west
-                    SpawnEyeTentacle(10, -10); //north west
-
-                    SpawnEyeTentacle(0, -20); //north
-                    SpawnEyeTentacle(-10, -10); //north east
-                    SpawnEyeTentacle(-20, 0); // east
-                    SpawnEyeTentacle(-10, 10); // south east
+                    SpawnEyeTentacle(0, -20, false); //north
+                    SpawnEyeTentacle(-10, -10, false); //north east
+                    SpawnEyeTentacle(-20, 0, false); // east
+                    SpawnEyeTentacle(-10, 10, false); // south east
 
                     //No point actually putting a timer here since
                     //These shouldn't trigger agian until after phase shifts
@@ -316,6 +407,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                         DarkGlareAngle = m_creature->GetAngle(target);
                         DarkGlareTickTimer = 1000;
                         DarkGlareTick = 0;
+                        ClockWise = rand()%2;
                     }
 
                     //Add red coloration to C'thun
@@ -337,18 +429,17 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
                 if (DarkGlareTick < 35)
                     if (DarkGlareTickTimer < diff)
                     {
-
-                        //SPELL_DARK_GLARE
-                        DoYell("Dark Beam",LANG_UNIVERSAL,NULL);
-
                         //Remove any target
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
                         //Set angle and cast
-                        m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+                        if (ClockWise)
+                            m_creature->SetOrientation(DarkGlareAngle + ((float)DarkGlareTick*PI/35));
+                        else m_creature->SetOrientation(DarkGlareAngle - ((float)DarkGlareTick*PI/35));
+
                         m_creature->StopMoving();
 
-                        //
+                        //Actual dark glare cast, maybe something missing here?
                         m_creature->CastSpell(NULL, SPELL_DARK_GLARE, false);
 
                         //Increase tick
@@ -392,59 +483,338 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public ScriptedAI
 
                     //Switch to c'thun model
                     DoCast(m_creature, SPELL_TRANSFORM, true);
+                    m_creature->SetName("C'thun");
+                    m_creature->SetHealth(m_creature->GetMaxHealth());
+
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE | UNIT_FLAG_ANIMATION_FROZEN);
 
                     //Emerging phase
                     AttackStart(Unit::GetUnit(*m_creature, HoldPlayer));
                     DoZoneInCombat();
+
+                    //Place all units in threat list on outside of stomach
+                    Stomach_Map.clear();
+
+                    std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+                    for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+                    {
+                        //Outside stomach
+                        Stomach_Map[(*i)->getUnitGuid()] = false;
+                    }
+
+                    //Spawn 2 flesh tentacles
+                    FleshTentaclesKilled = 0;
+
+                    Creature* Spawned;
+
+                    //Spawn flesh tentacle
+                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                   
+                    if (!Spawned)
+                        FleshTentaclesKilled++;
+                    else
+                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+
+                    //Spawn flesh tentacle
+                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                   
+                    if (!Spawned)
+                        FleshTentaclesKilled++;
+                    else
+                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
 
                     PhaseTimer = 0;
                 }else PhaseTimer -= diff;
 
             }break;
 
-            //Next phase
+            //Body Phase
         case 3:
             {
+                //Remove Target field
+                m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
+                //Weaken
+                if (FleshTentaclesKilled > 1)
+                {
+                    Phase = 4;
+                    DoTextEmote(EMOTE_WEAKENED, NULL);
+                    PhaseTimer = 45000;
+
+                    DoCast(m_creature, SPELL_RED_COLORATION, true);
+
+                    HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+
+                    //Kick all players out of stomach
+                    while (i != Stomach_Map.end())
+                    {
+                        //Check for valid player
+                        Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+
+                        //Only move units in stomach
+                        if (pUnit && i->second == true)
+                        {
+                            //Teleport each player out
+                            DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+10, rand()%6);
+
+                            //Cast knockback on them
+                            DoCast(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, true);
+
+                            //Remove the acid debuff
+                            pUnit->RemoveAurasDueToSpell(SPELL_DIGESTIVE_ACID);
+
+                            i->second = false;
+                        }
+                        ++i;
+                    }
+
+                    return;
+                }
+
+                //Stomach acid
+                if (StomachAcidTimer < diff)
+                {
+                    //Apply aura to all players in stomach
+                    HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+
+                    while (i != Stomach_Map.end())
+                    {
+                        //Check for valid player
+                        Unit* pUnit = Unit::GetUnit(*m_creature, i->first);
+
+                        //Only apply to units in stomach
+                        if (pUnit && i->second == true)
+                        {
+                            //Cast digestive acid on them
+                            DoCast(pUnit, SPELL_DIGESTIVE_ACID, true);
+
+                            //Check if player should be kicked from stomach
+                            if (pUnit->GetDistance(KICK_X, KICK_Y, KICK_Z) < 15)
+                            {
+                                //Teleport each player out
+                                DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+10, rand()%6);
+
+                                //Cast knockback on them
+                                DoCast(pUnit, SPELL_EXIT_STOMACH_KNOCKBACK, true);
+
+                                //Remove the acid debuff
+                                pUnit->RemoveAurasDueToSpell(SPELL_DIGESTIVE_ACID);
+
+                                i->second = false;
+                            }
+                        }
+                        ++i;
+                    }
+
+                    StomachAcidTimer = 4000;
+                }else StomachAcidTimer -= diff;
+
+                //Stomach Enter Timer
+                if (StomachEnterTimer < diff)
+                {
+                    Unit* target = NULL;
+                    target = SelectRandomNotStomach();
+
+                    if (target)
+                    {
+                        //Set target in stomach
+                        Stomach_Map[target->GetGUID()] = true;
+                        target->InterruptNonMeleeSpells(false);
+                        target->CastSpell(target, SPELL_MOUTH_TENTACLE, true, NULL, NULL, m_creature->GetGUID());
+                        StomachEnterTarget = target->GetGUID();
+                        StomachEnterVisTimer = 1000;
+                    }
+
+                    StomachEnterTimer = 10000;
+                }else StomachEnterTimer -= diff;
+
+                if (StomachEnterVisTimer && StomachEnterTarget)
+                    if (StomachEnterVisTimer <= diff)
+                    {
+                        //Check for valid player
+                        Unit* pUnit = Unit::GetUnit(*m_creature, StomachEnterTarget);
+
+                        if (pUnit)
+                        {
+                            DoTeleportPlayer(pUnit, STOMACH_X, STOMACH_Y, STOMACH_Z, STOMACH_O);
+                        }
+
+                        StomachEnterTarget = 0;
+                        StomachEnterVisTimer = 0;
+                    }else StomachEnterVisTimer -= diff;
+
+                //GientClawTentacleTimer
+                if (GiantClawTentacleTimer < diff)
+                {
+                    Unit* target = NULL;
+                    target = SelectRandomNotStomach();
+                    if (target)
+                    {
+                        Creature* Spawned = NULL;
+
+                        //Spawn claw tentacle on the random target
+                        Spawned = (Creature*)m_creature->SummonCreature(MOB_GIANT_CLAW_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,500);
+
+                        if (Spawned)
+                            Spawned->AI()->AttackStart(target);
+                    }
+
+                    //One giant claw tentacle every minute
+                    GiantClawTentacleTimer = 60000;
+                }else GiantClawTentacleTimer -= diff;
+
+                //GiantEyeTentacleTimer
+                if (GiantEyeTentacleTimer < diff)
+                {
+                    Unit* target = NULL;
+                    target = SelectRandomNotStomach();
+                    if (target)
+                    {
+
+                        Creature* Spawned = NULL;
+
+                        //Spawn claw tentacle on the random target
+                        Spawned = (Creature*)m_creature->SummonCreature(MOB_GIANT_EYE_TENTACLE,target->GetPositionX(),target->GetPositionY(),target->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,500);
+
+                        if (Spawned)
+                            Spawned->AI()->AttackStart(target);
+                    }
+
+                    //One giant eye tentacle every minute
+                    GiantEyeTentacleTimer = 60000;
+                }else GiantEyeTentacleTimer -= diff;
+
+                //EyeTentacleTimer
+                if (EyeTentacleTimer < diff)
+                {
+                    
+                    //Spawn the 8 Eye Tentacles in the corret spots
+                    SpawnEyeTentacle(0, 25, true); //south
+                    SpawnEyeTentacle(12, 12, true); //south west
+                    SpawnEyeTentacle(25, 0, true); //west
+                    SpawnEyeTentacle(12, -12, true); //north west
+
+                    SpawnEyeTentacle(0, -25, true); //north
+                    SpawnEyeTentacle(-12, -12, true); //north east
+                    SpawnEyeTentacle(-25, 0, true); // east
+                    SpawnEyeTentacle(-12, 12, true); // south east
+
+                    //These spawn at every 30 seconds
+                    EyeTentacleTimer = 30000;
+                }else EyeTentacleTimer -= diff;
 
             }break;
+
+            //Weakened state
+        case 4:
+            {
+                //PhaseTimer
+                if (PhaseTimer < diff)
+                {
+                    //Switch
+                    Phase = 3;
+
+                    //Remove red coloration
+                    m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
+
+                    //Spawn 2 flesh tentacles
+                    FleshTentaclesKilled = 0;
+
+                    Creature* Spawned;
+
+                    //Spawn flesh tentacle
+                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS1_X, TENTACLE_POS1_Y, TENTACLE_POS1_Z, TENTACLE_POS1_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                   
+                    if (!Spawned)
+                        FleshTentaclesKilled++;
+                    else
+                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+
+                    //Spawn flesh tentacle
+                    Spawned = (Creature*)m_creature->SummonCreature(MOB_FLESH_TENTACLE, TENTACLE_POS2_X, TENTACLE_POS2_Y, TENTACLE_POS2_Z, TENTACLE_POS2_O, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                   
+                    if (!Spawned)
+                        FleshTentaclesKilled++;
+                    else
+                        ((flesh_tentacleAI*)(Spawned->AI()))->SpawnedByCthun(m_creature->GetGUID());
+
+                    PhaseTimer = 0;
+                }else PhaseTimer -= diff;
+            }
         }
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
-        if (Phase > 3)
-            return;
-
-        //Reduce damage by 99%, this is not done by a spell that I can find
-        //At one time I know there was a spell for this though called Hardened Carapace
-        if (Phase == 3 && !Weakened)
+        switch (Phase)
         {
-            if (damage / 99 > 0) damage/= 99;
-            else damage = 1;
-        }
+            case 0:
+            case 1:
+                {
+                    //Only if it will kill
+                    if (damage < m_creature->GetHealth())
+                        return;
 
-        if (damage > m_creature->GetHealth())
-        {
-            //Death animation/respawning
-            Phase = 2;
-            m_creature->SetHealth(0);
-            PhaseTimer = 12000;
-            damage = 0;
+                    //Fake death in phase 0 or 1 (green beam or dark glare phase)
+                    m_creature->InterruptNonMeleeSpells(false);
 
-            m_creature->InterruptNonMeleeSpells(true);
-            m_creature->RemoveAllAuras();
-            m_creature->DeleteThreatList();
-            m_creature->CombatStop();
-            
-            HoldPlayer = done_by->GetGUID();
+                    //Remove Red coloration from c'thun
+                    m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
+
+                    //Reset to normal emote state and prevent select and attack
+                    m_creature->setEmoteState(0);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE);
+
+                    //Remove Target field
+                    m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+
+                    //Death animation/respawning
+                    Phase = 2;
+                    m_creature->SetHealth(0);
+                    PhaseTimer = 12000;
+                    damage = 0;
+
+                    m_creature->InterruptNonMeleeSpells(true);
+                    m_creature->RemoveAllAuras();
+
+                    HoldPlayer = done_by->GetGUID();
+                }
+            break;
+
+            case 2:
+                {
+                    //Prevent death in this phase
+                    damage = 0;
+                    return;
+                }
+                break;
+
+            case 3:
+                {
+                    //Not weakened so reduce damage by 99%
+                    if (damage / 99 > 0) damage/= 99;
+                    else damage = 1;
+                    return;
+                }
+                break;
+
+            case 4:
+                {
+                    //Weakened - takes normal damage
+                    return;
+                }
         }
+    }
+
+    void FleshTentcleKilled()
+    {
+        FleshTentaclesKilled++;
     }
 };
 
-struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
+struct MANGOS_DLL_DECL eye_tentacleAI : public Scripted_NoMovementAI
 {
-    eye_tentacleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    eye_tentacleAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
 
     uint32 MindflayTimer; 
 
@@ -456,39 +826,7 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-    }
-
-    void AttackStart(Unit* who)
-    {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack())
-        {
-            //Begin attack
-            DoStartAttackNoMovement(who);
-
-            if (!InCombat)
-            {
-                Aggro(who);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        //We simply use this function to find players until we can use Map->GetPlayers()
-
-        if (who && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
-        {
-            //Add them to our threat list
-            m_creature->AddThreat(who,1.0f);
-
-            // Attack
-            if (!m_creature->getVictim())
-                AttackStart(who);
-        }
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
@@ -502,18 +840,18 @@ struct MANGOS_DLL_DECL eye_tentacleAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)
+            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
                 DoCast(target,SPELL_MIND_FLAY);
 
-            //Mindflay every 5 seconds
-            MindflayTimer = 5000;
+            //Mindflay every 10 seconds
+            MindflayTimer = 10100;
         }else MindflayTimer -= diff;
     }
 };
 
-struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
+struct MANGOS_DLL_DECL claw_tentacleAI : public Scripted_NoMovementAI
 {
-    claw_tentacleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    claw_tentacleAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
 
     uint32 GroundRuptureTimer; 
     uint32 HamstringTimer;
@@ -529,39 +867,7 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-    }
-
-    void AttackStart(Unit* who)
-    {
-        if (!who)
-            return;
-
-        if (who->isTargetableForAttack())
-        {
-            //Begin attack
-            DoStartAttackNoMovement(who);
-
-            if (!InCombat)
-            {
-                Aggro(who);
-                InCombat = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        //We simply use this function to find players until we can use Map->GetPlayers()
-
-        if (who && who->GetTypeId() == TYPEID_PLAYER && m_creature->IsHostileTo(who) && m_creature->IsWithinLOSInMap(who))
-        {
-            //Add them to our threat list
-            m_creature->AddThreat(who,1.0f);
-
-            // Attack
-            if (!m_creature->getVictim())
-                AttackStart(who);
-        }
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
@@ -574,10 +880,29 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
         if (m_creature->GetDistanceSq(m_creature->getVictim()) > ATTACK_DISTANCE)
             if (EvadeTimer < diff)
             {
-                //Since we can't move auto evade if the players is to far away from us for to long
-                EnterEvadeMode();
+                //Dissapear and reappear at new position
+                m_creature->SetVisibility(VISIBILITY_OFF);
 
-                return;
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (!target)
+                {
+                    EnterEvadeMode();
+                    return;
+                }
+
+                if (!target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+                {
+                    m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
+
+                    GroundRuptureTimer = 500;
+                    HamstringTimer = 2000;
+                    EvadeTimer = 5000;
+                    AttackStart(target);
+                }
+
+                m_creature->SetVisibility(VISIBILITY_ON);
+
             }else EvadeTimer -= diff;
 
         //GroundRuptureTimer
@@ -602,19 +927,197 @@ struct MANGOS_DLL_DECL claw_tentacleAI : public ScriptedAI
     }
 };
 
+struct MANGOS_DLL_DECL giant_claw_tentacleAI : public Scripted_NoMovementAI
+{
+    giant_claw_tentacleAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
+
+    uint32 GroundRuptureTimer; 
+    uint32 ThrashTimer;
+    uint32 HamstringTimer;
+    uint32 EvadeTimer;
+
+    void Reset()
+    {
+        //First rupture should happen half a second after we spawn
+        GroundRuptureTimer = 500;
+        HamstringTimer = 2000;
+        ThrashTimer = 5000;
+        EvadeTimer = 5000;
+    }
+
+    void Aggro(Unit *who)
+    {
+        DoZoneInCombat();
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Check if we have a target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //EvadeTimer
+        if (m_creature->GetDistanceSq(m_creature->getVictim()) > ATTACK_DISTANCE)
+            if (EvadeTimer < diff)
+            {
+                //Dissapear and reappear at new position
+                m_creature->SetVisibility(VISIBILITY_OFF);
+
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (!target)
+                {
+                    EnterEvadeMode();
+                    return;
+                }
+
+                if (!target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+                {
+                    m_creature->GetMap()->CreatureRelocation(m_creature, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
+
+                    GroundRuptureTimer = 500;
+                    HamstringTimer = 2000;
+                    ThrashTimer = 5000;
+                    EvadeTimer = 5000;
+                    AttackStart(target);
+                }
+
+                m_creature->SetVisibility(VISIBILITY_ON);
+
+            }else EvadeTimer -= diff;
+
+        //GroundRuptureTimer
+        if (GroundRuptureTimer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_GROUND_RUPTURE);
+
+            //Ground rupture every 30 seconds
+            GroundRuptureTimer = 30000;
+        }else GroundRuptureTimer -= diff;
+
+        //ThrashTimer
+        if (ThrashTimer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_THRASH);
+
+            //Hamstring every 10 seconds
+            ThrashTimer = 10000;
+        }else ThrashTimer -= diff;
+
+        //HamstringTimer
+        if (HamstringTimer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_HAMSTRING);
+
+            //Hamstring every 10 seconds
+            HamstringTimer = 10000;
+        }else HamstringTimer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+struct MANGOS_DLL_DECL giant_eye_tentacleAI : public Scripted_NoMovementAI
+{
+    giant_eye_tentacleAI(Creature *c) : Scripted_NoMovementAI(c) {Reset();}
+
+    uint32 BeamTimer; 
+
+    void Reset()
+    {
+        //Green Beam half a second after we spawn
+        BeamTimer = 500;
+    }
+
+    void Aggro(Unit *who)
+    {
+        DoZoneInCombat();
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Check if we have a target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //BeamTimer
+        if (BeamTimer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target && !target->HasAura(SPELL_DIGESTIVE_ACID, 0))
+                DoCast(target,SPELL_GREEN_BEAM);
+
+            //Beam every 2 seconds
+            BeamTimer = 2100;
+        }else BeamTimer -= diff;
+    }
+};
+
+//Flesh tentacle functions
+void flesh_tentacleAI::UpdateAI(const uint32 diff)
+{
+    //Check if we have a target
+    if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        return;
+
+    if (Parent)
+        if (CheckTimer < diff)
+        {
+            Unit* pUnit = Unit::GetUnit(*m_creature, Parent);
+
+            if (!pUnit || !pUnit->isAlive() || !pUnit->isInCombat())
+            {
+                Parent = 0;
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NONE, NULL, false);
+                return;
+            }
+
+            CheckTimer = 1000;
+        }else CheckTimer -= diff;
+
+    DoMeleeAttackIfReady();
+}
+
+void flesh_tentacleAI::JustDied(Unit* killer)
+{
+    if (!Parent)
+    {
+        DoYell("Error: No Parent variable", LANG_UNIVERSAL, NULL);
+        return;
+    }
+
+    Creature* Cthun = (Creature*)Unit::GetUnit(*m_creature, Parent);
+
+    if (Cthun)
+        ((eye_of_cthunAI*)(Cthun->AI()))->FleshTentcleKilled();
+    else DoYell("Error: No Cthun", LANG_UNIVERSAL, NULL);
+}
+
+//GetAIs
 CreatureAI* GetAI_eye_of_cthun(Creature *_Creature)
 {
     return new eye_of_cthunAI (_Creature);
 }
-
 CreatureAI* GetAI_eye_tentacle(Creature *_Creature)
 {
     return new eye_tentacleAI (_Creature);
 }
-
 CreatureAI* GetAI_claw_tentacle(Creature *_Creature)
 {
     return new claw_tentacleAI (_Creature);
+}
+CreatureAI* GetAI_giant_claw_tentacle(Creature *_Creature)
+{
+    return new giant_claw_tentacleAI (_Creature);
+}
+CreatureAI* GetAI_giant_eye_tentacle(Creature *_Creature)
+{
+    return new giant_eye_tentacleAI (_Creature);
+}
+CreatureAI* GetAI_flesh_tentacle(Creature *_Creature)
+{
+    return new flesh_tentacleAI (_Creature);
 }
 
 void AddSC_boss_cthun()
@@ -635,5 +1138,20 @@ void AddSC_boss_cthun()
     newscript = new Script;
     newscript->Name="mob_claw_tentacle";
     newscript->GetAI = GetAI_claw_tentacle;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_giant_claw_tentacle";
+    newscript->GetAI = GetAI_giant_claw_tentacle;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_giant_eye_tentacle";
+    newscript->GetAI = GetAI_giant_eye_tentacle;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_giant_flesh_tentacle";
+    newscript->GetAI = GetAI_flesh_tentacle;
     m_scripts[nrscripts++] = newscript;
 }

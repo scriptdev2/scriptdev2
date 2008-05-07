@@ -444,9 +444,15 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
     if (!pUnit)
         pUnit = m_creature;
 
+    if (!pUnit->GetMap()->Instanceable())
+    {
+        error_log("SD2: DoZoneInCombat call for map that isn't an instance (m_creature entry = %d)", m_creature->GetCreatureInfo()->Entry);
+        return;
+    }
+
     std::list<Player*>::iterator i;
 
-    for (i = m_creature->GetMap()->GetPlayers().begin();i != m_creature->GetMap()->GetPlayers().end(); ++i)
+    for (i = pUnit->GetMap()->GetPlayers().begin();i != pUnit->GetMap()->GetPlayers().end(); ++i)
     {
         pUnit->Attack((*i));
         pUnit->AddThreat((*i), 0.0f);
@@ -476,4 +482,49 @@ void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float 
     ((Player*)pUnit)->BuildTeleportAckMsg(&data, x, y, z, o);
     ((Player*)pUnit)->GetSession()->SendPacket(&data);
     ((Player*)pUnit)->SetPosition( x, y, z, o, true);
+}
+
+
+void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
+{
+    if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+    {
+        if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+            return;
+
+        float attackRadius = m_creature->GetAttackDistance(who);
+        if(m_creature->IsWithinDistInMap(who, attackRadius))
+        {
+            // Check first that object is in an angle in front of this one before LoS check
+            if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+            {
+                DoStartAttackNoMovement(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+                    Aggro(who);
+                    InCombat = true;
+                }
+            }
+        }
+    }
+}
+
+void Scripted_NoMovementAI::AttackStart(Unit* who)
+{
+    if (!who)
+        return;
+
+    if (who->isTargetableForAttack())
+    {
+        //Begin attack
+        DoStartAttackNoMovement(who);
+
+        if (!InCombat)
+        {
+            Aggro(who);
+            InCombat = true;
+        }
+    }
 }
