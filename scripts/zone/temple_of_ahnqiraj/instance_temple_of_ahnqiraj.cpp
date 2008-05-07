@@ -39,6 +39,8 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 
     uint32 BugTrioDeathCount;
 
+    uint32 CthunPhase;
+
     void Initialize()
     {
         IsBossDied[0] = false;
@@ -52,6 +54,8 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
         VeknilashGUID = 0;
 
         BugTrioDeathCount = 0;
+
+        CthunPhase = 0;
     }
 
     void OnCreatureCreate (Creature *creature, uint32 creature_entry)
@@ -78,7 +82,7 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
             VeknilashGUID = creature->GetGUID();
             break;
         }
-    } 
+    }
 
     bool IsEncounterInProgress() const 
     {
@@ -107,6 +111,9 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 
             case DATA_BUG_TRIO_DEATH:
                 return BugTrioDeathCount;
+
+            case DATA_CTHUN_PHASE:
+                return CthunPhase;
         }
         return 0;
     }
@@ -147,6 +154,10 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 
             case DATA_VEKNILASH_DEATH:
                 IsBossDied[2] = true;
+                break;
+
+            case DATA_CTHUN_PHASE:
+                CthunPhase = data;
                 break;
         }
     }

@@ -115,10 +115,11 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(m_creature->GetPower(POWER_MANA) <= 0 && !m_creature->HasAura(SPELL_EVOCATION,0))
+        if(m_creature->GetPower(POWER_MANA) <= 1000 && !Evocating)
         {
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
+            m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature, SPELL_EVOCATION);
             Evocating = true;
         }
@@ -142,7 +143,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 }
 
                 //Reduce Mana by 10%
-                int32 mana = (int32)(0.1*(m_creature->GetMaxPower(POWER_MANA)));               
+                int32 mana = (int32)(0.1f*(m_creature->GetMaxPower(POWER_MANA)));               
                 m_creature->ModifyPower(POWER_MANA, -mana);
                 switch(rand()%4)
                 {
@@ -153,7 +154,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 case 1:
                     DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                    break;                    
+                    break;
                 }
                 AddTimer = 10000;
             }else AddTimer -= diff;

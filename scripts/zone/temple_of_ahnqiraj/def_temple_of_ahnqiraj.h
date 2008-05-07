@@ -16,4 +16,6 @@
 #define DATA_VEKNILASHISDEAD    10
 #define DATA_VEKNILASH_DEATH    11
 #define DATA_BUG_TRIO_DEATH     14
+
+#define DATA_CTHUN_PHASE        20
 #endif
