@@ -325,18 +325,18 @@ SpellEntry const* ScriptedAI::SelectSpell(Unit* Target, int32 School, int32 Mech
     return Spell[rand()%SpellCount];
 }
 
-bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell)
+bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell, bool Triggered)
 {
     //No target so we can't cast
     if (!Target || !Spell)
         return false;
 
     //Silenced so we can't cast
-    if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
+    if (!Triggered && m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED))
         return false;
 
     //Check for power
-    if (m_creature->GetPower((Powers)Spell->powerType) < Spell->manaCost)
+    if (!Triggered && m_creature->GetPower((Powers)Spell->powerType) < Spell->manaCost)
         return false;
 
     SpellRangeEntry const *TempRange = NULL;

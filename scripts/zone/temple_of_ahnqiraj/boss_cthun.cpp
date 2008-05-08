@@ -188,7 +188,8 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE | UNIT_FLAG_ANIMATION_FROZEN);
 
         //Reset Phase
-        pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (pInst)
+            pInst->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void Aggro(Unit *who)
@@ -214,6 +215,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
     {
         //Check if we have a target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        //No instance
+        if (!pInst)
             return;
 
         switch (pInst->GetData(DATA_CTHUN_PHASE))
@@ -384,6 +389,10 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
+        //No instance
+        if (!pInst)
+            return;
+
         switch (pInst->GetData(DATA_CTHUN_PHASE))
         {
             case 0:
@@ -499,7 +508,8 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
         m_creature->RemoveAurasDueToSpell(SPELL_TRANSFORM);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE);
 
-        pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (pInst)
+            pInst->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void Aggro(Unit *who)
@@ -610,6 +620,10 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
         }
 
         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+
+        //No instance
+        if (!pInst)
+            return;
 
         switch (pInst->GetData(DATA_CTHUN_PHASE))
         {
@@ -893,6 +907,10 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
+        //No instance
+        if (!pInst)
+            return;
+
         switch (pInst->GetData(DATA_CTHUN_PHASE))
         {
             case 3:

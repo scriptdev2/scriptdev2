@@ -133,6 +133,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void GetAdvisors()
     {
+        if(!pInstance)
+            return;
+
         Advisors[0] = pInstance->GetData64(DATA_SHARKKIS);
         Advisors[1] = pInstance->GetData64(DATA_TIDALVESS);
         Advisors[3] = pInstance->GetData64(DATA_CARIBDIS);
@@ -303,32 +306,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
             pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
-                if(!InCombat)
-                {
-                    if(pInstance)
-                    {
-                        pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-                        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
-                    }
-                }
-            }
         }
     }
 

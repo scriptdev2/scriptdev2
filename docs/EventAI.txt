@@ -63,6 +63,8 @@ Params are always read from Param1, then Param2, then Param3.
 11   EVENT_T_RANGE               MinDist, MaxDist, TimeUnitlRepeat      Expires when the highest threat target distance is greater than (Param1) and less than (Param2). Repeats every (Param3) or never if Param3 = 0.
 12   EVENT_T_OOC_LOS             NoHostile, NoFriendly, TimeUntilRepeat Expires when a Player moves within visible distance to creature. Does not expire for Hostile Players if (Param1) is not 0. Does not expire for Friendly Players if (Param2) is not 0. Will repeat every (Param3) or never if Param3 = 0. Does not expire for creatures or pet or when the creature is in combat.
 13   EVENT_T_SPAWNED             NONE                                   Expires at initial spawn and at creature respawn (useful for setting ranged movement type)
+14   EVENT_T_TARGET_HP           HPMax%, HPMin%, TimeUntilRepeat        Expires when Current Target's HP is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. 
+15   EVENT_T_TARGET_CASTING      TimeUntilRepeat			Expires when the player is casting a spell. Will repeat every (Param1) or never repeat if Param1 = 0.
 
 -----------------------------------------
 Action Types
@@ -128,9 +130,11 @@ Cast Flags
 -----------------------------------------
 Below is the list of current Cast Flags that EventAI's spell casting can handle.
 Cast flags are handled bitwise. Bit 0 is Interrupt Previous, bit 1 is triggered, etc.
-So for example the number "3"(11 in binary) would mean that this cast should both interrupt previous and triggered spell.
+So for example the number "3"(11 in binary) would mean that this cast has both CAST_INTURRUPT_PREVIOUS and CAST_TRIGGERED.
 
 (bit#   Internal Name                  Discription)
 0       CAST_INTURRUPT_PREVIOUS        Interrupts any previous spell casting (basicaly makes sure that this spell goes off)
 1       CAST_TRIGGERED                 Forces the spell to be instant cast and require no mana/reagents.
-2       CAST_FORCE_CAST                Forces spell to cast even if the player is possibly out of range or the creature is possibly out of mana
+2       CAST_FORCE_CAST                Forces spell to cast even if the target is possibly out of range or the creature is possibly out of mana
+3       CAST_NO_MELEE_IF_OOM           Prevents creature from entering melee if out of mana or out of range
+4       CAST_FORCE_TARGET_SELF         Forces the target to cast this spell on itself

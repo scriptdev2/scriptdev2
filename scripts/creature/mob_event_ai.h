@@ -33,6 +33,8 @@ enum Event_Types
     EVENT_T_RANGE                   = 11,   //MinDist, MaxDist, TimeUnitlRepeat
     EVENT_T_OOC_LOS                 = 12,   //NoHostile, NoFriendly, TimeUntilRepeat
     EVENT_T_SPAWNED                 = 13,   //NONE
+    EVENT_T_TARGET_HP               = 14,   //HPMax%, HPMin%, TimeUntilRepeat
+    EVENT_T_TARGET_CASTING          = 15,   //TimeUntilRepeat
     
     EVENT_T_END,
 };
@@ -93,9 +95,11 @@ enum Target
 
 enum CastFlags
 {
-    CAST_INTURRUPT_PREVIOUS = 0x01,
-    CAST_TRIGGERED          = 0x02,
-    CAST_FORCE_CAST         = 0x04,
+    CAST_INTURRUPT_PREVIOUS     = 0x01,     //Interrupt any spell casting
+    CAST_TRIGGERED              = 0x02,     //Triggered (this makes spell cost zero mana and have no cast time)
+    CAST_FORCE_CAST             = 0x04,     //Forces cast even if creature is out of mana or out of range
+    CAST_NO_MELEE_IF_OOM        = 0x08,     //Prevents creature from entering melee if out of mana or out of range
+    CAST_FORCE_TARGET_SELF      = 0x10,     //Forces the target to cast this spell on itself
 };
 
 struct EventAI_Event

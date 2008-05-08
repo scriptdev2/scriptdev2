@@ -87,7 +87,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if ( m_creature->Attack(pTarget) )
         {
             if (Follow)
+            {
+                m_creature->GetMotionMaster()->Clear(false);
                 m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
+            }
             
             m_creature->AddThreat(pTarget, 0.0f);
             m_creature->resetAttackTimer();
@@ -251,6 +254,33 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
             }
             break;
+        case EVENT_T_TARGET_HP:
+            {
+                if (!InCombat || !m_creature->getVictim() || !m_creature->getVictim()->GetMaxHealth())
+                    return;
+
+                uint32 perc = (m_creature->getVictim()->GetHealth()*100) / m_creature->getVictim()->GetMaxHealth();
+
+                if (perc > param1 || perc < param2)
+                    return;
+
+                //Prevent repeat for param3 time, or disable if param3 not set
+                if (param3)
+                    pHolder.Time = param3;
+                else pHolder.Enabled = false;
+            }
+            break;
+        case EVENT_T_TARGET_CASTING:
+            {
+                if (!InCombat || !m_creature->getVictim() || !m_creature->getVictim()->IsNonMeleeSpellCasted(false, false, true))
+                    return;
+
+                //Prevent repeat for param1 time, or disable if param3 not set
+                if (param1)
+                    pHolder.Time = param1;
+                else pHolder.Enabled = false;
+            }
+            break;
         default:
             error_log("Event type missing from ProcessEvent() Switch . Type = %d", pHolder.Event.event_type);
             break;
@@ -383,20 +413,45 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_CAST:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
+                Unit* caster = m_creature;
 
                 if (!target)
                     return;
 
-                if (param3 & CAST_INTURRUPT_PREVIOUS || !m_creature->IsNonMeleeSpellCasted(false))
+                //Cast is always triggered if target is forced to cast on self
+                if (param3 & CAST_FORCE_TARGET_SELF)
                 {
-                    m_creature->InterruptNonMeleeSpells(false);
+                    param3 |= CAST_TRIGGERED;
+                    caster = target;
+                }
 
-                   const SpellEntry* tSpell = GetSpellStore()->LookupEntry(param1);
+                //Interrupt any previous spell
+                if (caster->IsNonMeleeSpellCasted(false) && param3 & CAST_INTURRUPT_PREVIOUS)
+                    caster->InterruptNonMeleeSpells(false);
 
+                //Cast only if not casting or if spell is triggered
+                if (param3 & CAST_TRIGGERED || !caster->IsNonMeleeSpellCasted(false))
+                {
+                    const SpellEntry* tSpell = GetSpellStore()->LookupEntry(param1);
+
+                    //Verify that spell exists
                     if (tSpell)
                     {
-                        if ((param3 & CAST_FORCE_CAST) || CanCast(target, tSpell))
-                            m_creature->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+                        //Check if cannot cast spell
+                        if (!(param3 & (CAST_FORCE_TARGET_SELF | CAST_FORCE_CAST)) && 
+                            !CanCast(target, tSpell, (param3 & CAST_TRIGGERED)))
+                        {
+                            //Melee current victim if flag not set
+                            if (!(param3 & CAST_NO_MELEE_IF_OOM))
+                            {
+                                AttackDistance = 0;
+                                AttackAngle = 0;
+
+                                m_creature->GetMotionMaster()->Clear(false);
+                                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                            }
+
+                        }else caster->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
 
                     }else error_log("SD2: EventAI creature %d attempt to cast spell that doesn't exist %d", m_creature->GetCreatureInfo()->Entry, param1);
                 }
@@ -498,11 +553,16 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case ACTION_T_COMBAT_MOVEMENT:
             {
+                CombatMovementEnabled = param1;
+
                 //Allow movement (create new targeted movement gen if none exist already)
-                if (param1)
+                if (CombatMovementEnabled)
                 {
                     if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    {
+                        m_creature->GetMotionMaster()->Clear(false);
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                    }
                 }
                 else
                     if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE)
@@ -921,6 +981,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         case EVENT_T_TIMER_OOC_SINGLE:
                         case EVENT_T_MANA:
                         case EVENT_T_HP:
+                        case EVENT_T_TARGET_HP:
+                        case EVENT_T_TARGET_CASTING:
                             ProcessEvent(*i);
                             break;
                         }
