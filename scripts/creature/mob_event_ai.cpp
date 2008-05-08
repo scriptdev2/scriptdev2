@@ -282,7 +282,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             break;
         default:
-            error_log("Event type missing from ProcessEvent() Switch . Type = %d", pHolder.Event.event_type);
+            error_log("Event type missing from ProcessEvent() Switch . Type = %d. CreatureEntry = %d", pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
             break;
         }
 
@@ -469,7 +469,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 else pCreature = pCreature = DoSpawnCreature(param1, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
-                    error_log( "SD2: Eventid failed to spawn creature %u.", param1);
+                    error_log( "SD2: EventAI failed to spawn creature %u. Spawn event is on creature %d", param1, m_creature->GetCreatureInfo()->Entry);
                 else if (param2 != TARGET_T_SELF && target)
                     pCreature->AI()->AttackStart(target);
             }
@@ -582,7 +582,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 Phase += param1;
 
                 if (Phase > 31)
-                    error_log( "SD2: Eventid incremented Phase above 31. Phase mask cannot be used with phases past 31.");
+                    error_log( "SD2: Eventid incremented Phase above 31. Phase mask cannot be used with phases past 31. CreatureEntry = %d", m_creature->GetCreatureInfo()->Entry);
             }
             break;
 
@@ -662,7 +662,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     Phase = param1 + (rnd % (param2 - param1));
                 }
-                else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero.");
+                else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero. CreatureEntry = %d", m_creature->GetCreatureInfo()->Entry);
             }
             break;
         case ACTION_T_SUMMON_ID:
@@ -676,7 +676,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (i == EventSummon_Map.end())
                 {
-                    error_log( "SD2: Eventid failed to spawn creature %u. Summon map index %u does not exist.", param1, param3);
+                    error_log( "SD2: EventAI failed to spawn creature %u. Summon map index %u does not exist. CreatureID %d", param1, param3, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
@@ -685,7 +685,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 else pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
-                    error_log( "SD2: Eventid failed to spawn creature %u.", param1);
+                    error_log( "SD2: EventAI failed to spawn creature %u. Event on Creature %d", param1, m_creature->GetCreatureInfo()->Entry);
                 else if (param2 != TARGET_T_SELF && target)
                     pCreature->AI()->AttackStart(target);
             }
@@ -704,7 +704,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
                 if (!pInst)
+                {
+                    error_log("SD2: EventAI attempt to set instance data without instance script. Creature %d", m_creature->GetCreatureInfo()->Entry);
                     return;
+                }
 
                 pInst->SetData(param1, param2);
             }
@@ -715,11 +718,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 Unit* target = GetTargetByType(param2, pActionInvoker);
 
                 if (!target)
+                {
+                    error_log("SD2: EventAI attempt to set instance data64 but Target == NULL. Creature %d", m_creature->GetCreatureInfo()->Entry);
                     return;
+                }
 
                 ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
+
                 if (!pInst)
+                {
+                    error_log("SD2: EventAI attempt to set instance data64 without instance script. Creature %d", m_creature->GetCreatureInfo()->Entry);
                     return;
+                }
 
                 pInst->SetData(param1, target->GetGUID());
             }
