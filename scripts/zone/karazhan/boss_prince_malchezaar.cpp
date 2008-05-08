@@ -296,7 +296,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
             if(pInfernal && pInfernal->isAlive())
             {
                 pInfernal->SetVisibility(VISIBILITY_OFF);
-                pInfernal->DealDamage(pInfernal, pInfernal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                pInfernal->setDeathState(JUST_DIED);
             }
         }
         infernals.clear();
@@ -517,9 +517,12 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                         axe->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         axe->setFaction(m_creature->getFaction());
                         axes[i] = axe->GetGUID();
-                        axe->AI()->AttackStart(target);
-                        // axe->getThreatManager().tauntApply(target); //Taunt Apply and fade out does not work properly
-                        axe->AddThreat(target, 10000000.0f); // So we'll use a hack to add a lot of threat to our target
+                        if(target)
+                        {
+                            axe->AI()->AttackStart(target);
+                            // axe->getThreatManager().tauntApply(target); //Taunt Apply and fade out does not work properly
+                            axe->AddThreat(target, 10000000.0f); // So we'll use a hack to add a lot of threat to our target
+                        }
                     }
                 }
 
@@ -553,9 +556,14 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                         Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
                         if(axe)
                         {
-                            float threat = axe->getThreatManager().getThreat(axe->getVictim());
-                            axe->getThreatManager().modifyThreatPercent(axe->getVictim(), -100);
-                            axe->AddThreat(target, threat);
+                            float threat = 1000000;
+                            if(axe->getVictim())
+                            {
+                                threat = axe->getThreatManager().getThreat(axe->getVictim());
+                                axe->getThreatManager().modifyThreatPercent(axe->getVictim(), -100);
+                            }
+                            if(target)
+                                axe->AddThreat(target, threat);
                             //axe->getThreatManager().tauntFadeOut(axe->getVictim());
                             //axe->getThreatManager().tauntApply(target);
                         }
