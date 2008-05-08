@@ -22,7 +22,7 @@ SDCategory: Creatures
 EndScriptData */
 
 #include "mob_event_ai.h"
-//#include "../../../../game/Player.h"
+#include "sc_instance.h"
 #include "TargetedMovementGenerator.h"
 
 #define EVENT_UPDATE_TIME   500
@@ -697,6 +697,31 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
                     ((Player*)target)->KilledMonster(param1, m_creature->GetGUID());
+            }
+            break;
+
+        case ACTION_T_SET_INST_DATA:
+            {
+                ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
+                if (!pInst)
+                    return;
+
+                pInst->SetData(param1, param2);
+            }
+            break;
+
+        case ACTION_T_SET_INST_DATA64:
+            {
+                Unit* target = GetTargetByType(param2, pActionInvoker);
+
+                if (!target)
+                    return;
+
+                ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
+                if (!pInst)
+                    return;
+
+                pInst->SetData(param1, target->GetGUID());
             }
             break;
         };

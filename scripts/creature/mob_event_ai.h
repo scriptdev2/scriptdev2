@@ -75,6 +75,8 @@ enum Action_Types
     ACTION_T_RANDOM_PHASE_RANGE     = 31,   //PhaseMin, PhaseMax
     ACTION_T_SUMMON_ID              = 32,   //CreatureId, Target, SpawnId
     ACTION_T_KILLED_MONSTER         = 33,   //CreatureId, Target
+    ACTION_T_SET_INST_DATA          = 34,   //Field, Data
+    ACTION_T_SET_INST_DATA64        = 35,   //Field, Target
 
     ACTION_T_END,
 };

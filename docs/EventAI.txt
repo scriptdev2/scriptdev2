@@ -108,6 +108,8 @@ Params are always read from Param1, then Param2, then Param3.
 31   ACTION_T_RANDOM_PHASE_RANGE       PhaseMin, PhaseMax              Sets the phase to a random id (Phase = PhaseMin + rnd % PhaseMin-PhaseMax). PhaseMax must be greater than PhaseMin.
 32   ACTION_T_SUMMON                   CreatureID, Target, SummonID    Summons creature (param1) to attack target (param2) at location specified by EventAI_Summons (param3). 
 33   ACTION_T_KILLED_MONSTER           CreatureID, Target              Calls KilledMonster (param1) for target of type (param2)
+34   ACTION_T_SET_INST_DATA            Field, Data                     Calls ScriptedInstance::SetData with field (param1) and data (param2)
+35   ACTION_T_SET_INST_DATA64          Field, Target                   Calls ScriptedInstance::SetData64 with field (param1) and data (param2) target's GUID.
 
 * = Use -1 to specify that if this param is picked to do nothing. Random is constant between actions within an event. So if you have a random Yell and a random Sound they will match up (ex: param2 with param2)
 -----------------------------------------
