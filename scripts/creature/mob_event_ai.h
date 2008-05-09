@@ -77,6 +77,7 @@ enum Action_Types
     ACTION_T_KILLED_MONSTER         = 33,   //CreatureId, Target
     ACTION_T_SET_INST_DATA          = 34,   //Field, Data
     ACTION_T_SET_INST_DATA64        = 35,   //Field, Target
+    ACTION_T_UPDATE_TEMPLATE        = 36,   //Entry, Team
 
     ACTION_T_END,
 };

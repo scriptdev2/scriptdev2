@@ -734,6 +734,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pInst->SetData(param1, target->GetGUID());
             }
             break;
+
+        case ACTION_T_UPDATE_TEMPLATE:
+            {
+                if (m_creature->GetCreatureInfo()->Entry == param1)
+                {
+                    error_log("SD2: EventAI ACTION_T_UPDATE_TEMPLATE call with param1 == current entry. Creature %d", m_creature->GetCreatureInfo()->Entry);
+                    return;
+                }
+
+                m_creature->UpdateEntry(param1, param2 ? HORDE : ALLIANCE);
+            }
+            break;
         };
     }
 

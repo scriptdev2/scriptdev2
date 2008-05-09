@@ -42,6 +42,7 @@ EndScriptData */
 #define SPELL_MARK_OF_CORRUPTION5 38230
 #define SPELL_MARK_OF_CORRUPTION6 40583
 #define SPELL_VILE_SLUDGE         38246
+#define SPELL_ENRAGE              27680
 
 #define PURE_SPAWNS_OF_HYDROSS    22035
 #define TAINTED_SPAWN_OF_HYDROSS  22036
@@ -96,6 +97,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     uint32 Invisible_Timer;
     uint32 MarkOfHydross_Count;
     uint32 MarkOfCorruption_Count;
+    uint32 EnrageTimer;
 
     bool CorruptedForm;
     bool HasSpawnedInvisible;
@@ -112,6 +114,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         Invisible_Timer = 2000;
         MarkOfHydross_Count = 0;
         MarkOfCorruption_Count = 0;
+        EnrageTimer = 360000;
 
         // despawn invisible trigger
         DespawnCreatureIfExists(InvisibleGUID);
@@ -370,6 +373,14 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                 PosCheck_Timer = 5000;
             }else PosCheck_Timer -=diff;
         }
+
+        //EnrageTimer
+        if(EnrageTimer < diff)
+        {
+            DoCast(m_creature, SPELL_ENRAGE);
+
+            EnrageTimer = 60000;
+        }else EnrageTimer -= diff;
 
         DoMeleeAttackIfReady();
     }

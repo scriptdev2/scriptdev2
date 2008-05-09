@@ -31,10 +31,10 @@ EndScriptData */
 bool GossipHello_npc_ayren_cloudbreaker(Player *player, Creature *_Creature)
 {
     if( player->GetQuestStatus(11532) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11533) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"Dead Scar bombing run",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(0,"Speaking of action, I've been ordered to undertake an air strike.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     if( player->GetQuestStatus(11542) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(11543) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(0,"Ship bombing run",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+        player->ADD_GOSSIP_ITEM(0,"I need to intercept the Dawnblade reinforcements.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
     return true; 
@@ -74,7 +74,7 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
 bool GossipHello_npc_unrestrained_dragonhawk(Player *player, Creature *_Creature)
 {
     if( player->GetQuestStatus(11542) == QUEST_STATUS_COMPLETE || player->GetQuestStatus(11543) == QUEST_STATUS_COMPLETE )
-        player->ADD_GOSSIP_ITEM(0,"Take me back.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(0,"<Ride the dragonhawk to Sun's Reach>",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
     return true; 

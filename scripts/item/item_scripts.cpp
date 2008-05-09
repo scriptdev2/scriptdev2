@@ -28,6 +28,8 @@ EndScriptData */
 # item_vorenthals_presence(i30259)   Prevents abuse of this item
 # item_yehkinyas_bramble(i10699)     Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 # item_zezzak_shard(i31463)          Quest The eyes of Grillok (q10813). Prevents abuse
+# item_Sparrowhawk_Net(i32321)       Quest To Catch A Sparrowhawk (q10987). Prevents abuse
+# item_Blackwhelp_Net(i31129)        Quest Whelps of the Wyrmcult (q10747). Prevents abuse
 # 
 #####*/
 
@@ -160,6 +162,34 @@ bool ItemUse_item_zezzak_shard(Player *player, Item* _Item, SpellCastTargets con
     return true;
 }
 
+/*#####
+# item_Sparrowhawk_Net
+#####*/
+
+bool ItemUse_item_Sparrowhawk_Net(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 22979 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    return true;
+}
+
+/*#####
+# item_Blackwhelp_Net
+#####*/
+
+bool ItemUse_item_Blackwhelp_Net(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 21387 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    return true;
+}
+
 void AddSC_item_scripts()
 {
     Script *newscript;
@@ -192,5 +222,15 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_zezzaks_shard";
     newscript->pItemUse = ItemUse_item_zezzak_shard;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_Sparrowhawk_Net";
+    newscript->pItemUse = ItemUse_item_Sparrowhawk_Net;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_Blackwhelp_Net";
+    newscript->pItemUse = ItemUse_item_Blackwhelp_Net;
     m_scripts[nrscripts++] = newscript;
 }

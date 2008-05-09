@@ -81,9 +81,9 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         defaultsize=m_creature->GetFloatValue(OBJECT_FIELD_SCALE_X);
         Reset();
     }
-    
+
     ScriptedInstance *pInstance;
-    
+
     uint32 ArcaneMissiles_Timer;
     uint32 MarkOfTheAstromancer_Timer;
     uint32 BlindingLight_Timer;
@@ -98,11 +98,11 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
     uint32 defaultarmor;
 
     float defaultsize;
-    
+
     bool AppearDelay;
 
     uint8 Phase;
-    
+
     uint64 WrathTarget;
 
     float Portals[3][3];
@@ -123,63 +123,63 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         MarkOfTheSolarian_Timer=45000;
         Jump_Timer=8000;
         Phase = 1;
-        
+
         if(pInstance)
             pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
-        
+
         m_creature->SetArmor(defaultarmor);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetVisibility(VISIBILITY_ON);
         m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, defaultsize);
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_HUMAN);
     }
-    
+
     void StartEvent()
     {
         DoYell(SAY_PHASE1, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_PHASE1);
-        
+
         if(pInstance)
             pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 1);
     }
-    
+
     void KIlledUnit(Unit *victim)
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KILL1);
-                break;
-            
-            case 1:
-                DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KILL2);
-                break;
-            
-            case 2:
-                DoYell(SAY_KILL3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KILL3);
-                break;
+        case 0:
+            DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_KILL1);
+            break;
+
+        case 1:
+            DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_KILL2);
+            break;
+
+        case 2:
+            DoYell(SAY_KILL3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_KILL3);
+            break;
         }
     }
-    
+
     void JustDied(Unit *victim)
     {
         m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, defaultsize);
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_HUMAN);
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
-        
+
         if(pInstance)
             pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
     }
-    
+
     void Aggro(Unit *who)
     {
-                StartEvent();
+        StartEvent();
     }
-    
+
     void SummonMinion(uint32 entry, float x, float y, float z)
     {
         Creature* Summoned = m_creature->SummonCreature(entry, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
@@ -203,8 +203,8 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
         switch(rand()%2)
         {
-            case 0: z = 1; break;
-            case 1: z = -1; break;
+        case 0: z = 1; break;
+        case 1: z = -1; break;
         }
         return (z*sqrt(radius*radius - (x - CENTER_X)*(x - CENTER_X)) + CENTER_Y);
     }
@@ -214,7 +214,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         //Return since we have no target
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-        
+
         if (AppearDelay)
         {
             m_creature->StopMoving();
@@ -226,15 +226,15 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 {
                     switch (rand()%2)
                     {
-                        case 0:
-                            DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-                            break;
-                    
-                        case 1:
-                            DoYell(SAY_PHASE21, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_PHASE21);
-                            break;
+                    case 0:
+                        DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_PHASE2);
+                        break;
+
+                    case 1:
+                        DoYell(SAY_PHASE21, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_PHASE21);
+                        break;
                     }
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->SetVisibility(VISIBILITY_OFF);
@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 AppearDelay_Timer = 2000;
             }else AppearDelay_Timer -= diff;
         }
-        
+
         //the jumping of the dot part of the wrath of the astromancer
         if(WrathTarget)
         {
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             {
                 std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
                 bool hasJumped = false;
-                
+
                 Unit* target = Unit::GetUnit((*m_creature),WrathTarget);
                 if(target && target->isAlive())
                 {
@@ -291,9 +291,10 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                     target = m_creature->getVictim();
                 if (target)
                     DoCast(target, SPELL_ARCANE_MISSILES);
-                ArcaneMissiles_Timer = 1000; //4000;
+
+                ArcaneMissiles_Timer = 3000;
             }else ArcaneMissiles_Timer -= diff;
-            
+
             //MarkOfTheSolarian_Timer
             if (MarkOfTheSolarian_Timer < diff)
             {
@@ -306,7 +307,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             {
                 //A debuff that lasts for 5 seconds, cast several times each phase on a random raid member, but not the main tank
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                
+
                 if(target)
                 {
                     DoCast(target, SPELL_MARK_OF_THE_ASTROMANCER);
@@ -317,16 +318,16 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
                 MarkOfTheAstromancer_Timer = 15000;
             }else MarkOfTheAstromancer_Timer -= diff;
-            
+
             //BlindingLight_Timer
             if (BlindingLight_Timer < diff)
             {
                 //She casts this spell every 45 seconds. It is a kind of Moonfire spell, which she strikes down on the whole raid simultaneously. It hits everyone in the raid for 2280 to 2520 arcane damage.
                 DoCast(m_creature->getVictim(), SPELL_BLINDING_LIGHT);
-                
+
                 BlindingLight_Timer = 45000;
             }else BlindingLight_Timer -= diff;
-        
+
             //Phase1_Timer
             if (Phase1_Timer < diff)
             {
@@ -353,7 +354,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 {
                     int i=1;
                     if (abs(CENTER_X+26.0f-Portals[2][0])<7)
-                       i = -1;
+                        i = -1;
                     Portals[2][0] = Portals[2][0]+7*i;
                     Portals[2][1] = Portal_Y(Portals[2][0], LARGE_PORTAL_RADIUS);
                 }
@@ -371,17 +372,17 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         }
         else if(Phase == 2)
         {
-                //10 seconds after Solarian disappears, 12 mobs spawn out of the three portals.
-                m_creature->AttackStop();
-                m_creature->StopMoving();
-                if (Phase2_Timer < diff)
-                {
-                  Phase = 3;
-                  for (int i=0; i<=2; i++)
-                      for (int j=1; j<=4; j++)
-                          SummonMinion(SOLARIUM_AGENT, Portals[i][0], Portals[i][1], Portals[i][2]);
-                  Phase2_Timer = 10000;
-                } else Phase2_Timer -= diff;
+            //10 seconds after Solarian disappears, 12 mobs spawn out of the three portals.
+            m_creature->AttackStop();
+            m_creature->StopMoving();
+            if (Phase2_Timer < diff)
+            {
+                Phase = 3;
+                for (int i=0; i<=2; i++)
+                    for (int j=1; j<=4; j++)
+                        SummonMinion(SOLARIUM_AGENT, Portals[i][0], Portals[i][1], Portals[i][2]);
+                Phase2_Timer = 10000;
+            } else Phase2_Timer -= diff;
         }
         else if(Phase == 3)
         {
@@ -414,7 +415,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 DoCast(m_creature->getVictim(), SPELL_FEAR);
                 Fear_Timer = 20000;
             }else Fear_Timer -= diff;
-                
+
             //VoidBolt_Timer
             if (VoidBolt_Timer < diff)
             {
@@ -422,26 +423,26 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 VoidBolt_Timer = 10000;
             }else VoidBolt_Timer -= diff;
         } 
-            
+
         //When Solarian reaches 20% she will transform into a huge void walker.
         if(Phase != 4 && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth())<20))
         {
             Phase = 4;
-            
+
             //To make sure she wont be invisible or not selecatble
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetVisibility(VISIBILITY_ON);
             switch(rand()%2)
             {
-                case 0:
-                    DoYell(SAY_VOID, LANG_UNIVERSAL, NULL);
-                    break;
-                        
-                case 1:
-                    DoYell(SAY_VOID1, LANG_UNIVERSAL, NULL);
-                    break;
+            case 0:
+                DoYell(SAY_VOID, LANG_UNIVERSAL, NULL);
+                break;
+
+            case 1:
+                DoYell(SAY_VOID1, LANG_UNIVERSAL, NULL);
+                break;
             }
-            
+
             m_creature->SetArmor(WV_ARMOR);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_VOIDWALKER);
             m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, defaultsize*2.5f);
@@ -479,7 +480,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
     { 
         if (!who || m_creature->getVictim())
             return;
-            
+
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             float attackRadius = m_creature->GetAttackDistance(who);
@@ -487,9 +488,9 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                    
+
                 DoStartAttackAndMovement(who);
-               
+
             }
         }
     }
@@ -505,14 +506,14 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
 
             switch(rand()%2)
             {
-                case 0:
-                    if(pInstance)
-                        target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ASTROMANCER));
-                    break;
-                        
-                case 1:
-                    target = m_creature;
-                    break;
+            case 0:
+                if(pInstance)
+                    target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ASTROMANCER));
+                break;
+
+            case 1:
+                target = m_creature;
+                break;
             }
             if(target)
             {

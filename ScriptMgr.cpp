@@ -141,6 +141,7 @@ extern void AddSC_boss_teron_gorefiend();
 extern void AddSC_boss_najentus();
 extern void AddSC_boss_illidari_council();
 extern void AddSC_instance_black_temple();
+extern void AddSC_npc_spirit_of_olum();
 
 //Blackfathom Depths
 //Blackrock Depths
@@ -278,6 +279,7 @@ extern void AddSC_mobs_dustwallow_marsh();
 
 //Eversong Woods
 extern void AddSC_mobs_mana_tapped();
+extern void AddSC_Prospector_Anvilward();
 
 //Exodar
 //Eastern Plaguelands
@@ -513,6 +515,8 @@ extern void AddSC_boss_zereketh();
 extern void AddSC_instance_arcatraz();
 
 //--Botanica
+extern void AddSC_boss_warp_splinter();
+
 //--The Eye
 extern void AddSC_boss_kaelthas();
 extern void AddSC_boss_void_reaver();
@@ -1017,6 +1021,7 @@ void ScriptsInit()
     AddSC_boss_najentus();
     AddSC_boss_illidari_council();
     AddSC_instance_black_temple();
+    AddSC_npc_spirit_of_olum();
 
     //Blackfathom Depths
     //Blackrock Depths
@@ -1154,6 +1159,7 @@ void ScriptsInit()
 
     //Eversong Woods
     AddSC_mobs_mana_tapped();
+    AddSC_Prospector_Anvilward();
 
     //Exodar
     //Eastern Plaguelands
@@ -1390,6 +1396,8 @@ void ScriptsInit()
     AddSC_instance_arcatraz();
 
     //--Botanica
+    AddSC_boss_warp_splinter();
+
     //--The Eye
     AddSC_boss_kaelthas();
     AddSC_boss_void_reaver();

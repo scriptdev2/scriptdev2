@@ -92,6 +92,7 @@ scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/mob_blacktemple.cpp \
+scripts/zone/black_temple/npc_spirit_of_olum.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \
@@ -154,11 +155,11 @@ scripts/zone/burning_steppes/npcs_burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \
-scripts/zone/caverns_of_time/hyjal/boss_rage_winterchill.cpp \
 scripts/zone/caverns_of_time/hyjal/boss_anetheron.cpp \
-scripts/zone/caverns_of_time/hyjal/boss_kazrogal.cpp \
-scripts/zone/caverns_of_time/hyjal/boss_azgalor.cpp \
 scripts/zone/caverns_of_time/hyjal/boss_archimonde.cpp \
+scripts/zone/caverns_of_time/hyjal/boss_azgalor.cpp \
+scripts/zone/caverns_of_time/hyjal/boss_kazrogal.cpp \
+scripts/zone/caverns_of_time/hyjal/boss_rage_winterchill.cpp \
 scripts/zone/caverns_of_time/hyjal/def_hyjal.h \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.h \
@@ -191,6 +192,7 @@ scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
+scripts/zone/eversong_woods/npcs_eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
 scripts/zone/ghostlands/npcs_ghostlands.cpp \
@@ -348,11 +350,16 @@ scripts/zone/stratholme/boss_timmy_the_cruel.cpp \
 scripts/zone/stratholme/def_stratholme.h \
 scripts/zone/stratholme/instance_stratholme.cpp \
 scripts/zone/stratholme/mobs_stratholme.cpp \
+scripts/zone/sunwell_plateau/boss_brutallus.cpp \
+scripts/zone/sunwell_plateau/boss_kalecgos.cpp \
+scripts/zone/sunwell_plateau/def_sunwell_plateau.h \
+scripts/zone/sunwell_plateau/instance_sunwell_plateau.cpp \
 scripts/zone/tanaris/mobs_tanaris.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
+scripts/zone/tempest_keep/botanica/boss_warp_splinter.cpp \
 scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \

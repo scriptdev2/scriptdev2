@@ -52,8 +52,8 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     void Reset()
     {   
-        voidblast_timer = 10000;
-        darkshell_timer = 15000;
+        voidblast_timer = 30000;
+        darkshell_timer = 20000;
         voidblast_counter = 0;
     }
 
@@ -84,24 +84,24 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                switch(rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+            break;
 
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break; 
+        case 1:
+            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+            break; 
 
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;
-                }
-                
+        case 2:
+            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+            break;
+        }
+
     }
 
     void UpdateAI(const uint32 diff)
@@ -122,14 +122,14 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
                 voidblast_timer = 25000+rand()%10000;
                 voidblast_counter = 0;
             }
-           }else voidblast_timer -= diff;
- 
+        }else voidblast_timer -= diff;
+
         if(voidblast_counter == 0)
-        if(darkshell_timer < diff)
-        {                   
-            DoCast(m_creature,SPELL_DARK_SHELL);
-            darkshell_timer = 15000;
-        }else darkshell_timer -= diff;
+            if(darkshell_timer < diff)
+            {                   
+                DoCast(m_creature,SPELL_DARK_SHELL);
+                darkshell_timer = 20000;
+            }else darkshell_timer -= diff;
 
         DoMeleeAttackIfReady();
     }

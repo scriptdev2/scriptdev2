@@ -1575,12 +1575,20 @@
 						RelativePath="..\scripts\zone\black_temple\mob_blacktemple.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\black_temple\npc_spirit_of_olum.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Eversong Woods"
 					>
 					<File
 						RelativePath="..\scripts\zone\eversong_woods\mobs_mana_tapped.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\eversong_woods\npcs_eversong_woods.cpp"
 						>
 					</File>
 				</Filter>
@@ -1810,6 +1818,10 @@
 					<Filter
 						Name="Botanica"
 						>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_warp_splinter.cpp"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="The Eye"
@@ -2183,14 +2195,30 @@
 						RelativePath="..\scripts\zone\isle_of_queldanas\npcs_isle_of_queldanas.cpp"
 						>
 					</File>
-					<Filter
-						Name="Sunwell Plateau"
+				</Filter>
+				<Filter
+					Name="Magister&apos;s Terrace"
+					>
+				</Filter>
+				<Filter
+					Name="Sunwell Plateau"
+					>
+					<File
+						RelativePath="..\scripts\zone\sunwell_plateau\boss_brutallus.cpp"
 						>
-					</Filter>
-					<Filter
-						Name="Magister&apos;s Terrace"
+					</File>
+					<File
+						RelativePath="..\scripts\zone\sunwell_plateau\boss_kalecgos.cpp"
 						>
-					</Filter>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\sunwell_plateau\def_sunwell_plateau.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\sunwell_plateau\instance_sunwell_plateau.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

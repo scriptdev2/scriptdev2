@@ -52,6 +52,8 @@ UPDATE `item_template` SET `ScriptName` = 'item_draenei_fishing_net' WHERE `entr
 UPDATE `item_template` SET `ScriptName` = 'item_tainted_core' WHERE `entry` = 31088;
 UPDATE `item_template` SET `ScriptName` = 'item_yehkinyas_bramble' WHERE `entry` = 10699;
 UPDATE `item_template` SET `ScriptName` = 'item_zezzaks_shard' WHERE `entry` = 31463;
+UPDATE `item_template` SET `ScriptName` = 'item_Sparrowhawk_Net' WHERE `entry` = 32321;
+UPDATE `item_template` SET `ScriptName` = 'item_Blackwhelp_Net' WHERE `entry` = 31129;
 
 /* NPC */
 UPDATE `creature_template` SET `ScriptName` = 'npc_guardian' WHERE `entry` = 5764;
@@ -154,6 +156,8 @@ UPDATE creature_template SET ScriptName = 'mob_ashtongue_channeler' WHERE `entry
 UPDATE creature_template SET ScriptName = 'mob_ashtongue_sorcerer' WHERE `entry` = 23215; -- Ashtongue Sorcerer in Shade of Akama
 UPDATE creature_template SET ScriptName = 'npc_enslaved_soul' WHERE `entry` = 23469; -- Enslaved Soul in Reliquary Event
 UPDATE creature_template SET ScriptName = 'mob_doom_blossom' WHERE `entry` = 23123; -- Doom Blossoms in Teron Gorefiend's encounter
+UPDATE creature_template SET ScriptName = 'npc_spirit_of_olum' WHERE `entry` = 23411;
+
 -- UPDATE creature_template sET ScriptName = 'mob_shadowy_construct' WHERE `entry` = 23111; -- Shadowy Construct in Teron Gorefiend's encounter. Commented until Mind Control is implemented.
 -- UPDATE creature_template SET ScriptName = 'mob_najentus_spine' WHERE `entry` = 500000; -- Workaround creature for spine in Najentus event
 
@@ -758,6 +762,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_nethermancer_sepethrea' WHER
 UPDATE `creature_template` SET `ScriptName` = 'mob_ragin_flames' WHERE `entry` = 20481;
 
 /* THE BOTANICA */
+UPDATE creature_template SET ScriptName='boss_warp_splinter' WHERE entry='17977';
+UPDATE creature_template SET ScriptName='mob_warp_splinter_treant' WHERE entry='19949';
 
 /* THE ARCATRAZ */
 UPDATE `instance_template` SET `script` = 'instance_arcatraz' WHERE `map` = 552;
