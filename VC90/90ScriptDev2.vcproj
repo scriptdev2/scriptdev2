@@ -737,14 +737,6 @@
 					>
 				</Filter>
 				<Filter
-					Name="Loch Modan"
-					>
-					<File
-						RelativePath="..\scripts\zone\loch_modan\npcs_loch_modan.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Maraudon"
 					>
 					<File
@@ -1432,7 +1424,7 @@
 					Name="Eversong Woods"
 					>
 					<File
-						RelativePath="..\scripts\zone\eversong_woods\mobs_mana_tapped.cpp"
+						RelativePath="..\scripts\zone\eversong_woods\mobs_eversong_woods.cpp"
 						>
 					</File>
 					<File
@@ -2145,6 +2137,14 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_depths\npcs_blackrock_depths.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Loch Modan"
+					>
+					<File
+						RelativePath="..\scripts\zone\loch_modan\npcs_loch_modan.cpp"
 						>
 					</File>
 				</Filter>
