@@ -111,7 +111,6 @@ extern void AddSC_boss_tailonking_ikiss();
 extern void AddSC_instance_sethekk_halls();
 
 //--Shadow Labyrinth
-extern void AddSC_boss_ambassador_hellmaw();
 extern void AddSC_boss_blackheart_the_inciter();
 extern void AddSC_boss_grandmaster_vorpil();
 extern void AddSC_boss_murmur();
@@ -130,7 +129,6 @@ extern void AddSC_npcs_azuremyst_isle();
 extern void AddSC_npcs_the_barrens();
 
 //Black Temple
-extern void AddSC_mob_blacktemple();
 extern void AddSC_boss_illidan();
 extern void AddSC_boss_shade_of_akama();
 extern void AddSC_boss_supremus();
@@ -141,7 +139,7 @@ extern void AddSC_boss_teron_gorefiend();
 extern void AddSC_boss_najentus();
 extern void AddSC_boss_illidari_council();
 extern void AddSC_instance_black_temple();
-extern void AddSC_npc_spirit_of_olum();
+extern void AddSC_npcs_black_temple();
 
 //Blackfathom Depths
 //Blackrock Depths
@@ -169,7 +167,6 @@ extern void AddSC_boss_seethrel();
 extern void AddSC_boss_verek();
 extern void AddSC_boss_vilerel();
 extern void AddSC_boss_warder_stilgiss();
-extern void AddSC_overmaster_pyron();
 extern void AddSC_phalanx();
 extern void AddSC_npcs_blackrock_depths();
 
@@ -186,7 +183,6 @@ extern void AddSC_boss_quatermasterzigris();
 extern void AddSC_boss_pyroguard_emberseer();
 extern void AddSC_boss_gyth();
 extern void AddSC_boss_rend_blackhand();
-extern void AddSC_mob_chromatic_elite_guard();
 
 //Blackwing lair
 extern void AddSC_boss_razorgore();
@@ -206,7 +202,6 @@ extern void AddSC_npcs_blades_edge_mountains();
 
 //Blasted lands
 extern void AddSC_boss_kruul();
-extern void AddSC_boss_teremusthedevourer();
 extern void AddSC_npcs_blasted_lands();
 
 //Bloodmyst Isle
@@ -244,10 +239,8 @@ extern void AddSC_boss_lady_vashj();
 extern void AddSC_boss_leotheras_the_blind();
 extern void AddSC_boss_morogrim_tidewalker();
 extern void AddSC_instance_serpentshrine_cavern();
-extern void AddSC_mob_serpentshrine_cavern();
 
 //--Slave Pens
-extern void AddSC_boss_rokmar_the_crackler();
 
 //--Steam Vault
 extern void AddSC_boss_warlord_kalithresh();
@@ -255,7 +248,6 @@ extern void AddSC_boss_hydromancer_thespia();
 extern void AddSC_instance_steam_vault();
 
 //--Underbog
-extern void AddSC_boss_ghazan();
 extern void AddSC_boss_hungarfen();
 
 //Darkshore
@@ -279,7 +271,7 @@ extern void AddSC_mobs_dustwallow_marsh();
 
 //Eversong Woods
 extern void AddSC_mobs_mana_tapped();
-extern void AddSC_Prospector_Anvilward();
+extern void AddSC_npcs_eversong_woods();
 
 //Exodar
 //Eastern Plaguelands
@@ -303,7 +295,6 @@ extern void AddSC_npcs_ghostlands();
 extern void AddSC_boss_gruul();
 extern void AddSC_boss_high_king_maulgar();
 extern void AddSC_instance_gruuls_lair();
-extern void AddSC_mob_gruuls_lair();
 
 //Hellfire Citadel
 //--Blood Furnace
@@ -354,14 +345,9 @@ extern void AddSC_npcs_loch_modan();
 //Lower Blackrock Spire
 //Maraudon
 extern void AddSC_boss_landslide();
-extern void AddSC_boss_lord_vyletongue();
 extern void AddSC_boss_noxxion();
 extern void AddSC_boss_ptheradras();
-extern void AddSC_boss_rotgrip();
-extern void AddSC_boss_tinkerergizlock();
 extern void AddSC_celebras_the_cursed();
-extern void AddSC_meshlok_the_harvester();
-extern void AddSC_razorlash();
 
 //Molten core
 extern void AddSC_boss_lucifron();
@@ -374,14 +360,14 @@ extern void AddSC_boss_golemagg();
 extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
-extern void AddSC_mobs_molten_core();
 extern void AddSC_instance_molten_core();
+extern void AddSC_mobs_molten_core();
 
 //Moonglade
 extern void AddSC_npcs_moonglade();
 
 //Mulgore
-extern void AddSC_skorn_whitecloud();
+extern void AddSC_npcs_mulgore();
 
 //Nagrand
 extern void AddSC_mobs_nagrand();
@@ -427,7 +413,6 @@ extern void AddSC_boss_houndmaster_loksey();
 extern void AddSC_boss_interrogator_vishas();
 extern void AddSC_boss_scarlet_commander_mograine();
 extern void AddSC_boss_scorn();
-extern void AddSC_scarlet_torturer();
 
 //Scholomance
 extern void AddSC_boss_darkmaster_gandling();
@@ -464,7 +449,7 @@ extern void AddSC_npc_shattrathflaskvendors();
 extern void AddSC_npcs_silithus();
 
 //Silvermoon
-extern void AddSC_npc_blood_knight_stillblade();
+extern void AddSC_npcs_silvermoon_city();
 
 //Silverpine forest
 extern void AddSC_npcs_silverpine_forest();
@@ -523,7 +508,6 @@ extern void AddSC_boss_void_reaver();
 extern void AddSC_instance_the_eye();
 extern void AddSC_boss_high_astromancer_solarian();
 extern void AddSC_mob_crystalcore_devastator();
-extern void AddSC_mob_the_eye();
 
 //--The Mechanar
 extern void AddSC_boss_gatewatcher_iron_hand();
@@ -545,7 +529,7 @@ extern void AddSC_npcs_terokkar_forest();
 
 //Thousand Needles
 //Thunder Bluff
-extern void AddSC_npc_cairne_bloodhoof();
+extern void AddSC_npcs_thunder_bluff();
 
 //Tirisfal Glades
 //Uldaman
@@ -560,7 +544,6 @@ extern void AddSC_npcs_undercity();
 //Un'Goro Crater
 //Upper blackrock spire
 //Wailing caverns
-extern void AddSC_boss_wailing_caverns();
 
 //Western plaguelands
 extern void AddSC_npcs_western_plaguelands();
@@ -991,7 +974,6 @@ void ScriptsInit()
 	AddSC_instance_sethekk_halls();
 
     //--Shadow Labyrinth
-    AddSC_boss_ambassador_hellmaw();
     AddSC_boss_blackheart_the_inciter();
     AddSC_boss_grandmaster_vorpil();
     AddSC_boss_murmur();
@@ -1010,7 +992,6 @@ void ScriptsInit()
     AddSC_npcs_the_barrens();
 
     //Black Temple
-    AddSC_mob_blacktemple();
     AddSC_boss_illidan();
     AddSC_boss_shade_of_akama();
     AddSC_boss_supremus();
@@ -1021,7 +1002,7 @@ void ScriptsInit()
     AddSC_boss_najentus();
     AddSC_boss_illidari_council();
     AddSC_instance_black_temple();
-    AddSC_npc_spirit_of_olum();
+    AddSC_npcs_black_temple();
 
     //Blackfathom Depths
     //Blackrock Depths
@@ -1049,7 +1030,6 @@ void ScriptsInit()
     AddSC_boss_verek();
     AddSC_boss_vilerel();
     AddSC_boss_warder_stilgiss();
-    AddSC_overmaster_pyron();
     AddSC_phalanx();
     AddSC_npcs_blackrock_depths();
 
@@ -1066,7 +1046,6 @@ void ScriptsInit()
     AddSC_boss_pyroguard_emberseer();
     AddSC_boss_gyth();
     AddSC_boss_rend_blackhand();
-    AddSC_mob_chromatic_elite_guard();
 
     //Blackwing lair
     AddSC_boss_razorgore();
@@ -1086,7 +1065,6 @@ void ScriptsInit()
 
     //Blasted lands
     AddSC_boss_kruul();
-    AddSC_boss_teremusthedevourer();
     AddSC_npcs_blasted_lands();
 
     //Bloodmyst Isle
@@ -1124,18 +1102,14 @@ void ScriptsInit()
     AddSC_boss_leotheras_the_blind();
     AddSC_boss_morogrim_tidewalker();
     AddSC_instance_serpentshrine_cavern();
-    AddSC_mob_serpentshrine_cavern();
 
     //--Slave Pens
-    AddSC_boss_rokmar_the_crackler();
-
     //--Steam Vault
     AddSC_boss_warlord_kalithresh();
     AddSC_boss_hydromancer_thespia();
     AddSC_instance_steam_vault();
 
     //--Underbog
-    AddSC_boss_ghazan();
     AddSC_boss_hungarfen();
 
     //Darkshore
@@ -1159,7 +1133,7 @@ void ScriptsInit()
 
     //Eversong Woods
     AddSC_mobs_mana_tapped();
-    AddSC_Prospector_Anvilward();
+    AddSC_npcs_eversong_woods();
 
     //Exodar
     //Eastern Plaguelands
@@ -1183,8 +1157,7 @@ void ScriptsInit()
     AddSC_boss_gruul();
     AddSC_boss_high_king_maulgar();
     AddSC_instance_gruuls_lair();
-    AddSC_mob_gruuls_lair();
-
+    
     //Hellfire Citadel
     //--Blood Furnace
     AddSC_boss_broggok();
@@ -1234,15 +1207,10 @@ void ScriptsInit()
     //Lower Blackrock Spire
     //Maraudon
     AddSC_boss_landslide();
-    AddSC_boss_lord_vyletongue();
     AddSC_boss_noxxion();
     AddSC_boss_ptheradras();
-    AddSC_boss_rotgrip();
-    AddSC_boss_tinkerergizlock();
     AddSC_celebras_the_cursed();
-    AddSC_meshlok_the_harvester();
-    AddSC_razorlash();
-
+    
     //Molten core
     AddSC_boss_lucifron();
     AddSC_boss_magmadar();
@@ -1254,15 +1222,14 @@ void ScriptsInit()
     AddSC_boss_sulfuron();
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
-    AddSC_mobs_molten_core();
     AddSC_instance_molten_core();
-
+    AddSC_mobs_molten_core();
 
     //Moonglade
     AddSC_npcs_moonglade();
 
     //Mulgore
-    AddSC_skorn_whitecloud();
+    AddSC_npcs_mulgore();
 
     //Nagrand
     AddSC_mobs_nagrand();
@@ -1308,8 +1275,7 @@ void ScriptsInit()
     AddSC_boss_interrogator_vishas();
     AddSC_boss_scarlet_commander_mograine();
     AddSC_boss_scorn();
-    AddSC_scarlet_torturer();
-
+    
     //Scholomance
     AddSC_boss_darkmaster_gandling();
     AddSC_boss_death_knight_darkreaver();
@@ -1345,7 +1311,7 @@ void ScriptsInit()
     AddSC_npcs_silithus();
 
     //Silvermoon
-    AddSC_npc_blood_knight_stillblade();
+    AddSC_npcs_silvermoon_city();
 
     //Silverpine forest
     AddSC_npcs_silverpine_forest();
@@ -1403,7 +1369,6 @@ void ScriptsInit()
     AddSC_boss_void_reaver();
     AddSC_instance_the_eye();
     AddSC_mob_crystalcore_devastator();
-    AddSC_mob_the_eye();
     AddSC_boss_high_astromancer_solarian();
 
     //--The Mechanar
@@ -1426,7 +1391,7 @@ void ScriptsInit()
 
     //Thousand Needles
     //Thunder Bluff
-    AddSC_npc_cairne_bloodhoof();
+    AddSC_npcs_thunder_bluff();
 
     //Tirisfal Glades
     //Uldaman
@@ -1441,7 +1406,6 @@ void ScriptsInit()
     //Un'Goro Crater
     //Upper blackrock spire
     //Wailing caverns
-    AddSC_boss_wailing_caverns();
 
     //Western plaguelands
     AddSC_npcs_western_plaguelands();

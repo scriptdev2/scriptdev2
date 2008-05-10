@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Deadmines
 SD%Complete: 50
-SDComment: Deadmines bosses
+SDComment: Deadmines bosses -- all except Miner Johnson in EAI
 SDCategory: Deadmines
 EndScriptData */
 
@@ -31,40 +31,7 @@ CreatureAI* GetAI_boss_deadmines(Creature *_Creature)
 
     switch (CreatureID) 
     {
-        //Cookie
-    case 645: 
-        ai->Spell[0].Enabled = true;               
-        ai->Spell[0].Spell_Id = 6306;      //Acid Splash     
-        ai->Spell[0].Cooldown = 30000;                 
-        ai->Spell[0].First_Cast = 30000;             
-        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;  
-        break;
-
-        //Gilnid
-    case 1763: 
-        ai->Spell[0].Enabled = true;               
-        ai->Spell[0].Spell_Id = 5213;      //MOLTEN_METAL    
-        ai->Spell[0].Cooldown = 15000;                 
-        ai->Spell[0].First_Cast = 15000;             
-        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;  
-
-        ai->Spell[1].Enabled = true;               
-        ai->Spell[1].Spell_Id = 5159;      //MELT_ORE   
-        ai->Spell[1].Cooldown = 20000;                 
-        ai->Spell[1].First_Cast = 20000;             
-        ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;  
-        break;
-
-        //Marisa du paige
-    case 599: 
-        ai->Spell[0].Enabled = true;                
-        ai->Spell[0].Spell_Id = 3140;        // Fireball
-        ai->Spell[0].Cooldown = 8000;                 
-        ai->Spell[0].First_Cast = 8000;             
-        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET; 
-        break;
-
-        // Miner Johnson
+        // Miner Johnson -- Needs to be converted to EAI
     case 3586: 
         ai->Spell[0].Enabled = true;                
         ai->Spell[0].Spell_Id = 12097;        // Peirce Armor

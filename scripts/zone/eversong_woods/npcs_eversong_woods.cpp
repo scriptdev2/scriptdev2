@@ -15,10 +15,10 @@
 */
 
 /* ScriptData
-SDName: npc_Prospector_Anvilward.cpp
+SDName: npc_eversong_wood
 SD%Complete: 100
 SDComment: Script for npc Prospector Anvilward
-SDCategory: /scripts/zone/eversong_woods
+SDCategory: Eversong Woods
 EndScriptData */
 
 #include "sc_creature.h"
@@ -146,7 +146,7 @@ bool GossipSelect_npc_Prospector_Anvilward(Player *player, Creature *_Creature, 
     return false;
 }
 
-void AddSC_Prospector_Anvilward()
+void AddSC_npcs_eversong_woods()
 {
     Script *newscript;
     newscript = new Script;

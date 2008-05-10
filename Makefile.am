@@ -69,7 +69,6 @@ scripts/zone/aunchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
 scripts/zone/aunchindoun/sethekk_halls/def_sethekk_halls.h \
 scripts/zone/aunchindoun/sethekk_halls/instance_sethekk_halls.cpp \
-scripts/zone/aunchindoun/shadow_labyrinth/boss_ambassador_hellmaw.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_blackheart_the_inciter.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
@@ -91,8 +90,7 @@ scripts/zone/black_temple/boss_warlord_najentus.cpp \
 scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
-scripts/zone/black_temple/mob_blacktemple.cpp \
-scripts/zone/black_temple/npc_spirit_of_olum.cpp \
+scripts/zone/black_temple/npcs_black_temple.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \
@@ -117,7 +115,6 @@ scripts/zone/blackrock_depths/boss_seethrel.cpp \
 scripts/zone/blackrock_depths/boss_verek.cpp \
 scripts/zone/blackrock_depths/boss_vilerel.cpp \
 scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
-scripts/zone/blackrock_depths/mob_overmaster_pyron.cpp \
 scripts/zone/blackrock_depths/mob_phalanx.cpp \
 scripts/zone/blackrock_depths/npcs_blackrock_depths.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
@@ -131,7 +128,6 @@ scripts/zone/blackrock_spire/boss_rend_blackhand.cpp \
 scripts/zone/blackrock_spire/boss_shadow_hunter_voshgajin.cpp \
 scripts/zone/blackrock_spire/boss_the_beast.cpp \
 scripts/zone/blackrock_spire/boss_warmaster_voone.cpp \
-scripts/zone/blackrock_spire/mob_chromatic_elite_guard.cpp \
 scripts/zone/blackrock_spire/mob_quartermaster_zigris.cpp \
 scripts/zone/blackwing_lair/boss_broodlord_lashlayer.cpp \
 scripts/zone/blackwing_lair/boss_chromaggus.cpp \
@@ -147,7 +143,6 @@ scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
 scripts/zone/blades_edge_mountains/npcs_blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
-scripts/zone/blasted_lands/mob_teremus_the_devourer.cpp \
 scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
 scripts/zone/bloodmyst_isle/mobs_bloodmyst_isle.cpp \
 scripts/zone/bloodmyst_isle/npcs_bloodmyst_isle.cpp \
@@ -175,13 +170,10 @@ scripts/zone/coilfang_resevoir/serpent_shrine/boss_leotheras_the_blind.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_morogrim_tidewalker.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/def_serpent_shrine.h \
 scripts/zone/coilfang_resevoir/serpent_shrine/instance_serpent_shrine.cpp \
-scripts/zone/coilfang_resevoir/serpent_shrine/mob_serpent_shrine.cpp \
-scripts/zone/coilfang_resevoir/slave_pens/boss_rokmar.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_hydromancer_thespia.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/boss_warlord_kalithresh.cpp \
 scripts/zone/coilfang_resevoir/steam_vault/def_steam_vault.h \
 scripts/zone/coilfang_resevoir/steam_vault/instance_steam_vault.cpp \
-scripts/zone/coilfang_resevoir/underbog/boss_ghazan.cpp \
 scripts/zone/coilfang_resevoir/underbog/boss_hungarfen.cpp \
 scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/deadmines/boss_deadmines.cpp \
@@ -191,7 +183,6 @@ scripts/zone/dustwallow_marsh/npcs_dustwallow_marsh.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
-scripts/zone/eversong_woods/mobs_mana_tapped.cpp \
 scripts/zone/eversong_woods/npcs_eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
@@ -200,7 +191,6 @@ scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/def_gruuls_lair.h \
 scripts/zone/gruuls_lair/instance_gruuls_lair.cpp \
-scripts/zone/gruuls_lair/mob_gruuls_lair.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_broggok.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_kelidan_the_breaker.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
@@ -209,7 +199,6 @@ scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/def_magtheridons_lair.h \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
-scripts/zone/hellfire_citadel/magtheridons_lair/mob_hellfire_warder.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
@@ -231,14 +220,9 @@ scripts/zone/karazhan/instance_karazhan.cpp \
 scripts/zone/karazhan/npcs_karazhan.cpp \
 scripts/zone/loch_modan/npcs_loch_modan.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
-scripts/zone/maraudon/boss_lord_vyletongue.cpp \
 scripts/zone/maraudon/boss_noxxion.cpp \
 scripts/zone/maraudon/boss_princess_theradras.cpp \
-scripts/zone/maraudon/boss_rotgrip.cpp \
-scripts/zone/maraudon/boss_tinkerer_gizlock.cpp \
 scripts/zone/maraudon/mob_celebras_the_cursed.cpp \
-scripts/zone/maraudon/mob_meshlok_the_harvester.cpp \
-scripts/zone/maraudon/mob_razorlash.cpp \
 scripts/zone/molten_core/boss_baron_geddon.cpp \
 scripts/zone/molten_core/boss_garr.cpp \
 scripts/zone/molten_core/boss_gehennas.cpp \
@@ -253,7 +237,7 @@ scripts/zone/molten_core/def_molten_core.h \
 scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
 scripts/zone/moonglade/npcs_moonglade.cpp \
-scripts/zone/mulgore/npc_skorn_whitecloud.cpp \
+scripts/zone/mulgore/npcs_mulgore.cpp \
 scripts/zone/nagrand/mobs_nagrand.cpp \
 scripts/zone/nagrand/npcs_nagrand.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
@@ -297,7 +281,6 @@ scripts/zone/scarlet_monastery/boss_houndmaster_loksey.cpp \
 scripts/zone/scarlet_monastery/boss_interrogator_vishas.cpp \
 scripts/zone/scarlet_monastery/boss_scarlet_commander_mograine.cpp \
 scripts/zone/scarlet_monastery/boss_scorn.cpp \
-scripts/zone/scarlet_monastery/mob_scarlet_torturer.cpp \
 scripts/zone/scholomance/boss_darkmaster_gandling.cpp \
 scripts/zone/scholomance/boss_death_knight_darkreaver.cpp \
 scripts/zone/scholomance/boss_doctor_theolen_krastinov.cpp \
@@ -322,7 +305,7 @@ scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
 scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
 scripts/zone/silithus/npcs_silithus.cpp \
-scripts/zone/silvermoon/npc_blood_knight_stillblade.cpp \
+scripts/zone/silvermoon/npcs_silvermoon_city.cpp \
 scripts/zone/silverpine_forest/npcs_silverpine_forest.cpp \
 scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \
 scripts/zone/stormwind/npcs_stormwind_city.cpp \
@@ -366,7 +349,6 @@ scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/def_the_eye.h \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
 scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
-scripts/zone/tempest_keep/the_eye/mob_the_eye.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_gyrokill.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_ironhand.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_nethermancer_sepethrea.cpp \
@@ -384,13 +366,12 @@ scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
 scripts/zone/terokkar_forest/npcs_terokkar_forest.cpp \
-scripts/zone/thunder_bluff/npc_cairne_bloodhoof.cpp \
+scripts/zone/thunder_bluff/npcs_thunder_bluff.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/npcs_uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
-scripts/zone/wailing_caverns/boss_wailing_caverns.cpp \
 scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
 scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \

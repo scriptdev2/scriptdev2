@@ -17,47 +17,13 @@
 /* ScriptData
 SDName: Mobs_Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9849, 9918, 9935, 9935, 9874. Gurok, mini outdoor boss.
+SDComment: Quest support: 9849, 9918, 9935, 9935, 9874.
 SDCategory: Nagrand
 EndScriptData */
 
 #include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 #include "sc_gossip.h"
-
-/*######
-## mob_gurok_the_usurper
-######*/
-
-CreatureAI* GetAI_mob_gurok_the_usurper(Creature *_Creature)
-{
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    //knockback
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 24199;
-    ai->Spell[0].Cooldown = 18000;
-    ai->Spell[0].First_Cast = 12000;
-    ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //earth shock
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = 24685;
-    ai->Spell[1].Cooldown = 12000;
-    ai->Spell[1].First_Cast = 8000;
-    ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    //entangling roots
-    ai->Spell[2].Enabled = true;
-    ai->Spell[2].Spell_Id = 20699;
-    ai->Spell[2].Cooldown = 25000;
-    ai->Spell[2].First_Cast = 20000;
-    ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-    ai->EnterEvadeMode();
-
-    return ai;
-}
 
 /*######
 ## mob_shattered_rumbler
@@ -326,11 +292,6 @@ CreatureAI* GetAI_mob_sunspring_villager(Creature *_Creature)
 void AddSC_mobs_nagrand()
 {
     Script *newscript;
-
-    newscript = new Script;
-    newscript->Name="mob_gurok_the_usurper";
-    newscript->GetAI = GetAI_mob_gurok_the_usurper;
-    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="mob_shattered_rumbler";

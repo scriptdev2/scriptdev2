@@ -381,118 +381,6 @@
 					>
 				</Filter>
 				<Filter
-					Name="Blackrock Depths"
-					>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_ambassador_flamelash.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_angerrel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_anubshiah.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_baelgar.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_doomrel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_doperel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_emperor_dagran_thaurissan.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_fineous_darkvire.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_general_angerforge.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_gloomrel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_golem_lord_argelmach.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_gorosh_the_dervish.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_grizzle.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_haterel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_high_interrogator_gerstahn.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_incendius.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_roccor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_magmus.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_moira_bronzebeard.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_pyromancer_loregrain.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_seethrel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_verek.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_vilerel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_warder_stilgiss.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\mob_overmaster_pyron.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\mob_phalanx.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\npcs_blackrock_depths.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Deadmines"
 					>
 					<File
@@ -619,10 +507,6 @@
 						RelativePath="..\scripts\zone\gruuls_lair\instance_gruuls_lair.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\scripts\zone\gruuls_lair\mob_gruuls_lair.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Burning Steppes"
@@ -747,10 +631,6 @@
 						RelativePath="..\scripts\zone\scarlet_monastery\boss_scorn.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\mob_scarlet_torturer.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Scholomance"
@@ -872,10 +752,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\boss_lord_vyletongue.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\maraudon\boss_noxxion.cpp"
 						>
 					</File>
@@ -884,23 +760,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\maraudon\boss_rotgrip.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\boss_tinkerer_gizlock.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\maraudon\mob_celebras_the_cursed.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\mob_meshlok_the_harvester.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\mob_razorlash.cpp"
 						>
 					</File>
 				</Filter>
@@ -964,7 +824,7 @@
 					Name="Mulgore"
 					>
 					<File
-						RelativePath="..\scripts\zone\mulgore\npc_skorn_whitecloud.cpp"
+						RelativePath="..\scripts\zone\mulgore\npcs_mulgore.cpp"
 						>
 					</File>
 				</Filter>
@@ -1311,10 +1171,6 @@
 				<Filter
 					Name="Wailing Caverns"
 					>
-					<File
-						RelativePath="..\scripts\zone\wailing_caverns\boss_wailing_caverns.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Western Plaguelands"
@@ -1491,10 +1347,6 @@
 						Name="Shadow Labyrinth"
 						>
 						<File
-							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_ambassador_hellmaw.cpp"
-							>
-						</File>
-						<File
 							RelativePath="..\scripts\zone\aunchindoun\shadow_labyrinth\boss_blackheart_the_inciter.cpp"
 							>
 						</File>
@@ -1572,11 +1424,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\black_temple\mob_blacktemple.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\npc_spirit_of_olum.cpp"
+						RelativePath="..\scripts\zone\black_temple\npcs_black_temple.cpp"
 						>
 					</File>
 				</Filter>
@@ -1620,10 +1468,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blasted_lands\mob_teremus_the_devourer.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blasted_lands\npcs_blasted_lands.cpp"
 						>
 					</File>
@@ -1660,10 +1504,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\instance_magtheridons_lair.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\hellfire_citadel\magtheridons_lair\mob_hellfire_warder.cpp"
 							>
 						</File>
 					</Filter>
@@ -1850,10 +1690,6 @@
 							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_crystalcore_devastator.cpp"
 							>
 						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_the_eye.cpp"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="The Mechanar"
@@ -1940,10 +1776,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_spire\mob_chromatic_elite_guard.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
 						>
 					</File>
@@ -1990,18 +1822,10 @@
 							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\instance_serpent_shrine.cpp"
 							>
 						</File>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\serpent_shrine\mob_serpent_shrine.cpp"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="Slave Pens"
 						>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\slave_pens\boss_rokmar.cpp"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="Steam Vault"
@@ -2026,10 +1850,6 @@
 					<Filter
 						Name="Underbog"
 						>
-						<File
-							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_ghazan.cpp"
-							>
-						</File>
 						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\underbog\boss_hungarfen.cpp"
 							>
@@ -2120,7 +1940,7 @@
 					Name="Silvermoon City"
 					>
 					<File
-						RelativePath="..\scripts\zone\silvermoon\npc_blood_knight_stillblade.cpp"
+						RelativePath="..\scripts\zone\silvermoon\npcs_silvermoon_city.cpp"
 						>
 					</File>
 				</Filter>
@@ -2156,7 +1976,7 @@
 					Name="Thunder Bluff"
 					>
 					<File
-						RelativePath="..\scripts\zone\thunder_bluff\npc_cairne_bloodhoof.cpp"
+						RelativePath="..\scripts\zone\thunder_bluff\npcs_thunder_bluff.cpp"
 						>
 					</File>
 				</Filter>
@@ -2217,6 +2037,114 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\sunwell_plateau\instance_sunwell_plateau.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Blackrock Depths"
+					>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_ambassador_flamelash.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_angerrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_anubshiah.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_baelgar.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_doomrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_doperel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_emperor_dagran_thaurissan.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_fineous_darkvire.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_general_angerforge.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_gloomrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_golem_lord_argelmach.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_gorosh_the_dervish.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_grizzle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_haterel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_high_interrogator_gerstahn.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_incendius.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_roccor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_magmus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_moira_bronzebeard.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_pyromancer_loregrain.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_seethrel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_verek.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_vilerel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\boss_warder_stilgiss.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\mob_phalanx.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\npcs_blackrock_depths.cpp"
 						>
 					</File>
 				</Filter>
