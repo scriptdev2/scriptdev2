@@ -1132,7 +1132,7 @@ void ScriptsInit()
     AddSC_mobs_dustwallow_marsh();
 
     //Eversong Woods
-    AddSC_mobs_mana_tapped();
+    AddSC_mobs_eversong_woods();
     AddSC_npcs_eversong_woods();
 
     //Exodar

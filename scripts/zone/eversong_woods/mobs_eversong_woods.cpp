@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: Mobs_Mana_Tapped
+SDName: mobs_eversong_woods
 SD%Complete: 100
 SDComment: For quest 8346
 SDCategory: Eversong Woods
@@ -59,7 +59,7 @@ CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
     return new mobs_mana_tappedAI (_Creature);
 }
 
-void AddSC_npcs_eversong_woods()
+void AddSC_mobs_eversong_woods()
 {
     Script *newscript;
     newscript = new Script;
