@@ -495,7 +495,7 @@ public:
     MostHPMissingInRange(Unit const* obj, float range, uint32 hp) : i_obj(obj), i_range(range), i_hp(hp) {}
     bool operator()(Unit* u)
     {
-        if(u->isAlive() && i_obj->IsFriendlyTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
+        if(u->isAlive() && u->GetTypeId() == TYPEID_UNIT && i_obj->IsFriendlyTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
         {
             i_hp = u->GetMaxHealth() - u->GetHealth();
             return true;
