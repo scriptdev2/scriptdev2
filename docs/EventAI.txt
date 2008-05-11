@@ -65,6 +65,7 @@ Params are always read from Param1, then Param2, then Param3.
 13   EVENT_T_SPAWNED             NONE                                   Expires at initial spawn and at creature respawn (useful for setting ranged movement type)
 14   EVENT_T_TARGET_HP           HPMax%, HPMin%, TimeUntilRepeat        Expires when Current Target's HP is between (Param1) and (Param2). Will repeat every (Param3) or never repeat if Param3 = 0. 
 15   EVENT_T_TARGET_CASTING      TimeUntilRepeat			Expires when the player is casting a spell. Will repeat every (Param1) or never repeat if Param1 = 0.
+16   EVENT_T_FRIENDLY_HP         HPDeficit, Radius, TimeUntilRepeat     Expires when a friendly unit in radius has at least (param1) hp missing. Will repeat every (Param1) or never repeat if Param1 = 0.
 
 -----------------------------------------
 Action Types
@@ -126,7 +127,7 @@ Target types are used by certain actions and may effect actions differently
 3    TARGET_T_HOSTILE_LAST_AGGRO        Dead last on aggro (no idea what this could be used for)
 4    TARGET_T_HOSTILE_RANDOM            Just any random target on our threat list
 5    TARGET_T_HOSTILE_RANDOM_NOT_TOP    Any random target except top threat
-6    TARGET_T_ACTION_INVOKER            Unit who caused this Event to occur (only works for EVENT_T_AGGRO, EVENT_T_KILL, EVENT_T_DEATH, EVENT_T_SPELLHIT, EVENT_T_OOC_LOS)
+6    TARGET_T_ACTION_INVOKER            Unit who caused this Event to occur (only works for EVENT_T_AGGRO, EVENT_T_KILL, EVENT_T_DEATH, EVENT_T_SPELLHIT, EVENT_T_OOC_LOS, EVENT_T_FRIENDLY_HP)
 
 -----------------------------------------
 Cast Flags

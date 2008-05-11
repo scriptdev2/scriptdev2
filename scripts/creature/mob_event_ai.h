@@ -35,6 +35,7 @@ enum Event_Types
     EVENT_T_SPAWNED                 = 13,   //NONE
     EVENT_T_TARGET_HP               = 14,   //HPMax%, HPMin%, TimeUntilRepeat
     EVENT_T_TARGET_CASTING          = 15,   //TimeUntilRepeat
+    EVENT_T_FRIENDLY_HP             = 16,   //HPDeficit, Radius, TimeUntilRepeat
     
     EVENT_T_END,
 };

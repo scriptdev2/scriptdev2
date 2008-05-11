@@ -730,6 +730,13 @@ void LoadDatabase()
                 if (temp.event_chance == 0)
                     error_log("SD2: Event %d has 0 percent chance. Event will never trigger!", i);
 
+                //Special check for EVENT_T_FRIENDLY_HP
+                if (temp.event_type == EVENT_T_FRIENDLY_HP && temp.event_param3 < 2000)
+                {
+                    temp.event_param3 = 2000;
+                    error_log("SD2: Event %d has EVENT_T_FRIENDLY_HP with param3 (TimeUntilRepeat) < 2000 ms. Defaulted to 2000 ms to prevent lag. ", i);
+                }
+
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
                     temp.action[j].type = fields[8+(j*4)].GetUInt16();

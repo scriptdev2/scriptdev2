@@ -4,6 +4,11 @@
 #include "WorldPacket.h"
 #include "Spell.h"
 
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {
     uint8 Targets;    // set of enum SelectTarget
@@ -484,6 +489,46 @@ void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float 
     ((Player*)pUnit)->SetPosition( x, y, z, o, true);
 }
 
+class MostHPMissingInRange
+{
+public:
+    MostHPMissingInRange(Unit const* obj, float range, uint32 hp) : i_obj(obj), i_range(range), i_hp(hp) {}
+    bool operator()(Unit* u)
+    {
+        if(u->isAlive() && i_obj->IsFriendlyTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
+        {
+            i_hp = u->GetMaxHealth() - u->GetHealth();
+            return true;
+        }
+        return false;
+    }
+private:
+    Unit const* i_obj;
+    float i_range;
+    uint32 i_hp;
+};
+
+Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
+{
+    CellPair p(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
+    Cell cell(p);
+    cell.data.Part.reserved = ALL_DISTRICT;
+    cell.SetNoCreate();
+
+    Unit* pUnit = NULL;
+
+    MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
+    MaNGOS::UnitLastSearcher<MostHPMissingInRange> searcher(pUnit, u_check);
+
+    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MostHPMissingInRange>, WorldTypeMapContainer > world_unit_searcher(searcher);
+    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+
+    CellLock<GridReadGuard> cell_lock(cell, p);
+    cell_lock->Visit(cell_lock, world_unit_searcher, *(m_creature->GetMap()));
+    cell_lock->Visit(cell_lock, grid_unit_searcher, *(m_creature->GetMap()));
+
+    return pUnit;
+}
 
 void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
 {

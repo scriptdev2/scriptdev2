@@ -147,6 +147,9 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Teleports a player without dropping threat (only teleports to same map)
     void DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float o);
 
+    //Returns friendly unit with the most amount of hp missing from max hp
+    Unit* DoSelectLowestHpFriendly(float range, uint32 MinHPDiff = 1);
+
     //Spawns a creature relative to m_creature
     Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);
 

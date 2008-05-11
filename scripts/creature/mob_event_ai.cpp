@@ -25,8 +25,8 @@ EndScriptData */
 #include "sc_instance.h"
 #include "TargetedMovementGenerator.h"
 
-#define EVENT_UPDATE_TIME   500
-#define SPELL_RUN_AWAY      8225
+#define EVENT_UPDATE_TIME               500
+#define SPELL_RUN_AWAY                  8225
 
 struct EventHolder
 {
@@ -279,6 +279,22 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (param1)
                     pHolder.Time = param1;
                 else pHolder.Enabled = false;
+            }
+            break;
+
+        case EVENT_T_FRIENDLY_HP:
+            {
+                Unit* pUnit = DoSelectLowestHpFriendly(param2, param1);
+
+                if (!pUnit)
+                    return;
+
+                pActionInvoker = pUnit;
+
+                if (param3)
+                    pHolder.Time = param3;
+                else
+                    pHolder.Enabled = false;
             }
             break;
         default:
@@ -1030,6 +1046,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         case EVENT_T_HP:
                         case EVENT_T_TARGET_HP:
                         case EVENT_T_TARGET_CASTING:
+                        case EVENT_T_FRIENDLY_HP:
                             ProcessEvent(*i);
                             break;
                         }
