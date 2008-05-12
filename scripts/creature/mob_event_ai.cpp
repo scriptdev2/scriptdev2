@@ -284,6 +284,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         case EVENT_T_FRIENDLY_HP:
             {
+                if (!InCombat)
+                    return;
+
                 Unit* pUnit = DoSelectLowestHpFriendly(param2, param1);
 
                 if (!pUnit)
