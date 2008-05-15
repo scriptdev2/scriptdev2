@@ -867,7 +867,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 if(Phoenix_Timer < diff)
                 {
                     DoCast(m_creature, SPELL_PHOENIX_ANIMATION);
-                    Creature *Phoenix = DoSpawnCreature(PHOENIX, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 1000);
+                    Creature *Phoenix = DoSpawnCreature(PHOENIX, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
 
                     if(Phoenix)
                     {
