@@ -149,7 +149,7 @@ EndScriptData */
 //Master Engineer Telonicus speech
 #define SAY_TELONICUS_AGGRO               "Anar'alah belore!"
 #define SOUND_TELONICUS_AGGRO             11157
-#define SAY_TELONICUS_DEATH               "More perrals... await"
+#define SAY_TELONICUS_DEATH               "More perils... await"
 #define SOUND_TELONICUS_DEATH             11158
 
 //Creature IDs
@@ -194,7 +194,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
     advisorbase_ai(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -338,7 +338,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         AdvisorGuid[0] = 0;
         AdvisorGuid[1] = 0;
         AdvisorGuid[2] = 0;
@@ -729,7 +729,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     Creature* Weapon;
                     for (uint32 i = 0; i < 7; i++)
                     {
-                        Weapon = m_creature->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
+                        Weapon = m_creature->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
 
                         if (!Weapon)
                             error_log("SD2: Kael'thas weapon %i could not be spawned", i);
