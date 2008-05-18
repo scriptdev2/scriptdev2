@@ -447,6 +447,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     DoomBlossom->setFaction(m_creature->getFaction());
                     DoomBlossom->AddThreat(target, 1.0f);
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
+                    ((mob_doom_blossomAI*)DoomBlossom->AI())->InCombat = true;
                     SetThreatList(DoomBlossom);
                     SummonDoomBlossomTimer = 45000;
                 }
