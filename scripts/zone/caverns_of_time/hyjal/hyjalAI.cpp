@@ -16,12 +16,37 @@
 
 /* ScriptData
 SDName: HyjalAI
-SD%Complete: 100
-SDComment: 
+SD%Complete: 99
+SDComment: World Packet workaround for World States
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "hyjalAI.h"
+#include "PointMovementGenerator.h"
+#include "Map.h"
+#include "WorldPacket.h"
+
+float AllianceBase[4][3]= // Locations for summoning waves in Alliance base
+{
+    {4979.010, -1709.134, 1339.674},
+    {4969.123, -1705.904, 1341.363},
+    {4970.260, -1698.546, 1341.200},
+    {4975.262, -1698.239, 1341.427}
+};
+
+float HordeBase[4][3]= // Locations for summoning waves in Horde base
+{
+    {5554.399, -2581.419, 1480.820},
+    {5538.996, -2577.742, 1479.790},
+    {5565.642, -2565.666, 1481.635},
+    {5547.218, -2574.589, 1479.194}
+};
+
+float AttackArea[2][3]= // used to inform the wave where to move and attack to
+{
+    {5042.9189, -1776.2562, 1323.0621}, // Alliance
+    {5510.4815, -2676.7112, 1480.4314} // Horde
+};
 
 hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
 {
@@ -61,10 +86,29 @@ void hyjalAI::Reset()
     Summon = false;
 
     /** Flags **/
-    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+    m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
     /** Initialize spells **/
     memset(Spell, 0, sizeof(Spell));
+
+    /** Reset World States **/
+    UpdateWorldState(WORLDSTATE_WAVES, 0);
+    UpdateWorldState(WORLDSTATE_ENEMY, 0);
+    UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 0);
+}
+
+void hyjalAI::EnterEvadeMode()
+{
+    m_creature->InterruptNonMeleeSpells(true);
+    m_creature->RemoveAllAuras();
+    m_creature->DeleteThreatList();
+    m_creature->CombatStop();
+    m_creature->LoadCreaturesAddon();
+
+    if(m_creature->isAlive())
+        m_creature->GetMotionMaster()->TargetedHome();
+
+    InCombat = false;
 }
 
 void hyjalAI::Aggro(Unit *who)
@@ -81,52 +125,33 @@ void hyjalAI::Aggro(Unit *who)
 
 void hyjalAI::JustDied(Unit* killer)
 {
-    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
     Talk(DEATH);
 }
 
-void hyjalAI::SetFaction(uint32 faction)
-{
-    Faction = faction;
-}
-
-void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
+void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
 {
     uint32 random = rand()%4;
-    float X = 0;
-    float Y = 0;
-    float Z = 0;
-    if(!Faction) // Alliance
+    float SpawnLoc[3];
+    float AttackLoc[3];
+
+    for(uint8 i = 0; i < 3; ++i)
     {
-        X = AllianceBase[random].x;
-        Y = AllianceBase[random].y;
-        Z = AllianceBase[random].z;
-    }
-    else if(Faction == 1) // Horde
-    {
-        X = HordeBase[random].x;
-        Y = HordeBase[random].y;
-        Z = HordeBase[random].z;
+        SpawnLoc[i] = Base[random][i];
+        AttackLoc[i] = AttackArea[Faction][i];
     }
 
-    Creature* pCreature = m_creature->SummonCreature(entry, X, Y, Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 45000);
+    Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
     if(pCreature)
     {
         EnemyCount++; // Increment Enemy Count to be used in World States
-        std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
 
-        if(PlayerList.empty())
-            return;
-
-        for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
-        {
-            pCreature->AddThreat((*itr), 1.0f);
-            if((*itr)->GetGUID() == PlayerGUID)
-                pCreature->AI()->AttackStart((*itr)); // Attack whoever clicked.
-        }
+        pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+        pCreature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]));
+        DoZoneInCombat(pCreature);
         pCreature->AddThreat(m_creature, 1.0f);
 
-        if(IsBoss)
+        // Check if creature is a boss.
+        if(pCreature->GetCreatureInfo()->rank == 3)
         {
             if(!FirstBossDead)
                 BossGUID[0] = pCreature->GetGUID();
@@ -136,70 +161,34 @@ void hyjalAI::SummonCreature(uint32 entry, bool IsBoss)
     }
 }
 
-void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, uint32 faction)
+void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
 {
     if(rand()%4 == 0) // 1 in 4 chance we give a rally yell. Not sure if the chance is Blizzlike.
         Talk(RALLY);
 
-    if(wave[Count].IsBoss)
-        SummonCreature(wave[Count].Mob1, true);
-
-    if(wave[Count].Mob1 && (!wave[Count].IsBoss))
-        SummonCreature(wave[Count].Mob1);
-     if(wave[Count].Mob2)
-         SummonCreature(wave[Count].Mob2);
-     if(wave[Count].Mob3)
-         SummonCreature(wave[Count].Mob3);
-     if(wave[Count].Mob4)
-         SummonCreature(wave[Count].Mob4);
-     if(wave[Count].Mob5)
-         SummonCreature(wave[Count].Mob5);
-     if(wave[Count].Mob6)
-         SummonCreature(wave[Count].Mob6);
-     if(wave[Count].Mob7)
-         SummonCreature(wave[Count].Mob7);
-     if(wave[Count].Mob8)
-         SummonCreature(wave[Count].Mob8);
-     if(wave[Count].Mob9)
-         SummonCreature(wave[Count].Mob9);
-     if(wave[Count].Mob10)
-         SummonCreature(wave[Count].Mob10);
-     if(wave[Count].Mob11)
-         SummonCreature(wave[Count].Mob11);
-     if(wave[Count].Mob12)
-         SummonCreature(wave[Count].Mob12);
-     if(wave[Count].Mob13)
-         SummonCreature(wave[Count].Mob13);
-     if(wave[Count].Mob14)
-         SummonCreature(wave[Count].Mob14);
-     if(wave[Count].Mob15)
-         SummonCreature(wave[Count].Mob15);
-     if(wave[Count].Mob16)
-         SummonCreature(wave[Count].Mob16);
-     if(wave[Count].Mob17)
-         SummonCreature(wave[Count].Mob17);
-     if(wave[Count].Mob18)
-         SummonCreature(wave[Count].Mob18);
-
-     if(!wave[Count].IsBoss)
-     {
-         //uint32 stateValue = Count+1;
-         //if(FirstBossDead)
-         //    stateValue -= 9; // Subtract 8 from it to give the proper wave number if we are greater than 8
-         //UpdateWorldState(WORLDSTATE_WAVES, stateValue); // Set world state to our current wave number
-         //UpdateWorldState(WORLDSTATE_ENEMY, 1);
-         //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount);
-         NextWaveTimer = wave[Count].WaveTimer;
-     }
-     else
-     {
-         //UpdateWorldState(0, WORLDSTATE_WAVES); // Set world state for waves to 0 to disable it.
-         //UpdateWorldState(1, WORLDSTATE_ENEMY);
-         //UpdateWorldState(0, WORLDSTATE_ENEMYCOUNT); // Set World State for enemies invading to 1.
-         //UpdateWorldState(1, WORLDSTATE_ENEMYCOUNT);
-         Summon = false;
-         CheckBossTimer = 1000;
-     }
+    for(uint8 i = 0; i < 18; ++i)
+    {
+        if(wave[Count].Mob[i])
+            SummonCreature(wave[Count].Mob[i], Base);
+    }
+    
+    if(!wave[Count].IsBoss)
+    {
+        uint32 stateValue = Count+1;
+        if(FirstBossDead)
+            stateValue -= 9; // Subtract 8 from it to give the proper wave number if we are greater than 8
+        UpdateWorldState(WORLDSTATE_WAVES, stateValue); // Set world state to our current wave number
+        UpdateWorldState(WORLDSTATE_ENEMY, 1);
+        UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount);
+        NextWaveTimer = wave[Count].WaveTimer;
+    }
+    else
+    {
+        UpdateWorldState(WORLDSTATE_WAVES, 0); // Set world state for waves to 0 to disable it.
+        UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 1); // Set World State for enemies invading to 1.
+        Summon = false;
+        CheckBossTimer = 1000;
+    }
 }
 
 void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
@@ -207,11 +196,6 @@ void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
     std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
     if(PlayerList.empty())
         return;
-
-    if(Faction == 1) // Horde
-    {
-
-    }
 
     for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
     {
@@ -222,18 +206,18 @@ void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
 
 void hyjalAI::StartEvent(Player* player)
 {
-    if(player)
-    {
-        Talk(BEGIN);
-        EventBegun = true;
-        Summon = true;
-        NextWaveTimer = 15000;
-        CheckBossTimer = 5000;
-        PlayerGUID = player->GetGUID();
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0);
-        //UpdateWorldState(0, WORLDSTATE_WAVES);
-        //UpdateWorldState(0, WORLDSTATE_ENEMY);
-    }
+    if(!player)
+        return;
+    Talk(BEGIN);
+    EventBegun = true;
+    Summon = true;
+    NextWaveTimer = 15000;
+    CheckBossTimer = 5000;
+    PlayerGUID = player->GetGUID();
+    m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    UpdateWorldState(WORLDSTATE_WAVES, 0);
+    UpdateWorldState(WORLDSTATE_ENEMY, 0);
+    UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 0);
 }
 
 uint32 hyjalAI::GetInstanceData(uint32 Event)
@@ -286,11 +270,21 @@ void hyjalAI::Talk(uint32 id)
         DoPlaySoundToSet(m_creature, Sound);
 }
 
-// Core patch required.
-//void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
-//{
-//    m_creature->GetMap()->UpdateWorldState(field, value);
-//}
+// Slight workaround for now
+void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
+{
+    WorldPacket data(SMSG_UPDATE_WORLD_STATE, 8);
+
+    data << field;
+    data << value;
+
+    std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
+    for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+        (*itr)->GetSession()->SendPacket(&data);
+
+    // TODO: Uncomment and remove everything above this line only when the core patch for this is accepted
+    //m_creature->GetMap()->UpdateWorldState(field, value);
+}
 
 void hyjalAI::UpdateAI(const uint32 diff)
 {
@@ -301,9 +295,9 @@ void hyjalAI::UpdateAI(const uint32 diff)
         if(NextWaveTimer < diff)
         {
             if(Faction == 0)
-                SummonNextWave(AllianceWaves, WaveCount, 1);
+                SummonNextWave(AllianceWaves, WaveCount, AllianceBase);
             else if(Faction == 1)
-                SummonNextWave(HordeWaves, WaveCount, 1);
+                SummonNextWave(HordeWaves, WaveCount, HordeBase);
             WaveCount++;
         }else NextWaveTimer -= diff;
     }
@@ -329,9 +323,9 @@ void hyjalAI::UpdateAI(const uint32 diff)
                     }
                     EventBegun = false;
                     CheckBossTimer = 0;
-                    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+                    m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                     BossGUID[i] = 0;
-                    //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 0);// Reset world state for enemies to disable it 
+                    UpdateWorldState(WORLDSTATE_ENEMY, 0);// Reset world state for enemies to disable it 
                 }
             }
         }

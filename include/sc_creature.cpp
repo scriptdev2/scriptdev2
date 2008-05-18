@@ -466,13 +466,14 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
 
 void ScriptedAI::DoResetThreat()
 {
-    std::list<HostilReference*>::iterator i;
+    std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
+    std::list<HostilReference*>::iterator itr;
 
-    for (i = m_creature->getThreatManager().getThreatList().begin();i != m_creature->getThreatManager().getThreatList().end(); ++i)
+    for(itr = m_threatlist.begin(); itr != m_threatlist.end(); ++itr)
     {
         Unit* pUnit = NULL;
-        pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-        if(pUnit)
+        pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
+        if(pUnit && m_creature->getThreatManager().getThreat(pUnit))
             m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
     }
 }

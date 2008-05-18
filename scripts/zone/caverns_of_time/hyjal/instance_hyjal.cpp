@@ -165,6 +165,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 Encounters[4] = data;
                 break;
         }
+
+        Save();
     }
 
     uint32 GetData(uint32 type)
@@ -188,6 +190,31 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         }
         return 0;
     }
+
+    //const char* Save()
+    //{
+    //    uint32 r = 0;
+    //    for(uint8 i = 0; i < ENCOUNTERS; ++i)
+    //    {
+    //        if(Encounters[i] == DONE)
+    //            r++;
+    //    }
+
+    //    char* temp = NULL;
+    //    //if(r)
+    //    //    sprintf(temp, "%d", r);
+    //    return temp;
+    //}
+
+    //void Load(const char* load)
+    //{
+    //    if(!load)
+    //        return;
+
+    //    uint32 in = atol(load);
+    //    for(uint8 i = 0; i < in; ++i)
+    //        Encounters[i] = DONE;
+    //}
 };
 
 InstanceData* GetInstanceData_instance_mount_hyjal(Map* map)

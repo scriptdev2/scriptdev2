@@ -30,9 +30,6 @@ EndScriptData */
 #define GOSSIP_ITEM_BEGIN_HORDE "We're here to help! The Alliance are overrun."
 #define GOSSIP_ITEM_AZGALOR     "We're okay so far. Let's do this!"
 
-#define ALLIANCE 0
-#define HORDE    1
-
 #define HORDEBASE_X         5464.5522
 #define HORDEBASE_Y         -2731.5644
 #define HORDEBASE_Z         1485.7075
@@ -46,7 +43,7 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
     hyjalAI* ai = new hyjalAI(_Creature);
 
     ai->Reset();
-    ai->SetFaction(ALLIANCE);
+    ai->EnterEvadeMode();
 
     ai->Spell[0].SpellId = SPELL_BLIZZARD;
     ai->Spell[0].Cooldown = 15000 + rand()%20000;
@@ -104,7 +101,6 @@ CreatureAI* GetAI_npc_thrall(Creature *_Creature)
 
     ai->Reset();
     ai->EnterEvadeMode();
-    ai->SetFaction(HORDE);
 
     ai->Spell[0].SpellId = SPELL_CHAIN_LIGHTNING;
     ai->Spell[0].Cooldown = 2000 + rand()%5000;

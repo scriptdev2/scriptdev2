@@ -37,7 +37,8 @@
 #define SPELL_TELEPORT_VISUAL   41232
 
 #define WORLDSTATE_WAVES        2842
-#define WORLDSTATE_ENEMIES      2453
+#define WORLDSTATE_ENEMY        2453
+#define WORLDSTATE_ENEMYCOUNT   2454
 
 /*** Spells for Jaina ***/
 #define SPELL_BRILLIANCE_AURA     31260 // The database must handle this spell via creature_addon
@@ -51,12 +52,12 @@
 
 struct Wave
 {
-    uint32 Mob1, Mob2, Mob3, Mob4, Mob5, Mob6, Mob7, Mob8, Mob9, Mob10, Mob11, Mob12, Mob13, Mob14, Mob15, Mob16, Mob17, Mob18;
-    uint32 WaveTimer;
-    bool IsBoss;
+    uint32 Mob[18]; // Stores Creature Entries to be summoned in Waves
+    uint32 WaveTimer; // The timer before the next wave is summoned
+    bool IsBoss; // Simply used to inform the wave summoner that the next wave contains a boss to halt all waves after that
 };
 
-static Wave AllianceWaves[]=
+static Wave AllianceWaves[]= // Waves that will be summoned in the Alliance Base
 {
     {GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, 0, 0, 0, 0, 0, 0, 0, 0, 120000, false}, // Wave 1
     {GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, GHOUL, CRYPT_FIEND, CRYPT_FIEND, 0, 0, 0, 0, 0, 0, 120000, false}, // Wave 2
@@ -78,7 +79,7 @@ static Wave AllianceWaves[]=
     {ANETHERON, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true} // All 8 Waves are summoned, summon Anatheron
 };
 
-static Wave HordeWaves[]=
+static Wave HordeWaves[]= // Waves that are summoned in the Horde base
 {
     {GHOUL, GHOUL, GHOUL, GHOUL, ABOMINATION, ABOMINATION, ABOMINATION, ABOMINATION, BANSHEE, BANSHEE, NECROMANCER, NECROMANCER, 0, 0, 0, 0, 0, 0, 120000, false}, // Wave 1
     {GHOUL, GHOUL, GHOUL, GHOUL, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, GARGOYLE, 0, 0, 0, 0, 120000, false}, // Wave 2
@@ -100,28 +101,7 @@ static Wave HordeWaves[]=
     {AZGALOR, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true} // All 8 Waves are summoned, summon Azgalor
 };
 
-struct Location
-{
-    float x, y, z;
-};
-
-static Location AllianceBase[]=
-{
-    {4979.010, -1709.134, 1339.674},
-    {4969.123, -1705.904, 1341.363},
-    {4970.260, -1698.546, 1341.200},
-    {4975.262, -1698.239, 1341.427}
-};
-
-static Location HordeBase[]=
-{
-    {5554.399, -2581.419, 1480.820},
-    {5538.996, -2577.742, 1479.790},
-    {5565.642, -2565.666, 1481.635},
-    {5547.218, -2574.589, 1479.194}
-};
-
-enum TargetType
+enum TargetType // Used in the spell cast system for the AI
 {
     TARGETTYPE_SELF     = 0,
     TARGETTYPE_RANDOM   = 1,
@@ -130,20 +110,20 @@ enum TargetType
 
 struct Yells
 {
-    uint32 id; // used to determine if it's attack yells, etc.
-    char* text;
-    uint32 sound;
+    uint32 id; // Used to determine the type of yell (attack, rally, etc)
+    char* text; // The text to be yelled
+    uint32 sound; // Sound that corresponds to the text
 };
 
 enum YellId
 {
-    ATTACKED     = 0,
-    BEGIN        = 1,
-    INCOMING     = 2,
-    RALLY        = 3,
-    FAIL         = 4,
-    SUCCESS      = 5,
-    DEATH        = 6,
+    ATTACKED     = 0, // Used when attacked and set in combat
+    BEGIN        = 1, // Used when the event is begun
+    INCOMING     = 2, // Used to warn the raid that another wave phase is coming
+    RALLY        = 3, // Used to rally the raid and warn that the next wave has been summoned
+    FAIL         = 4, // Used when raid has failed (unsure where to place)
+    SUCCESS      = 5, // Used when the raid has sucessfully defeated a wave phase
+    DEATH        = 6, // Used on death
 };
 
 static Yells JainaQuotes[]=
@@ -177,29 +157,31 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 {
     hyjalAI(Creature *c);
 
-    void Reset();
+    void Reset(); // Generically used to reset our variables. Do *not* call in EnterEvadeMode as this may make problems if the raid is still in combat
 
-    void Aggro(Unit *who);
+    void EnterEvadeMode(); // Send creature back to spawn location and evade.
 
-    void UpdateAI(const uint32 diff);
+    void Aggro(Unit *who); // Used to reset cooldowns for our spells and to inform the raid that we're under attack
 
-    void JustDied(Unit* killer);
+    void UpdateAI(const uint32 diff); // Called to summon waves, check for boss deaths and to cast our spells.
 
-    void SetFaction(uint32 faction);
+    void JustDied(Unit* killer); // Called on death, informs the raid that they have failed.
 
-    void TeleportRaid(Player *player, float X, float Y, float Z);
+    void SetFaction(uint32 _faction) { Faction = _faction; } // Set the faction to either Alliance or Horde in Hyjal
 
-    void SummonCreature(uint32 entry, bool IsBoss = false);
+    void TeleportRaid(Player *player, float X, float Y, float Z); // Used by gossip to teleport the entire raid to the next location
+
+    void SummonCreature(uint32 entry, float Base[4][3]); // Summons a creature for that wave in that base
     
-    void SummonNextWave(Wave wave[18], uint32 Count, uint32 faction);
+    void SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3]); // Summons the next wave, calls SummonCreature
 
-    void StartEvent(Player* player);
+    void StartEvent(Player* player); // Begins the event by gossip click
 
-    uint32 GetInstanceData(uint32 Event);
+    uint32 GetInstanceData(uint32 Event); // Gets instance data for this instance, used to check if raid has gotten past a certain point and can access the next phase
 
-    void Talk(uint32 id);
+    void Talk(uint32 id); // Searches for the appropriate yell and sound and uses it to inform the raid of various things
 
-    void UpdateWorldState(uint32 field, uint32 value);
+    void UpdateWorldState(uint32 field, uint32 value); // NYI: Requires core support. Updates the world state counter at the top of the UI.
 public:    
     ScriptedInstance* pInstance;
 

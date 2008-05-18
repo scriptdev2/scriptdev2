@@ -112,9 +112,7 @@ struct mob_ancient_wispAI : public ScriptedAI
         CheckTimer = 1000;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void DamageTaken(Unit* done_by, uint32 &damage) { damage = 0; }
 
@@ -361,14 +359,14 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     uint32 GripOfTheLegionTimer;
     uint32 DoomfireTimer;
     uint32 SoulChargeTimer;
+    uint32 SoulChargeCount;
     uint32 MeleeRangeCheckTimer;
     uint32 HandOfDeathTimer;
     uint32 SummonWispTimer;
+    uint32 WispCount;
     uint32 EnrageTimer;
     uint32 CheckDistanceTimer;
-    uint32 GlobalSoulChargeCooldown; // This prevents spamming Soul Charges too quickly.
 
-    bool SoulCharged;
     bool Enraged;
     bool BelowTenPercent;
     bool HasProtected;
@@ -384,15 +382,14 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         AirBurstTimer = 30000;
         GripOfTheLegionTimer = 5000 + rand()%20000;
         DoomfireTimer = 20000;
-        SoulChargeTimer = 5000 + rand()%40000;
+        SoulChargeTimer = 2000 + rand()%27000;
+        SoulChargeCount = 0;
         MeleeRangeCheckTimer = 15000;
         HandOfDeathTimer = 2000;
-        SummonWispTimer = 1500;
+        WispCount = 0; // When ~30 wisps are summoned, Archimonde dies
         EnrageTimer = 600000; // 10 minutes
         CheckDistanceTimer = 30000; // This checks if he's too close to the World Tree (75 yards from a point on the tree), if true then he will enrage
-        GlobalSoulChargeCooldown = 0;
 
-        SoulCharged = false;
         Enraged = false;
         BelowTenPercent = false;
         HasProtected = false;
@@ -404,6 +401,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         m_creature->InterruptSpell(CURRENT_CHANNELED_SPELL);
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoZoneInCombat();
 
         if(pInstance)
             pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
@@ -452,9 +450,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 break;
         }
 
-        SoulChargeTimer += 2000 + rand()%35000;
-//        CalculateSoulChargeTimer();
-        SoulCharged = true;
+        SoulChargeTimer = 2000 + rand()%28000;
+        SoulChargeCount++;
     }
 
     void JustDied(Unit *victim)
@@ -502,25 +499,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         return false;
     }
 
-    void SetThreatList(Creature* target)
-    {
-        if(!target)
-            return;
-
-        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
-        
-        if(m_threatlist.empty())
-            return;
-
-        std::list<HostilReference*>::iterator itr = m_threatlist.begin();
-        for( ; itr != m_threatlist.end(); ++itr)
-        {
-            Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-            if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER)) // Only copy PLAYERS' threat.
-                target->AddThreat(pUnit, m_creature->getThreatManager().getThreat(pUnit));
-        }
-    }
-
     void SummonDoomfire(Unit* target)
     {    
         Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE_TARGETING, rand()%30, rand()%30, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
@@ -528,7 +506,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             ((mob_doomfire_targettingAI*)Doomfire->AI())->ArchimondeGUID = m_creature->GetGUID();
             Doomfire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            SetThreatList(Doomfire);
+            DoZoneInCombat(Doomfire);
             Doomfire->setFaction(m_creature->getFaction());
             DoCast(Doomfire, SPELL_DOOMFIRE_SPAWN);
             Doomfire->CastSpell(Doomfire, SPELL_DOOMFIRE_VISUAL, true);
@@ -545,41 +523,6 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_DOOMFIRE2);
             }
         }
-    }
-
-    void CalculateSoulChargeTimer()
-    {
-        uint32 totalStacks = 0;
-        uint32 newTimer = 0;
-        for(uint8 i = 0; i < 3; i++)
-        {
-            uint32 spell = 0;
-            switch(i)
-            {
-                case 0:
-                    spell = SPELL_SOUL_CHARGE_RED;
-                    break;
-                case 1:
-                    spell = SPELL_SOUL_CHARGE_YELLOW;
-                    break;
-                case 2:
-                    spell = SPELL_SOUL_CHARGE_GREEN;
-                    break;
-            }
-            if(Aura* aur = m_creature->GetAura(spell, 0))
-            {
-                totalStacks += aur->GetAuraSlot();
-                aur->SetAuraDuration(120000);
-            }
-        }
-
-        if(!totalStacks)
-            return;
-
-        SoulChargeTimer = newTimer;
-
-        if(totalStacks > 7 && GlobalSoulChargeCooldown > 3000)
-            GlobalSoulChargeCooldown = 5000;
     }
 
     void UnleashSoulCharge()
@@ -608,12 +551,10 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             m_creature->RemoveSingleAuraFromStack(chargeSpell, 0);
             DoCast(m_creature->getVictim(), unleashSpell);
             HasCast = true;
+            SoulChargeCount--;
         }
         if(HasCast)
-        {
-            //CalculateSoulChargeTimer();
-            SoulCharged = false;
-        }
+            SoulChargeTimer = 2000 + rand()%28000;
     }
 
     void UpdateAI(const uint32 diff)
@@ -622,11 +563,17 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         {
             if(pInstance)
             {
-                // Do not let the raid skip straight to Archimonde. Visible only if Azagalor is finished.
-                if((pInstance->GetData(DATA_AZGALOREVENT) < 3) && (m_creature->GetVisibility() != VISIBILITY_OFF))
+                // Do not let the raid skip straight to Archimonde. Visible and hostile ONLY if Azagalor is finished.
+                if((pInstance->GetData(DATA_AZGALOREVENT) < DONE) && ((m_creature->GetVisibility() != VISIBILITY_OFF) || (m_creature->getFaction() != 35)))
+                {
                     m_creature->SetVisibility(VISIBILITY_OFF);
-                else if((pInstance->GetData(DATA_AZGALOREVENT) >= 3) && (m_creature->GetVisibility() != VISIBILITY_ON))
+                    m_creature->setFaction(35);
+                }
+                else if((pInstance->GetData(DATA_AZGALOREVENT) >= DONE) && ((m_creature->GetVisibility() != VISIBILITY_ON) || (m_creature->getFaction() == 35)))
+                {
+                    m_creature->setFaction(1720);
                     m_creature->SetVisibility(VISIBILITY_ON);
+                }
             }
 
             if(DrainNordrassilTimer < diff)
@@ -636,6 +583,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
                     if(Nordrassil)
                     {
+                        Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        Nordrassil->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                         DoCast(Nordrassil, SPELL_DRAIN_WORLD_TREE);
                         IsChanneling = true;
                     }
@@ -643,6 +592,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 5000);
                 if(Nordrassil)
                 {
+                    Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    Nordrassil->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                     Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
                     DrainNordrassilTimer = 1000;
                 }
@@ -707,8 +658,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     Wisp->AI()->AttackStart(m_creature);
                     ((mob_ancient_wispAI*)Wisp->AI())->ArchimondeGUID = m_creature->GetGUID();
                 }
-                SummonWispTimer = 5000;
+                SummonWispTimer = 1500;
+                WispCount++;
             }else SummonWispTimer -= diff;
+
+            if(WispCount >= 30)
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
 
         if(Enraged)
@@ -721,14 +676,11 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             return; // Don't do anything after this point.
         }
 
-        if(SoulCharged)
+        if(SoulChargeCount)
         {
-            if(GlobalSoulChargeCooldown < diff)
-            {
-                if(SoulChargeTimer < diff)
-                    UnleashSoulCharge();
-                else SoulChargeTimer -= diff;
-            }else GlobalSoulChargeCooldown -= diff;
+            if(SoulChargeTimer < diff)
+                UnleashSoulCharge();
+            else SoulChargeTimer -= diff;
         }
 
         if(GripOfTheLegionTimer < diff)
