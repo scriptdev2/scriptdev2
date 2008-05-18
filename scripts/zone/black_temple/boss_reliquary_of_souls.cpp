@@ -179,6 +179,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
 
+        DespawnEssences();
+
         SufferingGUID = 0;
         DesireGUID = 0;
         AngerGUID = 0;
@@ -264,6 +266,20 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 m_creature->AddThreat(pUnit, threat); // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
             }
         }
+    }
+    
+    void DespawnEssences()
+    {
+        // Despawn Essences
+        Unit* Essence = NULL;
+        if(SufferingGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
+        else if(DesireGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
+        else if(AngerGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
+        if(Essence && Essence->isAlive())
+            Essence->setDeathState(JUST_DIED);
     }
 
     void JustDied(Unit* killer)
@@ -680,7 +696,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         //Supposed to be cast on nearest target
         if(FixateTimer < diff)
         {
-            //CastFixate();
+            CastFixate();
             FixateTimer = 5000;
         }else FixateTimer -= diff;
 
@@ -778,10 +794,6 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
                 }
             }
         }
-    }
-
-    void JustDied(Unit* killer)
-    {
     }
 
     void UpdateAI(const uint32 diff)
