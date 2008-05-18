@@ -30,7 +30,7 @@ EndScriptData */
 #define SAY_CARRION1    "The swarm is eager to feed."
 #define SOUND_CARRION1  10979
 #define SAY_CARRION2    "Pestilence upon you!"
-#define SOUND_CARRION2  11036
+#define SOUND_CARRION2  11037
 #define SAY_INFERNO     "Let fire rain from above!"
 #define SOUND_INFERNO   10980
 #define SAY_INFERNO2    "Earth and Sky shall burn!"

@@ -98,13 +98,14 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
-        m_creature->CastSpell(m_creature, SPELL_LEVEL_UP, true);
+        if(victim->GetTypeId() == TYPEID_PLAYER)
+        {
+            DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
+            m_creature->CastSpell(m_creature, SPELL_LEVEL_UP, true);
+        }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {
