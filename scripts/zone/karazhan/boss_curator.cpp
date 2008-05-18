@@ -39,7 +39,7 @@ EndScriptData */
 #define SOUND_ENRAGE        9185
 
 #define SAY_KILL1           "Do not touch the displays."
-#define SOUND_KILL1         9186
+#define SOUND_KILL1         9187
 
 #define SAY_KILL2           "You are not a guest."
 #define SOUND_KILL2         9308
@@ -104,8 +104,8 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {        
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)

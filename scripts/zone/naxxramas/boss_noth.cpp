@@ -35,7 +35,7 @@ EndScriptData */
 #define SOUND_AGGRO3      8847
 #define SOUND_SUMMON      8851
 #define SOUND_SLAY1      8849
-#define SOUND_SLAY2      8849
+#define SOUND_SLAY2      8850
 #define SOUND_DEATH      8848
 
 // Teleport position of Noth on his balcony
@@ -71,38 +71,36 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-            //Say our dialog on initial aggro
-                switch (rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                    break;
-                case 2:
-                    DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                    break;
-                }
+        //Say our dialog on initial aggro
+        switch (rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                break;
+        }
     }
 
     void KilledUnit(Unit* victim)
     {
-
         switch (rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-            break;
-
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+                break;
         }
     }
 
@@ -196,6 +194,3 @@ void AddSC_boss_noth()
     newscript->GetAI = GetAI_boss_noth;
     m_scripts[nrscripts++] = newscript;
 }
-
-
-
