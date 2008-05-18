@@ -119,10 +119,8 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         Spear_Throw_Timer = 2000;
 
         m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
-        m_creature->setFaction(1711);                       //hostile
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
-
 
     void DamageTaken(Unit *done_by, uint32 & damage)
     {
@@ -136,7 +134,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 ((Player*)done_by)->AttackStop();
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveAllAuras();
-                //m_creature->DeleteThreatList();
+                m_creature->DeleteThreatList();
                 m_creature->CombatStop();
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
@@ -175,6 +173,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
             {
                 EnterEvadeMode(); 
                 bReset = false;
+                m_creature->setFaction(1711);                       //hostile
             }
             else Reset_Timer -= diff;
         }

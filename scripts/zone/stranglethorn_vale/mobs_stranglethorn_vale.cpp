@@ -30,7 +30,11 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
 {
-    mob_yennikuAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_yennikuAI(Creature *c) : ScriptedAI(c) 
+    {
+        bReset = false;
+        Reset();
+    }
 
     uint32 Reset_Timer;
     bool bReset;
@@ -38,15 +42,8 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     void Reset()
     {
         Reset_Timer = 0;
-        bReset = false;
 
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-        m_creature->setFaction(28);                         //troll, bloodscalp
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -56,8 +53,8 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
             if(!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)//Yenniku's Release
             {
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
-                //m_creature->CombatStop();                   //stop combat
-                //m_creature->DeleteThreatList();             //unsure of this
+                m_creature->CombatStop();                   //stop combat
+                m_creature->DeleteThreatList();             //unsure of this
                 m_creature->setFaction(83);                 //horde generic
 
                 bReset = true;
@@ -67,17 +64,18 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
         return;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {
-        if (bReset && Reset_Timer < diff)
-        {
-            EnterEvadeMode();
-        }
-        else Reset_Timer -= diff;
+        if (bReset)
+            if(Reset_Timer < diff)
+            {
+                EnterEvadeMode();
+                bReset = false;
+                m_creature->setFaction(28);                         //troll, bloodscalp
+            }
+            else Reset_Timer -= diff;
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
