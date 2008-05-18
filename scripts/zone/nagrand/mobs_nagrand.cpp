@@ -22,11 +22,10 @@ SDCategory: Nagrand
 EndScriptData */
 
 #include "sc_creature.h"
-#include "../../creature/simple_ai.h"
 #include "sc_gossip.h"
 
 /*######
-## mob_shattered_rumbler
+## mob_shattered_rumbler - this should be done with ACID
 ######*/
 
 struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
@@ -40,9 +39,7 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
         Spawn = false;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
@@ -67,44 +64,21 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 }
 
 /*######
-## mobs_kilsorrow_agent
+## mobs_kilsorrow_agent - should be done with ACID
 ######*/
 
 struct MANGOS_DLL_DECL mobs_kilsorrow_agentAI : public ScriptedAI
 {
     mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void Reset()
-    {
-    }
+    void Reset() {}
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
             ((Player*)Killer)->KilledMonster(21276, m_creature->GetGUID());
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartAttackAndMovement(who);
-            }
-        }
     }
 };
 CreatureAI* GetAI_mobs_kilsorrow_agent(Creature *_Creature)
@@ -129,7 +103,11 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_lump' WHERE `entry` = 18351;
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
-    mob_lumpAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_lumpAI(Creature *c) : ScriptedAI(c) 
+    {
+        bReset = false;
+        Reset();
+    }
 
     uint32 Reset_Timer;
     uint32 Spear_Throw_Timer;
@@ -139,12 +117,12 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     {
         Reset_Timer = 60000;
         Spear_Throw_Timer = 2000;
-        bReset = false;
 
         m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
         m_creature->setFaction(1711);                       //hostile
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
+
 
     void DamageTaken(Unit *done_by, uint32 & damage)
     {
@@ -157,9 +135,9 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
                 ((Player*)done_by)->AttackStop();
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                //m_creature->RemoveAllAuras();
+                m_creature->RemoveAllAuras();
                 //m_creature->DeleteThreatList();
-                //m_creature->CombatStop();
+                m_creature->CombatStop();
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
                 m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, 0);
@@ -171,21 +149,21 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if (m_creature->HasAura(SPELL_VISUAL_SLEEP,0))
-                    m_creature->RemoveAura(SPELL_VISUAL_SLEEP,0);
+        if (m_creature->HasAura(SPELL_VISUAL_SLEEP,0))
+            m_creature->RemoveAura(SPELL_VISUAL_SLEEP,0);
 
-                if (!m_creature->IsStandState())
-                    m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
+        if (!m_creature->IsStandState())
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
 
-                switch(rand()%2)
-                {
-                case 0:
-                    DoSay(LUMP_SAY0,LANG_UNIVERSAL,NULL);
-                    break;
-                case 1:
-                    DoSay(LUMP_SAY1,LANG_UNIVERSAL,NULL);
-                    break;
-                }
+        switch(rand()%2)
+        {
+            case 0:
+                DoSay(LUMP_SAY0,LANG_UNIVERSAL,NULL);
+                break;
+            case 1:
+                DoSay(LUMP_SAY1,LANG_UNIVERSAL,NULL);
+                break;
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -193,7 +171,11 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         //check if we waiting for a reset
         if (bReset)
         {
-            if (Reset_Timer < diff) { EnterEvadeMode(); }
+            if (Reset_Timer < diff) 
+            {
+                EnterEvadeMode(); 
+                bReset = false;
+            }
             else Reset_Timer -= diff;
         }
 
@@ -253,7 +235,7 @@ bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, u
 }
 
 /*####
-# mob_sunspring_villager
+# mob_sunspring_villager - should be done with ACID
 ####*/
 
 struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
@@ -264,12 +246,9 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
     {
 		m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
-
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {

@@ -269,13 +269,9 @@ struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public Scripted
 {
   npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
-  void Reset()
-  {
-  }
+  void Reset() {}
 
-  void Aggro(Unit* who)
-    {
-    }
+  void Aggro(Unit* who) {}
 
   void MoveInLineOfSight(Unit *who)
   {

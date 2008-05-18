@@ -165,8 +165,6 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 Encounters[4] = data;
                 break;
         }
-
-        Save();
     }
 
     uint32 GetData(uint32 type)
