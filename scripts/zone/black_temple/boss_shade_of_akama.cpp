@@ -200,6 +200,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     uint32 ReduceHealthTimer;
     uint32 SummonTimer;
     uint32 ResetTimer;
+    uint32 CheckTimer;
 
     bool SummonedChannelers;
     bool IsBanished;
@@ -231,6 +232,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         SummonTimer = 10000;
         ReduceHealthTimer = 0;
         ResetTimer = 60000;
+        CheckTimer = 15000;
 
         IsBanished = true;
         HasKilledAkama = false;
@@ -347,9 +349,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         if(!InCombat)
             return;
 
-        if(m_creature->getThreatManager().getThreatList().empty())
-            EnterEvadeMode();
-
         if(IsBanished)
         {
             //if(!m_creature->GetMotionMaster()->empty())
@@ -357,6 +356,19 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             //    m_creature->GetMotionMaster()->Clear(false);
             //    m_creature->GetMotionMaster()->Idle();
             //}
+
+            if(CheckTimer < diff)
+            {
+                std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
+                uint32 DeathCount = 0;
+                for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+                {
+                    if(!(*itr)->isAlive())
+                        DeathCount++;
+                }
+                if(DeathCount == PlayerList.size())
+                    EnterEvadeMode();
+            }else CheckTimer -= diff;
 
             if(SummonTimer < diff)
             {
@@ -375,7 +387,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
                 SummonCreature();
                 SummonCreature();
-                SummonTimer = 15000;
+                SummonTimer = 30000;
             }else SummonTimer -= diff;
 
             if(DeathCount >= 6)
