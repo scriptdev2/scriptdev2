@@ -58,10 +58,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        Council[0] = 0;
-        Council[1] = 0;
-        Council[2] = 0;
-        Council[3] = 0;
+        for(uint8 i = 0; i < 4; ++i)
+            Council[i] = 0;
         Reset();
     }
 
@@ -84,14 +82,13 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         Charging_Timer = 0;
         Phase2 = false;
 
-        //respawn if died
-        if(InCombat)
+        Creature *pCreature = NULL;
+        for(uint8 i = 0; i < 4; i++)
         {
-            Creature *pCreature;
-            for(uint8 i = 0; i < 4; i++)
+            if(Council[i])
             {
                 pCreature = (Creature*)(Unit::GetUnit((*m_creature), Council[i]));
-                if(pCreature)
+                if(pCreature && !pCreature->isAlive())
                 {
                     pCreature->Respawn();
                     pCreature->AI()->EnterEvadeMode();
@@ -108,17 +105,11 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
+            case 0:  DoPlaySoundToSet(m_creature, SOUND_SLAY1);  break;
 
-        case 1:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 1:  DoPlaySoundToSet(m_creature, SOUND_SLAY2);  break;
 
-        case 2:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            break;
+            case 2:  DoPlaySoundToSet(m_creature, SOUND_SLAY3);  break;
         }
     }
 
@@ -130,10 +121,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void Aggro(Unit *who)
-    {
-                StartEvent(who);
-    }
+    void Aggro(Unit *who) { StartEvent(who); }
 
     void GetCouncil()
     {
@@ -254,11 +242,11 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-                    pInstance->SetData(DATA_MAULGAREVENT, 1);
-                }
+        if(pInstance)
+        {
+            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            pInstance->SetData(DATA_MAULGAREVENT, 1);
+        }
     }
 
 
@@ -350,11 +338,11 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-                    pInstance->SetData(DATA_MAULGAREVENT, 1);
-                }
+        if(pInstance)
+        {
+            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            pInstance->SetData(DATA_MAULGAREVENT, 1);
+        }
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -72,7 +72,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 {
     boss_morogrim_tidewalkerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Murloc_entries[0] = 21224; //Tidewalker Depth-Seer
         Murloc_entries[1] = 21227; //Tidewalker Harpooner
         Murloc_entries[2] = 21228; //Tidewalker Hydromancer
@@ -121,19 +121,19 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         switch(rand()%3)
         {
             case 0:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            break;
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                break;
 
             case 1:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-            break;
-            case 2:
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                break;
 
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
-            break;
+            case 2:
+                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+                DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
+                break;
         }
     }
 
@@ -146,10 +146,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
             pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
     }
 
-    void Aggro(Unit *who)
-    {
-                StartEvent();
-    }
+    void Aggro(Unit *who) { StartEvent(); }
 
     void ApplyWateryGrave(Unit *player, uint8 pos)
     {
@@ -283,7 +280,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 Unit *target;
                 for(uint8 i = 0; i < 4; i++)
                 {
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    target = SelectUnit(SELECT_TARGET_RANDOM, 1);
                     if(target && (target->GetTypeId() == TYPEID_PLAYER) && !target->HasAura(SPELL_WATERY_GRAVE, 0) && target->IsWithinDistInMap(m_creature, 50))
                         ApplyWateryGrave(target, i);
                 }
@@ -347,16 +344,9 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->setFaction(14);
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who)
     {
