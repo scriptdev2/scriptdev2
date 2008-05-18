@@ -834,7 +834,8 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
 
                     DoCast(target, SPELL_LITTLE_RED_RIDING_HOOD, true);
                     TempThreat = m_creature->getThreatManager().getThreat(target);
-                    m_creature->getThreatManager().modifyThreatPercent(target, -100);
+                    if(TempThreat)
+                        m_creature->getThreatManager().modifyThreatPercent(target, -100);
                     HoodGUID = target->GetGUID();
                     m_creature->AddThreat(target, 1000000.0f);
                     ChaseTimer = 20000;
@@ -848,7 +849,8 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
                 if(target)
                 {
                     HoodGUID = 0;
-                    m_creature->getThreatManager().modifyThreatPercent(target, -100);
+                    if(m_creature->getThreatManager().getThreat(target))
+                        m_creature->getThreatManager().modifyThreatPercent(target, -100);
                     m_creature->AddThreat(target, TempThreat);
                     TempThreat = 0;
                 }

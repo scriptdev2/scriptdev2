@@ -36,6 +36,7 @@ EndScriptData */
 #define SPELL_KNOCKBACK          38576
 #define SPELL_TAUNT_GURTOGG      40603
 #define SPELL_INSIGNIFIGANCE     40618
+#define SPELL_BERSERK            45078
 
 //Speech'n'Sound
 #define SAY_AGGRO            "Horde will crush you!"
@@ -74,8 +75,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c) 
     {
-     pInstance = ((ScriptedInstance*)c->GetInstanceData());
-     Reset();
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -116,7 +117,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         PhaseChangeTimer = 60000;
 
         Phase1 = true;
-
     }
 
     void Aggro(Unit *who)
@@ -200,8 +200,10 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         pUnit = Unit::GetUnit((*m_creature), guid);
         if(pUnit)
         {
-            m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);               
-            m_creature->AddThreat(pUnit, TargetThreat);
+            if(m_creature->getThreatManager().getThreat(pUnit))
+                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);               
+            if(TargetThreat)
+                m_creature->AddThreat(pUnit, TargetThreat);
         }
     }
 
@@ -222,13 +224,13 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
             FelAcidTimer = 25000;
         }else FelAcidTimer -= diff;
 
-        if(EnrageTimer < diff)
-        {
-            //TODO: Find Enrage Spell
-            EnrageTimer = 600000;
-            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-        }else EnrageTimer -= diff;
+        if(!m_creature->HasAura(SPELL_BERSERK, 0))
+            if(EnrageTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            }else EnrageTimer -= diff;
 
         if(Phase1)
         {            
@@ -237,7 +239,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
                 if(target)
                 {
-                    (m_creature->getThreatManager()).modifyThreatPercent(target, -40);
+                    if(m_creature->getThreatManager().getThreat(target))
+                        m_creature->getThreatManager().modifyThreatPercent(target, -40);
                     DoCast(target, SPELL_KNOCKBACK);
                     KnockbackTimer = 22000;
                 }
@@ -278,8 +281,10 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     TargetThreat = m_creature->getThreatManager().getThreat(target);
                     TargetGUID = target->GetGUID();
                     target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
-                    m_creature->TauntApply(target);
-                    // m_creature->AddThreat(target, 50000000.0f); // Add a lot of threat since TauntApply does not work properly.
+                    //m_creature->TauntApply(target);
+                    if(m_creature->getThreatManager().getThreat(target))
+                        m_creature->getThreatManager().modifyThreatPercent(target, -100);
+                    m_creature->AddThreat(target, 50000000.0f); // Add a lot of threat since TauntApply does not work properly.
                     DoCast(target, SPELL_FEL_RAGE_TARGET, true);
                     DoCast(m_creature, SPELL_INSIGNIFIGANCE, true); // If VMaps are disabled, this spell can call the whole instance
                     /* These spells do not work, comment them out for now.
@@ -301,6 +306,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                             DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
                             break;
                     }
+
                     AcidGeyserTimer = 1000;
                     Phase1 = false;
                     PhaseChangeTimer = 30000;
@@ -309,10 +315,10 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
             if(!Phase1) // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
             {
-                m_creature->TauntFadeOut(m_creature->getVictim());
+                //m_creature->TauntFadeOut(m_creature->getVictim());
                 
-                //if(TargetGUID)
-                    //RevertThreatOnTarget(TargetGUID);
+                if(TargetGUID)
+                    RevertThreatOnTarget(TargetGUID);
                 TargetGUID = 0;
                 Phase1 = true;
                 BloodboilTimer = 10000;

@@ -67,7 +67,8 @@ struct MANGOS_DLL_DECL boss_firemawAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_WINGBUFFET);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
 
             //25 seconds till recast
             WingBuffet_Timer = 25000;

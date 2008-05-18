@@ -556,8 +556,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                         Unit *axe = Unit::GetUnit(*m_creature, axes[i]);
                         if(axe)
                         {
-                            float threat = 1000000;
-                            if(axe->getVictim())
+                            float threat = 1000000.0f;
+                            if(axe->getVictim() && m_creature->getThreatManager().getThreat(axe->getVictim()))
                             {
                                 threat = axe->getThreatManager().getThreat(axe->getVictim());
                                 axe->getThreatManager().modifyThreatPercent(axe->getVictim(), -100);

@@ -185,7 +185,8 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
         {
 
             DoCast(m_creature->getVictim(), SPELL_GOUGE);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
             Gouge_Timer = 17000+rand()%10000;
         }else Gouge_Timer -= diff;
 

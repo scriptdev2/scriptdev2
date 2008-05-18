@@ -28,17 +28,23 @@ EndScriptData */
 #define SPELL_BEAM_VILE         40860
 #define SPELL_BEAM_WICKED       40861
 #define SPELL_BEAM_SINFUL       40827
-#define SPELL_PRISMATIC_SHADOW  40880
-#define SPELL_PRISMATIC_FIRE    40882
-#define SPELL_PRISMATIC_NATURE  40883
-#define SPELL_PRISMATIC_ARCANE  40891
-#define SPELL_PRISMATIC_FROST   40896
-#define SPELL_PRISMATIC_HOLY    40897
 #define SPELL_ATTRACTION        40871
+#define SPELL_SILENCING_SHRIEK  40823
 #define SPELL_ENRAGE            23537
 #define SPELL_SABER_LASH        43267
 #define SPELL_SABER_LASH_IMM    43690
 #define SPELL_TELEPORT_VISUAL   40869
+#define SPELL_BERSERK           45078
+
+uint32 PrismaticAuras[]=
+{
+    40880, // Shadow
+    40882, // Fire
+    40883, // Nature
+    40891, // Arcane
+    40896, // Frost
+    40897, // Holy
+};
 
 //Speech'n'Sounds
 #define SAY_TAUNT1          "You play, you pay."
@@ -189,6 +195,14 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        {
+            Enraged = true;
+            DoCast(m_creature, SPELL_ENRAGE, true);
+            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }
+
         //Randomly cast one beam.
         if(BeamTimer < diff)
         {
@@ -211,33 +225,15 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                     DoCast(target, SPELL_BEAM_SINFUL);
                     break;
             }
-            BeamTimer = Enraged ? 10000 : 30000; // Cast it much faster if enraged
+            BeamTimer = 15000;
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds. 
         if(PrismaticShieldTimer < diff)
         {
-            switch(rand()%6)
-            {
-                case 0:
-                    DoCast(m_creature, SPELL_PRISMATIC_SHADOW);
-                    break;
-                case 1:
-                    DoCast(m_creature, SPELL_PRISMATIC_FIRE);
-                    break;
-                case 2:
-                    DoCast(m_creature, SPELL_PRISMATIC_NATURE);
-                    break;
-                case 3:
-                    DoCast(m_creature, SPELL_PRISMATIC_ARCANE);
-                    break;
-                case 4:
-                    DoCast(m_creature, SPELL_PRISMATIC_FROST);
-                    break;
-                case 5:
-                    DoCast(m_creature, SPELL_PRISMATIC_HOLY);
-                    break;
-            }
+            uint32 random = rand()%6;
+            if(PrismaticAuras[random])
+                DoCast(m_creature, PrismaticAuras[random]);
             PrismaticShieldTimer = 15000;
         }else PrismaticShieldTimer -= diff;
 
@@ -291,14 +287,13 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         }else FatalAttractionExplodeTimer -= diff;
 
         //Enrage
-        if(EnrageTimer < diff)
-        {
-            DoCast(m_creature, SPELL_ENRAGE);
-            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            Enraged = true;
-            EnrageTimer = 600000;
-        }else EnrageTimer -= diff;
+        if(!m_creature->HasAura(SPELL_BERSERK, 0))
+            if(EnrageTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            }else EnrageTimer -= diff;
 
         //Random taunts
         if(RandomYellTimer < diff)

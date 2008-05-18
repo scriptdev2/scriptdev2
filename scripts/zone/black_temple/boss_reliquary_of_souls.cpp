@@ -124,9 +124,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         ReliquaryGUID = 0;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
@@ -202,7 +200,9 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         m_creature->GetMotionMaster()->Clear(false);
     }
 
-    void Aggro(Unit *who) { }
+    void Aggro(Unit* who) { }
+
+    void AttackStart(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -223,6 +223,9 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
+                    m_creature->AddThreat(who, 1.0f);
+
+                    InCombat = true;
                 }
             }
         }
@@ -291,7 +294,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
                 Creature* EssenceSuffering = NULL;
-                EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
                 if(EssenceSuffering)
                 {
@@ -393,7 +396,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 {
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
                     Creature* EssenceDesire = NULL;
-                    EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
                     if(EssenceDesire)
                     {
@@ -497,7 +500,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 {
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
                     Creature* EssenceAnger = NULL;
-                    EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 45000);
+                    EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
 
                     if(EssenceAnger)
                     {
@@ -591,7 +594,6 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-
         Reset();
         DoCast(who, AURA_OF_SUFFERING, true);
         DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);

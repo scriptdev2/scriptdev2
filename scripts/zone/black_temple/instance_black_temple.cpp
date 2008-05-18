@@ -24,7 +24,7 @@ EndScriptData */
 #include "def_black_temple.h"
 #include "GameObject.h"
 
-#define ENCOUNTERS     8
+#define ENCOUNTERS     9
 
 /* Black Temple encounters:
 0 - High Warlord Naj'entus event
@@ -54,6 +54,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 IllidanStormrage;
 
     uint64 NajentusSpine;
+    uint64 IllidanGate;
+    uint64 IllidanDoor[2];
 
     uint32 Encounters[ENCOUNTERS];
 
@@ -70,7 +72,10 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         VerasDarkshadow = 0;
         IllidanStormrage = 0;
         
-        NajentusSpine = 0;
+        NajentusSpine  = 0;
+        IllidanGate    = 0;
+        IllidanDoor[0] = 0;
+        IllidanDoor[1] = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
@@ -96,7 +101,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
                 Akama = creature->GetGUID();
                 break;
 
-            case 23890:
+            case 23089:
                 Akama_Shade = creature->GetGUID();
                 break;
 
@@ -137,6 +142,18 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case 185584:
                 NajentusSpine = go->GetGUID();
                 break;
+
+            case 185905: // Gate leading to Temple Summit
+                IllidanGate = go->GetGUID();
+                break;
+
+            case 186261: // Right door at Temple Summit
+                IllidanDoor[0] = go->GetGUID();
+                break;
+
+            case 186262: // Left door at Temple Summit
+                IllidanDoor[1] = go->GetGUID();
+                break;
         }
     }
 
@@ -176,6 +193,15 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
              case DATA_NAJENTUS_SPINE:
                  return NajentusSpine;
+                 
+             case DATA_GAMEOBJECT_ILLIDAN_GATE:
+                 return IllidanGate;
+
+             case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:
+                 return IllidanDoor[0];
+
+             case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:
+                 return IllidanDoor[1];
         }
 
         return 0;

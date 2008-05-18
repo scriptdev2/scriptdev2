@@ -24,8 +24,6 @@ EndScriptData */
 #include "def_black_temple.h"
 #include "GameObject.h"
 #include "TargetedMovementGenerator.h"
-#include "Map.h"
-#include "WorldPacket.h"
 
 //Aggro
 #define SAY_AGGRO       "You will die, in the name of Lady Vashj!"
@@ -64,13 +62,13 @@ EndScriptData */
 #define SPELL_CRASHINGWAVE             40100
 #define SPELL_NEEDLE_SPINE             39835
 #define SPELL_NEEDLE_AOE               39968
-#define SPELL_ENRAGE                   8747 // TODO: Find proper enrage spell.
 #define SPELL_TIDAL_BURST              39878
 #define SPELL_TIDAL_SHIELD             39872 // Not going to use this since Hurl Spine doesn't dispel it.
 #define SPELL_IMPALING_SPINE           39837
 #define SPELL_CREATE_NAJENTUS_SPINE    39956
 #define SPELL_HURL_SPINE               39948
 #define SPELL_SHIELD_VISUAL            37136
+#define SPELL_BERSERK                  45078
 
 #define DISPLAYID_SPINE         7362
 
@@ -83,16 +81,9 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
     
     uint64 SpineVictimGUID;
 
-    void Reset()
-    {
-        SpineVictimGUID = 0;
-    }
+    void Reset() {  SpineVictimGUID = 0; }
 
-    void SetSpineVictimGUID(uint64 guid)
-    {
-        if(guid)
-            SpineVictimGUID = guid;
-    }
+    void SetSpineVictimGUID(uint64 guid){ SpineVictimGUID = guid; }
 
     void JustDied(Unit *killer)
     {
@@ -114,9 +105,10 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who) {}
-
-    void UpdateAI(const uint32 diff) { }
+    void Aggro(Unit* who) {}
+    void AttackStart(Unit* who) {}
+    void MoveInLineOfSight(Unit* who) {}
+    void UpdateAI(const uint32 diff) {}
 };
 
 struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
@@ -134,7 +126,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     uint32 SpecialYellTimer;
     uint32 TidalShieldTimer;
     uint32 ImpalingSpineTimer;
-    uint32 ImpalingSpineGOTimer;
     uint32 CheckTimer; // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
     uint32 DispelShieldTimer; // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
 
@@ -153,7 +144,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         SpecialYellTimer = 45000 + (rand()%76)*1000;
         TidalShieldTimer = 60000;
         ImpalingSpineTimer = 45000;
-        ImpalingSpineGOTimer = ImpalingSpineTimer + 5000; // TODO: Set this by distance
         CheckTimer = 2000;
         DispelShieldTimer = 30000;
 
@@ -256,18 +246,25 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         Spine->SetFloatValue(GAMEOBJECT_POS_Y, y);
         Spine->SetFloatValue(GAMEOBJECT_POS_Z, z);
         Spine->SetUInt32Value(GAMEOBJECT_DISPLAYID, DISPLAYID_SPINE);
+
+        Spine->SendUpdateObjectToAllExcept(NULL);
     }
 
-    void RemoveImpalingSpine()
+    bool RemoveImpalingSpine(uint64 guid)
     {
-        if(!IsShielded) return;
+        if(!IsShielded || guid == SpineTargetGUID) return false;
 
         if(SpineTargetGUID)
         {
             Unit* target = Unit::GetUnit((*m_creature), SpineTargetGUID);
             if(target && target->HasAura(SPELL_IMPALING_SPINE, 0))
+            {
                 target->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
+                return true;
+            }
         }
+
+        return false;
     }
 
     void UpdateAI(const uint32 diff)
@@ -311,14 +308,13 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             CrashingWaveTimer = 28500;
         }else CrashingWaveTimer -= diff;
 
-        // Enrage
-        if(EnrageTimer < diff)
-        {
-            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            DoCast(m_creature, SPELL_ENRAGE);
-            EnrageTimer = 480000;
-        }else EnrageTimer -= diff;
+        if(!m_creature->HasAura(SPELL_BERSERK, 0))
+            if(EnrageTimer < diff)
+            {
+                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+                DoCast(m_creature, SPELL_BERSERK);
+            }else EnrageTimer -= diff;
 
         // Needle
         if(NeedleSpineTimer < diff)
@@ -358,7 +354,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 SpineTargetGUID = target->GetGUID();
                 SummonImpalingSpine(target);
                 ImpalingSpineTimer = 45000;
-                ImpalingSpineGOTimer = 1000; // TODO: Set this by distance to player instead.
             
                 switch(rand()%2)
                 {
@@ -373,19 +368,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 }
             }
         }else ImpalingSpineTimer -= diff;
-
-        /*
-        if(ImpalingSpineGOTimer < diff)
-        {
-            if(SpineTargetGUID)
-            {
-                Unit* target = Unit::GetUnit((*m_creature), SpineTargetGUID);
-                if(target && target->isAlive())
-                    SummonImpalingSpine(target);
-            }
-            ImpalingSpineTimer = 45000;
-            ImpalingSpineGOTimer = ImpalingSpineTimer + 1000;
-        }else ImpalingSpineGOTimer -= diff;*/
 
         if(TidalShieldTimer < diff)
         {
@@ -415,7 +397,8 @@ bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
             Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), NajentusGUID));
             if(Najentus)
             {
-                ((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine();
+                if(((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine(player->GetGUID()))
+                    _GO->SendObjectDeSpawnAnim(player->GetGUID());
             }else error_log("ERROR: Na'entus Spine GameObject unable to find Naj'entus");
         }else error_log("ERROR: Invalid GUID acquired for Naj'entus by Naj'entus Spine GameObject");
     }

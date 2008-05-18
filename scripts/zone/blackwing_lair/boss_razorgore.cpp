@@ -103,7 +103,8 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
             //12 seconds until we should cast this agian
             Conflagration_Timer = 12000;

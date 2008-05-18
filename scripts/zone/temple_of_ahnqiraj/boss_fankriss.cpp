@@ -132,13 +132,15 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (target && target->GetTypeId() == TYPEID_PLAYER) 
             {
+                DoCast(target, SPELL_ROOT);
+                if(m_creature->getThreatManager().getThreat(target))
+                    m_creature->getThreatManager().modifyThreatPercent(target, -100);
+                    
 
                     switch(rand()%3)
                     {
                         case 0:  
-                        DoCast(target, SPELL_ROOT);
                         DoTeleportPlayer(target, -8106.0142,1289.2900,-74.419533,5.112);
-                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -149,9 +151,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                             break;
                         case 1:
-                        DoCast(target, SPELL_ROOT);
                         DoTeleportPlayer(target, -7990.135354,1155.1907,-78.849319,2.608);
-                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -162,9 +162,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                             break;
                         case 2:
-                        DoCast(target, SPELL_ROOT);
                         DoTeleportPlayer(target,-8159.7753,1127.9064,-76.868660,0.675);
-                        m_creature->getThreatManager().modifyThreatPercent(target,-100);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()+3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);

@@ -111,7 +111,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(), SPELL_HEX);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
             //12-20 seconds until we should cast this agian
             Hex_Timer = 12000 + rand()%8000;
@@ -143,7 +144,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             {
             
             DoTeleportPlayer(target, -11583.7783,-1249.4278,77.5471,4.745);
-            m_creature->getThreatManager().modifyThreatPercent(target,-100);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(target,-100);
 
             Skeletons = m_creature->SummonCreature(14826, target->GetPositionX()+2, target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
             Skeletons->AI()->AttackStart(target); 

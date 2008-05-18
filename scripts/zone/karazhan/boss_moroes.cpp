@@ -343,7 +343,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         if(Gouge_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_GOUGE);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
             Gouge_Timer = 40000;
         }else Gouge_Timer -= diff;
 

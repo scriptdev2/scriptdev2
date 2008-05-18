@@ -28,8 +28,9 @@ EndScriptData */
 #define SPELL_INCINERATE                40239
 #define SPELL_CRUSHING_SHADOWS          40243
 #define SPELL_SHADOWBOLT                40185          
-#define SPELL_PASSIVE_SHADOWFORM        41913
+#define SPELL_PASSIVE_SHADOWFORM        40326
 #define SPELL_SHADOW_OF_DEATH           40251
+#define SPELL_BERSERK                   45078
 
 #define SPELL_ATROPHY                   40327 // Shadowy Constructs use this when they get within melee range of a player
 
@@ -85,7 +86,9 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         TeronGUID = 0;
     }
 
-    void Aggro(Unit *who) { return; }
+    void Aggro(Unit *who) { }
+    void AttackStart(Unit* who) { }
+    void MoveInLineOfSight(Unit* who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -108,8 +111,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         if(!InCombat)
             return;
 
-        if(!m_creature->isInCombat()) m_creature->SetInCombat();
-
         if(ShadowBoltTimer < diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SHADOWBOLT);
@@ -117,11 +118,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         }else ShadowBoltTimer -= diff;
     }
 
-    void SetTeronGUID(uint64 guid)
-    {
-        if(guid)
-            TeronGUID = guid;
-    }
+    void SetTeronGUID(uint64 guid){ TeronGUID = guid; }
 };
 
 //This is used to sort the players by distance for Constructs to see who to cast Atrophy on
@@ -158,9 +155,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         CheckTeronTimer = 5000;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) { }
     
     void MoveInLineOfSight(Unit *who)
     {
@@ -251,7 +246,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     uint64 GhostGUID; // Player that gets killed by Shadow of Death and gets turned into a ghost
 
     bool Intro;
-    bool HasEnraged;
 
     void Reset()
     {
@@ -265,7 +259,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         SummonShadowsTimer = 60000;
         RandomYellTimer = 50000;
 
-        HasEnraged = false;
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Start off unattackable so that the intro is done properly
     
@@ -274,9 +267,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         Intro = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -299,6 +290,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 if(pInstance)
                     pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
 
+                m_creature->GetMotionMaster()->Clear(false);
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoYell(SAY_INTRO,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_INTRO);
@@ -333,16 +325,16 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
-    float CalculateRandomLocation(float Loc)
+    float CalculateRandomLocation(float Loc, uint32 radius)
     {
         float coord = Loc;
         switch(rand()%2)
         {
             case 0:
-                coord += rand()%10;
+                coord += rand()%radius;
                 break;
             case 1:
-                coord -= rand()%10;
+                coord -= rand()%radius;
                 break;
         }
         return coord;
@@ -383,8 +375,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             for(uint8 i = 0; i < 4; i++)
             {
                 Creature* Construct = NULL;
-                float X = CalculateRandomLocation(Ghost->GetPositionX());
-                float Y = CalculateRandomLocation(Ghost->GetPositionY());
+                float X = CalculateRandomLocation(Ghost->GetPositionX(), 10);
+                float Y = CalculateRandomLocation(Ghost->GetPositionY(), 10);
                 Construct = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, Y, Ghost->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 if(Construct)
                 {
@@ -412,7 +404,11 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 if(AggroTargetGUID)
                 {
                     Unit* pUnit = Unit::GetUnit((*m_creature), AggroTargetGUID);
-                    if(pUnit) AttackStart(pUnit);
+                    if(pUnit)
+                    {
+                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pUnit));
+                        AttackStart(pUnit);
+                    }
                 }else EnterEvadeMode();
 
             }else AggroTimer -= diff;
@@ -428,7 +424,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             for(uint8 i = 0; i < 2; i++)
             {
                 Creature* Shadow = NULL;
-                float X = CalculateRandomLocation(m_creature->GetPositionX());
+                float X = CalculateRandomLocation(m_creature->GetPositionX(), 10);
                 Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 if(Shadow)
                     Shadow->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
@@ -441,8 +437,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
             {
-                float X = CalculateRandomLocation(target->GetPositionX());
-                float Y = CalculateRandomLocation(target->GetPositionY());
+                float X = CalculateRandomLocation(target->GetPositionX(), 20);
+                float Y = CalculateRandomLocation(target->GetPositionY(), 20);
                 Creature* DoomBlossom = NULL;
                 DoomBlossom = m_creature->SummonCreature(23123, X, Y, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
                 if(DoomBlossom)
@@ -515,15 +511,13 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             RandomYellTimer = 50000 + rand()%51 * 1000;
         }else RandomYellTimer -= diff;
 
-        if(!HasEnraged)
-        {
+        if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(EnrageTimer < diff)
             {
+                DoCast(m_creature, SPELL_BERSERK);
                 DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-                HasEnraged = true;
             }else EnrageTimer -= diff;
-        }
 
         DoMeleeAttackIfReady();
     }

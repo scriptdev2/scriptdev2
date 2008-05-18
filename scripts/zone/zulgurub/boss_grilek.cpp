@@ -61,9 +61,10 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
 
                 target = SelectUnit(SELECT_TARGET_RANDOM,1);
 
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
+                if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
                 if (target) 
-                DoStartAttackAndMovement(target);
+                    DoStartAttackAndMovement(target);
 
                 //25-35 seconds until we should cast this agian
                 Avartar_Timer = 25000 + rand()%10000;

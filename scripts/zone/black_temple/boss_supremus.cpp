@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Supremus
-SD%Complete: 98
-SDComment: Missing Enrage
+SD%Complete: 95
+SDComment: Need to implement doors.
 SDCategory: Black Temple
 EndScriptData */
 
@@ -31,6 +31,7 @@ EndScriptData */
 #define SPELL_VOLCANIC_FIREBALL     40118
 #define SPELL_VOLCANIC_GEYSER       42055
 #define SPELL_MOLTEN_PUNCH          40126
+#define SPELL_BERSERK               45078
 
 struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 {
@@ -43,60 +44,86 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     bool TargetLocked;
     uint32 CheckTimer;
 
-    void Reset();
-    void Aggro(Unit *who);
-    void MoveInLineOfSight(Unit *who);
-    void UpdateAI(const uint32 diff);
-    void SetSupremusGUID(uint64 GUID);
-    void StalkTarget(Unit* target);
-};
-
-void molten_flameAI::Reset()
-{
-    SupremusGUID = 0;
-    TargetLocked = false;
-    CheckTimer = 1000;
-}
-
-void molten_flameAI::Aggro(Unit *who)
-{
-}
-
-void molten_flameAI::MoveInLineOfSight(Unit *who)
-{
-    if(TargetLocked)
-        return; // stop it from aggroing players who move in LOS if we have a target.
-    if(who && (who != m_creature) && (m_creature->IsWithinDistInMap(who, 10)))
+    void Reset()
     {
-        m_creature->AddThreat(who, 50000000.0f);
-        (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
+        SupremusGUID = 0;
+        TargetLocked = false;
+
+        CheckTimer = 1000;
+    }
+
+    void Aggro(Unit *who) {}
+    void AttackStart(Unit* who) {}
+    void MoveInLineOfSight(Unit *who)
+    {
+        if(TargetLocked)
+            return; // stop it from aggroing players who move in LOS if we have a target.
+        if(who && (who != m_creature) && (m_creature->IsWithinDistInMap(who, 10)))
+        {
+            m_creature->AddThreat(who, 50000000.0f);
+            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
+            m_creature->CastSpell(m_creature, 40029, true);
+            TargetLocked = true;
+        }
+    }
+
+    void SetSupremusGUID(uint64 GUID) { SupremusGUID = GUID; }
+
+    void StalkTarget(Unit* target)
+    {
+        if(!target) return;
+
+        m_creature->AddThreat(target, 50000000.0f);
+        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
         m_creature->CastSpell(m_creature, 40029, true);
         TargetLocked = true;
     }
-}
 
-void molten_flameAI::SetSupremusGUID(uint64 guid)
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget())
+            return;
+
+        if(m_creature->getVictim() && m_creature->isAlive())
+        {
+            if(CheckTimer < diff)
+            {
+                if(SupremusGUID)
+                {
+                    Unit* Supremus = NULL;
+                    Supremus = Unit::GetUnit((*m_creature), SupremusGUID);
+                    if(Supremus && (!Supremus->isAlive()))
+                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                }
+                CheckTimer = 2000;
+            }else CheckTimer -= diff;
+        }
+    }
+};
+
+struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 {
-    if(guid)
-        SupremusGUID = guid;
-}
+    npc_volcanoAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-void molten_flameAI::StalkTarget(Unit *target)
-{
-    if(!target) return;
+    uint32 CheckTimer;
+    uint64 SupremusGUID;
+    uint32 FireballTimer;
+    uint32 GeyserTimer;
 
-    m_creature->AddThreat(target, 50000000.0f);
-    (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
-    m_creature->CastSpell(m_creature, 40029, true);
-    TargetLocked = true;
-}
+    void Reset()
+    {
+        CheckTimer = 1000;
+        SupremusGUID = 0;
+        FireballTimer = 500;
+        GeyserTimer = 0;
+    }
 
-void molten_flameAI::UpdateAI(const uint32 diff)
-{
-    if (!m_creature->SelectHostilTarget())
-        return;
+    void Aggro(Unit *who) {}
+    void AttackStart(Unit* who) {}
+    void MoveInLineOfSight(Unit* who) {}
+    void SetSupremusGUID(uint64 guid) { SupremusGUID = guid; }
 
-    if(m_creature->getVictim() && m_creature->isAlive())
+    void UpdateAI(const uint32 diff)
     {
         if(CheckTimer < diff)
         {
@@ -109,59 +136,14 @@ void molten_flameAI::UpdateAI(const uint32 diff)
             }
             CheckTimer = 2000;
         }else CheckTimer -= diff;
-    }
-}
 
-struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
-{
-    npc_volcanoAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    uint32 CheckTimer;
-    uint64 SupremusGUID;
-    uint32 FireballTimer;
-    uint32 GeyserTimer;
-
-    void Reset();
-    void Aggro(Unit *who) {return;}
-    void MoveInLineOfSight(Unit *who) {return;}
-    void UpdateAI(const uint32 diff);
-    void SetSupremusGUID(uint64 guid);
-};
-
-void npc_volcanoAI::Reset()
-{
-    CheckTimer = 1000;
-    SupremusGUID = 0;
-    FireballTimer = 500;
-    GeyserTimer = 0;
-}
-
-void npc_volcanoAI::SetSupremusGUID(uint64 guid)
-{
-    if(guid)
-        SupremusGUID = guid;
-}
-
-void npc_volcanoAI::UpdateAI(const uint32 diff)
-{
-    if(CheckTimer < diff)
-    {
-        if(SupremusGUID)
+        if(GeyserTimer < diff)
         {
-            Unit* Supremus = NULL;
-            Supremus = Unit::GetUnit((*m_creature), SupremusGUID);
-            if(Supremus && (!Supremus->isAlive()))
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), 0, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }
-        CheckTimer = 2000;
-    }else CheckTimer -= diff;
-
-    if(GeyserTimer < diff)
-    {
-        DoCast(m_creature, SPELL_VOLCANIC_GEYSER);
-        GeyserTimer = 18000;
-    }else GeyserTimer -= diff;
-}
+            DoCast(m_creature, SPELL_VOLCANIC_GEYSER);
+            GeyserTimer = 18000;
+        }else GeyserTimer -= diff;
+    }
+};
 
 struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 {
@@ -178,6 +160,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     uint32 PhaseSwitchTimer;
     uint32 SummonVolcanoTimer;
     uint32 HurtfulStrikeTimer;
+    uint32 BerserkTimer;
 
     bool Phase1;
 
@@ -191,6 +174,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         SwitchTargetTimer = 90000;
         PhaseSwitchTimer = 60000;
         SummonVolcanoTimer = 5000;
+        BerserkTimer = 900000; // 15 minute enrage
 
         Phase1 = true;
     }
@@ -264,12 +248,22 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
+        if(!m_creature->HasAura(SPELL_BERSERK, 0))
+            if(BerserkTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+            }else BerserkTimer -= diff;
+
         if(Phase1)
         {
             if(HurtfulStrikeTimer < diff)
             {
-                DoCast(CalculateHurtfulStrikeTarget(), SPELL_HURTFUL_STRIKE);
-                HurtfulStrikeTimer = 20000 +rand()%31*1000;
+                Unit* target = CalculateHurtfulStrikeTarget();
+                if(target)
+                {
+                    DoCast(target, SPELL_HURTFUL_STRIKE);
+                    HurtfulStrikeTimer = 20000 +rand()%31*1000;
+                }
             }else HurtfulStrikeTimer -= diff;
 
             if(SummonFlameTimer < diff)
@@ -282,6 +276,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                     MoltenFlame = SummonCreature(23095, target);
                     if(MoltenFlame)
                     {
+                        MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Invisible model
                         ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
                         ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
                         SummonFlameTimer = 20000;
@@ -308,20 +303,21 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             if(SummonVolcanoTimer < diff)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                if(!target) return;
-
-                Creature* Volcano = NULL;
-                Volcano = SummonCreature(23085, target);
-
-                if(Volcano)
+                if(target)
                 {
-                    DoCast(target, SPELL_VOLCANIC_ERUPTION);
-                    ((npc_volcanoAI*)Volcano->AI())->SetSupremusGUID(m_creature->GetGUID());
+                    Creature* Volcano = NULL;
+                    Volcano = SummonCreature(23085, target);
+
+                    if(Volcano)
+                    {
+                        DoCast(target, SPELL_VOLCANIC_ERUPTION);
+                        ((npc_volcanoAI*)Volcano->AI())->SetSupremusGUID(m_creature->GetGUID());
+                    }
+                    
+                    DoTextEmote("roars and the ground begins to crack open!", NULL);
+                    
+                    SummonVolcanoTimer = 10000;
                 }
-                
-                DoTextEmote("roars and the ground begins to crack open!", NULL);
-                
-                SummonVolcanoTimer = 10000;
             }else SummonVolcanoTimer -= diff;
         }
 

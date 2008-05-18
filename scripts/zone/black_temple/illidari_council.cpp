@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Illidari_Council
-SD%Complete: 85
-SDComment: Workarounds for Spellstealing Dampen Magic and Circle of Healing. Need more details on the enrage.
+SD%Complete: 90
+SDComment: Workarounds for Spellstealing Dampen Magic and Circle of Healing.
 SDCategory: Black Temple
 EndScriptData */
 
@@ -53,6 +53,9 @@ EndScriptData */
 #define SPELL_ENVENOM              41487
 #define SPELL_VANISH               41479
 
+#define SPELL_BERSERK              45078
+
+//Speech'n'Sounds
 //Speech'n'Sounds
 #define SAY_GATH_AGGRO            "I have better things to do!"
 #define SOUND_GATH_AGGRO          11422
@@ -66,8 +69,6 @@ EndScriptData */
 #define SOUND_GATH_SPECIAL1       11426
 #define SAY_GATH_SPECIAL2         "You are mine!"
 #define SOUND_GATH_SPECIAL2       11427
-#define SAY_GATH_ENRAGE           "Enough games!"
-#define SOUND_GATH_ENRAGE         11428
 
 #define SAY_MALA_AGGRO            "Flee, or die!"
 #define SOUND_MALA_AGGRO          11482
@@ -81,8 +82,6 @@ EndScriptData */
 #define SOUND_MALA_SPECIAL1       11486
 #define SAY_MALA_SPECIAL2         "I'm full of surprises!"
 #define SOUND_MALA_SPECIAL2       11487
-#define SAY_MALA_ENRAGE           "For Quel'Thalas! For the Sunwell!"
-#define SOUND_MALA_ENRAGE         11488
 
 #define SAY_ZERE_AGGRO            "Common... such a crude language. Bandal!"
 #define SOUND_ZERE_AGGRO          11440
@@ -96,8 +95,6 @@ EndScriptData */
 #define SOUND_ZERE_SPECIAL1       11444
 #define SAY_ZERE_SPECIAL2         "Sha'amoor ara mashal?"
 #define SOUND_ZERE_SPECIAL2       11445
-#define SAY_ZERE_ENRAGE           "Sha'amoor sine menoor!"
-#define SOUND_ZERE_ENRAGE         11446
 
 #define SAY_VERA_AGGRO            "You wish to test me?"
 #define SOUND_VERA_AGGRO          11524
@@ -111,19 +108,28 @@ EndScriptData */
 #define SOUND_VERA_SPECIAL1       11528
 #define SAY_VERA_SPECIAL2         "Anar'alah belore!"
 #define SOUND_VERA_SPECIAL2       11529
-#define SAY_VERA_ENRAGE           "You wish to kill me? Hahaha, you first!"
-#define SOUND_VERA_ENRAGE         11530
+
+struct Yells
+{
+    char* text;
+    uint32 soundId, timer;
+};
+
+static Yells CouncilEnrage[]=
+{
+    {"For Quel'Thalas! For the Sunwell!", 11488}, // Malande
+    {"Sha'amoor sine menoor!", 11446}, // Zerevor
+    {"Enough games!", 11428}, // Gathios
+    {"You wish to kill me? Hahaha, you first!", 11530}, // Veras
+};
 
 struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
 {
     boss_illidari_councilAI(Creature *c) : ScriptedAI(c) 
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-
-        Council[0] = 0;
-        Council[1] = 0;
-        Council[2] = 0;
-        Council[3] = 0;
+        for(uint8 i = 0; i < 4; ++i)
+            Council[i] = 0;
 
         Reset();
     }
@@ -133,10 +139,14 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     uint64 Council[4];
 
     uint32 CheckTimer;
+    uint32 EnrageTimer;
+
+    bool EventBegun;
 
     void Reset()
     {     
         CheckTimer = 2000;
+        EnrageTimer = 900000; // 15 minutes
 
         Creature* Member;
         for(uint8 i = 0; i < 3; i++)
@@ -151,8 +161,11 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 }
             }
         }
+
         if(pInstance)
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, NOT_STARTED);
+
+        EventBegun = false;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -164,10 +177,29 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
        StartEvent(who);
     }
 
+    void AttackStart(Unit* who) {}
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        {
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            {
+                if(who->HasStealthAura())
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                   if(!EventBegun)
+                       StartEvent(who);
+            }
+        }
+    }
+
     void StartEvent(Unit *target)
     {
         if(!pInstance) return;
 
+        outstring_log("IC Event Begun - target: %s", target->GetName());
         if(target && target->isAlive())
         {
             Council[0] = pInstance->GetData64(DATA_GATHIOSTHESHATTERER);
@@ -187,11 +219,14 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             }
 
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, IN_PROGRESS);
+
+            EventBegun = true;
         }
     }
+
     void UpdateAI(const uint32 diff)
     {
-        if(!InCombat) return;
+        if(!EventBegun) return;
 
         if(CheckTimer < diff)
         {
@@ -210,31 +245,32 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 Veras = ((Creature*)Unit::GetUnit((*m_creature), Council[3]));
             
             // Don't allow players to pull one of the council's members, aggro another members' target if none present
-            if(Gathios && Gathios->isAlive() && !Gathios->SelectHostilTarget())
+            if(Gathios && Gathios->isAlive() && !Gathios->SelectHostilTarget() && Veras)
                 Gathios->AddThreat(Veras->getVictim(), 1.0f);
 
-            if(Zerevor && Zerevor->isAlive() && !Zerevor->SelectHostilTarget())
+            if(Zerevor && Zerevor->isAlive() && !Zerevor->SelectHostilTarget() && Gathios)
                 Zerevor->AddThreat(Gathios->getVictim(), 1.0f);
 
-            if(Malande && Malande->isAlive() && !Malande->SelectHostilTarget())
+            if(Malande && Malande->isAlive() && !Malande->SelectHostilTarget() && Zerevor)
                 Malande->AddThreat(Zerevor->getVictim(), 1.0f);
 
-            if(Veras && Veras->isAlive() && !Veras->SelectHostilTarget())
+            if(Veras && Veras->isAlive() && !Veras->SelectHostilTarget() && Malande)
                 Veras->AddThreat(Malande->getVictim(), 1.0f);
 
             uint8 EvadeCheck = 0;
             uint8 DeathCheck = 0;
-            for(uint8 i = 0; i < 4; i++)
+            for(uint8 i = 0; i < 4; ++i)
             {
                 if(Council[i])
                 {
                     Creature* Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i]));
                     if(Member)
                     {
+                        // This is the evade/death check. 
                         if(Member->isAlive() && !Member->SelectHostilTarget())
-                            EvadeCheck++;
+                            EvadeCheck++; //If all members evade, we reset so that players can properly reset the event
                         else if(!Member->isAlive())
-                            DeathCheck++;
+                            DeathCheck++; // If all members are dead, set instance data and suicide.
                     }
                     else DeathCheck++;
                 }
@@ -252,6 +288,26 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
             }
             CheckTimer = 2000;
         }else CheckTimer -= diff;
+
+        if(EnrageTimer < diff)
+        {
+            for(uint8 i = 0; i < 4; ++i)
+            {
+                Unit* Member = Unit::GetUnit((*m_creature), Council[i]);
+                if(Member && Member->isAlive() && Member->SelectHostilTarget() && !Member->HasAura(SPELL_BERSERK, 0))
+                {
+                    Member->CastSpell(Member, SPELL_BERSERK, true);
+                    char* text = CouncilEnrage[i].text;
+                    uint32 sound = CouncilEnrage[i].soundId;
+                    if(text)
+                        Member->MonsterYell(text, LANG_UNIVERSAL, 0);
+                    if(sound)
+                        DoPlaySoundToSet(Member, sound);
+                    EnrageTimer = 4000;
+                    return; // Return so it exits the loop
+                }
+            }
+        }else EnrageTimer -= diff;
     }
 };
 
@@ -891,7 +947,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
             }
             AcquiredGUIDs = true;
         }
-
+ 
         if(!HasVanished)
         {
             if(DeadlyPoisonTimer < diff)
@@ -902,27 +958,26 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
             if(AppearEnvenomTimer < diff) // Cast Envenom. This is cast 4 seconds after Vanish is over
             {
-                (*m_creature).GetMotionMaster()->Clear(false);
                 DoCast(m_creature->getVictim(), SPELL_ENVENOM);
                 AppearEnvenomTimer = 90000;
             }else AppearEnvenomTimer -= diff;
 
             if(VanishTimer < diff) // Disappear and stop attacking, but follow a random unit
             {
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                (*m_creature).GetMotionMaster()->Clear();
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if(target)
-                {
+                {        
+                    VanishTimer = 30000;
+                    AppearEnvenomTimer= 28000;
+                    HasVanished = true;
+                    m_creature->SetVisibility(VISIBILITY_OFF);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     DoResetThreat();
                     m_creature->AddThreat(target, 500000.0f); // Chase a unit. Check before DoMeleeAttackIfReady prevents from attacking
-                   (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
                 }
-                VanishTimer = 30000;
-                AppearEnvenomTimer= 28000;
-                HasVanished = true;
-                m_creature->SetVisibility(VISIBILITY_OFF);
             }else VanishTimer -= diff;
+
             DoMeleeAttackIfReady();
         }
         else
@@ -930,7 +985,6 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
             if(VanishTimer < diff) // Become attackable and poison current target
             {
                 DoCast(m_creature->getVictim(), SPELL_DEADLY_POISON);
-                (*m_creature).GetMotionMaster()->Clear();
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoResetThreat();
                 m_creature->AddThreat(m_creature->getVictim(), 3000.0f); // Make Veras attack his target for a while, he will cast Envenom 4 seconds after.
@@ -942,8 +996,8 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
             if(AppearEnvenomTimer < diff) // Appear 2 seconds before becoming attackable (Shifting out of vanish)
             {
-                (*m_creature).GetMotionMaster()->Clear();
-                (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
                 m_creature->SetVisibility(VISIBILITY_ON);
                 AppearEnvenomTimer = 6000;
             }else AppearEnvenomTimer -= diff;
