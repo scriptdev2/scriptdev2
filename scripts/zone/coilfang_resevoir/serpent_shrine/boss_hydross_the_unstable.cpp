@@ -114,7 +114,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         Invisible_Timer = 2000;
         MarkOfHydross_Count = 0;
         MarkOfCorruption_Count = 0;
-        EnrageTimer = 360000;
+        EnrageTimer = 600000;
 
         // despawn invisible trigger
         DespawnCreatureIfExists(InvisibleGUID);
@@ -286,6 +286,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     DoYell(SAY_SWITCH_TO_CLEAN, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_CLEAN);
+                    DoResetThreat();
 
                     // spawn 4 adds
                     Creature *Adds;
@@ -359,6 +360,7 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     DoYell(SAY_SWITCH_TO_CORRUPT, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_CORRUPT);
+                    DoResetThreat();
 
                     // spawn 4 adds
                     Creature *Adds;
