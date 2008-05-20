@@ -62,24 +62,19 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 {
     npc_bartlebyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    Unit* PlayerHolder;
+    uint64 PlayerGUID;
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->setFaction(11);
-        //DoGoHome();
         m_creature->setEmoteState(7);
 
-        PlayerHolder = NULL;
+        PlayerGUID = 0;
     }
 
     void JustDied(Unit *who)
     {
         m_creature->setFaction(11);
-        PlayerHolder = NULL;
     }
 
     void DamageTaken(Unit *done_by, uint32 & damage)
@@ -89,38 +84,17 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
             //Take 0 damage
             damage = 0;
 
-            if (done_by->GetTypeId() == TYPEID_PLAYER)
+            if (done_by->GetTypeId() == TYPEID_PLAYER && done_by->GetGUID() == PlayerGUID)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->AreaExploredOrEventHappens(1640);
+                ((Player*)done_by)->KilledMonster(m_creature->GetEntry(), m_creature->GetGUID());
             }
-            //m_creature->CombatStop();
+            m_creature->CombatStop();
             EnterEvadeMode();
         }
-        AttackedBy(done_by);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady())
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
-    }
+    void Aggro(Unit *who) {}
 };
 
 bool QuestAccept_npc_bartleby(Player *player, Creature *_Creature, Quest const *_Quest)
@@ -128,7 +102,7 @@ bool QuestAccept_npc_bartleby(Player *player, Creature *_Creature, Quest const *
     if(_Quest->GetQuestId() == 1640)
     {
         _Creature->setFaction(168);
-        ((npc_bartlebyAI*)_Creature->AI())->PlayerHolder = (Player*)player;
+        ((npc_bartlebyAI*)_Creature->AI())->PlayerGUID = player->GetGUID();
         ((npc_bartlebyAI*)_Creature->AI())->AttackStart(player);
     }
     return true;
@@ -149,11 +123,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->setFaction(11);
-        //DoGoHome();
         m_creature->setEmoteState(7);
     }
 
@@ -167,7 +137,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->AreaExploredOrEventHappens(1447);
+                ((Player*)done_by)->KilledMonster(m_creature->GetEntry(), m_creature->GetGUID());
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
@@ -175,28 +145,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
         AttackedBy(done_by);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-
-        //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if( m_creature->isAttackReady())
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
-    }
+    void Aggro(Unit *who) {}
 };
 
 bool QuestAccept_npc_dashel_stonefist(Player *player, Creature *_Creature, Quest const *_Quest)

@@ -160,6 +160,9 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        if(StartBanishing)
+            return;
+
         if(ShadeGUID)
         {
             Unit* Shade = Unit::GetUnit((*m_creature), ShadeGUID);
@@ -169,7 +172,9 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
                 {
                     m_creature->GetMotionMaster()->Clear(false);
                     m_creature->GetMotionMaster()->Idle();
-                    DoCast(m_creature, SPELL_SHADE_SOUL_CHANNEL, true);
+                    DoCast(m_creature, SPELL_SHADE_SOUL_CHANNEL);
+
+                    StartBanishing = true;
                 }
             }
         }else
@@ -185,6 +190,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 {
     boss_shade_of_akamaAI(Creature* c) : ScriptedAI(c)
     {
+        AkamaGUID = 0;
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
@@ -200,7 +206,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
     uint32 ReduceHealthTimer;
     uint32 SummonTimer;
     uint32 ResetTimer;
-    uint32 CheckTimer;
 
     bool SummonedChannelers;
     bool IsBanished;
@@ -215,16 +220,14 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 Creature* Channeler = NULL;
                 Channeler = ((Creature*)Unit::GetUnit((*m_creature), ChannelerGUID[i]));
                 if(Channeler && Channeler->isAlive())
-                {
-                    Channeler->SetVisibility(VISIBILITY_OFF);
                     Channeler->setDeathState(JUST_DIED);
-                }
                 ChannelerGUID[i] = 0;
             }
             SummonedChannelers = false;
         }
 
-        AkamaGUID = 0;
+        if(!AkamaGUID && pInstance)
+            AkamaGUID = pInstance->GetData64(DATA_AKAMA_SHADE);
 
         SorcererCount = 0;
         DeathCount = 0;
@@ -232,7 +235,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         SummonTimer = 10000;
         ReduceHealthTimer = 0;
         ResetTimer = 60000;
-        CheckTimer = 15000;
 
         IsBanished = true;
         HasKilledAkama = false;
@@ -248,7 +250,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
     }
 
-    void Aggro(Unit* who){}
+    void Aggro(Unit* who) { DoZoneInCombat(); }
 
     void AttackStart(Unit* who)
     {
@@ -257,14 +259,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         
         if(who->isTargetableForAttack() && who != m_creature)
             DoStartAttackAndMovement(who);
-    }
-
-    void MoveInLineOfSight(Unit* who)
-    {
-        if(IsBanished)
-            return;
-
-        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void SummonCreature()
@@ -338,7 +332,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                 {
                     Channeler->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     Channeler->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Channeler->CastSpell(Channeler, SPELL_SHADE_SOUL_CHANNEL, true);
+                    Channeler->CastSpell(Channeler, SPELL_SHADE_SOUL_CHANNEL, false);
                     ((mob_ashtongue_channelerAI*)Channeler->AI())->ShadeGUID = m_creature->GetGUID();
                     ChannelerGUID[i] = Channeler->GetGUID();
                 }
@@ -357,18 +351,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             //    m_creature->GetMotionMaster()->Idle();
             //}
 
-            if(CheckTimer < diff)
-            {
-                std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
-                uint32 DeathCount = 0;
-                for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
-                {
-                    if(!(*itr)->isAlive())
-                        DeathCount++;
-                }
-                if(DeathCount == PlayerList.size())
-                    EnterEvadeMode();
-            }else CheckTimer -= diff;
+            // Akama is set in the threatlist so when we reset, we make sure that he is not included in our check
+            if(m_creature->getThreatManager().getThreatList().size() < 2)
+                EnterEvadeMode();
 
             if(SummonTimer < diff)
             {

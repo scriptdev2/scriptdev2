@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             uint64 KalecGUID = pInstance->GetData64(DATA_KALEC_HUMAN);
             Unit *Kalec = Unit::GetUnit(*m_creature,KalecGUID);
             if(Kalec && Kalec->isAlive()){
-                ((Creature*)Kalec)->Yell(KALEC_SAY_FRIENDLY_ON_NEAR_LOSING,LANG_UNIVERSAL,NULL);
+                ((Creature*)Kalec)->Yell(KALEC_SAY_FRIENDLY_ON_NEAR_LOSING,LANG_UNIVERSAL,0);
                 DoPlaySoundToSet(Kalec,KALEC_SOUND_FRIENDLY_ON_NEAR_LOSING);
             }
             hasYelled = true;

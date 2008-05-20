@@ -350,10 +350,11 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                         Portals[i][2] = PORTAL_Z;
                     }
                 }
-                if ((abs(Portals[2][0]-Portals[1][0])<7)&&(abs(Portals[2][1]-Portals[1][1]))<7)
+                if((abs(Portals[2][0] - Portals[1][0]) < 7)
+                    && (abs(Portals[2][1] - Portals[1][1]) < 7))
                 {
                     int i=1;
-                    if (abs(CENTER_X+26.0f-Portals[2][0])<7)
+                    if(abs(CENTER_X + 26.0f - Portals[2][0]) < 7)
                         i = -1;
                     Portals[2][0] = Portals[2][0]+7*i;
                     Portals[2][1] = Portal_Y(Portals[2][0], LARGE_PORTAL_RADIUS);
