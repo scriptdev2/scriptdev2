@@ -1746,7 +1746,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 if(ShadowBlastTimer < diff)
                 {
-                    DoCast(m_creature, SPELL_DEMON_FORM, true);
                     DoCast(m_creature->getVictim(), SPELL_SHADOW_BLAST);
                     ShadowBlastTimer = 4000;
                     GlobalTimer += 1500;
@@ -1755,7 +1754,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(FlameBurstTimer < diff)
                 {
                     DoCast(m_creature, SPELL_FLAME_BURST);
-                    FlameBurstTimer = 22000;
+                    FlameBurstTimer = 15000;
                     GlobalTimer += 1000;
                 }else FlameBurstTimer -= diff;
             }else GlobalTimer -= diff;

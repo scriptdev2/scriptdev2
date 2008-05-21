@@ -29,7 +29,7 @@ EndScriptData */
 #define SPELL_GROUND_SLAM         33525 // AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
 #define SPELL_SHATTER_EFFECT      33671
 #define SPELL_HURTFUL_STRIKE      33813 
-#define SPELL_REVERBERATION       6297 //AoE Silence
+#define SPELL_REVERBERATION       36297 //AoE Silence
 #define SPELL_GRONN_LORDS_GRASP   33572 //Already handled in GroundSlam
 #define SPELL_STONED              33652 //-- Spell is self cast
 #define SPELL_SHATTER             33654
