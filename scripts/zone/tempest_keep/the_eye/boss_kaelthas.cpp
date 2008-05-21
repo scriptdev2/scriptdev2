@@ -1026,7 +1026,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                                     //Using packet workaround
                                     WorldPacket data(12);
-                                    data.SetOpcode(SMSG_FLY_MODE_START);
+                                    data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
                                     data.append(pUnit->GetPackGUID());
                                     data << uint32(0);
                                     pUnit->SendMessageToSet(&data, true);
@@ -1054,7 +1054,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 {
                                     //Using packet workaround
                                     WorldPacket data(12);
-                                    data.SetOpcode(SMSG_FLY_MODE_STOP);
+                                    data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
                                     data.append(pUnit->GetPackGUID());
                                     data << uint32(0);
                                     pUnit->SendMessageToSet(&data, true);
