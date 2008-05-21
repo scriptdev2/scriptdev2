@@ -140,7 +140,7 @@ bool ItemUse_item_yehkinyas_bramble(Player *player, Item* _Item, SpellCastTarget
             return false;                                   // all ok
         }
     }
-    WorldPacket data(SMSG_CAST_RESULT, (4+2));              // prepare packet error message
+    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
     data << uint32(10699);                                  // itemId
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Bad target
