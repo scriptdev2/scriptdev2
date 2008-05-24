@@ -121,7 +121,7 @@ enum YellId
     BEGIN        = 1, // Used when the event is begun
     INCOMING     = 2, // Used to warn the raid that another wave phase is coming
     RALLY        = 3, // Used to rally the raid and warn that the next wave has been summoned
-    FAIL         = 4, // Used when raid has failed (unsure where to place)
+    FAILURE      = 4, // Used when raid has failed (unsure where to place)
     SUCCESS      = 5, // Used when the raid has sucessfully defeated a wave phase
     DEATH        = 6, // Used on death
 };
@@ -134,7 +134,7 @@ static Yells JainaQuotes[]=
     {BEGIN, "Hold them back as long as possible", 11050},
     {RALLY, "Don't give up! We must prevail!", 11006},
     {RALLY, "We must hold strong!", 11051},
-    {FAIL, "We are lost. Fall back!", 11009},
+    {FAILURE, "We are lost. Fall back!", 11009},
     {SUCCESS, "We have won valuable time. Now we must pull back!", 11011},
     {DEATH, "I did... my best.", 11010},
 };
@@ -148,7 +148,7 @@ static Yells ThrallQuotes[]=
     {RALLY, "Hold them back! Do not falter!", 11030},
     {RALLY, "Victory or death!", 11059},
     {RALLY, "Do not give an inch of ground!", 11060},
-    {FAIL, "It is over. Withdraw! We have failed.", 11033},
+    {FAILURE, "It is over. Withdraw! We have failed.", 11033},
     {SUCCESS, "We have played our part and done well. It is up to the others now.", 11035},
     {DEATH, "Uraaa...", 11034},
 };

@@ -745,13 +745,12 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
         else
         {
-            done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            if(done_by && (done_by->GetTypeId() == TYPEID_PLAYER) && done_by->isAlive())
+                done_by->DealDamage(done_by, damage/2, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void KilledUnit(Unit *victim)
     {

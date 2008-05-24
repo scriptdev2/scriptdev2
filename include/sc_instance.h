@@ -9,7 +9,7 @@ enum EncounterState
 {
     NOT_STARTED   = 0,
     IN_PROGRESS   = 1,
-    FAILED        = 2,
+    FAIL          = 2,
     DONE          = 3
 };
 

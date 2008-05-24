@@ -1746,16 +1746,20 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 if(ShadowBlastTimer < diff)
                 {
-                    DoCast(m_creature->getVictim(), SPELL_SHADOW_BLAST);
-                    ShadowBlastTimer = 4000;
-                    GlobalTimer += 1500;
+                    Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+                    if(target && target->isAlive())
+                    {
+                        m_creature->SetUInt64Value(UNIT_FIELD_TARGET, target->GetGUID());
+                        DoCast(target, SPELL_SHADOW_BLAST);
+                        ShadowBlastTimer = 4000;
+                        GlobalTimer += 1500;
+                    }
                 }else ShadowBlastTimer -= diff;
 
                 if(FlameBurstTimer < diff)
                 {
                     DoCast(m_creature, SPELL_FLAME_BURST);
                     FlameBurstTimer = 15000;
-                    GlobalTimer += 1000;
                 }else FlameBurstTimer -= diff;
             }else GlobalTimer -= diff;
         }
