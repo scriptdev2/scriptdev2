@@ -226,17 +226,6 @@ static Locations EyeBlast[]=
     {709.865, 325.654, 353.322}
 };
 
-static Locations CageTrap[]=
-{
-    {670, 252, 353},
-    {699, 265, 353},
-    {675, 283, 355},
-    {655, 301, 355},
-    {681, 339, 353},
-    {656, 341, 353},
-    {705, 326, 354}
-};
-
 static Locations AkamaWP[]=
 {
     {770.01, 304.50, 312.29}, // Bottom of the first stairs, at the doors
@@ -1781,13 +1770,11 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(MaievGUID)
                 {
                     Unit* Maiev = Unit::GetUnit((*m_creature), MaievGUID);
-                    if(!Maiev) return;
-
-                    uint32 random = rand()%7; // Get the location of a random cage trap
-                    float X = CageTrap[random].x;
-                    float Y = CageTrap[random].y;
-                    float Z = CageTrap[random].z;
-                    Maiev->SendMoveToPacket(X, Y, Z, 0, 0);
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    if(!Maiev || !target || (target->GetTypeId() != TYPEID_PLAYER))
+                        return;
+                    float X, Y, Z;
+                    target->GetPosition(X, Y, Z);
                     Maiev->Relocate(X, Y, Z, Maiev->GetOrientation());
                     Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true); // Make it look like she 'teleported'
                     Maiev->CastSpell(Maiev, SPELL_CAGE_TRAP_SUMMON, false); // summon the trap!
