@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER && done_by->GetGUID() == PlayerGUID)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->KilledMonster(m_creature->GetEntry(), m_creature->GetGUID());
+                ((Player*)done_by)->AreaExploredOrEventHappens(1640);
             }
             m_creature->CombatStop();
             EnterEvadeMode();
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->KilledMonster(m_creature->GetEntry(), m_creature->GetGUID());
+                ((Player*)done_by)->AreaExploredOrEventHappens(1447));
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
