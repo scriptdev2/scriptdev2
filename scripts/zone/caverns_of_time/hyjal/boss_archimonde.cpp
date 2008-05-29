@@ -110,6 +110,9 @@ struct mob_ancient_wispAI : public ScriptedAI
     {
         ArchimondeGUID = 0;
         CheckTimer = 1000;
+
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
     }
 
     void Aggro(Unit* who) {}
@@ -192,6 +195,23 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
             TargetGUID = who->GetGUID();
             RefreshTimer = 2000;
         }
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        bool suicide = true;
+        if(ArchimondeGUID)
+        {
+            Creature* Archimonde = ((Creature*)Unit::GetUnit((*m_creature), ArchimondeGUID));
+            if(Archimonde && Archimonde->isAlive())
+            {
+                suicide = false;
+                Archimonde->AI()->KilledUnit(victim);
+            }
+        }
+
+        if(suicide)
+            m_creature->setDeathState(JUST_DIED);
     }
 
     void UpdateAI(const uint32 diff)

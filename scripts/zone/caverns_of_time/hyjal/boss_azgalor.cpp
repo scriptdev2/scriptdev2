@@ -45,7 +45,7 @@ EndScriptData */
 #define SOUND_DEATH         11002
 
 #define SOUND_ARCHIMONDE   10986
-#define SAY_ARCHIMONDE     "All of your efforts have been in vaid, for the draining of the World Tree has already begun! Soon, the heart of your world shall beat no more!"
+#define SAY_ARCHIMONDE     "All of your efforts have been in vain, for the draining of the World Tree has already begun! Soon, the heart of your world shall beat no more!"
 
 struct MANGOS_DLL_DECL boss_azgalorAI : public ScriptedAI
 {
@@ -57,20 +57,14 @@ struct MANGOS_DLL_DECL boss_azgalorAI : public ScriptedAI
 
     ScriptedInstance* pInstance;
 
-    uint64 DoomGUID;
-
     uint32 DoomTimer;
-    uint32 DoomSummonTimer;
     uint32 HowlTimer;
     uint32 RainOfFireTimer;
     uint32 CleaveTimer;
 
     void Reset()
     {
-        DoomGUID = 0;
-
         DoomTimer = 50000;
-        DoomSummonTimer = DoomTimer + 20000;
         HowlTimer = 30000;
         RainOfFireTimer = 20000;
         CleaveTimer = 10000;
@@ -128,10 +122,9 @@ struct MANGOS_DLL_DECL boss_azgalorAI : public ScriptedAI
         if(DoomTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(target)
+            if(target && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCast(target, SPELL_DOOM);
-                DoomGUID = target->GetGUID();
                 switch(rand()%2)
                 {
                    case 0:
@@ -144,24 +137,8 @@ struct MANGOS_DLL_DECL boss_azgalorAI : public ScriptedAI
                        break;
                 }
                 DoomTimer = 60000;
-                DoomSummonTimer = 20000;
             }
         }else DoomTimer -= diff;
-
-        if(DoomSummonTimer < diff)
-        {
-            DoomSummonTimer = DoomTimer + 20000;
-            if(DoomGUID)
-            {
-                Unit* target = Unit::GetUnit((*m_creature), DoomGUID);
-                if(target)
-                {
-                    m_creature->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    target->CastSpell(target, SPELL_DOOM_SUMMON, true);
-                    DoomGUID = 0;
-                }
-            }
-        }else DoomSummonTimer -= diff;
 
         if(HowlTimer < diff)
         {

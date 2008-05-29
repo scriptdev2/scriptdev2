@@ -399,13 +399,13 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
             GameObject* Gate = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
             if(Gate && !Gate->GetUInt32Value(GAMEOBJECT_STATE))
-                Gate->SetUInt32Value(GAMEOBJECT_STATE, 0); // close door if already open (when raid wipes or something)
+                Gate->SetUInt32Value(GAMEOBJECT_STATE, 1); // close door if already open (when raid wipes or something)
             
             for(uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L + 1; ++i)
             {
                 GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
                 if(Door)
-                    Door->UseDoorOrButton();
+                    Door->SetUInt32Value(GAMEOBJECT_STATE, 0);
             }
         }
 
@@ -473,7 +473,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     void AddWaypoint(uint32 id, float x, float y, float z)
     {
         WayPoints AkamaWP(id, x, y, z);
-        debug_log("Waypoint added to Akama - %d %f %f %f", id, x, y, z);
         WayPointList.push_back(AkamaWP);
     }
     
@@ -491,7 +490,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
         if(!pInstance)
             return;
 
-        debug_log("Akama - Door event initiated by player %s", player->GetName());
+        outstring_log("SD2: Akama - Door event initiated by player %s", player->GetName());
         PlayerGUID = player->GetGUID();
 
         GameObject* Gate = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
@@ -541,7 +540,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                     {
                         GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
                         if(Door)
-                            Door->UseDoorOrButton();
+                            Door->SetUInt32Value(GAMEOBJECT_STATE, 0);
                     }
                 }
             case 7:
@@ -662,11 +661,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             if(WalkTimer <= diff)
             {
                 if(WayPoint == WayPointList.end())
-                {
-                    debug_log("Akama - current WP == WayPoint End");
                     return;
-                }
-                debug_log("Next WP: %d %f %f %f", WayPoint->id, WayPoint->x, WayPoint->y, WayPoint->z);
                 m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WayPoint->id, WayPoint->x, WayPoint->y,WayPoint->z));
                 WalkTimer = 0;
             }else WalkTimer -= diff;
@@ -693,7 +688,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                             }
                             GameObject* Gate = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
                             if(Gate)
-                                Gate->UseDoorOrButton();
+                                Gate->SetUInt32Value(GAMEOBJECT_STATE, 0);
                             ChannelCount++;
                             ChannelTimer = 5000;
                         }
@@ -1009,7 +1004,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
             if(Door)
-                Door->UseDoorOrButton();
+                Door->SetUInt32Value(GAMEOBJECT_STATE, 0); // Open Doors
         }
 
     }
@@ -1286,14 +1281,14 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 else
                 {
                     DoTextEmote("is unable to summon a Flame of Azzinoth.", NULL);
-                    error_log("ERROR: Illidan Stormrage AI: Unable to summon Flame of Azzinoth (entry: 22997), please check your database");
+                    error_log("SD2 ERROR: Illidan Stormrage AI: Unable to summon Flame of Azzinoth (entry: 22997), please check your database");
                     EnterEvadeMode();
                 }
             }
             else
             {
                 DoTextEmote("is unable to summon a Blade of Azzinoth.", NULL);
-                error_log("ERROR: Illidan Stormrage AI: Unable to summon Blade of Azzinoth (entry: 22996), please check your database");
+                error_log("SD2 ERROR: Illidan Stormrage AI: Unable to summon Blade of Azzinoth (entry: 22996), please check your database");
             }
         }
         DoResetThreat(); // And now reset our threatlist
@@ -1313,7 +1308,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             m_creature->GetMotionMaster()->Clear(false); // Stop moving, it's rude to walk and talk!
             m_creature->GetMotionMaster()->Idle();
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Just in case someone is unaffected by Shadow Prison
-            DoCast(m_creature, SPELL_SHADOW_PRISON);
+            DoCast(m_creature, SPELL_SHADOW_PRISON, true);
             TalkCount = 10;
             IsTalking = true; // We are now talking/
             Maiev->SetVisibility(VISIBILITY_OFF); // Leave her invisible until she has to talk
@@ -1324,7 +1319,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             EnterEvadeMode();
             DoTextEmote("is unable to summon Maiev Shadowsong and enter Phase 4. Resetting Encounter.", NULL);
-            error_log("ERROR: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
+            error_log("SD2 ERROR: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
         }
     }
 
@@ -1346,7 +1341,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 float distance = 10.0f;
                 float dx = m_creature->GetPositionX() + (distance*cos(m_creature->GetOrientation()));
                 float dy = m_creature->GetPositionY() + (distance*sin(m_creature->GetOrientation()));
-                outstring_log("Maiev relocation to X - %f Y - %f. Illidan - %f, %f", dx, dy, m_creature->GetPositionX(), m_creature->GetPositionY());
                 Maiev->Relocate(dx,dy,Maiev->GetPositionZ());
                 Maiev->SendMoveToPacket(dx,dy,Maiev->GetPositionZ(), 0, 0);
                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
@@ -1435,7 +1429,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             }
                         }
                         IsTalking = false;
-                        m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // Now we kill ourself
+                        if(m_creature->getVictim())
+                            m_creature->getVictim()->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE,SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                        else
+                            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // Now we kill ourself
                         break;
                 }
                 Talk(TalkCount); // This function does most of the talking
@@ -1477,13 +1474,13 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             EnterPhase2();
 
         /** Signal to summon Maiev **/
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && (!MaievGUID) &&
-            (Phase != PHASE_DEMON) && (Phase != PHASE_DEMON_SEQUENCE))
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && !MaievGUID &&
+            ((Phase != PHASE_DEMON) || (Phase != PHASE_DEMON_SEQUENCE)))
             SummonMaiev();
 
         /** Time for the death speech **/
         if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 1) && (!IsTalking) &&
-                (Phase != PHASE_DEMON) && (Phase != PHASE_DEMON_SEQUENCE))
+                ((Phase != PHASE_DEMON) || (Phase != PHASE_DEMON_SEQUENCE)))
             InitializeDeath();
 
         /***** Spells for Phase 1, 3 and 5 (Normal Form) ******/
@@ -1513,8 +1510,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(FlameCrashTimer < diff)
                 {
                     // It spawns multiple flames sometimes. Therefore, we'll do this manually.
-                    DoCast(m_creature->getVictim(), SPELL_FLAME_CRASH);
-                    //DoSpawnCreature(FLAME_CRASH, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
+                    //DoCast(m_creature->getVictim(), SPELL_FLAME_CRASH);
+                    DoSpawnCreature(FLAME_CRASH, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 40000);
                     FlameCrashTimer = 35000;
                     GlobalTimer += 2000;
                 }else FlameCrashTimer -= diff;
@@ -1525,7 +1522,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     target = SelectUnit(SELECT_TARGET_RANDOM,1);
                     if(target && target->isAlive() && !target->HasAura(SPELL_PARASITIC_SHADOWFIEND, 0))
                     {
-                        Cast(target, SPELL_PARASITIC_SHADOWFIEND); // The Parasitic Shadowfiend debuff doesn't summon 2 Shadowfiends on the target when it fades
+                        Cast(target, SPELL_PARASITIC_SHADOWFIEND);
                         ParasiticShadowFiendTimer = 40000;
                     }
                 }else ParasiticShadowFiendTimer -= diff;
@@ -1534,7 +1531,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     DoCast(m_creature->getVictim(), SPELL_DRAW_SOUL);
                     DrawSoulTimer = 55000;
-                    GlobalTimer = 3000;
+                    GlobalTimer += 3000;
                 }else DrawSoulTimer -= diff;
             }else GlobalTimer -= diff;
 
@@ -1582,7 +1579,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                     FlameGUID[i] = 0;
                             }
                         }
-                        CheckFlamesTimer = 1000;
+                        CheckFlamesTimer = 500;
                     }else CheckFlamesTimer -= diff;
 
                 // If both flames are dead/non-existant, kill glaives and change to phase 3.
@@ -1637,7 +1634,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 if(FireballTimer < diff)
                 {
                     Cast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
-                    FireballTimer = 7000;
+                    FireballTimer = 5000;
                     GlobalTimer += 1500;
                 }else FireballTimer -= diff;
 
@@ -1645,7 +1642,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     m_creature->InterruptNonMeleeSpells(false);
                     DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DARK_BARRAGE);
-                    DarkBarrageTimer = 41000;
+                    DarkBarrageTimer = 35000;
                     GlobalTimer += 9000;
                 }else DarkBarrageTimer -= diff;
 
@@ -1672,8 +1669,9 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
            
             if(TransformTimer < diff)
             {
-                // Prevent Illidan from morphing if less than 32%, as this may cause issues with the phase transition
-                if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 32) && !MaievGUID)
+                uint32 CurHealth = m_creature->GetHealth()*100 / m_creature->GetMaxHealth();
+                // Prevent Illidan from morphing if less than 32% or 5%, as this may cause issues with the phase transition or death speech
+                if((CurHealth < 32 && !MaievGUID) || (CurHealth < 5))
                     return;
 
                 Phase = PHASE_DEMON_SEQUENCE; // Transform sequence
@@ -1743,6 +1741,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         ShadowBlastTimer = 4000;
                         GlobalTimer += 1500;
                     }
+                    if(!m_creature->HasAura(SPELL_DEMON_FORM, 0))
+                        DoCast(m_creature, SPELL_DEMON_FORM, true);
                 }else ShadowBlastTimer -= diff;
 
                 if(FlameBurstTimer < diff)
@@ -1798,7 +1798,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
 void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 {
-    debug_log("Akama - Illidan Introduction started. Illidan event properly begun.");
+    debug_log("SD2: Akama - Illidan Introduction started. Illidan event properly begun.");
     if(pInstance)
     {
         IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
