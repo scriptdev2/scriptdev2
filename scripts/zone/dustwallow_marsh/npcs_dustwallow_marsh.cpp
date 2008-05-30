@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
+#include "PointMovementGenerator.h"
 
 /*######
 ## npc_deserter_agitator
@@ -217,9 +218,7 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
     void PatientSaved(Unit* soldier, Player* player);
     void UpdateAI(const uint32 diff);
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who){}
 };
 
 /*#####
@@ -234,7 +233,6 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
 
     void Reset()
     {
-
         Doctorguid = 0;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);     //no select
@@ -260,9 +258,7 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who){}
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
@@ -284,17 +280,18 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             DoSay(SAY_DOC1,LANG_UNIVERSAL,NULL);
 
             uint32 mobId = m_creature->GetEntry();
+            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
             switch (mobId)
             {
                 case 12923:
                 case 12924:
                 case 12925:
-                    m_creature->SendMoveToPacket(H_RUNTOX, H_RUNTOY, H_RUNTOZ, true, 2000 );
+                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, H_RUNTOX, H_RUNTOY, H_RUNTOZ));
                     break;
                 case 12936:
                 case 12937:
                 case 12938:
-                    m_creature->SendMoveToPacket(A_RUNTOX, A_RUNTOY, A_RUNTOZ, true, 2000 );
+                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, A_RUNTOX, A_RUNTOY, A_RUNTOZ));
                     break;
             }
         }
@@ -353,7 +350,7 @@ void npc_doctorAI::PatientDied(Unit* soldier)
     if(player && ((player->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE) || (player->GetQuestStatus(6622) == QUEST_STATUS_INCOMPLETE)))
     {
         PatientDiedCount++;
-        if (PatientDiedCount >= 5 && Event)
+        if (PatientDiedCount > 5 && Event)
         {
             if(player->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE)
                 player->FailQuest(6624);
