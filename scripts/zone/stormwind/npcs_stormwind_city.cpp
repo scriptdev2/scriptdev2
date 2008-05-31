@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 & damage)
     { 
-        if ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
+        if(damage > m_creature->GetHealth() || ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15))
         {
             //Take 0 damage
             damage = 0;
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER && done_by->GetGUID() == PlayerGUID)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->AreaExploredOrEventHappens(1640);
+                ((Player*)done_by)->CompleteQuest(1640);
             }
             m_creature->CombatStop();
             EnterEvadeMode();
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 & damage)
     { 
-        if ((m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
+        if((damage > m_creature->GetHealth()) || (m_creature->GetHealth() - damage)*100 / m_creature->GetMaxHealth() < 15)
         {
             //Take 0 damage
             damage = 0;
@@ -137,7 +137,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->AreaExploredOrEventHappens(1447);
+                ((Player*)done_by)->CompleteQuest(1447);
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
