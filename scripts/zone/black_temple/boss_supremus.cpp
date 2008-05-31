@@ -270,6 +270,10 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                
+                if(!target) // someone is trying to solo, set target as current victim.
+                    target = m_creature->getVictim();
+
                 if(target)
                 {
                     Creature* MoltenFlame = NULL;
@@ -303,6 +307,10 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             if(SummonVolcanoTimer < diff)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
+                if(!target)
+                    target = m_creature->getVictim();
+
                 if(target)
                 {
                     Creature* Volcano = NULL;

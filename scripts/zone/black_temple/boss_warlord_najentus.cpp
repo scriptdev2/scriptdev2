@@ -322,6 +322,9 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             for(uint8 i = 0; i < 3; i++)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                if(!target)
+                    target = m_creature->getVictim();
+
                 DoCast(target, SPELL_NEEDLE_AOE, true);
                 DoCast(target, SPELL_NEEDLE_SPINE);
             }
@@ -347,6 +350,9 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if(ImpalingSpineTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if(!target)
+                target = m_creature->getVictim();
+
             if(target && (target->GetTypeId() == TYPEID_PLAYER))
             {
                 DoCast(target, SPELL_IMPALING_SPINE);

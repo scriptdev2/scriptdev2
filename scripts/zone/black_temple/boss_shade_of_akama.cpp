@@ -82,6 +82,7 @@ static Location AkamaWP[]=
 #define SPELL_LIGHTNING_BOLT        42024
 #define SPELL_AKAMA_SOUL_CHANNEL    40447
 #define SPELL_AKAMA_SOUL_RETRIEVE   40902
+#define AKAMA_SOUL_EXPEL            40855
 
 // Channeler entry
 #define CREATURE_CHANNELER          23421

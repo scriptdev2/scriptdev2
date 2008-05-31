@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
             CheckTeronTimer = 5000;
         }else CheckTeronTimer -= diff;
 
-        if(!InCombat)
+        if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
             return;
 
         if(ShadowBoltTimer < diff)
@@ -176,12 +176,13 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         }
     }
 
+/* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
-    {/* COmment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
+    {
         if(done_by->GetGUID() != GhostGUID) 
-            damage = 0; // Only the ghost can deal damage. */
+            damage = 0; // Only the ghost can deal damage. 
     }
-
+*/
     void CheckPlayers()
     {
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
@@ -377,13 +378,18 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 Creature* Construct = NULL;
                 float X = CalculateRandomLocation(Ghost->GetPositionX(), 10);
                 float Y = CalculateRandomLocation(Ghost->GetPositionY(), 10);
-                Construct = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, Y, Ghost->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                Construct = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, Y, Ghost->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
                 if(Construct)
                 {
                     Construct->CastSpell(Construct, SPELL_PASSIVE_SHADOWFORM, true);
                     SetThreatList(Construct); // Use same function as Doom Blossom to set Threat List.
                     ((mob_shadowy_constructAI*)Construct->AI())->GhostGUID = GhostGUID;
-                    Construct->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*SelectUnit(SELECT_TARGET_RANDOM, 1)));
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    if(!target) // someone's trying to solo.
+                        target = m_creature->getVictim();
+
+                    if(target)
+                        Construct->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
                 }
             }
         }
@@ -425,9 +431,16 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             {
                 Creature* Shadow = NULL;
                 float X = CalculateRandomLocation(m_creature->GetPositionX(), 10);
-                Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                Shadow = m_creature->SummonCreature(CREATURE_SHADOWY_CONSTRUCT, X, m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 0);
                 if(Shadow)
-                    Shadow->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
+                {
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    if(!target)
+                        target = m_creature->getVictim();
+
+                    if(target)
+                        Shadow->AI()->AttackStart(target);
+                }
             }
             SummonShadowsTimer = 60000;
         }else SummonShadowsTimer -= diff;
@@ -457,6 +470,10 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if(IncinerateTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            
+            if(!target)
+                target = m_creature->getVictim();
+
             if(target)
             {
                 switch(rand()%2)
@@ -487,6 +504,10 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         /*if(ShadowOfDeathTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            
+            if(!target)
+               target = m_creature->getVictim();
+
             if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCast(target, SPELL_SHADOW_OF_DEATH);

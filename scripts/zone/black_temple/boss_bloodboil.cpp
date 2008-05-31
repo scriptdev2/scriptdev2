@@ -278,6 +278,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0); 
                 if(target && target->isAlive())
                 {                          
+                    Phase1 = false;
+
                     TargetThreat = m_creature->getThreatManager().getThreat(target);
                     TargetGUID = target->GetGUID();
                     target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
@@ -308,7 +310,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     }
 
                     AcidGeyserTimer = 1000;
-                    Phase1 = false;
                     PhaseChangeTimer = 30000;
                 }
             }

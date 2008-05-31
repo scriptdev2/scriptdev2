@@ -2186,7 +2186,7 @@ struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
             if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
             {
                 if(!m_creature->getVictim()->HasAura(SPELL_PARASITIC_SHADOWFIEND, 0))
-                    DoCast(m_creature->getVictim(), SPELL_PARASITIC_SHADOWFIEND);
+                    DoCast(m_creature->getVictim(), SPELL_PARASITIC_SHADOWFIEND, true);
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
             }
