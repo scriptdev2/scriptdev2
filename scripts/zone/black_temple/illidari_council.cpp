@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        Reset();
+        DoZoneInCombat();
         DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
     }
@@ -544,7 +544,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        Reset();
+        DoZoneInCombat();
         AggroYellTimer = 9000;
     }
 
@@ -712,6 +712,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoZoneInCombat();
         AggroYellTimer = 5500;
     }
 
@@ -870,6 +871,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoZoneInCombat();
         AggroYellTimer = 3000;
     }
 

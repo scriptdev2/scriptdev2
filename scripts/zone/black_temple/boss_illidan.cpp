@@ -955,7 +955,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
     }
 
-    void Aggro(Unit *who) {}
+    void Aggro(Unit *who) { DoZoneInCombat(); }
 
     void AttackStart(Unit *who)
     {

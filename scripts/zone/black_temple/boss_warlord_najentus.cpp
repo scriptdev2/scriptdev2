@@ -207,6 +207,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+
+        DoZoneInCombat();
     }
 
     // This is a workaround since we cannot summon GameObjects at will.

@@ -181,6 +181,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoZoneInCombat();
+
         if(pInstance)
             pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
     }

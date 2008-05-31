@@ -121,6 +121,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoZoneInCombat();
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
         if(pInstance)

@@ -72,6 +72,8 @@ struct MANGOS_DLL_DECL boss_kazrogalAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_KAZROGALEVENT, IN_PROGRESS);
+
+        DoZoneInCombat();
     }
 
     void JustDied(Unit* killer)

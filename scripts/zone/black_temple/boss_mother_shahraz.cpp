@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
-        Reset();
+        DoZoneInCombat();
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }

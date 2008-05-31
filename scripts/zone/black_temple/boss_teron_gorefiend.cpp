@@ -415,6 +415,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pUnit));
                         AttackStart(pUnit);
                     }
+                    DoZoneInCombat();
                 }else EnterEvadeMode();
 
             }else AggroTimer -= diff;

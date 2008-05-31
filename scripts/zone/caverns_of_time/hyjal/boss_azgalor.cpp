@@ -80,6 +80,8 @@ struct MANGOS_DLL_DECL boss_azgalorAI : public ScriptedAI
 
         if(pInstance)
             pInstance->SetData(DATA_AZGALOREVENT, IN_PROGRESS);
+
+        DoZoneInCombat();
     }
 
     void JustDied(Unit* killer)

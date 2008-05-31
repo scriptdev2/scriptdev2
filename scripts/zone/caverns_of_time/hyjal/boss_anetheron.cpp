@@ -112,6 +112,8 @@ struct MANGOS_DLL_DECL boss_anetheronAI : public ScriptedAI
 
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)

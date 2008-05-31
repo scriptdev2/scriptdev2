@@ -610,7 +610,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        Reset();
+        DoZoneInCombat();
         DoCast(who, AURA_OF_SUFFERING, true);
         DoCast(m_creature, ESSENCE_OF_SUFFERING_PASSIVE, true);
     }
@@ -750,7 +750,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who) {}
+    void Aggro(Unit *who) { DoZoneInCombat(); }
 
     void KilledUnit(Unit *victim)
     {
@@ -863,7 +863,8 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoCast(m_creature->getVictim(), AURA_OF_ANGER);
+        DoZoneInCombat();
+        DoCast(m_creature->getVictim(), AURA_OF_ANGER, true);
     }
 
     void MoveInLineOfSight(Unit *who)
