@@ -35,7 +35,7 @@ EndScriptData */
 #define SOUND_DEATH              11376
 
 // High King Maulgar
-#define SPELL_ARCING_SMASH       38761
+#define SPELL_ARCING_SMASH       39144
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33239
 #define SPELL_ENRAGE             34970     
