@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             Evocating = true;
         }
 
-        if (Evocating && m_creature->GetPower(POWER_MANA) == m_creature->GetMaxPower(POWER_MANA))
+        if (Evocating && !m_creature->HasAura(SPELL_EVOCATION, 0))
             Evocating = false;
 
         if(!Enraged && !Evocating)
