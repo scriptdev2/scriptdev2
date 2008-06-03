@@ -830,7 +830,7 @@ void LoadDatabase()
                         break;
 
                     case ACTION_T_KILLED_MONSTER:
-                        if (temp.action[j].type != EVENT_T_DEATH)
+                        if (temp.event_type != EVENT_T_DEATH)
                             outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j);
                         break;
 

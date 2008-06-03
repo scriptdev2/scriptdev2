@@ -48,8 +48,8 @@
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Extract SVN revision"
-				CommandLine="cd ..\&#x0D;&#x0A;svn_revision.js"
+				Description=""
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
@@ -101,8 +101,8 @@
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Extract SVN revision"
-				CommandLine="cd ..\&#x0D;&#x0A;svn_revision.js"
+				Description=""
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
@@ -2122,6 +2122,32 @@
 		<File
 			RelativePath="..\ScriptMgr.h"
 			>
+		</File>
+		<File
+			RelativePath="..\svn_revision.h"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Extracting SVN Revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					AdditionalDependencies=".svn/entries"
+					Outputs="svn_revision.h"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Extracting SVN Revision"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					AdditionalDependencies=".svn/entries"
+					Outputs="svn_revision.h"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\system.cpp"

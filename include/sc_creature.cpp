@@ -496,7 +496,7 @@ public:
     MostHPMissingInRange(Unit const* obj, float range, uint32 hp) : i_obj(obj), i_range(range), i_hp(hp) {}
     bool operator()(Unit* u)
     {
-        if(u->isAlive() && u->GetTypeId() == TYPEID_UNIT && u->isInCombat() && !i_obj->IsHostileTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
+        if(u->isAlive() && u->isInCombat() && !i_obj->IsHostileTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
         {
             i_hp = u->GetMaxHealth() - u->GetHealth();
             return true;
@@ -521,13 +521,14 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
     MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
     MaNGOS::UnitLastSearcher<MostHPMissingInRange> searcher(pUnit, u_check);
 
-    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MostHPMissingInRange>, WorldTypeMapContainer > world_unit_searcher(searcher);
+    /*
+    typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
+    This means that if we only search grid then we cannot possibly return pets or players so this is safe
+    */
     TypeContainerVisitor<MaNGOS::UnitLastSearcher<MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
     CellLock<GridReadGuard> cell_lock(cell, p);
-    cell_lock->Visit(cell_lock, world_unit_searcher, *(m_creature->GetMap()));
     cell_lock->Visit(cell_lock, grid_unit_searcher, *(m_creature->GetMap()));
-
     return pUnit;
 }
 
