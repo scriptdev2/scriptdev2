@@ -108,10 +108,12 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     uint64 TargetGUID[3];
     uint32 BeamTimer;
-    uint32 BeamCounter;
+    uint32 BeamCount;
+    uint32 CurrentBeam;
     uint32 PrismaticShieldTimer;
     uint32 FatalAttractionTimer;
     uint32 FatalAttractionExplodeTimer;
+    uint32 ShriekTimer;
     uint32 RandomYellTimer;
     uint32 EnrageTimer;
     uint32 ExplosionCount;
@@ -126,11 +128,13 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         for(uint8 i = 0; i<3; i++)
             TargetGUID[i] = 0;
 
-        BeamTimer = 60000;
-        BeamCounter = 4;
+        BeamTimer = 60000; // Timers may be incorrect
+        BeamCount = 0;
+        CurrentBeam = 0; // 0 - Sinister, 1 - Vile, 2 - Wicked, 3 - Sinful
         PrismaticShieldTimer = 0;
         FatalAttractionTimer = 60000;
         FatalAttractionExplodeTimer = 70000;
+        ShriekTimer = 30000;
         RandomYellTimer = 70000 + rand()%41 * 1000;
         EnrageTimer = 600000;
         ExplosionCount = 0;
@@ -210,7 +214,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             if(!target || !target->isAlive())
                 return;
 
-            switch(rand()%4)
+            switch(CurrentBeam)
             {
                 case 0:
                     DoCast(target, SPELL_BEAM_SINISTER);
@@ -225,7 +229,13 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                     DoCast(target, SPELL_BEAM_SINFUL);
                     break;
             }
-            BeamTimer = 15000;
+            BeamCount++;
+            uint32 Beam = CurrentBeam;
+            if(BeamCount > 3)
+                while(CurrentBeam == Beam)
+                    CurrentBeam = rand()%3;
+
+            BeamTimer = 9000;
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds. 
@@ -285,6 +295,12 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 ExplosionCount = 0;
             }
         }else FatalAttractionExplodeTimer -= diff;
+
+        if(ShriekTimer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_SILENCING_SHRIEK);
+            ShriekTimer = 30000;
+        }else ShriekTimer -= diff;
 
         //Enrage
         if(!m_creature->HasAura(SPELL_BERSERK, 0))

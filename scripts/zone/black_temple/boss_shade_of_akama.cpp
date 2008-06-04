@@ -435,7 +435,10 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             if(HasKilledAkama)
             {
                 if(ResetTimer < diff)
+                {
+                    InCombat = false;
                     EnterEvadeMode(); // Reset a little while after killing Akama
+                }
                 else ResetTimer -= diff;
             }
 

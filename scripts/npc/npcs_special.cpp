@@ -386,12 +386,15 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* player, Location* Poi
             PatientSavedCount++;
             if(PatientSavedCount == 15)
             {
-                std::list<uint64>::iterator itr;
-                for(itr = Patients.begin(); itr != Patients.end(); ++itr)
+                if(!Patients.empty())
                 {
-                    Creature* Patient = ((Creature*)Unit::GetUnit((*m_creature), *itr));
-                    if(Patient)
-                        Patient->setDeathState(JUST_DIED); // Unsummon
+                    std::list<uint64>::iterator itr;
+                    for(itr = Patients.begin(); itr != Patients.end(); ++itr)
+                    {
+                        Creature* Patient = ((Creature*)Unit::GetUnit((*m_creature), *itr));
+                        if(Patient)
+                            Patient->setDeathState(JUST_DIED); // Unsummon
+                    }
                 }
 
                 if(player->GetQuestStatus(6624) == QUEST_STATUS_INCOMPLETE)
@@ -421,6 +424,10 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
         {
             Creature* Patient = NULL;
             Location* Point = NULL;
+
+            if(Coordinates.empty())
+                return;
+
             std::vector<Location*>::iterator itr = Coordinates.begin()+rand()%Coordinates.size();
             uint32 patientEntry = 0;
 

@@ -139,8 +139,7 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         SpawnLoc[i] = Base[random][i];
         AttackLoc[i] = AttackArea[Faction][i];
     }
-
-    Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
+    Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
     if(pCreature)
     {
         EnemyCount++; // Increment Enemy Count to be used in World States
@@ -166,6 +165,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     if(rand()%4 == 0) // 1 in 4 chance we give a rally yell. Not sure if the chance is Blizzlike.
         Talk(RALLY);
 
+    EnemyCount = 0;
     for(uint8 i = 0; i < 18; ++i)
     {
         if(wave[Count].Mob[i])
