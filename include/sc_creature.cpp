@@ -451,7 +451,14 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
 
     if (!pUnit->GetMap()->Instanceable())
     {
-        error_log("SD2: DoZoneInCombat call for map that isn't an instance (m_creature entry = %d)", m_creature->GetCreatureInfo()->Entry);
+        error_log("SD2: DoZoneInCombat call for map that isn't an instance (pUnit entry = %d)", pUnit->GetTypeId() == TYPEID_UNIT ? ((Creature*)pUnit)->GetCreatureInfo()->Entry : 0);
+        return;
+    }
+
+    if (!pUnit->CanHaveThreatList() || pUnit->getThreatManager().isThreatListEmpty())
+    {
+        error_log("SD2: DoZoneInCombat called for creature that either cannot have threat list or has empty threat list (pUnit entry = %d)", pUnit->GetTypeId() == TYPEID_UNIT ? ((Creature*)pUnit)->GetCreatureInfo()->Entry : 0);
+
         return;
     }
 
@@ -466,6 +473,13 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
 
 void ScriptedAI::DoResetThreat()
 {
+    if (!m_creature->CanHaveThreatList() || m_creature->getThreatManager().isThreatListEmpty())
+    {
+        error_log("SD2: DoResetThreat called for creature that either cannot have threat list or has empty threat list (m_creature entry = %d)", m_creature->GetCreatureInfo()->Entry);
+
+        return;
+    }
+
     std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
     std::list<HostilReference*>::iterator itr;
 
