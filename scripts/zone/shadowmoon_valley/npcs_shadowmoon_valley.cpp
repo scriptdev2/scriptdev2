@@ -258,6 +258,7 @@ bool GossipSelect_npc_oronok_tornheart(Player *player, Creature *_Creature, uint
     return true;
 }
 
+
 void AddSC_npcs_shadowmoon_valley()
 {
     Script *newscript;

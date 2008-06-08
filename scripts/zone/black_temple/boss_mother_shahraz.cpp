@@ -214,6 +214,8 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             if(!target || !target->isAlive())
                 return;
 
+            BeamTimer = 9000;
+
             switch(CurrentBeam)
             {
                 case 0:
@@ -235,7 +237,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
                 while(CurrentBeam == Beam)
                     CurrentBeam = rand()%3;
 
-            BeamTimer = 9000;
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds. 

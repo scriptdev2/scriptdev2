@@ -416,7 +416,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                     if(EssenceDesire)
                     {
-                        DoYell(DESI_SAY_FREED, LANG_UNIVERSAL, NULL);
+                        EssenceDesire->Yell(DESI_SAY_FREED, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, DESI_SOUND_FREED);                
                         Unit* target = NULL;
                         target = SelectUnit(SELECT_TARGET_RANDOM, 0);

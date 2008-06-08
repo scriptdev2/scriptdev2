@@ -642,6 +642,8 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_neltharaku' WHERE `entry` = 2
 UPDATE `creature_template` SET `ScriptName` = 'npc_oronok_tornheart' WHERE `entry` = 21183;
 UPDATE `creature_template` SET `ScriptName` = 'mobs_dragonmaw_orc' WHERE `entry` IN (21717, 21718, 21719, 21720, 22331);
 UPDATE `creature_template` SET `ScriptName` = 'mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878, 21879);
+UPDATE creature_template SET scriptname = 'mob_mature_netherwing_drake' WHERE entry = 21648; -- Quest Support 10804 (Kindness)
+UPDATE creature_template SET scriptname = 'mob_enslaved_netherwing_drake' WHERE entry = 21722; -- Quest Support 10854 (The Force of Neltharaku)
 /* Doomwalker */
 UPDATE `creature_template` SET `ScriptName` = 'boss_doomwalker' WHERE `entry` = 17711;
 
