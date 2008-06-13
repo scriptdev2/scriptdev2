@@ -4,8 +4,8 @@
 #include "sc_creature.h"
 #include "sc_instance.h"
 
-#define DATA_DALLIAHTHEDOOMSAYEREVENT 1
-#define DATA_HARBINGERSKYRISSEVENT 2
-#define DATA_WRATH_SCRYERSOCCOTHRATESEVENT 3
-#define DATA_ZEREKETHTHEUNBOUNDEVENT 4
+#define TYPE_ZEREKETH         1
+#define TYPE_DALLIAH          2
+#define TYPE_SOCCOTHRATES     3
+#define TYPE_HARBINGERSKYRISS 4
 #endif

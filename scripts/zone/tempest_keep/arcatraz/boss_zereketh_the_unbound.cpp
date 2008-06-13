@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_zereketh
 SD%Complete: 0
-SDComment: boss_zereketh_the_unbound, mob_zerekethvoidzone
+SDComment: TODO: mob_zerekethvoidzone -> ACID (boss already ACID)
 SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
@@ -32,7 +32,7 @@ Unbound Void Zone [Creature] 21101
 Summon Unbound Void Zone 36119
 */
 
-#define SAY_AGGRO "Life energy to... consume."
+/*#define SAY_AGGRO "Life energy to... consume."
 #define SOUND_AGGRO 11250 
 
 #define SAY_KILL_1 "This vessel...is empty."
@@ -46,9 +46,9 @@ Summon Unbound Void Zone 36119
 #define SAY_ZONE_2 "Darkness... consumes all."
 
 #define SAY_DEATH "The Void... beckons."
-#define SOUND_DEATH 11255
+#define SOUND_DEATH 11255*/
 
-struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
+/*struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
 {
     boss_zerekethAI(Creature *c) : ScriptedAI(c)
     {
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_zerekethAI : public ScriptedAI
             wait = false;
         }else wait_timer -= diff;
     }
-};
+};*/
 
 struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
 {
@@ -193,10 +193,10 @@ struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_zerekethAI(Creature *_Creature)
+/*CreatureAI* GetAI_boss_zerekethAI(Creature *_Creature)
 {
     return new boss_zerekethAI (_Creature);
-}
+}*/
 
 CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
 {
@@ -206,10 +206,10 @@ CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
 void AddSC_boss_zereketh()
 {
     Script *newscript;
-    newscript = new Script;
+    /*newscript = new Script;
     newscript->Name="boss_zereketh_the_unbound";
     newscript->GetAI = GetAI_boss_zerekethAI;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[nrscripts++] = newscript;*/
 
     newscript = new Script;
     newscript->Name="mob_zerekethvoidzone";

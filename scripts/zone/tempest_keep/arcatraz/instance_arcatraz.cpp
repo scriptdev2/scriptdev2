@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_arcatraz
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 60
+SDComment: Harbringer Skyriss not implemented
 SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
@@ -27,7 +27,7 @@ EndScriptData */
 #define ENCOUNTERS 4
 
 #define CONTAINMENT_CORE_SECURITY_FIELD_ALPHA 184318 //door opened when Wrath-Scryer Soccothrates dies
-#define CONTAINMENT_CORE_SECURITY_FIELD_BETA 184319 //door opened when Dalliah the Doomsayer dies
+#define CONTAINMENT_CORE_SECURITY_FIELD_BETA  184319 //door opened when Dalliah the Doomsayer dies
 
 /* Arcatraz encounters:
 1 - Zereketh the Unbound event
@@ -40,21 +40,24 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 {
     instance_arcatraz(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    bool Encounters[ENCOUNTERS];
+    bool Encounter[ENCOUNTERS];
 
     GameObject *Containment_Core_Security_Field_Alpha;
     GameObject *Containment_Core_Security_Field_Beta;
 
     void Initialize()
     {
+        Containment_Core_Security_Field_Alpha = NULL;
+        Containment_Core_Security_Field_Beta  = NULL;
+
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = false;
+            Encounter[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true;
+            if(Encounter[i]) return true;
 
         return false;
     }
@@ -73,43 +76,42 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         }
     }
 
-    void OpenDoor(GameObject *go)
-    {
-        //open the door
-        go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetUInt32Value(GAMEOBJECT_STATE, 0);
-    }
-
     void SetData(uint32 type, uint32 data)
     {
         switch(type)
         {
-            case DATA_ZEREKETHTHEUNBOUNDEVENT:
-                Encounters[0] = (data) ? true : false;
+            case TYPE_ZEREKETH:
+                Encounter[0] = (data) ? true : false;
                 break;
 
-            case DATA_WRATH_SCRYERSOCCOTHRATESEVENT:
-                if(data == 2)
+            case TYPE_DALLIAH:
+            {
+                if(data == DONE)
                 {
-                    Encounters[1] = false;
-                    if(Containment_Core_Security_Field_Alpha)
-                        OpenDoor(Containment_Core_Security_Field_Alpha);
-                }
-                Encounters[1] = (data) ? true : false;
-                break;
-
-            case DATA_DALLIAHTHEDOOMSAYEREVENT:
-                if(data == 2)
-                {
-                    Encounters[2] = false;
+                    Encounter[1] = DONE;
                     if(Containment_Core_Security_Field_Beta)
-                        OpenDoor(Containment_Core_Security_Field_Beta);
+                        Containment_Core_Security_Field_Beta->UseDoorOrButton();
                 }
-                Encounters[2] = (data) ? true : false;
+                else
+                    Encounter[1] = NOT_STARTED;
                 break;
+            }
 
-            case DATA_HARBINGERSKYRISSEVENT:
-                Encounters[3] = (data) ? true : false;
+            case TYPE_SOCCOTHRATES:
+            {
+                if(data == DONE)
+                {
+                    Encounter[2] = DONE;
+                    if(Containment_Core_Security_Field_Alpha)
+                        Containment_Core_Security_Field_Alpha->UseDoorOrButton();
+                }
+                else
+                    Encounter[2] = NOT_STARTED;
+                break;
+            }
+
+            case TYPE_HARBINGERSKYRISS:
+                Encounter[3] = (data) ? true : false;
                 break;
         }
     }
