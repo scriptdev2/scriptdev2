@@ -115,7 +115,7 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, ui
 
 bool GossipHello_npc_elder_kuruti(Player *player, Creature *_Creature )
 {
-    if (!player->HasItemCount(24573,1))                    //only allow if player does not have message
+    if( player->GetQuestStatus(9803) == QUEST_STATUS_INCOMPLETE )
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     player->SEND_GOSSIP_MENU(9226,_Creature->GetGUID());
@@ -135,24 +135,21 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature *_Creature, uint32 s
             player->SEND_GOSSIP_MENU(9229, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            if ( !player->HasItemCount(24573,1))
+        {
+            if( !player->HasItemCount(24573,1) )
             {
                 ItemPosCountVec dest;
-                uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 24573, 1 );
+                uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 24573, 1, false);
                 if( msg == EQUIP_ERR_OK )
                 {
-                    Item * item = player->StoreNewItem( dest, 24573, true );
-                    if( item )
-                    {
-                        player->SEND_GOSSIP_MENU(9231, _Creature->GetGUID());
-                    }
-                    else
-                        player->SendEquipError( msg,NULL,NULL);
+                    player->StoreNewItem( dest, 24573, true);
                 }
+                else
+                    player->SendEquipError( msg,NULL,NULL );
             }
-            else
-                player->SEND_GOSSIP_MENU(9231, _Creature->GetGUID());
+            player->SEND_GOSSIP_MENU(9231, _Creature->GetGUID());
             break;
+        }
     }
     return true;
 }
