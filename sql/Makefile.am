@@ -27,6 +27,5 @@ pkgdatadir = $(datadir)/scriptdev2/sql
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
 	create_database.sql \
-	mangos_additional_req.sql \
 	mangos_full_scripts.sql \
 	scriptdev2_structure.sql
