@@ -64,8 +64,6 @@ EndScriptData */
 #define OLUM_Y                     -542.76f
 #define OLUM_Z                     -7.54773f
 #define OLUM_O                     0.401581f
-#define OLUM_QUEST                 10944
-#define OLUM_PRE_QUEST             10708
 
 //Fathom-Lord Karathress AI
 struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
@@ -183,28 +181,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, 0);
 
         //support for quest 10944
-        if(killer && (killer->GetTypeId() == TYPEID_PLAYER))
-        {
-            //need to spawn if only pre quest done
-            bool needspawn = false;
-
-            std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
-
-            if(PlayerList.empty())
-                return;
-
-            for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
-            {
-                //Check if anyone has the quest
-                if(((*itr)->GetQuestStatus(OLUM_QUEST) == QUEST_STATUS_NONE) && ((*itr)->GetQuestRewardStatus(OLUM_PRE_QUEST)))
-                {
-                    needspawn = true;
-                    break;
-                }
-            }
-            if(needspawn)
-                m_creature->SummonCreature(SEER_OLUM, OLUM_X, OLUM_Y, OLUM_Z, OLUM_O, TEMPSUMMON_TIMED_DESPAWN, 180000);
-        }
+        m_creature->SummonCreature(SEER_OLUM, OLUM_X, OLUM_Y, OLUM_Z, OLUM_O, TEMPSUMMON_TIMED_DESPAWN, 3600000);
     }
 
     void Aggro(Unit *who)
