@@ -16,12 +16,14 @@
 
 /* ScriptData
 SDName: Boss_Epoch_Hunter
-SD%Complete: 100
-SDComment: 
+SD%Complete: 60
+SDComment: Missing spawns, missing speech to be coordinated with rest of escort event. Mob should not complete quest, current code only temporary
 SDCategory: Caverns of Time, Old Hillsbrad
 EndScriptData */
 
-#include "sc_creature.h"
+#include "def_old_hillsbrad.h"
+
+#define QUEST_ENTRY_ESCAPE      10284
 
 #define SPELL_SAND_BREATH       31914
 #define SPELL_IMPENDING_DOOM    19702
@@ -52,7 +54,13 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 {
-    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 SandBreath_Timer;
     uint32 ImpendingDoom_Timerr;
@@ -69,17 +77,17 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                switch(rand()%2)
-                {
-                case 0:
-                    DoYell( SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoYell( SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                    break;
-                }
+        switch(rand()%2)
+        {
+            case 0:
+                DoYell( SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell( SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+         }
     }    
 
     void KilledUnit(Unit *victim)
@@ -101,6 +109,20 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        if( pInstance && pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS )
+        {
+            pInstance->SetData(TYPE_THRALL_PART4, DONE);
+
+            Unit* Temp = NULL;
+
+            std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
+            for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+            {
+                Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
+                if (Temp && Temp->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)Temp)->AreaExploredOrEventHappens(QUEST_ENTRY_ESCAPE);
+            }
+        }
     }
 
     void UpdateAI(const uint32 diff)

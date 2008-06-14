@@ -257,9 +257,12 @@ UPDATE `creature_template` SET `ScriptName`='npc_thrall' WHERE `entry` =17852;
 UPDATE `creature_template` SET `ScriptName`='npc_jaina_proudmoore' WHERE `entry`=17772;
 
 /* OLD HILLSBRAD */
+UPDATE `instance_template` SET `script`='instance_old_hillsbrad' WHERE `map`=560;
 UPDATE `creature_template` SET `ScriptName`='boss_lieutenant_drake' WHERE `entry`=17848;
 UPDATE `creature_template` SET `ScriptName`='boss_epoch_hunter' WHERE `entry`=18096;
 UPDATE `creature_template` SET `ScriptName`='boss_captain_skarloc' WHERE `entry`=17862;
+UPDATE `creature_template` SET `ScriptName`='npc_brazen' WHERE `entry`=18725;
+UPDATE `creature_template` SET `ScriptName`='npc_erozion' WHERE `entry`=18723;
 
 /* THE DARK PORTAL */
 UPDATE `creature_template` SET `ScriptName`='boss_chrono_lord_deja' WHERE `entry`=17879;
@@ -614,7 +617,8 @@ UPDATE `creature_template` SET `ScriptName`='mob_mature_netherwing_drake' WHERE 
 UPDATE `creature_template` SET `ScriptName`='mob_enslaved_netherwing_drake' WHERE `entry`=21722;
 
 /* SHATTRATH */
-UPDATE `creature_template` SET ScriptName='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
+UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
+UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
 
 /* SILITHUS */
 UPDATE `creature_template` SET `ScriptName`='npcs_rutgar_and_frankal' WHERE `entry` IN (15170,15171);

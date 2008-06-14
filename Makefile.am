@@ -163,6 +163,9 @@ scripts/zone/caverns_of_time/hyjal/npc_hyjal.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_captain_skarloc.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_epoch_hunter.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_leutenant_drake.cpp \
+scripts/zone/caverns_of_time/old_hillsbrad/def_old_hillsbrad.h \
+scripts/zone/caverns_of_time/old_hillsbrad/instance_old_hillsbrad.cpp \
+scripts/zone/caverns_of_time/old_hillsbrad/npcs_old_hillsbrad.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_fathomlord_karathress.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_hydross_the_unstable.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_lady_vashj.cpp \
@@ -304,7 +307,7 @@ scripts/zone/shadowfang_keep/npcs_shadowfang_keep.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
 scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
-scripts/zone/shattrath/npc_shattrathflaskvendors.cpp \
+scripts/zone/shattrath/npcs_shattrath_city.cpp \
 scripts/zone/silithus/npcs_silithus.cpp \
 scripts/zone/silvermoon/npcs_silvermoon_city.cpp \
 scripts/zone/silverpine_forest/npcs_silverpine_forest.cpp \

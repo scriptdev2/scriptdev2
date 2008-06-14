@@ -28,7 +28,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -112,7 +111,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -2098,6 +2096,18 @@
 							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\boss_leutenant_drake.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\def_old_hillsbrad.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\instance_old_hillsbrad.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\npcs_old_hillsbrad.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter
@@ -2132,7 +2142,7 @@
 					Name="Shattrath City"
 					>
 					<File
-						RelativePath="..\scripts\zone\shattrath\npc_shattrathflaskvendors.cpp"
+						RelativePath="..\scripts\zone\shattrath\npcs_shattrath_city.cpp"
 						>
 					</File>
 				</Filter>
@@ -2367,7 +2377,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC80\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC80\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>

@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: Npc_Shattrath_Flask_Vendors
+SDName: Npcs_Shattrath_City
 SD%Complete: 100
-SDComment: Provides flasks to people exalted with 3 factions
+SDComment: Flask vendors, Teleport to Caverns of Time
 SDCategory: Shattrath City
 EndScriptData */
 
@@ -25,7 +25,7 @@ EndScriptData */
 
 /*
 ##################################################
-Shattrath City Flask Vendors:
+Shattrath City Flask Vendors provides flasks to people exalted with 3 factions:
 Haldor the Compulsive 
 Arcanist Xorith
 Both sell special flasks for use in Outlands 25man raids only,
@@ -69,14 +69,34 @@ bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_shattrathflaskvendors(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
-    if (action == GOSSIP_ACTION_TRADE)
-    {
+    if( action == GOSSIP_ACTION_TRADE )
         player->SEND_VENDORLIST( _Creature->GetGUID() );
-    }
+
     return true;
 }
 
-void AddSC_npc_shattrathflaskvendors()
+/*######
+# npc_zephyr
+######*/
+
+bool GossipHello_npc_zephyr(Player *player, Creature *_Creature)
+{
+    if( player->GetReputationRank(989) >= REP_REVERED )
+        player->ADD_GOSSIP_ITEM(0, "Take me to the Caverns of Time.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+bool GossipSelect_npc_zephyr(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+        player->CastSpell(player,37778,false);
+
+    return true;
+}
+
+void AddSC_npcs_shattrath_city()
 {
     Script *newscript;
 
@@ -86,4 +106,9 @@ void AddSC_npc_shattrathflaskvendors()
     newscript->pGossipSelect = &GossipSelect_npc_shattrathflaskvendors;
     m_scripts[nrscripts++] = newscript;
 
+    newscript = new Script;
+	newscript->Name="npc_zephyr";
+	newscript->pGossipHello =  &GossipHello_npc_zephyr;
+	newscript->pGossipSelect = &GossipSelect_npc_zephyr;
+	m_scripts[nrscripts++] = newscript;
 }

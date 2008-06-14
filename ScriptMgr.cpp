@@ -225,6 +225,8 @@ extern void AddSC_instance_mount_hyjal();
 extern void AddSC_boss_captain_skarloc();
 extern void AddSC_boss_epoch_hunter();
 extern void AddSC_boss_lieutenant_drake();
+extern void AddSC_instance_old_hillsbrad();
+extern void AddSC_npcs_old_hillsbrad();
 
 //--The Dark Portal
 extern void AddSC_boss_aeonus();
@@ -443,7 +445,7 @@ extern void AddSC_mobs_shadowmoon_valley();
 extern void AddSC_npcs_shadowmoon_valley();
 
 //Shattrath
-extern void AddSC_npc_shattrathflaskvendors();
+extern void AddSC_npcs_shattrath_city();
 
 //Silithus
 extern void AddSC_npcs_silithus();
@@ -1095,6 +1097,8 @@ void ScriptsInit()
     AddSC_boss_captain_skarloc();
     AddSC_boss_epoch_hunter();
     AddSC_boss_lieutenant_drake();
+    AddSC_instance_old_hillsbrad();
+    AddSC_npcs_old_hillsbrad();
 
     //--The Dark Portal
     AddSC_boss_aeonus();
@@ -1312,7 +1316,7 @@ void ScriptsInit()
     AddSC_npcs_shadowmoon_valley();
 
     //Shattrath
-    AddSC_npc_shattrathflaskvendors();
+    AddSC_npcs_shattrath_city();
 
     //Silithus
     AddSC_npcs_silithus();

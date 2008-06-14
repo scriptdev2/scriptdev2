@@ -16,12 +16,12 @@
 
 /* ScriptData
 SDName: Boss_Captain_Skarloc
-SD%Complete: 100
-SDComment: 
+SD%Complete: 75
+SDComment: Missing adds, missing waypoints to move up to Thrall once spawned + speech before enter combat.
 SDCategory: Caverns of Time, Old Hillsbrad
 EndScriptData */
 
-#include "sc_creature.h"
+#include "def_old_hillsbrad.h"
 
 #define HOLY_LIGHT          29562
 #define CLEANSE             39078
@@ -46,7 +46,13 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 {
-    boss_captain_skarlocAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_captain_skarlocAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 Holy_Light_Timer;
     uint32 Cleanse_Timer;   
@@ -67,17 +73,17 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
 
     void Aggro(Unit *who)
     { 
-                switch(rand()%2)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                    break;
-                }
+        switch(rand()%2)
+        {
+            case 0:
+                DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+        }
     }
 
     void KilledUnit(Unit *victim)
@@ -99,6 +105,8 @@ struct MANGOS_DLL_DECL boss_captain_skarlocAI : public ScriptedAI
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        if( pInstance && pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS )
+            pInstance->SetData(TYPE_THRALL_PART1, DONE);
     }
 
     void UpdateAI(const uint32 diff)
