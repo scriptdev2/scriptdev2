@@ -28,7 +28,7 @@ EndScriptData */
 #define SPELL_AOESILENCE                8988
 #define SPELL_ARCANEEXPLOSION3          8438
 #define SPELL_ARCANEEXPLOSION4          8439
-#define SPELL_FIREAOE                   25049
+#define SPELL_FIREAOE                   9435
 #define SPELL_BLINK                     1953
 #define SPELL_FIREBALL                  21162
 #define SPELL_MANASHIELD4               10191
@@ -71,8 +71,8 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
@@ -181,7 +181,6 @@ CreatureAI* GetAI_boss_arcanist_doan(Creature *_Creature)
 {
     return new boss_arcanist_doanAI (_Creature);
 }
-
 
 void AddSC_boss_arcanist_doan()
 {
