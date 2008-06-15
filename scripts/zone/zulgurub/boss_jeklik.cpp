@@ -57,8 +57,6 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
     uint32 GreaterHeal_Timer;
     uint32 SpawnFlyingBats_Timer;
 
-    Creature *Bat;
-    Creature *FlyingBat;
     bool PhaseTwo;
 
     void Reset()
@@ -78,9 +76,9 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                DoCast(m_creature,SPELL_BAT_FORM);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoCast(m_creature,SPELL_BAT_FORM);
     }
     
     void JustDied(Unit* Killer)
@@ -88,7 +86,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
+        ScriptedInstance *pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
         if(pInstance)
             pInstance->SetData(DATA_JEKLIK_DEATH, 0);
 
@@ -105,15 +103,16 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             {
 
                 if (Charge_Timer < diff)
-                {
-                
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    DoCast(target,SPELL_CHARGE);
+                {                
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    if(target)
+                    {
+                        DoCast(target,SPELL_CHARGE);
 
-                    m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0); 
-                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartAttackAndMovement(target);
+                        m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0); 
+                        m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                        DoStartAttackAndMovement(target);
+                    }
                     
                     Charge_Timer = 15000 + rand()%15000;
                 }else Charge_Timer -= diff;
@@ -133,18 +132,21 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
 
                 if (SpawnBats_Timer < diff)
                 {
-
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     
+                    Creature* Bat = NULL;
                     Bat = m_creature->SummonCreature(11368,-12291.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
+
                     Bat = m_creature->SummonCreature(11368,-12289.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
+
                     Bat = m_creature->SummonCreature(11368,-12293.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
+
                     Bat = m_creature->SummonCreature(11368,-12291.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
+
                     Bat = m_creature->SummonCreature(11368,-12289.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
                     Bat = m_creature->SummonCreature(11368,-12293.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -157,59 +159,58 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
             }
             else
             {
-                if(!PhaseTwo)
+                if(PhaseTwo)
                 {
+                    if(PhaseTwo && ShadowWordPain_Timer < diff)
+                    {
+                        Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                        if(target)
+                        {
+                            DoCast(target, SPELL_SHADOW_WORD_PAIN);
+                            ShadowWordPain_Timer = 12000 + rand()%6000;
+                        }
+                    }ShadowWordPain_Timer -=diff;
+                    
+                    if(MindFlay_Timer < diff)
+                    {
+                        DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
+                        MindFlay_Timer = 16000;
+                    }MindFlay_Timer -=diff;
+                    
+                    if(ChainMindFlay_Timer < diff)
+                    {
+                        m_creature->InterruptNonMeleeSpells(false);
+                        DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
+                        ChainMindFlay_Timer = 15000 + rand()%15000;
+                    }ChainMindFlay_Timer -=diff;
+                    
+                    if(GreaterHeal_Timer < diff)
+                    {
+                        m_creature->InterruptNonMeleeSpells(false);
+                        DoCast(m_creature,SPELL_GREATERHEAL);
+                        GreaterHeal_Timer = 25000 + rand()%10000;
+                    }GreaterHeal_Timer -=diff;
+                    
+                    if(SpawnFlyingBats_Timer < diff)
+                    {
+                        Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                            
+                        Creature* FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                        if(FlyingBat)
+                        {
+                            if(target)
+                                FlyingBat->AI()->AttackStart(target);
+                        }
+                             
+                        SpawnFlyingBats_Timer = 10000 + rand()%5000;
+                    }SpawnFlyingBats_Timer -=diff;
+                }
+                else
+                {   
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15219);
                     DoResetThreat();
                     PhaseTwo = true;
                 }
-
-                if(PhaseTwo && ShadowWordPain_Timer < diff)
-                {
-
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                    DoCast(target, SPELL_SHADOW_WORD_PAIN);
-                    ShadowWordPain_Timer = 12000 + rand()%6000;
-                }ShadowWordPain_Timer -=diff;
-                
-                if(PhaseTwo && MindFlay_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
-                    MindFlay_Timer = 16000;
-                }MindFlay_Timer -=diff;
-                
-                if(PhaseTwo && ChainMindFlay_Timer < diff)
-                {
-                    m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
-                    ChainMindFlay_Timer = 15000 + rand()%15000;
-                }ChainMindFlay_Timer -=diff;
-                
-                if(PhaseTwo && GreaterHeal_Timer < diff)
-                {
-                    m_creature->InterruptNonMeleeSpells(false);
-                    DoCast(m_creature,SPELL_GREATERHEAL);
-                    GreaterHeal_Timer = 25000 + rand()%10000;
-                }GreaterHeal_Timer -=diff;
-                
-                if(PhaseTwo && SpawnFlyingBats_Timer < diff)
-                {
-
-                    Unit *target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                        
-                    FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                    if(FlyingBat)
-                    {
-                        if(target)
-                            FlyingBat->AI()->AttackStart(target);
-                    }
-                         
-                    SpawnFlyingBats_Timer = 10000 + rand()%5000;
-                }SpawnFlyingBats_Timer -=diff;
-
 
             }
             DoMeleeAttackIfReady();
@@ -222,7 +223,7 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
 {
     mob_batriderAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -233,39 +234,13 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
  
     void Reset()
     {
-        m_creature->setFaction(14);
         Bomb_Timer = 2000;
         Check_Timer = 1000;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        //DoGoHome();
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
-
-            }
-        }
-    }
+    void Aggro(Unit *who) {}
  
     void UpdateAI (const uint32 diff)
     {
@@ -276,47 +251,46 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         //Bomb_Timer
         if(Bomb_Timer < diff)
         {
-            Unit *target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             //Casting Bomb on random target
             if(target)
+            {
                 DoCast(target, SPELL_BOMB);
-
-            Bomb_Timer = 5000;
+                Bomb_Timer = 5000;
+            }
         }else Bomb_Timer -= diff;
 
         //Check_Timer
         if(Check_Timer < diff)
         {
             if(pInstance)
-            {    
-
-                    if(pInstance->GetData(DATA_JEKLIKISDEAD))
+            {
+                if(pInstance->GetData(DATA_JEKLIKISDEAD))
+                {
                     //remove
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
-                    m_creature->setFaction(35);
+                }
             }
 
             Check_Timer = 1000;
         }else Check_Timer -= diff;
 
-            DoMeleeAttackIfReady();
+        DoMeleeAttackIfReady();
 
     }
 };
-
 
 CreatureAI* GetAI_boss_jeklik(Creature *_Creature)
 {
     return new boss_jeklikAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_batrider(Creature *_Creature)
 {
     return new mob_batriderAI (_Creature);
 }
-
 
 void AddSC_boss_jeklik()
 {
@@ -330,5 +304,4 @@ void AddSC_boss_jeklik()
     newscript->Name="mob_batrider";
     newscript->GetAI = GetAI_mob_batrider;
     m_scripts[nrscripts++] = newscript;
-
 }
