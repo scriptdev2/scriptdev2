@@ -171,7 +171,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             {
                 uint32 random = rand()%8;
                 if(random < 7)
-                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, MovementLocations[random][1], MovementLocations[random][2], MovementLocations[random][3]));
+                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]));
                 else
                 {
                     DoTextEmote("takes a deep breath", NULL);
@@ -192,7 +192,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 for(uint8 i = 0; i < max; ++i)
                 {
                     uint8 random = rand()%4;
-                    Creature* Whelp = m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[random][1], SpawnLocations[random][2], SpawnLocations[random][3], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                    Creature* Whelp = m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[random][0], SpawnLocations[random][1], SpawnLocations[random][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
                     if(Whelp)
                         Whelp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
                 }
