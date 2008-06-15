@@ -258,6 +258,25 @@ bool GossipSelect_npc_oronok_tornheart(Player *player, Creature *_Creature, uint
     return true;
 }
 
+/*####
+# npc_karynaku
+####*/
+
+bool QuestAccept_npc_karynaku(Player* player, Creature* creature, Quest const* quest)
+{
+    if(quest->GetQuestId() == 10870) // Ally of the Netherwing
+    {
+        std::vector<uint32> nodes;
+
+        nodes.resize(2);
+        nodes[0] = 161; // From Karynaku
+        nodes[1] = 162; // To Mordenai
+        error_log("SD2: Player %s started quest 10870 which has disabled taxi node, need to be fixed in core", player->GetName());
+//        player->ActivateTaxiPathTo(nodes, 20811);
+    }
+
+    return true;
+}
 
 void AddSC_npcs_shadowmoon_valley()
 {
@@ -284,6 +303,11 @@ void AddSC_npcs_shadowmoon_valley()
     newscript->Name="npc_neltharaku";
     newscript->pGossipHello =  &GossipHello_npc_neltharaku;
     newscript->pGossipSelect = &GossipSelect_npc_neltharaku;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_karynaku";
+    newscript->pQuestAccept = &QuestAccept_npc_karynaku;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

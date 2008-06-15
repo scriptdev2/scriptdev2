@@ -229,7 +229,7 @@ void SendDefaultMenu_custom_example(Player *player, Creature *_Creature, uint32 
     {
         //Set our faction to hostile twoards all
         _Creature->setFaction(24);
-        _Creature->Attack(player);
+        _Creature->Attack(player, true);
         player->PlayerTalkClass->CloseGossip();
     }
 }

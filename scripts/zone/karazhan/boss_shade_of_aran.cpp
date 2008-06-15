@@ -483,7 +483,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 Creature* pUnit = DoSpawnCreature(CREATURE_WATER_ELEMENTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 90000);
                 if (pUnit)
                 {
-                    pUnit->Attack(m_creature->getVictim());
+                    pUnit->Attack(m_creature->getVictim(), true);
                     pUnit->setFaction(m_creature->getFaction());
                 }
             }
@@ -499,7 +499,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 Creature* pUnit = DoSpawnCreature(CREATURE_SHADOW_OF_ARAN, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 if (pUnit)
                 {
-                    pUnit->Attack(m_creature->getVictim());
+                    pUnit->Attack(m_creature->getVictim(), true);
                     pUnit->setFaction(m_creature->getFaction());
                 }
             }

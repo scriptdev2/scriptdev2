@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 {
     boss_mandokirAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         if(victim->GetTypeId() == TYPEID_PLAYER)
         {
             DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
-            m_creature->CastSpell(m_creature, SPELL_LEVEL_UP, true);
+            DoCast(m_creature, SPELL_LEVEL_UP, true);
         }
     }
 
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                         targetX != pUnit->GetPositionX() || 
                         targetY != pUnit->GetPositionY() ||
                         targetZ != pUnit->GetPositionZ() ||
-                        pUnit->isAttacking()))
+                        pUnit->isInCombat()))
                     {
                         if(m_creature->IsWithinDistInMap(pUnit, ATTACK_DISTANCE))
                         {
@@ -156,11 +156,14 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             if ((Watch_Timer < 8000) && !someWatched) //8 sec(cast time + expire time) before the check for the watch effect mandokir will cast watch debuff on a random target
             {
                 Unit* p = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoYell(SAY_WATCH, LANG_UNIVERSAL, p);
-                DoCast(p, SPELL_WATCH);
-                WatchTarget = p->GetGUID();
-                someWatched = true;
-                endWatch = true;
+                if(p)
+                {
+                    DoYell(SAY_WATCH, LANG_UNIVERSAL, p);
+                    DoCast(p, SPELL_WATCH);
+                    WatchTarget = p->GetGUID();
+                    someWatched = true;
+                    endWatch = true;
+                }
             }
 
             if ((Watch_Timer < 1000) && endWatch) //1 sec before the debuf expire, store the target position
@@ -261,7 +264,7 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
 {
     mob_ohganAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -273,13 +276,10 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
         SunderArmor_Timer = 5000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void JustDied(Unit* Killer)
     {
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
         if(pInstance)
             pInstance->SetData(DATA_OHGAN_DEATH, 0);
     }

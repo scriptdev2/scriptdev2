@@ -24,7 +24,7 @@ void npc_escortAI::AttackStart(Unit *who)
     if (who->isTargetableForAttack())
     {
         //Begin attack
-        if ( m_creature->Attack(who) )
+        if ( m_creature->Attack(who, true) )
         {
             m_creature->GetMotionMaster()->MovementExpired();
             m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
@@ -68,7 +68,7 @@ void npc_escortAI::MoveInLineOfSight(Unit *who)
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin attack
-                if ( m_creature->Attack(who) )
+                if ( m_creature->Attack(who, true) )
                 {
                     m_creature->GetMotionMaster()->MovementExpired();
                     m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));

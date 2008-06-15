@@ -146,8 +146,8 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
 
         pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
         pCreature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]));
-        DoZoneInCombat(pCreature);
         pCreature->AddThreat(m_creature, 1.0f);
+        DoZoneInCombat(pCreature);
 
         // Check if creature is a boss.
         if(pCreature->GetCreatureInfo()->rank == 3)

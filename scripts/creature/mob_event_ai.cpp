@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if (!pTarget)
             return;
 
-        if ( m_creature->Attack(pTarget) )
+        if ( m_creature->Attack(pTarget, true) )
         {
             if (Follow)
             {

@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
         if( pInstance && i == 6)
         {
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-            m_creature->Say("Thanks for freeing me, i'll open this door for you, then i will get out of here.", LANG_UNIVERSAL, 0);
+            m_creature->Say("Thanks for freeing me, I'll open this door for you, then I will get out of here.", LANG_UNIVERSAL, 0);
             pInstance->SetData(TYPE_FREE_NPC, DONE);
         }
     }
@@ -80,7 +80,7 @@ bool GossipHello_npc_shadowfang_prisoner(Player *player, Creature *_Creature)
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
 
     if( pInstance && (pInstance->GetData(TYPE_RETHILGORE) >= DONE) && (pInstance->GetData(TYPE_FREE_NPC) == NOT_STARTED) )
-        player->ADD_GOSSIP_ITEM( 0, "Thanks, i'll follow you to the door.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM( 0, "Thanks, I'll follow you to the door.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 

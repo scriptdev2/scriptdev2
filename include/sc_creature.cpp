@@ -110,7 +110,7 @@ void ScriptedAI::DoStartAttackAndMovement(Unit* victim, float distance, float an
     if (!victim)
         return;
 
-    if ( m_creature->Attack(victim) )
+    if ( m_creature->Attack(victim, true) )
     {
         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*victim, distance, angle));
         m_creature->AddThreat(victim, 0.0f);
@@ -126,7 +126,7 @@ void ScriptedAI::DoStartAttackNoMovement(Unit* victim)
     if (!victim)
         return;
 
-    if ( m_creature->Attack(victim) )
+    if ( m_creature->Attack(victim, true) )
     {
         m_creature->AddThreat(victim, 0.0f);
         m_creature->resetAttackTimer();
@@ -466,7 +466,7 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
 
     for (i = pUnit->GetMap()->GetPlayers().begin();i != pUnit->GetMap()->GetPlayers().end(); ++i)
     {
-        pUnit->Attack((*i));
+        pUnit->Attack((*i), false);
         pUnit->AddThreat((*i), 0.0f);
     }
 }

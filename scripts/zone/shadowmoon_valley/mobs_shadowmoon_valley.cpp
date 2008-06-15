@@ -29,20 +29,16 @@ EndScriptData */
 #include "GridNotifiersImpl.h"
 
 /*######
-## mobs_dragonmaw_orcs
+## mobs_dragonmaw_orcs -- Needs ACID conversion.
 ######*/
 
 struct MANGOS_DLL_DECL mobs_dragonmaw_orcAI : public ScriptedAI
 {
     mobs_dragonmaw_orcAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void Reset()
-    {
-    }
+    void Reset() {}
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void JustDied(Unit* Killer)
     {
@@ -100,7 +96,6 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
     }
 
     uint64 PlayerGUID;
-    uint64 CarcassGUID;
 
     bool IsEating;
     bool Evade;
@@ -111,8 +106,6 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 
     void Reset() 
     {
-        CarcassGUID = 0;
-
         IsEating = false;
         Evade = false;
 
@@ -173,6 +166,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                     {
                         plr->KilledMonster(22131, m_creature->GetGUID());
                         Evade = true;
+                        PlayerGUID = 0;
                     }
                 }
             }else EatTimer -= diff;
@@ -359,6 +353,77 @@ CreatureAI* GetAI_mob_enslaved_netherwing_drake(Creature* _Creature)
     return new mob_enslaved_netherwing_drakeAI(_Creature);
 }
 
+/*#####
+# mob_dragonmaw_peon
+#####*/
+
+struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
+{
+    mob_dragonmaw_peonAI(Creature* c) : ScriptedAI(c)
+    {
+        Reset();
+    }
+
+    uint64 PlayerGUID;
+
+    bool Tapped;
+    
+    uint32 PoisonTimer;
+
+    void Reset()
+    {
+        PlayerGUID = 0;
+
+        Tapped = false;
+
+        PoisonTimer = 0;
+    }
+
+    void Aggro(Unit* who) { }
+
+    void SpellHit(Unit* caster, const SpellEntry* spell)
+    {
+        if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == 40468 && !Tapped)
+        {
+            PlayerGUID = caster->GetGUID();
+
+            Tapped = true;
+            float x, y, z;
+            caster->GetClosePoint(x, y, z);
+
+            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(1, x, y, z));
+        }
+    }
+
+    void MovementInform(uint32 type, uint32 id)
+    {
+        if(type != POINT_MOTION_TYPE)
+            return;
+
+        if(id)
+        {
+            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_EAT);
+            PoisonTimer = 15000;
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(PoisonTimer)
+            if(PoisonTimer <= diff)
+            {
+                if(PlayerGUID)
+                {
+                    Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
+                    if(plr && plr->GetQuestStatus(11020) == QUEST_STATUS_INCOMPLETE)
+                        plr->KilledMonster(23209, m_creature->GetGUID());
+                }
+                PoisonTimer = 0;
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }else PoisonTimer -= diff;
+    }
+};
 /*######
 ## AddSC
 ######*/

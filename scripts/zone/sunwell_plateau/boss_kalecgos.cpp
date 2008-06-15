@@ -21,69 +21,66 @@ SDComment: VERIFY SCRIPT
 EndScriptData */
 
 
-#define KALEC_SAY_NON_FRIENDLY_ON_AGGRO "No longer will I be a slave to Malygos! Challenge me and you will be destroyed!"
-#define KALEC_SOUND_NON_FIRENDLY_ON_AGGRO 12422
-#define KALEC_SAY_NON_FRIENDLY_ON_SPELL_1 "I will purge you!"
-#define KALEC_SOUND_NON_FRIENDLY_ON_SPELL_1 12423
-#define KALEC_SAY_NON_FRIENDLY_ON_SPELL_2 "Your pain has only begun!"
-#define KALEC_SOUND_NON_FRIENDLY_ON_SPELL_2 12424
-#define KALEC_SAY_NON_FRIENDLY_ON_KILL_1 "In the name of Kil'jaeden!"
-#define KALEC_SOUND_NON_FRIENDLY_ON_KILL_1 12425
-#define KALEC_SAY_NON_FRIENDLY_ON_KILL_2 "You were warned!"
-#define KALEC_SOUND_NON_FRIENDLY_ON_KILL_2 12426
-#define KALEC_SAY_NON_FRIENDLY_BEFORE_FLY_AWAY "My awakening is complete! You shall all perish!"
-#define KALEC_SOUND_NON_FRIENDLY_BEFORE_FLY_AWAY 12427
+#define KALEC_SAY_NON_FRIENDLY_ON_AGGRO             "No longer will I be a slave to Malygos! Challenge me and you will be destroyed!"
+#define KALEC_SOUND_NON_FIRENDLY_ON_AGGRO           12422
+#define KALEC_SAY_NON_FRIENDLY_ON_SPELL_1           "I will purge you!"
+#define KALEC_SOUND_NON_FRIENDLY_ON_SPELL_1         12423
+#define KALEC_SAY_NON_FRIENDLY_ON_SPELL_2           "Your pain has only begun!"
+#define KALEC_SOUND_NON_FRIENDLY_ON_SPELL_2         12424
+#define KALEC_SAY_NON_FRIENDLY_ON_KILL_1            "In the name of Kil'jaeden!"
+#define KALEC_SOUND_NON_FRIENDLY_ON_KILL_1          12425
+#define KALEC_SAY_NON_FRIENDLY_ON_KILL_2            "You were warned!"
+#define KALEC_SOUND_NON_FRIENDLY_ON_KILL_2          12426
+#define KALEC_SAY_NON_FRIENDLY_BEFORE_FLY_AWAY      "My awakening is complete! You shall all perish!"
+#define KALEC_SOUND_NON_FRIENDLY_BEFORE_FLY_AWAY    12427
 
-#define SHAT_SAY_ON_AGGRO "Gyahaha... There will be no reprieve. My work here is nearly finished."
-#define SHAT_SOUND_ON_AGGRO 12451
-//11sec
-#define SHAT_SAY_ON_DIE "I'm... never on... the losing... side..."
-#define SHAT_SOUND_ON_DIE 12452
-//7sec
-#define SHAT_SAY_ON_SPELL_1 "Your misery is my delight!"
-#define SHAT_SOUND_ON_SPELL_1 12453
-#define SHAT_SAY_ON_SPELL_2 "I will watch you bleed!"
-#define SHAT_SOUND_ON_SPELL_2 12454
-#define SHAT_SAY_ON_KILL_1 "Pitious mortal!"
-#define SHAT_SOUND_ON_KILL_1 12455
-#define SHAT_SAY_ON_KILL_2 "Haven't you heard? I always win!"
-#define SHAT_SOUND_ON_KILL_2 12456
-#define SHAT_SAY_ON_ENRAGE "I have toyed with you long enough!"
-#define SHAT_SOUND_ON_ENRAGE 12457
+#define SHAT_SAY_ON_AGGRO            "Gyahaha... There will be no reprieve. My work here is nearly finished."
+#define SHAT_SOUND_ON_AGGRO         12451
+#define SHAT_SAY_ON_DIE             "I'm... never on... the losing... side..."
+#define SHAT_SOUND_ON_DIE           12452
+#define SHAT_SAY_ON_SPELL_1         "Your misery is my delight!"
+#define SHAT_SOUND_ON_SPELL_1       12453
+#define SHAT_SAY_ON_SPELL_2         "I will watch you bleed!"
+#define SHAT_SOUND_ON_SPELL_2       12454
+#define SHAT_SAY_ON_KILL_1          "Pitious mortal!"
+#define SHAT_SOUND_ON_KILL_1        12455
+#define SHAT_SAY_ON_KILL_2          "Haven't you heard? I always win!"
+#define SHAT_SOUND_ON_KILL_2        12456
+#define SHAT_SAY_ON_ENRAGE          "I have toyed with you long enough!"
+#define SHAT_SOUND_ON_ENRAGE        12457
 
-#define KALEC_SAY_FRIENDLY_ON_AGGRO "I need... your help... Cannot... resist him... much longer..."
-#define KALEC_SOUND_FRIENDLY_ON_AGGRO 12428
-#define KALEC_SAY_FRIENDLY_ON_LOSING "Aaahhh! Help me, before I lose my mind!"
-#define KALEC_SOUND_FRIENDLY_ON_LOSING 12429
-#define KALEC_SAY_FRIENDLY_ON_NEAR_LOSING "Hurry! There is not much of me left!" //???
+#define KALEC_SAY_FRIENDLY_ON_AGGRO         "I need... your help... Cannot... resist him... much longer..."
+#define KALEC_SOUND_FRIENDLY_ON_AGGRO       12428
+#define KALEC_SAY_FRIENDLY_ON_LOSING        "Aaahhh! Help me, before I lose my mind!"
+#define KALEC_SOUND_FRIENDLY_ON_LOSING      12429
+#define KALEC_SAY_FRIENDLY_ON_NEAR_LOSING   "Hurry! There is not much of me left!" //???
 #define KALEC_SOUND_FRIENDLY_ON_NEAR_LOSING 12430
-#define KALEC_SAY_FRIENDLY_AT_END "I am forever in your debt. Once we have triumphed over Kil'jaeden, this entire world will be in your debt as well."
-#define KALEC_SOUND_FRIENDLY_AT_END 12431
-//11sec
+#define KALEC_SAY_FRIENDLY_AT_END           "I am forever in your debt. Once we have triumphed over Kil'jaeden, this entire world will be in your debt as well."
+#define KALEC_SOUND_FRIENDLY_AT_END         12431
 
-#define GO_FAILED "You cant use this currently.You can if debuff expried."
+#define GO_FAILED               "You are unable to use this currently."
 
-#define FLY_X 1551
-#define FLY_Y 788
-#define FLY_Z 121
+#define FLY_X       1551
+#define FLY_Y       788
+#define FLY_Z       121
 
-#define AURA_PLAYER_NOT_ABLE_TO_TELEPORT 44867
-#define AURA_PLAYER_IS_TELEPORTED 46021
-#define KALECGOS_TELEPORT 44866 //summon go, and dealdmg(currently) (spellname: spectral blast)
-#define TRANSFORM_TO_KALEC 44670
+#define AURA_PLAYER_NOT_ABLE_TO_TELEPORT        44867
+#define AURA_PLAYER_IS_TELEPORTED               46021
+#define KALECGOS_TELEPORT                       44866 //summon go, and dealdmg(currently) (spellname: spectral blast)
+#define TRANSFORM_TO_KALEC                      44670
 
-#define ARCANE_BUFFET 45018
-#define FROST_BREATH 44799
+#define ARCANE_BUFFET               45018
+#define FROST_BREATH                44799
 
-#define CORRUPTING_STRIKE 45029
-#define COURSE_OF_BUNDLESS_AGONY 45032
-#define SHADOW_BOLT_VOLLEY 45031
+#define CORRUPTING_STRIKE           45029
+#define COURSE_OF_BUNDLESS_AGONY    45032
+#define SHADOW_BOLT_VOLLEY          45031
 
-#define SPELL_BANISH 40370
-#define BERSERK 26662 //...need info
+#define SPELL_BANISH                40370
+#define BERSERK                     26662 //...need info
 
-#define HEROIC_STRIKE 45026 //aggro..:)
-#define REVITALIZE 45860
+#define HEROIC_STRIKE               45026 //aggro..:)
+#define REVITALIZE                  45860
 
 
 #include "sc_creature.h"
@@ -96,24 +93,27 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 {
+    boss_kalecgosAI(Creature *c) : ScriptedAI(c) 
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+    
     uint32 wild_magics[6];
     uint32 arcane_buffet_timer;
     uint32 frost_breath_timer;
     uint32 wild_magic_timer;
     uint32 spectral_blast_timer;
     uint32 checktimer;
+    uint32 end_timer;
+
     bool flying;
     bool end;
     bool hasYelled;
     bool friendly;
-    uint32 end_timer;
+
     ScriptedInstance *pInstance;
 
-    boss_kalecgosAI(Creature *c) : ScriptedAI(c) 
-    {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-        Reset();
-    }
 
     void Reset()
     {
@@ -131,8 +131,13 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         wild_magic_timer = 10000;
         spectral_blast_timer = 20000+(rand()%5000);
         checktimer = spectral_blast_timer+20000; //after spectral blast
-        pInstance->SetData(DATA_KALEC_FLY,0);
-        pInstance->SetData(DATA_SHAT_DIE,0);
+        
+        if(pInstance)
+        {
+            pInstance->SetData(DATA_KALEC_FLY,0);
+            pInstance->SetData(DATA_SHAT_DIE,0);
+        }
+
         flying = false;
         end = false;
         hasYelled = false;
@@ -142,9 +147,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
     void Aggro(Unit* who)
     {
         if(pInstance->GetData(DATA_KALEC_FLY) == 1)
-        {
             fly();
-        }
         else
         {
             DoYell(KALEC_SAY_NON_FRIENDLY_ON_AGGRO,LANG_UNIVERSAL,NULL);
@@ -159,14 +162,14 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(KALEC_SAY_NON_FRIENDLY_ON_KILL_1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,KALEC_SOUND_NON_FRIENDLY_ON_KILL_1);
-            break;
-        case 1:
-            DoYell(KALEC_SAY_NON_FRIENDLY_ON_KILL_2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,KALEC_SOUND_NON_FRIENDLY_ON_KILL_2);
-            break;
+            case 0:
+                DoYell(KALEC_SAY_NON_FRIENDLY_ON_KILL_1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,KALEC_SOUND_NON_FRIENDLY_ON_KILL_1);
+                break;
+            case 1:
+                DoYell(KALEC_SAY_NON_FRIENDLY_ON_KILL_2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,KALEC_SOUND_NON_FRIENDLY_ON_KILL_2);
+                break;
         }
     }
     void JustDied(Unit *victim)
@@ -207,7 +210,8 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         {
             uint64 KalecGUID = pInstance->GetData64(DATA_KALEC_HUMAN);
             Unit *Kalec = Unit::GetUnit(*m_creature,KalecGUID);
-            if(Kalec && Kalec->isAlive()){
+            if(Kalec && Kalec->isAlive())
+            {
                 ((Creature*)Kalec)->Yell(KALEC_SAY_FRIENDLY_ON_NEAR_LOSING,LANG_UNIVERSAL,0);
                 DoPlaySoundToSet(Kalec,KALEC_SOUND_FRIENDLY_ON_NEAR_LOSING);
             }
@@ -217,16 +221,17 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(end_timer < diff && !end)
-        {
-            m_creature->CastSpell(m_creature,BERSERK,false);
-            uint64 ShatGUID = pInstance->GetData64(DATA_SHATHROVARR);
-            Unit *shat = Unit::GetUnit(*m_creature,ShatGUID);
-            if(shat)
-                shat->CastSpell(shat,BERSERK,false);
-            end = true;
+        if(!end)
+            if(end_timer < diff)
+            {
+                m_creature->CastSpell(m_creature,BERSERK,false);
+                uint64 ShatGUID = pInstance->GetData64(DATA_SHATHROVARR);
+                Unit *shat = Unit::GetUnit(*m_creature,ShatGUID);
+                if(shat)
+                    shat->CastSpell(shat,BERSERK,false);
+                end = true;
 
-        }else end_timer -= diff;
+            }else end_timer -= diff;
 
         if(arcane_buffet_timer < diff)
         {
@@ -289,7 +294,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             if(shat_curr_hp - kalec_curr_hp < 5 && shat_curr_hp - kalec_curr_hp > -5)
             { 
                 //is blizzlike?
-                m_creature->CastSpell(m_creature,BERSERK,false);
+                DoCast(m_creature,BERSERK);
                 uint64 ShatGUID = pInstance->GetData64(DATA_SHATHROVARR);
                 Unit *shat = Unit::GetUnit(*m_creature,ShatGUID);
                 if(shat)
@@ -305,9 +310,8 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             Unit *shat = Unit::GetUnit(*m_creature,shatGUID);
             if(shat && shat->isAlive())
             {
-                if((shat->GetHealth()*100)/shat->GetMaxHealth() >= 2){
+                if((shat->GetHealth()*100)/shat->GetMaxHealth() >= 2)
                     m_creature->CastSpell(m_creature,SPELL_BANISH,false);
-                }
             }
         }
 
@@ -345,8 +349,6 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
     {
         m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         m_creature->RemoveCorpse();
-        //m_creature->Relocate();
-        pInstance->Save();
 
     }
 };
@@ -363,7 +365,7 @@ struct MANGOS_DLL_DECL boss_SathrovarrAI : public ScriptedAI
     boss_SathrovarrAI(Creature *c) : ScriptedAI(c) 
     {
         Reset();
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
     }
 
     void Reset()
@@ -386,7 +388,7 @@ struct MANGOS_DLL_DECL boss_SathrovarrAI : public ScriptedAI
         }
         if(kalec_h && who != kalec_h)
         {
-            kalec_h->Attack(m_creature);
+            kalec_h->Attack(m_creature, true);
             float aggro = m_creature->getThreatManager().getThreat(who);
             m_creature->AddThreat(kalec_h,aggro+1);
         }
@@ -690,7 +692,7 @@ void AddSC_boss_kalecgos()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_Sathrovarr";
+    newscript->Name="boss_sathrovarr";
     newscript->GetAI = GetAI_boss_Sathrovarr;
     m_scripts[nrscripts++] = newscript;
 
