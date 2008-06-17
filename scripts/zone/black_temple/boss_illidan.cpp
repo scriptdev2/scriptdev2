@@ -433,7 +433,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Database sometimes has strange values..
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->SetVisibility(VISIBILITY_ON);
     }
 
@@ -517,7 +517,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                 }
                 StartChanneling = true;
                 m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 DoCast(Channel, SPELL_AKAMA_DOOR_FAIL);
             }
         }
@@ -561,7 +561,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                 }
                 break;
             case 8:
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 if(!IsReturningToIllidan)
                 {
                     IsWalking = false;
@@ -571,7 +571,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             case 12:
                 IsWalking = false;
                 FightMinions = true;
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 break;
         }
         
@@ -633,7 +633,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                                 m_creature->RemoveAllAuras();
                                 m_creature->CombatStop();
                                 m_creature->AttackStop();
-                                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                                 TalkCount = 3;
                                 break;
                             case 3:
@@ -940,7 +940,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 21135);
         m_creature->InterruptNonMeleeSpells(false);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0); // Unequip warglaives if needed
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
@@ -971,7 +971,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim() || IsTalking || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (!who || m_creature->getVictim() || IsTalking || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
@@ -1217,7 +1217,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         Phase = PHASE_FLIGHT;
         m_creature->RemoveAllAuras();
         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // So players don't shoot us down
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // So players don't shoot us down
         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF); // Animate our take off!
         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING); // We now hover!
         m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, CENTER_X, CENTER_Y, CENTER_Z));
@@ -1227,7 +1227,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             if(Glaive)
             {
                 GlaiveGUID[i] = Glaive->GetGUID(); // We need this to remove them later on
-                Glaive->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                Glaive->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 Glaive->SetVisibility(VISIBILITY_OFF);
                 Glaive->setFaction(m_creature->getFaction());
             }
@@ -1307,12 +1307,12 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             m_creature->GetMotionMaster()->Clear(false); // Stop moving, it's rude to walk and talk!
             m_creature->GetMotionMaster()->Idle();
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Just in case someone is unaffected by Shadow Prison
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // Just in case someone is unaffected by Shadow Prison
             DoCast(m_creature, SPELL_SHADOW_PRISON, true);
             TalkCount = 10;
             IsTalking = true; // We are now talking/
             Maiev->SetVisibility(VISIBILITY_OFF); // Leave her invisible until she has to talk
-            Maiev->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            Maiev->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             MaievGUID = Maiev->GetGUID();
         }
         else // If Maiev cannot be summoned, reset the encounter and post some errors to the console.
@@ -1327,7 +1327,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     {
         m_creature->RemoveAllAuras();
         DoCast(m_creature, SPELL_DEATH); // Animate his kneeling + stun him
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // Don't let the players interrupt our talk!
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // Don't let the players interrupt our talk!
         m_creature->GetMotionMaster()->Clear(false); // No moving!
         m_creature->GetMotionMaster()->Idle();
         if(MaievGUID)
@@ -1384,7 +1384,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 ((npc_akama_illidanAI*)Akama->AI())->AttackStart(m_creature); // Akama starts attacking us
                             }
                         }
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // We are now attackable!
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // We are now attackable!
                         break;
                     case 11:
                         if(MaievGUID)
@@ -1412,7 +1412,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 Maiev->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             }
                         }
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
                         IsTalking = false;
                         FaceVictimTimer = 2000;
@@ -1621,7 +1621,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND); // anndddd touchdown!
                         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
                         Phase = PHASE_NORMAL_2;
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE); // We should let the raid fight us =)
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // We should let the raid fight us =)
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
                         m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim())); // Chase our victim!
                     }else LandTimer -= diff;
@@ -1815,7 +1815,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
 
     if(IllidanGUID)
     {
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         Creature* Illidan = ((Creature*)Unit::GetUnit((*m_creature), IllidanGUID));
         if(Illidan)
         {
@@ -1829,7 +1829,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
             Illidan->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
             IsTalking = true; // Prevent Akama from starting to attack him
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP); // Prevent players from talking again
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             Illidan->GetMotionMaster()->Clear(false);
             Illidan->GetMotionMaster()->Idle();
             m_creature->GetMotionMaster()->Clear(false);

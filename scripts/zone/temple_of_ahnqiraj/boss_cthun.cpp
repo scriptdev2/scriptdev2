@@ -185,7 +185,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 
         //Reset flags
         m_creature->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE | UNIT_FLAG_ANIMATION_FROZEN);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
         //Reset Phase
         if (pInst)
@@ -312,7 +312,6 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
                     DoCast(m_creature,SPELL_RED_COLORATION);
 
                     //Freeze animation
-                    m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
                     m_creature->setEmoteState(53);
 
                     //Darkbeam for 35 seconds
@@ -410,7 +409,7 @@ struct MANGOS_DLL_DECL eye_of_cthunAI : public Scripted_NoMovementAI
 
                     //Reset to normal emote state and prevent select and attack
                     m_creature->setEmoteState(0);
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
                     //Remove Target field
                     m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
@@ -506,7 +505,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
         //Reset flags
         m_creature->RemoveAurasDueToSpell(SPELL_TRANSFORM);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
         if (pInst)
             pInst->SetData(DATA_CTHUN_PHASE, 0);
@@ -641,7 +640,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                     DoCast(m_creature, SPELL_TRANSFORM, false);
                     m_creature->SetHealth(m_creature->GetMaxHealth());
 
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
                     //Emerging phase
                     //AttackStart(Unit::GetUnit(*m_creature, HoldPlayer));

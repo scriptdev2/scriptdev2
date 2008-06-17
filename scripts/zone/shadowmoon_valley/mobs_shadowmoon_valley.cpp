@@ -176,16 +176,16 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
                 EnterEvadeMode();
             else ResetTimer -= diff;
 
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
+            if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+                return;
 
-        if(CastTimer < diff)
-        {
-            DoCast(m_creature->getVictim(), SPELL_NETHER_BREATH);
-            CastTimer = 5000;
-        }else CastTimer -= diff;
+            if(CastTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_NETHER_BREATH);
+                CastTimer = 5000;
+            }else CastTimer -= diff;
 
-        DoMeleeAttackIfReady();
+            DoMeleeAttackIfReady();
     }
 };
 
@@ -246,7 +246,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
 
         TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-        
+
         CellLock<GridReadGuard> cell_lock(cell, pair);
         cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
 
@@ -271,13 +271,14 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                 AttackStart(Dragonmaw);
             }
 
-            // Iterate through threatlist and remove the caster if present
-            std::list<HostilReference*>::iterator itr = m_creature->getThreatManager().getThreatList().begin();
-            for( ; itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+            // Iterate through threatlist and remove the caster if present			
+            std::list<HostilReference *>::iterator itr = m_creature->getThreatManager().getThreatList().begin();
+            while (itr!= m_creature->getThreatManager().getThreatList().end())
             {
-                if((*itr)->getUnitGuid() == caster->GetGUID())
+                if (caster->GetGUID() == (*itr)->getUnitGuid())
                     (*itr)->removeReference();
-            }
+                else ++itr;
+            }	
         }
     }
 
@@ -320,7 +321,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                             /*
                             float x,y,z;
                             m_creature->GetPosition(x,y,z);
-                            
+
                             float dx,dy,dz;
                             m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
                             dz += 20; // so it's in the air, not ground*/
@@ -367,7 +368,7 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
     uint64 PlayerGUID;
 
     bool Tapped;
-    
+
     uint32 PoisonTimer;
 
     void Reset()

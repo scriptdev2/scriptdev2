@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "def_the_eye.h"
 
-#define SPELL_ARCANE_MISSILES                 39414 //33031
+#define SPELL_ARCANE_MISSILES                 33031
 #define SPELL_MARK_OF_THE_ASTROMANCER         33045
 #define MARK_OF_SOLARIAN                      33023
 #define SPELL_BLINDING_LIGHT                  33009

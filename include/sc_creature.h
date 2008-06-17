@@ -39,14 +39,6 @@ enum SelectAggroTarget
     SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
 };
 
-enum UnitFlags1
-{
-            UNIT_FLAG_NOT_ATTACKABLE       = 0x0002,
-            UNIT_FLAG_ATTACKABLE           = 0x0008,
-            UNIT_FLAG_ANIMATION_FROZEN     = 0x0400,
-            UNIT_FLAG_WAR_PLAYER           = 0x1000
-};
-
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
     ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false) {}

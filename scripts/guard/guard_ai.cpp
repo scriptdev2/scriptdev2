@@ -82,11 +82,11 @@ void guardAI::UpdateAI(const uint32 diff)
     if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
         return;
 
-    //If we are within range melee the target
-    if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+    // Make sure our attack is ready and we arn't currently casting
+    if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
     {
-        //Make sure our attack is ready and we arn't currently casting
-        if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+        //If we are within range melee the target
+        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             bool Healing = false;
             SpellEntry const *info = NULL;

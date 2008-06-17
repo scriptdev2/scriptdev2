@@ -82,7 +82,7 @@ EndScriptData */
 #define TAINTED_ELEMENTAL             22009
 #define COILFANG_STRIDER              22056
 #define COILFANG_ELITE                22055
-#define FATHOM_SPOREBAT               22120 
+#define FATHOM_SPOREBAT               22140
 
 float ElementPos[8][4] = 
 {
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     //Phase 2 begins when Vashj hits 70%. She will run to the middle of her platform and surround herself in a shield making her invulerable.
                     Phase = 2;
 
-                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     m_creature->GetMotionMaster()->Clear();
                     m_creature->Relocate(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
                     m_creature->SendMoveToPacket(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, false, 0);
@@ -512,7 +512,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     //set life 50%
                     m_creature->SetHealth(m_creature->GetMaxHealth()/2);
 
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     m_creature->RemoveAurasDueToSpell(SPELL_MAGIC_BARRIER);
 
                     DoPlaySoundToSet(m_creature, SOUND_PHASE3);

@@ -1,6 +1,8 @@
-#include "Creature.h"
+#include "sc_creature.h"
+
+/*
 #include "CreatureAI.h"
-#include "../../ScriptMgr.h"
+#include "../../ScriptMgr.h"*/
 
 struct Escort_Waypoint
 {
@@ -20,7 +22,7 @@ struct Escort_Waypoint
     uint32 WaitTimeMs;
 };
 
-struct MANGOS_DLL_DECL npc_escortAI : private CreatureAI
+struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 {
 public:
 
@@ -32,7 +34,7 @@ public:
     virtual void Reset() = 0;
 
     // CreatureAI functions
-    npc_escortAI(Creature *c) : m_creature(c), IsBeingEscorted(false), InCombat(false), PlayerTimer(1000) {m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);}
+    npc_escortAI(Creature *c) : ScriptedAI(c), IsBeingEscorted(false), PlayerTimer(1000) {m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);}
 
     bool IsVisible(Unit*) const;
 
@@ -55,10 +57,8 @@ public:
 
     // EscortAI variables
 protected:
-    Creature* m_creature;
     uint64 PlayerGUID;
     bool IsBeingEscorted;
-    bool InCombat;
 
 private:
     uint32 WaitTimer;

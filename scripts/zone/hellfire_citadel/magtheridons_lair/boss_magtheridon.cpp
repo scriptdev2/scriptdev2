@@ -130,7 +130,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         Banished = false;
 
         m_creature->setFaction(35);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->CastSpell(m_creature, SPELL_SHADOW_CAGE, false);
 
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             if (Phase1_Timer <= diff)
             {
                 m_creature->setFaction(14);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
                 DoYell(SAY_FREED, LANG_UNIVERSAL, NULL);

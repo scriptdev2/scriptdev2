@@ -25,7 +25,7 @@ EndScriptData */
 
 #define SWITCH_RADIUS             15
 
-#define MODEL_CORRUPT             5498
+#define MODEL_CORRUPT             20609
 #define MODEL_CLEAN               20162
 
 #define SPELL_WATER_TOMB          38235

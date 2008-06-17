@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
@@ -229,7 +229,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
     void AttackStart(Unit* who)
     {
-        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (who->isTargetableForAttack())
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         DelayRes_Target = 0;
 
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         //reset encounter
@@ -391,7 +391,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             PrepareAdvisors();
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if(pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
@@ -406,7 +406,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             if(pCreature)
             {
                 pCreature->Respawn();
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 pCreature->setFaction(m_creature->getFaction());
                 pCreature->AI()->EnterEvadeMode();
             }
@@ -435,7 +435,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             Unit *target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -451,7 +451,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_INTRO);
 
             pInstance->SetData(DATA_KAELTHASEVENT, 1);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             PhaseSubphase = 0;
             Phase_Timer = 23000;
@@ -478,7 +478,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
@@ -574,7 +574,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -609,7 +609,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -644,7 +644,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -679,7 +679,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         if(Advisor)
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             Advisor->setFaction(m_creature->getFaction());
 
                             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -785,7 +785,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
                     Unit *target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -917,7 +917,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         m_creature->InterruptNonMeleeSpells(false);
                         DoCast(m_creature, SPELL_FULLPOWER);
-                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     }
 
                     //ShockBarrier_Timer
@@ -954,7 +954,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_creature->InterruptNonMeleeSpells(false);
                         m_creature->RemoveAurasDueToSpell(SPELL_FULLPOWER);
                         DoCast(m_creature, SPELL_EXPLODE);
-                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         Phase = 6;
                         DoStartAttackAndMovement(m_creature->getVictim());
                         m_creature->GetMotionMaster()->Clear();
@@ -1126,7 +1126,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
 
     void Aggro(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1202,7 +1202,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
 
     void Aggro(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1267,7 +1267,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void AttackStart(Unit* who)
     {
-        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (who->isTargetableForAttack())
@@ -1285,7 +1285,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void Aggro(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)
@@ -1386,7 +1386,7 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
 
     void Aggro(Unit *who)
     {
-        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE))
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
         if (!who || FakeDeath)

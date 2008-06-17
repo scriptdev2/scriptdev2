@@ -31,6 +31,7 @@ EndScriptData */
 #define SPELL_ENRAGE                44779
 #define SPELL_TELETOCENTER          43098
 #define SPELL_SUMMONALL             43097
+#define SPELL_BERSERK               47008
 // -- Fire Bob Spells
 #define MOB_FIRE_BOMB               23920
 #define SPELL_FIRE_BOMB_CHANNEL     42621    
@@ -39,8 +40,8 @@ EndScriptData */
 #define SPELL_FIRE_BOMB_DAMAGE      42630 
 
 // -- SAYs
-#define SOUND_EVENT                 12031 //NOT USED need more information
-#define SAY_EVENT                   "Spirits of da wind be your doom!" // NOT USED need more information
+#define SOUND_AGGRO                 12031 
+#define SAY_AGGRO                   "Spirits of da wind be your doom!"
 #define SOUND_FIRE_BOMBS            12032
 #define SAY_FIRE_BOMBS              "I burn ya now!"
 #define SOUND_SUMMON_HATCHER        12033
@@ -58,10 +59,10 @@ EndScriptData */
 #define SOUND_DEATH                 12038
 #define SAY_DEATH                   "Zul'jin... got a surprise for you..."
 
-#define SOUND_AGGRO_1               12039
-#define SAY_AGGRO_1                 "Come, strangers. The spirit of the dragonhawk hot be hungry for worthy souls."
-#define SOUND_AGGRO_2               12040
-#define SAY_AGGRO_2                 "Come, friends. Your bodies gonna feed ma hatchlings, and your souls are going to feed me with power!"
+#define SOUND_AGGRO_1               12039 //NOT USED need more information
+#define SAY_AGGRO_1                 "Come, strangers. The spirit of the dragonhawk hot be hungry for worthy souls." //NOT USED need more information (random say before aggro?)
+#define SOUND_AGGRO_2               12040 //NOT USED need more information
+#define SAY_AGGRO_2                 "Come, friends. Your bodies gonna feed ma hatchlings, and your souls are going to feed me with power!" //NOT USED need more information (random say before aggro?)
 
 // --Summons
 #define MOB_AMANI_HATCHER           23818
@@ -129,6 +130,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     uint32 wipetimer;
     uint32 reset_timer;
     bool noeggs;
+    bool enraged;
+    bool enragetime;
 
     uint64 FireBombGUIDs[40];
     uint64 ThrowControllerGUID;
@@ -151,6 +154,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         wipetimer = 600000; // 10 mins       
         bombing =false;
         reset_timer = 5000;
+        enraged = false;
+        enragetime = false;
 
         ThrowControllerGUID = 0;
         for(uint8 i = 0; i < 40; i++)
@@ -192,18 +197,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_JANALAIEVENT, IN_PROGRESS);
 
-        switch(rand()%2)
-        {
-            case 0:
-                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                break;
-
-            case 1:
-                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                break; 
-        }  
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void FireWall() // Create Firewall
@@ -332,18 +327,31 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 DoCast(m_creature,SPELL_TELETOCENTER,true);// only Effect Spell
                 DoCast(m_creature,SPELL_FIRE_BOMB_CHANNEL,false);
                 finishedbomb_timer = 11000;
-            }else bomb_timer -=diff; 
+            }else bomb_timer -=diff;
 
-            //Enrage after 5 minutes
-            if(enrage_timer < diff)
+            if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25) && !enraged) //enrage if under 25% hp before 5 min.
+            {
+                enragetime = true;
+                enrage_timer = 600000;
+            }
+
+            //Enrage but only if not bombing
+            if(enragetime && !enraged)
             {             
                 DoYell(SAY_BERSERK, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_BERSERK);
                 m_creature->InterruptNonMeleeSpells(false);
                 DoCast(m_creature,SPELL_ENRAGE);
-                enrage_timer = 600000;             
-            }else enrage_timer -=diff;
+                enraged = true;
+            }
         };
+
+        //Enrage after 5 minutes
+        if(enrage_timer < diff)
+        {
+            enragetime = true;
+            enrage_timer = 600000;
+        }else enrage_timer -=diff;
 
         if(bombing) // every Spell if Bombing
         {
@@ -396,11 +404,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {     
             DoYell(SAY_BERSERK, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_BERSERK);  
-
-            const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg * 10));
-            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg * 10));
-            m_creature->UpdateDamagePhysical(BASE_ATTACK);      
+            DoCast(m_creature,SPELL_ENRAGE);
 
             wipetimer = 30000;            
         }else wipetimer -=diff;

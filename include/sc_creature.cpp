@@ -38,7 +38,7 @@ void ScriptedAI::MoveInLineOfSight(Unit *who)
             {
                 DoStartAttackAndMovement(who);
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
+
                 if (!InCombat)
                 {
                     Aggro(who);
@@ -72,10 +72,10 @@ void ScriptedAI::UpdateAI(const uint32 diff)
     //Check if we have a current target
     if( m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
     {
-        //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if( m_creature->isAttackReady() )
         {
-            if( m_creature->isAttackReady() )
+            //If we are within range melee the target
+            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
@@ -145,8 +145,8 @@ void ScriptedAI::DoMeleeAttackIfReady()
         //If we are within range melee the target
         if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
+            m_creature->AttackerStateUpdate(m_creature->getVictim());
+            m_creature->resetAttackTimer();
         }
     }
 }

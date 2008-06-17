@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
         m_creature->setFaction(16);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if(pInstance)
             pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
@@ -304,7 +304,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         {
             m_creature->setFaction(35);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             DoCast(m_creature, SPELL_VANISH);
             InVanish = true;
             Vanish_Timer = 30000;
@@ -333,7 +333,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 
                 m_creature->setFaction(16);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_ATTACKABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->AI()->AttackStart(m_creature->getVictim());
                 InVanish = false;
             }else Wait_Timer -= diff;
