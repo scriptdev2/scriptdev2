@@ -115,6 +115,9 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
+        if (Evocating && !m_creature->HasAura(SPELL_EVOCATION, 0))
+            Evocating = false;
+
         if(m_creature->GetPower(POWER_MANA) <= 1000 && !Evocating)
         {
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
@@ -123,9 +126,6 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             DoCast(m_creature, SPELL_EVOCATION);
             Evocating = true;
         }
-
-        if (Evocating && !m_creature->HasAura(SPELL_EVOCATION, 0))
-            Evocating = false;
 
         if(!Enraged && !Evocating)
         {
