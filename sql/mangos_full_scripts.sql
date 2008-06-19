@@ -701,6 +701,9 @@ UPDATE `creature_template` SET `ScriptName`='mob_crystalcore_devastator' WHERE `
 /* Void Reaver event */
 UPDATE `creature_template` SET `ScriptName`='boss_void_reaver' WHERE `entry`=19516;
 UPDATE `creature_template` SET `ScriptName`='mob_arcane_orb_target' WHERE `entry`=19577;
+/* Astromancer event */
+UPDATE `creature_template` SET `ScriptName`='boss_high_astromancer_solarian' WHERE `entry`=18805;
+UPDATE `creature_template` SET `ScriptName`='mob_solarium_priest' WHERE `entry`=18806;
 /* Kael'thas event */
 UPDATE `creature_template` SET `ScriptName`='boss_kaelthas' WHERE `entry`=19622;
 UPDATE `creature_template` SET `ScriptName`='boss_thaladred_the_darkener' WHERE `entry`=20064;
