@@ -22,7 +22,6 @@ SDCategory: Gruul's Lair
 EndScriptData */
 
 #include "def_gruuls_lair.h"
-#include "TargetedMovementGenerator.h"
 
 #define SPELL_GROWTH              36300
 #define SPELL_CAVE_IN             36240
@@ -192,7 +191,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                         Unit *victim = m_creature->getVictim();
                         if(victim)
                         {
-                            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*victim));
+                            m_creature->GetMotionMaster()->MoveChase(victim);
                             m_creature->SetUInt64Value(UNIT_FIELD_TARGET, victim->GetGUID());
                         }
 
@@ -255,7 +254,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             if (GroundSlamTimer < diff)
             {
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->Idle();
+                m_creature->GetMotionMaster()->MoveIdle();
                 m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
                 PerformingGroundSlam= true;

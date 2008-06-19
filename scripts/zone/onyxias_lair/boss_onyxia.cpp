@@ -22,7 +22,6 @@ SDCategory: Onyxia's Lair
 EndScriptData */
 
 #include "sc_creature.h"
-#include "PointMovementGenerator.h"
 
 #define SPELL_WINGBUFFET            18500
 #define SPELL_FLAMEBREATH           18435
@@ -112,7 +111,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             DoYell(SAY_PHASE_2_TRANS, LANG_UNIVERSAL, NULL);
         }
 
@@ -164,14 +163,14 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                 m_creature->SetHover(true);
             }
 
-            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != POINT_MOTION_TYPE))
+            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE))
                 m_creature->GetMotionMaster()->Clear(false);
 
             if(MovementTimer < diff)
             {
                 uint32 random = rand()%8;
                 if(random < 7)
-                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]));
+                    m_creature->GetMotionMaster()->MovePoint(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]);
                 else
                 {
                     DoTextEmote("takes a deep breath", NULL);

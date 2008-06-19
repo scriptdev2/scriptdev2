@@ -22,7 +22,6 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "sc_creature.h"
-#include "TargetedMovementGenerator.h"
 
 //Spells
 #define SPELL_ICEBOLT                  28522
@@ -113,7 +112,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                     m_creature->InterruptNonMeleeSpells(false);
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                     (*m_creature).GetMotionMaster()->Clear(false);
-                    (*m_creature).GetMotionMaster()->Idle();
+                    (*m_creature).GetMotionMaster()->MoveIdle();
                     DoCast(m_creature,11010);
                     m_creature->SetHover(true);
                     DoCast(m_creature,18430);
@@ -157,7 +156,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                     m_creature->SetHover(false);
                     (*m_creature).GetMotionMaster()->Clear(false);
-                    (*m_creature).GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                    (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
                     Fly_Timer = 67000;
                     }else land_Timer -= diff;
                 }

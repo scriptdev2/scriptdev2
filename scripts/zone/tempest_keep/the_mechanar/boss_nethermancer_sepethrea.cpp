@@ -22,7 +22,6 @@ SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
 #include "sc_creature.h"
-#include "TargetedMovementGenerator.h"
 
 // Spells to be casted
 #define SPELL_SUMMON_RAGIN_FLAMES       35275
@@ -210,7 +209,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+            m_creature->GetMotionMaster()->MoveChase(target);
             onlyonce = true;
         }
 
@@ -222,7 +221,7 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+            m_creature->GetMotionMaster()->MoveChase(target);
         }else inferno_Timer -= diff;
 
         if(flame_timer < diff)

@@ -22,7 +22,6 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 
 // High Nethermancer Zerevor's spells
 #define SPELL_FLAMESTRIKE          41481
@@ -976,7 +975,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     DoResetThreat();
                     m_creature->AddThreat(target, 500000.0f); // Chase a unit. Check before DoMeleeAttackIfReady prevents from attacking
-                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                    m_creature->GetMotionMaster()->MoveChase(target);
                 }
             }else VanishTimer -= diff;
 
@@ -999,7 +998,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
             if(AppearEnvenomTimer < diff) // Appear 2 seconds before becoming attackable (Shifting out of vanish)
             {
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                 m_creature->SetVisibility(VISIBILITY_ON);
                 AppearEnvenomTimer = 6000;
             }else AppearEnvenomTimer -= diff;

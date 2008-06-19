@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "def_black_temple.h"
 #include "GameObject.h"
-#include "TargetedMovementGenerator.h"
+#include "Player.h"
 
 //Aggro
 #define SAY_AGGRO       "You will die, in the name of Lady Vashj!"
@@ -289,12 +289,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if(IsShielded)
         {
             m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             if(!m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                 DoCast(m_creature, SPELL_SHIELD_VISUAL);
             if(DispelShieldTimer < diff)
             {
-                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                 if(m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                     m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
                 IsShielded = false;
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             DoCast(m_creature, SPELL_SHIELD_VISUAL, true);
             // DoCast(m_creature, SPELL_TIDAL_SHIELD);
             m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             IsShielded = true;
             TidalShieldTimer = 60000;
             CheckTimer = 2000;

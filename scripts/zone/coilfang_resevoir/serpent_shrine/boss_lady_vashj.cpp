@@ -27,8 +27,6 @@ EndScriptData */
 #include "Item.h"
 #include "Spell.h"
 #include "GameObject.h"
-#include "TargetedMovementGenerator.h"
-#include "PointMovementGenerator.h"
 
 #define SPELL_MULTI_SHOT              38310
 #define SPELL_SHOCK_BLAST             38509
@@ -444,7 +442,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 Creature *Elemental;
                 Elemental = m_creature->SummonCreature(ENCHANTED_ELEMENTAL, ElementPos[EnchantedElemental_Pos][0], ElementPos[EnchantedElemental_Pos][1], ElementPos[EnchantedElemental_Pos][2], ElementPos[EnchantedElemental_Pos][3], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
                 if(Elemental)
-                    Elemental->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()));
+                    Elemental->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
 
                 if(EnchantedElemental_Pos == 7)
                     EnchantedElemental_Pos = 0;
@@ -463,7 +461,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 if(Tain_Elemental)
                 {
                     Tain_Elemental->GetMotionMaster()->Clear();
-                    Tain_Elemental->GetMotionMaster()->Idle();
+                    Tain_Elemental->GetMotionMaster()->MoveIdle();
                 }
 
                 TaintedElemental_Timer = 120000;
@@ -521,7 +519,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     Phase = 3;
 
                     //return to the tank
-                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                 }
                 Check_Timer = 1000;
             }else Check_Timer -= diff;

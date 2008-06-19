@@ -22,8 +22,6 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "sc_creature.h"
-#include "TargetedMovementGenerator.h"
-#include "PointMovementGenerator.h"
 
 #define SAY_MIDNIGHT_KILL "Well done Midnight!"
 #define SOUND_MIDNIGHT_KILL 9173 
@@ -147,7 +145,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                 {
                     Mount_Timer = 0;
                     m_creature->SetVisibility(VISIBILITY_OFF);
-                    m_creature->GetMotionMaster()->Idle();
+                    m_creature->GetMotionMaster()->MoveIdle();
                     Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen);
                     if(pAttumen)
                     {
@@ -155,7 +153,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                         pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         if(pAttumen->getVictim())
                         {
-                            pAttumen->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pAttumen->getVictim()));
+                            pAttumen->GetMotionMaster()->MoveChase(pAttumen->getVictim());
                             pAttumen->SetUInt64Value(UNIT_FIELD_TARGET, pAttumen->getVictim()->GetGUID());
                         }
                         pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
@@ -182,12 +180,12 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         //m_creature->Relocate(newX,newY,newZ,angle);
         //m_creature->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
         m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, newX, newY, newZ));
+        m_creature->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
         distance += 10;
         newX = m_creature->GetPositionX() + cos(angle)*(distance/2) ;
         newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
         pAttumen->GetMotionMaster()->Clear();
-        pAttumen->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, newX, newY, newZ));
+        pAttumen->GetMotionMaster()->MovePoint(0, newX, newY, newZ);
         //pAttumen->Relocate(newX,newY,newZ,-angle);
         //pAttumen->SendMonsterMove(newX, newY, newZ, 0, true, 1000);
         Mount_Timer = 1000;

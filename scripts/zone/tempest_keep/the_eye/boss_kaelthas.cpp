@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "def_the_eye.h"
 #include "Player.h"
-#include "TargetedMovementGenerator.h"
 #include "WorldPacket.h"
 
 //Phase 2 spells (Not used)
@@ -305,7 +304,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             m_creature->ClearAllReactives();
             m_creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
             m_creature->GetMotionMaster()->Clear();
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
 
             if (pInstance->GetData(DATA_KAELTHASEVENT) == 3)
@@ -326,7 +325,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
                 DoResetThreat();
                 AttackStart(Target);
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*Target));
+                m_creature->GetMotionMaster()->MoveChase(Target);
                 m_creature->AddThreat(Target, 0.0f);
             }else DelayRes_Timer -= diff;
     }
@@ -909,7 +908,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                         m_creature->StopMoving();
                         m_creature->GetMotionMaster()->Clear();
-                        m_creature->GetMotionMaster()->Idle();
+                        m_creature->GetMotionMaster()->MoveIdle();
                         m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
                         //m_creature->GetMap()->CreatureRelocation(m_creature, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
                         m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, true, 1000);
@@ -958,7 +957,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         Phase = 6;
                         DoStartAttackAndMovement(m_creature->getVictim());
                         m_creature->GetMotionMaster()->Clear();
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
 
                     }else Phase_Timer -= diff;
                 }
@@ -976,7 +975,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         case 0:
                             m_creature->StopMoving();
                             m_creature->GetMotionMaster()->Clear();
-                            m_creature->GetMotionMaster()->Idle();
+                            m_creature->GetMotionMaster()->MoveIdle();
                             m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
                             //m_creature->GetMap()->CreatureRelocation(m_creature, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
                             m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, true, 1000);
@@ -1066,7 +1065,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             GravityLapse_Phase = 0;
                             DoStartAttackAndMovement(m_creature->getVictim());
                             m_creature->GetMotionMaster()->Clear();
-                            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                             DoResetThreat();
                             break;
                         }
@@ -1526,7 +1525,7 @@ struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
             IsEgg = true;
 
             m_creature->GetMotionMaster()->Clear();
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetHealth(m_creature->GetMaxHealth());
             EggVis_Timer = 1000;
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);

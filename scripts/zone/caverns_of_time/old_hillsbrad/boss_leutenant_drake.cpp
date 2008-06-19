@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "def_old_hillsbrad.h"
 #include "GameObject.h"
-#include "PointMovementGenerator.h"
 #include "../../../npc/npc_escortAI.h"
 
 /*######
@@ -166,7 +165,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         //TODO: make this work
         if( CanPatrol && wpId == 0 )
         {
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(DrakeWP[0].wpId, DrakeWP[0].x, DrakeWP[0].y, DrakeWP[0].z));
+            m_creature->GetMotionMaster()->MovePoint(DrakeWP[0].wpId, DrakeWP[0].x, DrakeWP[0].y, DrakeWP[0].z);
             wpId++;
         }
 

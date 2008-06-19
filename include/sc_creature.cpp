@@ -1,7 +1,9 @@
 #include "sc_creature.h"
 #include "Map.h"
-#include "TargetedMovementGenerator.h"
 #include "WorldPacket.h"
+
+#include "Item.h"
+#include "Player.h"
 #include "Spell.h"
 
 #include "Cell.h"
@@ -93,7 +95,7 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->LoadCreaturesAddon();
 
     if(m_creature->isAlive())
-        m_creature->GetMotionMaster()->TargetedHome();
+        m_creature->GetMotionMaster()->MoveTargetedHome();
 
     InCombat = false;
     Reset();
@@ -112,7 +114,7 @@ void ScriptedAI::DoStartAttackAndMovement(Unit* victim, float distance, float an
 
     if ( m_creature->Attack(victim, true) )
     {
-        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*victim, distance, angle));
+        m_creature->GetMotionMaster()->MoveChase(victim, distance, angle);
         m_creature->AddThreat(victim, 0.0f);
         m_creature->resetAttackTimer();
 

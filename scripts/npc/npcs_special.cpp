@@ -24,7 +24,6 @@ EndScriptData
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
-#include "PointMovementGenerator.h"
 
 /*########
 # npc_chicken_cluck
@@ -285,12 +284,12 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
                 case 12923:
                 case 12924:
                 case 12925:
-                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, H_RUNTOX, H_RUNTOY, H_RUNTOZ));
+                    m_creature->GetMotionMaster()->MovePoint(0, H_RUNTOX, H_RUNTOY, H_RUNTOZ);
                     break;
                 case 12936:
                 case 12937:
                 case 12938:
-                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, A_RUNTOX, A_RUNTOY, A_RUNTOZ));
+                    m_creature->GetMotionMaster()->MovePoint(0, A_RUNTOX, A_RUNTOY, A_RUNTOZ);
                     break;
             }
         }

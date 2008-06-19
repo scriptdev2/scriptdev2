@@ -21,7 +21,6 @@ SDComment:
 EndScriptData */
 
 #include "def_karazhan.h"
-#include "TargetedMovementGenerator.h"
 
 #define SAY_AGGRO           "Hmm, unannounced visitors? Preparations must be made."
 #define SOUND_AGGRO         9211

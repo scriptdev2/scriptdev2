@@ -1,6 +1,4 @@
 #include "npc_escortAI.h"
-#include "TargetedMovementGenerator.h"
-#include "PointMovementGenerator.h"
 
 #define WP_LAST_POINT   -1
 #define MAX_PLAYER_DISTANCE 50
@@ -27,7 +25,7 @@ void npc_escortAI::AttackStart(Unit *who)
         if ( m_creature->Attack(who, true) )
         {
             m_creature->GetMotionMaster()->MovementExpired();
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
+            m_creature->GetMotionMaster()->MoveChase(who);
             m_creature->AddThreat(who, 0.0f);
             m_creature->resetAttackTimer();
 
@@ -71,7 +69,7 @@ void npc_escortAI::MoveInLineOfSight(Unit *who)
                 if ( m_creature->Attack(who, true) )
                 {
                     m_creature->GetMotionMaster()->MovementExpired();
-                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
+                    m_creature->GetMotionMaster()->MoveChase(who);
                     m_creature->AddThreat(who, 0.0f);
                     m_creature->resetAttackTimer();
 
@@ -118,12 +116,12 @@ void npc_escortAI::EnterEvadeMode()
         debug_log("SD2: EscortAI has left combat and is now returning to last point");
         Returning = true;
         m_creature->GetMotionMaster()->MovementExpired();
-        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z ));
+        m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z);
 
     }else 
     {
         m_creature->GetMotionMaster()->MovementExpired();
-        m_creature->GetMotionMaster()->TargetedHome();
+        m_creature->GetMotionMaster()->MoveTargetedHome();
     }
 
     Reset();
@@ -143,7 +141,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
                 //Continue with waypoints
-                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z ));
+                m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
                 debug_log("SD2: EscortAI Reconnect WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                 WaitTimer = 0;
                 ReconnectWP = false;
@@ -170,7 +168,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 return;
             }
 
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z ));
+            m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
             debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
 
             WaitTimer = 0;
@@ -287,7 +285,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
     
     //Start WP
-    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z ));
+    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
     debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
     IsBeingEscorted = true;
     ReconnectWP = false;

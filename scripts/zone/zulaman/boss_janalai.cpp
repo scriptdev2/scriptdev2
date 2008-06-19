@@ -22,7 +22,6 @@ SDCategory: Zul'Aman
 EndScriptData */
 
 #include "def_zulaman.h"
-#include "PointMovementGenerator.h"
 
 // Jan'alai
 // --Spell
@@ -385,11 +384,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature,SOUND_SUMMON_HATCHER);
                     hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_l[0][0],hatcherway_l[0][1],hatcherway_l[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
                     if(hatcher)
-                        hatcher->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, hatcherway_l[0][0], hatcherway_l[0][1], hatcherway_l[0][2]));
+                        hatcher->GetMotionMaster()->MovePoint(0, hatcherway_l[0][0], hatcherway_l[0][1], hatcherway_l[0][2]);
 
                     hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
                     if(hatcher)
-                        hatcher->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2]));
+                        hatcher->GetMotionMaster()->MovePoint(0, hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2]);
                     hatchertime = 45000;
                 }
                 else
@@ -573,9 +572,9 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
                 {
                     m_creature->GetMotionMaster()->Clear();
                     if(waytype)
-                        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0,hatcherway_l[waypoint][0],hatcherway_l[waypoint][1],hatcherway_l[waypoint][2]));
+                        m_creature->GetMotionMaster()->MovePoint(0,hatcherway_l[waypoint][0],hatcherway_l[waypoint][1],hatcherway_l[waypoint][2]);
                     else
-                        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0,hatcherway_r[waypoint][0],hatcherway_r[waypoint][1],hatcherway_r[waypoint][2]));
+                        m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[waypoint][0],hatcherway_r[waypoint][1],hatcherway_r[waypoint][2]);
                     wait= true;
                 }
             }
@@ -716,9 +715,9 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
         if(!start)
         {
             if(m_creature->GetPositionY() > 1150)
-                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, hatcherway_l[3][0]+rand()%4-2,hatcherway_l[3][1]+rand()%4-2,hatcherway_l[3][2]));
+                m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0]+rand()%4-2,hatcherway_l[3][1]+rand()%4-2,hatcherway_l[3][2]);
             else
-                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0,hatcherway_r[3][0]+rand()%4-2,hatcherway_r[3][1]+rand()%4-2,hatcherway_r[3][2]));
+                m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[3][0]+rand()%4-2,hatcherway_r[3][1]+rand()%4-2,hatcherway_r[3][2]);
             start = true;
         }
 

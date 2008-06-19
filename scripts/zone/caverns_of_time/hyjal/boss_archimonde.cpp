@@ -22,8 +22,6 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "def_hyjal.h"
-#include "TargetedMovementGenerator.h"
-#include "PointMovementGenerator.h"
 #include "SpellAuras.h"
 
 #define SPELL_DENOUEMENT_WISP      32124
@@ -325,7 +323,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                     if(target && target->isAlive())
                     {
                         m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                        m_creature->GetMotionMaster()->MoveChase(target);
                     }
                     break;
 
@@ -334,7 +332,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                     float y = 0;
                     float z = 0;
                     m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 40, x, y, z);
-                    m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, x, y, z));
+                    m_creature->GetMotionMaster()->MovePoint(0, x, y, z);
                     break;
             }
             ChangeTargetTimer = 5000;
@@ -633,7 +631,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 10)
                 {
                     m_creature->GetMotionMaster()->Clear(false);
-                    m_creature->GetMotionMaster()->Idle();
+                    m_creature->GetMotionMaster()->MoveIdle();
                     Enraged = true;
                     DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
@@ -649,7 +647,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     if(m_creature->IsWithinDistInMap(Check, 75))
                     {
                         m_creature->GetMotionMaster()->Clear(false);
-                        m_creature->GetMotionMaster()->Idle();
+                        m_creature->GetMotionMaster()->MoveIdle();
                         Enraged = true;
                         DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
                         DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
@@ -664,7 +662,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             if(!HasProtected)
             {
                 m_creature->GetMotionMaster()->Clear(false);
-                m_creature->GetMotionMaster()->Idle();
+                m_creature->GetMotionMaster()->MoveIdle();
                 DoCast(m_creature->getVictim(), SPELL_PROTECTION_OF_ELUNE);
                 HasProtected = true;
                 Enraged = true;

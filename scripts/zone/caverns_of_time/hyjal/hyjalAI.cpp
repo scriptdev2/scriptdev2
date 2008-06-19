@@ -22,7 +22,6 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "hyjalAI.h"
-#include "PointMovementGenerator.h"
 #include "Map.h"
 #include "WorldPacket.h"
 
@@ -106,7 +105,7 @@ void hyjalAI::EnterEvadeMode()
     m_creature->LoadCreaturesAddon();
 
     if(m_creature->isAlive())
-        m_creature->GetMotionMaster()->TargetedHome();
+        m_creature->GetMotionMaster()->MoveTargetedHome();
 
     InCombat = false;
 }
@@ -145,7 +144,7 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         EnemyCount++; // Increment Enemy Count to be used in World States
 
         pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-        pCreature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]));
+        pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
         pCreature->AddThreat(m_creature, 1.0f);
         DoZoneInCombat(pCreature);
 

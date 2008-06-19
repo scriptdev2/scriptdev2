@@ -23,8 +23,6 @@ EndScriptData */
 
 #include "def_karazhan.h"
 #include "sc_gossip.h"
-#include "PointMovementGenerator.h"
-#include "TargetedMovementGenerator.h"
 #include "GameObject.h"
 
 /***********************************/
@@ -674,7 +672,7 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
             m_creature->GetPosition(x,y,z);
             float PosX, PosY, PosZ;
             m_creature->GetRandomPoint(x,y,z,10, PosX, PosY, PosZ);
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, PosX, PosY, PosZ));
+            m_creature->GetMotionMaster()->MovePoint(0, PosX, PosY, PosZ);
             MoveTimer = 5000 + rand()%3000;
         }else MoveTimer -= diff;
     }
@@ -957,7 +955,7 @@ void PretendToDie(Creature* _Creature)
     _Creature->ClearAllReactives();
     _Creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
     _Creature->GetMotionMaster()->Clear();
-    _Creature->GetMotionMaster()->Idle();
+    _Creature->GetMotionMaster()->MoveIdle();
     _Creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
 };
 
@@ -970,7 +968,7 @@ void Resurrect(Creature* target)
     if(target->getVictim())
     {
         target->SetUInt64Value(UNIT_FIELD_TARGET, target->getVictim()->GetGUID());
-        target->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target->getVictim()));
+        target->GetMotionMaster()->MoveChase(target->getVictim());
         target->AI()->AttackStart(target->getVictim());
     }
 };

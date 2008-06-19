@@ -23,7 +23,7 @@ EndScriptData */
 
 #include "mob_event_ai.h"
 #include "sc_instance.h"
-#include "TargetedMovementGenerator.h"
+#include "Player.h"
 
 #define EVENT_UPDATE_TIME               500
 #define SPELL_RUN_AWAY                  8225
@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             if (Follow)
             {
                 m_creature->GetMotionMaster()->Clear(false);
-                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pTarget, AttackDistance, AttackAngle));
+                m_creature->GetMotionMaster()->MoveChase(pTarget, AttackDistance, AttackAngle);
             }
             
             m_creature->AddThreat(pTarget, 0.0f);
@@ -467,7 +467,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                                 AttackAngle = 0;
 
                                 m_creature->GetMotionMaster()->Clear(false);
-                                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
                             }
 
                         }else caster->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
@@ -577,17 +577,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Allow movement (create new targeted movement gen if none exist already)
                 if (CombatMovementEnabled)
                 {
-                    if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
                     {
                         m_creature->GetMotionMaster()->Clear(false);
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
                     }
                 }
                 else
-                    if (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
                     {
                         m_creature->GetMotionMaster()->Clear(false);
-                        m_creature->GetMotionMaster()->Idle();
+                        m_creature->GetMotionMaster()->MoveIdle();
                     }
             }
             break;
@@ -662,7 +662,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     //Drop current movement gen
                     m_creature->GetMotionMaster()->Clear(false);
-                    m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim(), AttackDistance, AttackAngle));
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
                 }
             }
             break;
@@ -818,7 +818,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         m_creature->CombatStop();
         m_creature->LoadCreaturesAddon();
         if(m_creature->isAlive())
-            m_creature->GetMotionMaster()->TargetedHome();
+            m_creature->GetMotionMaster()->MoveTargetedHome();
 
         InCombat = false;
         Reset();

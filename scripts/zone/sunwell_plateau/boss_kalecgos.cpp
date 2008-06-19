@@ -86,7 +86,6 @@ EndScriptData */
 #include "sc_creature.h"
 #include "GameObject.h"
 #include "sc_gossip.h"
-#include "PointMovementGenerator.h"
 #include "def_sunwell_plateau.h"
 //timers not blizzlike
 //say @ spellcastion: not implemented
@@ -342,7 +341,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,KALEC_SOUND_NON_FRIENDLY_BEFORE_FLY_AWAY);
         m_creature->SetUnitMovementFlags(MOVEMENTFLAG_ONTRANSPORT);
         m_creature->GetMotionMaster()->Clear();
-        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0,FLY_X,FLY_Y,FLY_Z));
+        m_creature->GetMotionMaster()->MovePoint(0,FLY_X,FLY_Y,FLY_Z);
     }
 
     void MovementInform(uint32 type,uint32 id)

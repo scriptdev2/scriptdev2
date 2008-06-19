@@ -22,7 +22,6 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 
 //Sound'n'speech
 //Suffering
@@ -349,7 +348,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                             MergeThreatList(EssenceSuffering);
                             EssenceSuffering->RemoveAllAuras();
                             EssenceSuffering->DeleteThreatList();
-                            EssenceSuffering->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
+                            EssenceSuffering->GetMotionMaster()->MoveFollow(m_creature,0.0f,0.0f);
                             EssenceSuffering->Yell(SUFF_SAY_RECAP,LANG_UNIVERSAL,0);
                             DoPlaySoundToSet(m_creature, SUFF_SOUND_RECAP);
                             EssenceSuffering->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -449,7 +448,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     if(EssenceDesire->GetHealth() < (EssenceDesire->GetMaxHealth()*0.1))
                     {
                         MergeThreatList(EssenceDesire);
-                        EssenceDesire->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
+                        EssenceDesire->GetMotionMaster()->MoveFollow(m_creature,0.0f,0.0f);
                         EssenceDesire->RemoveAllAuras();
                         EssenceDesire->DeleteThreatList();
                         EssenceDesire->Yell(DESI_SAY_RECAP,LANG_UNIVERSAL,0);

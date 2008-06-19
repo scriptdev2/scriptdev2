@@ -25,7 +25,6 @@ EndScriptData */
 #include "def_karazhan.h"
 #include "GameObject.h"
 #include "Map.h"
-#include "PointMovementGenerator.h"
 #include "WorldPacket.h"
 #include "../../npc/npc_escortAI.h"
 

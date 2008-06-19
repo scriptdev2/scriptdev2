@@ -22,7 +22,6 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 
 //Spells
 #define SPELL_HURTFUL_STRIKE        33813
@@ -61,7 +60,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
         if(who && (who != m_creature) && (m_creature->IsWithinDistInMap(who, 10)))
         {
             m_creature->AddThreat(who, 50000000.0f);
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*who));
+            m_creature->GetMotionMaster()->MoveChase(who);
             m_creature->CastSpell(m_creature, 40029, true);
             TargetLocked = true;
         }
@@ -74,7 +73,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
         if(!target) return;
 
         m_creature->AddThreat(target, 50000000.0f);
-        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+        m_creature->GetMotionMaster()->MoveChase(target);
         m_creature->CastSpell(m_creature, 40029, true);
         TargetLocked = true;
     }

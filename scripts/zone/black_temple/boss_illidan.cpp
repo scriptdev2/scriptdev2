@@ -23,8 +23,6 @@ EndScriptData */
 
 /******** Includes ************/
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
-#include "PointMovementGenerator.h"
 #include "WorldPacket.h"
 #include "GameObject.h"
 #include "sc_gossip.h"
@@ -554,7 +552,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                         {
                             float dx = Illidan->GetPositionX() + rand()%15;
                             float dy = Illidan->GetPositionY() + rand()%15;
-                            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(13, dx, dy, Illidan->GetPositionZ()));
+                            m_creature->GetMotionMaster()->MovePoint(13, dx, dy, Illidan->GetPositionZ());
                             m_creature->SetUInt64Value(UNIT_FIELD_TARGET, IllidanGUID);
                         }
                     }
@@ -662,7 +660,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             {
                 if(WayPoint == WayPointList.end())
                     return;
-                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WayPoint->id, WayPoint->x, WayPoint->y,WayPoint->z));
+                m_creature->GetMotionMaster()->MovePoint(WayPoint->id, WayPoint->x, WayPoint->y,WayPoint->z);
                 WalkTimer = 0;
             }else WalkTimer -= diff;
         }
@@ -729,7 +727,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
                         WayPoint = WayPointList.begin();
                         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WayPoint->id, WayPoint->x, WayPoint->y, WayPoint->z));
+                        m_creature->GetMotionMaster()->MovePoint(WayPoint->id, WayPoint->x, WayPoint->y, WayPoint->z);
                         IsWalking = true;
                         break;
                     default:
@@ -894,7 +892,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                     Akama->Respawn();
                 ((npc_akama_illidanAI*)Akama->AI())->Reset();
                 ((npc_akama_illidanAI*)Akama->AI())->EnterEvadeMode();
-                Akama->GetMotionMaster()->TargetedHome();
+                Akama->GetMotionMaster()->MoveTargetedHome();
             }
         }
 
@@ -1075,7 +1073,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             if(Trigger)
             {
                 ((demonfireAI*)Trigger->AI())->IsTrigger = true;
-                Trigger->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, final_X, final_Y, final_Z));
+                Trigger->GetMotionMaster()->MovePoint(0, final_X, final_Y, final_Z);
         
                 if(!i)
                     Trigger->CastSpell(Trigger, SPELL_EYE_BLAST_TRIGGER, true);
@@ -1141,7 +1139,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     
     void Move(float X, float Y, float Z, Creature* _Creature)
     {
-        _Creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, X, Y, Z));
+        _Creature->GetMotionMaster()->MovePoint(0, X, Y, Z);
     }
 
     void HandleDemonTransformAnimation(uint32 count)
@@ -1157,7 +1155,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if(DemonTransformation[count].phase != 8)
         {
             m_creature->GetMotionMaster()->Clear();
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
         }
         
         if(unaura)
@@ -1186,7 +1184,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             Phase = DemonTransformation[count].phase; // Set phase properly
         else
         {
-            m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim())); // Refollow and attack our old victim
+            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim()); // Refollow and attack our old victim
             if(MaievGUID) Phase = PHASE_NORMAL_MAIEV; // Depending on whether we summoned Maiev, we switch to either phase 5 or 3
             else Phase = PHASE_NORMAL_2;
         }
@@ -1220,7 +1218,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // So players don't shoot us down
         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF); // Animate our take off!
         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING); // We now hover!
-        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, CENTER_X, CENTER_Y, CENTER_Z));
+        m_creature->GetMotionMaster()->MovePoint(0, CENTER_X, CENTER_Y, CENTER_Z);
         for(uint8 i = 0; i < 2; ++i)
         {
             Creature* Glaive = m_creature->SummonCreature(BLADE_OF_AZZINOTH, GlaivePosition[i].x, GlaivePosition[i].y, GlaivePosition[i].z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -1306,7 +1304,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if(Maiev)
         {
             m_creature->GetMotionMaster()->Clear(false); // Stop moving, it's rude to walk and talk!
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // Just in case someone is unaffected by Shadow Prison
             DoCast(m_creature, SPELL_SHADOW_PRISON, true);
             TalkCount = 10;
@@ -1329,7 +1327,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         DoCast(m_creature, SPELL_DEATH); // Animate his kneeling + stun him
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // Don't let the players interrupt our talk!
         m_creature->GetMotionMaster()->Clear(false); // No moving!
-        m_creature->GetMotionMaster()->Idle();
+        m_creature->GetMotionMaster()->MoveIdle();
         if(MaievGUID)
         {
             Creature* Maiev = ((Creature*)Unit::GetUnit((*m_creature), MaievGUID));
@@ -1337,7 +1335,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 Maiev->CombatStop(); // Maiev shouldn't do anything either. No point in her attacking us =]
                 Maiev->GetMotionMaster()->Clear(false); // Stop her from moving as well
-                Maiev->GetMotionMaster()->Idle();
+                Maiev->GetMotionMaster()->MoveIdle();
                 float distance = 10.0f;
                 float dx = m_creature->GetPositionX() + (distance*cos(m_creature->GetOrientation()));
                 float dy = m_creature->GetPositionY() + (distance*sin(m_creature->GetOrientation()));
@@ -1375,9 +1373,9 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             if(Akama)
                             {
                                 Akama->GetMotionMaster()->Clear(false);
-                                Akama->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature)); // Akama runs to us!
+                                Akama->GetMotionMaster()->MoveChase(m_creature); // Akama runs to us!
                                 m_creature->GetMotionMaster()->Clear(false);
-                                m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*Akama)); // We run to Akama!
+                                m_creature->GetMotionMaster()->MoveChase(Akama); // We run to Akama!
                                 Akama->AddThreat(m_creature, 1000000.0f);
                                 AttackStart(Akama); // Start attacking Akama
                                 ((npc_akama_illidanAI*)Akama->AI())->IsTalking = false;
@@ -1406,14 +1404,14 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                             if(Maiev)
                             {
                                 Maiev->GetMotionMaster()->Clear(false);
-                                Maiev->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature));
+                                Maiev->GetMotionMaster()->MoveChase(m_creature);
                                 Maiev->AddThreat(m_creature, 10000000.0f); // Have Maiev add a lot of threat on us so that players don't pull her off if they damage her via AOE
                                 Maiev->AI()->AttackStart(m_creature); // Force Maiev to attack us.
                                 Maiev->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                             }
                         }
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim()));
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                         IsTalking = false;
                         FaceVictimTimer = 2000;
                         RefaceVictim = true;
@@ -1558,7 +1556,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 }else SummonFlamesTimer -= diff;
             }
 
-            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() != POINT_MOTION_TYPE))
+            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE))
                 m_creature->GetMotionMaster()->Clear(false);
 
             if(HasSummoned)
@@ -1623,7 +1621,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         Phase = PHASE_NORMAL_2;
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // We should let the raid fight us =)
                         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->getVictim()->GetGUID());
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*m_creature->getVictim())); // Chase our victim!
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim()); // Chase our victim!
                     }else LandTimer -= diff;
                     return; // Do not continue past this point if LandTimer is not 0 and we are in phase 2.
                 }
@@ -1831,9 +1829,9 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP); // Prevent players from talking again
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             Illidan->GetMotionMaster()->Clear(false);
-            Illidan->GetMotionMaster()->Idle();
+            Illidan->GetMotionMaster()->MoveIdle();
             m_creature->GetMotionMaster()->Clear(false);
-            m_creature->GetMotionMaster()->Idle();
+            m_creature->GetMotionMaster()->MoveIdle();
 
             if(PlayerGUID)
             {

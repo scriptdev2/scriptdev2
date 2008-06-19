@@ -15,7 +15,6 @@
 */
 
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
@@ -389,7 +388,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                         target = m_creature->getVictim();
 
                     if(target)
-                        Construct->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*target));
+                        Construct->GetMotionMaster()->MoveChase(target);
                 }
             }
         }
@@ -412,7 +411,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     Unit* pUnit = Unit::GetUnit((*m_creature), AggroTargetGUID);
                     if(pUnit)
                     {
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*pUnit));
+                        m_creature->GetMotionMaster()->MoveChase(pUnit);
                         AttackStart(pUnit);
                     }
                     DoZoneInCombat();

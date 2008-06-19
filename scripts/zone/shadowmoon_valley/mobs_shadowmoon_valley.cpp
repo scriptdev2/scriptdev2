@@ -22,7 +22,6 @@ SDCategory: Shadowmoon Valley
 EndScriptData */
 
 #include "sc_creature.h"
-#include "PointMovementGenerator.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"
@@ -118,7 +117,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(m_creature->GetMotionMaster()->top()->GetMovementGeneratorType() == POINT_MOTION_TYPE)
+        if(m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
             return;
 
         ScriptedAI::MoveInLineOfSight(who);
@@ -131,7 +130,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
             float PlayerX, PlayerY, PlayerZ;
             caster->GetClosePoint(PlayerX, PlayerY, PlayerZ, 1);
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(1, PlayerX, PlayerY, PlayerZ));
+            m_creature->GetMotionMaster()->MovePoint(1, PlayerX, PlayerY, PlayerZ);
             PlayerGUID = caster->GetGUID();
         }
     }
@@ -338,7 +337,7 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                             }
 
                             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
-                            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(1, dx, dy, dz));
+                            m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
                         }
                     }
                 }else FlyTimer -= diff;
@@ -393,7 +392,7 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
             caster->GetClosePoint(x, y, z);
 
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(1, x, y, z));
+            m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
         }
     }
 

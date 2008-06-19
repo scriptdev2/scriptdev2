@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
-#include "PointMovementGenerator.h"
 #include <cmath>
 
 /*######
@@ -163,7 +162,7 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
             if(isMove)
             {
                 m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, -4115.053711f, -13754.831055f, 73.508949f));
+                m_creature->GetMotionMaster()->MovePoint(0, -4115.053711f, -13754.831055f, 73.508949f);
                 //CreatureMove(-4115.053711f,-13754.831055f,73.508949f);
                 isMove = false;
             }

@@ -22,9 +22,7 @@ SDCategory: Black Temple
 EndScriptData */
 
 #include "def_black_temple.h"
-#include "TargetedMovementGenerator.h"
 #include "sc_gossip.h"
-#include "PointMovementGenerator.h"
 
 struct Location
 {
@@ -166,7 +164,7 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
                 if(m_creature->GetDistance2d(Shade) < 20)
                 {
                     m_creature->GetMotionMaster()->Clear(false);
-                    m_creature->GetMotionMaster()->Idle();
+                    m_creature->GetMotionMaster()->MoveIdle();
                     DoCast(m_creature, SPELL_SHADE_SOUL_CHANNEL);
 
                     StartBanishing = true;
@@ -238,7 +236,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->GetMotionMaster()->Clear(false);
-        m_creature->GetMotionMaster()->Idle();
+        m_creature->GetMotionMaster()->MoveIdle();
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
 
         if(pInstance)
@@ -276,7 +274,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             if(Sorcerer)
             {
                 Sorcerer->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                Sorcerer->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()));
+                Sorcerer->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
                 Sorcerer->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
                 ChannelerGUID[index] = Sorcerer->GetGUID();
                 DeathCount--;
@@ -290,7 +288,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
             if(Spawn)
             {
                 Spawn->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                Spawn->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(0, AGGRO_X, AGGRO_Y, AGGRO_Z));
+                Spawn->GetMotionMaster()->MovePoint(0, AGGRO_X, AGGRO_Y, AGGRO_Z);
             }
         }
     }
@@ -374,9 +372,9 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                     {
                         IsBanished = false;
                         m_creature->GetMotionMaster()->Clear(false);
-                        m_creature->GetMotionMaster()->Mutate(new TargetedMovementGenerator<Creature>(*Akama));
+                        m_creature->GetMotionMaster()->MoveChase(Akama);
                         Akama->GetMotionMaster()->Clear(false);
-                        Akama->GetMotionMaster()->Idle(); // Shade should move to Akama, not the other way around
+                        Akama->GetMotionMaster()->MoveIdle(); // Shade should move to Akama, not the other way around
                         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         m_creature->AddThreat(Akama, 10000000.0f); // Crazy amount of threat
                         Akama->AddThreat(m_creature, 10000000.0f);
@@ -586,7 +584,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             if(pInstance)
                 pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
 
-            m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WayPointId, AkamaWP[1].x, AkamaWP[1].y, AkamaWP[1].z));
+            m_creature->GetMotionMaster()->MovePoint(WayPointId, AkamaWP[1].x, AkamaWP[1].y, AkamaWP[1].z);
             WayPointId++;
         }
 
@@ -601,7 +599,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                     {
                         ShadeHasDied = true;
                         WayPointId = 0;
-                        m_creature->GetMotionMaster()->Mutate(new PointMovementGenerator<Creature>(WayPointId, AkamaWP[0].x, AkamaWP[0].y, AkamaWP[0].z));
+                        m_creature->GetMotionMaster()->MovePoint(WayPointId, AkamaWP[0].x, AkamaWP[0].y, AkamaWP[0].z);
                     }
                 }
                 CheckTimer = 5000;
