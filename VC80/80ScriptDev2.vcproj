@@ -1102,10 +1102,6 @@
 					Name="Shadowfang Keep"
 					>
 					<File
-						RelativePath="..\scripts\zone\shadowfang_keep\boss_shadowfang_keep.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\shadowfang_keep\def_shadowfang_keep.h"
 						>
 					</File>
@@ -1464,10 +1460,6 @@
 							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_exarch_maladaar.cpp"
 							>
 						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\auchenai_crypts\boss_shirrak_the_dead_watcher.cpp"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="Mana Tombs"
@@ -1478,10 +1470,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_pandemonius.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\aunchindoun\mana_tombs\boss_tavarok.cpp"
 							>
 						</File>
 					</Filter>

@@ -79,7 +79,7 @@ bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
 {
     if(player->HasSkill(SKILL_ENGINERING) && player->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !player->HasSpell(22704)) 
     {
-        player->CastSpell(player,22705,false);
+        player->CastSpell(player,22864,false);
     }
     return true;
 }
@@ -92,7 +92,7 @@ bool GOHello_go_barov_journal(Player *player, GameObject* _GO)
 {
     if(player->HasSkill(SKILL_TAILORING) && player->GetBaseSkillValue(SKILL_TAILORING) >= 280 && !player->HasSpell(26086))
     {
-        player->CastSpell(player,26089,false);
+        player->CastSpell(player,26095,false);
     }
     return true;
 }

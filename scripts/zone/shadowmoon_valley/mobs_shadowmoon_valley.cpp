@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Mobs_Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10836, 10702, 10703, 10804, 10854. 
+SDComment: Quest support: 10804, 10854. 
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -26,56 +26,6 @@ EndScriptData */
 #include "CellImpl.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
-
-/*######
-## mobs_dragonmaw_orcs -- Needs ACID conversion.
-######*/
-
-struct MANGOS_DLL_DECL mobs_dragonmaw_orcAI : public ScriptedAI
-{
-    mobs_dragonmaw_orcAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    void Reset() {}
-
-    void Aggro(Unit* who) {}
-
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            ((Player*)Killer)->KilledMonster(22197, m_creature->GetGUID());
-    }
-};
-CreatureAI* GetAI_mobs_dragonmaw_orc(Creature *_Creature)
-{
-    return new mobs_dragonmaw_orcAI (_Creature);
-}
-
-/*######
-## mobs_shadowmoon_valley_wildlife
-######*/
-
-struct MANGOS_DLL_DECL mobs_shadowmoon_valley_wildlifeAI : public ScriptedAI
-{
-    mobs_shadowmoon_valley_wildlifeAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    void Reset()
-    {
-    }
-
-    void Aggro(Unit* who)
-    {
-    }
-
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            ((Player*)Killer)->KilledMonster(21978, m_creature->GetGUID());
-    }
-};
-CreatureAI* GetAI_mobs_shadowmoon_valley_wildlife(Creature *_Creature)
-{
-    return new mobs_shadowmoon_valley_wildlifeAI (_Creature);
-}
 
 /*#####
 # mob_mature_netherwing_drake
@@ -431,16 +381,6 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
 void AddSC_mobs_shadowmoon_valley()
 {
     Script *newscript;
-
-    newscript = new Script;
-    newscript->Name="mobs_dragonmaw_orc";
-    newscript->GetAI = GetAI_mobs_dragonmaw_orc;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mobs_shadowmoon_valley_wildlife";
-    newscript->GetAI = GetAI_mobs_shadowmoon_valley_wildlife;
-    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_mature_netherwing_drake";

@@ -80,15 +80,12 @@ UPDATE `creature_template` SET `ScriptName`='npc_sayge' WHERE `entry`=14822;
 /*  */
 
 /* MANA TOMBS */
-UPDATE `creature_template` SET `ScriptName`='boss_tavarok' WHERE `entry`=18343;
 UPDATE `creature_template` SET `ScriptName`='boss_pandemonius' WHERE `entry`=18341;
 UPDATE `creature_template` SET `ScriptName`='boss_nexusprince_shaffar' WHERE `entry`=18344;
 UPDATE `creature_template` SET `ScriptName`='mob_ethereal_beacon' WHERE `entry`=18431;
 UPDATE `creature_template` SET `ScriptName`='mob_ethereal_apprentice' WHERE `entry`=18430;
 
 /* AUCHENAI CRYPTS */
-UPDATE `creature_template` SET `ScriptName`='boss_shirrak_the_dead_watcher' WHERE `entry`=18371;
-UPDATE `creature_template` SET `ScriptName`='boss_shirrak_the_dead_watcher' WHERE `entry`=20318;
 UPDATE `creature_template` SET `ScriptName`='boss_exarch_maladaar' WHERE `entry`=18373;
 
 /* SETHEKK HALLS */
@@ -248,10 +245,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_ragged_john' WHERE `entry`=9563
 /* MT. HYJAL */
 UPDATE `instance_template` SET `script`='instance_hyjal' WHERE `map`=534;
 UPDATE `creature_template` SET `ScriptName`='boss_rage_winterchill' WHERE `entry`=17767;
-UPDATE `creature_template` SET `ScriptName`='boss_anetheron' WHERE `entry`=17808;
 UPDATE `creature_template` SET `ScriptName`='boss_kazrogal' WHERE `entry`=17888;
 UPDATE `creature_template` SET `ScriptName`='boss_azgalor' WHERE `entry`=17842;
-UPDATE `creature_template` SET `ScriptName`='mob_echo_of_archimonde' WHERE `entry`=13083;
 UPDATE `creature_template` SET `ScriptName`='npc_tyrande_whisperwind' WHERE `entry`=17948;
 UPDATE `creature_template` SET `ScriptName`='npc_thrall' WHERE `entry` =17852;
 UPDATE `creature_template` SET `ScriptName`='npc_jaina_proudmoore' WHERE `entry`=17772;
@@ -599,9 +594,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_zamael_lunthistle' WHERE `entry
 
 /* SHADOWFANG KEEP */
 UPDATE `instance_template` SET `script`='instance_shadowfang_keep' WHERE `map`=33;
-UPDATE `creature_template` SET `ScriptName`='boss_fenrus' WHERE `entry`=4274;
-UPDATE `creature_template` SET `ScriptName`='boss_nandos' WHERE `entry`=3927;
-UPDATE `creature_template` SET `ScriptName`='boss_rethilgore' WHERE `entry`=3914;
 UPDATE `creature_template` SET `ScriptName`='npc_shadowfang_prisoner' WHERE `entry` IN (3849,3850);
 
 /* SHADOWMOON VALLEY */
@@ -611,8 +603,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_invis_legion_teleporter' WHERE 
 UPDATE `creature_template` SET `ScriptName`='npcs_flanis_swiftwing_and_kagrosh' WHERE `entry` IN (21725,21727);
 UPDATE `creature_template` SET `ScriptName`='npc_neltharaku' WHERE `entry`=21657;
 UPDATE `creature_template` SET `ScriptName`='npc_oronok_tornheart' WHERE `entry`=21183;
-UPDATE `creature_template` SET `ScriptName`='mobs_dragonmaw_orc' WHERE `entry` IN (21717,21718,21719,21720,22331);
-UPDATE `creature_template` SET `ScriptName`='mobs_shadowmoon_valley_wildlife' WHERE `entry` IN (21878,21879);
 UPDATE `creature_template` SET `ScriptName`='mob_mature_netherwing_drake' WHERE `entry`=21648;
 UPDATE `creature_template` SET `ScriptName`='mob_enslaved_netherwing_drake' WHERE `entry`=21722;
 

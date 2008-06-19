@@ -61,10 +61,8 @@ scripts/npc/npc_professions.cpp \
 scripts/npc/npcs_darkmoon.cpp \
 scripts/npc/npcs_special.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
-scripts/zone/aunchindoun/auchenai_crypts/boss_shirrak_the_dead_watcher.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_pandemonius.cpp \
-scripts/zone/aunchindoun/mana_tombs/boss_tavarok.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_darkweaver_syth.cpp \
 scripts/zone/aunchindoun/sethekk_halls/boss_tailonking_ikiss.cpp \
 scripts/zone/aunchindoun/sethekk_halls/def_sethekk_halls.h \
@@ -300,7 +298,6 @@ scripts/zone/scholomance/boss_vectus.cpp \
 scripts/zone/scholomance/def_scholomance.h \
 scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/npcs_searing_gorge.cpp \
-scripts/zone/shadowfang_keep/boss_shadowfang_keep.cpp \
 scripts/zone/shadowfang_keep/def_shadowfang_keep.h \
 scripts/zone/shadowfang_keep/instance_shadowfang_keep.cpp \
 scripts/zone/shadowfang_keep/npcs_shadowfang_keep.cpp \

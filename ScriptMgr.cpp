@@ -98,12 +98,10 @@ extern void AddSC_npcs_darkmoon();
 //Ashenvale Forest
 //Aunchindoun
 //--Auchenai Crypts
-extern void AddSC_boss_shirrak_the_dead_watcher();
 extern void AddSC_boss_exarch_maladaar();
 //--Mana Tombs
 extern void AddSC_boss_nexusprince_shaffar();
 extern void AddSC_boss_pandemonius();
-extern void AddSC_boss_tavarok();
 
 //--Sekketh Halls
 extern void AddSC_boss_darkweaver_syth();
@@ -435,7 +433,6 @@ extern void AddSC_instance_scholomance();
 extern void AddSC_npcs_searing_gorge();
 
 //Shadowfang keep
-extern void AddSC_boss_shadowfang_keep();
 extern void AddSC_npcs_shadowfang_keep();
 extern void AddSC_instance_shadowfang_keep();
 
@@ -969,13 +966,11 @@ void ScriptsInit()
     //Ashenvale Forest
     //Aunchindoun
     //--Auchenai Crypts
-    AddSC_boss_shirrak_the_dead_watcher();
     AddSC_boss_exarch_maladaar();
 
     //--Mana Tombs
     AddSC_boss_nexusprince_shaffar();
     AddSC_boss_pandemonius();
-    AddSC_boss_tavarok();
 
     //--Sekketh Halls
     AddSC_boss_darkweaver_syth();
@@ -1306,7 +1301,6 @@ void ScriptsInit()
     AddSC_npcs_searing_gorge();
 
     //Shadowfang keep
-    AddSC_boss_shadowfang_keep();
     AddSC_npcs_shadowfang_keep();
     AddSC_instance_shadowfang_keep();
 
