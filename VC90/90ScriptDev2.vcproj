@@ -1857,23 +1857,7 @@
 						Name="Battle for Mt. Hyjal"
 						>
 						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_anetheron.cpp"
-							>
-						</File>
-						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_archimonde.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_azgalor.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_kazrogal.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\boss_rage_winterchill.cpp"
 							>
 						</File>
 						<File
@@ -2193,7 +2177,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>

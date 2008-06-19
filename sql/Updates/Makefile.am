@@ -152,4 +152,5 @@ pkgdata_DATA = \
 	r428_mangos.sql \
 	r431_mangos.sql \
 	r444_mangos.sql \
-	r445_mangos.sql
+	r445_mangos.sql \
+	r446_mangos.sql
