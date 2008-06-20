@@ -400,8 +400,9 @@ system.cpp
 
 ## magic to include SVN revision number in SD2 version string
 svn_revision.h: FORCE tools/gensvnrevision/gensvnrevision
-+ tools/gensvnrevision/gensvnrevision
-+FORCE:
+        tools/gensvnrevision/gensvnrevision
+
+FORCE:
 
 ## libtool settings
 # API versioning
