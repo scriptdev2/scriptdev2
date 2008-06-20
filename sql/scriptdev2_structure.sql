@@ -58,7 +58,7 @@ CREATE TABLE `eventai_summons` (
 PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='EventAI Summoning Locations';
 
-DROP TABLE IF EXISTS `db_version`;
-CREATE TABLE `db_version` (
+DROP TABLE IF EXISTS `sd2_db_version`;
+CREATE TABLE `sd2_db_version` (
 `version` varchar(255) NOT NULL default '' COMMENT 'Database version string'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

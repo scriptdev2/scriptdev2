@@ -592,7 +592,7 @@ void LoadDatabase()
 
         //Get Version information
         result = ScriptDev2DB.PQuery("SELECT `version`"
-            "FROM `db_version`");
+            "FROM `sd2_db_version`");
 
         if (result)
         {
@@ -602,7 +602,7 @@ void LoadDatabase()
             outstring_log(" ");
             delete result;
 
-        }else error_log("SD2: Missing db_version information.");
+        }else error_log("SD2: Missing sd2_db_version information.");
 
         //Drop existing Localized Text has map
         Localized_Text_Map.clear();
@@ -725,12 +725,33 @@ void LoadDatabase()
                 if (temp.event_chance == 0)
                     error_log("SD2: Event %d has 0 percent chance. Event will never trigger!", i);
 
-                //Special check for EVENT_T_FRIENDLY_HP
-                if (temp.event_type == EVENT_T_FRIENDLY_HP && temp.event_param3 < 2000)
+                //Individual event checks
+                switch (temp.event_type)
                 {
-                    temp.event_param3 = 2000;
-                    error_log("SD2: Event %d has EVENT_T_FRIENDLY_HP with param3 (TimeUntilRepeat) < 2000 ms. Defaulted to 2000 ms to prevent lag. ", i);
-                }
+                case EVENT_T_HP:
+                    {
+                        if (temp.event_param2 > 100)
+                            error_log("SD2: Event %d has EVENT_T_HP with param2 (HpMinPercent) > 100. Event will never trigger! ", i);
+                    }
+                    break;
+
+                case EVENT_T_MANA:
+                    {
+                        if (temp.event_param2 > 100)
+                            error_log("SD2: Event %d has EVENT_T_MANA with param2 (ManaMinPercent) > 100. Event will never trigger! ", i);
+                    }
+                    break;
+
+                case EVENT_T_FRIENDLY_HP:
+                    {
+                        if (temp.event_param3 < 1000)
+                        {
+                            error_log("SD2 WARNING: Event %d has EVENT_T_FRIENDLY_HP with param3 (TimeUntilRepeat) < 1000 ms. Defaulted to 1000 ms to prevent possible lag. ", i);
+                            temp.event_param3 = 1000;
+                        }
+                    }
+                    break;
+                };
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
@@ -774,8 +795,8 @@ void LoadDatabase()
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param1);
                             if (!pSpell)
                             {
-                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u", i, j, temp.action[j].param1);
-                                error_log("Spell Store Size = %u", GetSpellStore()->GetNumRows());
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param1);
+                                error_log("Spell Store Size = %u.", GetSpellStore()->GetNumRows());
                             }
                         }
 

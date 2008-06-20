@@ -19,6 +19,8 @@
 ## Sub-directories to parse
 SUBDIRS = sql
 
+BUILT_SOURCES = svn_revision.h
+CLEANFILES = svn_revision.h
 ## CPP flags for includes, defines, etc.
 AM_CPPFLAGS = $(MYSQL_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/ -I$(srcdir)/../../game/ -I$(srcdir)/include/
 
@@ -392,8 +394,14 @@ scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/def_zulgurub.h \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
 scripts/zone/zulgurub/mobs_zulgurub.cpp \
+svn_revision.h \
 system.cpp
 
+
+## magic to include SVN revision number in SD2 version string
+svn_revision.h: FORCE tools/gensvnrevision/gensvnrevision
++ tools/gensvnrevision/gensvnrevision
++FORCE:
 
 ## libtool settings
 # API versioning

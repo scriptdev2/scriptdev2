@@ -23,12 +23,9 @@
 
 int main(int argc, char **argv)
 {
-    FILE* EntriesFile = fopen(".svn\\entries", "r");
+    FILE* EntriesFile = fopen(".svn/entries", "r");
     if(!EntriesFile)
-    {
-        fclose(EntriesFile);
         return 1;
-    }
 
     char buf[200];
     int revision;
@@ -36,15 +33,33 @@ int main(int argc, char **argv)
     char time_str[200];
 
     fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fscanf(EntriesFile,"%i",&revision);
-    fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fgets(buf,200,EntriesFile);
-    fscanf(EntriesFile,"%10sT%8s",date_str,time_str);
+    if (strstr(buf,"xml") > 0)
+    { // svn 1.3.x
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fscanf(EntriesFile,"   committed-date=\"%10sT%8s",date_str,time_str);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fscanf(EntriesFile,"   revision=\"%i",&revision);
+    } else
+    { // svn 1.4.x
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fscanf(EntriesFile,"%i",&revision);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fgets(buf,200,EntriesFile);
+      fscanf(EntriesFile,"%10sT%8s",date_str,time_str);
+    }
 
     std::ostringstream newData;
 
