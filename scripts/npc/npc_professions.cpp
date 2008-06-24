@@ -16,17 +16,17 @@
 
 /* ScriptData
 SDName: Npc_Professions
-SD%Complete: 60
-SDComment: NOT FOR GENERAL USE YET. Provides learn/unlearn/relearn-options for all professions, including GO (soothsaying for dummies)
+SD%Complete: 75
+SDComment: Provides learn/unlearn/relearn-options for professions. Not supported yet: Relearn blacksmith(specs), engineering and leatherworking
 SDCategory: NPCs
 EndScriptData */
 
 /*
 A few notes for future developement:
-- Mangos need to implement support for "hidden" faction reputation. We can probably make workarounds in script, using questRewarded, 
+- Mangos need to implement full support for Spell::EffectReputation. We can probably make workarounds in script, using questRewarded, 
 but this is not a good solution.
-- Mangos need to implement better support for unlearning spells. Player must also unlearn associated spells, 
-not only the profession spell itself.
+- Mangos should implement better support for unlearning spells. Player must also unlearn associated spells, 
+not only the profession spell itself, also in addition to this, player should not be able to unlearn if item equipped that requires specialty
 - Mangos need to implement better support for checks of equipped items _before_ player can actually unlearn spell. If user unlearn spell
 and are allowed to have items equipped dependant on this spell, player will get errors on next log in (and the item(s) in mail). Script
 must use/have access to this check to prevent further action, if player has items equipped (perhaps possible to script all of this, but
@@ -234,19 +234,12 @@ void ProfessionUnlearnSpells(Player *player, uint32 type)
 	switch (type)
     {
         case 36436: // S_UNLEARN_WEAPON
-            player->removeSpell(10003); // The Shatterer
-            player->removeSpell(10007); // Phantom Blade 
-            player->removeSpell(10011); // Blight
             player->removeSpell(36125); // Light Earthforged Blade
             player->removeSpell(36128); // Light Emberforged Hammer
             player->removeSpell(36126); // Light Skyforged Axe
-            player->removeSpell(10015); // Truesilver Champion 
             break;
         case 36435: // S_UNLEARN_ARMOR
-            player->removeSpell(9974);  // Truesilver Breastplate 
-            player->removeSpell(9954);  // Truesilver Gauntlets
             player->removeSpell(36122); // Earthforged Leggings 
-            player->removeSpell(36155); // Windforged Leggings
             player->removeSpell(36129); // Heavy Earthforged Breastplate 
             player->removeSpell(36130); // Stormforged Hauberk 
             player->removeSpell(34533); // Breastplate of Kings
@@ -308,6 +301,7 @@ void ProfessionUnlearnSpells(Player *player, uint32 type)
             player->removeSpell(35585); // Windhawk Hauberk
             player->removeSpell(35587); // Windhawk Belt
             player->removeSpell(35588); // Windhawk Bracers
+            player->removeSpell(36075); // Wildfeather Leggings
             player->removeSpell(36078); // Living Crystal Breastplate
             break;
         case 41299: // S_UNLEARN_SPELLFIRE
