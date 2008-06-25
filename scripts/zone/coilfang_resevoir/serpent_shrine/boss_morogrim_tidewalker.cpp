@@ -66,6 +66,7 @@ EndScriptData */
 #define EMOTE_WATERY_GLOBULES      "summons Watery Globules!"
 
 #define WATER_GLOBULE              21913
+#define TIDEWALKER_LURKER          21920
 
 //Morogrim Tidewalker AI
 struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
@@ -73,18 +74,11 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     boss_morogrim_tidewalkerAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        Murloc_entries[0] = 21224; //Tidewalker Depth-Seer
-        Murloc_entries[1] = 21227; //Tidewalker Harpooner
-        Murloc_entries[2] = 21228; //Tidewalker Hydromancer
-        Murloc_entries[3] = 21920; //Tidewalker Lurker
-        Murloc_entries[4] = 21226; //Tidewalker Shaman
-        Murloc_entries[5] = 21225; //Tidewalker Warrior
         Reset();
     }
 
     ScriptedInstance* pInstance;
 
-    uint32 Murloc_entries[6];
     uint32 TidalWave_Timer;
     uint32 WateryGrave_Timer;
     uint32 Earthquake_Timer;
@@ -96,15 +90,15 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     void Reset()
     {
         TidalWave_Timer = 10000;
-        WateryGrave_Timer = 25000;
-        Earthquake_Timer = 30000;
+        WateryGrave_Timer = 30000;
+        Earthquake_Timer = 40000;
         WateryGlobules_Timer = 0;
 
         Earthquake = false;
         Phase2 = false;
 
         if(pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, NOT_STARTED);
     }
 
     void StartEvent()
@@ -113,7 +107,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 1); 
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, IN_PROGRESS); 
     }
 
     void KilledUnit(Unit *victim)
@@ -143,7 +137,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
         if(pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, 0);
+            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *who) { StartEvent(); }
@@ -187,7 +181,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
     {
         Creature *Summoned;
 
-        Summoned = m_creature->SummonCreature(Murloc_entries[rand()%6], x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+        Summoned = m_creature->SummonCreature(TIDEWALKER_LURKER, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
         if(Summoned)
         {
             Unit *target = NULL;
@@ -260,7 +254,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
                 DoTextEmote(EMOTE_EARTHQUAKE, NULL);
 
                 Earthquake = false;
-                Earthquake_Timer = 30000+rand()%5000;
+                Earthquake_Timer = 40000+rand()%5000;
             }
         }else Earthquake_Timer -= diff;
 
@@ -303,7 +297,7 @@ struct MANGOS_DLL_DECL boss_morogrim_tidewalkerAI : public ScriptedAI
 
                 DoTextEmote(EMOTE_WATERY_GRAVE, NULL);
 
-                WateryGrave_Timer = 25000;
+                WateryGrave_Timer = 30000;
             }else WateryGrave_Timer -= diff;
 
             //Start Phase2
@@ -379,7 +373,6 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
                 //despawn
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
-
             Check_Timer = 500;
         }else Check_Timer -= diff;
 

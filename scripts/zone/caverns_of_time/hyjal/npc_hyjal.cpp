@@ -88,7 +88,7 @@ bool GossipSelect_npc_jaina_proudmoore(Player *player, Creature *_Creature, uint
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->TeleportRaid(player, HORDEBASE_X, HORDEBASE_Y, HORDEBASE_Z);
+            ((hyjalAI*)_Creature->AI())->TeleportRaid(HORDEBASE_X, HORDEBASE_Y, HORDEBASE_Z);
             break;
     }
 
@@ -147,7 +147,7 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->TeleportRaid(player, NIGHTELFBASE_X, NIGHTELFBASE_Y, NIGHTELFBASE_Z);
+            ((hyjalAI*)_Creature->AI())->TeleportRaid(NIGHTELFBASE_X, NIGHTELFBASE_Y, NIGHTELFBASE_Z);
             break;
     }
 

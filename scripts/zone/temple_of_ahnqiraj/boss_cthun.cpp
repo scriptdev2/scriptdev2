@@ -576,39 +576,21 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
             //WisperTimer
             if (WisperTimer < diff)
             {
-                std::list<Player*>::iterator i = m_creature->GetMap()->GetPlayers().begin();
-
-                for (;i != m_creature->GetMap()->GetPlayers().end(); ++i)
+                Map::PlayerList const& PlayerList = m_creature->GetMap()->GetPlayers();
+                for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                 {
                     //Play random sound to the zone
                     switch (rand()%8)
                     {
-                    case 0:
-                        (*i)->PlaySound(RND_WISPER_1, true);
-                        break;
-                    case 1:
-                        (*i)->PlaySound(RND_WISPER_2, true);
-                        break;
-                    case 2:
-                        (*i)->PlaySound(RND_WISPER_3, true);
-                        break;
-                    case 3:
-                        (*i)->PlaySound(RND_WISPER_4, true);
-                        break;
-                    case 4:
-                        (*i)->PlaySound(RND_WISPER_5, true);
-                        break;
-                    case 5:
-                        (*i)->PlaySound(RND_WISPER_6, true);
-                        break;
-                    case 6:
-                        (*i)->PlaySound(RND_WISPER_7, true);
-                        break;
-                    case 7:
-                        (*i)->PlaySound(RND_WISPER_8, true);
-                        break;
+                    case 0: (*i)->PlaySound(RND_WISPER_1, true); break;
+                    case 1: (*i)->PlaySound(RND_WISPER_2, true); break;
+                    case 2: (*i)->PlaySound(RND_WISPER_3, true); break;
+                    case 3: (*i)->PlaySound(RND_WISPER_4, true); break;
+                    case 4: (*i)->PlaySound(RND_WISPER_5, true); break;
+                    case 5: (*i)->PlaySound(RND_WISPER_6, true); break;
+                    case 6: (*i)->PlaySound(RND_WISPER_7, true); break;
+                    case 7: (*i)->PlaySound(RND_WISPER_8, true); break;
                     }
-
                 }
 
                 //One random wisper every 90 - 300 seconds

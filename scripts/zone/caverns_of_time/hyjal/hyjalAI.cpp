@@ -190,13 +190,13 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     }
 }
 
-void hyjalAI::TeleportRaid(Player* player, float X, float Y, float Z)
+void hyjalAI::TeleportRaid(float X, float Y, float Z)
 {
-    std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
+    Map::PlayerList const& PlayerList = m_creature->GetMap()->GetPlayers();
     if(PlayerList.empty())
         return;
 
-    for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+    for(Map::PlayerList::const_iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
     {
         (*itr)->CastSpell((*itr), SPELL_TELEPORT_VISUAL, true);
         DoTeleportPlayer((*itr), X,Y,Z,(*itr)->GetOrientation());
@@ -277,9 +277,7 @@ void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
     data << field;
     data << value;
 
-    std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
-    for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
-        (*itr)->GetSession()->SendPacket(&data);
+    m_creature->GetMap()->SendToPlayers(&data);
 
     // TODO: Uncomment and remove everything above this line only when the core patch for this is accepted
     //m_creature->GetMap()->UpdateWorldState(field, value);

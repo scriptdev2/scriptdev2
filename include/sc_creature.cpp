@@ -464,12 +464,14 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
         return;
     }
 
-    std::list<Player*>::iterator i;
-
-    for (i = pUnit->GetMap()->GetPlayers().begin();i != pUnit->GetMap()->GetPlayers().end(); ++i)
+    Map::PlayerList const& PlayerList = pUnit->GetMap()->GetPlayers();
+    for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
     {
-        pUnit->Attack((*i), false);
-        pUnit->AddThreat((*i), 0.0f);
+        if(!(*i)->isGameMaster())
+        {
+            pUnit->Attack(*i, false);
+            pUnit->AddThreat(*i, 0.0f);
+        }
     }
 }
 

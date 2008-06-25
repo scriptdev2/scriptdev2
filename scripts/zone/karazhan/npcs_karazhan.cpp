@@ -292,18 +292,21 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             {
                 if(WipeTimer < diff)
                 {
-                    std::list<Player*> PlayerList = m_creature->GetMap()->GetPlayers();
+                    Map::PlayerList const& PlayerList = m_creature->GetMap()->GetPlayers();
                     if(PlayerList.empty())
                         return;
 
-                    uint32 DeathCount = 0;
-                    uint32 TotalCount = PlayerList.size();
-                    for(std::list<Player*>::iterator itr = PlayerList.begin(); itr != PlayerList.end(); ++itr)
+                    RaidWiped = true;
+                    for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
                     {
-                        if(!(*itr)->isAlive())
-                            DeathCount++;
+                        if((*i)->isAlive() && !(*i)->isGameMaster())
+                        {
+                            RaidWiped = false;
+                            break;
+                        }
                     }
-                    if(DeathCount == TotalCount)
+
+                    if(RaidWiped)
                     {
                         RaidWiped = true;
                         EnterEvadeMode();

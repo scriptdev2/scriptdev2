@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void SetFaction(uint32 _faction) { Faction = _faction; } // Set the faction to either Alliance or Horde in Hyjal
 
-    void TeleportRaid(Player *player, float X, float Y, float Z); // Used by gossip to teleport the entire raid to the next location
+    void TeleportRaid(float X, float Y, float Z); // Used by gossip to teleport the entire raid to the next location
 
     void SummonCreature(uint32 entry, float Base[4][3]); // Summons a creature for that wave in that base
     
