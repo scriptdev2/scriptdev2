@@ -55,7 +55,7 @@ bool GossipSelect_npc_marin_noggenfogger(Player *player, Creature *_Creature, ui
 ## npc_steward_of_time
 ######*/
 
-#define GOSSIP_FLIGHT "Give me a flight. <Real gossip missing>"
+#define GOSSIP_FLIGHT "Please take me to the master's lair."
 
 bool GossipHello_npc_steward_of_time(Player *player, Creature *_Creature)
 {
