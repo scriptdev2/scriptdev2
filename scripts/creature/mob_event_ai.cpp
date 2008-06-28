@@ -619,13 +619,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_QUEST_EVENT_ALL:
             {
                 Unit* Temp = NULL;
-
-                std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
-                for (; i != m_creature->getThreatManager().getThreatList().end(); ++i)
+                if( pActionInvoker && pActionInvoker->GetTypeId() == TYPEID_PLAYER )
                 {
-                    Temp = Unit::GetUnit((*m_creature),(*i)->getUnitGuid());
-                    if (Temp && Temp->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)Temp)->AreaExploredOrEventHappens(param1);
+                    Temp = Unit::GetUnit((*m_creature),pActionInvoker->GetGUID());
+                    if( Temp )
+                        ((Player*)Temp)->GroupEventHappens(param1,m_creature);
                 }
             }
             break;

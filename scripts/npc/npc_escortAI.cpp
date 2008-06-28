@@ -58,35 +58,31 @@ void npc_escortAI::MoveInLineOfSight(Unit *who)
             return;
 
         float attackRadius = m_creature->GetAttackDistance(who);
-        if(m_creature->IsWithinDistInMap(who, attackRadius))
+        if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
         {
-            // Check first that object is in an angle in front of this one before LoS check
-            if( m_creature->HasInArc(M_PI/2.0f, who) && m_creature->IsWithinLOSInMap(who) )
+            who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+            //Begin attack
+            if ( m_creature->Attack(who, true) )
             {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                m_creature->GetMotionMaster()->MovementExpired();
+                m_creature->GetMotionMaster()->MoveChase(who);
+                m_creature->AddThreat(who, 0.0f);
+                m_creature->resetAttackTimer();
 
-                //Begin attack
-                if ( m_creature->Attack(who, true) )
-                {
-                    m_creature->GetMotionMaster()->MovementExpired();
-                    m_creature->GetMotionMaster()->MoveChase(who);
-                    m_creature->AddThreat(who, 0.0f);
-                    m_creature->resetAttackTimer();
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    m_creature->SetLootRecipient((Player*)who);
+            }
 
-                    if (who->GetTypeId() == TYPEID_PLAYER)
-                        m_creature->SetLootRecipient((Player*)who);
-                }
+            if (!InCombat)
+            {
+                InCombat = true;
 
-                if (!InCombat)
-                {
-                    InCombat = true;
+                //Store last position
+                m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);
+                debug_log("SD2: EscortAI has entered combat via LOS and stored last location");
 
-                    //Store last position
-                    m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);
-                    debug_log("SD2: EscortAI has entered combat via LOS and stored last location");
-
-                    Aggro(who);
-                }
+                Aggro(who);
             }
         }
     }
