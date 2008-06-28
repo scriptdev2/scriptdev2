@@ -24,12 +24,13 @@ EndScriptData */
 #include "sc_creature.h"
 
 #define SPELL_SHADOWVOLLEY                32963            
-#define SPELL_CLEAVE           27794             //Not sure if right ID
-#define SPELL_THUNDERCLAP            23931
-#define SPELL_VOIDBOLT              39329
-#define SPELL_MARKOFKAZZAK            21056   // We need to cast 21058 on a Player that dont have any mana.
-#define SPELL_RAGE           32964
-#define SPELL_CAPTURESOUL               32966   
+#define SPELL_CLEAVE           	          31779
+#define SPELL_THUNDERCLAP                 36706
+#define SPELL_VOIDBOLT                    39329
+#define SPELL_MARKOFKAZZAK                32960
+#define SPELL_ENRAGE                      32964
+#define SPELL_CAPTURESOUL                 32966   
+#define SPELL_TWISTEDREFLECTION           21063
 
 struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 {
@@ -40,7 +41,8 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
     uint32 ThunderClap_Timer;
     uint32 VoidBolt_Timer;
     uint32 MarkOfKazzak_Timer;
-    uint32 Rage_Timer;
+    uint32 Enrage_Timer;
+    uint32 Twisted_Reflection_Timer;
 
     void Reset()
     {       
@@ -49,18 +51,17 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         ThunderClap_Timer = 20000;
         VoidBolt_Timer = 30000;
         MarkOfKazzak_Timer = 25000;
-        Rage_Timer = 55000;                //Cast 55
+        Enrage_Timer = 60000;
+        Twisted_Reflection_Timer = 33000; // Timer may be incorrect
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
-    void KilledUnit()
+    void KilledUnit(Unit* victim)
     {
-        // When a player, pet or totem gets killed, Lord Kazzak casts this spell to instantly regenerate 70,000 health.
-        DoCast(m_creature,SPELL_CAPTURESOUL);
-
+        // When Kazzak kills a player (not pets/totems), he regens some health
+        if(victim->GetTypeId() == TYPEID_PLAYER)
+           DoCast(m_creature,SPELL_CAPTURESOUL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -72,24 +73,14 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         //ShadowVolley_Timer
         if (ShadowVolley_Timer < diff)
         {
-            if (rand()%100 < 55) //55% chance to cast
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_SHADOWVOLLEY);
-            }
-            //5 seconds
+            DoCast(m_creature->getVictim(), SPELL_SHADOWVOLLEY);
             ShadowVolley_Timer = 5000;
         }else ShadowVolley_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            if (rand()%100 < 50) //50% chance to cast
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-            }
-            //10 seconds until we should cast this agian
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
             Cleave_Timer = 10000;
         }else Cleave_Timer -= diff;
 
@@ -97,13 +88,8 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         //ThunderClap_Timer
         if (ThunderClap_Timer < diff)
         {
-            if (rand()%100 < 20) //20% chance to cast
-            {
-                //Cast
-                DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
-            }
-            //12 seconds until we should cast this agian
-            ThunderClap_Timer = 10000;
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            ThunderClap_Timer = 12000;
         }else ThunderClap_Timer -= diff;
 
 
@@ -120,21 +106,28 @@ struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
         //MarkOfKazzak_Timer
         if (MarkOfKazzak_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_MARKOFKAZZAK);
-            //20 seconds until we should cast this agian
-            MarkOfKazzak_Timer = 20000;
+            Unit* victim = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if(victim->GetPower(POWER_MANA))
+            {
+                DoCast(victim, SPELL_MARKOFKAZZAK);
+                MarkOfKazzak_Timer = 20000;
+            }
         }else MarkOfKazzak_Timer -= diff;
 
-        //Rage_Timer
-        if (Rage_Timer < diff)
+        //Enrage_Timer
+        if (Enrage_Timer < diff)
         {
             //Cast
-            DoCast(m_creature,SPELL_RAGE);
+            DoCast(m_creature,SPELL_ENRAGE);
 
-            //27 seconds until we should cast this agian
-            Rage_Timer = 27000;
-        }else Rage_Timer -= diff;
+             Enrage_Timer = 30000;
+        }else Enrage_Timer -= diff;
+
+        if(Twisted_Reflection_Timer < diff)
+        {
+            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_TWISTEDREFLECTION);
+            Twisted_Reflection_Timer = 15000;
+        }else Twisted_Reflection_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
