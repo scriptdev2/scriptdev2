@@ -70,6 +70,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         GathiosTheShatterer = 0;
         HighNethermancerZerevor = 0;
         VerasDarkshadow = 0;
+        IllidariCouncil = 0;
         IllidanStormrage = 0;
         
         NajentusSpine  = 0;
@@ -132,6 +133,10 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case 22952:
                 VerasDarkshadow = creature->GetGUID();
                 break;
+
+            case 23426:
+                IllidariCouncil = creature->GetGUID();
+                break;
         }
     }
 
@@ -161,35 +166,38 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(identifier)
         {
-            case DATA_HIGHWARLORDNAJENTUS:
-                return Najentus;
+             case DATA_HIGHWARLORDNAJENTUS:
+                 return Najentus;
 
              case DATA_AKAMA:
-                return Akama;
+                 return Akama;
 
              case DATA_AKAMA_SHADE:
-                return Akama_Shade;
+                 return Akama_Shade;
 
              case DATA_SHADEOFAKAMA:
-                return ShadeOfAkama;
+                 return ShadeOfAkama;
 
              case DATA_SUPREMUS:
-                return Supremus;
+                 return Supremus;
 
              case DATA_ILLIDANSTORMRAGE:
-                return IllidanStormrage;
+                 return IllidanStormrage;
 
              case DATA_GATHIOSTHESHATTERER:
-                return GathiosTheShatterer;
+                 return GathiosTheShatterer;
 
              case DATA_HIGHNETHERMANCERZEREVOR:
-                return HighNethermancerZerevor;
+                 return HighNethermancerZerevor;
 
              case DATA_LADYMALANDE:
-                return LadyMalande;
+                 return LadyMalande;
 
              case DATA_VERASDARKSHADOW:
-                return VerasDarkshadow;
+                 return VerasDarkshadow;
+
+             case DATA_ILLIDARICOUNCIL
+                 return IllidariCouncil;
 
              case DATA_NAJENTUS_SPINE:
                  return NajentusSpine;

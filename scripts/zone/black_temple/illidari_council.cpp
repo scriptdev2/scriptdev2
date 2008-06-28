@@ -108,6 +108,7 @@ EndScriptData */
 #define SAY_VERA_SPECIAL2         "Anar'alah belore!"
 #define SOUND_VERA_SPECIAL2       11529
 
+#define ERROR_INST_DATA	          "SD2 ERROR: Instance Data for Black Temple not set properly; abort Illidari Council event."
 struct Yells
 {
     char* text;
@@ -346,6 +347,17 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        if(pInstance)
+        {
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
+           if(Controller)
+               Controller->AddThreat(who, 1.0f);
+        }
+        else
+        {
+            error_log(ERROR_INST_DATA);
+            EnterEvadeMode();
+        }
         DoZoneInCombat();
         DoYell(SAY_GATH_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_GATH_AGGRO);
@@ -543,6 +555,18 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        if(pInstance)
+        {
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           if(Controller)
+               Controller->AddThreat(who, 1.0f);
+        }
+        else
+        {
+            error_log(ERROR_INST_DATA);
+            EnterEvadeMode();
+        }
+
         DoZoneInCombat();
         AggroYellTimer = 9000;
     }
@@ -711,6 +735,18 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        if(pInstance)
+        {
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           if(Controller)
+               Controller->AddThreat(who, 1.0f);
+        }
+        else
+        {
+            error_log(ERROR_INST_DATA);
+            EnterEvadeMode();
+        }
+
         DoZoneInCombat();
         AggroYellTimer = 5500;
     }
@@ -870,6 +906,18 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        if(pInstance)
+        {
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           if(Controller)
+               Controller->AddThreat(who, 1.0f);
+        }
+        else
+        {
+            error_log(ERROR_INST_DATA);
+            EnterEvadeMode();
+        }
+
         DoZoneInCombat();
         AggroYellTimer = 3000;
     }
