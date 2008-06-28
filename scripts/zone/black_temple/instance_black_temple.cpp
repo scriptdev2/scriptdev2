@@ -51,6 +51,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 GathiosTheShatterer;
     uint64 HighNethermancerZerevor;
     uint64 VerasDarkshadow;
+    uint64 IllidariCouncil;
     uint64 IllidanStormrage;
 
     uint64 NajentusSpine;
@@ -196,7 +197,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
              case DATA_VERASDARKSHADOW:
                  return VerasDarkshadow;
 
-             case DATA_ILLIDARICOUNCIL
+             case DATA_ILLIDARICOUNCIL:
                  return IllidariCouncil;
 
              case DATA_NAJENTUS_SPINE:

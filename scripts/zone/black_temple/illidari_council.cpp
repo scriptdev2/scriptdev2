@@ -557,7 +557,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
     {
         if(pInstance)
         {
-           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
            if(Controller)
                Controller->AddThreat(who, 1.0f);
         }
@@ -737,7 +737,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
     {
         if(pInstance)
         {
-           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
            if(Controller)
                Controller->AddThreat(who, 1.0f);
         }
@@ -908,7 +908,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
     {
         if(pInstance)
         {
-           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInsta$
+           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
            if(Controller)
                Controller->AddThreat(who, 1.0f);
         }
