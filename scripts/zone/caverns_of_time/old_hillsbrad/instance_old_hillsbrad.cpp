@@ -22,9 +22,7 @@ SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
 /*
-UPDATE `creature_template` SET `ScriptName`='npc_taretha' WHERE `entry`=18887;
-UPDATE `creature_template` SET `ScriptName`='npc_thrall_old_hillsbrad' WHERE `entry`=17876;
-UPDATE `gameobject_template` SET `ScriptName`='go_barrel_old_hillsbrad' WHERE `entry`=182589;
+-- UPDATE `gameobject_template` SET `ScriptName`='go_barrel_old_hillsbrad' WHERE `entry`=182589;
 */
 
 #include "def_old_hillsbrad.h"

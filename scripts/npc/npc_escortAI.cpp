@@ -92,6 +92,7 @@ void npc_escortAI::JustRespawned()
 {
     InCombat = false;
     IsBeingEscorted = false;
+    IsOnHold = false;
 
     //Re-Enable gossip
     m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -137,11 +138,14 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
                 //Continue with waypoints
-                m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
-                debug_log("SD2: EscortAI Reconnect WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-                WaitTimer = 0;
-                ReconnectWP = false;
-                return;
+                if( !IsOnHold )
+                {
+                    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+                    debug_log("SD2: EscortAI Reconnect WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+                    WaitTimer = 0;
+                    ReconnectWP = false;
+                    return;
+                }
             }
 
             //End of the line, Despawn self then immediatly respawn
@@ -164,10 +168,12 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 return;
             }
 
-            m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
-            debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-
-            WaitTimer = 0;
+            if( !IsOnHold )
+            {
+                m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+                debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+                WaitTimer = 0;
+            }
         }else WaitTimer -= diff;
 
     //Check if player is within range

@@ -255,6 +255,8 @@ UPDATE `creature_template` SET `ScriptName`='boss_epoch_hunter' WHERE `entry`=18
 UPDATE `creature_template` SET `ScriptName`='boss_captain_skarloc' WHERE `entry`=17862;
 UPDATE `creature_template` SET `ScriptName`='npc_brazen' WHERE `entry`=18725;
 UPDATE `creature_template` SET `ScriptName`='npc_erozion' WHERE `entry`=18723;
+UPDATE `creature_template` SET `ScriptName`='npc_taretha' WHERE `entry`=18887;
+UPDATE `creature_template` SET `ScriptName`='npc_thrall_old_hillsbrad' WHERE `entry`=17876;
 
 /* THE DARK PORTAL */
 UPDATE `creature_template` SET `ScriptName`='boss_chrono_lord_deja' WHERE `entry`=17879;

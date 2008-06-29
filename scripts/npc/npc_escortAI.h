@@ -59,6 +59,7 @@ public:
 protected:
     uint64 PlayerGUID;
     bool IsBeingEscorted;
+    bool IsOnHold;
 
 private:
     uint32 WaitTimer;
