@@ -58,7 +58,7 @@ bool GossipSelect_npc_brazen(Player *player, Creature *_Creature, uint32 sender,
             nodes[1] = 116;                                 //end outside durnholde
             player->ActivateTaxiPathTo(nodes);              //TaxiPath 534
 
-            player->PlaySoundA(10773,true);
+            player->PlaySound(10773,true);
         }
     }
     return true;
