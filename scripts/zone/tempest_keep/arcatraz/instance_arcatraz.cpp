@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_arcatraz
-SD%Complete: 60
-SDComment: Harbringer Skyriss not implemented
+SD%Complete: 80
+SDComment: Mainly Harbringer Skyriss event
 SDCategory: Tempest Keep, Arcatraz
 EndScriptData */
 
@@ -34,6 +34,8 @@ EndScriptData */
 #define POD_GAMMA   183962                                  //pod fourth boss wave
 #define POD_OMEGA   183965                                  //pod fifth boss wave
 
+#define MELLICHAR   21436                                   //skyriss will kill this unit
+
 /* Arcatraz encounters:
 1 - Zereketh the Unbound event
 2 - Dalliah the Doomsayer event
@@ -45,7 +47,7 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 {
     instance_arcatraz(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    bool Encounter[ENCOUNTERS];
+    uint32 Encounter[ENCOUNTERS];
 
     GameObject *Containment_Core_Security_Field_Alpha;
     GameObject *Containment_Core_Security_Field_Beta;
@@ -54,6 +56,8 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
     GameObject *Pod_Beta;
     GameObject *Pod_Delta;
     GameObject *Pod_Omega;
+
+    uint64 Mellichar;
 
     void Initialize()
     {
@@ -65,8 +69,10 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         Pod_Gamma = NULL;
         Pod_Omega = NULL;
 
+        Mellichar = 0;
+
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = false;
+            Encounter[i] = NOT_STARTED;
     }
 
     bool IsEncounterInProgress() const 
@@ -81,26 +87,22 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case CONTAINMENT_CORE_SECURITY_FIELD_ALPHA:
-                Containment_Core_Security_Field_Alpha = go;
-                break;
-            case CONTAINMENT_CORE_SECURITY_FIELD_BETA:
-                Containment_Core_Security_Field_Beta = go;
-                break;
-            case POD_ALPHA:
-                Pod_Alpha = go;
-                break;
-            case POD_BETA:
-                Pod_Beta = go;
-                break;
-            case POD_DELTA:
-                Pod_Delta = go;
-                break;
-            case POD_GAMMA:
-                Pod_Gamma = go;
-                break;
-            case POD_OMEGA:
-                Pod_Omega = go;
+            case CONTAINMENT_CORE_SECURITY_FIELD_ALPHA: Containment_Core_Security_Field_Alpha = go; break;
+            case CONTAINMENT_CORE_SECURITY_FIELD_BETA:  Containment_Core_Security_Field_Beta =  go; break;
+            case POD_ALPHA: Pod_Alpha = go; break;
+            case POD_BETA:  Pod_Beta =  go; break;
+            case POD_DELTA: Pod_Delta = go; break;
+            case POD_GAMMA: Pod_Gamma = go; break;
+            case POD_OMEGA: Pod_Omega = go; break;
+        }
+    }
+
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch(creature_entry)
+        {
+            case MELLICHAR:
+                Mellichar = creature->GetGUID();
                 break;
         }
     }
@@ -110,126 +112,100 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         switch(type)
         {
             case TYPE_ZEREKETH:
-                Encounter[0] = (data) ? true : false;
+                Encounter[0] = data;
                 break;
 
             case TYPE_DALLIAH:
-            {
-                if(data == DONE)
-                {
-                    Encounter[1] = DONE;
-                    if(Containment_Core_Security_Field_Beta)
+                if( data == DONE )
+                    if( Containment_Core_Security_Field_Beta )
                         Containment_Core_Security_Field_Beta->UseDoorOrButton();
-                }
-                else
-                    Encounter[1] = NOT_STARTED;
+                Encounter[1] = data;
                 break;
-            }
 
             case TYPE_SOCCOTHRATES:
-            {
-                if(data == DONE)
-                {
-                    Encounter[2] = DONE;
-                    if(Containment_Core_Security_Field_Alpha)
+                if( data == DONE )
+                    if( Containment_Core_Security_Field_Alpha )
                         Containment_Core_Security_Field_Alpha->UseDoorOrButton();
-                }
-                else
-                    Encounter[2] = NOT_STARTED;
+                Encounter[2] = data;
                 break;
-            }
 
             case TYPE_HARBINGERSKYRISS:
-                Encounter[3] = (data) ? true : false;
+                if( data == NOT_STARTED || data == FAIL )
+                {
+                    Encounter[4] = NOT_STARTED;
+                    Encounter[5] = NOT_STARTED;
+                    Encounter[6] = NOT_STARTED;
+                    Encounter[7] = NOT_STARTED;
+                    Encounter[8] = NOT_STARTED;
+                }
+                Encounter[3] = data;
                 break;
 
             case TYPE_WARDEN_1:
-            {
-                switch(data)
-                {
-                    case IN_PROGRESS:
-                        Encounter[4] = IN_PROGRESS;
-                        if(Pod_Alpha)
-                            Pod_Alpha->UseDoorOrButton();
-                        break;
-                    case DONE:
-                        Encounter[4] = DONE;
-                        break;
-                    default:
-                        Encounter[4] = (data) ? FAIL : NOT_STARTED;
-                        break;
-                }
-            }
-            case TYPE_WARDEN_2:
-            {
-                switch(data)
-                {
-                    case IN_PROGRESS:
-                        Encounter[5] = IN_PROGRESS;
-                        if(Pod_Beta)
-                            Pod_Beta->UseDoorOrButton();
-                        break;
-                    case DONE:
-                        Encounter[5] = DONE;
-                        break;
-                    default:
-                        Encounter[5] = (data) ? FAIL : NOT_STARTED;
-                        break;
-                }
-            }
-            case TYPE_WARDEN_3:
-            {
-                switch(data)
-                {
-                    case IN_PROGRESS:
-                        Encounter[6] = IN_PROGRESS;
-                        if(Pod_Delta)
-                            Pod_Delta->UseDoorOrButton();
-                        break;
-                    case DONE:
-                        Encounter[6] = DONE;
-                        break;
-                    default:
-                        Encounter[6] = (data) ? FAIL : NOT_STARTED;
-                        break;
-                }
-            }
-            case TYPE_WARDEN_4:
-            {
-                switch(data)
-                {
-                    case IN_PROGRESS:
-                        Encounter[7] = IN_PROGRESS;
-                        if(Pod_Gamma)
-                            Pod_Gamma->UseDoorOrButton();
-                        break;
-                    case DONE:
-                        Encounter[7] = DONE;
-                        break;
-                    default:
-                        Encounter[7] = (data) ? FAIL : NOT_STARTED;
-                        break;
-                }
-            }
-            case TYPE_WARDEN_5:
-            {
-                switch(data)
-                {
-                    case IN_PROGRESS:
-                        Encounter[8] = IN_PROGRESS;
-                        if(Pod_Omega)
-                            Pod_Omega->UseDoorOrButton();
-                        break;
-                    case DONE:
-                        Encounter[8] = DONE;
-                        break;
-                    default:
-                        Encounter[8] = (data) ? FAIL : NOT_STARTED;
-                        break;
-                }
-            }
+                if( data == IN_PROGRESS )
+                    if( Pod_Alpha )
+                        Pod_Alpha->UseDoorOrButton();
+                Encounter[4] = data;
+                break;
 
+            case TYPE_WARDEN_2:
+                if( data == IN_PROGRESS )
+                    if( Pod_Beta )
+                        Pod_Beta->UseDoorOrButton();
+                Encounter[5] = data;
+                break;
+
+            case TYPE_WARDEN_3:
+                if( data == IN_PROGRESS )
+                    if( Pod_Delta )
+                        Pod_Delta->UseDoorOrButton();
+                Encounter[6] = data;
+                break;
+
+            case TYPE_WARDEN_4:
+                if( data == IN_PROGRESS )
+                    if( Pod_Gamma )
+                        Pod_Gamma->UseDoorOrButton();
+                Encounter[7] = data;
+                break;
+
+            case TYPE_WARDEN_5:
+                if( data == IN_PROGRESS )
+                    if( Pod_Omega )
+                        Pod_Omega->UseDoorOrButton();
+                Encounter[8] = data;
+                break;
         }
+    }
+
+    uint32 GetData(uint32 data)
+    {
+        switch(data)
+        {
+            case TYPE_HARBINGERSKYRISS:
+                return Encounter[3];
+            case TYPE_WARDEN_1:
+                return Encounter[4];
+            case TYPE_WARDEN_2:
+                return Encounter[5];
+            case TYPE_WARDEN_3:
+                return Encounter[6];
+            case TYPE_WARDEN_4:
+                return Encounter[7];
+            case TYPE_WARDEN_5:
+                return Encounter[8];
+        }
+        return 0;
+    }
+
+    uint64 GetData64(uint32 identifier)
+    {
+        switch(identifier)
+        {
+            case DATA_MELLICHAR:
+                return Mellichar;
+        }
+        return 0;
     }
 };
 

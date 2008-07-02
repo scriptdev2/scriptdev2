@@ -338,9 +338,10 @@ scripts/zone/sunwell_plateau/def_sunwell_plateau.h \
 scripts/zone/sunwell_plateau/instance_sunwell_plateau.cpp \
 scripts/zone/tanaris/mobs_tanaris.cpp \
 scripts/zone/tanaris/npcs_tanaris.cpp \
-scripts/zone/tempest_keep/arcatraz/boss_zereketh_the_unbound.cpp \
+scripts/zone/tempest_keep/arcatraz/boss_harbinger_skyriss.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
+scripts/zone/tempest_keep/arcatraz/npcs_arcatraz.cpp \
 scripts/zone/tempest_keep/botanica/boss_warp_splinter.cpp \
 scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \

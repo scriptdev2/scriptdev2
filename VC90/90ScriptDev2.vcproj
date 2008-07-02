@@ -1621,7 +1621,7 @@
 						Name="Arcatraz"
 						>
 						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\boss_zereketh_the_unbound.cpp"
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
 							>
 						</File>
 						<File
@@ -1630,6 +1630,10 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\npcs_arcatraz.cpp"
 							>
 						</File>
 					</Filter>

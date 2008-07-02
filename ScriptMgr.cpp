@@ -489,7 +489,8 @@ extern void AddSC_npcs_tanaris();
 //Teldrassil
 //Tempest Keep
 //--Arcatraz
-extern void AddSC_boss_zereketh();
+extern void AddSC_boss_harbinger_skyriss();
+extern void AddSC_npcs_arcatraz();
 extern void AddSC_instance_arcatraz();
 
 //--Botanica
@@ -1372,7 +1373,8 @@ void ScriptsInit()
     //Teldrassil
     //Tempest Keep
     //--Arcatraz
-    AddSC_boss_zereketh();
+    AddSC_boss_harbinger_skyriss();
+    AddSC_npcs_arcatraz();
     AddSC_instance_arcatraz();
 
     //--Botanica

@@ -692,6 +692,9 @@ UPDATE `creature_template` SET `ScriptName`='mob_warp_splinter_treant' WHERE `en
 /* THE ARCATRAZ */
 UPDATE `instance_template` SET `script`='instance_arcatraz' WHERE `map`=552;
 UPDATE `creature_template` SET `ScriptName`='mob_zerekethvoidzone' WHERE `entry`=21101;
+UPDATE `creature_template` SET `ScriptName`='boss_harbinger_skyriss' WHERE `entry`=20912;
+UPDATE `creature_template` SET `ScriptName`='npc_warden_mellichar' WHERE `entry`=20904;
+UPDATE `creature_template` SET `ScriptName`='npc_millhouse_manastorm' WHERE `entry`=20977;
 
 /* THE EYE */
 UPDATE `instance_template` SET `script`='instance_the_eye' WHERE `map`=550;
