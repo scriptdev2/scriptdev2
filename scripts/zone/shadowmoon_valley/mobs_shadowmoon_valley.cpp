@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
         if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == 38439 && !m_creature->HasAura(SPELL_JUST_EATEN, 0) && !PlayerGUID)
         {
             float PlayerX, PlayerY, PlayerZ;
-            caster->GetClosePoint(PlayerX, PlayerY, PlayerZ, 1);
+            caster->GetClosePoint(PlayerX, PlayerY, PlayerZ, m_creature->GetObjectSize());
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             m_creature->GetMotionMaster()->MovePoint(1, PlayerX, PlayerY, PlayerZ);
             PlayerGUID = caster->GetGUID();
@@ -339,7 +339,7 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
 
             Tapped = true;
             float x, y, z;
-            caster->GetClosePoint(x, y, z);
+            caster->GetClosePoint(x, y, z, m_creature->GetObjectSize());
 
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
             m_creature->GetMotionMaster()->MovePoint(1, x, y, z);

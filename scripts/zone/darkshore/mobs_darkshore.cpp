@@ -16,52 +16,8 @@
 
 /* ScriptData
 SDName: Mobs_Darkshore
-SD%Complete: 100
-SDComment: Quest support: 
+SD%Complete: 0
+SDComment: Placeholder
 SDCategory: Darkshore
 EndScriptData */
 
-#include "sc_creature.h"
-
-/*######
-## mob_lunaclaw
-######*/
-
-struct MANGOS_DLL_DECL mob_lunaclawAI : public ScriptedAI
-{
-    mob_lunaclawAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    void Reset()
-    {
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage) 
-    {
-        if (m_creature->GetHealth() <= damage)
-        {
-            m_creature->CastSpell(m_creature,18986,true);//summon lunaclaw spirit
-        }
-    }
-
-    void Aggro(Unit *who)
-    {
-    }
-};
-CreatureAI* GetAI_mob_lunaclaw(Creature *_Creature)
-{
-    return new mob_lunaclawAI (_Creature);
-}
-
-/*######
-## AddSC
-######*/
-
-void AddSC_mobs_darkshore()
-{
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name="mob_lunaclaw";
-    newscript->GetAI = GetAI_mob_lunaclaw;
-    m_scripts[nrscripts++] = newscript;
-}

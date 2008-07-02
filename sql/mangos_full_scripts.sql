@@ -307,7 +307,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_shield_generator_channel' WHERE
 
 
 /* DARKSHORE */
-UPDATE `creature_template` SET `ScriptName`='mob_lunaclaw' WHERE `entry`=12138;
+
 
 /* DEADMINES */
 
