@@ -57,8 +57,6 @@ bool GossipSelect_npc_brazen(Player *player, Creature *_Creature, uint32 sender,
             nodes[0] = 115;                                 //from brazen
             nodes[1] = 116;                                 //end outside durnholde
             player->ActivateTaxiPathTo(nodes);              //TaxiPath 534
-
-            player->PlaySound(10773,true);
         }
     }
     return true;
@@ -238,7 +236,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 9:
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                DoSay(THRALL_SAY_ARMOR, LANG_UNIVERSAL, 0);
+                DoSay(THRALL_SAY_ARMOR, LANG_UNIVERSAL, NULL);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, THRALL_WEAPON_MODEL);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
@@ -283,7 +281,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 if( sum ) sum->AI()->AttackStart(m_creature);
                 break;
             case 29:
-                DoSay(THRALL_SKARLOC_MEET, LANG_UNIVERSAL, 0);
+                DoSay(THRALL_SKARLOC_MEET, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_SKARLOC_MEET);
                 sum = m_creature->SummonCreature(17862,2036.48,271.22,63.43,5.27,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
                 //temporary,skarloc should rather be triggered to walk up to thrall
@@ -295,7 +293,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 break;
             case 31:
-                DoSay(THRALL_MOUNTS_UP, LANG_UNIVERSAL, 0);
+                DoSay(THRALL_MOUNTS_UP, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_MOUNTS_UP);
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                 DoMount();
@@ -348,7 +346,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 if( sum ) sum->AI()->AttackStart(m_creature);
                 break;
             case 84:
-                DoSay(THRALL_CHURCH_END, LANG_UNIVERSAL, 0);
+                DoSay(THRALL_CHURCH_END, LANG_UNIVERSAL, NULL);
                 break;
             case 91:
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
@@ -367,19 +365,19 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 //trigger taretha Say("Thrall, you escaped!")
                 break;
             case 95:
-                DoSay(THRALL_MEET_TARETHA, LANG_UNIVERSAL, 0);
+                DoSay(THRALL_MEET_TARETHA, LANG_UNIVERSAL, NULL);
                 if( pInstance )
                     pInstance->SetData(TYPE_THRALL_PART3,DONE);
                 IsOnHold = true;
                 break;
             case 96:
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                DoYell(THRALL_EPOCH_WONDER, LANG_UNIVERSAL, 0);
+                DoYell(THRALL_EPOCH_WONDER, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_EPOCH_WONDER);
                 break;
             case 97:
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                DoYell(THRALL_EPOCH_KILL_TARETHA, LANG_UNIVERSAL, 0);
+                DoYell(THRALL_EPOCH_KILL_TARETHA, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_EPOCH_KILL_TARETHA);
                 m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 break;
@@ -439,15 +437,15 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             switch(rand()%3)
             {
             case 0:
-                DoYell(THRALL_LEAVE_COMBAT1,LANG_UNIVERSAL,0);
+                DoYell(THRALL_LEAVE_COMBAT1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT1);
                 break;
             case 1:
-                DoYell(THRALL_LEAVE_COMBAT2,LANG_UNIVERSAL,0);
+                DoYell(THRALL_LEAVE_COMBAT2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT2);
                 break;
             case 2:
-                DoYell(THRALL_LEAVE_COMBAT3,LANG_UNIVERSAL,0);
+                DoYell(THRALL_LEAVE_COMBAT3,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT3);
                 break;
             }
@@ -474,19 +472,19 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         switch(rand()%4)
         {
         case 0:
-            DoYell(THRALL_RANDOM_AGGRO1,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_AGGRO1,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO1);
             break;
         case 1:
-            DoYell(THRALL_RANDOM_AGGRO2,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_AGGRO2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO2);
             break;
         case 2:
-            DoYell(THRALL_RANDOM_AGGRO3,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_AGGRO3,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO3);
             break;
         case 3:
-            DoYell(THRALL_RANDOM_AGGRO4,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_AGGRO4,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO4);
             break;
         }
@@ -501,15 +499,15 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         switch(rand()%3)
         {
         case 0:
-            DoYell(THRALL_RANDOM_KILL1,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_KILL1,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL1);
             break;
         case 1:
-            DoYell(THRALL_RANDOM_KILL2,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_KILL2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL2);
             break;
         case 2:
-            DoYell(THRALL_RANDOM_KILL3,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_KILL3,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL3);
             break;
         }
@@ -519,11 +517,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         switch(rand()%2)
         {
         case 0:
-            DoYell(THRALL_RANDOM_DIE1,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_DIE1,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE1);
             break;
         case 1:
-            DoYell(THRALL_RANDOM_DIE2,LANG_UNIVERSAL,0);
+            DoYell(THRALL_RANDOM_DIE2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE2);
             break;
         }
@@ -543,11 +541,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 switch(rand()%2)
                 {
                 case 0:
-                    DoYell(THRALL_RANDOM_LOW_HP1,LANG_UNIVERSAL,0);
+                    DoYell(THRALL_RANDOM_LOW_HP1,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP1);
                     break;
                 case 1:
-                    DoYell(THRALL_RANDOM_LOW_HP2,LANG_UNIVERSAL,0);
+                    DoYell(THRALL_RANDOM_LOW_HP2,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP2);
                     break;
                 }

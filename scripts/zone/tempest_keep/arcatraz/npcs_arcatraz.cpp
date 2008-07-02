@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,0);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
@@ -105,11 +105,11 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         switch(rand()%2)
         {
         case 0:
-            DoYell(SAY_KILL_1,LANG_UNIVERSAL,0);
+            DoYell(SAY_KILL_1,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_KILL_1);
             break;
         case 1:
-            DoYell(SAY_KILL_2,LANG_UNIVERSAL,0);
+            DoYell(SAY_KILL_2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_KILL_2);
             break;
         }
@@ -135,27 +135,27 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
                     switch( Phase )
                     {
                         case 1:
-                            DoYell(SAY_INTRO_1,LANG_UNIVERSAL,0);
+                            DoYell(SAY_INTRO_1,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_INTRO_1);
                             break;
                         case 2:
-                            DoYell(SAY_INTRO_2,LANG_UNIVERSAL,0);
+                            DoYell(SAY_INTRO_2,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_INTRO_2);
                             break;
                         case 3:
-                            DoYell(SAY_WATER,LANG_UNIVERSAL,0);
+                            DoYell(SAY_WATER,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_WATER);
                             break;
                         case 4:
-                            DoYell(SAY_BUFFS,LANG_UNIVERSAL,0);
+                            DoYell(SAY_BUFFS,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_BUFFS);
                             break;
                         case 5:
-                            DoYell(SAY_DRINK,LANG_UNIVERSAL,0);
+                            DoYell(SAY_DRINK,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_DRINK);
                             break;
                         case 6:
-                            DoYell(SAY_READY,LANG_UNIVERSAL,0);
+                            DoYell(SAY_READY,LANG_UNIVERSAL,NULL);
                             DoPlaySoundToSet(m_creature,SOUND_READY);
                             break;
                         case 7:
@@ -175,7 +175,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
         if( !LowHp && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20) )
         {
-            DoYell(SAY_LOWHP,LANG_UNIVERSAL,0);
+            DoYell(SAY_LOWHP,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_LOWHP);
             LowHp = true;
         }
@@ -289,7 +289,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(YELL_INTRO1,LANG_UNIVERSAL,0);
+        DoYell(YELL_INTRO1,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_INTRO1);
         //possibly wrong spell OR should also cast second spell to make bubble appear (visual for this spell appear to be the correct)
         DoCast(m_creature,SPELL_BUBBLE_VISUAL);
@@ -396,7 +396,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                         break;
                     case 3:
                         m_creature->SummonCreature(ENTRY_MILLHOUSE,413.292,-148.378,42.56,6.27,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,240000);
-                        DoYell(YELL_RELEASE2B,LANG_UNIVERSAL,0);
+                        DoYell(YELL_RELEASE2B,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_RELEASE2B);
                         break;
                     case 4:
@@ -423,7 +423,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                         break;
                     case 6:
                         m_creature->SummonCreature(ENTRY_SKYRISS,445.763,-191.639,44.64,1.60,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
-                        DoYell(YELL_WELCOME,LANG_UNIVERSAL,0);
+                        DoYell(YELL_WELCOME,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_WELCOME);
                         //possible remove flag for skyriss to kill?
                         //m_creature->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
@@ -437,27 +437,27 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                 switch( Phase )
                 {
                     case 1:
-                        DoYell(YELL_INTRO2,LANG_UNIVERSAL,0);
+                        DoYell(YELL_INTRO2,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_INTRO2);
                         Phase = Phase++;
                         break;
                     case 2:
-                        DoYell(YELL_RELEASE1,LANG_UNIVERSAL,0);
+                        DoYell(YELL_RELEASE1,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_RELEASE1);
                         DoPrepareForPhase();
                         break;
                     case 3:
-                        DoYell(YELL_RELEASE2A,LANG_UNIVERSAL,0);
+                        DoYell(YELL_RELEASE2A,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_RELEASE2A);
                         DoPrepareForPhase();
                         break;
                     case 4:
-                        DoYell(YELL_RELEASE3,LANG_UNIVERSAL,0);
+                        DoYell(YELL_RELEASE3,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_RELEASE3);
                         DoPrepareForPhase();
                         break;
                     case 5:
-                        DoYell(YELL_RELEASE4,LANG_UNIVERSAL,0);
+                        DoYell(YELL_RELEASE4,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_RELEASE4);
                         DoPrepareForPhase();
                         break;

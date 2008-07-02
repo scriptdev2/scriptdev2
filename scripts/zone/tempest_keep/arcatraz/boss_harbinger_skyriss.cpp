@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     { 
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, 0);
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
         if( pInstance )
             pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
@@ -93,11 +93,11 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         switch(rand()%2)
         { 
         case 0:
-            DoYell(SAY_KILL_1, LANG_UNIVERSAL, 0);
+            DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_KILL_1);
             break;
         case 1:
-            DoYell(SAY_KILL_2, LANG_UNIVERSAL, 0);
+            DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_KILL_2);
             break; 
         }
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, 0);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 

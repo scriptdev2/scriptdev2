@@ -14,44 +14,23 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/* ScriptData
+SDName: Boss_Warp_Splinter
+SD%Complete: 80
+SDComment: Includes Sapling (need some better control with these). Spells for boss possibly need some rework.
+SDCategory: Tempest Keep, The Botanica
+EndScriptData */
+
 #include "sc_creature.h"
-#include "sc_instance.h"
 
-// Warp Splinter AI
+/*#####
+# mob_treant (Sapling)
+#####*/
 
-#define WAR_STOMP 34716
-#define SUMMON_TREANTS 34727    // DBC: 34727, 34731, 34733, 34734, 34736, 34739, 34741 (with Ancestral Life spell 34742)   // won't work (guardian summon)
-#define ARCANE_VOLLEY 35059      //37078, 34785   // must additional script them (because Splinter eats them after 20 sec ^)
-#define SPELL_HEAL_FATHER       6262
-
-#define CREATURE_TREANT  19949
-
-#define SAY_COMBAT_START        "Who disturbs this sanctuary?"
-#define SOUND_COMBAT_START      11230
-
-#define SAY_SLAY_1            "You must die! But wait: this does not-- No, no... you must die!"
-#define SOUND_SLAY_1    11231
-#define SAY_SLAY_2            "What am I doing? Why do I..."
-#define SOUND_SLAY_2    11231
-
-#define SAY_DEATH              "So... confused. Do not... belong here!"
-#define SOUND_DEATH          11232
-
-#define TREANT_SPAWN_DIST  50 //50 yards from Warp Splinter's spawn point
-
-float treant_pos[6][3] = {
-    {24.301233, 427.221100, -27.060635},
-    {16.795492, 359.678802, -27.355425},
-    {53.493484, 345.381470, -26.196192},
-    {61.867096, 439.362732, -25.921030},
-    {109.861877, 423.201630, -27.356019},
-    {106.780159, 355.582581, -27.593357}
-};
-
-// Treant AI
 struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 {
-    mob_treantAI (Creature *c) : ScriptedAI(c){
+    mob_treantAI (Creature *c) : ScriptedAI(c)
+    {
         WarpGuid = 0;
         Reset();
     }
@@ -81,9 +60,46 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 
         if (m_creature->getVictim()->GetGUID() !=  WarpGuid)
             DoMeleeAttackIfReady();
-
     }
+};
 
+/*#####
+# boss_warp_splinter
+#####*/
+
+#define WAR_STOMP           34716
+#define SUMMON_TREANTS      34727                           // DBC: 34727, 34731, 34733, 34734, 34736, 34739, 34741 (with Ancestral Life spell 34742)   // won't work (guardian summon)
+#define ARCANE_VOLLEY       35059                           //37078, 34785 //must additional script them (because Splinter eats them after 20 sec ^)
+#define SPELL_HEAL_FATHER   6262
+
+#define CREATURE_TREANT     19949
+
+#define SAY_COMBAT_START    "Who disturbs this sanctuary?"
+#define SOUND_COMBAT_START  11230
+
+#define SAY_SLAY_1          "You must die! But wait: this does not-- No, no... you must die!"
+#define SOUND_SLAY_1        11231
+#define SAY_SLAY_2          "What am I doing? Why do I..."
+#define SOUND_SLAY_2        11232
+
+#define SAY_SUMMON_1        "Children, come to me!"
+#define SOUND_SUMMON_1      11233
+#define SAY_SUMMON_2        "Maybe this is not-- No, we fight! Come to my aid."
+#define SOUND_SUMMON_2      11234
+
+#define SAY_DEATH           "So... confused. Do not... belong here!"
+#define SOUND_DEATH         11235
+
+#define TREANT_SPAWN_DIST   50                              //50 yards from Warp Splinter's spawn point
+
+float treant_pos[6][3] = 
+{
+    {24.301233, 427.221100, -27.060635},
+    {16.795492, 359.678802, -27.355425},
+    {53.493484, 345.381470, -26.196192},
+    {61.867096, 439.362732, -25.921030},
+    {109.861877, 423.201630, -27.356019},
+    {106.780159, 355.582581, -27.593357}
 };
 
 struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
@@ -125,9 +141,10 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoYell(SAY_COMBAT_START,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_COMBAT_START);
         InCombat = true;
     }
-
 
     // On Killed Unit
     void KilledUnit(Unit* victim)
@@ -171,6 +188,17 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
                 ((mob_treantAI*)pTreant->AI())->WarpGuid = m_creature->GetGUID();
             }
         }
+        switch(rand()%2)
+        { 
+        case 0:
+            DoYell(SAY_SUMMON_1,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SUMMON_1);
+            break;
+        case 1:
+            DoYell(SAY_SUMMON_2,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature,SOUND_SUMMON_2);
+            break; 
+        }
     }
 
     // Warp Splinter eat treants if they are near him
@@ -201,7 +229,6 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-
         //Check for War Stomp
         if(War_Stomp_Timer < diff)
         {
@@ -212,7 +239,6 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             War_Stomp_Timer = 60000;        
         }
         else War_Stomp_Timer -= diff;
-
 
         //Check for Arcane Volley
         if(Arcane_Volley_Timer < diff)
@@ -225,7 +251,6 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         }
         else Arcane_Volley_Timer -= diff;
 
-
         //Check for Summon Treants
         if(Summon_Treants_Timer < diff)
         {
@@ -235,7 +260,6 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
             Summon_Treants_Timer = 45000;        
         }
         else Summon_Treants_Timer -= diff;
-
 
         // I check if there is a Treant in Warp Splinter's LOS, so he can eat them
         if( CheckTreantLOS_Timer < diff)
@@ -248,12 +272,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-
 };
-
-
-
-
 
 CreatureAI* GetAI_boss_warp_splinter(Creature *_Creature)
 {
@@ -268,6 +287,7 @@ CreatureAI* GetAI_mob_treant(Creature *_Creature)
 void AddSC_boss_warp_splinter()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_warp_splinter";
     newscript->GetAI = GetAI_boss_warp_splinter;
