@@ -25,13 +25,13 @@ EndScriptData */
 # item_area_52_special(i28132)       Prevents abuse of this item
 # item_draenei_fishing_net(i23654)   Correctly implements chance to spawn item or creature
 # item_nether_wraith_beacon(i31742)  Summons creatures for quest Becoming a Spellfire Tailor (q10832)
+# item_flying_machine(i34060,i34061) Engineering crafted flying machines
 # item_tame_beast_rods(many)         Prevent cast on any other creature than the intended (for all tame beast quests)
 # item_vorenthals_presence(i30259)   Prevents abuse of this item
 # item_yehkinyas_bramble(i10699)     Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 # item_zezzak_shard(i31463)          Quest The eyes of Grillok (q10813). Prevents abuse
 # item_Sparrowhawk_Net(i32321)       Quest To Catch A Sparrowhawk (q10987). Prevents abuse
 # item_Blackwhelp_Net(i31129)        Quest Whelps of the Wyrmcult (q10747). Prevents abuse
-# 
 #####*/
 
 #include "sc_creature.h"
@@ -105,6 +105,26 @@ bool ItemUse_item_nether_wraith_beacon(Player *player, Item* _Item, SpellCastTar
             ((CreatureAI*)Nether->AI())->AttackStart(player);
     }
     return false;
+}
+
+/*#####
+# item_flying_machine
+#####*/
+
+bool ItemUse_item_flying_machine(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    uint32 itemId = _Item->GetEntry();
+    if( itemId == 34060 )
+        if( player->GetBaseSkillValue(SKILL_RIDING) >= 225 )
+            return false;
+
+    if( itemId == 34061 )
+        if( player->GetBaseSkillValue(SKILL_RIDING) == 300 )
+            return false;
+
+    debug_log("SD2: Player attempt to use item %u, but did not meet riding requirement",itemId);
+    player->SendEquipError(EQUIP_ERR_ERR_CANT_EQUIP_SKILL,_Item,NULL);
+    return true;
 }
 
 /*#####
@@ -254,6 +274,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_nether_wraith_beacon";
     newscript->pItemUse = ItemUse_item_nether_wraith_beacon;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_flying_machine";
+    newscript->pItemUse = ItemUse_item_flying_machine;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
