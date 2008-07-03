@@ -26,52 +26,67 @@ int main(int argc, char **argv)
 {
     FILE* EntriesFile = fopen(".svn/entries", "r");
     if(!EntriesFile)
-        return 1;
-
-    char buf[200];
-    int revision;
-    char date_str[200];
-    char time_str[200];
-
-    fgets(buf,200,EntriesFile);
-    if (strstr(buf,"xml") > 0)
-    { // svn 1.3.x
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fscanf(EntriesFile,"   committed-date=\"%10sT%8s",date_str,time_str);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fscanf(EntriesFile,"   revision=\"%i",&revision);
-    } else
-    { // svn 1.4.x
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fscanf(EntriesFile,"%i",&revision);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fgets(buf,200,EntriesFile);
-      fscanf(EntriesFile,"%10sT%8s",date_str,time_str);
-    }
+    	EntriesFile = fopen("_svn/entries", "r");
 
     std::ostringstream newData;
 
-    newData << "#ifndef __SVN_REVISION_H__" << std::endl;
-    newData << "#define __SVN_REVISION_H__"  << std::endl;
-    newData << " #define SVN_REVISION \"" << revision << "\"" << std::endl;
-    newData << " #define SVN_DATE \"" << date_str << "\"" << std::endl;
-    newData << " #define SVN_TIME \"" << time_str << "\""<< std::endl;
-    newData << "#endif // __SVN_REVISION_H__" << std::endl;
+    if(!EntriesFile)
+    {
+        newData << "#ifndef __SVN_REVISION_H__" << std::endl;
+        newData << "#define __SVN_REVISION_H__"  << std::endl;
+        newData << " #define SVN_REVISION \"Unknown\"" << std::endl;
+        newData << " #define SVN_DATE \"Unknown\"" << std::endl;
+        newData << " #define SVN_TIME \"Unknown\""<< std::endl;
+        newData << "#endif // __SVN_REVISION_H__" << std::endl;
+    }
+    else
+    {
+        char buf[200];
+        int revision;
+        char date_str[200];
+        char time_str[200];
 
-    fclose(EntriesFile);
+        fgets(buf,200,EntriesFile);
+        if (strstr(buf,"xml") > 0)
+        {   // svn 1.3.x
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fscanf(EntriesFile,"   committed-date=\"%10sT%8s",date_str,time_str);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fscanf(EntriesFile,"   revision=\"%i",&revision);
+        }
+        else
+        {   // svn 1.4.x
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fscanf(EntriesFile,"%i",&revision);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fgets(buf,200,EntriesFile);
+            fscanf(EntriesFile,"%10sT%8s",date_str,time_str);
+        }
+
+        std::ostringstream newData;
+
+        newData << "#ifndef __SVN_REVISION_H__" << std::endl;
+        newData << "#define __SVN_REVISION_H__"  << std::endl;
+        newData << " #define SVN_REVISION \"" << revision << "\"" << std::endl;
+        newData << " #define SVN_DATE \"" << date_str << "\"" << std::endl;
+        newData << " #define SVN_TIME \"" << time_str << "\""<< std::endl;
+        newData << "#endif // __SVN_REVISION_H__" << std::endl;
+
+        fclose(EntriesFile);
+    }
 
     std::string oldData;
 
