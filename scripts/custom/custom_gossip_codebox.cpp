@@ -15,6 +15,7 @@
 */
 
 #include "sc_gossip.h"
+#include <cstring>
 
 //This function is called when the player opens the gossip menubool 
 bool GossipHello_custom_gossip_codebox(Player *player, Creature *_Creature)
