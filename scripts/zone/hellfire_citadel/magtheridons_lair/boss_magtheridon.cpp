@@ -150,21 +150,16 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
-    void MoveInLineOfSight(Unit*)
-    {
-    }
+    void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
         if (!InCombat && !Phase1_Timer)
             if (RandChat_Timer < diff)
             {
-                uint32 p = rand()%5;
-                DoPlaySoundToSet(m_creature, RandomSound[p]);
+                DoPlaySoundToSet(m_creature, RandomSound[rand()%5]);
 
                 RandChat_Timer = 90000;
             }else RandChat_Timer -= diff;
@@ -173,7 +168,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         if (!InCombat && !Phase1_Timer && pInst && pInst->GetData64(DATA_EVENT_STARTER))
         {
             //Unbanish self after 2 minutes
-            Phase1_Timer = 12000;
+            Phase1_Timer = 120000;
             DoTextEmote(EMOTE_BEGIN, NULL);
             return;
         }
