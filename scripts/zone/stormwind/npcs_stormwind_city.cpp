@@ -171,12 +171,12 @@ bool ReceiveEmote_npc_general_marcus_jonathan(Player *player, Creature *_Creatur
 {
     if(player->GetTeam() == ALLIANCE)
     {
-        if (emote == EMOTE_ONESHOT_SALUTE)
+        if (emote == TEXTEMOTE_SALUTE)
         {
             _Creature->SetOrientation(_Creature->GetAngle(player));
             _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
         }
-        if (emote == EMOTE_ONESHOT_WAVE)
+        if (emote == TEXTEMOTE_WAVE)
         {
             _Creature->MonsterSay("Greetings citizen",LANG_COMMON,0);
         }

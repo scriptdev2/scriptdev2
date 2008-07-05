@@ -256,7 +256,7 @@ bool ReciveEmote_mobs_spectral_ghostly_citizen(Player *player, Creature *_Creatu
 {
     _Creature->HandleEmoteCommand(emote);
 
-    if (emote == EMOTE_STATE_DANCE)
+    if (emote == TEXTEMOTE_DANCE)
         ((mobs_spectral_ghostly_citizenAI*)_Creature->AI())->EnterEvadeMode();
 
     return true;

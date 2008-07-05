@@ -80,6 +80,20 @@ EndScriptData */
 #define GOSSIP_TEXT_INN_SILVERMOON_1          "Silvermoon City Inn"
 #define GOSSIP_TEXT_INN_SILVERMOON_2          "Wayfarer's Rest tavern"
 
+//common used for guards in main cities
+void DoReplyToTextEmote(Creature *_Creature,uint32 em)
+{
+    switch(em)
+    {
+        case TEXTEMOTE_KISS:    _Creature->HandleEmoteCommand(EMOTE_ONESHOT_BOW); break;
+        case TEXTEMOTE_WAVE:    _Creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE); break;
+        case TEXTEMOTE_SALUTE:  _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE); break;
+        case TEXTEMOTE_SHY:     _Creature->HandleEmoteCommand(EMOTE_ONESHOT_FLEX); break;
+        case TEXTEMOTE_RUDE:
+        case TEXTEMOTE_CHICKEN: _Creature->HandleEmoteCommand(EMOTE_ONESHOT_POINT); break;
+    }
+}
+
 /*******************************************************
  * guard_azuremyst start
  *******************************************************/
@@ -2291,21 +2305,8 @@ bool GossipSelect_guard_orgrimmar(Player *player, Creature *_Creature, uint32 se
 
 bool ReceiveEmote_guard_orgrimmar(Player *player, Creature *_Creature, uint32 emote) 
 {
-    if(player->GetTeam() == HORDE)
-    {
-        switch(emote)
-        {
-            case EMOTE_ONESHOT_KISS:
-                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_FLEX);
-                break;
-            case EMOTE_ONESHOT_WAVE:
-                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
-                break;
-            case EMOTE_ONESHOT_SALUTE:
-                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                break;
-        }
-    }
+    if( player->GetTeam() == HORDE )
+        DoReplyToTextEmote(_Creature,emote);
     return true;
 }
 
@@ -3133,18 +3134,8 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
 
 bool ReceiveEmote_guard_stormwind(Player *player, Creature *_Creature, uint32 emote) 
 {
-    if(player->GetTeam() == ALLIANCE)
-    {
-        switch(emote)
-        {
-            case EMOTE_ONESHOT_WAVE:
-                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
-                break;
-            case EMOTE_ONESHOT_SALUTE:
-                _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                break;
-        }
-    }
+    if( player->GetTeam() == ALLIANCE )
+        DoReplyToTextEmote(_Creature,emote);
     return true;
 }
 
