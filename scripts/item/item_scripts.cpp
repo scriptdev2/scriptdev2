@@ -23,15 +23,16 @@ EndScriptData */
 
 /*#####
 # item_area_52_special(i28132)       Prevents abuse of this item
+# item_blackwhelp_net(i31129)        Quest Whelps of the Wyrmcult (q10747). Prevents abuse
 # item_draenei_fishing_net(i23654)   Correctly implements chance to spawn item or creature
 # item_nether_wraith_beacon(i31742)  Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 # item_flying_machine(i34060,i34061) Engineering crafted flying machines
+# item_soul_cannon(i32825)           Prevents abuse of this item
+# item_sparrowhawk_net(i32321)       Quest To Catch A Sparrowhawk (q10987). Prevents abuse
 # item_tame_beast_rods(many)         Prevent cast on any other creature than the intended (for all tame beast quests)
 # item_vorenthals_presence(i30259)   Prevents abuse of this item
 # item_yehkinyas_bramble(i10699)     Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 # item_zezzak_shard(i31463)          Quest The eyes of Grillok (q10813). Prevents abuse
-# item_Sparrowhawk_Net(i32321)       Quest To Catch A Sparrowhawk (q10987). Prevents abuse
-# item_Blackwhelp_Net(i31129)        Quest Whelps of the Wyrmcult (q10747). Prevents abuse
 #####*/
 
 #include "sc_creature.h"
@@ -55,6 +56,20 @@ bool ItemUse_item_area_52_special(Player *player, Item* _Item, SpellCastTargets 
         player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE,_Item,NULL);
         return true;
     }
+}
+
+/*#####
+# item_blackwhelp_net
+#####*/
+
+bool ItemUse_item_blackwhelp_net(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 21387 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    return true;
 }
 
 /*#####
@@ -174,6 +189,36 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
 }
 
 /*#####
+# item_soul_cannon
+#####*/
+
+bool ItemUse_item_soul_cannon(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    // allow use
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 22357 )
+        return false;
+
+    // error
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    return true;
+}
+
+/*#####
+# item_sparrowhawk_net
+#####*/
+
+bool ItemUse_item_sparrowhawk_net(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 22979 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    return true;
+}
+
+/*#####
 # item_vorenthals_presence
 #####*/
 
@@ -229,34 +274,6 @@ bool ItemUse_item_zezzak_shard(Player *player, Item* _Item, SpellCastTargets con
     return true;
 }
 
-/*#####
-# item_Sparrowhawk_Net
-#####*/
-
-bool ItemUse_item_Sparrowhawk_Net(Player *player, Item* _Item, SpellCastTargets const& targets)
-{
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
-        targets.getUnitTarget()->GetEntry() == 22979 )
-        return false;
-
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
-    return true;
-}
-
-/*#####
-# item_Blackwhelp_Net
-#####*/
-
-bool ItemUse_item_Blackwhelp_Net(Player *player, Item* _Item, SpellCastTargets const& targets)
-{
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
-        targets.getUnitTarget()->GetEntry() == 21387 )
-        return false;
-
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
-    return true;
-}
-
 void AddSC_item_scripts()
 {
     Script *newscript;
@@ -264,6 +281,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_area_52_special";
     newscript->pItemUse = ItemUse_item_area_52_special;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_blackwhelp_net";
+    newscript->pItemUse = ItemUse_item_blackwhelp_net;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
@@ -287,6 +309,16 @@ void AddSC_item_scripts()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
+    newscript->Name="item_soul_cannon";
+    newscript->pItemUse = ItemUse_item_soul_cannon;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_sparrowhawk_net";
+    newscript->pItemUse = ItemUse_item_sparrowhawk_net;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="item_vorenthals_presence";
     newscript->pItemUse = ItemUse_item_vorenthals_presence;
     m_scripts[nrscripts++] = newscript;
@@ -299,15 +331,5 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_zezzaks_shard";
     newscript->pItemUse = ItemUse_item_zezzak_shard;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="item_Sparrowhawk_Net";
-    newscript->pItemUse = ItemUse_item_Sparrowhawk_Net;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="item_Blackwhelp_Net";
-    newscript->pItemUse = ItemUse_item_Blackwhelp_Net;
     m_scripts[nrscripts++] = newscript;
 }

@@ -14,7 +14,7 @@
 
 5) Create the default ScriptDev2 database using "sql\created_database.sql", then execute "sql\scriptdev2_structure.sql" on that database.
 
-6) Execute the included "sql\scripts_mangosd_full.sql" and "sql\scripts_mangosd_additional_req.sql" on your MaNGOS database
+6) Execute the included "sql\mangos_full_scripts.sql" on your MaNGOS database.
 
 7) Place the included "scriptdev2.conf" file within the directory containing your "mangosd.conf" and "realmd.conf" files. You may need to change this file to match the database you created and any custom settings you wish to use (such as a different locale).
 
@@ -26,7 +26,7 @@ All you have to do is open src\bindings\ and right click on the ScriptDev2 folde
 
 To update your Database with new Scriptdev2 SQL changes you can either:
 a) apply only the changes that were made during that revision by looking in the sql\update folder or (files named rXXX_scriptdev2.sql should be executed on the scriptdev2 db while rXXX_mangos.sql should be executed on your mangos db)
-b) reapply "mangos_full_scripts.sql" to your MaNGOS database along with executing "mangos_additional_req.sql" on your MaNGOS database. 
+b) reapply "mangos_full_scripts.sql" to your MaNGOS database. 
 
 You can view the ScriptDev2 Change Log at:
 [url=http://scriptdev2.svn.sourceforge.net/viewvc/scriptdev2/?view=log]http://scriptdev2.svn.sourceforge.net/viewvc/scriptdev2/?view=log[/url]
