@@ -76,8 +76,6 @@ int main(int argc, char **argv)
             fscanf(EntriesFile,"%10sT%8s",date_str,time_str);
         }
 
-        std::ostringstream newData;
-
         newData << "#ifndef __SVN_REVISION_H__" << std::endl;
         newData << "#define __SVN_REVISION_H__"  << std::endl;
         newData << " #define SVN_REVISION \"" << revision << "\"" << std::endl;
