@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: npcs_special
+SDName: Npcs_Special
 SD%Complete: 100
 SDComment: To be used for special NPCs that are located globally. Support for quest 3861 (Cluck!), 6622 and 6624 (Triage)
 SDCategory: NPCs
@@ -30,10 +30,10 @@ EndScriptData
 #########*/
 
 #define QUEST_CLUCK         3861
-#define ITEM_CHICKEN_FEED   11109
-#define CLUCK_TEXT1         "looks up at you quizzically. Maybe you should inspect it?"
-#define CLUCK_TEXT2         "starts pecking at the feed"
-#define FACTION_FRIENDLY    35
+#define EMOTE_A_HELLO       "looks up at you quizzically. Maybe you should inspect it?"
+#define EMOTE_H_HELLO       "looks at you unexpectadly."
+#define CLUCK_TEXT2         "starts pecking at the feed."
+#define FACTION_FRIENDLY    84
 #define FACTION_CHICKEN     31
 
 struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
@@ -74,28 +74,30 @@ CreatureAI* GetAI_npc_chicken_cluck(Creature *_Creature)
 
 bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32 emote )
 {
-    if(player->GetTeam() == ALLIANCE)
+    if( emote == TEXTEMOTE_CHICKEN )
     {
-        if(player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE)
+        if( player->GetTeam() == ALLIANCE )
         {
-            if(emote == TEXTEMOTE_CHICKEN)
+            if( rand()%30 == 1 )
             {
-                if(rand()%30 == 0)
+                if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE )
                 {
                     _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                    _Creature->MonsterTextEmote(CLUCK_TEXT1, 0);
+                    _Creature->setFaction(FACTION_FRIENDLY);
+                    _Creature->MonsterTextEmote(EMOTE_A_HELLO, 0);
                 }
             }
-        }
-        else if(player->HasItemCount(ITEM_CHICKEN_FEED, 1))
-        {
-            if(emote == TEXTEMOTE_CHEER)
-            {
-                _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
-            }
-        }
+        } else
+            _Creature->MonsterTextEmote(EMOTE_H_HELLO,0);
     }
+    if( emote == TEXTEMOTE_CHEER && player->GetTeam() == ALLIANCE )
+        if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE )
+        {
+            _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+            _Creature->setFaction(FACTION_FRIENDLY);
+            _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
+        }
+
     return true;
 }
 
