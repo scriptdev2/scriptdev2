@@ -69,7 +69,7 @@ EndScriptData */
 #define SOLARIUM_SILENCE                     37160
 
 #define WV_ARMOR                    31000
-#define MIN_RANGE_FOR_DOT_JUMP      20
+#define MIN_RANGE_FOR_DOT_JUMP      20.0f
 
 struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 {
@@ -125,7 +125,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         Phase = 1;
 
         if(pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
 
         m_creature->SetArmor(defaultarmor);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -140,10 +140,10 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_PHASE1);
 
         if(pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 1);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, IN_PROGRESS);
     }
 
-    void KIlledUnit(Unit *victim)
+    void KilledUnit(Unit *victim)
     {
         switch(rand()%3)
         {
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, 0);
+            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *who)
