@@ -111,6 +111,7 @@ UPDATE `creature_template` SET `ScriptName`='mobs_spitelashes' WHERE `entry` IN 
 UPDATE `creature_template` SET `ScriptName`='npc_loramus_thalipedes' WHERE `entry`=7783;
 
 /* AZUREMYST ISLE */
+UPDATE `creature_template` SET `ScriptName`='npc_engineer_spark_overgrind' WHERE `entry`=17243;
 UPDATE `creature_template` SET `ScriptName`='injured_draenei' WHERE `entry`=16971;
 UPDATE `creature_template` SET `ScriptName`='npc_susurrus' WHERE `entry`=17435;
 

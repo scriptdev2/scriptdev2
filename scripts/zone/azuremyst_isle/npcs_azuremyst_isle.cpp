@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Npcs_Azuremyst_Isle
 SD%Complete: 100
-SDComment: Quest support: 9283, 9554(special flight path, proper model for mount missing). Injured Draenei cosmetic only
+SDComment: Quest support: 9283, 9537, 9554(special flight path, proper model for mount missing). Injured Draenei cosmetic only
 SDCategory: Azuremyst Isle
 EndScriptData */
 
@@ -209,6 +209,81 @@ CreatureAI* GetAI_draenei_survivor(Creature *_Creature)
 }
 
 /*######
+## npc_engineer_spark_overgrind
+######*/
+
+#define SAY_TEXT        "Yes Master, all goes along as planned."
+#define SAY_EMOTE       "puts the shell to his ear."
+#define GOSSIP_FIGHT    "Traitor! You will be brought to justice!"
+#define ATTACK_YELL     "Now I cut you!"
+#define SPELL_DYNAMITE  7978
+
+struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
+{
+    npc_engineer_spark_overgrindAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 Dynamite_Timer;
+    uint32 Emote_Timer;
+
+    void Reset()
+    {
+        Dynamite_Timer = 8000;
+        Emote_Timer = 120000 + rand()%30000;
+        m_creature->setFaction(875);
+    }
+
+    void Aggro(Unit *who) { }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if( !InCombat )
+            if (Emote_Timer < diff)
+            {
+                DoSay(SAY_TEXT,LANG_UNIVERSAL,NULL);
+                DoTextEmote(SAY_EMOTE,NULL);
+                Emote_Timer = 120000 + rand()%30000;
+            }else Emote_Timer -= diff;
+
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if (Dynamite_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_DYNAMITE);
+            Dynamite_Timer = 8000;
+        } else Dynamite_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature *_Creature)
+{
+    return new npc_engineer_spark_overgrindAI (_Creature);
+}
+
+bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature *_Creature)
+{
+    if( player->GetQuestStatus(9537) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_INFO_DEF )
+    {
+        player->CLOSE_GOSSIP_MENU();
+        _Creature->setFaction(14);
+        _Creature->Yell(ATTACK_YELL, LANG_UNIVERSAL, player->GetGUID());
+        ((npc_engineer_spark_overgrindAI*)_Creature->AI())->AttackStart(player);
+    }
+    return true;
+}
+
+/*######
 ## injured_draenei
 ######*/
 
@@ -297,13 +372,20 @@ void AddSC_npcs_azuremyst_isle()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
+    newscript->Name="npc_engineer_spark_overgrind";
+    newscript->GetAI = GetAI_npc_engineer_spark_overgrind;
+    newscript->pGossipHello =  &GossipHello_npc_engineer_spark_overgrind;
+    newscript->pGossipSelect = &GossipSelect_npc_engineer_spark_overgrind;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="injured_draenei";
     newscript->GetAI = GetAI_injured_draenei;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_susurrus";
-    newscript->pGossipHello =   &GossipHello_npc_susurrus;
-    newscript->pGossipSelect =  &GossipSelect_npc_susurrus;
+    newscript->pGossipHello =  &GossipHello_npc_susurrus;
+    newscript->pGossipSelect = &GossipSelect_npc_susurrus;
     m_scripts[nrscripts++] = newscript;
 }
