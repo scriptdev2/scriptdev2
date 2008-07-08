@@ -883,7 +883,8 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
     void JustDied(Unit* pKiller)
     {
         //Switch
-        pInst->SetData(DATA_CTHUN_PHASE, 5);
+        if( pInst )
+            pInst->SetData(DATA_CTHUN_PHASE, 5);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 

@@ -24,12 +24,12 @@ EndScriptData */
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_HEAL_BROTHER          7393
-#define SPELL_TWIN_TELEPORT         800     //Visual only
+#define SPELL_TWIN_TELEPORT         800                     //Visual only
 
 #define SPELL_SHADOWBOLT            26006
 #define SPELL_BLIZZARD              26607
 #define SPELL_ARCANEBURST           568
-#define SPELL_EXPLODEBUG            804    //Buggy. Same as Golemaggs trust spell. Its casted on gamers not on the right creature...
+#define SPELL_EXPLODEBUG            804                     //Buggy. Same as Golemaggs trust spell. Its casted on gamers not on the right creature...
 
 
 //8657 - Aggro - To Late
@@ -42,7 +42,6 @@ EndScriptData */
 //8627 - to decorate
 //8628 - your brash
 //8629 - you will not
-
 
 struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 {
@@ -66,7 +65,6 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 
     Creature* Summoned;
 
-
     void Reset()
     {
         Heal_Timer = 25000 + rand()%15000;
@@ -76,7 +74,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         ArcaneBurst_Timer = 5000;
         Scorpions_Timer = 7000 + rand()%7000;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, IMMUNE_DAMAGE_PHYSICAL, true);  //Added. Can be removed if its included in DB.
+        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, true); //Added. Can be removed if its included in DB.
 
 //        m_creature->RemoveAllAuras();
 //        m_creature->DeleteThreatList();
@@ -84,10 +82,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 //        DoGoHome();
     }
 
-    void JustDied(Unit* Killer)
-    {
-
-    }
+    void JustDied(Unit* Killer) { }
 
     void SummonScorpions(Unit* victim)
     {
@@ -113,11 +108,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 	    }
     }
 
-    
-
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -125,92 +116,85 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-            //ShadowBolt_Timer
-            if (ShadowBolt_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
-                ShadowBolt_Timer = 2500;
-            }else ShadowBolt_Timer -= diff;
+        //ShadowBolt_Timer
+        if (ShadowBolt_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
+            ShadowBolt_Timer = 2500;
+        }else ShadowBolt_Timer -= diff;
 
-            //Blizzard_Timer
-            if (Blizzard_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                DoCast(target,SPELL_BLIZZARD);
+        //Blizzard_Timer
+        if (Blizzard_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            DoCast(target,SPELL_BLIZZARD);
 
-                Blizzard_Timer = 15000+rand()%15000;
-            }else Blizzard_Timer -= diff;
+            Blizzard_Timer = 15000+rand()%15000;
+        }else Blizzard_Timer -= diff;
 
-
-	    //If we are within range melee the target
-            if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Check if our attack isShock ready (swing timer)
-                if( m_creature->isAttackReady() )
-                {                 
-                    //Send our melee swing and then reset our attack timer
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-
-                   //ArcaneBurst_Timer
-                   if (ArcaneBurst_Timer < diff)
-                   {
-                       DoCast(m_creature->getVictim(),SPELL_ARCANEBURST);
-                       ArcaneBurst_Timer = 15000+rand()%15000;
-                   }else ArcaneBurst_Timer -= diff;
-                }
-            }
-
-            //Summon Scorpions
-            if (Scorpions_Timer < diff)
+        //If we are within range melee the target
+        if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        {
+            //Check if our attack isShock ready (swing timer)
+            if( m_creature->isAttackReady() )
             {                 
-                SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));				
-                Scorpions_Timer = 7000+rand()%3000;
-            }else Scorpions_Timer -= diff;
+                //Send our melee swing and then reset our attack timer
+                m_creature->AttackerStateUpdate(m_creature->getVictim());
+                m_creature->resetAttackTimer();
 
-            //Casting Heal to brother
-            if(Heal_Timer < diff)
-            {
-                if(pInstance)
-                {    
-                    Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
-                    if(pVeknilash)
-                        DoCast(pVeknilash, SPELL_HEAL_BROTHER);
-                }
-                       
-                Heal_Timer = 3000;
-            }else Heal_Timer -= diff;
-
-            //Teleporting to brother
-            if(Teleport_Timer < diff)
-            {
-                if(pInstance)
-                {    
-                    DoCast(m_creature, SPELL_TWIN_TELEPORT);
-                    Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
-                    if(pVeknilash)
-                    {
-                        m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
-                        m_creature->SendMoveToPacket(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), false, 0);
-                        DoResetThreat();
-                    }
-
-                Teleport_Timer = 30000;
-               }else Teleport_Timer -= diff;
+                //ArcaneBurst_Timer
+                if (ArcaneBurst_Timer < diff)
+                {
+                    DoCast(m_creature->getVictim(),SPELL_ARCANEBURST);
+                    ArcaneBurst_Timer = 15000+rand()%15000;
+                }else ArcaneBurst_Timer -= diff;
             }
-            
+        }
 
+        //Summon Scorpions
+        if (Scorpions_Timer < diff)
+        {                 
+            SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));				
+            Scorpions_Timer = 7000+rand()%3000;
+        }else Scorpions_Timer -= diff;
 
+        //Casting Heal to brother
+        if(Heal_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
+                if(pVeknilash)
+                    DoCast(pVeknilash, SPELL_HEAL_BROTHER);
+            }
+            Heal_Timer = 3000;
+        }else Heal_Timer -= diff;
 
-            DoMeleeAttackIfReady();
+        //Teleporting to brother
+        if(Teleport_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                DoCast(m_creature, SPELL_TWIN_TELEPORT);
+                Unit *pVeknilash = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKNILASH));
+                if(pVeknilash)
+                {
+                    m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
+                    m_creature->SendMoveToPacket(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), false, 0);
+                    DoResetThreat();
+                }
+                Teleport_Timer = 30000;
+            }else Teleport_Timer -= diff;
+        }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_veklor(Creature *_Creature)
 {
     return new boss_veklorAI (_Creature);
 }
-
 
 void AddSC_boss_veklor()
 {

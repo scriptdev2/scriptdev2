@@ -24,13 +24,11 @@ EndScriptData */
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_HEAL_BROTHER          7393
-#define SPELL_TWIN_TELEPORT         800     //Visual only
+#define SPELL_TWIN_TELEPORT         800                     //Visual only
 
 #define SPELL_UPPERCUT              26007
 #define SPELL_UNBALANCING_STRIKE    26613
-#define SPELL_MUTILATE_BUG          802     //Buggy. Same as Golemaggs trust spell. Its casted on gamers not on the right creature...
-
-
+#define SPELL_MUTILATE_BUG          802                     //Buggy. Same as Golemaggs trust spell. Its casted on gamers not on the right creature...
 
 //8660 - Death - Feel
 //8661 - Aggro - Let none
@@ -64,7 +62,6 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
 
     Creature* Summoned;
 
-
     void Reset()
     {
         Heal_Timer = 25000 + rand()%15000;
@@ -73,7 +70,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
         UnbalancingStrike_Timer = 8000 + rand()%10000;
         Scarabs_Timer = 7000 + rand()%7000;
 
-        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, IMMUNE_DAMAGE_MAGIC, true);  //Added. Can be removed if its included in DB.
+        m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true); //Added. Can be removed if its included in DB.
 
 //        m_creature->RemoveAllAuras();
 //        m_creature->DeleteThreatList();
@@ -81,9 +78,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
 //        DoGoHome();
     }
 
-    void JustDied(Unit* Killer)
-    {
-    }
+    void JustDied(Unit* Killer) { }
 
     void SummonScarabs(Unit* victim)
     {
@@ -109,11 +104,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
 	    }
     }
 
-    
-
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -121,81 +112,76 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-            //UnbalancingStrike_Timer
-            if (UnbalancingStrike_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_UNBALANCING_STRIKE);
-                UnbalancingStrike_Timer = 8000+rand()%12000;
-            }else UnbalancingStrike_Timer -= diff;
+        //UnbalancingStrike_Timer
+        if (UnbalancingStrike_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_UNBALANCING_STRIKE);
+            UnbalancingStrike_Timer = 8000+rand()%12000;
+        }else UnbalancingStrike_Timer -= diff;
 
-	    //If we are within range melee the target
-            if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-            {
-                //Check if our attack isShock ready (swing timer)
-                if( m_creature->isAttackReady() )
-                {                 
-                    //Send our melee swing and then reset our attack timer
-                    m_creature->AttackerStateUpdate(m_creature->getVictim());
-                    m_creature->resetAttackTimer();
-
-                   //UpperCut_Timer
-                   if (UpperCut_Timer < diff)
-                   {
-                       DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
-                       DoResetThreat();
-                       UpperCut_Timer = 15000+rand()%15000;
-                   }else UpperCut_Timer -= diff;
-                }
-            }
-
-            //Summon Scarabs
-            if (Scarabs_Timer < diff)
+        //If we are within range melee the target
+        if( m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        {
+            //Check if our attack isShock ready (swing timer)
+            if( m_creature->isAttackReady() )
             {                 
-                SummonScarabs(SelectUnit(SELECT_TARGET_RANDOM,0));				
-                Scarabs_Timer = 10000+rand()%5000;
-            }else Scarabs_Timer -= diff;
+                //Send our melee swing and then reset our attack timer
+                m_creature->AttackerStateUpdate(m_creature->getVictim());
+                m_creature->resetAttackTimer();
 
-            //Casting Heal to brother
-            if(Heal_Timer < diff)
-            {
-                if(pInstance)
-                {    
-                    Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
-                    if(pVeklor)
-                        DoCast(pVeklor, SPELL_HEAL_BROTHER);
-                }
-                       
-                Heal_Timer = 3000;
-            }else Heal_Timer -= diff;
-
-            //Teleporting to brother
-            if(Teleport_Timer < diff)
-            {
-                if(pInstance)
-                {    
-                    DoCast(m_creature, SPELL_TWIN_TELEPORT);
-                    Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
-                    if(pVeklor)
-                    {
-                        m_creature->Relocate(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), 0);    
-                        m_creature->SendMoveToPacket(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), false, 0);
-                        DoResetThreat();   
-                    }
-
-                    Teleport_Timer = 30000;
-                }else Teleport_Timer -= diff;
+                //UpperCut_Timer
+                if (UpperCut_Timer < diff)
+                {
+                    DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+                    DoResetThreat();
+                    UpperCut_Timer = 15000+rand()%15000;
+                }else UpperCut_Timer -= diff;
             }
+        }
 
+        //Summon Scarabs
+        if (Scarabs_Timer < diff)
+        {                 
+            SummonScarabs(SelectUnit(SELECT_TARGET_RANDOM,0));				
+            Scarabs_Timer = 10000+rand()%5000;
+        }else Scarabs_Timer -= diff;
 
+        //Casting Heal to brother
+        if(Heal_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
+                if(pVeklor)
+                    DoCast(pVeklor, SPELL_HEAL_BROTHER);
+            }
+            Heal_Timer = 3000;
+        }else Heal_Timer -= diff;
 
-            DoMeleeAttackIfReady();
+        //Teleporting to brother
+        if(Teleport_Timer < diff)
+        {
+            if(pInstance)
+            {    
+                DoCast(m_creature, SPELL_TWIN_TELEPORT);
+                Unit *pVeklor = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_VEKLOR));
+                if(pVeklor)
+                {
+                    m_creature->Relocate(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), 0);    
+                    m_creature->SendMoveToPacket(pVeklor->GetPositionX(), pVeklor->GetPositionY(), pVeklor->GetPositionZ(), false, 0);
+                    DoResetThreat();   
+                }
+                Teleport_Timer = 30000;
+            }else Teleport_Timer -= diff;
+        }
+
+        DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_veknilash(Creature *_Creature)
 {
     return new boss_veknilashAI (_Creature);
 }
-
 
 void AddSC_boss_veknilash()
 {
