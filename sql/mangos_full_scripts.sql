@@ -705,7 +705,6 @@ UPDATE `instance_template` SET `script`='instance_the_eye' WHERE `map`=550;
 UPDATE `creature_template` SET `ScriptName`='mob_crystalcore_devastator' WHERE `entry`=20040;
 /* Void Reaver event */
 UPDATE `creature_template` SET `ScriptName`='boss_void_reaver' WHERE `entry`=19516;
-UPDATE `creature_template` SET `ScriptName`='mob_arcane_orb_target' WHERE `entry`=19577;
 /* Astromancer event */
 UPDATE `creature_template` SET `ScriptName`='boss_high_astromancer_solarian' WHERE `entry`=18805;
 UPDATE `creature_template` SET `ScriptName`='mob_solarium_priest' WHERE `entry`=18806;

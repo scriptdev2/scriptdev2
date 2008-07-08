@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: boss_Void_Reaver
+SDName: Boss_Void_Reaver
 SD%Complete: 100
 SDComment: 
 SDCategory: Tempest Keep, The Eye
@@ -25,7 +25,6 @@ EndScriptData */
 
 #define SPELL_POUNDING              34162
 #define SPELL_ARCANE_ORB_TRIGGER    34172
-#define SPELL_ARCANE_ORB            34190
 #define SPELL_KNOCK_AWAY            11130
 #define SPELL_BERSERK               27680
 
@@ -63,14 +62,14 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     uint32 Berserk_Timer;
 
     void Reset()
-    {       
+    {
         Pounding_Timer = 12000;
         ArcaneOrb_Timer = 3000;
         KnockAway_Timer = 30000;
         Berserk_Timer = 600000;
 
         if(pInstance)
-            pInstance->SetData(DATA_VOIDREAVEREVENT, 0);
+            pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -98,18 +97,16 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
-
         if(pInstance)
-            pInstance->SetData(DATA_VOIDREAVEREVENT, 0);
+            pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *who)
-    {        
-
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-                if(pInstance)
-                    pInstance->SetData(DATA_VOIDREAVEREVENT, 1);
+    {
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        if(pInstance)
+            pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
@@ -155,7 +152,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             if (target)
             {
                 Unit* Spawn = NULL;
-                Spawn = m_creature->SummonCreature(CREATURE_ORB_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 3000);
+                Spawn = m_creature->SummonCreature(CREATURE_ORB_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
                 if (Spawn)
                     m_creature->CastSpell(Spawn, SPELL_ARCANE_ORB_TRIGGER, true);
             }
@@ -187,56 +184,11 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
-
-
-struct MANGOS_DLL_DECL arcane_orb_targetAI : public ScriptedAI
-{
-    arcane_orb_targetAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    void Reset()
-    {       
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-    }
-
-    void Aggro(Unit *who)
-    {        
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-    }
-
-    void SpellHit(Unit *Attacker, const SpellEntry *Spellkind)
-    {
-        if (!Attacker || Spellkind->Id != SPELL_ARCANE_ORB_TRIGGER)
-            return;
-
-        //Cast arcane orb
-        m_creature->setFaction(14);
-        m_creature->CastSpell(m_creature, SPELL_ARCANE_ORB, true);
-
-        m_creature->setDeathState(JUST_DIED);
-        m_creature->RemoveCorpse();
-        m_creature->setFaction(35);
-    }
-}; 
+};
 
 CreatureAI* GetAI_boss_void_reaver(Creature *_Creature)
 {
     return new boss_void_reaverAI (_Creature);
-}
-
-CreatureAI* GetAI_arcane_orb_target(Creature *_Creature)
-{
-    return new arcane_orb_targetAI (_Creature);
 }
 
 void AddSC_boss_void_reaver()
@@ -245,10 +197,5 @@ void AddSC_boss_void_reaver()
     newscript = new Script;
     newscript->Name="boss_void_reaver";
     newscript->GetAI = GetAI_boss_void_reaver;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mob_arcane_orb_target";
-    newscript->GetAI = GetAI_arcane_orb_target;
     m_scripts[nrscripts++] = newscript;
 }
