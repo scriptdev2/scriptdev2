@@ -31,6 +31,7 @@ EndScriptData */
 # mob_mature_netherwing_drake
 #####*/
 
+#define SPELL_PLACE_CARCASS             38439
 #define SPELL_JUST_EATEN                38502
 #define SPELL_NETHER_BREATH             38467
 
@@ -75,7 +76,10 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
-        if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == 38439 && !m_creature->HasAura(SPELL_JUST_EATEN, 0) && !PlayerGUID)
+        if(!caster)
+            return;
+
+        if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == SPELL_PLACE_CARCASS && !m_creature->HasAura(SPELL_JUST_EATEN, 0) && !PlayerGUID)
         {
             float PlayerX, PlayerY, PlayerZ;
             caster->GetClosePoint(PlayerX, PlayerY, PlayerZ, m_creature->GetObjectSize());
@@ -204,6 +208,9 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
 
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
+        if(!caster)
+            return;
+
         if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == SPELL_HIT_FORCE_OF_NELTHARAKU && !Tapped)
         {
             Tapped = true;
@@ -220,14 +227,9 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
                 AttackStart(Dragonmaw);
             }
 
-            // Iterate through threatlist and remove the caster if present			
-            std::list<HostilReference *>::iterator itr = m_creature->getThreatManager().getThreatList().begin();
-            while (itr!= m_creature->getThreatManager().getThreatList().end())
-            {
-                if (caster->GetGUID() == (*itr)->getUnitGuid())
-                    (*itr)->removeReference();
-                else ++itr;
-            }	
+            HostilReference* ref = m_creature->getThreatManager().getOnlineContainer().getReferenceByTarget(caster);
+            if(ref)
+                ref->removeReference();
         }
     }
 
@@ -333,6 +335,9 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
 
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
+        if(!caster)
+            return;
+
         if(caster->GetTypeId() == TYPEID_PLAYER && spell->Id == 40468 && !Tapped)
         {
             PlayerGUID = caster->GetGUID();
