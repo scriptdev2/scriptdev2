@@ -22,6 +22,13 @@ SDCategory: NPCs
 EndScriptData
 */
 
+/* ContentData
+npc_chicken_cluck       100%    support for quest 3861 (Cluck!)
+npc_dancing_flames      100%    midsummer event NPC
+npc_injured_patient     100%    patients for triage-quests
+npc_doctor              100%    Gustaf Vanhowzen and Gregory Victor, quest 6622 and 6624 (Triage)
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
@@ -114,6 +121,17 @@ bool QuestComplete_npc_chicken_cluck(Player *player, Creature *_Creature, const 
     if(_Quest->GetQuestId() == QUEST_CLUCK)
         ((npc_chicken_cluckAI*)_Creature->AI())->Reset();
 
+    return true;
+}
+
+/*######
+## npc_dancing_flames
+######*/
+
+bool ReceiveEmote_npc_dancing_flames( Player *player, Creature *_Creature, uint32 emote )
+{
+    if( emote == TEXTEMOTE_DANCE )
+        _Creature->CastSpell(player,47057,false);
     return true;
 }
 
@@ -477,8 +495,13 @@ void AddSC_npcs_special()
     newscript->GetAI = GetAI_npc_chicken_cluck;
     newscript->pReceiveEmote =  &ReceiveEmote_npc_chicken_cluck;
     newscript->pQuestAccept =   &QuestAccept_npc_chicken_cluck;
-    newscript->pQuestComplete = &QuestComplete_npc_chicken_cluck;    
-    m_scripts[nrscripts++] = newscript;  
+    newscript->pQuestComplete = &QuestComplete_npc_chicken_cluck;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_dancing_flames";
+    newscript->pReceiveEmote =  &ReceiveEmote_npc_dancing_flames;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_injured_patient";

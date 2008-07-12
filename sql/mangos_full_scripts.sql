@@ -55,6 +55,7 @@ UPDATE `item_template` SET `ScriptName`='item_zezzaks_shard' WHERE `entry`=31463
 
 /* NPC (usually creatures to be found in more than one specific zone) */
 UPDATE `creature_template` SET `ScriptName`='npc_chicken_cluck' WHERE `entry`=620;
+UPDATE `creature_template` SET `ScriptName`='npc_dancing_flames' WHERE `entry`=25305;
 UPDATE `creature_template` SET `ScriptName`='npc_guardian' WHERE `entry`=5764;
 UPDATE `creature_template` SET `ScriptName`='npc_mount_vendor' WHERE `entry` IN (384,1261,1460,2357,3362,3685,4730,4731,4885,7952,7955,16264,17584);
 UPDATE `creature_template` SET `ScriptName`='npc_doctor' WHERE `entry` IN (12939,12920);
