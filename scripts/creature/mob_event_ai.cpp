@@ -93,7 +93,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             
             m_creature->AddThreat(pTarget, 0.0f);
-            m_creature->resetAttackTimer();
 
             if (pTarget->GetTypeId() == TYPEID_PLAYER)
                 m_creature->SetLootRecipient((Player*)pTarget);

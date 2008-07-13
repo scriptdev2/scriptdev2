@@ -27,7 +27,6 @@ void npc_escortAI::AttackStart(Unit *who)
             m_creature->GetMotionMaster()->MovementExpired();
             m_creature->GetMotionMaster()->MoveChase(who);
             m_creature->AddThreat(who, 0.0f);
-            m_creature->resetAttackTimer();
 
             if (who->GetTypeId() == TYPEID_PLAYER)
                 m_creature->SetLootRecipient((Player*)who);
@@ -68,7 +67,6 @@ void npc_escortAI::MoveInLineOfSight(Unit *who)
                 m_creature->GetMotionMaster()->MovementExpired();
                 m_creature->GetMotionMaster()->MoveChase(who);
                 m_creature->AddThreat(who, 0.0f);
-                m_creature->resetAttackTimer();
 
                 if (who->GetTypeId() == TYPEID_PLAYER)
                     m_creature->SetLootRecipient((Player*)who);
