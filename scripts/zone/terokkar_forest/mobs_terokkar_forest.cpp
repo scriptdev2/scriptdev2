@@ -25,30 +25,91 @@ EndScriptData */
 #include "sc_gossip.h"
 
 /*######
-## mobs_gordunni_ogre
+## mob_unkor_the_ruthless
 ######*/
 
-struct MANGOS_DLL_DECL mobs_gordunni_ogreAI : public ScriptedAI
+#define FACTION_BOULDERFIST            45
+#define FACTION_BOULDERFIST_UNKOR_NICE 35  // be nice for quest complete
+#define QUEST_DONTKILLTHEFATONE        9889
+
+#define UNKOR_SPELL_PULVERIZE          2676
+#define UNKOR_SPELL_PULVERIZE_COOLDOWN 6000
+
+struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 {
-    mobs_gordunni_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+  mob_unkor_the_ruthlessAI(Creature* c) : ScriptedAI(c) 
+  {
+      Reset(); 
+      unkorFriendlyTimer = 0;
+  }
 
-    void Reset()
-    {
-    }
+  uint32 unkorFriendlyTimer;
+  uint32 spellCastTimer;
 
-    void Aggro(Unit* who)
-    {
-    }
+  void Reset()
+  {
+    spellCastTimer = ( UNKOR_SPELL_PULVERIZE_COOLDOWN / 2 ); // for first time usage half of default cooldown timer
+  }
 
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            ((Player*)Killer)->KilledMonster(23450, m_creature->GetGUID());
-    }
+  void Aggro(Unit *who) {}
+
+  void UpdateAI(const uint32 diff)
+  {
+      if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+          return;
+
+      if(spellCastTimer < diff)
+      {
+          // set new timer with cooldown + rand 1/2 cooldown
+          spellCastTimer = UNKOR_SPELL_PULVERIZE_COOLDOWN + rand()%(UNKOR_SPELL_PULVERIZE_COOLDOWN/2); // Why?
+          DoCast(m_creature->getVictim(),UNKOR_SPELL_PULVERIZE);
+      }else spellCastTimer -= diff;
+
+      if(unkorFriendlyTimer)
+          if(unkorFriendlyTimer <= diff)
+          {
+              unkorFriendlyTimer = 0;
+              // Reset faction and evade.
+              m_creature->setFaction(FACTION_BOULDERFIST);
+              EnterEvadeMode();
+              
+              m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
+          }else unkorFriendlyTimer -= diff;
+
+      if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 30)
+      {
+          // iterate through threatlist, check if any player has quest. If so, and 10 ogres are killed, complete the quest
+          std::list<HostilReference*>::iterator itr;
+          for(itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+          {
+              if(Unit* pUnit = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
+              {
+                  if(pUnit->GetTypeId() == TYPEID_PLAYER)
+                  {
+                      Player* plr = ((Player*)pUnit);
+                      if(plr->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE && plr->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
+                          plr->CompleteQuest(QUEST_DONTKILLTHEFATONE);
+
+                      unkorFriendlyTimer = 30000;
+                      m_creature->setFaction(FACTION_BOULDERFIST_UNKOR_NICE); // Friendly now
+                      m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT); // Sit down
+
+                      // Evade so that we stop attacking.
+                      EnterEvadeMode();
+                  }
+              }
+          }
+      }
+
+      DoMeleeAttackIfReady();
+  }
+  
+  
 };
-CreatureAI* GetAI_mobs_gordunni_ogre(Creature *_Creature)
+
+CreatureAI* GetAI_mob_unkor_the_ruthless(Creature *_Creature)
 {
-    return new mobs_gordunni_ogreAI (_Creature);
+    return new mob_unkor_the_ruthlessAI (_Creature);
 }
 
 /*######
@@ -81,9 +142,7 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
 };
 CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
@@ -157,22 +216,23 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 
     void SummonVictims(Unit* victim)
     {
-    int Rand;
-    int RandX;
-    int RandY;
+        int Rand;
+        int RandX;
+        int RandY;
 
         Rand = rand()%5;
         switch (rand()%2)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            case 0: RandX = 0 - Rand; break;
+            case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
         Rand = rand()%5;
+
         switch (rand()%2)
         {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
+            case 0: RandY = 0 - Rand; break;
+            case 1: RandY = 0 + Rand; break;
         }
         Rand = 0;
         DoSpawnCreature(netherwebVictims[rand()%6], RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -198,12 +258,9 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
             }
         }
     }
-    void Aggro(Unit *who)
-    {
-    }
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
+
+    void MoveInLineOfSight(Unit *who) {}
 };
 CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
 {
@@ -219,8 +276,8 @@ void AddSC_mobs_terokkar_forest()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="mobs_gordunni_ogre";
-    newscript->GetAI = GetAI_mobs_gordunni_ogre;
+    newscript->Name="mob_unkor_the_ruthless";
+    newscript->GetAI = GetAI_mob_unkor_the_ruthless;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

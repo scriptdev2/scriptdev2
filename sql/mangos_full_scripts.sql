@@ -17,6 +17,7 @@ UPDATE `gameobject_template` SET `ScriptName`='go_northern_crystal_pylon' WHERE 
 UPDATE `gameobject_template` SET `ScriptName`='go_western_crystal_pylon' WHERE `entry`=164956;
 UPDATE `gameobject_template` SET `ScriptName`='go_eastern_crystal_pylon' WHERE `entry`=164957;
 UPDATE `gameobject_template` SET `ScriptName`='go_tablet_of_madness' WHERE `entry`=180368;
+UPDATE `gameobject_template` SET `ScriptName`='go_gilded_brazier' WHERE `entry` = '181956';
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName`='guard_azuremyst' WHERE `entry`=18038;
@@ -252,6 +253,10 @@ UPDATE `instance_template` SET `script`='instance_hyjal' WHERE `map`=534;
 UPDATE `creature_template` SET `ScriptName`='npc_tyrande_whisperwind' WHERE `entry`=17948;
 UPDATE `creature_template` SET `ScriptName`='npc_thrall' WHERE `entry` =17852;
 UPDATE `creature_template` SET `ScriptName`='npc_jaina_proudmoore' WHERE `entry`=17772;
+UPDATE `creature_template` SET `Scriptname` = "boss_archimonde" WHERE `entry` = 17968;
+UPDATE `creature_template` SET `ScriptName` = "mob_doomfire" WHERE `entry` = 18095;
+UPDATE `creature_template` SET `Scriptname` = "mob_doomfire_targetting" WHERE `entry` = 18104;
+UPDATE `creature_template` SET `ScriptName` = "mob_ancient_wisp" WHERE `entry` = 17946;
 
 /* OLD HILLSBRAD */
 UPDATE `instance_template` SET `script`='instance_old_hillsbrad' WHERE `map`=560;

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285, 4287, 4288 (crystal pylons in un'goro). Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 9678, 4285, 4287, 4288 (crystal pylons in un'goro). Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
  
@@ -132,6 +132,21 @@ bool GOHello_go_teleporter(Player *player, GameObject* _GO)
     return false;
 }
 
+/*#####
+## go_gilded_brazier
+#####*/
+
+bool GOHello_go_gilded_brazier(Player *player, GameObject* _GO)
+{
+    if (player->GetQuestStatus(9678) == QUEST_STATUS_INCOMPLETE)
+    {
+        Creature* Sangrias = player->SummonCreature(17716, 8106.11, -7542.06, 151.775, 3.02598, TEMPSUMMON_DEAD_DESPAWN, 60000);
+        if (Sangrias)
+            ((CreatureAI*)Sangrias->AI())->AttackStart(player);
+    }
+    return true;
+}
+
 void AddSC_go_scripts()
 {
     Script *newscript;
@@ -174,5 +189,10 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name="go_tablet_of_madness";
     newscript->pGOHello =           GOHello_go_tablet_of_madness;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_gilded_brazier";
+    newscript->pGOHello = GOHello_go_gilded_brazier;
     m_scripts[nrscripts++] = newscript;
 }
