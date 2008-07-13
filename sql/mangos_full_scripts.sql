@@ -17,7 +17,6 @@ UPDATE `gameobject_template` SET `ScriptName`='go_northern_crystal_pylon' WHERE 
 UPDATE `gameobject_template` SET `ScriptName`='go_western_crystal_pylon' WHERE `entry`=164956;
 UPDATE `gameobject_template` SET `ScriptName`='go_eastern_crystal_pylon' WHERE `entry`=164957;
 UPDATE `gameobject_template` SET `ScriptName`='go_tablet_of_madness' WHERE `entry`=180368;
-UPDATE `gameobject_template` SET `ScriptName`='go_gilded_brazier' WHERE `entry` = '181956';
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName`='guard_azuremyst' WHERE `entry`=18038;
