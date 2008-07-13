@@ -182,8 +182,7 @@ scripts/zone/dustwallow_marsh/npcs_dustwallow_marsh.cpp \
 scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
 scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
-scripts/zone/eversong_woods/mobs_eversong_woods.cpp \
-scripts/zone/eversong_woods/npcs_eversong_woods.cpp \
+scripts/zone/eversong_woods/zone_eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
 scripts/zone/ghostlands/npcs_ghostlands.cpp \

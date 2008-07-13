@@ -1582,11 +1582,7 @@
 					Name="Eversong Woods"
 					>
 					<File
-						RelativePath="..\scripts\zone\eversong_woods\mobs_eversong_woods.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\eversong_woods\npcs_eversong_woods.cpp"
+						RelativePath="..\scripts\zone\eversong_woods\zone_eversong_woods.cpp"
 						>
 					</File>
 				</Filter>

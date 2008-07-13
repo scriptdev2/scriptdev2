@@ -264,8 +264,7 @@ extern void AddSC_npcs_dustwallow_marsh();
 extern void AddSC_mobs_dustwallow_marsh();
 
 //Eversong Woods
-extern void AddSC_mobs_eversong_woods();
-extern void AddSC_npcs_eversong_woods();
+extern void AddSC_zone_eversong_woods();
 
 //Exodar
 //Eastern Plaguelands
@@ -1148,8 +1147,7 @@ void ScriptsInit()
     AddSC_mobs_dustwallow_marsh();
 
     //Eversong Woods
-    AddSC_mobs_eversong_woods();
-    AddSC_npcs_eversong_woods();
+    AddSC_zone_eversong_woods();
 
     //Exodar
     //Eastern Plaguelands

@@ -290,6 +290,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     IsBeingEscorted = true;
     ReconnectWP = false;
     Returning = false;
+    IsOnHold = false;
 
     //Disable gossip
     m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
