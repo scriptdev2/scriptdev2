@@ -89,20 +89,22 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         CataclysmicBolt_Timer = 10000;
         Enrage_Timer = 600000; //10 minutes
 
-        //respawn advisors if died
-        /*if(InCombat)
-        {
-            Creature *pCreature;
-            for(uint8 i = 0; i < 4; i++)
+        Creature* Advisor;
+        for(uint8 i = 0; i < 4; ++i)
+            if(Advisors[i])
             {
-                pCreature = (Creature*)(Unit::GetUnit((*m_creature), Advisors[i]));
-                if(pCreature)
+                Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
+                if(Advisor)
                 {
-                    pCreature->Respawn();
-                    pCreature->AI()->EnterEvadeMode();
+                    if(Advisor->isAlive())
+                    {
+                        Advisor->DealDamage(Advisor, Advisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                        Advisor->RemoveCorpse();
+                        Advisor->Respawn();
+                    }
+                    Advisor->AI()->EnterEvadeMode();
                 }
             }
-        }*/
 
         if(pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, 0);
@@ -136,7 +138,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         Advisors[0] = pInstance->GetData64(DATA_SHARKKIS);
         Advisors[1] = pInstance->GetData64(DATA_TIDALVESS);
-        Advisors[3] = pInstance->GetData64(DATA_CARIBDIS);
+        Advisors[2] = pInstance->GetData64(DATA_CARIBDIS);
     }
 
     void StartEvent(Unit *who)
@@ -158,17 +160,17 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         switch(rand()%3)
         {
             case 0:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            break;
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                break;
 
             case 1:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
 
             case 2:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            break;
+                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+                break;
         }
     }
 

@@ -252,16 +252,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 DoCast(m_creature->getVictim(), SPELL_ACIDIC_WOUND);
                 AcidicWoundTimer = 10000;
             }else AcidicWoundTimer -= diff;
-        }
 
-        if(!Phase1)
-        {
-            if(AcidGeyserTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_ACID_GEYSER);
-                AcidGeyserTimer = 30000;
-            }else AcidGeyserTimer -= diff;
-            
             if(BloodboilTimer < diff)
             {
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 1), SPELL_BLOODBOIL);
@@ -271,6 +262,13 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 else return; // Only cast it five times
             }else BloodboilTimer -= diff;
         }
+
+        if(!Phase1)
+            if(AcidGeyserTimer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_ACID_GEYSER);
+                AcidGeyserTimer = 30000;
+            }else AcidGeyserTimer -= diff;
 
         if(PhaseChangeTimer < diff)
         {

@@ -406,7 +406,7 @@ bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
             if(Najentus)
             {
                 if(((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine(player->GetGUID()))
-                    _GO->SendObjectDeSpawnAnim(player->GetGUID());
+                    _GO->SendObjectDeSpawnAnim(_GO->GetGUID());
             }else error_log("ERROR: Na'entus Spine GameObject unable to find Naj'entus");
         }else error_log("ERROR: Invalid GUID acquired for Naj'entus by Naj'entus Spine GameObject");
     }

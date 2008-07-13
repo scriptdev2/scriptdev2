@@ -24,13 +24,17 @@ EndScriptData */
 #include "def_black_temple.h"
 
 //Spells
-#define SPELL_HURTFUL_STRIKE        33813
+#define SPELL_HURTFUL_STRIKE        41926
+#define SPELL_DEMON_FIRE            40029
 #define SPELL_MOLTEN_FLAME          40253
 #define SPELL_VOLCANIC_ERUPTION     40276
 #define SPELL_VOLCANIC_FIREBALL     40118
 #define SPELL_VOLCANIC_GEYSER       42055
 #define SPELL_MOLTEN_PUNCH          40126
 #define SPELL_BERSERK               45078
+
+#define CREATURE_VOLCANO            23085
+#define CREATURE_STALKER            23095
 
 struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 {
@@ -58,12 +62,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
         if(TargetLocked)
             return; // stop it from aggroing players who move in LOS if we have a target.
         if(who && (who != m_creature) && (m_creature->IsWithinDistInMap(who, 10)))
-        {
-            m_creature->AddThreat(who, 50000000.0f);
-            m_creature->GetMotionMaster()->MoveChase(who);
-            m_creature->CastSpell(m_creature, 40029, true);
-            TargetLocked = true;
-        }
+            StalkTarget(who);
     }
 
     void SetSupremusGUID(uint64 GUID) { SupremusGUID = GUID; }
@@ -74,7 +73,8 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 
         m_creature->AddThreat(target, 50000000.0f);
         m_creature->GetMotionMaster()->MoveChase(target);
-        m_creature->CastSpell(m_creature, 40029, true);
+        DoCast(m_creature, SPELL_DEMON_FIRE, true);
+        // DoCast(m_creature, SPELL_MOLTEN_FLAME, true); // This spell damages self, so disabled for now
         TargetLocked = true;
     }
 
@@ -168,7 +168,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
 
-        HurtfulStrikeTimer = 20000;
+        HurtfulStrikeTimer = 5000;
         SummonFlameTimer = 20000;
         SwitchTargetTimer = 90000;
         PhaseSwitchTimer = 60000;
@@ -251,9 +251,29 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(BerserkTimer < diff)
-            {
                 DoCast(m_creature, SPELL_BERSERK);
-            }else BerserkTimer -= diff;
+            else BerserkTimer -= diff;
+
+        if(SummonFlameTimer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            
+            if(!target) // someone is trying to solo, set target as current victim.
+                target = m_creature->getVictim();
+
+            if(target)
+            {
+                Creature* MoltenFlame = SummonCreature(CREATURE_STALKER, target);
+                if(MoltenFlame)
+                {
+                    MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Invisible model
+                    ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
+                    ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
+                    SummonFlameTimer = 20000;
+                }
+            }
+        }else SummonFlameTimer -= diff;
 
         if(Phase1)
         {
@@ -263,31 +283,9 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if(target)
                 {
                     DoCast(target, SPELL_HURTFUL_STRIKE);
-                    HurtfulStrikeTimer = 20000 +rand()%31*1000;
+                    HurtfulStrikeTimer = 5000;
                 }
             }else HurtfulStrikeTimer -= diff;
-
-            if(SummonFlameTimer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                
-                if(!target) // someone is trying to solo, set target as current victim.
-                    target = m_creature->getVictim();
-
-                if(target)
-                {
-                    Creature* MoltenFlame = NULL;
-                    MoltenFlame = SummonCreature(23095, target);
-                    if(MoltenFlame)
-                    {
-                        MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Invisible model
-                        ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
-                        ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
-                        SummonFlameTimer = 20000;
-                    }
-                }
-            }else SummonFlameTimer -= diff;
         }
 
         if(!Phase1)
@@ -315,7 +313,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if(target)
                 {
                     Creature* Volcano = NULL;
-                    Volcano = SummonCreature(23085, target);
+                    Volcano = SummonCreature(CREATURE_VOLCANO, target);
 
                     if(Volcano)
                     {
@@ -347,7 +345,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 SwitchTargetTimer = 10000;
                 SummonVolcanoTimer = 2000;
                 PhaseSwitchTimer = 60000;
-                m_creature->SetSpeed(MOVE_RUN, 0.5f);
+                m_creature->SetSpeed(MOVE_RUN, 0.9f);
             }
         }else PhaseSwitchTimer -= diff;
 

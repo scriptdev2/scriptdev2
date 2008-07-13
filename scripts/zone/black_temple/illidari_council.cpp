@@ -156,8 +156,12 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
                 Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i]));
                 if(Member)
                 {
-                    ((Creature*)Member)->Respawn();
-                    ((Creature*)Member)->AI()->EnterEvadeMode();
+                    if(!Member->isAlive())
+                    {
+                        Member->RemoveCorpse();
+                        Member->Respawn();
+                    }
+                    Member->AI()->EnterEvadeMode();
                 }
             }
         }

@@ -64,7 +64,7 @@ EndScriptData */
 #define SAY_DEATH           "The wheel...spins...again...."
 #define SOUND_DEATH         11521
 
-#define CEATURE_DOOM_BLOSSOM        23123
+#define CREATURE_DOOM_BLOSSOM       23123
 #define CREATURE_SHADOWY_CONSTRUCT  23111
 
 struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         if(ShadowBoltTimer < diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SHADOWBOLT);
-            ShadowBoltTimer = 15000;
+            ShadowBoltTimer = 10000;
         }else ShadowBoltTimer -= diff;
     }
 
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if(pInstance)
             pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
 
-        IncinerateTimer = 40000;
+        IncinerateTimer = 20000 + rand()%11000;
         SummonDoomBlossomTimer = 12000;
         EnrageTimer = 600000;
         CrushingShadowsTimer = 22000;
@@ -371,8 +371,16 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             Ghost = Unit::GetUnit((*m_creature), GhostGUID);
         if(Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
         {
-            Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            for(uint8 i = 0; i < 4; i++)
+            /*float x,y,z;
+            Ghost->GetPosition(x,y,z);
+            Creature* control = m_creature->SummonCreature(CREATURE_GHOST, x, y, z, 0, TEMPSUMMON_TIMED_DESAWN, 30000);
+            if(control)
+            {
+                ((Player*)Ghost)->Possess(control);
+                Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, 
+false);
+            }*/
+            for(uint8 i = 0; i < 4; ++i)
             {
                 Creature* Construct = NULL;
                 float X = CalculateRandomLocation(Ghost->GetPositionX(), 10);
@@ -427,7 +435,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         {
             //MindControlGhost();
             
-            for(uint8 i = 0; i < 2; i++)
+            for(uint8 i = 0; i < 2; ++i)
             {
                 Creature* Shadow = NULL;
                 float X = CalculateRandomLocation(m_creature->GetPositionX(), 10);
@@ -452,8 +460,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             {
                 float X = CalculateRandomLocation(target->GetPositionX(), 20);
                 float Y = CalculateRandomLocation(target->GetPositionY(), 20);
-                Creature* DoomBlossom = NULL;
-                DoomBlossom = m_creature->SummonCreature(23123, X, Y, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
+                Creature* DoomBlossom = m_creature->SummonCreature(CREATURE_DOOM_BLOSSOM, X, Y, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
                 if(DoomBlossom)
                 {
                     DoomBlossom->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -462,7 +469,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->InCombat = true;
                     SetThreatList(DoomBlossom);
-                    SummonDoomBlossomTimer = 45000;
+                    SummonDoomBlossomTimer = 35000;
                 }
             }
         }else SummonDoomBlossomTimer -= diff;
@@ -488,7 +495,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                         break;
                 }                         
                 DoCast(target, SPELL_INCINERATE);
-                IncinerateTimer = 10000 + rand()%31 * 1000;
+                IncinerateTimer = 20000 + rand()%31 * 1000;
             }
         }else IncinerateTimer -= diff;
 
