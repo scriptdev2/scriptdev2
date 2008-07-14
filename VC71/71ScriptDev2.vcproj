@@ -461,11 +461,7 @@
 					Name="Eastern Plaguelands"
 					>
 					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\mobs_ghoul_flayer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\eastern_plaguelands\npcs_eastern_plaguelands.cpp"
+						RelativePath="..\scripts\zone\eastern_plaguelands\eastern_plaguelands.cpp"
 						>
 					</File>
 				</Filter>

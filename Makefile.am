@@ -178,8 +178,7 @@ scripts/zone/darkshore/mobs_darkshore.cpp \
 scripts/zone/deadmines/boss_deadmines.cpp \
 scripts/zone/dun_morogh/npc_narm_faulk.cpp \
 scripts/zone/dustwallow_marsh/dustwallow_marsh.cpp \
-scripts/zone/eastern_plaguelands/mobs_ghoul_flayer.cpp \
-scripts/zone/eastern_plaguelands/npcs_eastern_plaguelands.cpp \
+scripts/zone/eastern_plaguelands/eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \

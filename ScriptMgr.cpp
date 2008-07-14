@@ -267,8 +267,7 @@ extern void AddSC_eversong_woods();
 
 //Exodar
 //Eastern Plaguelands
-extern void AddSC_mobs_ghoul_flayer();
-extern void AddSC_npcs_eastern_plaguelands();
+extern void AddSC_eastern_plaguelands();
 
 //Elwynn Forest
 extern void AddSC_npc_henze_faulk();
@@ -1140,8 +1139,7 @@ void ScriptsInit()
 
     //Exodar
     //Eastern Plaguelands
-    AddSC_mobs_ghoul_flayer();
-    AddSC_npcs_eastern_plaguelands();
+    AddSC_eastern_plaguelands();
 
     //Elwynn Forest
     AddSC_npc_henze_faulk();

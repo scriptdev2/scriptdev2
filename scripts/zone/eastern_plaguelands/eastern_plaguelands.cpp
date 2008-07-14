@@ -15,20 +15,51 @@
 */
 
 /* ScriptData
-SDName: npcs_eastern_plaguelands
-SD%Complete: 90
-SDComment: npcs eastern plaguelands, mostly quest related.
+SDName: Eastern_Plaguelands
+SD%Complete: 100
+SDComment: Quest support: 5211, 5742
 SDCategory: Eastern Plaguelands
 EndScriptData */
 
+/* ContentData
+mobs_ghoul_flayer
+npc_darrowshire_spirit
+npc_tirion_fordring
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
+
+//id8530 - cannibal ghoul
+//id8531 - gibbering ghoul
+//id8532 - diseased flayer
+
+struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
+{
+    mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset() { }
+
+    void Aggro(Unit* who) { }
+
+    void JustDied(Unit* Killer)
+    {
+        if( Killer->GetTypeId() == TYPEID_PLAYER )
+            DoSpawnCreature(11064,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN,60000);
+    }
+
+};
+
+CreatureAI* GetAI_mobs_ghoul_flayer(Creature *_Creature)
+{
+    return new mobs_ghoul_flayerAI (_Creature);
+}
 
 /*######
 ## npc_darrowshire_spirit
 ######*/
 
-#define GOSSIP_ITEM     "Free me"
+#define SPELL_SPIRIT_SPAWNIN    17321
 
 struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
 {
@@ -36,50 +67,22 @@ struct MANGOS_DLL_DECL npc_darrowshire_spiritAI : public ScriptedAI
 
     void Reset()
     {
-    }
-    
-    void Aggro(Unit *who)
-    {
+        DoCast(m_creature,SPELL_SPIRIT_SPAWNIN);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        return;
-    }
+    void Aggro(Unit *who) { }
+
 }; 
 CreatureAI* GetAI_npc_darrowshire_spirit(Creature *_Creature)
 {
     return new npc_darrowshire_spiritAI (_Creature);
 }
-//to open gossip
 bool GossipHello_npc_darrowshire_spirit(Player *player, Creature *_Creature)
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
     player->SEND_GOSSIP_MENU(3873,_Creature->GetGUID());
-
-    return true;
-}
-//after player select gossip item
-void SendDefaultMenu_npc_darrowshire_spirit(Player *player, Creature *_Creature, uint32 action)
-{
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
-    {
-        //update quest status, requires SpecialFlag = 8
-        player->KilledMonster(_Creature->GetEntry(), _Creature->GetGUID());
-
-        player->SEND_GOSSIP_MENU(3873,_Creature->GetGUID());
-
-        //prevent further interaction
-        _Creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
-}
-//what action to take when player selects gossip item
-bool GossipSelect_npc_darrowshire_spirit(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-    if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_npc_darrowshire_spirit(player, _Creature, action);
-
+    player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+    _Creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     return true;
 }
 
@@ -95,7 +98,7 @@ bool GossipHello_npc_tirion_fordring(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(5742) == QUEST_STATUS_INCOMPLETE && player->getStandState() == PLAYER_STATE_SIT )
         player->ADD_GOSSIP_ITEM( 0, "I am ready to hear your tale, Tirion.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -124,15 +127,19 @@ bool GossipSelect_npc_tirion_fordring(Player *player, Creature *_Creature, uint3
     return true;
 }
 
-void AddSC_npcs_eastern_plaguelands()
+void AddSC_eastern_plaguelands()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_ghoul_flayer";
+    newscript->GetAI = GetAI_mobs_ghoul_flayer;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_darrowshire_spirit";
     newscript->GetAI = GetAI_npc_darrowshire_spirit;
     newscript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
-    newscript->pGossipSelect = &GossipSelect_npc_darrowshire_spirit;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
