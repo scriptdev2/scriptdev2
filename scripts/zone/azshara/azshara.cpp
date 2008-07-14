@@ -15,14 +15,81 @@
 */
 
 /* ScriptData
-SDName: npcs_azshara
+SDName: Azshara
 SD%Complete: 90
-SDComment: npcs azshara, mostly quest related. Unknown relation between quest 2744 and 3141, wdb data suggest they both should have gossip before questComplete
+SDComment: Quest support: 2744, 3141, 9364
 SDCategory: Azshara
 EndScriptData */
 
+/* ContentData
+mobs_spitelashes
+npc_loramus_thalipedes
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## mobs_spitelashes
+######*/
+
+struct MANGOS_DLL_DECL mobs_spitelashesAI : public ScriptedAI
+{
+    mobs_spitelashesAI(Creature *c) : ScriptedAI(c) {Reset();}
+ 
+    uint32 morphtimer;
+    bool spellhit;
+
+    void Reset()
+    {
+        morphtimer = 0;
+        spellhit = false;
+    }
+ 
+    void Aggro(Unit *who) { }
+ 
+    void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
+    {
+        if( !spellhit &&
+            Hitter->GetTypeId() == TYPEID_PLAYER &&
+            ((Player*)Hitter)->GetQuestStatus(9364) == QUEST_STATUS_INCOMPLETE &&
+            (Spellkind->Id==118 || Spellkind->Id== 12824 || Spellkind->Id== 12825 || Spellkind->Id== 12826) )
+        {
+            spellhit=true;
+            DoCast(m_creature,29124);                       //become a sheep
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        // we mustn't remove the creature in the same round in which we cast the summon spell, otherwise there will be no summons
+        if( spellhit && morphtimer>=5000 )
+        {
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            m_creature->RemoveCorpse();                     //you don't see any corpse on off.
+            EnterEvadeMode();                               //spellhit will be set to false
+        }
+        // walk 5 seconds before summoning
+        if( spellhit && morphtimer<5000 )
+        {
+            morphtimer+=diff;
+            if( morphtimer>=5000 )
+            {
+                DoCast(m_creature,28406);                   //summon copies
+                DoCast(m_creature,6924);                    //visual explosion
+            }
+        }
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //TODO: add abilities for the different creatures
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_mobs_spitelashes(Creature *_Creature)
+{
+    return new mobs_spitelashesAI (_Creature);
+}
 
 /*######
 ## npc_loramus_thalipedes
@@ -39,7 +106,7 @@ bool GossipHello_npc_loramus_thalipedes(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(3141) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -81,9 +148,14 @@ bool GossipSelect_npc_loramus_thalipedes(Player *player, Creature *_Creature, ui
     return true;
 }
 
-void AddSC_npcs_azshara()
+void AddSC_azshara()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_spitelashes";
+    newscript->GetAI = GetAI_mobs_spitelashes;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_loramus_thalipedes";

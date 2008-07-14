@@ -75,8 +75,7 @@ scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/def_shadow_labyrinth.h \
 scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
-scripts/zone/azshara/mobs_spitelashes.cpp \
-scripts/zone/azshara/npcs_azshara.cpp \
+scripts/zone/azshara/azshara.cpp \
 scripts/zone/azuremyst_isle/npcs_azuremyst_isle.cpp \
 scripts/zone/barrens/npcs_the_barrens.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \

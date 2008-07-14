@@ -522,11 +522,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\azshara\mobs_spitelashes.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\azshara\npcs_azshara.cpp"
+						RelativePath="..\scripts\zone\azshara\azshara.cpp"
 						>
 					</File>
 				</Filter>

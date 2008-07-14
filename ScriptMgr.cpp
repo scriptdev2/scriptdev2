@@ -116,8 +116,7 @@ extern void AddSC_instance_shadow_labyrinth();
 
 //Azshara
 extern void AddSC_boss_azuregos();
-extern void AddSC_mobs_spitelashes();
-extern void AddSC_npcs_azshara();
+extern void AddSC_azshara();
 
 //Azuremyst Isle
 extern void AddSC_npcs_azuremyst_isle();
@@ -989,8 +988,7 @@ void ScriptsInit()
 
     //Azshara
     AddSC_boss_azuregos();
-    AddSC_mobs_spitelashes();
-    AddSC_npcs_azshara();
+    AddSC_azshara();
 
     //Azuremyst Isle
     AddSC_npcs_azuremyst_isle();
