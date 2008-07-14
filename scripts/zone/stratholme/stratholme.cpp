@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: mobs_stratholme
+SDName: Stratholme
 SD%Complete: 100
 SDComment: trash mobs for strat. Simple AI mobs converted to EAI (except Mindless Skeleton and Thuzadin Acolyte)
 SDCategory: Stratholme
@@ -24,8 +24,6 @@ EndScriptData */
 #include "sc_creature.h"
 #include "../../creature/simple_ai.h"
 #include "sc_gossip.h"
-
-// **** This script is still under Developement ****
 
 /*######
 ## mob_freed_soul
@@ -306,7 +304,7 @@ CreatureAI* GetAI_mob_thuzadin_acolyte(Creature *_Creature)
 ## 
 ######*/
 
-void AddSC_mobs_stratholme()
+void AddSC_stratholme()
 {
     Script *newscript;
 

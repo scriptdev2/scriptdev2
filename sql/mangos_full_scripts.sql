@@ -252,10 +252,10 @@ UPDATE `instance_template` SET `script`='instance_hyjal' WHERE `map`=534;
 UPDATE `creature_template` SET `ScriptName`='npc_tyrande_whisperwind' WHERE `entry`=17948;
 UPDATE `creature_template` SET `ScriptName`='npc_thrall' WHERE `entry` =17852;
 UPDATE `creature_template` SET `ScriptName`='npc_jaina_proudmoore' WHERE `entry`=17772;
-UPDATE `creature_template` SET `Scriptname` = "boss_archimonde" WHERE `entry` = 17968;
-UPDATE `creature_template` SET `ScriptName` = "mob_doomfire" WHERE `entry` = 18095;
-UPDATE `creature_template` SET `Scriptname` = "mob_doomfire_targetting" WHERE `entry` = 18104;
-UPDATE `creature_template` SET `ScriptName` = "mob_ancient_wisp" WHERE `entry` = 17946;
+UPDATE `creature_template` SET `ScriptName`='boss_archimonde' WHERE `entry`=17968;
+UPDATE `creature_template` SET `ScriptName`='mob_doomfire' WHERE `entry`=18095;
+UPDATE `creature_template` SET `ScriptName`='mob_doomfire_targetting' WHERE `entry`=18104;
+UPDATE `creature_template` SET `ScriptName`='mob_ancient_wisp' WHERE `entry`=17946;
 
 /* OLD HILLSBRAD */
 UPDATE `instance_template` SET `script`='instance_old_hillsbrad' WHERE `map`=560;
@@ -341,12 +341,11 @@ UPDATE `creature_template` SET `ScriptName`='npc_narm_faulk' WHERE `entry`=6177;
 
 
 /* DUSTWALLOW MARSH */
+UPDATE `creature_template` SET `ScriptName`='mobs_risen_husk_spirit' WHERE `entry` IN (23554,23555);
 UPDATE `creature_template` SET `ScriptName`='npc_deserter_agitator' WHERE `entry`=23602;
 UPDATE `creature_template` SET `ScriptName`='npc_lady_jaina_proudmoore' WHERE `entry`=4968;
 UPDATE `creature_template` SET `ScriptName`='npc_nat_pagle' WHERE `entry`=12919;
 UPDATE `creature_template` SET `ScriptName`='npc_restless_apparition' WHERE `entry`=23861;
-UPDATE `creature_template` SET `ScriptName`='mobs_direhorn_grimtotem' WHERE `entry`=23595;
-UPDATE `creature_template` SET `ScriptName`='mobs_risen_husk_spirit' WHERE `entry` IN (23554,23555);
 
 /* EASTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName`='mobs_ghoul_flayer' WHERE `entry` IN (8530,8531,8532);
@@ -646,23 +645,14 @@ UPDATE `creature_template` SET `ScriptName`='mob_yenniku' WHERE `entry`=2530;
 /* STRATHOLME */
 UPDATE `instance_template` SET `script`='instance_stratholme' WHERE `map`=329;
 UPDATE `creature_template` SET `ScriptName`='boss_dathrohan_balnazzar' WHERE `entry`=10812;
-UPDATE `creature_template` SET `ScriptName`='boss_fras_siabi' WHERE `entry`=11058;
-UPDATE `creature_template` SET `ScriptName`='boss_skul' WHERE `entry`=10393;
-UPDATE `creature_template` SET `ScriptName`='boss_hearthsinger_forresten' WHERE `entry`=10558;
 UPDATE `creature_template` SET `ScriptName`='boss_magistrate_barthilas' WHERE `entry`=10435;
 UPDATE `creature_template` SET `ScriptName`='boss_maleki_the_pallid' WHERE `entry`=10438;
 UPDATE `creature_template` SET `ScriptName`='boss_nerubenkan' WHERE `entry`=10437;
 UPDATE `creature_template` SET `ScriptName`='boss_cannon_master_willey' WHERE `entry`=10997;
-UPDATE `creature_template` SET `ScriptName`='boss_the_unforgiven' WHERE `entry`=10516;
 UPDATE `creature_template` SET `ScriptName`='boss_baroness_anastari' WHERE `entry`=10436;
-UPDATE `creature_template` SET `ScriptName`='boss_archivist_galford' WHERE `entry`=10811;
-UPDATE `creature_template` SET `ScriptName`='boss_crimson_hammersmith' WHERE `entry`=11120;
 UPDATE `creature_template` SET `ScriptName`='boss_ramstein_the_gorger' WHERE `entry`=10439;
-UPDATE `creature_template` SET `ScriptName`='boss_malor_the_zealous' WHERE `entry`=11032;
-UPDATE `creature_template` SET `ScriptName`='boss_black_guard_swordsmith' WHERE `entry`=11121;
 UPDATE `creature_template` SET `ScriptName`='boss_timmy_the_cruel' WHERE `entry`=10808;
 UPDATE `creature_template` SET `ScriptName`='boss_silver_hand_bosses' WHERE `entry` IN (17910,17911,17912,17913,17914);
-UPDATE `creature_template` SET `ScriptName`='boss_stonespine' WHERE `entry`=10809;
 UPDATE `creature_template` SET `ScriptName`='boss_postmaster_malown' WHERE `entry`=11143;
 UPDATE `creature_template` SET `ScriptName`='boss_baron_rivendare' WHERE `entry`=10440;
 UPDATE `creature_template` SET `ScriptName`='mob_mindless_skeleton' WHERE `entry`=11197;

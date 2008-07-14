@@ -418,11 +418,7 @@
 					Name="Dustwallow Marsh"
 					>
 					<File
-						RelativePath="..\scripts\zone\dustwallow_marsh\mobs_dustwallow_marsh.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\dustwallow_marsh\npcs_dustwallow_marsh.cpp"
+						RelativePath="..\scripts\zone\dustwallow_marsh\dustwallow_marsh.cpp"
 						>
 					</File>
 				</Filter>
@@ -962,10 +958,6 @@
 					Name="Stratholme"
 					>
 					<File
-						RelativePath="..\scripts\zone\stratholme\boss_archivist_galford.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\stratholme\boss_baron_rivendare.cpp"
 						>
 					</File>
@@ -974,27 +966,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\boss_black_guard_swordsmith.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\stratholme\boss_cannon_master_willey.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\boss_crimson_hammersmith.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\stratholme\boss_dathrohan_balnazzar.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stratholme\boss_fras_siabi.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stratholme\boss_hearthsinger_forresten.cpp"
 						>
 					</File>
 					<File
@@ -1003,10 +979,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\stratholme\boss_maleki_the_pallid.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stratholme\boss_malor_the_zealous.cpp"
 						>
 					</File>
 					<File
@@ -1026,18 +998,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\boss_skul.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stratholme\boss_stonespine.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\stratholme\boss_the_unforgiven.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\stratholme\boss_timmy_the_cruel.cpp"
 						>
 					</File>
@@ -1050,7 +1010,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\stratholme\mobs_stratholme.cpp"
+						RelativePath="..\scripts\zone\stratholme\stratholme.cpp"
 						>
 					</File>
 				</Filter>
@@ -1410,7 +1370,7 @@
 					Name="Eversong Woods"
 					>
 					<File
-						RelativePath="..\scripts\zone\eversong_woods\zone_eversong_woods.cpp"
+						RelativePath="..\scripts\zone\eversong_woods\eversong_woods.cpp"
 						>
 					</File>
 				</Filter>

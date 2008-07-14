@@ -15,11 +15,16 @@
 */
 
 /* ScriptData
-SDName: Zone_Eversong_Woods
+SDName: Eversong_Woods
 SD%Complete: 100
 SDComment: Quest support: 8346, 8483
 SDCategory: Eversong Woods
 EndScriptData */
+
+/* ContentData
+mobs_mana_tapped
+npc_prospector_anvilward
+EndContentData */
 
 #include "sc_gossip.h"
 #include "../../npc/npc_escortAI.h"
@@ -140,7 +145,7 @@ bool GossipSelect_npc_prospector_anvilward(Player *player, Creature *_Creature, 
     return true;
 }
 
-void AddSC_zone_eversong_woods()
+void AddSC_eversong_woods()
 {
     Script *newscript;
 

@@ -260,11 +260,10 @@ extern void AddSC_npc_narm_faulk();
 //Durotar
 //Duskwood
 //Dustwallow marsh
-extern void AddSC_npcs_dustwallow_marsh();
-extern void AddSC_mobs_dustwallow_marsh();
+extern void AddSC_dustwallow_marsh();
 
 //Eversong Woods
-extern void AddSC_zone_eversong_woods();
+extern void AddSC_eversong_woods();
 
 //Exodar
 //Eastern Plaguelands
@@ -457,28 +456,19 @@ extern void AddSC_npcs_stormwind_city();
 extern void AddSC_mobs_stranglethorn_vale();
 
 //Stratholme
-extern void AddSC_boss_fras_siabi();
-extern void AddSC_boss_hearthsinger_forresten();
 extern void AddSC_boss_magistrate_barthilas();
 extern void AddSC_boss_maleki_the_pallid();
-extern void AddSC_boss_skul();
 extern void AddSC_boss_nerubenkan();
-extern void AddSC_boss_the_unforgiven();
 extern void AddSC_boss_cannon_master_willey();
 extern void AddSC_boss_baroness_anastari();
-extern void AddSC_boss_archivist_galford();
-extern void AddSC_boss_crimson_hammersmith();
 extern void AddSC_boss_ramstein_the_gorger();
-extern void AddSC_boss_malor_the_zealous();
-extern void AddSC_boss_black_guard_swordsmith();
 extern void AddSC_boss_timmy_the_cruel();
-extern void AddSC_boss_stonespine();
 extern void AddSC_boss_postmaster_malown();
 extern void AddSC_boss_baron_rivendare();
 extern void AddSC_boss_dathrohan_balnazzar();
 extern void AddSC_boss_order_of_silver_hand();
-extern void AddSC_mobs_stratholme();
 extern void AddSC_instance_stratholme();
+extern void AddSC_stratholme();
 
 //Sunken Temple
 //Tanaris
@@ -1143,11 +1133,10 @@ void ScriptsInit()
     //Durotar
     //Duskwood
     //Dustwallow marsh
-    AddSC_npcs_dustwallow_marsh();
-    AddSC_mobs_dustwallow_marsh();
+    AddSC_dustwallow_marsh();
 
     //Eversong Woods
-    AddSC_zone_eversong_woods();
+    AddSC_eversong_woods();
 
     //Exodar
     //Eastern Plaguelands
@@ -1340,28 +1329,19 @@ void ScriptsInit()
     AddSC_mobs_stranglethorn_vale();
 
     //Stratholme
-    AddSC_boss_fras_siabi();
-    AddSC_boss_hearthsinger_forresten();
     AddSC_boss_magistrate_barthilas();
     AddSC_boss_maleki_the_pallid();
-    AddSC_boss_skul();
     AddSC_boss_nerubenkan();
-    AddSC_boss_the_unforgiven();
     AddSC_boss_cannon_master_willey();
     AddSC_boss_baroness_anastari();
-    AddSC_boss_archivist_galford();
-    AddSC_boss_crimson_hammersmith();
     AddSC_boss_ramstein_the_gorger();
-    AddSC_boss_malor_the_zealous();
-    AddSC_boss_black_guard_swordsmith();
     AddSC_boss_timmy_the_cruel();
-    AddSC_boss_stonespine();
     AddSC_boss_postmaster_malown();
     AddSC_boss_baron_rivendare();
     AddSC_boss_dathrohan_balnazzar();
     AddSC_boss_order_of_silver_hand();
-    AddSC_mobs_stratholme();
     AddSC_instance_stratholme();
+    AddSC_stratholme();
 
     //Sunken Temple
     //Tanaris

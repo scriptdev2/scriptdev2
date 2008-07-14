@@ -15,14 +15,93 @@
 */
 
 /* ScriptData
-SDName: Npcs_Dustwallow_Marsh
+SDName: Dustwallow_Marsh
 SD%Complete: 95
 SDComment: Quest support: 11180, 558, 11126. Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
+/* ContentData
+mobs_risen_husk_spirit
+npc_restless_apparition
+npc_deserter_agitator
+npc_lady_jaina_proudmoore
+npc_nat_pagle
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## mobs_risen_husk_spirit
+######*/
+
+#define SPELL_SUMMON_RESTLESS_APPARITION    42511
+#define SPELL_CONSUME_FLESH                 37933           //Risen Husk
+#define SPELL_INTANGIBLE_PRESENCE           43127           //Risen Spirit
+
+struct MANGOS_DLL_DECL mobs_risen_husk_spiritAI : public ScriptedAI
+{
+    mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 ConsumeFlesh_Timer;
+    uint32 IntangiblePresence_Timer;
+
+    void Reset()
+    {
+        ConsumeFlesh_Timer = 10000;
+        IntangiblePresence_Timer = 5000;
+    }
+
+    void Aggro(Unit* who) { }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if( done_by->GetTypeId() == TYPEID_PLAYER )
+            if( damage >= m_creature->GetHealth() && ((Player*)done_by)->GetQuestStatus(11180) == QUEST_STATUS_INCOMPLETE )
+                m_creature->CastSpell(done_by,SPELL_SUMMON_RESTLESS_APPARITION,false);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if( ConsumeFlesh_Timer < diff )
+        {
+            if( m_creature->GetEntry() == 23555 )
+                DoCast(m_creature->getVictim(),SPELL_CONSUME_FLESH);
+            ConsumeFlesh_Timer = 15000;
+        } else ConsumeFlesh_Timer -= diff;
+
+        if( IntangiblePresence_Timer < diff )
+        {
+            if( m_creature->GetEntry() == 23554 )
+                DoCast(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
+            IntangiblePresence_Timer = 20000;
+        } else IntangiblePresence_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_mobs_risen_husk_spirit(Creature *_Creature)
+{
+    return new mobs_risen_husk_spiritAI (_Creature);
+}
+
+/*######
+## npc_restless_apparition
+######*/
+
+bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
+{
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
+    _Creature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+    return true;
+}
 
 /*######
 ## npc_deserter_agitator
@@ -72,7 +151,7 @@ bool GossipHello_npc_lady_jaina_proudmoore(Player *player, Creature *_Creature)
     if( player->GetQuestStatus(558) == QUEST_STATUS_INCOMPLETE )
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_JAINA, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO );
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -115,26 +194,22 @@ bool GossipSelect_npc_nat_pagle(Player *player, Creature *_Creature, uint32 send
 }
 
 /*######
-## npc_restless_apparition
-######*/
-
-bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
-{
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
-
-    player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
-    _Creature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-    return true;
-}
-
-/*######
 ## 
 ######*/
 
-void AddSC_npcs_dustwallow_marsh()
+void AddSC_dustwallow_marsh()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_risen_husk_spirit";
+    newscript->GetAI = GetAI_mobs_risen_husk_spirit;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_restless_apparition";
+    newscript->pGossipHello =   &GossipHello_npc_restless_apparition;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_deserter_agitator";
@@ -152,10 +227,5 @@ void AddSC_npcs_dustwallow_marsh()
     newscript->Name="npc_nat_pagle";
     newscript->pGossipHello = &GossipHello_npc_nat_pagle;
     newscript->pGossipSelect = &GossipSelect_npc_nat_pagle;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="npc_restless_apparition";
-    newscript->pGossipHello =   &GossipHello_npc_restless_apparition;
     m_scripts[nrscripts++] = newscript;
 }
