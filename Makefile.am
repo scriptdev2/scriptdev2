@@ -292,8 +292,7 @@ scripts/zone/shadowfang_keep/def_shadowfang_keep.h \
 scripts/zone/shadowfang_keep/instance_shadowfang_keep.cpp \
 scripts/zone/shadowfang_keep/npcs_shadowfang_keep.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
-scripts/zone/shadowmoon_valley/mobs_shadowmoon_valley.cpp \
-scripts/zone/shadowmoon_valley/npcs_shadowmoon_valley.cpp \
+scripts/zone/shadowmoon_valley/shadowmoon_valley.cpp \
 scripts/zone/shattrath/npcs_shattrath_city.cpp \
 scripts/zone/silithus/npcs_silithus.cpp \
 scripts/zone/silvermoon/npcs_silvermoon_city.cpp \
