@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npcs_Hellfire_Peninsula
+SDName: Hellfire_Peninsula
 SD%Complete: 100
 SDComment: Quest support: 10129, 10146, 10162, 10163, 10340, 10346, 10347, 10382 (Special flight paths)
 SDCategory: Hellfire Peninsula
 EndScriptData */
+
+/* ContentData
+npc_wing_commander_dabiree
+npc_gryphoneer_windbellow
+npc_wing_commander_brack
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -199,7 +205,7 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
 ## 
 ######*/
 
-void AddSC_npcs_hellfire_peninsula()
+void AddSC_hellfire_peninsula()
 {
     Script *newscript;
 

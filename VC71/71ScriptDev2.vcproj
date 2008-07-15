@@ -409,11 +409,7 @@
 					Name="Bloodmyst Isle"
 					>
 					<File
-						RelativePath="..\scripts\zone\bloodmyst_isle\mobs_bloodmyst_isle.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\bloodmyst_isle\npcs_bloodmyst_isle.cpp"
+						RelativePath="..\scripts\zone\bloodmyst_isle\bloodmyst_isle.cpp"
 						>
 					</File>
 				</Filter>
@@ -1317,11 +1313,7 @@
 					Name="Blade&apos;s Edge Mountains"
 					>
 					<File
-						RelativePath="..\scripts\zone\blades_edge_mountains\mobs_blades_edge_mountains.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blades_edge_mountains\npcs_blades_edge_mountains.cpp"
+						RelativePath="..\scripts\zone\blades_edge_mountains\blades_edge_mountains.cpp"
 						>
 					</File>
 				</Filter>
@@ -1405,7 +1397,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\npcs_hellfire_peninsula.cpp"
+						RelativePath="..\scripts\zone\hellfire_peninsula\hellfire_peninsula.cpp"
 						>
 					</File>
 				</Filter>
@@ -2005,11 +1997,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\mob_phalanx.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\npcs_blackrock_depths.cpp"
+						RelativePath="..\scripts\zone\blackrock_depths\blackrock_depths.cpp"
 						>
 					</File>
 				</Filter>

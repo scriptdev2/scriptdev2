@@ -15,13 +15,64 @@
 */
 
 /* ScriptData
-SDName: Npcs_Bloodmyst_Isle
-SD%Complete: 75
-SDComment: Quest support: 9756 (gossip items text needed).
+SDName: Bloodmyst_Isle
+SD%Complete: 80
+SDComment: Quest support: 9670, 9756(gossip items text needed).
 SDCategory: Bloodmyst Isle
 EndScriptData */
 
+/* ContentData
+mob_webbed_creature
+npc_captured_sunhawk_agent
+EndContentData */
+
+#include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## mob_webbed_creature
+######*/
+
+//possible creatures to be spawned
+const uint32 possibleSpawns[32] = {17322, 17661, 17496, 17522, 17340, 17352, 17333, 17524, 17654, 17348, 17339, 17345, 17359, 17353, 17336, 17550, 17330, 17701, 17321, 17680, 17325, 17320, 17683, 17342, 17715, 17334, 17341, 17338, 17337, 17346, 17344, 17327};
+
+struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
+{
+    mob_webbed_creatureAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* who)
+    {
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        uint32 spawnCreatureID;
+
+        switch(rand()%3)
+        {
+        case 0:
+            spawnCreatureID = 17681;
+            if (Killer->GetTypeId() == TYPEID_PLAYER)
+                ((Player*)Killer)->KilledMonster(spawnCreatureID, m_creature->GetGUID());
+            break;
+        case 1:
+        case 2:
+            spawnCreatureID = possibleSpawns[rand()%31];
+            break;
+        }
+
+        if(spawnCreatureID)
+            DoSpawnCreature(spawnCreatureID,0,0,0,m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+    }
+};
+CreatureAI* GetAI_mob_webbed_creature(Creature *_Creature)
+{
+    return new mob_webbed_creatureAI (_Creature);
+}
 
 /*######
 ## npc_captured_sunhawk_agent
@@ -73,9 +124,14 @@ bool GossipSelect_npc_captured_sunhawk_agent(Player *player, Creature *_Creature
     return true;
 }
 
-void AddSC_npcs_bloodmyst_isle()
+void AddSC_bloodmyst_isle()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_webbed_creature";
+    newscript->GetAI = GetAI_mob_webbed_creature;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_captured_sunhawk_agent";

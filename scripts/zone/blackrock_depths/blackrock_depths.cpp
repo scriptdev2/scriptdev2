@@ -15,13 +15,86 @@
 */
 
 /* ScriptData
-SDName: Npcs_Blackrock_Depths
+SDName: Blackrock_Depths
 SD%Complete: 95
 SDComment: Quest support: 4342, 7604. Vendor Lokhtos Darkbargainer.
 SDCategory: Blackrock Depths
 EndScriptData */
 
+/* ContentData
+mob_phalanx
+npc_kharan_mighthammer
+npc_lokhtos_darkbargainer
+EndContentData */
+
+#include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## mob_phalanx
+######*/
+
+#define SPELL_THUNDERCLAP       8732              
+#define SPELL_FIREBALLVOLLEY    22425
+#define SPELL_MIGHTYBLOW        14099
+
+struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
+{
+    mob_phalanxAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 ThunderClap_Timer;
+    uint32 FireballVolley_Timer;
+    uint32 MightyBlow_Timer;
+
+    void Reset()
+    {       
+        ThunderClap_Timer = 12000;
+        FireballVolley_Timer =0;
+        MightyBlow_Timer = 15000;
+    }
+
+    void Aggro(Unit *who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        //ThunderClap_Timer
+        if( ThunderClap_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_THUNDERCLAP);
+            ThunderClap_Timer = 10000;
+        }else ThunderClap_Timer -= diff;
+
+        //FireballVolley_Timer
+        if( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 51 )
+        {
+            if (FireballVolley_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
+                FireballVolley_Timer = 15000;
+            }else FireballVolley_Timer -= diff;
+        }
+
+        //MightyBlow_Timer
+        if( MightyBlow_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_MIGHTYBLOW);
+            MightyBlow_Timer = 10000;
+        }else MightyBlow_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+
+}; 
+CreatureAI* GetAI_mob_phalanx(Creature *_Creature)
+{
+    return new mob_phalanxAI (_Creature);
+}
 
 /*######
 ## npc_kharan_mighthammer
@@ -130,19 +203,24 @@ bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature,
 ## 
 ######*/
 
-void AddSC_npcs_blackrock_depths()
+void AddSC_blackrock_depths()
 {
     Script *newscript;
 
     newscript = new Script;
+    newscript->Name="phalanx";
+    newscript->GetAI = GetAI_mob_phalanx;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="npc_kharan_mighthammer";
-    newscript->pGossipHello = &GossipHello_npc_kharan_mighthammer;
+    newscript->pGossipHello =  &GossipHello_npc_kharan_mighthammer;
     newscript->pGossipSelect = &GossipSelect_npc_kharan_mighthammer;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_lokhtos_darkbargainer";
-    newscript->pGossipHello          = &GossipHello_npc_lokhtos_darkbargainer;
-    newscript->pGossipSelect         = &GossipSelect_npc_lokhtos_darkbargainer;
+    newscript->pGossipHello =  &GossipHello_npc_lokhtos_darkbargainer;
+    newscript->pGossipSelect = &GossipSelect_npc_lokhtos_darkbargainer;
     m_scripts[nrscripts++] = newscript;
 }

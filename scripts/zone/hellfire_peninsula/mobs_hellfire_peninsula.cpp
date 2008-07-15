@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: mobs_hellfire_peninsula
 SD%Complete: 100
-SDComment: misc mobs, mostly related to quest
+SDComment: Scripts in this file -> ACID -> delete from SD2
 SDCategory: Hellfire Peninsula
 EndScriptData */
 

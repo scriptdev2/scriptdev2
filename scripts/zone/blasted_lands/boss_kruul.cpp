@@ -15,10 +15,10 @@
 */
 
 /* ScriptData
-SDName: boss_kruul
+SDName: Boss_Kruul
 SD%Complete: 100
-SDComment: 
-SDCategory: Blasted Lands
+SDComment: Highlord Kruul are presumably no longer in-game on regular bases, however future events could bring him back.
+SDCategory: Bosses
 EndScriptData */
 
 #include "sc_creature.h"

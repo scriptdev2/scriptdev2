@@ -164,8 +164,7 @@ extern void AddSC_boss_seethrel();
 extern void AddSC_boss_verek();
 extern void AddSC_boss_vilerel();
 extern void AddSC_boss_warder_stilgiss();
-extern void AddSC_phalanx();
-extern void AddSC_npcs_blackrock_depths();
+extern void AddSC_blackrock_depths();
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -194,16 +193,14 @@ extern void AddSC_boss_victor_nefarius();
 extern void AddSC_mob_blackwing_lair();
 
 //Blade's Edge Mountains
-extern void AddSC_mobs_blades_edge_mountains();
-extern void AddSC_npcs_blades_edge_mountains();
+extern void AddSC_blades_edge_mountains();
 
 //Blasted lands
 extern void AddSC_boss_kruul();
 extern void AddSC_npcs_blasted_lands();
 
 //Bloodmyst Isle
-extern void AddSC_mobs_bloodmyst_isle();
-extern void AddSC_npcs_bloodmyst_isle();
+extern void AddSC_bloodmyst_isle();
 
 //Burning steppes
 extern void AddSC_npcs_burning_steppes();
@@ -306,7 +303,7 @@ extern void AddSC_boss_omor_the_unscarred();
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
 extern void AddSC_mobs_hellfire_peninsula();
-extern void AddSC_npcs_hellfire_peninsula();
+extern void AddSC_hellfire_peninsula();
 
 //Hillsbrad Foothills
 //Hinterlands
@@ -1036,8 +1033,7 @@ void ScriptsInit()
     AddSC_boss_verek();
     AddSC_boss_vilerel();
     AddSC_boss_warder_stilgiss();
-    AddSC_phalanx();
-    AddSC_npcs_blackrock_depths();
+    AddSC_blackrock_depths();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();
@@ -1066,16 +1062,14 @@ void ScriptsInit()
     AddSC_mob_blackwing_lair();
 
     //Blade's Edge Mountains
-    AddSC_mobs_blades_edge_mountains();
-    AddSC_npcs_blades_edge_mountains();
+    AddSC_blades_edge_mountains();
 
     //Blasted lands
     AddSC_boss_kruul();
     AddSC_npcs_blasted_lands();
 
     //Bloodmyst Isle
-    AddSC_mobs_bloodmyst_isle();
-    AddSC_npcs_bloodmyst_isle();
+    AddSC_bloodmyst_isle();
 
     //Burning steppes
     AddSC_npcs_burning_steppes();
@@ -1177,7 +1171,7 @@ void ScriptsInit()
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();
     AddSC_mobs_hellfire_peninsula();
-    AddSC_npcs_hellfire_peninsula();
+    AddSC_hellfire_peninsula();
 
     //Hillsbrad Foothills
     //Hinterlands

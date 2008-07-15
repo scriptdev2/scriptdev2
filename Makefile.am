@@ -90,6 +90,7 @@ scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
 scripts/zone/black_temple/npcs_black_temple.cpp \
+scripts/zone/blackrock_depths/blackrock_depths.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \
@@ -114,8 +115,6 @@ scripts/zone/blackrock_depths/boss_seethrel.cpp \
 scripts/zone/blackrock_depths/boss_verek.cpp \
 scripts/zone/blackrock_depths/boss_vilerel.cpp \
 scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
-scripts/zone/blackrock_depths/mob_phalanx.cpp \
-scripts/zone/blackrock_depths/npcs_blackrock_depths.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
 scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \
@@ -139,12 +138,10 @@ scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/mob_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
-scripts/zone/blades_edge_mountains/mobs_blades_edge_mountains.cpp \
-scripts/zone/blades_edge_mountains/npcs_blades_edge_mountains.cpp \
+scripts/zone/blades_edge_mountains/blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/npcs_blasted_lands.cpp \
-scripts/zone/bloodmyst_isle/mobs_bloodmyst_isle.cpp \
-scripts/zone/bloodmyst_isle/npcs_bloodmyst_isle.cpp \
+scripts/zone/bloodmyst_isle/bloodmyst_isle.cpp \
 scripts/zone/burning_steppes/npcs_burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
@@ -198,7 +195,7 @@ scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
-scripts/zone/hellfire_peninsula/npcs_hellfire_peninsula.cpp \
+scripts/zone/hellfire_peninsula/hellfire_peninsula.cpp \
 scripts/zone/ironforge/npcs_ironforge.cpp \
 scripts/zone/isle_of_queldanas/npcs_isle_of_queldanas.cpp \
 scripts/zone/karazhan/boss_curator.cpp \

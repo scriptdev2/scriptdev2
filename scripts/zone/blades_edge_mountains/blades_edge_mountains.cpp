@@ -15,14 +15,79 @@
 */
 
 /* ScriptData
-SDName: Npcs_Blades_Edge_Mountains
+SDName: Blades_Edge_Mountains
 SD%Complete: 90
-SDComment: Quest support: 10556, 10682, 10980. Ogri'la->Skettis Flight. (npc_daranelle needs bit more work before consider complete)
+SDComment: Quest support: 10502, 10503, 10504, 10505, 10556, 10682, 10980. Ogri'la->Skettis Flight. (npc_daranelle needs bit more work before consider complete)
 SDCategory: Blade's Edge Mountains
 EndScriptData */
 
+/* ContentData
+mobs_bladespire_ogre
+mobs_bloodmaul_ogre
+npc_daranelle
+npc_overseer_nuaar
+npc_saikkal_the_elder
+npc_skyguard_handler_irena
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+## mobs_bladespire_ogre
+######*/
+
+//TODO: add support for quest 10512 + creature abilities
+struct MANGOS_DLL_DECL mobs_bladespire_ogreAI : public ScriptedAI
+{
+    mobs_bladespire_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* who)
+    {
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        if (Killer->GetTypeId() == TYPEID_PLAYER)
+            ((Player*)Killer)->KilledMonster(19995, m_creature->GetGUID());
+    }
+};
+CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
+{
+    return new mobs_bladespire_ogreAI (_Creature);
+}
+
+/*######
+## mobs_bloodmaul_ogre
+######*/
+
+//TODO: check if they can be done in ACID (meaning, not involved in other quests that require special scripting)
+struct MANGOS_DLL_DECL mobs_bloodmaul_ogreAI : public ScriptedAI
+{
+    mobs_bloodmaul_ogreAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* who)
+    {
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        if (Killer->GetTypeId() == TYPEID_PLAYER)
+            ((Player*)Killer)->KilledMonster(19991, m_creature->GetGUID());
+    }
+};
+CreatureAI* GetAI_mobs_bloodmaul_ogre(Creature *_Creature)
+{
+    return new mobs_bloodmaul_ogreAI (_Creature);
+}
 
 /*######
 ## npc_daranelle
@@ -168,9 +233,19 @@ bool GossipSelect_npc_skyguard_handler_irena(Player *player, Creature *_Creature
 ## AddSC
 ######*/
 
-void AddSC_npcs_blades_edge_mountains()
+void AddSC_blades_edge_mountains()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_bladespire_ogre";
+    newscript->GetAI = GetAI_mobs_bladespire_ogre;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mobs_bloodmaul_ogre";
+    newscript->GetAI = GetAI_mobs_bloodmaul_ogre;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_daranelle";
