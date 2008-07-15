@@ -357,8 +357,7 @@ extern void AddSC_npcs_moonglade();
 extern void AddSC_npcs_mulgore();
 
 //Nagrand
-extern void AddSC_mobs_nagrand();
-extern void AddSC_npcs_nagrand();
+extern void AddSC_nagrand();
 
 //Naxxramas
 extern void AddSC_boss_anubrekhan();
@@ -425,8 +424,7 @@ extern void AddSC_instance_shadowfang_keep();
 
 //Shadowmoon Valley
 extern void AddSC_boss_doomwalker();
-extern void AddSC_mobs_shadowmoon_valley();
-extern void AddSC_npcs_shadowmoon_valley();
+extern void AddSC_shadowmoon_valley();
 
 //Shattrath
 extern void AddSC_npcs_shattrath_city();
@@ -467,8 +465,7 @@ extern void AddSC_stratholme();
 
 //Sunken Temple
 //Tanaris
-extern void AddSC_mobs_tanaris();
-extern void AddSC_npcs_tanaris();
+extern void AddSC_tanaris();
 
 //Teldrassil
 //Tempest Keep
@@ -502,8 +499,7 @@ extern void AddSC_boss_veknilash();
 extern void AddSC_instance_temple_of_ahnqiraj();
 
 //Terokkar Forest
-extern void AddSC_mobs_terokkar_forest();
-extern void AddSC_npcs_terokkar_forest();
+extern void AddSC_terokkar_forest();
 
 //Thousand Needles
 //Thunder Bluff
@@ -512,9 +508,8 @@ extern void AddSC_npcs_thunder_bluff();
 //Tirisfal Glades
 //Uldaman
 extern void AddSC_boss_ironaya();
-extern void AddSC_mob_jadespine_basilisk();
 extern void AddSC_mob_uldaman();
-extern void AddSC_npcs_uldaman();
+extern void AddSC_uldaman();
 
 //Undercity
 extern void AddSC_npcs_undercity();
@@ -1225,8 +1220,7 @@ void ScriptsInit()
     AddSC_npcs_mulgore();
 
     //Nagrand
-    AddSC_mobs_nagrand();
-    AddSC_npcs_nagrand();
+    AddSC_nagrand();
 
     //Naxxramas
     AddSC_boss_anubrekhan();
@@ -1293,8 +1287,7 @@ void ScriptsInit()
 
     //Shadowmoon Valley
     AddSC_boss_doomwalker();
-    AddSC_mobs_shadowmoon_valley();
-    AddSC_npcs_shadowmoon_valley();
+    AddSC_shadowmoon_valley();
 
     //Shattrath
     AddSC_npcs_shattrath_city();
@@ -1335,8 +1328,7 @@ void ScriptsInit()
 
     //Sunken Temple
     //Tanaris
-    AddSC_mobs_tanaris();
-    AddSC_npcs_tanaris();
+    AddSC_tanaris();
 
     //Teldrassil
     //Tempest Keep
@@ -1370,8 +1362,7 @@ void ScriptsInit()
     AddSC_instance_temple_of_ahnqiraj();
 
     //Terokkar Forest
-    AddSC_mobs_terokkar_forest();
-    AddSC_npcs_terokkar_forest();
+    AddSC_terokkar_forest();
 
     //Thousand Needles
     //Thunder Bluff
@@ -1380,9 +1371,8 @@ void ScriptsInit()
     //Tirisfal Glades
     //Uldaman
     AddSC_boss_ironaya();
-    AddSC_mob_jadespine_basilisk();
     AddSC_mob_uldaman();
-    AddSC_npcs_uldaman();
+    AddSC_uldaman();
 
     //Undercity
     AddSC_npcs_undercity();

@@ -15,11 +15,19 @@
 */
 
 /* ScriptData
-SDName: Mobs_Terokkar_Forest
+SDName: Terokkar_Forest
 SD%Complete: 100
-SDComment: Quest support: 10873, 10896, 11096.
+SDComment: Quest support: 10873, 10896, 11096. Skettis->Ogri'la Flight
 SDCategory: Terokkar Forest
 EndScriptData */
+
+/* ContentData
+mob_unkor_the_ruthless
+mob_infested_root_walker
+mob_rotting_forest_rager
+mob_netherweb_victim
+npc_skyguard_handler_deesak
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -29,7 +37,7 @@ EndScriptData */
 ######*/
 
 #define FACTION_BOULDERFIST            45
-#define FACTION_BOULDERFIST_UNKOR_NICE 35  // be nice for quest complete
+#define FACTION_BOULDERFIST_UNKOR_NICE 35                   // be nice for quest complete
 #define QUEST_DONTKILLTHEFATONE        9889
 
 #define UNKOR_SPELL_PULVERIZE          2676
@@ -37,74 +45,72 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 {
-  mob_unkor_the_ruthlessAI(Creature* c) : ScriptedAI(c) 
-  {
-      Reset(); 
-      unkorFriendlyTimer = 0;
-  }
+    mob_unkor_the_ruthlessAI(Creature* c) : ScriptedAI(c) 
+    {
+        Reset(); 
+        unkorFriendlyTimer = 0;
+    }
 
-  uint32 unkorFriendlyTimer;
-  uint32 spellCastTimer;
+    uint32 unkorFriendlyTimer;
+    uint32 spellCastTimer;
 
-  void Reset()
-  {
-    spellCastTimer = ( UNKOR_SPELL_PULVERIZE_COOLDOWN / 2 ); // for first time usage half of default cooldown timer
-  }
+    void Reset()
+    {
+        // for first time usage half of default cooldown timer
+        spellCastTimer = ( UNKOR_SPELL_PULVERIZE_COOLDOWN / 2 );
+    }
 
-  void Aggro(Unit *who) {}
+    void Aggro(Unit *who) {}
 
-  void UpdateAI(const uint32 diff)
-  {
-      if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-          return;
+    void UpdateAI(const uint32 diff)
+    {
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
 
-      if(spellCastTimer < diff)
-      {
-          // set new timer with cooldown + rand 1/2 cooldown
-          spellCastTimer = UNKOR_SPELL_PULVERIZE_COOLDOWN + rand()%(UNKOR_SPELL_PULVERIZE_COOLDOWN/2); // Why?
-          DoCast(m_creature->getVictim(),UNKOR_SPELL_PULVERIZE);
-      }else spellCastTimer -= diff;
+        if(spellCastTimer < diff)
+        {
+            // set new timer with cooldown + rand 1/2 cooldown
+            spellCastTimer = UNKOR_SPELL_PULVERIZE_COOLDOWN + rand()%(UNKOR_SPELL_PULVERIZE_COOLDOWN/2); // Why?
+            DoCast(m_creature->getVictim(),UNKOR_SPELL_PULVERIZE);
+        }else spellCastTimer -= diff;
 
-      if(unkorFriendlyTimer)
-          if(unkorFriendlyTimer <= diff)
-          {
-              unkorFriendlyTimer = 0;
-              // Reset faction and evade.
-              m_creature->setFaction(FACTION_BOULDERFIST);
-              EnterEvadeMode();
-              
-              m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
-          }else unkorFriendlyTimer -= diff;
+        if(unkorFriendlyTimer)
+            if(unkorFriendlyTimer <= diff)
+            {
+                unkorFriendlyTimer = 0;
+                // Reset faction and evade.
+                m_creature->setFaction(FACTION_BOULDERFIST);
+                EnterEvadeMode();
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
+            }else unkorFriendlyTimer -= diff;
 
-      if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 30)
-      {
-          // iterate through threatlist, check if any player has quest. If so, and 10 ogres are killed, complete the quest
-          std::list<HostilReference*>::iterator itr;
-          for(itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
-          {
-              if(Unit* pUnit = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
-              {
-                  if(pUnit->GetTypeId() == TYPEID_PLAYER)
-                  {
-                      Player* plr = ((Player*)pUnit);
-                      if(plr->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE && plr->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
-                          plr->CompleteQuest(QUEST_DONTKILLTHEFATONE);
+        if((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) > 30)
+        {
+            // iterate through threatlist, check if any player has quest. If so, and 10 ogres are killed, complete the quest
+            std::list<HostilReference*>::iterator itr;
+            for(itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
+            {
+                if(Unit* pUnit = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
+                {
+                    if(pUnit->GetTypeId() == TYPEID_PLAYER)
+                    {
+                        Player* plr = ((Player*)pUnit);
+                        if(plr->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE && plr->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
+                            plr->CompleteQuest(QUEST_DONTKILLTHEFATONE);
 
-                      unkorFriendlyTimer = 30000;
-                      m_creature->setFaction(FACTION_BOULDERFIST_UNKOR_NICE); // Friendly now
-                      m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT); // Sit down
+                        unkorFriendlyTimer = 30000;
+                        m_creature->setFaction(FACTION_BOULDERFIST_UNKOR_NICE); // Friendly now
+                        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT); // Sit down
 
-                      // Evade so that we stop attacking.
-                      EnterEvadeMode();
-                  }
-              }
-          }
-      }
+                        // Evade so that we stop attacking.
+                        EnterEvadeMode();
+                    }
+                }
+            }
+        }
 
-      DoMeleeAttackIfReady();
-  }
-  
-  
+        DoMeleeAttackIfReady();
+    }
 };
 
 CreatureAI* GetAI_mob_unkor_the_ruthless(Creature *_Creature)
@@ -122,24 +128,14 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
-        //m_creature->CastSpell(m_creature,7941,true);//Immunity: Nature
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
         if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
-        {
             if (m_creature->GetHealth() <= damage)
-            {
                 if (rand()%100 < 75)
                     m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
-            }
-        }
     }
 
     void Aggro(Unit *who) {}
@@ -160,24 +156,14 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
-
-        //m_creature->CastSpell(m_creature,7941,true);//Immunity: Nature
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) 
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
-        {
             if (m_creature->GetHealth() <= damage)
-            {
                 if (rand()%100 < 75)
                     m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
-            }
-        }
     }
 
     void Aggro(Unit *who)
@@ -208,10 +194,6 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void SummonVictims(Unit* victim)
@@ -254,7 +236,6 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
                 SummonVictims(m_creature->getVictim());
                 if (rand()%100 < 75)
                     SummonVictims(m_creature->getVictim());
-
             }
         }
     }
@@ -268,10 +249,44 @@ CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
 }
 
 /*######
+## npc_skyguard_handler_deesak
+######*/
+
+#define GOSSIP_SKYGUARD "Fly me to Ogri'la please"
+
+bool GossipHello_npc_skyguard_handler_deesak(Player *player, Creature *_Creature )
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetReputationRank(1031) >= REP_HONORED)
+        player->ADD_GOSSIP_ITEM( 2, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+bool GossipSelect_npc_skyguard_handler_deesak(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        player->PlayerTalkClass->CloseGossip();
+
+        std::vector<uint32> nodes;
+
+        nodes.resize(2);
+        nodes[0] = 171;                                     //from skettis
+        nodes[1] = 172;                                     //end at ogri'la
+        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 705
+    }
+    return true;
+}
+
+/*######
 ## AddSC
 ######*/
 
-void AddSC_mobs_terokkar_forest()
+void AddSC_terokkar_forest()
 {
     Script *newscript;
 
@@ -293,5 +308,11 @@ void AddSC_mobs_terokkar_forest()
     newscript = new Script;
     newscript->Name="mob_netherweb_victim";
     newscript->GetAI = GetAI_mob_netherweb_victim;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_skyguard_handler_deesak";
+    newscript->pGossipHello =  &GossipHello_npc_skyguard_handler_deesak;
+    newscript->pGossipSelect = &GossipSelect_npc_skyguard_handler_deesak;
     m_scripts[nrscripts++] = newscript;
 }

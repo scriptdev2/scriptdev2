@@ -231,8 +231,7 @@ scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
 scripts/zone/moonglade/npcs_moonglade.cpp \
 scripts/zone/mulgore/npcs_mulgore.cpp \
-scripts/zone/nagrand/mobs_nagrand.cpp \
-scripts/zone/nagrand/npcs_nagrand.cpp \
+scripts/zone/nagrand/nagrand.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
 scripts/zone/naxxramas/boss_faerlina.cpp \
 scripts/zone/naxxramas/boss_feugen.cpp \
@@ -320,8 +319,7 @@ scripts/zone/sunwell_plateau/boss_brutallus.cpp \
 scripts/zone/sunwell_plateau/boss_kalecgos.cpp \
 scripts/zone/sunwell_plateau/def_sunwell_plateau.h \
 scripts/zone/sunwell_plateau/instance_sunwell_plateau.cpp \
-scripts/zone/tanaris/mobs_tanaris.cpp \
-scripts/zone/tanaris/npcs_tanaris.cpp \
+scripts/zone/tanaris/tanaris.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_harbinger_skyriss.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
@@ -348,13 +346,11 @@ scripts/zone/temple_of_ahnqiraj/boss_veknilash.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
-scripts/zone/terokkar_forest/mobs_terokkar_forest.cpp \
-scripts/zone/terokkar_forest/npcs_terokkar_forest.cpp \
+scripts/zone/terokkar_forest/terokkar_forest.cpp \
 scripts/zone/thunder_bluff/npcs_thunder_bluff.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
-scripts/zone/uldaman/mob_jadespine_basilisk.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
-scripts/zone/uldaman/npcs_uldaman.cpp \
+scripts/zone/uldaman/uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
