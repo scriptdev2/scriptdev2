@@ -176,7 +176,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 {
                     debug_log("SD2: Barnes Opera Event - Spotlight summoned, begin introduction");
                     Spotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT);
+                    Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT, false);
                     SpotlightGUID = Spotlight->GetGUID();
                 }
                 break;
