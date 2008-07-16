@@ -145,6 +145,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_illidan_stormrage' WHERE `entr
 UPDATE `creature_template` SET `ScriptName`='boss_high_nethermancer_zerevor' WHERE `entry`=22950; -- Mage at Illidari Council
 UPDATE `creature_template` SET `ScriptName`='boss_gathios_the_shatterer' WHERE `entry`=22949; -- Paladin at Illidari Council
 UPDATE `creature_template` SET `ScriptName`='boss_maiev_shadowsong' WHERE `entry`=23197; -- Maiev Shadowsong
+UPDATE `gameobject_template` SET `ScriptName` = 'gameobject_cage_trap' WHERE `entry` = 185916; -- Cage Trap GO in Illidan Encounter
 UPDATE `creature_template` SET `ScriptName`='mob_blaze' WHERE `entry`=23259; -- Blaze mob in Illidan Phase 2
 UPDATE `creature_template` SET `ScriptName`='mob_flame_of_azzinoth' WHERE `entry`=22997; -- Flame of Azzinoth (Illidan Phase 2)
 UPDATE `creature_template` SET `ScriptName`='mob_blade_of_azzinoth' WHERE `entry`=22996; -- Blade of Azzinoth (Illidan Phase 2)
@@ -160,7 +161,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_enslaved_soul' WHERE `entry`=23
 UPDATE `creature_template` SET `ScriptName`='mob_doom_blossom' WHERE `entry`=23123; -- Doom Blossoms in Teron Gorefiend's encounter
 UPDATE `creature_template` SET `ScriptName`='npc_spirit_of_olum' WHERE `entry`=23411;
 -- UPDATE `creature_template` SET `ScriptName`='mob_shadowy_construct' WHERE `entry`=23111; -- Shadowy Construct in Teron Gorefiend's encounter. Commented until Mind Control is implemented.
--- UPDATE `creature_template` SET `ScriptName`='mob_najentus_spine' WHERE `entry`=500000; -- Workaround creature for spine in Najentus event
 
 /* BLACKFATHOM DEPTHS */
 

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_illidan_stormrage
 SD%Complete: 90
-SDComment: Somewhat of a workaround for Parasitic Shadowfiend, unable to summon GOs for Cage Trap.
+SDComment: 
 SDCategory: Black Temple
 EndScriptData */
 
@@ -26,6 +26,11 @@ EndScriptData */
 #include "WorldPacket.h"
 #include "GameObject.h"
 #include "sc_gossip.h"
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+
 
 /************* Quotes and Sounds ***********************/
 // Gossip for when a player clicks Akama
@@ -85,9 +90,9 @@ EndScriptData */
 #define SPELL_DEMON_FORM                40506 // Transforms into Demon Illidan. Has an Aura of Dread on him.
 #define SPELL_SHADOW_BLAST              41078 // 8k - 11k Shadow Damage. Targets highest threat. Has a splash effect, damaging anyone in 20 yards of the target.
 #define SPELL_FLAME_BURST               41126 // Hurls fire at entire raid for ~3.5k damage every 10 seconds. Resistable. (Does not work: Script effect)
-#define SPELL_FLAME_BURST_EFFECT        41131 // The actual damage. Have each player cast it on itself (workaround)
+#define SPELL_FLAME_BURST_EFFECT        41131 // The actual damage. Handled by core (41126 triggers 41131)
 // Other Illidan spells
-#define SPELL_KNEEL                     39656 // Before beginning encounter, this is how he appears (talking to skully).
+#define SPELL_KNEEL                     39656 // Before beginning encounter, this is how he appears (talking to Wilson).
 #define SPELL_SHADOW_PRISON             40647 // Illidan casts this spell to immobilize entire raid when he summons Maiev.
 #define SPELL_DEATH                     41220 // This spell doesn't do anything except stun Illidan and set him on his knees.
 #define SPELL_BERSERK                   45078 // Damage increased by 500%, attack speed by 150%
@@ -942,7 +947,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0); // Unequip warglaives if needed
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
+        m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
 
         IsTalking = false;
         
@@ -1081,7 +1086,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     Trigger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->SetUInt64Value(UNIT_FIELD_TARGET, Trigger->GetGUID());
-                    DoCast(Trigger, SPELL_EYE_BLAST, true);
+                    DoCast(Trigger, SPELL_EYE_BLAST);
                 }
             }
         }
@@ -1217,7 +1222,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->SetUInt64Value(UNIT_FIELD_TARGET, 0);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // So players don't shoot us down
         m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF); // Animate our take off!
-        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING); // We now hover!
+        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING); // We now hover!
         m_creature->GetMotionMaster()->MovePoint(0, CENTER_X, CENTER_Y, CENTER_Z);
         for(uint8 i = 0; i < 2; ++i)
         {
@@ -1882,26 +1887,6 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
 
     void Aggro(Unit *who) {}
 
-    void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if(!IllidanGUID)
@@ -1943,34 +1928,35 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     uint64 IllidanGUID;
     uint32 DespawnTimer;
 
-    bool HasCaged;
+    bool Active;
     bool SummonedBeams;
 
     void Reset()
     {
         IllidanGUID = 0;
 
-        HasCaged = false;
+        Active = false;
         SummonedBeams = false;
 
         DespawnTimer = 0;
 
-       // m_creature->SetUInt32Value(OBJECT_FIELD_SCALE_X, 1036831949);
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15882);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
    
     void Aggro(Unit *who){}
 
     void MoveInLineOfSight(Unit *who)
     {
+        if(!Active)
+            return;
+
         if(who && (who->GetTypeId() != TYPEID_PLAYER))
         {
             if(who->GetEntry() == ILLIDAN_STORMRAGE) // Check if who is Illidan
             {
-                if((!HasCaged) && (!who->HasAura(SPELL_CAGED, 0)) && m_creature->IsWithinDistInMap(who, 3))
+                if(!IllidanGUID && (!who->HasAura(SPELL_CAGED, 0)) && m_creature->IsWithinDistInMap(who, 3))
                 {
                     IllidanGUID = who->GetGUID();
-                    HasCaged = true;
                     who->CastSpell(who, SPELL_CAGED, true);
                     DespawnTimer = 5000;
                     if(who->HasAura(SPELL_ENRAGE, 0))
@@ -1983,22 +1969,58 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if(DespawnTimer)
-        {
             if(DespawnTimer < diff)
-                m_creature->setDeathState(JUST_DIED);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             else DespawnTimer -= diff;
-        }
 
-        if(HasCaged && !SummonedBeams)
-        {
-            Unit* Illidan = Unit::GetUnit((*m_creature), IllidanGUID);
-            if(!Illidan)
-                return;
-
-            //TODO: Find proper spells and properly apply 'caged' Illidan effect
-        }
+        //if(IllidanGUID && !SummonedBeams)
+        //{
+        //    if(Unit* Illidan = Unit::GetUnit(*m_creature, IllidanGUID)
+        //    {
+        //        //TODO: Find proper spells and properly apply 'caged' Illidan effect
+        //    }
+        //}
     }
 };
+
+bool GOHello_cage_trap(Player* plr, GameObject* go)
+{
+    float x, y, z;
+    plr->GetPosition(x, y, z);
+
+    Creature* trigger = NULL;
+
+    CellPair pair(MaNGOS::ComputeCellPair(x, y));
+    Cell cell(pair);
+    cell.data.Part.reserved = ALL_DISTRICT;
+    cell.SetNoCreate();
+
+    // Grid search for nearest live creature of entry 23304 within 10 yards
+    MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck check(*plr, 23304, true, 10);
+    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(trigger, check);
+
+    TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> cSearcher(searcher);
+
+    CellLock<GridReadGuard> cell_lock(cell, pair);
+    cell_lock->Visit(cell_lock, cSearcher, *(plr->GetMap()));
+
+    if(!trigger)
+    {
+        error_log("SD2: Unable to locate Cage Trap Disturb Trigger (entry 23304). Forcing trap to spawn trigger.");
+        plr->GetSession()->SendNotification("SD2: Unable to locate Cage Trap Disturb Trigger (entry 23304). Forcing trap to spawn trigger.", LANG_UNIVERSAL, 0);
+        trigger = plr->SummonCreature(23304, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+        if(!trigger)
+        {
+            plr->GetSession()->SendNotification("SD2: Summon failed. This trap is now useless.", LANG_UNIVERSAL, 0);
+            error_log("SD2: Unable to spawn trigger. This Cage Trap is now useless");
+            return false;
+        }
+    }
+
+    if(!((cage_trap_triggerAI*)trigger->AI())->Active)
+        ((cage_trap_triggerAI*)trigger->AI())->Active = true;
+    return true;
+}
 
 //This is used to sort the players by distance in preparation for being charged by the flames.
 struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
@@ -2032,11 +2054,11 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
     void Charge()
     {        
         // Get the Threat List
-        std::list<HostilReference *> m_threatlist = m_creature->getThreatManager().getThreatList();
+        std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         
         if(!m_threatlist.size()) return; // He doesn't have anyone in his threatlist, useless to continue
 
-        std::list<Unit *> targets;
+        std::list<Unit*> targets;
         std::list<HostilReference *>::iterator itr = m_threatlist.begin();
         for( ; itr!= m_threatlist.end(); ++itr) //store the threat list in a different container
         {
@@ -2125,6 +2147,7 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_CONSUME_SOUL);
     }
 };
+
 struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
 {
     flamecrashAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -2155,7 +2178,7 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
         if(DespawnTimer < diff)
         {
             m_creature->SetVisibility(VISIBILITY_OFF); // So that players don't see the sparkly effect when we die.
-            m_creature->setDeathState(JUST_DIED);
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else DespawnTimer -= diff;
     }
 };
@@ -2168,10 +2191,7 @@ struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
         Reset();
     }
 
-    void Reset()
-    {        
-        DoCast(m_creature, SPELL_SHADOWFIEND_PASSIVE, true);
-    }
+    void Reset() {}
 
     void Aggro(Unit* who) {}
 
@@ -2328,6 +2348,11 @@ void AddSC_boss_illidan()
     newscript = new Script;
     newscript->Name = "mob_blade_of_azzinoth";
     newscript->GetAI = GetAI_blade_of_azzinoth;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name = "gameobject_cage_trap";
+    newscript->pGOHello = GOHello_cage_trap;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
