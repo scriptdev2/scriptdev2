@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
                 if(pVeknilash)
                 {
                     m_creature->Relocate(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0);  
-                    m_creature->SendMoveToPacket(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), false, 0);
+                    m_creature->SendMonsterMove(pVeknilash->GetPositionX(), pVeknilash->GetPositionY(), pVeknilash->GetPositionZ(), 0, 0, 0);
                     DoResetThreat();
                 }
                 Teleport_Timer = 30000;

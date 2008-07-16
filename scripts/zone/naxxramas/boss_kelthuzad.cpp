@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                      Walk_Pos_Z = ADDZ_RIGHT_NEAR;                         
                      break;
                 }
-                pUnit->SendMoveToPacket(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z,true);
+                pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z,MOVEMENTFLAG_WALK_MODE);
             }
     }
 
@@ -490,7 +490,7 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
                     {
                         //if we find no one to figth walk to the center
                         if(!pUnit->isInCombat())
-                            pUnit->SendMoveToPacket(Walk_Pos_X,Walk_Pos_Y,Walk_Pos_Z,true);
+                            pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X,Walk_Pos_Y,Walk_Pos_Z,MOVEMENTFLAG_WALK_MODE);
 
                         //Safe storing of creatures
                         GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pUnit->GetGUID();

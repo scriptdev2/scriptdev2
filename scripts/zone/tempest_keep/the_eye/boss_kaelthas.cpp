@@ -906,9 +906,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         m_creature->GetMotionMaster()->Clear();
                         m_creature->GetMotionMaster()->MoveIdle();
                         m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                        //m_creature->GetMap()->CreatureRelocation(m_creature, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                        m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, true, 1000);
-                        m_creature->SendMoveToPacket(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, true, 1000);
+                        m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, 0, 0);
 
                         m_creature->InterruptNonMeleeSpells(false);
                         DoCast(m_creature, SPELL_FULLPOWER);
@@ -973,9 +971,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             m_creature->GetMotionMaster()->Clear();
                             m_creature->GetMotionMaster()->MoveIdle();
                             m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                            //m_creature->GetMap()->CreatureRelocation(m_creature, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                            m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, 0, true, 1000);
-                            //m_creature->SendMoveToPacket(GRAVITY_X, GRAVITY_Y,GRAVITY_Z, true, 1000);
+                            m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0, 0, 0);
                             // 1) Kael'thas will portal the whole raid right into his body
                             for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
                             {

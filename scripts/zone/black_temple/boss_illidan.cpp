@@ -1345,7 +1345,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 float dx = m_creature->GetPositionX() + (distance*cos(m_creature->GetOrientation()));
                 float dy = m_creature->GetPositionY() + (distance*sin(m_creature->GetOrientation()));
                 Maiev->Relocate(dx,dy,Maiev->GetPositionZ());
-                Maiev->SendMoveToPacket(dx,dy,Maiev->GetPositionZ(), 0, 0);
+                Maiev->SendMonsterMove(dx,dy,Maiev->GetPositionZ(), 0, 0, 0);
                 Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
                 Maiev->SetUInt64Value(UNIT_FIELD_TARGET, m_creature->GetGUID());
             }
