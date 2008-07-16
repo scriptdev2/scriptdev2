@@ -149,7 +149,7 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
         EnrageTimer = 900000; // 15 minutes
 
         Creature* Member;
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 4; i++)
         {
             if(Council[i])
             {
@@ -382,7 +382,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         damage /= 4;
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = NULL;
             if(Council[i])
@@ -590,7 +590,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         damage /= 4;
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = NULL;
             if(Council[i])
@@ -601,22 +601,6 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
                     pUnit->SetHealth(pUnit->GetHealth() - damage);
             }
         }
-    }
-
-    // THIS IS A WORKAROUND AS SPELLSTEAL DOES NOT WORK/DOES NOT ALLOW PLAYERS TO STEAL BUFFS OFF MOBS.
-    void CastDampenMagicWorkaround()
-    {
-        Unit* target = m_creature->getVictim();
-
-        if(target && (target->GetTypeId() == TYPEID_PLAYER))
-        {
-            if((target->getClass() == CLASS_MAGE) && (!target->HasAura(SPELL_DAMPEN_MAGIC, 0)))
-            {
-                target->CastSpell(target, SPELL_DAMPEN_MAGIC, true);
-                target->SetPower(POWER_MANA, target->GetPower(POWER_MANA) + 600);
-            }
-        }
-        else DoCast(m_creature, SPELL_DAMPEN_MAGIC);
     }
 
     void UpdateAI(const uint32 diff)
@@ -657,9 +641,9 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public ScriptedAI
 
         if(DampenMagicTimer < diff)
         {
-            CastDampenMagicWorkaround();
+            DoCast(m_creature, SPELL_DAMPEN_MAGIC);
             Cooldown = 1000;
-            DampenMagicTimer = 5000; // Should be ~2 minutes.
+            DampenMagicTimer = 120000; // ~ 2 minutes
             ArcaneBoltTimer += 1000;
         }else DampenMagicTimer -= diff;
         
@@ -770,7 +754,7 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {          
         damage /= 4;
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = NULL;
             if(Council[i])
@@ -779,24 +763,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
                 pUnit = Unit::GetUnit((*m_creature), Council[i]);
                 if(pUnit && (damage < pUnit->GetHealth()))
                     pUnit->SetHealth(pUnit->GetHealth() - damage);
-            }
-        }
-    }
-
-    /** This is a workaround as Circle of Healing puts Malande in the threat list of others.
-    Please remove this workaround when her Circle of Healing works properly */
-    void DoCircleOfHealingWorkaround()
-    {
-        uint32 heal;
-        for(uint8 i = 0; i < 3; i++)
-        {
-            heal = 5000 + rand()%5001; // 5 - 10k health healed
-            Unit* pUnit = NULL;
-            pUnit = Unit::GetUnit((*m_creature), Council[i]);
-            if(pUnit && ((pUnit->GetHealth()*100 / pUnit->GetMaxHealth()) > 1))
-            {
-                pUnit->SetHealth(pUnit->GetHealth() + heal);
-                pUnit->CastSpell(pUnit, SPELL_HEAL_VISUAL, true);
             }
         }
     }
@@ -841,7 +807,6 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public ScriptedAI
         {
             // Currently bugged and puts Malande on the threatlist of the other council members. It also heals players.
 //            DoCast(m_creature, SPELL_CIRCLE_OF_HEALING);
-            DoCircleOfHealingWorkaround(); // Workaround till the actual spell works.
             CircleOfHealingTimer = 60000;
         }else CircleOfHealingTimer -= diff;
 
@@ -962,7 +927,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public ScriptedAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {   
         damage /= 4;
-        for(uint8 i = 0; i < 3; i++)
+        for(uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = NULL;
             if(Council[i])
