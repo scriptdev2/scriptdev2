@@ -25,7 +25,6 @@ EndScriptData */
 #include "def_karazhan.h"
 #include "GameObject.h"
 #include "Map.h"
-#include "WorldPacket.h"
 #include "../../npc/npc_escortAI.h"
 
 /*######
@@ -73,6 +72,7 @@ static Dialogue RAJDialogue[]=
     {"But don't take it from me, see for yourself what tragedy lies ahead when the paths of star-crossed lovers meet. And now...on with the show!", 9343, 14000}
 };
 
+// Entries and spawn locations for creatures in Oz event
 float Spawns[6][2]=
 {
     {17535, -10896}, // Dorothee
@@ -171,12 +171,12 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 float x,y,z;
                 m_creature->GetPosition(x, y, z);
                 Creature* Spotlight;
-                Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+                Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 50000);
                 if(Spotlight)
                 {
                     debug_log("SD2: Barnes Opera Event - Spotlight summoned, begin introduction");
                     Spotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT, true);
+                    Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT);
                     SpotlightGUID = Spotlight->GetGUID();
                 }
                 break;
@@ -232,15 +232,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         debug_log("SD2: Barnes' Opera Event Introduction: Event - %d, Count - %d, Timer - %d", Event, TalkCount, TalkTimer);
 
         if(text)
-            m_creature->Yell(text, LANG_UNIVERSAL, 0);
-
+            DoYell(text, LANG_UNIVERSAL, 0);
         if(sound)
-        {
-            WorldPacket data(4);
-            data.SetOpcode(SMSG_PLAY_SOUND);
-            data << uint32(sound);
-            m_creature->SendMessageToSet(&data, false);
-        }
+            DoPlaySoundToSet(m_creature, sound);
     }
 
     void UpdateAI(const uint32 diff)
@@ -256,7 +250,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     debug_log("SD2: Barnes - Introduction complete - removing Spotlight and re-enabling Escort");
                     Unit* Spotlight = Unit::GetUnit((*m_creature), SpotlightGUID);
                     if(Spotlight)
-                        Spotlight->DealDamage(Spotlight, Spotlight->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    {
+                        Spotlight->RemoveAllAuras();
+                        Spotlight->SetVisibility(VISIBILITY_OFF);
+                    }
 
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STAND);
                     IsTalking = false;
@@ -266,7 +263,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
                 Talk(TalkCount);
-                TalkCount++;
+                ++TalkCount;
             }
             else TalkTimer -= diff;
         }
@@ -277,6 +274,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 if(CurtainTimer <= diff)
                 {
                     PrepareEncounter();
+
                     if(!pInstance)
                         return;
 
@@ -321,14 +319,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-        {
-            if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
-            {
-                m_creature->AttackerStateUpdate(m_creature->getVictim());
-                m_creature->resetAttackTimer();
-            }
-        }
+        DoMeleeAttackIfReady();
     }
 
     void StartEvent()

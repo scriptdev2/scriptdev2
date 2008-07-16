@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Bosses_Opera
 SD%Complete: 80
-SDComment: Oz, Hood and RAJ event implemented - needs further testing
+SDComment: Oz, and Hood event implemented. RAJ event disabled for now.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -820,6 +820,8 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
+        DoMeleeAttackIfReady();
+
         if(ChaseTimer < diff)
         {
             if(!IsChasing)
@@ -872,7 +874,6 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
             SwipeTimer = 25000 + rand()%5000;
         }else SwipeTimer -= diff;
 
-        DoMeleeAttackIfReady();
     }
 };
 
