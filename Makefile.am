@@ -229,6 +229,11 @@ scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/def_molten_core.h \
 scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
+scripts/zone/magisters_terrace/boss_selin_fireheart.cpp \
+scripts/zone/magisters_terrace/boss_vexallus.cpp \
+scripts/zone/magisters_terrace/boss_priestess_delrissa.cpp \
+scripts/zone/magisters_terrace/def_magisters_terrace.h \
+scripts/zone/magisters_terrace/instance_magisters_terrace.cpp \
 scripts/zone/moonglade/npcs_moonglade.cpp \
 scripts/zone/mulgore/npcs_mulgore.cpp \
 scripts/zone/nagrand/nagrand.cpp \

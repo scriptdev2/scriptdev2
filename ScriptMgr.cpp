@@ -330,6 +330,13 @@ extern void AddSC_instance_karazhan();
 extern void AddSC_npcs_loch_modan();
 
 //Lower Blackrock Spire
+
+// Magister's Terrace
+extern void AddSC_boss_selin_fireheart();
+extern void AddSC_boss_vexallus();
+extern void AddSC_boss_priestess_delrissa();
+extern void AddSC_instance_magisters_terrace();
+
 //Maraudon
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_noxxion();
@@ -1193,6 +1200,13 @@ void ScriptsInit()
     AddSC_npcs_loch_modan();
 
     //Lower Blackrock Spire
+    
+    // Magister's Terrace
+    AddSC_boss_selin_fireheart();
+    AddSC_boss_vexallus();
+    AddSC_boss_priestess_delrissa();
+    AddSC_instance_magisters_terrace();
+
     //Maraudon
     AddSC_boss_landslide();
     AddSC_boss_noxxion();

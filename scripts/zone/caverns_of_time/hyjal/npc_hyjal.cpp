@@ -30,14 +30,6 @@ EndScriptData */
 #define GOSSIP_ITEM_BEGIN_HORDE "We're here to help! The Alliance are overrun."
 #define GOSSIP_ITEM_AZGALOR     "We're okay so far. Let's do this!"
 
-#define HORDEBASE_X         5464.5522
-#define HORDEBASE_Y         -2731.5644
-#define HORDEBASE_Z         1485.7075
-
-#define NIGHTELFBASE_X      5186.07
-#define NIGHTELFBASE_Y      -3383.49
-#define NIGHTELFBASE_Z      1638.28
-
 CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
 {
     hyjalAI* ai = new hyjalAI(_Creature);
@@ -62,15 +54,19 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
 
 bool GossipHello_npc_jaina_proudmoore(Player *player, Creature *_Creature)
 {
-    if((!((hyjalAI*)_Creature->AI())->EventBegun) && (!((hyjalAI*)_Creature->AI())->FirstBossDead))
+    hyjalAI* ai = ((hyjalAI*)_Creature->AI());
+    if(ai->EventBegun)
+        return false;
+
+    uint32 RageEncounter = ai->GetInstanceData(DATA_RAGEWINTERCHILLEVENT);
+    uint32 AnetheronEncounter = ai->GetInstanceData(DATA_ANETHERONEVENT);
+    if(RageEncounter == NOT_STARTED)
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BEGIN_ALLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    else
-    {
-        if((!((hyjalAI*)_Creature->AI())->SecondBossDead))
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_ANETHERON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-        else
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    }
+    else if(RageEncounter == DONE && AnetheronEncounter == NOT_STARTED)
+        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_ANETHERON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    else if(RageEncounter == DONE && AnetheronEncounter == DONE)
+        player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
     player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
 
     return true;
@@ -85,10 +81,12 @@ bool GossipSelect_npc_jaina_proudmoore(Player *player, Creature *_Creature, uint
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
+            ((hyjalAI*)_Creature->AI())->FirstBossDead = true;
+            ((hyjalAI*)_Creature->AI())->WaveCount = 9;
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->TeleportRaid(HORDEBASE_X, HORDEBASE_Y, HORDEBASE_Z);
+            ((hyjalAI*)_Creature->AI())->Retreat();
             break;
     }
 
@@ -115,19 +113,18 @@ CreatureAI* GetAI_npc_thrall(Creature *_Creature)
 
 bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
 {
-    uint32 AnetheronEvent = 0;
-    AnetheronEvent = ((hyjalAI*)_Creature->AI())->GetInstanceData(DATA_ANETHERONEVENT);
-    if(AnetheronEvent >= DONE) // Only let them start the Horde phase if Anetheron is dead.
+    hyjalAI* ai = ((hyjalAI*)_Creature->AI());
+    uint32 AnetheronEvent = ai->GetInstanceData(DATA_ANETHERONEVENT);
+    if(AnetheronEvent >= DONE && !ai->EventBegun) // Only let them start the Horde phase if Anetheron is dead.
     {
-        if((((hyjalAI*)_Creature->AI())->EventBegun) && (!((hyjalAI*)_Creature->AI())->FirstBossDead))
+        uint32 KazrogalEvent = ai->GetInstanceData(DATA_KAZROGALEVENT);
+        uint32 AzgalorEvent  = ai->GetInstanceData(DATA_AZGALOREVENT);
+        if(KazrogalEvent == NOT_STARTED)
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BEGIN_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        else
-        {
-            if((!((hyjalAI*)_Creature->AI())->SecondBossDead))
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_AZGALOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            else
-                player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-        }
+        else if(KazrogalEvent == DONE && AzgalorEvent == NOT_STARTED)
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_AZGALOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        else if(AzgalorEvent == DONE)
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     }
 
     player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
@@ -144,10 +141,12 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
+            ((hyjalAI*)_Creature->AI())->FirstBossDead = true;
+            ((hyjalAI*)_Creature->AI())->WaveCount = 9;
             ((hyjalAI*)_Creature->AI())->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->TeleportRaid(NIGHTELFBASE_X, NIGHTELFBASE_Y, NIGHTELFBASE_Z);
+            ((hyjalAI*)_Creature->AI())->Retreat();
             break;
     }
 

@@ -18,5 +18,8 @@
 #define DATA_RAGEWINTERCHILLEVENT 11
 #define DATA_THRALL 12
 #define DATA_TYRANDEWHISPERWIND 13
+#define DATA_TRASH 14
+
+#define ERROR_INST_DATA     "SD2: Instance data not set properly for Mount Hyjal. Encounters will be buggy"
 
 #endif

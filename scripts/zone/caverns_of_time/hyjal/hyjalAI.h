@@ -165,11 +165,11 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff); // Called to summon waves, check for boss deaths and to cast our spells.
 
-    void JustDied(Unit* killer); // Called on death, informs the raid that they have failed.
+    void JustDied(Unit* killer) { Talk(DEATH); } // Called on death, informs the raid that they have failed.
 
     void SetFaction(uint32 _faction) { Faction = _faction; } // Set the faction to either Alliance or Horde in Hyjal
 
-    void TeleportRaid(float X, float Y, float Z); // Used by gossip to teleport the entire raid to the next location
+    void Retreat(); // "Teleport" (teleport visual + set invisible) all friendly creatures from the base away.
 
     void SummonCreature(uint32 entry, float Base[4][3]); // Summons a creature for that wave in that base
     
@@ -190,7 +190,7 @@ public:
 
     uint32 NextWaveTimer;
     uint32 WaveCount;
-    uint32 CheckBossTimer;
+    uint32 CheckTimer;
     uint32 Faction;
     uint32 EnemyCount;
 

@@ -22,6 +22,7 @@ SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
 #include "def_hyjal.h"
+#include "WorldPacket.h"
 
 #define ENCOUNTERS     5
 
@@ -46,6 +47,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     uint64 Thrall;
     uint64 TyrandeWhisperwind;
 
+    uint32 Trash;
     uint32 Encounters[ENCOUNTERS];
 
     void Initialize()
@@ -59,13 +61,14 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         Thrall = 0;
         TyrandeWhisperwind = 0;
         
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
+        Trash = 0;
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
     }
 
     bool IsEncounterInProgress() const 
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
             if(Encounters[i] == IN_PROGRESS) return true;
 
         return false;
@@ -75,37 +78,14 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 17767:
-                RageWinterchill = creature->GetGUID();
-                break;
-
-            case 17808:
-                Anetheron = creature->GetGUID();
-                break;
-
-            case 17888:
-                Kazrogal = creature->GetGUID();
-                break;
-
-            case 17842:
-                Azgalor = creature->GetGUID();
-                break;
-
-            case 17968:
-                Archimonde = creature->GetGUID();
-                break;
-
-            case 17772:
-                JainaProudmoore = creature->GetGUID();
-                break;
-
-            case 17852:
-                Thrall = creature->GetGUID();
-                break;
-                
-            case 17948:
-                TyrandeWhisperwind = creature->GetGUID();
-                break;
+            case 17767: RageWinterchill = creature->GetGUID(); break;
+            case 17808: Anetheron = creature->GetGUID(); break;
+            case 17888: Kazrogal = creature->GetGUID();  break;
+            case 17842: Azgalor = creature->GetGUID(); break;
+            case 17968: Archimonde = creature->GetGUID(); break;
+            case 17772: JainaProudmoore = creature->GetGUID(); break;
+            case 17852: Thrall = creature->GetGUID(); break;
+            case 17948: TyrandeWhisperwind = creature->GetGUID(); break;
         }
     }
 
@@ -113,29 +93,14 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(identifier)
         {
-            case DATA_RAGEWINTERCHILL:
-                return RageWinterchill;
-                
-            case DATA_ANETHERON:
-                return Anetheron;
-
-            case DATA_KAZROGAL:
-                return Kazrogal;
-
-            case DATA_AZGALOR:
-                return Azgalor;
-            
-            case DATA_ARCHIMONDE:
-                return Archimonde;
-            
-            case DATA_JAINAPROUDMOORE:
-                return JainaProudmoore;
-
-            case DATA_THRALL:
-                return Thrall;
-
-            case DATA_TYRANDEWHISPERWIND:
-                return TyrandeWhisperwind;
+            case DATA_RAGEWINTERCHILL: return RageWinterchill;
+            case DATA_ANETHERON: return Anetheron;
+            case DATA_KAZROGAL: return Kazrogal;
+            case DATA_AZGALOR: return Azgalor;
+            case DATA_ARCHIMONDE: return Archimonde;
+            case DATA_JAINAPROUDMOORE: return JainaProudmoore;
+            case DATA_THRALL: return Thrall;
+            case DATA_TYRANDEWHISPERWIND: return TyrandeWhisperwind;
         }
 
         return 0;
@@ -145,24 +110,21 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_RAGEWINTERCHILLEVENT:
-                Encounters[0] = data;
-                break;
+            case DATA_RAGEWINTERCHILLEVENT: Encounters[0] = data; break;
+            case DATA_ANETHERONEVENT:       Encounters[1] = data; break;
+            case DATA_KAZROGALEVENT:        Encounters[2] = data; break;
+            case DATA_AZGALOREVENT:         Encounters[3] = data; break;
+            case DATA_ARCHIMONDEEVENT:      Encounters[4] = data; break;
 
-             case DATA_ANETHERONEVENT:
-                Encounters[1] = data;
-                break;
-
-             case DATA_KAZROGALEVENT:
-                Encounters[2] = data;
-                break;
-
-             case DATA_AZGALOREVENT:
-                Encounters[3] = data;
-                break;
-
-             case DATA_ARCHIMONDEEVENT:
-                Encounters[4] = data;
+            case DATA_TRASH:
+                if(data)
+                {
+                    if(data < 20) // Max amount of trash per wave is 18
+                        Trash = data;
+                    else Trash = 0; // With this, we can reset the trash counter if the event resets.
+                }
+                else Trash--;
+                UpdateWorldState(2453, data);
                 break;
         }
     }
@@ -171,48 +133,56 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_RAGEWINTERCHILLEVENT:
-                return Encounters[0];
-
-             case DATA_ANETHERONEVENT:
-                return Encounters[1];
-
-             case DATA_KAZROGALEVENT:
-                return Encounters[2];
-
-             case DATA_AZGALOREVENT:
-                return Encounters[3];
-
-             case DATA_ARCHIMONDEEVENT:
-                return Encounters[4];
+            case DATA_RAGEWINTERCHILLEVENT: return Encounters[0];
+             case DATA_ANETHERONEVENT:      return Encounters[1];
+             case DATA_KAZROGALEVENT:       return Encounters[2];
+             case DATA_AZGALOREVENT:        return Encounters[3];
+             case DATA_ARCHIMONDEEVENT:     return Encounters[4];
+             case DATA_TRASH:               return Trash;
         }
         return 0;
     }
 
-    //const char* Save()
-    //{
-    //    uint32 r = 0;
-    //    for(uint8 i = 0; i < ENCOUNTERS; ++i)
-    //    {
-    //        if(Encounters[i] == DONE)
-    //            r++;
-    //    }
+    void UpdateWorldState(uint32 field, uint32 value)
+    {
+        WorldPacket data(SMSG_UPDATE_WORLD_STATE, 8);
+        data << field;
+        data << value;
 
-    //    char* temp = NULL;
-    //    //if(r)
-    //    //    sprintf(temp, "%d", r);
-    //    return temp;
-    //}
+        instance->SendToPlayers(&data);
+    }
 
-    //void Load(const char* load)
-    //{
-    //    if(!load)
-    //        return;
+    const char* Save()
+    {
+        if(Encounters[4] == DONE)
+            return "Archimonde complete";
+        else if(Encounters[3] == DONE)
+            return "Azgalor complete";
+        else if(Encounters[2] == DONE)
+            return "Kazrogal complete";
+        else if(Encounters[1] == DONE)
+            return "Anetheron complete";
+        else if(Encounters[0] == DONE)
+            return "Winterchill complete";
 
-    //    uint32 in = atol(load);
-    //    for(uint8 i = 0; i < in; ++i)
-    //        Encounters[i] = DONE;
-    //}
+        return NULL;
+    }
+
+    void Load(const char* load)
+    {
+        if(!load)
+            return;
+        
+        uint8 r = 0;
+        if(load == "Archimonde complete") r = 4;
+        else if(load == "Azgalor complete") r = 3;
+        else if(load == "Kazrogal complete") r = 2;
+        else if(load == "Anetheron complete") r = 1;
+        else if(load == "Winterchill complete") r = 0;
+
+        for(uint8 i = 0; i <= r; ++i)
+            Encounters[i] = DONE;
+    }
 };
 
 InstanceData* GetInstanceData_instance_mount_hyjal(Map* map)

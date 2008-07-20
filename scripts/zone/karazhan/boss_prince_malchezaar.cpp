@@ -362,7 +362,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 enfeeble_targets[i] = target->GetGUID();
                 enfeeble_health[i] = target->GetHealth();
 
-               // target->CastSpell(target, SPELL_ENFEEBLE, true, 0, 0, m_creature->GetGUID());
+                target->CastSpell(target, SPELL_ENFEEBLE, true, 0, 0, m_creature->GetGUID());
                 target->SetHealth(1);
             }
         }

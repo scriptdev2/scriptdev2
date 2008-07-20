@@ -681,7 +681,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             if(HandOfDeathTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_HAND_OF_DEATH);
-                HandOfDeathTimer = 1000;
+                HandOfDeathTimer = 2000;
             }else HandOfDeathTimer -= diff;
             return; // Don't do anything after this point.
         }

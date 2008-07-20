@@ -346,11 +346,11 @@
 					Name="Azshara"
 					>
 					<File
-						RelativePath="..\scripts\zone\azshara\boss_azuregos.cpp"
+						RelativePath="..\scripts\zone\azshara\azshara.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\azshara\azshara.cpp"
+						RelativePath="..\scripts\zone\azshara\boss_azuregos.cpp"
 						>
 					</File>
 				</Filter>
@@ -1446,11 +1446,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_hellfire_peninsula.cpp"
+						RelativePath="..\scripts\zone\hellfire_peninsula\hellfire_peninsula.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\hellfire_peninsula.cpp"
+						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_hellfire_peninsula.cpp"
 						>
 					</File>
 				</Filter>
@@ -1917,6 +1917,26 @@
 				<Filter
 					Name="Magister&apos;s Terrace"
 					>
+					<File
+						RelativePath="..\scripts\zone\magisters_terrace\boss_priestess_delrissa.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\magisters_terrace\boss_selin_fireheart.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\magisters_terrace\boss_vexallus.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\magisters_terrace\def_magisters_terrace.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\magisters_terrace\instance_magisters_terrace.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Sunwell Plateau"
@@ -1941,6 +1961,10 @@
 				<Filter
 					Name="Blackrock Depths"
 					>
+					<File
+						RelativePath="..\scripts\zone\blackrock_depths\blackrock_depths.cpp"
+						>
+					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_ambassador_flamelash.cpp"
 						>
@@ -2035,10 +2059,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_warder_stilgiss.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\blackrock_depths.cpp"
 						>
 					</File>
 				</Filter>

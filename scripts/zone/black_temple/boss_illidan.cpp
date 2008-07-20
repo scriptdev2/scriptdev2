@@ -809,6 +809,23 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     }
 };
 
+/************* Custom check used for Agonizing Flames ***************/
+class AgonizingFlamesTargetCheck
+{
+public:
+    AgonizingFlamesTargetCheck(Unit const* unit) : pUnit(unit) {}
+    bool operator() (Player* plr)
+    {
+        if(plr->isGameMaster() && pUnit->GetDistance2d(plr) > 225) // Faster than square rooting
+            return true;
+
+        return false;
+    }
+
+private:
+    Unit const* pUnit;
+};
+
 /************************************** Illidan's AI ***************************************/
 struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 {
@@ -1053,7 +1070,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     {
         m_creature->InterruptNonMeleeSpells(false);
 
-        GlobalTimer += 30000;
+        DarkBarrageTimer += 10000;
 
         DoYell(SAY_EYE_BLAST, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_EYE_BLAST);
@@ -1090,6 +1107,31 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 }
             }
         }
+    }
+
+    // It's only cast on players that are greater than 15 yards away from Illidan. If no one is found, cast it on MT instead (since selecting someone in that 15 yard radius would cause the flames to hit the MT anyway).
+    void CastAgonizingFlames()
+    {
+        // We'll use grid searching for this, using a custom searcher that selects a player that is at a distance >15 yards
+        Player* target = NULL;
+
+        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
+        Cell cell(pair);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        AgonizingFlamesTargetCheck check(m_creature);
+        MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck> searcher(target, check);
+        TypeContainerVisitor
+            <MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck>, GridTypeMapContainer> visitor(searcher);
+
+        CellLock<GridReadGuard> cell_lock(cell, pair);
+        cell_lock->Visit(cell_lock, visitor, *(m_creature->GetMap()));
+
+        if(target)
+            DoCast(target, SPELL_AGONIZING_FLAMES);
+        else 
+            DoCast(m_creature->getVictim(), SPELL_AGONIZING_FLAMES);
     }
 
     void Talk(uint32 count)
@@ -1638,7 +1680,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 {
                     Cast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
                     FireballTimer = 5000;
-                    GlobalTimer += 1500;
                 }else FireballTimer -= diff;
 
                 if(DarkBarrageTimer < diff)
@@ -1664,9 +1705,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             {
                 if(AgonizingFlamesTimer < diff)
                 {
-                    DoCast(m_creature->getVictim(), SPELL_AGONIZING_FLAMES);
+                    CastAgonizingFlames();
                     AgonizingFlamesTimer = 60000;
-                    GlobalTimer += 1500;
                 }else AgonizingFlamesTimer -= diff;
             }else GlobalTimer -= diff;
            
@@ -1719,13 +1759,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         {
                             ShadowDemon->AddThreat(target, 5000000.0f);
                             ShadowDemon->AI()->AttackStart(target);
-                            // Run through threatlist and give Shadow Demons targets if they kill the initial one.
-                            for(std::list<HostilReference*>::iterator itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
-                            {
-                                Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-                                if(pUnit && pUnit->isAlive())
-                                    ShadowDemon->AddThreat(pUnit, 1.0f);
-                            }
+                            DoZoneInCombat(ShadowDemon);
                         }
                     }
                 }
@@ -1823,8 +1857,6 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
         if(Illidan)
         {
             Illidan->RemoveAurasDueToSpell(SPELL_KNEEL); // Time for Illidan to stand up.
-            Illidan->SetInCombat(); // Get ready to begin attacking
-            m_creature->SetInCombat();
             ((boss_illidan_stormrageAI*)Illidan->AI())->TalkCount = 0; // First line of Akama-Illidan convo
             ((boss_illidan_stormrageAI*)Illidan->AI())->IsTalking = true; // Begin Talking
             ((boss_illidan_stormrageAI*)Illidan->AI())->AkamaGUID = m_creature->GetGUID();
@@ -1898,7 +1930,10 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
             Creature* Illidan = NULL;
             Illidan = ((Creature*)Unit::GetUnit((*m_creature), IllidanGUID));
             if(!Illidan || !Illidan->isAlive() || Illidan->IsInEvadeMode())
-                m_creature->setDeathState(JUST_DIED);
+            {
+                m_creature->SetVisibility(VISIBILITY_OFF);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
             else if(Illidan && ((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 2))
                 return;
         }
@@ -1926,6 +1961,8 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     cage_trap_triggerAI(Creature *c) : ScriptedAI(c) {Reset();}
    
     uint64 IllidanGUID;
+    uint64 CageTrapGUID;
+
     uint32 DespawnTimer;
 
     bool Active;
@@ -1934,6 +1971,7 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
     void Reset()
     {
         IllidanGUID = 0;
+        CageTrapGUID = 0;
 
         Active = false;
         SummonedBeams = false;
@@ -1954,13 +1992,16 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
         {
             if(who->GetEntry() == ILLIDAN_STORMRAGE) // Check if who is Illidan
             {
-                if(!IllidanGUID && (!who->HasAura(SPELL_CAGED, 0)) && m_creature->IsWithinDistInMap(who, 3))
+                if(!IllidanGUID && m_creature->IsWithinDistInMap(who, 3) && !who->HasAura(SPELL_CAGED, 0))
                 {
                     IllidanGUID = who->GetGUID();
                     who->CastSpell(who, SPELL_CAGED, true);
                     DespawnTimer = 5000;
                     if(who->HasAura(SPELL_ENRAGE, 0))
                         who->RemoveAurasDueToSpell(SPELL_ENRAGE); // Dispel his enrage
+
+                    if(GameObject* CageTrap = GameObject::GetGameObject(*m_creature, CageTrapGUID))
+                        CageTrap->SetLootState(GO_JUST_DEACTIVATED);
                 }
             }
         }
@@ -2006,19 +2047,13 @@ bool GOHello_cage_trap(Player* plr, GameObject* go)
 
     if(!trigger)
     {
-        error_log("SD2: Unable to locate Cage Trap Disturb Trigger (entry 23304). Forcing trap to spawn trigger.");
-        plr->GetSession()->SendNotification("SD2: Unable to locate Cage Trap Disturb Trigger (entry 23304). Forcing trap to spawn trigger.", LANG_UNIVERSAL, 0);
-        trigger = plr->SummonCreature(23304, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-        if(!trigger)
-        {
-            plr->GetSession()->SendNotification("SD2: Summon failed. This trap is now useless.", LANG_UNIVERSAL, 0);
-            error_log("SD2: Unable to spawn trigger. This Cage Trap is now useless");
-            return false;
-        }
+        plr->GetSession()->SendNotification("SD2: Summon failed. This trap is now useless.", LANG_UNIVERSAL, 0);
+        error_log("SD2: Cage Trap- Unable to find trigger. This Cage Trap is now useless");
+        return false;
     }
 
-    if(!((cage_trap_triggerAI*)trigger->AI())->Active)
-        ((cage_trap_triggerAI*)trigger->AI())->Active = true;
+    ((cage_trap_triggerAI*)trigger->AI())->Active = true;
+    go->SetUInt32Value(GAMEOBJECT_STATE, 0);
     return true;
 }
 
