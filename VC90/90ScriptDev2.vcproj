@@ -271,10 +271,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\npc\npc_mount_vendor.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\npc\npc_professions.cpp"
 					>
 				</File>

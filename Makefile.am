@@ -58,7 +58,6 @@ scripts/npc/npc_escortAI.cpp \
 scripts/npc/npc_escortAI.h \
 scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
-scripts/npc/npc_mount_vendor.cpp \
 scripts/npc/npc_professions.cpp \
 scripts/npc/npcs_darkmoon.cpp \
 scripts/npc/npcs_special.cpp \
