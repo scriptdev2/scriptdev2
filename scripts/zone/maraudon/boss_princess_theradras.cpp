@@ -21,14 +21,12 @@ SDComment:
 SDCategory: Maraudon
 EndScriptData */
 
-
 #include "sc_creature.h"
 
-#define SPELL_DUSTFIELD                21909   
-#define SPELL_BOULDER             21832     
-#define SPELL_KNOCKDOWN            19128
-#define SPELL_REPULSIVEGAZE                 21869      
-
+#define SPELL_DUSTFIELD             21909
+#define SPELL_BOULDER               21832
+#define SPELL_THRASH                3391
+#define SPELL_REPULSIVEGAZE         21869
 
 struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 {
@@ -36,19 +34,24 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
 
     uint32 Dustfield_Timer;
     uint32 Boulder_Timer;
-    uint32 Knockdown_Timer;
+    uint32 Thrash_Timer;
     uint32 RepulsiveGaze_Timer;
 
     void Reset()
-    {       
+    {
         Dustfield_Timer = 8000;
         Boulder_Timer = 2000;
-        Knockdown_Timer = 18000;
+        Thrash_Timer = 5000;
         RepulsiveGaze_Timer = 23000;
     }
 
     void Aggro(Unit *who)
     {
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        m_creature->SummonCreature(12238,28.067,61.875,-123.405,4.67,TEMPSUMMON_TIMED_DESPAWN,600000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -60,56 +63,41 @@ struct MANGOS_DLL_DECL boss_ptheradrasAI : public ScriptedAI
         //Dustfield_Timer
         if (Dustfield_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_DUSTFIELD);
-
-            //14 seconds
+            DoCast(m_creature,SPELL_DUSTFIELD);
             Dustfield_Timer = 14000;
         }else Dustfield_Timer -= diff;
 
         //Boulder_Timer
         if (Boulder_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_BOULDER);
-
-            //10 seconds until we should cast this agian
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if( target )
+                DoCast(target,SPELL_BOULDER);
             Boulder_Timer = 10000;
         }else Boulder_Timer -= diff;
-
-
-        //Knockdown_Timer
-        if (Knockdown_Timer < diff)
-        {
-
-            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
-
-            //12 seconds until we should cast this agian
-            Knockdown_Timer = 12000;
-        }else Knockdown_Timer -= diff;
 
         //RepulsiveGaze_Timer
         if (RepulsiveGaze_Timer < diff)
         {
-            //Cast Repulsive Gaze on a Random target
-            Unit* target = NULL;
-
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_REPULSIVEGAZE);
-
-            //20 seconds until we should cast this agian
+            DoCast(m_creature->getVictim(),SPELL_REPULSIVEGAZE);
             RepulsiveGaze_Timer = 20000;
         }else RepulsiveGaze_Timer -= diff;
 
+        //Thrash_Timer
+        if (Thrash_Timer < diff)
+        {
+            DoCast(m_creature,SPELL_THRASH);
+            Thrash_Timer = 18000;
+        }else Thrash_Timer -= diff;
+
         DoMeleeAttackIfReady();
     }
-
 }; 
 CreatureAI* GetAI_boss_ptheradras(Creature *_Creature)
 {
     return new boss_ptheradrasAI (_Creature);
 }
-
 
 void AddSC_boss_ptheradras()
 {
