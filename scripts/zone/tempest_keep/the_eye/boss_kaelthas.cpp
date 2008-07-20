@@ -386,7 +386,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             PrepareAdvisors();
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
         if(pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
