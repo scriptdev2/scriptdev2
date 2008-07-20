@@ -21,12 +21,11 @@ SDComment:
 SDCategory: Maraudon
 EndScriptData */
 
-
 #include "sc_creature.h"
 
-#define SPELL_WRATH                 21667
-#define SPELL_ENTANGLINGROOTS       21331
-#define SPELL_TWISTEDTRANQUILITY    21793
+#define SPELL_WRATH                 21807
+#define SPELL_ENTANGLINGROOTS       12747
+#define SPELL_CORRUPT_FORCES        21968
 
 struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
 {
@@ -34,46 +33,20 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
 
     uint32 Wrath_Timer;
     uint32 EntanglingRoots_Timer;
-    uint32 TwistedTranquility_Timer;
-    uint32 Adds_Timer;
-    int Rand;
-    int RandX;
-    int RandY;
-    Creature* Summoned;
+    uint32 CorruptForces_Timer;
 
     void Reset()
     {
         Wrath_Timer = 8000;
         EntanglingRoots_Timer = 2000;
-        TwistedTranquility_Timer = 20000;
-        Adds_Timer = 30000;
+        CorruptForces_Timer = 30000;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit *who) { }
+
+    void JustDied(Unit* Killer)
     {
-
-    }
-
-
-    void SummonAdds(Unit* victim)
-    {
-        Rand = rand()%8;
-        switch (rand()%2)
-        {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%8;
-        switch (rand()%2)
-        {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        Summoned = DoSpawnCreature(13743, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-        if(Summoned)
-            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+        m_creature->SummonCreature(13716, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 600000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -82,60 +55,38 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Wrath_Timer
+        //Wrath
         if (Wrath_Timer < diff)
         {
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_WRATH);
-
-            //20 seconds
-            Wrath_Timer = 20000;
+            if( target )
+                DoCast(target,SPELL_WRATH);
+            Wrath_Timer = 8000;
         }else Wrath_Timer -= diff;
 
-        //EntanglingRoots_Timer
+        //EntanglingRoots
         if (EntanglingRoots_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ENTANGLINGROOTS);
-
-            //12 seconds until we should cast this agian
-            EntanglingRoots_Timer = 12000;
+            EntanglingRoots_Timer = 20000;
         }else EntanglingRoots_Timer -= diff;
 
-
-        //TwistedTranquility_Timer
-        if (TwistedTranquility_Timer < diff)
+        //CorruptForces
+        if (CorruptForces_Timer < diff)
         {
-
-            DoCast(m_creature->getVictim(),SPELL_TWISTEDTRANQUILITY);
-
-            //30 seconds until we should cast this agian
-            TwistedTranquility_Timer = 30000;
-        }else TwistedTranquility_Timer -= diff;
-
-
-        //Adds_Timer
-        if (Adds_Timer < diff)
-        {
-            //Cast
-            SummonAdds(m_creature->getVictim());
-            SummonAdds(m_creature->getVictim());
-
-            //28 seconds until we should cast this agian
-            Adds_Timer = 28000;
-        }else Adds_Timer -= diff;
+            m_creature->InterruptNonMeleeSpells(false);
+            DoCast(m_creature,SPELL_CORRUPT_FORCES);
+            CorruptForces_Timer = 20000;
+        }else CorruptForces_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 }; 
 CreatureAI* GetAI_celebras_the_cursed(Creature *_Creature)
 {
     return new celebras_the_cursedAI (_Creature);
 }
-
 
 void AddSC_celebras_the_cursed()
 {

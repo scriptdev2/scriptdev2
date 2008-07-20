@@ -23,51 +23,27 @@ EndScriptData */
 
 #include "sc_creature.h"
 
-#define SPELL_KNOCKBACK             19813
-#define SPELL_WARSTOMP              24375
+#define SPELL_KNOCKAWAY         18670
+#define SPELL_TRAMPLE           5568
+#define SPELL_LANDSLIDE         21808
 
 struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
 {
     boss_landslideAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 KnockBack_Timer;
-    uint32 WarStomp_Timer;
-    uint32 Adds_Timer;
-    int Rand;
-    int RandX;
-    int RandY;
-    Creature* Summoned;
+    uint32 KnockAway_Timer;
+    uint32 Trample_Timer;
+    uint32 Landslide_Timer;
 
     void Reset()
     {       
-        KnockBack_Timer = 8000;
-        WarStomp_Timer = 2000;
-        Adds_Timer = 0;
+        KnockAway_Timer = 8000;
+        Trample_Timer = 2000;
+        Landslide_Timer = 0;
     }
 
     void Aggro(Unit *who)
     {
-    }
-
-    void SummonAdds(Unit* victim)
-    {
-        Rand = rand()%8;
-        switch (rand()%2)
-        {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
-        }
-        Rand = 0;
-        Rand = rand()%8;
-        switch (rand()%2)
-        {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
-        }
-        Rand = 0;
-        Summoned = DoSpawnCreature(2736, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
-        if(Summoned)
-            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
     void UpdateAI(const uint32 diff)
@@ -76,42 +52,29 @@ struct MANGOS_DLL_DECL boss_landslideAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //KnockBack_Timer
-        if (KnockBack_Timer < diff)
+        //KnockAway_Timer
+        if (KnockAway_Timer < diff)
         {
-            Unit* target = NULL;
+            DoCast(m_creature->getVictim(),SPELL_KNOCKAWAY);
+            KnockAway_Timer = 15000;
+        }else KnockAway_Timer -= diff;
 
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
-
-            //20 seconds
-            KnockBack_Timer = 15000;
-        }else KnockBack_Timer -= diff;
-
-        //WarStomp_Timer
-        if (WarStomp_Timer < diff)
+        //Trample_Timer
+        if (Trample_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
+            DoCast(m_creature,SPELL_TRAMPLE);
+            Trample_Timer = 8000;
+        }else Trample_Timer -= diff;
 
-            //12 seconds until we should cast this agian
-            WarStomp_Timer = 12000;
-        }else WarStomp_Timer -= diff;
-
-
-        //Adds_Timer
+        //Landslide
         if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
         {
-            if (Adds_Timer < diff)
+            if (Landslide_Timer < diff)
             {
-                // summon 3 Adds  
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-                SummonAdds(m_creature->getVictim());
-
-                //45 seconds until we should cast this agian
-                Adds_Timer = 45000;
-            } else Adds_Timer -= diff;
+                m_creature->InterruptNonMeleeSpells(false);
+                DoCast(m_creature,SPELL_LANDSLIDE);
+                Landslide_Timer = 60000;
+            } else Landslide_Timer -= diff;
         }
 
         DoMeleeAttackIfReady();
@@ -121,7 +84,6 @@ CreatureAI* GetAI_boss_landslide(Creature *_Creature)
 {
     return new boss_landslideAI (_Creature);
 }
-
 
 void AddSC_boss_landslide()
 {
