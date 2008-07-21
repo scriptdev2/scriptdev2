@@ -16,17 +16,21 @@
 
 /* ScriptData
 SDName: Boss_Murmur
-SD%Complete: 100
-SDComment: 
+SD%Complete: 75
+SDComment: Database should have `RegenHealth`=0 to prevent regen. Also, his shockwave triggered after magnetic pull may be incorrect. Murmur's Touch does not work properly.
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "sc_creature.h"
 
-#define SPELL_SONIC_BOOM           33666
-#define SPELL_SONIC_BOOM_CAST      38796
-#define SPELL_MURMURS_TOUCH        38794
-#define SPELL_RESONANCE            33657
+#define EMOTE_SONIC_BOOM            "draws energy from the air."
+
+#define SPELL_MAGNETIC_PULL         33689
+#define SPELL_SONIC_BOOM_PRE        33923
+#define SPELL_SONIC_BOOM_CAST       38795
+#define SPELL_MURMURS_TOUCH         33711
+#define SPELL_RESONANCE             33657
+#define SPELL_SHOCKWAVE             33686
 
 struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
 {
@@ -35,20 +39,28 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 SonicBoom_Timer;
     uint32 MurmursTouch_Timer;
     uint32 Resonance_Timer;
-    bool SonicBoomVisual;
+    uint32 MagneticPull_Timer;
+    bool CanSonicBoom;
+    bool CanShockWave;
+    Unit* target;
 
     void Reset()
     {
         SonicBoom_Timer = 30000;
         MurmursTouch_Timer = 20000;
         Resonance_Timer = 10000;
-        SonicBoomVisual = false;
+        MagneticPull_Timer = 45000;
+        CanSonicBoom = false;
+        CanShockWave = false;
+        target = NULL;
+
+        //database should have `RegenHealth`=0 to prevent regen
+        uint32 hp = m_creature->GetMaxHealth()*0.4;
+        if( hp )
+            m_creature->SetHealth(hp);
     }
 
-    void Aggro(Unit *who)
-    {
-
-    }
+    void Aggro(Unit *who) { }
 
     void AttackStart(Unit* who)
     {
@@ -99,41 +111,64 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         //SonicBoom_Timer
         if(SonicBoom_Timer < diff)
         {
-            if(!SonicBoomVisual)
+            if(CanSonicBoom)
             {
-                DoCast(m_creature, SPELL_SONIC_BOOM_CAST);
-                SonicBoomVisual = true;
-                SonicBoom_Timer = 5000;
+                DoCast(m_creature, SPELL_SONIC_BOOM_CAST,true);
+                CanSonicBoom = false;
+                SonicBoom_Timer = 30000;
             }
             else
             {
-                // it damage only the main tank, and it don't divides damage between other members / core related
-                //DoCast(m_creature->getVictim(), SPELL_SONIC_BOOM);
-                SonicBoomVisual = false;
-                SonicBoom_Timer = 30000;
+                DoTextEmote(EMOTE_SONIC_BOOM,NULL);
+                DoCast(m_creature,SPELL_SONIC_BOOM_PRE);
+                CanSonicBoom = true;
+                SonicBoom_Timer = 5000;
             }
         }else SonicBoom_Timer -= diff;
 
         //MurmursTouch_Timer
         if(MurmursTouch_Timer < diff)
         {
-            Unit* target = NULL;
+            /*Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
             if(target)
-                DoCast(target, SPELL_MURMURS_TOUCH);
-
+                DoCast(target, SPELL_MURMURS_TOUCH);*/
+            DoCast(m_creature, SPELL_MURMURS_TOUCH);
             MurmursTouch_Timer = 30000;
         }else MurmursTouch_Timer -= diff;
 
         //Resonance_Timer
         if(Resonance_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_RESONANCE);
-
-            Resonance_Timer = 40000;
+            if( !m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE) )
+                DoCast(m_creature->getVictim(), SPELL_RESONANCE);
+            Resonance_Timer = 5000;
         }else Resonance_Timer -= diff;
 
-        DoMeleeAttackIfReady();
+        //MagneticPull_Timer
+        if(MagneticPull_Timer < diff)
+        {
+            if( !CanShockWave )
+            {
+                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if( target )
+                    DoCast(target, SPELL_MAGNETIC_PULL);
+                MagneticPull_Timer = 2500;
+                CanShockWave = true;
+            }
+            else
+            {
+                if( target && target->isAlive() )
+                    target->CastSpell(target,SPELL_SHOCKWAVE,true);
+                MagneticPull_Timer = 35000;
+                CanShockWave = false;
+                target = NULL;
+            }
+        }else MagneticPull_Timer -= diff;
+
+        //no meele if preparing for sonic boom
+        if(!CanSonicBoom)
+            DoMeleeAttackIfReady();
     }
 }; 
 CreatureAI* GetAI_boss_murmur(Creature *_Creature)
