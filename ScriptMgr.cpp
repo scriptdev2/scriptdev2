@@ -1730,7 +1730,9 @@ InstanceData* CreateInstanceData(Map *map)
 {
     Script *tmpscript = NULL;
 
-    tmpscript = GetScriptByName(map->GetScript());
+    if(!map->IsDungeon()) return false;
+
+    tmpscript = GetScriptByName(((InstanceMap*)map)->GetScript());
     if(!tmpscript || !tmpscript->GetInstanceData) return false;
 
     return tmpscript->GetInstanceData(map);

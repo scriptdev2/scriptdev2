@@ -149,7 +149,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         data << field;
         data << value;
 
-        instance->SendToPlayers(&data);
+        //TODO: check if this is really proper way
+        ((InstanceMap*)instance)->SendToPlayers(&data);
     }
 
     const char* Save()

@@ -290,12 +290,15 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             {
                 if(WipeTimer < diff)
                 {
-                    Map::PlayerList const& PlayerList = m_creature->GetMap()->GetPlayers();
+                    Map *map = m_creature->GetMap();
+                    if(!map->IsDungeon()) return;
+
+                    InstanceMap::PlayerList const &PlayerList = ((InstanceMap*)map)->GetPlayers();
                     if(PlayerList.empty())
                         return;
 
                     RaidWiped = true;
-                    for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
+                    for(InstanceMap::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
                     {
                         if((*i)->isAlive() && !(*i)->isGameMaster())
                         {

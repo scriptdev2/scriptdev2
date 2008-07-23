@@ -445,7 +445,9 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
     if (!pUnit)
         pUnit = m_creature;
 
-    if (!pUnit->GetMap()->Instanceable())
+    Map *map = pUnit->GetMap();
+
+    if (!map->IsDungeon())                                  //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
     {
         error_log("SD2: DoZoneInCombat call for map that isn't an instance (pUnit entry = %d)", pUnit->GetTypeId() == TYPEID_UNIT ? ((Creature*)pUnit)->GetCreatureInfo()->Entry : 0);
         return;
@@ -458,8 +460,9 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
         return;
     }
 
-    Map::PlayerList const& PlayerList = pUnit->GetMap()->GetPlayers();
-    for(Map::PlayerList::const_iterator i = PlayerList.begin();i != PlayerList.end(); ++i)
+    InstanceMap::PlayerList const &PlayerList = ((InstanceMap*)map)->GetPlayers();
+    InstanceMap::PlayerList::const_iterator i;
+    for (i = PlayerList.begin(); i != PlayerList.end(); ++i)
     {
         if(!(*i)->isGameMaster())
         {
