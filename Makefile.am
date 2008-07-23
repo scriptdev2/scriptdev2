@@ -34,6 +34,7 @@ config.h \
 include/sc_creature.cpp \
 include/sc_creature.h \
 include/sc_gossip.h \
+include/sc_grid_searchers.h \
 include/sc_instance.h \
 include/sc_item.h \
 scripts/boss/boss_emeriss.cpp \
@@ -73,8 +74,8 @@ scripts/zone/aunchindoun/shadow_labyrinth/boss_grandmaster_vorpil.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/boss_murmur.cpp \
 scripts/zone/aunchindoun/shadow_labyrinth/def_shadow_labyrinth.h \
 scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
-scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azshara/azshara.cpp \
+scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/npcs_azuremyst_isle.cpp \
 scripts/zone/barrens/npcs_the_barrens.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \
@@ -193,8 +194,8 @@ scripts/zone/hellfire_citadel/magtheridons_lair/def_magtheridons_lair.h \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
-scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
 scripts/zone/hellfire_peninsula/hellfire_peninsula.cpp \
+scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
 scripts/zone/ironforge/npcs_ironforge.cpp \
 scripts/zone/isle_of_queldanas/npcs_isle_of_queldanas.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
@@ -211,6 +212,11 @@ scripts/zone/karazhan/def_karazhan.h \
 scripts/zone/karazhan/instance_karazhan.cpp \
 scripts/zone/karazhan/npcs_karazhan.cpp \
 scripts/zone/loch_modan/npcs_loch_modan.cpp \
+scripts/zone/magisters_terrace/boss_priestess_delrissa.cpp \
+scripts/zone/magisters_terrace/boss_selin_fireheart.cpp \
+scripts/zone/magisters_terrace/boss_vexallus.cpp \
+scripts/zone/magisters_terrace/def_magisters_terrace.h \
+scripts/zone/magisters_terrace/instance_magisters_terrace.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_noxxion.cpp \
 scripts/zone/maraudon/boss_princess_theradras.cpp \
@@ -228,11 +234,6 @@ scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/def_molten_core.h \
 scripts/zone/molten_core/instance_molten_core.cpp \
 scripts/zone/molten_core/mobs_molten_core.cpp \
-scripts/zone/magisters_terrace/boss_selin_fireheart.cpp \
-scripts/zone/magisters_terrace/boss_vexallus.cpp \
-scripts/zone/magisters_terrace/boss_priestess_delrissa.cpp \
-scripts/zone/magisters_terrace/def_magisters_terrace.h \
-scripts/zone/magisters_terrace/instance_magisters_terrace.cpp \
 scripts/zone/moonglade/npcs_moonglade.cpp \
 scripts/zone/mulgore/npcs_mulgore.cpp \
 scripts/zone/nagrand/nagrand.cpp \

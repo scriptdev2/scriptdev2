@@ -1,0 +1,97 @@
+#include "Unit.h"
+#include "Gameobject.h"
+
+//Used in:
+//sc_creature.cpp - DoSelectLowestHpFriendly()
+class MostHPMissingInRange
+{
+public:
+    MostHPMissingInRange(Unit const* obj, float range, uint32 hp) : i_obj(obj), i_range(range), i_hp(hp) {}
+    bool operator()(Unit* u)
+    {
+        if(u->isAlive() && u->isInCombat() && !i_obj->IsHostileTo(u) && i_obj->IsWithinDistInMap(u, i_range) && u->GetMaxHealth() - u->GetHealth() > i_hp)
+        {
+            i_hp = u->GetMaxHealth() - u->GetHealth();
+            return true;
+        }
+        return false;
+    }
+private:
+    Unit const* i_obj;
+    float i_range;
+    uint32 i_hp;
+};
+
+//Used in:
+//sc_creature.cpp - DoFindFriendlyCC()
+class FriendlyCCedInRange
+{
+public:
+    FriendlyCCedInRange(Unit const* obj, float range) : i_obj(obj), i_range(range) {}
+    bool operator()(Unit* u)
+    {
+        if(u->isAlive() && u->isInCombat() && !i_obj->IsHostileTo(u) && i_obj->IsWithinDistInMap(u, i_range) &&
+            (u->isFeared() || u->isCharmed() || u->isFrozen() || u->hasUnitState(UNIT_STAT_STUNDED) || u->hasUnitState(UNIT_STAT_STUNDED) || u->hasUnitState(UNIT_STAT_CONFUSED)))
+        {
+            return true;
+        }
+        return false;
+    }
+private:
+    Unit const* i_obj;
+    float i_range;
+};
+
+//Used in:
+//sc_creature.cpp - DoFindFriendlyMissingBuff()
+class FriendlyMissingBuffInRange
+{
+public:
+    FriendlyMissingBuffInRange(Unit const* obj, float range, uint32 spellid) : i_obj(obj), i_range(range), i_spell(spellid) {}
+    bool operator()(Unit* u)
+    {
+        if(u->isAlive() && u->isInCombat() && !i_obj->IsHostileTo(u) && i_obj->IsWithinDistInMap(u, i_range) && 
+            !(u->HasAura(i_spell, 0) || u->HasAura(i_spell, 1) || u->HasAura(i_spell, 2)))
+        {
+            return true;
+        }
+        return false;
+    }
+private:
+    Unit const* i_obj;
+    float i_range;
+    uint32 i_spell;
+};
+
+//Used in:
+//hyjalAI.cpp
+class AllFriendlyCreaturesInGrid
+{
+public:
+    AllFriendlyCreaturesInGrid(Unit const* obj) : pUnit(obj) {}
+    bool operator() (Unit* u)
+    {
+        if(u->isAlive() && u->GetVisibility() == VISIBILITY_ON && u->IsFriendlyTo(pUnit))
+            return true;
+
+        return false;
+    }
+
+private:
+    Unit const* pUnit;
+};
+
+//Used in:
+//hyjalAI.cpp
+class AllAncientGemVeinsInGrid
+{
+public:
+    AllAncientGemVeinsInGrid() {}
+    bool operator() (GameObject* g)
+    {
+        if(g->GetEntry() == 185557)
+            return true;
+
+        return false;
+    }
+};

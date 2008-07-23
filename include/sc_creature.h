@@ -78,7 +78,16 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //Called at creature killing another unit
     void KilledUnit(Unit*){}
 
-    //Called at creature respawn
+    // Called when the creature summon successfully other creature
+    void JustSummoned(Creature* ) {}
+
+    // Called when a summoned creature is despawned
+    void SummonedCreatureDespawn(Creature* /*unit*/) {}
+
+    // Called when hit by a spell
+    void SpellHit(Unit*, const SpellEntry*) {}
+
+    // Called when creature is spawned or respawned (for reseting variables)
     void JustRespawned();
 
     //Called at waypoint reached or PointMovement end
@@ -149,6 +158,12 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 
     //Returns friendly unit with the most amount of hp missing from max hp
     Unit* DoSelectLowestHpFriendly(float range, uint32 MinHPDiff = 1);
+
+    //Returns a list of friendly CC'd units within range
+    std::list<Creature*> DoFindFriendlyCC(float range);
+
+    //Returns a list of all friendly units missing a specific buff within range
+    std::list<Creature*> DoFindFriendlyMissingBuff(float range, uint32 spellid);
 
     //Spawns a creature relative to m_creature
     Creature* DoSpawnCreature(uint32 id, float x, float y, float z, float angle, uint32 type, uint32 despawntime);

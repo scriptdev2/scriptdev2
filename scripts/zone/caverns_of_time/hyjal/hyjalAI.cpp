@@ -30,6 +30,8 @@ EndScriptData */
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 
+#include "sc_grid_searchers.h"
+
 float AllianceBase[4][3]= // Locations for summoning waves in Alliance base
 {
     {4979.010, -1709.134, 1339.674},
@@ -288,35 +290,6 @@ void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
     // TODO: Uncomment and remove everything above this line only when the core patch for this is accepted
     //m_creature->GetMap()->UpdateWorldState(field, value);
 }
-
-class AllFriendlyCreaturesInGrid
-{
-public:
-    AllFriendlyCreaturesInGrid(Unit const* obj) : pUnit(obj) {}
-    bool operator() (Unit* u)
-    {
-        if(u->isAlive() && u->GetVisibility() == VISIBILITY_ON && u->IsFriendlyTo(pUnit))
-            return true;
-
-        return false;
-    }
-
-private:
-    Unit const* pUnit;
-};
-
-class AllAncientGemVeinsInGrid
-{
-public:
-    AllAncientGemVeinsInGrid() {}
-    bool operator() (GameObject* g)
-    {
-        if(g->GetEntry() == 185557)
-            return true;
-
-        return false;
-    }
-};
 
 void hyjalAI::Retreat()
 {
