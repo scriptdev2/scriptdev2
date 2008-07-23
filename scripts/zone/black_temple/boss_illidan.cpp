@@ -402,13 +402,13 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
             pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
             GameObject* Gate = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
             if( Gate && !Gate->GetGoState() )
-                Gate->SetGoState(GO_READY);                 // close door if already open (when raid wipes or something)
+                Gate->SetGoState(1);                        // close door if already open (when raid wipes or something)
             
             for(uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L + 1; ++i)
             {
                 GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
                 if(Door)
-                    Door->SetGoState(GO_NOT_READY);
+                    Door->SetGoState(0);
             }
         }
 
@@ -543,7 +543,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                     {
                         GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
                         if(Door)
-                            Door->SetGoState(GO_NOT_READY);
+                            Door->SetGoState(0);
                     }
                 }
             case 7:
@@ -691,7 +691,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                             }
                             GameObject* Gate = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE));
                             if(Gate)
-                                Gate->SetGoState(GO_NOT_READY);
+                                Gate->SetGoState(0);
                             ChannelCount++;
                             ChannelTimer = 5000;
                         }
@@ -1024,7 +1024,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
             if(Door)
-                Door->SetGoState(GO_NOT_READY);             // Open Doors
+                Door->SetGoState(0);                        // Open Doors
         }
 
     }
@@ -1847,7 +1847,7 @@ void npc_akama_illidanAI::BeginEvent(uint64 PlayerGUID)
         {
             GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(i));
             if(Door)
-                Door->SetGoState(GO_READY);
+                Door->SetGoState(1);
         }
 
     if(IllidanGUID)
@@ -2053,7 +2053,7 @@ bool GOHello_cage_trap(Player* plr, GameObject* go)
     }
 
     ((cage_trap_triggerAI*)trigger->AI())->Active = true;
-    go->SetGoState(GO_NOT_READY);
+    go->SetGoState(0);
     return true;
 }
 

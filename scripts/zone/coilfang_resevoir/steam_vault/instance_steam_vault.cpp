@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
     {
         //open the door
         go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetGoState(GO_NOT_READY);
+        go->SetGoState(0);
     }
 
     void CheckInstanceStatus()

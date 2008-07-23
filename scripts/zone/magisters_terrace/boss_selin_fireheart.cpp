@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
             GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR));
             if(Door)
-                Door->SetGoState(GO_READY);                 // Close the door. Open it only in JustDied.
+                Door->SetGoState(1);                        // Close the door. Open it only in JustDied.
 
             pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED); // Set Inst data for encounter
         }else error_log(ERROR_INST_DATA);
@@ -216,7 +216,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
         GameObject* EncounterDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR));
         if(EncounterDoor)
-            EncounterDoor->SetGoState(GO_READY);            // Open door now
+            EncounterDoor->SetGoState(1);                   // Open door now
 
         ShatterRemainingCrystals();
     }
