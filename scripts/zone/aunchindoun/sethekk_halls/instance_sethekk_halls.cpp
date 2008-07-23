@@ -51,7 +51,7 @@ struct MANGOS_DLL_DECL instance_sethekk_halls : public ScriptedInstance
     {
         //open the door
         go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetUInt32Value(GAMEOBJECT_STATE, 0);
+        go->SetGoState(GO_NOT_READY);
     }
 
     void SetData(uint32 type, uint32 data)

@@ -231,7 +231,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
         if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_DELRISSA_DOOR)))
-            Door->SetUInt32Value(GAMEOBJECT_STATE, 0);
+            Door->SetGoState(GO_NOT_READY);
     }
 
     void CheckLootable()

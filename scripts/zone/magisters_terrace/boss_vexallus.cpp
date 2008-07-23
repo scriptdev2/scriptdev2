@@ -99,7 +99,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             if(Door)
 			{
                 DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-                Door->SetInt32Value(GAMEOBJECT_STATE, 0);
+                Door->SetGoState(GO_NOT_READY);
 			}
 		}
     }

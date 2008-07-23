@@ -147,11 +147,11 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
             GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
             if(Door)
-                Door->SetUInt32Value(GAMEOBJECT_STATE, 1);
+                Door->SetGoState(GO_READY);
 
             GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
             if(Curtain)
-                Curtain->SetUInt32Value(GAMEOBJECT_STATE, 1);
+                Curtain->SetGoState(GO_READY);
 
             debug_log("SD2: Barnes Opera Event - Event is %d", Event);
         }
@@ -186,7 +186,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 {
                     GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
                     if(Door)
-                        Door->SetUInt32Value(GAMEOBJECT_STATE, 1);
+                        Door->SetGoState(GO_READY);
                 }
                 IsBeingEscorted = false;
                 PerformanceReady = true;
