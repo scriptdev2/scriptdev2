@@ -2034,7 +2034,7 @@
 					Name="Shattrath City"
 					>
 					<File
-						RelativePath="..\scripts\zone\shattrath\npcs_shattrath_city.cpp"
+						RelativePath="..\scripts\zone\shattrath\shattrath_city.cpp"
 						>
 					</File>
 				</Filter>

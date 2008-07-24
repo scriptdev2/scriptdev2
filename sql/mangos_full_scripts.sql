@@ -619,6 +619,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_mature_netherwing_drake' WHERE 
 UPDATE `creature_template` SET `ScriptName`='mob_enslaved_netherwing_drake' WHERE `entry`=21722;
 
 /* SHATTRATH */
+UPDATE `creature_template` SET `ScriptName`='npc_salsalabim' WHERE `entry`=18584;
 UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
 UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
 

@@ -433,7 +433,7 @@ extern void AddSC_boss_doomwalker();
 extern void AddSC_shadowmoon_valley();
 
 //Shattrath
-extern void AddSC_npcs_shattrath_city();
+extern void AddSC_shattrath_city();
 
 //Silithus
 extern void AddSC_npcs_silithus();
@@ -1302,7 +1302,7 @@ void ScriptsInit()
     AddSC_shadowmoon_valley();
 
     //Shattrath
-    AddSC_npcs_shattrath_city();
+    AddSC_shattrath_city();
 
     //Silithus
     AddSC_npcs_silithus();

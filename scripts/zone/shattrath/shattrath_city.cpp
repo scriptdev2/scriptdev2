@@ -15,13 +15,84 @@
 */
 
 /* ScriptData
-SDName: Npcs_Shattrath_City
+SDName: Shattrath_City
 SD%Complete: 100
-SDComment: Flask vendors, Teleport to Caverns of Time
+SDComment: Quest support: 10004. Flask vendors, Teleport to Caverns of Time
 SDCategory: Shattrath City
 EndScriptData */
 
+#include "sc_creature.h"
 #include "sc_gossip.h"
+
+/*######
+# npc_salsalabim
+######*/
+
+#define FACTION_HOSTILE                 90
+#define FACTION_FRIENDLY                35
+#define QUEST_10004                     10004
+
+#define SPELL_MAGNETIC_PULL             31705
+
+struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
+{
+    npc_salsalabimAI(Creature* c) : ScriptedAI(c) { Reset(); }
+
+    uint32 MagneticPull_Timer;
+
+    void Reset()
+    {
+        MagneticPull_Timer = 15000;
+        m_creature->setFaction(FACTION_FRIENDLY);
+    }
+
+    void Aggro(Unit *who) {}
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if( done_by->GetTypeId() == TYPEID_PLAYER )
+            if( (m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 20 )
+            {
+                ((Player*)done_by)->GroupEventHappens(QUEST_10004,m_creature);
+                damage = 0;
+                EnterEvadeMode();
+            }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if( MagneticPull_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_MAGNETIC_PULL);
+            MagneticPull_Timer = 15000;
+        }else MagneticPull_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_npc_salsalabim(Creature *_Creature)
+{
+    return new npc_salsalabimAI (_Creature);
+}
+
+bool GossipHello_npc_salsalabim(Player *player, Creature *_Creature)
+{
+    if( player->GetQuestStatus(QUEST_10004) == QUEST_STATUS_INCOMPLETE )
+    {
+        _Creature->setFaction(FACTION_HOSTILE);
+        ((npc_salsalabimAI*)_Creature->AI())->AttackStart(player);
+    }
+    else
+    {
+        if( _Creature->isQuestGiver() )
+            player->PrepareQuestMenu( _Creature->GetGUID() );
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    }
+    return true;
+}
 
 /*
 ##################################################
@@ -96,9 +167,15 @@ bool GossipSelect_npc_zephyr(Player *player, Creature *_Creature, uint32 sender,
     return true;
 }
 
-void AddSC_npcs_shattrath_city()
+void AddSC_shattrath_city()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_salsalabim";
+    newscript->GetAI = GetAI_npc_salsalabim;
+    newscript->pGossipHello =  &GossipHello_npc_salsalabim;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_shattrathflaskvendors";
@@ -107,8 +184,8 @@ void AddSC_npcs_shattrath_city()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-	newscript->Name="npc_zephyr";
-	newscript->pGossipHello =  &GossipHello_npc_zephyr;
-	newscript->pGossipSelect = &GossipSelect_npc_zephyr;
-	m_scripts[nrscripts++] = newscript;
+    newscript->Name="npc_zephyr";
+    newscript->pGossipHello =  &GossipHello_npc_zephyr;
+    newscript->pGossipSelect = &GossipSelect_npc_zephyr;
+    m_scripts[nrscripts++] = newscript;
 }
