@@ -17,19 +17,89 @@
 /* ScriptData
 SDName: Shattrath_City
 SD%Complete: 100
-SDComment: Quest support: 10004. Flask vendors, Teleport to Caverns of Time
+SDComment: Quest support: 10004, 10009. Flask vendors, Teleport to Caverns of Time
 SDCategory: Shattrath City
 EndScriptData */
+
+/* ContentData
+npc_raliq_the_drunk
+npc_salsalabim
+npc_shattrathflaskvendors
+npc_zephyr
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######
+## npc_raliq_the_drunk
+######*/
+
+#define GOSSIP_RALIQ            "You owe Sim'salabim money. Hand them over or die!"
+
+#define FACTION_HOSTILE_RD      45
+#define FACTION_FRIENDLY_RD     35
+
+#define SPELL_UPPERCUT          10966
+
+struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
+{
+    npc_raliq_the_drunkAI(Creature* c) : ScriptedAI(c) { Reset(); }
+
+    uint32 Uppercut_Timer;
+
+    void Reset()
+    {
+        Uppercut_Timer = 5000;
+        m_creature->setFaction(FACTION_FRIENDLY_RD);
+    }
+
+    void Aggro(Unit *who) {}
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if( Uppercut_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
+            Uppercut_Timer = 15000;
+        }else Uppercut_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_npc_raliq_the_drunk(Creature *_Creature)
+{
+    return new npc_raliq_the_drunkAI (_Creature);
+}
+
+bool GossipHello_npc_raliq_the_drunk(Player *player, Creature *_Creature )
+{
+    if( player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(9440, _Creature->GetGUID());
+    return true;
+}
+bool GossipSelect_npc_raliq_the_drunk(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+    {
+        player->CLOSE_GOSSIP_MENU();
+        _Creature->setFaction(FACTION_HOSTILE_RD);
+        ((npc_raliq_the_drunkAI*)_Creature->AI())->AttackStart(player);
+    }
+    return true;
+}
+
+/*######
 # npc_salsalabim
 ######*/
 
-#define FACTION_HOSTILE                 90
-#define FACTION_FRIENDLY                35
+#define FACTION_HOSTILE_SA              90
+#define FACTION_FRIENDLY_SA             35
 #define QUEST_10004                     10004
 
 #define SPELL_MAGNETIC_PULL             31705
@@ -43,7 +113,7 @@ struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
     void Reset()
     {
         MagneticPull_Timer = 15000;
-        m_creature->setFaction(FACTION_FRIENDLY);
+        m_creature->setFaction(FACTION_FRIENDLY_SA);
     }
 
     void Aggro(Unit *who) {}
@@ -82,7 +152,7 @@ bool GossipHello_npc_salsalabim(Player *player, Creature *_Creature)
 {
     if( player->GetQuestStatus(QUEST_10004) == QUEST_STATUS_INCOMPLETE )
     {
-        _Creature->setFaction(FACTION_HOSTILE);
+        _Creature->setFaction(FACTION_HOSTILE_SA);
         ((npc_salsalabimAI*)_Creature->AI())->AttackStart(player);
     }
     else
@@ -170,6 +240,12 @@ bool GossipSelect_npc_zephyr(Player *player, Creature *_Creature, uint32 sender,
 void AddSC_shattrath_city()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_raliq_the_drunk";
+    newscript->pGossipHello =  &GossipHello_npc_raliq_the_drunk;
+    newscript->pGossipSelect = &GossipSelect_npc_raliq_the_drunk;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_salsalabim";

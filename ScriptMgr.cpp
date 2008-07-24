@@ -533,7 +533,7 @@ extern void AddSC_npcs_western_plaguelands();
 extern void AddSC_npcs_winterspring();
 
 //Zangarmarsh
-extern void AddSC_npcs_zangarmarsh();
+extern void AddSC_zangarmarsh();
 
 //Zul'Farrak
 //Zul'Gurub
@@ -1402,7 +1402,7 @@ void ScriptsInit()
     AddSC_npcs_winterspring();
 
     //Zangarmarsh
-    AddSC_npcs_zangarmarsh();
+    AddSC_zangarmarsh();
 
     //Zul'Farrak
     //Zul'Gurub

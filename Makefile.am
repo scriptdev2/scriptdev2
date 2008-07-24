@@ -358,7 +358,7 @@ scripts/zone/uldaman/uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
 scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \
 scripts/zone/winterspring/npcs_winterspring.cpp \
-scripts/zone/zangarmarsh/npcs_zangarmarsh.cpp \
+scripts/zone/zangarmarsh/zangarmarsh.cpp \
 scripts/zone/zulaman/boss_janalai.cpp \
 scripts/zone/zulaman/boss_nalorakk.cpp \
 scripts/zone/zulaman/def_zulaman.h \

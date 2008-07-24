@@ -619,6 +619,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_mature_netherwing_drake' WHERE 
 UPDATE `creature_template` SET `ScriptName`='mob_enslaved_netherwing_drake' WHERE `entry`=21722;
 
 /* SHATTRATH */
+UPDATE `creature_template` SET `ScriptName`='npc_raliq_the_drunk' WHERE `entry`=18585;
 UPDATE `creature_template` SET `ScriptName`='npc_salsalabim' WHERE `entry`=18584;
 UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
 UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
@@ -750,6 +751,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_spawn_of_fankriss' WHERE `entry
 UPDATE `creature_template` SET `ScriptName`='mob_infested_root_walker' WHERE `entry`=22095;
 UPDATE `creature_template` SET `ScriptName`='mob_netherweb_victim' WHERE `entry`=22355;
 UPDATE `creature_template` SET `ScriptName`='mob_rotting_forest_rager' WHERE `entry`=22307;
+UPDATE `creature_template` SET `ScriptName`='npc_floon' WHERE `entry`=18588;
 UPDATE `creature_template` SET `ScriptName`='npc_skyguard_handler_irena' WHERE `entry`=23413;
 
 /* THOUSAND NEEDLES */
@@ -794,6 +796,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_witch_doctor_mauari' WHERE `ent
 
 /* ZANGARMARSH */
 UPDATE `creature_template` SET `ScriptName`='npcs_ashyen_and_keleth' WHERE `entry` IN (17900,17901);
+UPDATE `creature_template` SET `ScriptName`='npc_cooshcoosh' WHERE `entry`=18586;
 UPDATE `creature_template` SET `ScriptName`='npc_elder_kuruti' WHERE `entry`=18197;
 UPDATE `creature_template` SET `ScriptName`='npc_mortog_steamhead' WHERE `entry`=23373;
 

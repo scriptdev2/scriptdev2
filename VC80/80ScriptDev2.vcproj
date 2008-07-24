@@ -1794,7 +1794,7 @@
 					Name="Zangarmarsh"
 					>
 					<File
-						RelativePath="..\scripts\zone\zangarmarsh\npcs_zangarmarsh.cpp"
+						RelativePath="..\scripts\zone\zangarmarsh\zangarmarsh.cpp"
 						>
 					</File>
 				</Filter>

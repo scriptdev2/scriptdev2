@@ -15,12 +15,13 @@
 */
 
 /* ScriptData
-SDName: Npcs_Zangarmarsh
-SD%Complete: 95
-SDComment: Quest support: 9785, 9803. Mark Of ... buffs.
+SDName: Zangarmarsh
+SD%Complete: 100
+SDComment: Quest support: 9785, 9803, 10009. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
+#include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*######
@@ -106,6 +107,69 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature *_Creature, ui
 }
 
 /*######
+## npc_cooshcoosh
+######*/
+
+#define GOSSIP_COOSH            "You owe Sim'salabim money. Hand them over or die!"
+
+#define FACTION_HOSTILE_CO      45
+#define FACTION_FRIENDLY_CO     35
+
+#define SPELL_LIGHTNING_BOLT    9532
+
+struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
+{
+    npc_cooshcooshAI(Creature* c) : ScriptedAI(c) { Reset(); }
+
+    uint32 LightningBolt_Timer;
+
+    void Reset()
+    {
+        LightningBolt_Timer = 2000;
+        m_creature->setFaction(FACTION_FRIENDLY_CO);
+    }
+
+    void Aggro(Unit *who) {}
+
+    void UpdateAI(const uint32 diff)
+    {
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if( LightningBolt_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_LIGHTNING_BOLT);
+            LightningBolt_Timer = 5000;
+        }else LightningBolt_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_npc_cooshcoosh(Creature *_Creature)
+{
+    return new npc_cooshcooshAI (_Creature);
+}
+
+bool GossipHello_npc_cooshcoosh(Player *player, Creature *_Creature )
+{
+    if( player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(9441, _Creature->GetGUID());
+    return true;
+}
+bool GossipSelect_npc_cooshcoosh(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+    {
+        player->CLOSE_GOSSIP_MENU();
+        _Creature->setFaction(FACTION_HOSTILE_CO);
+        ((npc_cooshcooshAI*)_Creature->AI())->AttackStart(player);
+    }
+    return true;
+}
+
+/*######
 ## npc_elder_kuruti
 ######*/
 
@@ -181,7 +245,7 @@ bool GossipSelect_npc_mortog_steamhead(Player *player, Creature *_Creature, uint
 ## AddSC
 ######*/
 
-void AddSC_npcs_zangarmarsh()
+void AddSC_zangarmarsh()
 {
     Script *newscript;
 
@@ -189,6 +253,12 @@ void AddSC_npcs_zangarmarsh()
     newscript->Name="npcs_ashyen_and_keleth";
     newscript->pGossipHello =  &GossipHello_npcs_ashyen_and_keleth;
     newscript->pGossipSelect = &GossipSelect_npcs_ashyen_and_keleth;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_cooshcoosh";
+    newscript->pGossipHello =  &GossipHello_npc_cooshcoosh;
+    newscript->pGossipSelect = &GossipSelect_npc_cooshcoosh;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
