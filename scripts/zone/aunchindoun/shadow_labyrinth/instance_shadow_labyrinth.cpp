@@ -21,7 +21,6 @@ SDComment: VERIFY SCRIPT
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_shadow_labyrinth.h"
 #include "GameObject.h"
 

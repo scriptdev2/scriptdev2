@@ -21,7 +21,6 @@ SDComment: Missing Void Rifts, Void Traveler, and Draw Shadows
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_shadow_labyrinth.h"
 
 #define SPELL_DRAW_SHADOW_VISUAL       33563 // right but only animation works / too complex, it's useless implement it

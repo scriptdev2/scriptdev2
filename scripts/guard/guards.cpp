@@ -43,7 +43,6 @@ EndScriptData */
  * 
  *******************************************************/
 
-#include "sc_creature.h"
 #include "guard_ai.h"
 #include "sc_gossip.h"
 

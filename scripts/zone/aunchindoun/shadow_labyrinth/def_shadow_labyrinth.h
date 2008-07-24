@@ -1,6 +1,7 @@
 #ifndef DEF_SHADOW_LABYRINTH_H
 #define DEF_SHADOW_LABYRINTH_H
 
+#include "sc_creature.h"
 #include "sc_instance.h"
 
 #define DATA_AMBASSADORHELLMAWEVENT 1

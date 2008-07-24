@@ -21,7 +21,6 @@ SDComment:
 SDCategory: Magister's Terrace
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_magisters_terrace.h"
 #include "GameObject.h"
 

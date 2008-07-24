@@ -22,7 +22,6 @@ SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "def_serpent_shrine.h"
-#include "Map.h"
 #include "Player.h"
 
 //Karathress spells

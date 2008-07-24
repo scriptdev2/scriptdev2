@@ -21,7 +21,6 @@ SDComment: Using escortAI for movement to door. Might need additional code in ca
 SDCategory: Shadowfang Keep
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 #include "../../npc/npc_escortAI.h"
 #include "def_shadowfang_keep.h"

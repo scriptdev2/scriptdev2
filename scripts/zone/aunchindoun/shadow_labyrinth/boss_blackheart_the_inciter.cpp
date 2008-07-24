@@ -21,9 +21,7 @@ SDComment: Incite Chaos NYI since core lacks Mind Control support
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_shadow_labyrinth.h"
-#include "../../../creature/simple_ai.h"
 
 //#define SPELL_INCITE_CHAOS    33684
 #define SPELL_CHARGE          24408

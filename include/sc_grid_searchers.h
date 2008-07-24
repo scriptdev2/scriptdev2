@@ -1,5 +1,5 @@
 #include "Unit.h"
-#include "Gameobject.h"
+#include "GameObject.h"
 
 //Used in:
 //sc_creature.cpp - DoSelectLowestHpFriendly()

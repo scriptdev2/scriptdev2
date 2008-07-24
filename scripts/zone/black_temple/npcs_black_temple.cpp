@@ -21,7 +21,6 @@ SDComment: Spirit of Olum: Player Teleporter to Seer Kanai Teleport after defeat
 SDCategory: Black Temple
 EndScriptData */
 
-#include "sc_creature.h"
 #include "sc_gossip.h"
 #include "def_black_temple.h"
 
