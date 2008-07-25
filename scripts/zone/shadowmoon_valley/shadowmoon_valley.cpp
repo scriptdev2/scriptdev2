@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Shadowmoon_Valley
 SD%Complete: 100
-SDComment: Quest support: 10519, 10583, 10601, 10814, 10804, 10854. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
+SDComment: Quest support: 10519, 10583, 10601, 10814, 10804, 10854, 11082. Vendor Drake Dealer Hurlunk. Teleporter TO Invasion Point: Cataclysm
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -27,6 +27,7 @@ mob_enslaved_netherwing_drake
 npc_drake_dealer_hurlunk
 npc_invis_legion_teleporter
 npcs_flanis_swiftwing_and_kagrosh
+npc_murkblood_overseer
 npc_neltharaku
 npc_karynaku
 npc_oronok_tornheart
@@ -514,6 +515,54 @@ bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature *_C
 }
 
 /*######
+## npc_murkblood_overseer
+######*/
+
+#define QUEST_11082     11082
+
+bool GossipHello_npc_murkblood_overseer(Player *player, Creature *_Creature)
+{
+    if (player->GetQuestStatus(QUEST_11082) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM( 0, "I am here for you, overseer.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_murkblood_overseer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM(0, "How dare you question an overseer of the Dragonmaw!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM(0, "Who speaks of me? What are you talking about, broken?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM(0, "Continue please.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM(0, "Who are these bidders?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->ADD_GOSSIP_ITEM(0, "Well... yes.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            break;
+        case GOSSIP_ACTION_INFO_DEF+6:
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+            _Creature->CastSpell(player,41121,false);
+            player->AreaExploredOrEventHappens(QUEST_11082);
+            break;
+    }
+    return true;
+}
+
+/*######
 ## npc_neltharaku
 ######*/
 
@@ -671,6 +720,12 @@ void AddSC_shadowmoon_valley()
     newscript->Name="npcs_flanis_swiftwing_and_kagrosh";
     newscript->pGossipHello =  &GossipHello_npcs_flanis_swiftwing_and_kagrosh;
     newscript->pGossipSelect = &GossipSelect_npcs_flanis_swiftwing_and_kagrosh;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_murkblood_overseer";
+    newscript->pGossipHello =  &GossipHello_npc_murkblood_overseer;
+    newscript->pGossipSelect = &GossipSelect_npc_murkblood_overseer;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
