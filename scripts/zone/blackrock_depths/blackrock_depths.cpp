@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Blackrock_Depths
 SD%Complete: 95
-SDComment: Quest support: 4342, 7604. Vendor Lokhtos Darkbargainer.
+SDComment: Quest support: 4001, 4342, 7604. Vendor Lokhtos Darkbargainer.
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -100,15 +100,22 @@ CreatureAI* GetAI_mob_phalanx(Creature *_Creature)
 ## npc_kharan_mighthammer
 ######*/
 
+#define QUEST_4001  4001
+#define QUEST_4342  4342
+
 bool GossipHello_npc_kharan_mighthammer(Player *player, Creature *_Creature)
 {
-    if (_Creature->isQuestGiver())
+    if( _Creature->isQuestGiver() )
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetQuestStatus(4342) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "All is not lost, Kharan!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if( player->GetQuestStatus(QUEST_4001) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM( 0, "I need to know where the princess are, Kharan!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    if( player->GetQuestStatus(4342) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM( 0, "All is not lost, Kharan!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+
+    if( player->GetTeam() == HORDE ) player->SEND_GOSSIP_MENU(2473, _Creature->GetGUID());
+    if( player->GetTeam() == ALLIANCE ) player->SEND_GOSSIP_MENU(2474, _Creature->GetGUID());
 
     return true;
 }
@@ -118,36 +125,42 @@ bool GossipSelect_npc_kharan_mighthammer(Player *player, Creature *_Creature, ui
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM( 0, "Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(2476, _Creature->GetGUID());
+            player->ADD_GOSSIP_ITEM(0, "Gor'shak is my friend, you can trust me.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(2475, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM( 0, "So what happened?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+            player->ADD_GOSSIP_ITEM(0, "Not enough, you need to tell me more.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(2476, _Creature->GetGUID());
+            break;
+
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM(0, "So what happened?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
             player->SEND_GOSSIP_MENU(2477, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM( 0, "Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM(0, "Continue...", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
             player->SEND_GOSSIP_MENU(2478, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM( 0, "So you suspect that someone on the inside was involved? That they were tipped off?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->ADD_GOSSIP_ITEM(0, "So you suspect that someone on the inside was involved? That they were tipped off?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
             player->SEND_GOSSIP_MENU(2479, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM( 0, "Continue with your story please.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        case GOSSIP_ACTION_INFO_DEF+6:
+            player->ADD_GOSSIP_ITEM(0, "Continue with your story please.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
             player->SEND_GOSSIP_MENU(2480, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM( 0, "Indeed.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        case GOSSIP_ACTION_INFO_DEF+7:
+            player->ADD_GOSSIP_ITEM(0, "Indeed.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
             player->SEND_GOSSIP_MENU(2481, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            player->ADD_GOSSIP_ITEM( 0, "The door is open, Kharan. You are a free man.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        case GOSSIP_ACTION_INFO_DEF+8:
+            player->ADD_GOSSIP_ITEM(0, "The door is open, Kharan. You are a free man.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
             player->SEND_GOSSIP_MENU(2482, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF+8:
-            player->PlayerTalkClass->CloseGossip();
-            player->AreaExploredOrEventHappens(4342);
+        case GOSSIP_ACTION_INFO_DEF+9:
+            player->CLOSE_GOSSIP_MENU();
+            if( player->GetTeam() == HORDE ) player->AreaExploredOrEventHappens(QUEST_4001);
+            if( player->GetTeam() == ALLIANCE ) player->AreaExploredOrEventHappens(QUEST_4342);
             break;
     }
     return true;

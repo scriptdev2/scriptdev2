@@ -388,6 +388,8 @@ extern void AddSC_npcs_netherstorm();
 extern void AddSC_boss_onyxia();
 
 //Orgrimmar
+extern void AddSC_orgrimmar();
+
 //Ragefire Chasm
 //Razorfen Downs
 extern void AddSC_boss_amnennar_the_coldbringer();
@@ -1257,6 +1259,8 @@ void ScriptsInit()
     AddSC_boss_onyxia();
 
     //Orgrimmar
+    AddSC_orgrimmar();
+
     //Ragefire Chasm
     //Razorfen Downs
     AddSC_boss_amnennar_the_coldbringer();

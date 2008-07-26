@@ -260,6 +260,7 @@ scripts/zone/naxxramas/boss_thane_korthazz.cpp \
 scripts/zone/naxxramas/instance_naxxramas.cpp \
 scripts/zone/netherstorm/npcs_netherstorm.cpp \
 scripts/zone/onyxias_lair/boss_onyxia.cpp \
+scripts/zone/orgrimmar/orgrimmar.cpp \
 scripts/zone/razorfen_downs/boss_amnennar_the_coldbringer.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_ayamiss.cpp \
 scripts/zone/ruins_of_ahnqiraj/boss_buru.cpp \

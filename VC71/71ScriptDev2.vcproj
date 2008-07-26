@@ -1796,6 +1796,10 @@
 				<Filter
 					Name="Orgrimmar"
 					>
+					<File
+						RelativePath="..\scripts\zone\orgrimmar\orgrimmar.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Shattrath City"
