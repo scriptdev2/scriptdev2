@@ -274,7 +274,7 @@ extern void AddSC_npcs_felwood();
 extern void AddSC_npcs_feralas();
 
 //Ghostlands
-extern void AddSC_npcs_ghostlands();
+extern void AddSC_ghostlands();
 
 //Gnomeregan
 //Gruul's Lair
@@ -1145,7 +1145,7 @@ void ScriptsInit()
     AddSC_npcs_feralas();
 
     //Ghostlands
-    AddSC_npcs_ghostlands();
+    AddSC_ghostlands();
 
     //Gnomeregan
     //Gruul's Lair

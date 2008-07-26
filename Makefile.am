@@ -179,7 +179,7 @@ scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
 scripts/zone/feralas/npcs_feralas.cpp \
-scripts/zone/ghostlands/npcs_ghostlands.cpp \
+scripts/zone/ghostlands/ghostlands.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \
 scripts/zone/gruuls_lair/def_gruuls_lair.h \

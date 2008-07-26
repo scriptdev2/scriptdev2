@@ -1526,7 +1526,7 @@
 					Name="Ghostlands"
 					>
 					<File
-						RelativePath="..\scripts\zone\ghostlands\npcs_ghostlands.cpp"
+						RelativePath="..\scripts\zone\ghostlands\ghostlands.cpp"
 						>
 					</File>
 				</Filter>

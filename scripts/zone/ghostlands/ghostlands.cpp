@@ -17,9 +17,15 @@
 /* ScriptData
 SDName: Npcs_Ghostlands
 SD%Complete: 100
-SDComment: Quest support: 9692. Obtain Budd's Guise of Zul'aman
+SDComment: Quest support: 9692. Obtain Budd's Guise of Zul'aman. Vendor Rathis Tomber
 SDCategory: Ghostlands
 EndScriptData */
+
+/* ContentData
+npc_blood_knight_dawnstar
+npc_budd_nedreck
+npc_rathis_tomber
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -42,7 +48,7 @@ bool GossipSelect_npc_blood_knight_dawnstar(Player *player, Creature *_Creature,
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-	    ItemPosCountVec dest;
+        ItemPosCountVec dest;
         uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
         if( msg == EQUIP_ERR_OK )
         {
@@ -71,7 +77,7 @@ bool GossipHello_npc_budd_nedreck(Player *player, Creature *_Creature)
 
 bool GossipSelect_npc_budd_nedreck(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (action==GOSSIP_ACTION_INFO_DEF)
+    if( action==GOSSIP_ACTION_INFO_DEF )
     {
         player->CLOSE_GOSSIP_MENU();
         _Creature->CastSpell(player, 42540, false);
@@ -79,7 +85,33 @@ bool GossipSelect_npc_budd_nedreck(Player *player, Creature *_Creature, uint32 s
     return true;
 }
 
-void AddSC_npcs_ghostlands()
+/*######
+## npc_rathis_tomber
+######*/
+
+bool GossipHello_npc_rathis_tomber(Player *player, Creature *_Creature)
+{
+    if( _Creature->isQuestGiver() )
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if( _Creature->isVendor() && player->GetQuestRewardStatus(9152) )
+    {
+        player->ADD_GOSSIP_ITEM(1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->SEND_GOSSIP_MENU(8432,_Creature->GetGUID());
+    }else
+        player->SEND_GOSSIP_MENU(8431,_Creature->GetGUID());
+
+    return true; 
+}
+
+bool GossipSelect_npc_rathis_tomber(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_TRADE )
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    return true;
+}
+
+void AddSC_ghostlands()
 {
     Script *newscript;
 
@@ -93,5 +125,11 @@ void AddSC_npcs_ghostlands()
     newscript->Name="npc_budd_nedreck";
     newscript->pGossipHello = &GossipHello_npc_budd_nedreck;
     newscript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_rathis_tomber";
+    newscript->pGossipHello = &GossipHello_npc_rathis_tomber;
+    newscript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
     m_scripts[nrscripts++] = newscript;
 }
