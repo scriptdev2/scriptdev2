@@ -1093,6 +1093,10 @@
 				<Filter
 					Name="Tirisfal Glades"
 					>
+					<File
+						RelativePath="..\scripts\zone\tirisfal_glades\tirisfal_glades.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Wailing Caverns"

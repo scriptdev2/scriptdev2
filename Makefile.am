@@ -353,6 +353,7 @@ scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/terokkar_forest.cpp \
 scripts/zone/thunder_bluff/npcs_thunder_bluff.cpp \
+scripts/zone/tirisfal_glades/tirisfal_glades.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/uldaman.cpp \

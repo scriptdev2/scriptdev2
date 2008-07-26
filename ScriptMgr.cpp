@@ -514,6 +514,8 @@ extern void AddSC_terokkar_forest();
 extern void AddSC_npcs_thunder_bluff();
 
 //Tirisfal Glades
+extern void AddSC_tirisfal_glades();
+
 //Uldaman
 extern void AddSC_boss_ironaya();
 extern void AddSC_mob_uldaman();
@@ -1385,6 +1387,8 @@ void ScriptsInit()
     AddSC_npcs_thunder_bluff();
 
     //Tirisfal Glades
+    AddSC_tirisfal_glades();
+
     //Uldaman
     AddSC_boss_ironaya();
     AddSC_mob_uldaman();
