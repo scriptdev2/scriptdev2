@@ -42,9 +42,11 @@ UPDATE `creature_template` SET `ScriptName`='guard_shattrath' WHERE `entry`=1968
 /* ITEM */
 UPDATE `item_template` SET `ScriptName`='item_area_52_special' WHERE `entry`=28132;
 UPDATE `item_template` SET `ScriptName`='item_blackwhelp_net' WHERE `entry`=31129;
+UPDATE `item_template` SET `ScriptName`='item_disciplinary_rod' WHERE `entry`=22473;
 UPDATE `item_template` SET `ScriptName`='item_draenei_fishing_net' WHERE `entry`=23654;
 UPDATE `item_template` SET `ScriptName`='item_flying_machine' WHERE `entry` IN (34060,34061);
 UPDATE `item_template` SET `ScriptName`='item_nether_wraith_beacon' WHERE `entry`=31742;
+UPDATE `item_template` SET `ScriptName`='item_protovoltaic_magneto_collector' WHERE `entry`=30656;
 UPDATE `item_template` SET `ScriptName`='item_soul_cannon' WHERE `entry`=32825;
 UPDATE `item_template` SET `ScriptName`='item_sparrowhawk_net' WHERE `entry`=32321;
 UPDATE `item_template` SET `ScriptName`='item_tainted_core' WHERE `entry`=31088;

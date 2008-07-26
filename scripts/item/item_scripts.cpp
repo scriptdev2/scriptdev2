@@ -21,19 +21,21 @@ SDComment: Items for a range of different items. See content below (in script)
 SDCategory: Items
 EndScriptData */
 
-/*#####
-# item_area_52_special(i28132)       Prevents abuse of this item
-# item_blackwhelp_net(i31129)        Quest Whelps of the Wyrmcult (q10747). Prevents abuse
-# item_draenei_fishing_net(i23654)   Correctly implements chance to spawn item or creature
-# item_nether_wraith_beacon(i31742)  Summons creatures for quest Becoming a Spellfire Tailor (q10832)
-# item_flying_machine(i34060,i34061) Engineering crafted flying machines
-# item_soul_cannon(i32825)           Prevents abuse of this item
-# item_sparrowhawk_net(i32321)       Quest To Catch A Sparrowhawk (q10987). Prevents abuse
-# item_tame_beast_rods(many)         Prevent cast on any other creature than the intended (for all tame beast quests)
-# item_vorenthals_presence(i30259)   Prevents abuse of this item
-# item_yehkinyas_bramble(i10699)     Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
-# item_zezzak_shard(i31463)          Quest The eyes of Grillok (q10813). Prevents abuse
-#####*/
+/* ContentData
+item_area_52_special(i28132)        Prevents abuse of this item
+item_blackwhelp_net(i31129)         Quest Whelps of the Wyrmcult (q10747). Prevents abuse
+item_draenei_fishing_net(i23654)    Correctly implements chance to spawn item or creature
+item_disciplinary_rod               Prevents abuse
+item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
+item_flying_machine(i34060,i34061)  Engineering crafted flying machines
+item_protovoltaic_magneto_collector Prevents abuse
+item_soul_cannon(i32825)            Prevents abuse of this item
+item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
+item_tame_beast_rods(many)          Prevent cast on any other creature than the intended (for all tame beast quests)
+item_vorenthals_presence(i30259)    Prevents abuse of this item
+item_yehkinyas_bramble(i10699)      Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
+item_zezzak_shard(i31463)           Quest The eyes of Grillok (q10813). Prevents abuse
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -103,6 +105,20 @@ bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTarg
         }
     }
     return false;
+}
+
+/*#####
+# item_disciplinary_rod
+#####*/
+
+bool ItemUse_item_disciplinary_rod(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        (targets.getUnitTarget()->GetEntry() == 15941 || targets.getUnitTarget()->GetEntry() == 15945) )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    return true;
 }
 
 /*#####
@@ -185,6 +201,20 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
     player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    return true;
+}
+
+/*#####
+# item_protovoltaic_magneto_collector
+#####*/
+
+bool ItemUse_item_protovoltaic_magneto_collector(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 21729 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
     return true;
 }
 
@@ -289,6 +319,11 @@ void AddSC_item_scripts()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
+    newscript->Name="item_disciplinary_rod";
+    newscript->pItemUse = ItemUse_item_disciplinary_rod;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="item_draenei_fishing_net";
     newscript->pItemUse = ItemUse_item_draenei_fishing_net;
     m_scripts[nrscripts++] = newscript;
@@ -306,6 +341,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_tame_beast_rods";
     newscript->pItemUse = ItemUse_item_tame_beast_rods;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_protovoltaic_magneto_collector";
+    newscript->pItemUse = ItemUse_item_protovoltaic_magneto_collector;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
