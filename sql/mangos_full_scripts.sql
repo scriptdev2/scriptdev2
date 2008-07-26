@@ -127,6 +127,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_susurrus' WHERE `entry`=17435;
 /* BARRENS */
 UPDATE `creature_template` SET `ScriptName`='npc_beaten_corpse' WHERE `entry`=10668;
 UPDATE `creature_template` SET `ScriptName`='npc_sputtervalve' WHERE `entry`=3442;
+UPDATE `creature_template` SET `ScriptName`='npc_taskmaster_fizzule' WHERE `entry`=7233;
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script`='instance_black_temple' WHERE `map`=564;

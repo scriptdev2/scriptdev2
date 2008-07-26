@@ -530,7 +530,7 @@
 					Name="Barrens"
 					>
 					<File
-						RelativePath="..\scripts\zone\barrens\npcs_the_barrens.cpp"
+						RelativePath="..\scripts\zone\barrens\the_barrens.cpp"
 						>
 					</File>
 				</Filter>

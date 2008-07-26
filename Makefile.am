@@ -77,7 +77,7 @@ scripts/zone/aunchindoun/shadow_labyrinth/instance_shadow_labyrinth.cpp \
 scripts/zone/azshara/azshara.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/npcs_azuremyst_isle.cpp \
-scripts/zone/barrens/npcs_the_barrens.cpp \
+scripts/zone/barrens/the_barrens.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \
 scripts/zone/black_temple/boss_illidan.cpp \
 scripts/zone/black_temple/boss_mother_shahraz.cpp \

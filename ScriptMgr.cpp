@@ -122,7 +122,7 @@ extern void AddSC_npcs_azuremyst_isle();
 
 //Badlands
 //Barrens
-extern void AddSC_npcs_the_barrens();
+extern void AddSC_the_barrens();
 
 //Black Temple
 extern void AddSC_boss_illidan();
@@ -994,7 +994,7 @@ void ScriptsInit()
 
     //Badlands
     //Barrens
-    AddSC_npcs_the_barrens();
+    AddSC_the_barrens();
 
     //Black Temple
     AddSC_boss_illidan();
