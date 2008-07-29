@@ -35,9 +35,11 @@ UPDATE `creature_template` SET `ScriptName`='guard_durotar' WHERE `entry`=5953;
 UPDATE `creature_template` SET `ScriptName`='guard_mulgore' WHERE `entry` IN (3212,3215,3217,3218,3219,3220,3221,3222,3223,3224);
 UPDATE `creature_template` SET `ScriptName`='guard_dunmorogh' WHERE `entry` IN (727,13076);
 UPDATE `creature_template` SET `ScriptName`='guard_tirisfal' WHERE `entry` IN (1735,1738,2210,1744,1745,5725,1743,2209,1746,1742);
-UPDATE `creature_template` SET `scriptName`='guard_silvermoon' WHERE `entry`=16222;
-UPDATE `creature_template` SET `scriptName`='guard_exodar' WHERE `entry`=16733;
+UPDATE `creature_template` SET `ScriptName`='guard_silvermoon' WHERE `entry`=16222;
+UPDATE `creature_template` SET `ScriptName`='guard_exodar' WHERE `entry`=16733;
 UPDATE `creature_template` SET `ScriptName`='guard_shattrath' WHERE `entry`=19687;
+UPDATE `creature_template` SET `ScriptName`='guard_shattrath_aldor' WHERE `entry`=18549;
+UPDATE `creature_template` SET `ScriptName`='guard_shattrath_scryer' WHERE `entry`=18568;
 
 /* ITEM */
 UPDATE `item_template` SET `ScriptName`='item_area_52_special' WHERE `entry`=28132;
