@@ -870,7 +870,7 @@
 					Name="Feralas"
 					>
 					<File
-						RelativePath="..\scripts\zone\feralas\npcs_feralas.cpp"
+						RelativePath="..\scripts\zone\feralas\feralas.cpp"
 						>
 					</File>
 				</Filter>

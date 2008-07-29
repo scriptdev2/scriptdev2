@@ -370,6 +370,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_prospector_anvilward' WHERE `en
 UPDATE `creature_template` SET `ScriptName`='npcs_riverbreeze_and_silversky' WHERE `entry` IN (9528,9529);
 
 /* FERALAS */
+UPDATE `creature_template` SET `ScriptName`='npc_gregan_brewspewer' WHERE `entry`=7775;
 UPDATE `creature_template` SET `ScriptName`='npc_screecher_spirit' WHERE `entry`=8612;
 
 /* GHOSTLANDS */

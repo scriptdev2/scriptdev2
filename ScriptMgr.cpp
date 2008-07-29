@@ -271,7 +271,7 @@ extern void AddSC_npc_henze_faulk();
 extern void AddSC_npcs_felwood();
 
 //Feralas
-extern void AddSC_npcs_feralas();
+extern void AddSC_feralas();
 
 //Ghostlands
 extern void AddSC_ghostlands();
@@ -1144,7 +1144,7 @@ void ScriptsInit()
     AddSC_npcs_felwood();
 
     //Feralas
-    AddSC_npcs_feralas();
+    AddSC_feralas();
 
     //Ghostlands
     AddSC_ghostlands();

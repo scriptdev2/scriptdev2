@@ -178,7 +178,7 @@ scripts/zone/eastern_plaguelands/eastern_plaguelands.cpp \
 scripts/zone/elwynn_forest/npc_henze_faulk.cpp \
 scripts/zone/eversong_woods/eversong_woods.cpp \
 scripts/zone/felwood/npcs_felwood.cpp \
-scripts/zone/feralas/npcs_feralas.cpp \
+scripts/zone/feralas/feralas.cpp \
 scripts/zone/ghostlands/ghostlands.cpp \
 scripts/zone/gruuls_lair/boss_gruul.cpp \
 scripts/zone/gruuls_lair/boss_high_king_maulgar.cpp \

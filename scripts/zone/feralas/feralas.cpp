@@ -15,13 +15,41 @@
 */
 
 /* ScriptData
-SDName: Npcs_Feralas
+SDName: Feralas
 SD%Complete: 100
-SDComment: Quest support: 3520
+SDComment: Quest support: 3520. Special vendor Gregan Brewspewer
 SDCategory: Feralas
 EndScriptData */
 
 #include "sc_gossip.h"
+
+/*######
+## npc_gregan_brewspewer
+######*/
+
+bool GossipHello_npc_gregan_brewspewer(Player *player, Creature *_Creature)
+{
+    if( _Creature->isQuestGiver() )
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if( _Creature->isVendor() && player->GetQuestStatus(3909) == QUEST_STATUS_INCOMPLETE )
+        player->ADD_GOSSIP_ITEM(0, "Buy somethin', will ya?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    player->SEND_GOSSIP_MENU(2433,_Creature->GetGUID());
+    return true; 
+}
+
+bool GossipSelect_npc_gregan_brewspewer(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+    {
+        player->ADD_GOSSIP_ITEM(1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->SEND_GOSSIP_MENU(2434,_Creature->GetGUID());
+    }
+    if( action == GOSSIP_ACTION_TRADE )
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    return true;
+}
 
 /*######
 ## npc_screecher_spirit
@@ -40,9 +68,15 @@ bool GossipHello_npc_screecher_spirit(Player *player, Creature *_Creature)
 ## AddSC
 ######*/
 
-void AddSC_npcs_feralas()
+void AddSC_feralas()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_gregan_brewspewer";
+    newscript->pGossipHello = &GossipHello_npc_gregan_brewspewer;
+    newscript->pGossipSelect = &GossipSelect_npc_gregan_brewspewer;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_screecher_spirit";
