@@ -49,11 +49,8 @@ there is no difference here (except that default text is chosen with `gameobject
 #define TALK_SWORD_UNLEARN          "Forgetting your Swordsmithing skill is not something to do lightly. If you choose to abandon it you will forget all recipes that require Swordsmithing to create!"
 
 /*###
-# generic texts/defines
+# generic defines
 ###*/
-
-#define GOSSIP_ITEM_TRAINER         "Train me"
-#define GOSSIP_ITEM_GOODS           "I'd like to browse your goods."
 
 #define GOSSIP_SENDER_LEARN         50
 #define GOSSIP_SENDER_UNLEARN       51
@@ -355,9 +352,9 @@ bool GossipHello_npc_prof_alchemy(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS,   GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
     if(_Creature->isTrainer())
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM_TRAINER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
     uint32 eCreature = _Creature->GetEntry();
 
@@ -511,14 +508,10 @@ bool GossipSelect_npc_prof_alchemy(Player *player, Creature *_Creature, uint32 s
 {
     switch(sender) 
     {
-        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_alchemy(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_alchemy(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_alchemy(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_alchemy(player, _Creature, action);
-            break;
+        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_alchemy(player, _Creature, action); break;
+        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_alchemy(player, _Creature, action); break;
+        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_alchemy(player, _Creature, action); break;
+        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_alchemy(player, _Creature, action); break;
     }
     return true;
 }
@@ -539,9 +532,9 @@ bool GossipHello_npc_prof_blacksmith(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS,   GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
     if(_Creature->isTrainer())
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM_TRAINER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
     uint32 eCreature = _Creature->GetEntry();
     //WEAPONSMITH & ARMORSMITH
@@ -779,14 +772,10 @@ bool GossipSelect_npc_prof_blacksmith(Player *player, Creature *_Creature, uint3
 {
     switch(sender) 
     {
-        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_blacksmith(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_blacksmith(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_blacksmith(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_blacksmith(player, _Creature, action);
-            break;
+        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_blacksmith(player, _Creature, action); break;
+        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_blacksmith(player, _Creature, action); break;
+        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_blacksmith(player, _Creature, action); break;
+        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_blacksmith(player, _Creature, action); break;
     }
     return true;
 }
@@ -811,9 +800,9 @@ bool GossipHello_npc_prof_leather(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS,   GOSSIP_SENDER_MAIN,                GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
     if(_Creature->isTrainer())
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM_TRAINER, GOSSIP_SENDER_MAIN,                GOSSIP_ACTION_TRAIN);
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
     uint32 eCreature = _Creature->GetEntry();
 
@@ -929,12 +918,9 @@ bool GossipSelect_npc_prof_leather(Player *player, Creature *_Creature, uint32 s
 {
     switch(sender) 
     {
-        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_leather(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_leather(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_leather(player, _Creature, action);
-            break;
+        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_leather(player, _Creature, action); break;
+        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_leather(player, _Creature, action); break;
+        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_leather(player, _Creature, action); break;
     }
     return true;
 }
@@ -955,9 +941,9 @@ bool GossipHello_npc_prof_tailor(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM( 1, GOSSIP_ITEM_GOODS,   GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
     if (_Creature->isTrainer())
-        player->ADD_GOSSIP_ITEM( 2, GOSSIP_ITEM_TRAINER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
 
     uint32 eCreature = _Creature->GetEntry();
                                                             //TAILORING SPEC
@@ -1126,14 +1112,10 @@ bool GossipSelect_npc_prof_tailor(Player *player, Creature *_Creature, uint32 se
 {
     switch(sender) 
     {
-        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_tailor(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_tailor(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_tailor(player, _Creature, action);
-            break;
-        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_tailor(player, _Creature, action);
-            break;
+        case GOSSIP_SENDER_MAIN:    SendActionMenu_npc_prof_tailor(player, _Creature, action); break;
+        case GOSSIP_SENDER_LEARN:   SendConfirmLearn_npc_prof_tailor(player, _Creature, action); break;
+        case GOSSIP_SENDER_UNLEARN: SendConfirmUnlearn_npc_prof_tailor(player, _Creature, action); break;
+        case GOSSIP_SENDER_CHECK:   SendActionMenu_npc_prof_tailor(player, _Creature, action); break;
     }
     return true;
 }

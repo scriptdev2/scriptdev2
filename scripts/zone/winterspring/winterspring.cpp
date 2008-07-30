@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npcs_Winterspring
+SDName: Winterspring
 SD%Complete: 90
 SDComment: Quest support: 5126 (Loraxs' tale missing proper gossip items text). Vendor Rivern Frostwind. Obtain Cache of Mau'ari
 SDCategory: Winterspring
 EndScriptData */
+
+/* ContentData
+npc_lorax
+npc_rivern_frostwind
+npc_witch_doctor_mauari
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -82,7 +88,7 @@ bool GossipHello_npc_rivern_frostwind(Player *player, Creature *_Creature)
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
     if (_Creature->isVendor() && player->GetReputationRank(589) == REP_EXALTED)
-        player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
@@ -92,9 +98,7 @@ bool GossipHello_npc_rivern_frostwind(Player *player, Creature *_Creature)
 bool GossipSelect_npc_rivern_frostwind(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
-    {
         player->SEND_VENDORLIST( _Creature->GetGUID() );
-    }
     return true;
 }
 
@@ -127,7 +131,7 @@ bool GossipSelect_npc_witch_doctor_mauari(Player *player, Creature *_Creature, u
     return true;
 }
 
-void AddSC_npcs_winterspring()
+void AddSC_winterspring()
 {
     Script *newscript;
 

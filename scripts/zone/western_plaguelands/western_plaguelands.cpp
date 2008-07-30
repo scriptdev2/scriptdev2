@@ -15,11 +15,16 @@
 */
 
 /* ScriptData
-SDName: Npcs_Western_Plaguelands
+SDName: Western_Plaguelands
 SD%Complete: 90
 SDComment: Quest support: 5216,5219,5222,5225,5229,5231,5233,5235. To obtain Vitreous Focuser (could use more spesifics about gossip items)
 SDCategory: Western Plaguelands
 EndScriptData */
+
+/* ContentData
+npcs_dithers_and_arbington
+npc_the_scourge_cauldron
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -33,7 +38,7 @@ bool GossipHello_npcs_dithers_and_arbington(Player *player, Creature *_Creature)
     if(_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM( 1, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     if(player->GetQuestRewardStatus(5237) || player->GetQuestRewardStatus(5238))
     {
@@ -155,7 +160,7 @@ CreatureAI* GetAI_npc_the_scourge_cauldron(Creature *_Creature)
 ## 
 ######*/
 
-void AddSC_npcs_western_plaguelands()
+void AddSC_western_plaguelands()
 {
     Script *newscript;
 

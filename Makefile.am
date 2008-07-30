@@ -356,8 +356,8 @@ scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/uldaman.cpp \
 scripts/zone/undercity/npcs_undercity.cpp \
-scripts/zone/western_plaguelands/npcs_western_plaguelands.cpp \
-scripts/zone/winterspring/npcs_winterspring.cpp \
+scripts/zone/western_plaguelands/western_plaguelands.cpp \
+scripts/zone/winterspring/winterspring.cpp \
 scripts/zone/zangarmarsh/zangarmarsh.cpp \
 scripts/zone/zulaman/boss_janalai.cpp \
 scripts/zone/zulaman/boss_nalorakk.cpp \

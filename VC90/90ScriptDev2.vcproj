@@ -1098,7 +1098,7 @@
 					Name="Western Plaguelands"
 					>
 					<File
-						RelativePath="..\scripts\zone\western_plaguelands\npcs_western_plaguelands.cpp"
+						RelativePath="..\scripts\zone\western_plaguelands\western_plaguelands.cpp"
 						>
 					</File>
 				</Filter>
@@ -1114,7 +1114,7 @@
 					Name="Winterspring"
 					>
 					<File
-						RelativePath="..\scripts\zone\winterspring\npcs_winterspring.cpp"
+						RelativePath="..\scripts\zone\winterspring\winterspring.cpp"
 						>
 					</File>
 				</Filter>

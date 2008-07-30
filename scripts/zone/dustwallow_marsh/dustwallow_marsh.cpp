@@ -176,7 +176,7 @@ bool GossipHello_npc_nat_pagle(Player *player, Creature *_Creature)
 
     if(_Creature->isVendor() && player->GetQuestRewardStatus(8227))
     {
-        player->ADD_GOSSIP_ITEM( 0, "I'd like to browse your goods.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
         player->SEND_GOSSIP_MENU( 7640, _Creature->GetGUID() );
     }
     else

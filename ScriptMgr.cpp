@@ -527,12 +527,12 @@ extern void AddSC_npcs_undercity();
 //Wailing caverns
 
 //Western plaguelands
-extern void AddSC_npcs_western_plaguelands();
+extern void AddSC_western_plaguelands();
 
 //Westfall
 //Wetlands
 //Winterspring
-extern void AddSC_npcs_winterspring();
+extern void AddSC_winterspring();
 
 //Zangarmarsh
 extern void AddSC_zangarmarsh();
@@ -1398,12 +1398,12 @@ void ScriptsInit()
     //Wailing caverns
 
     //Western plaguelands
-    AddSC_npcs_western_plaguelands();
+    AddSC_western_plaguelands();
 
     //Westfall
     //Wetlands
     //Winterspring
-    AddSC_npcs_winterspring();
+    AddSC_winterspring();
 
     //Zangarmarsh
     AddSC_zangarmarsh();
