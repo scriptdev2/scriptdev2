@@ -857,7 +857,7 @@
 					Name="Stonetalon Mountains"
 					>
 					<File
-						RelativePath="..\scripts\zone\stonetalon_mountains\npcs_stonetalon_mountains.cpp"
+						RelativePath="..\scripts\zone\stonetalon_mountains\stonetalon_mountains.cpp"
 						>
 					</File>
 				</Filter>
@@ -1809,7 +1809,7 @@
 					Name="Thunder Bluff"
 					>
 					<File
-						RelativePath="..\scripts\zone\thunder_bluff\npcs_thunder_bluff.cpp"
+						RelativePath="..\scripts\zone\thunder_bluff\thunder_bluff.cpp"
 						>
 					</File>
 				</Filter>
@@ -1817,7 +1817,7 @@
 					Name="Undercity"
 					>
 					<File
-						RelativePath="..\scripts\zone\undercity\npcs_undercity.cpp"
+						RelativePath="..\scripts\zone\undercity\undercity.cpp"
 						>
 					</File>
 				</Filter>

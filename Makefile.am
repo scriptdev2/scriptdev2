@@ -301,7 +301,7 @@ scripts/zone/shattrath/shattrath_city.cpp \
 scripts/zone/silithus/npcs_silithus.cpp \
 scripts/zone/silvermoon/npcs_silvermoon_city.cpp \
 scripts/zone/silverpine_forest/npcs_silverpine_forest.cpp \
-scripts/zone/stonetalon_mountains/npcs_stonetalon_mountains.cpp \
+scripts/zone/stonetalon_mountains/stonetalon_mountains.cpp \
 scripts/zone/stormwind/npcs_stormwind_city.cpp \
 scripts/zone/stranglethorn_vale/mobs_stranglethorn_vale.cpp \
 scripts/zone/stratholme/boss_baron_rivendare.cpp \
@@ -350,12 +350,12 @@ scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
 scripts/zone/terokkar_forest/terokkar_forest.cpp \
-scripts/zone/thunder_bluff/npcs_thunder_bluff.cpp \
+scripts/zone/thunder_bluff/thunder_bluff.cpp \
 scripts/zone/tirisfal_glades/tirisfal_glades.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/uldaman.cpp \
-scripts/zone/undercity/npcs_undercity.cpp \
+scripts/zone/undercity/undercity.cpp \
 scripts/zone/western_plaguelands/western_plaguelands.cpp \
 scripts/zone/winterspring/winterspring.cpp \
 scripts/zone/zangarmarsh/zangarmarsh.cpp \

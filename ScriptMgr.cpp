@@ -446,7 +446,7 @@ extern void AddSC_npcs_silverpine_forest();
 
 //Stockade
 //Stonetalon mountains
-extern void AddSC_npcs_stonetalon_mountains();
+extern void AddSC_stonetalon_mountains();
 
 //Stormwind City
 extern void AddSC_npcs_stormwind_city();
@@ -509,7 +509,7 @@ extern void AddSC_terokkar_forest();
 
 //Thousand Needles
 //Thunder Bluff
-extern void AddSC_npcs_thunder_bluff();
+extern void AddSC_thunder_bluff();
 
 //Tirisfal Glades
 extern void AddSC_tirisfal_glades();
@@ -520,7 +520,7 @@ extern void AddSC_mob_uldaman();
 extern void AddSC_uldaman();
 
 //Undercity
-extern void AddSC_npcs_undercity();
+extern void AddSC_undercity();
 
 //Un'Goro Crater
 //Upper blackrock spire
@@ -1317,7 +1317,7 @@ void ScriptsInit()
 
     //Stockade
     //Stonetalon mountains
-    AddSC_npcs_stonetalon_mountains();
+    AddSC_stonetalon_mountains();
 
     //Stormwind City
     AddSC_npcs_stormwind_city();
@@ -1380,7 +1380,7 @@ void ScriptsInit()
 
     //Thousand Needles
     //Thunder Bluff
-    AddSC_npcs_thunder_bluff();
+    AddSC_thunder_bluff();
 
     //Tirisfal Glades
     AddSC_tirisfal_glades();
@@ -1391,7 +1391,7 @@ void ScriptsInit()
     AddSC_uldaman();
 
     //Undercity
-    AddSC_npcs_undercity();
+    AddSC_undercity();
 
     //Un'Goro Crater
     //Upper blackrock spire
