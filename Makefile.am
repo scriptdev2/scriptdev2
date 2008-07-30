@@ -57,10 +57,8 @@ scripts/item/item_scripts.cpp \
 scripts/item/item_test.cpp \
 scripts/npc/npc_escortAI.cpp \
 scripts/npc/npc_escortAI.h \
-scripts/npc/npc_guardian.cpp \
 scripts/npc/npc_innkeeper.cpp \
 scripts/npc/npc_professions.cpp \
-scripts/npc/npcs_darkmoon.cpp \
 scripts/npc/npcs_special.cpp \
 scripts/zone/aunchindoun/auchenai_crypts/boss_exarch_maladaar.cpp \
 scripts/zone/aunchindoun/mana_tombs/boss_nexusprince_shaffar.cpp \

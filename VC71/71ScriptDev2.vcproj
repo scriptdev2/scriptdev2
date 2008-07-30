@@ -202,19 +202,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\scripts\npc\npc_guardian.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\scripts\npc\npc_innkeeper.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\scripts\npc\npc_professions.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\scripts\npc\npcs_darkmoon.cpp"
 					>
 				</File>
 				<File

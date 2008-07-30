@@ -25,9 +25,11 @@ EndScriptData
 /* ContentData
 npc_chicken_cluck       100%    support for quest 3861 (Cluck!)
 npc_dancing_flames      100%    midsummer event NPC
+npc_guardian            100%    guardianAI used to prevent players from accessing off-limits areas. Not in use by SD2
 npc_injured_patient     100%    patients for triage-quests (6622 and 6624)
 npc_doctor              100%    Gustaf Vanhowzen and Gregory Victor, quest 6622 and 6624 (Triage)
 npc_mount_vendor        100%    Regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
+npc_sayge               100%    Darkmoon event fortune teller, buff player based on answers given
 EndContentData */
 
 #include "sc_creature.h"
@@ -137,21 +139,19 @@ bool ReceiveEmote_npc_dancing_flames( Player *player, Creature *_Creature, uint3
 }
 
 /*######
-## common defines first aid
+## Triage quest
 ######*/
 
 #define SAY_DOC1 "I'm saved! Thank you, doctor!"
 #define SAY_DOC2 "HOORAY! I AM SAVED!"
 #define SAY_DOC3 "Sweet, sweet embrace... take me..."
 
-/*######
-## Triage quest
-######*/
-
 struct Location
 {
     float x, y, z, o;
 };
+
+#define DOCTOR_ALLIANCE     12939
 
 static Location AllianceCoords[]=
 {
@@ -164,31 +164,31 @@ static Location AllianceCoords[]=
     {-3746.37, -4525.35, 14.16, 5.22}, // Left bunk near entrance
 };
 
-#define ALLIANCE_COORDS         7
+#define ALLIANCE_COORDS     7
 
 //alliance run to where
 #define A_RUNTOX -3742.96
 #define A_RUNTOY -4531.52
 #define A_RUNTOZ 11.91
 
-#define DOCTOR_ALLIANCE     12939
+#define DOCTOR_HORDE    12920
 
 static Location HordeCoords[]=
 {
-    {-1022.88, -3506.62, 63.69, 2.12}, // Nearest the Doctor
-    {-1027.50, -3501.60, 63.69, 5.84}, // Near the big hole in the corner
-    {-1025.68, -3497.50, 63.69, 0.09}, // Next bed over from the big hole
-    {-1009.78, -3494.56, 63.39, 3.23}, // Bed near the supplies vendor
+    {-1013.75, -3492.59, 62.62, 4.34}, // Left, Behind
+    {-1017.72, -3490.92, 62.62, 4.34}, // Right, Behind
+    {-1015.77, -3497.15, 62.82, 4.34}, // Left, Mid
+    {-1019.51, -3495.49, 62.82, 4.34}, // Right, Mid
+    {-1017.25, -3500.85, 62.98, 4.34}, // Left, front
+    {-1020.95, -3499.21, 62.98, 4.34}  // Right, Front
 };
 
-#define HORDE_COORDS        4
+#define HORDE_COORDS        6
 
 //horde run to where
 #define H_RUNTOX -1016.44
 #define H_RUNTOY -3508.48
 #define H_RUNTOZ 62.96
-
-#define DOCTOR_HORDE    12920
 
 const uint32 AllianceSoldierId[3] = 
 {
@@ -344,9 +344,10 @@ CreatureAI* GetAI_npc_injured_patient(Creature *_Creature)
     return new npc_injured_patientAI (_Creature);
 }
 
-/*######
-## npc_doctor (continue)
-######*/
+/*
+npc_doctor (continue)
+*/
+
 void npc_doctorAI::BeginEvent(Player* player)
 {
     Playerguid = player->GetGUID();
@@ -488,6 +489,45 @@ CreatureAI* GetAI_npc_doctor(Creature *_Creature)
 }
 
 /*######
+## npc_guardian
+######*/
+
+#define SPELL_DEATHTOUCH                5
+#define SAY_AGGRO                        "This area is closed!"
+
+struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
+{
+    npc_guardianAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    void Reset()
+    {
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    }
+
+    void Aggro(Unit *who)
+    {
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        if (m_creature->isAttackReady())
+        {
+            m_creature->CastSpell(m_creature->getVictim(),SPELL_DEATHTOUCH, true);
+            m_creature->resetAttackTimer();
+        }
+    }
+};
+
+CreatureAI* GetAI_npc_guardian(Creature *_Creature)
+{
+    return new npc_guardianAI (_Creature);
+}
+
+/*######
 ## npc_mount_vendor
 ######*/
 
@@ -576,6 +616,140 @@ bool GossipSelect_npc_mount_vendor(Player *player, Creature *_Creature, uint32 s
     return true;
 }
 
+/*######
+## npc_sayge
+######*/
+
+#define SPELL_DMG       23768                               //dmg
+#define SPELL_RES       23769                               //res
+#define SPELL_ARM       23767                               //arm
+#define SPELL_SPI       23738                               //spi
+#define SPELL_INT       23766                               //int
+#define SPELL_STM       23737                               //stm
+#define SPELL_STR       23735                               //str
+#define SPELL_AGI       23736                               //agi
+#define SPELL_FORTUNE   23765                               //faire fortune
+
+bool GossipHello_npc_sayge(Player *player, Creature *_Creature)
+{
+    if(_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if( player->HasSpellCooldown(SPELL_INT) || 
+        player->HasSpellCooldown(SPELL_ARM) || 
+        player->HasSpellCooldown(SPELL_DMG) || 
+        player->HasSpellCooldown(SPELL_RES) || 
+        player->HasSpellCooldown(SPELL_STR) || 
+        player->HasSpellCooldown(SPELL_AGI) || 
+        player->HasSpellCooldown(SPELL_STM) || 
+        player->HasSpellCooldown(SPELL_SPI) )
+        player->SEND_GOSSIP_MENU(7393, _Creature->GetGUID());
+    else
+    {
+        player->ADD_GOSSIP_ITEM(0, "Yes", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(7339, _Creature->GetGUID());
+    }
+
+    return true;
+}
+
+void SendAction_npc_sayge(Player *player, Creature *_Creature, uint32 action)
+{
+    switch(action)
+    {
+    case GOSSIP_ACTION_INFO_DEF+1:
+        player->ADD_GOSSIP_ITEM(0, "Slay the Man",                      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->ADD_GOSSIP_ITEM(0, "Turn him over to liege",            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+        player->ADD_GOSSIP_ITEM(0, "Confiscate the corn",               GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+        player->ADD_GOSSIP_ITEM(0, "Let him go and have the corn",      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+        player->SEND_GOSSIP_MENU(7340, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF+2:
+        player->ADD_GOSSIP_ITEM(0, "Execute your friend painfully",     GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Execute your friend painlessly",    GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Let your friend go",                GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
+        player->SEND_GOSSIP_MENU(7341, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF+3:
+        player->ADD_GOSSIP_ITEM(0, "Confront the diplomat",             GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Show not so quiet defiance",        GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Remain quiet",                      GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
+        player->SEND_GOSSIP_MENU(7361, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF+4:
+        player->ADD_GOSSIP_ITEM(0, "Speak against your brother openly", GOSSIP_SENDER_MAIN+6, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Help your brother in",              GOSSIP_SENDER_MAIN+7, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Keep your brother out without letting him know", GOSSIP_SENDER_MAIN+8, GOSSIP_ACTION_INFO_DEF);
+        player->SEND_GOSSIP_MENU(7362, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF+5:
+        player->ADD_GOSSIP_ITEM(0, "Take credit, keep gold",            GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Take credit, share the gold",       GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
+        player->ADD_GOSSIP_ITEM(0, "Let the knight take credit",        GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
+        player->SEND_GOSSIP_MENU(7363, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF:
+        player->ADD_GOSSIP_ITEM(0, "Thanks",                            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+        player->SEND_GOSSIP_MENU(7364, _Creature->GetGUID());
+        break;
+    case GOSSIP_ACTION_INFO_DEF+6:
+        _Creature->CastSpell(player, SPELL_FORTUNE, false);
+        player->SEND_GOSSIP_MENU(7365, _Creature->GetGUID());
+        break;
+    }
+}
+
+bool GossipSelect_npc_sayge(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    switch(sender) 
+    {
+        case GOSSIP_SENDER_MAIN:
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+1:
+            _Creature->CastSpell(player, SPELL_DMG, false);
+            player->AddSpellCooldown(SPELL_DMG,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+2:
+            _Creature->CastSpell(player, SPELL_RES, false);
+            player->AddSpellCooldown(SPELL_RES,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+3:
+            _Creature->CastSpell(player, SPELL_ARM, false);
+            player->AddSpellCooldown(SPELL_ARM,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+4:
+            _Creature->CastSpell(player, SPELL_SPI, false);
+            player->AddSpellCooldown(SPELL_SPI,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+5:
+            _Creature->CastSpell(player, SPELL_INT, false);
+            player->AddSpellCooldown(SPELL_INT,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+6:
+            _Creature->CastSpell(player, SPELL_STM, false);
+            player->AddSpellCooldown(SPELL_STM,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+7:
+            _Creature->CastSpell(player, SPELL_STR, false);
+            player->AddSpellCooldown(SPELL_STR,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+        case GOSSIP_SENDER_MAIN+8:
+            _Creature->CastSpell(player, SPELL_AGI, false);
+            player->AddSpellCooldown(SPELL_AGI,0,time(NULL) + 7200);
+            SendAction_npc_sayge(player, _Creature, action);
+            break;
+    }
+    return true;
+}
+
 void AddSC_npcs_special()
 {
     Script *newscript;
@@ -605,8 +779,19 @@ void AddSC_npcs_special()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
+    newscript->Name="npc_guardian";
+    newscript->GetAI = GetAI_npc_guardian;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
     newscript->Name="npc_mount_vendor";
     newscript->pGossipHello =  &GossipHello_npc_mount_vendor;
     newscript->pGossipSelect = &GossipSelect_npc_mount_vendor;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_sayge";
+    newscript->pGossipHello = &GossipHello_npc_sayge;
+    newscript->pGossipSelect = &GossipSelect_npc_sayge;
     m_scripts[nrscripts++] = newscript;
 }
