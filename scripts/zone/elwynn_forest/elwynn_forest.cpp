@@ -15,16 +15,21 @@
 */
 
 /* ScriptData
-SDName: Npc_Henze_Faulk
+SDName: Elwynn_Forest
 SD%Complete: 50
-SDComment: Core keeps breaking support for this quest
+SDComment: Quest support: 1786
 SDCategory: Elwynn Forest
 EndScriptData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+/* ContentData
+npc_henze_faulk
+EndContentData */
 
-// **** This script is still under Developement ****
+#include "sc_creature.h"
+
+/*######
+## npc_henze_faulk
+######*/
 
 #define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
 
@@ -84,9 +89,11 @@ CreatureAI* GetAI_npc_henze_faulk(Creature *_Creature)
 {
     return new npc_henze_faulkAI (_Creature);
 }
-void AddSC_npc_henze_faulk()
+
+void AddSC_elwynn_forest()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="npc_henze_faulk";
     newscript->GetAI = GetAI_npc_henze_faulk;

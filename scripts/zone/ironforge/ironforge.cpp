@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Ironforge
+SDName: Ironforge
 SD%Complete: 100
 SDComment: Quest support: 3702
 SDCategory: Ironforge
 EndScriptData */
+
+/* ContentData
+npc_royal_historian_archesonus
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -77,7 +81,7 @@ bool GossipSelect_npc_royal_historian_archesonus(Player *player, Creature *_Crea
     return true;
 }
 
-void AddSC_npcs_ironforge()
+void AddSC_ironforge()
 {
     Script *newscript;
 

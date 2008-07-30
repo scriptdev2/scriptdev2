@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Felwood
+SDName: Felwood
 SD%Complete: 95
 SDComment: To obtain Cenarion Beacon
 SDCategory: Felwood
 EndScriptData */
+
+/* ContentData
+npcs_riverbreeze_and_silversky
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -65,7 +69,7 @@ bool GossipSelect_npcs_riverbreeze_and_silversky(Player *player, Creature *_Crea
     return true;
 }
 
-void AddSC_npcs_felwood()
+void AddSC_felwood()
 {
     Script *newscript;
 

@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Burning_Steppes
+SDName: Burning_Steppes
 SD%Complete: 100
 SDComment: Quest support: 4224
 SDCategory: Burning Steppes
 EndScriptData */
+
+/* ContentData
+npc_ragged_john
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -35,8 +39,7 @@ bool GossipHello_npc_ragged_john(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(4224) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Tell me about the day you and Marshal Windsor was attacked by a Blackrock raiding party, John", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(2713, _Creature->GetGUID());
-
+    player->SEND_GOSSIP_MENU(2713, _Creature->GetGUID());
     return true;
 }
 
@@ -89,14 +92,14 @@ bool GossipSelect_npc_ragged_john(Player *player, Creature *_Creature, uint32 se
             player->SEND_GOSSIP_MENU(2721, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+11:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(4224);
             break;
     }
     return true;
 }
 
-void AddSC_npcs_burning_steppes()
+void AddSC_burning_steppes()
 {
     Script *newscript;
 

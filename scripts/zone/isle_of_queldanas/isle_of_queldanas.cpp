@@ -15,11 +15,16 @@
 */
 
 /* ScriptData
-SDName: Npcs_Isle_of_Queldanas
+SDName: Isle_of_Queldanas
 SD%Complete: 100
 SDComment: Quest support: 11532, 11533, 11542, 11543
 SDCategory: Isle Of Quel'Danas
 EndScriptData */
+
+/* ContentData
+npc_ayren_cloudbreaker
+npc_unrestrained_dragonhawk
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -96,7 +101,7 @@ bool GossipSelect_npc_unrestrained_dragonhawk(Player *player, Creature *_Creatur
     return true;
 }
 
-void AddSC_npcs_isle_of_queldanas()
+void AddSC_isle_of_queldanas()
 {
     Script *newscript;
 

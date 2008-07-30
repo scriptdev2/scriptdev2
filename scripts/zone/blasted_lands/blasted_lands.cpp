@@ -15,13 +15,22 @@
 */
 
 /* ScriptData
-SDName: Npcs_Blasted_Lands
+SDName: Blasted_Lands
 SD%Complete: 90
 SDComment: Quest support: 2784, 2801, 3628. Missing some texts for Fallen Hero. Teleporter to Rise of the Defiler missing group support.
 SDCategory: Blasted Lands
 EndScriptData */
 
+/* ContentData
+npc_deathly_usher
+npc_fallen_hero_of_horde
+EndContentData */
+
 #include "sc_gossip.h"
+
+/*######
+## npc_deathly_usher
+######*/
 
 #define GOSSIP_ITEM_USHER "I wish to to visit the Rise of the Defiler."
 
@@ -34,7 +43,7 @@ bool GossipHello_npc_deathly_usher(Player *player, Creature *_Creature)
     if(player->GetQuestStatus(3628) == QUEST_STATUS_INCOMPLETE && player->HasItemCount(10757, 1))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_USHER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -76,7 +85,7 @@ bool GossipHello_npc_fallen_hero_of_horde(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(2801) == QUEST_STATUS_INCOMPLETE && player->GetTeam() == ALLIANCE)
         player->ADD_GOSSIP_ITEM( 0, "Why are you here?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -132,7 +141,7 @@ bool GossipSelect_npc_fallen_hero_of_horde(Player *player, Creature *_Creature, 
     return true;
 }
 
-void AddSC_npcs_blasted_lands()
+void AddSC_blasted_lands()
 {
     Script *newscript;
 

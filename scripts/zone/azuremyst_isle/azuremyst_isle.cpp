@@ -15,18 +15,25 @@
 */
 
 /* ScriptData
-SDName: Npcs_Azuremyst_Isle
-SD%Complete: 100
+SDName: Azuremyst_Isle
+SD%Complete: 75
 SDComment: Quest support: 9283, 9537, 9554(special flight path, proper model for mount missing). Injured Draenei cosmetic only
 SDCategory: Azuremyst Isle
 EndScriptData */
+
+/* ContentData
+npc_draenei_survivor
+npc_engineer_spark_overgrind
+npc_injured_draenei
+npc_susurrus
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
 #include <cmath>
 
 /*######
-## draenei_survivor
+## npc_draenei_survivor
 ######*/
 
 #define HEAL1        "The last thing I remember is the ship falling and us getting into the pods. I'll go see how I can help. Thank you!"
@@ -39,9 +46,9 @@ EndScriptData */
 #define HELP3        "Ughhh... I hurt. Can you help me?"
 #define HELP4        "I don't know if I can make it, please help me..."
 
-struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 {
-    draenei_survivorAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_draenei_survivorAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 UnSpawnTimer;
     uint32 ResetlifeTimer;
@@ -203,9 +210,9 @@ struct MANGOS_DLL_DECL draenei_survivorAI : public ScriptedAI
         return;
     }
 };
-CreatureAI* GetAI_draenei_survivor(Creature *_Creature)
+CreatureAI* GetAI_npc_draenei_survivor(Creature *_Creature)
 {
-    return new draenei_survivorAI (_Creature);
+    return new npc_draenei_survivorAI (_Creature);
 }
 
 /*######
@@ -284,12 +291,12 @@ bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature *_Creatu
 }
 
 /*######
-## injured_draenei
+## npc_injured_draenei
 ######*/
 
-struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
+struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
 {
-    injured_draeneiAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_injured_draeneiAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset()
     {
@@ -320,9 +327,9 @@ struct MANGOS_DLL_DECL injured_draeneiAI : public ScriptedAI
     }
 
 };
-CreatureAI* GetAI_injured_draenei(Creature *_Creature)
+CreatureAI* GetAI_npc_injured_draenei(Creature *_Creature)
 {
-    return new injured_draeneiAI (_Creature);
+    return new npc_injured_draeneiAI (_Creature);
 }
 
 /*######
@@ -362,13 +369,13 @@ bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sende
 ## 
 ######*/
 
-void AddSC_npcs_azuremyst_isle()
+void AddSC_azuremyst_isle()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="draenei_survivor";
-    newscript->GetAI = GetAI_draenei_survivor;
+    newscript->Name="npc_draenei_survivor";
+    newscript->GetAI = GetAI_npc_draenei_survivor;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
@@ -379,8 +386,8 @@ void AddSC_npcs_azuremyst_isle()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="injured_draenei";
-    newscript->GetAI = GetAI_injured_draenei;
+    newscript->Name="npc_injured_draenei";
+    newscript->GetAI = GetAI_npc_injured_draenei;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

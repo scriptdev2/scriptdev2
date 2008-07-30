@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: Mobs_Darkshore
+SDName: Deadmines
 SD%Complete: 0
 SDComment: Placeholder
-SDCategory: Darkshore
+SDCategory: Deadmines
 EndScriptData */
 

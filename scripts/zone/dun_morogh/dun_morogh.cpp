@@ -15,15 +15,21 @@
 */
 
 /* ScriptData
-SDName: NPC_Narm_Faulk
+SDName: Dun_Morogh
 SD%Complete: 50
-SDComment: Core keeps breaking support for this quest
+SDComment: Quest support: 1783
 SDCategory: Dun Morogh
 EndScriptData */
 
+/* ContentData
+npc_narm_faulk
+EndContentData */
+
 #include "sc_creature.h"
 
-// **** This script is still under Developement ****
+/*######
+## npc_narm_faulk
+######*/
 
 #define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
 
@@ -83,9 +89,11 @@ CreatureAI* GetAI_npc_narm_faulk(Creature *_Creature)
 {
     return new npc_narm_faulkAI (_Creature);
 }
-void AddSC_npc_narm_faulk()
+
+void AddSC_dun_morogh()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="npc_narm_faulk";
     newscript->GetAI = GetAI_npc_narm_faulk;

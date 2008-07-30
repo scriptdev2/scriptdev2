@@ -116,7 +116,7 @@ extern void AddSC_boss_azuregos();
 extern void AddSC_azshara();
 
 //Azuremyst Isle
-extern void AddSC_npcs_azuremyst_isle();
+extern void AddSC_azuremyst_isle();
 
 //Badlands
 //Barrens
@@ -194,13 +194,13 @@ extern void AddSC_blades_edge_mountains();
 
 //Blasted lands
 extern void AddSC_boss_kruul();
-extern void AddSC_npcs_blasted_lands();
+extern void AddSC_blasted_lands();
 
 //Bloodmyst Isle
 extern void AddSC_bloodmyst_isle();
 
 //Burning steppes
-extern void AddSC_npcs_burning_steppes();
+extern void AddSC_burning_steppes();
 
 //Caverns of Time
 //--Battle for Mt. Hyjal
@@ -242,13 +242,11 @@ extern void AddSC_boss_hungarfen();
 //Darkshore
 //Darnassus
 //Deadmines
-extern void AddSC_boss_deadmines();
-
 //Deadwind pass
 //Desolace
 //Dire Maul
 //Dun Morogh
-extern void AddSC_npc_narm_faulk();
+extern void AddSC_dun_morogh();
 
 //Durotar
 //Duskwood
@@ -263,10 +261,10 @@ extern void AddSC_eversong_woods();
 extern void AddSC_eastern_plaguelands();
 
 //Elwynn Forest
-extern void AddSC_npc_henze_faulk();
+extern void AddSC_elwynn_forest();
 
 //Felwood
-extern void AddSC_npcs_felwood();
+extern void AddSC_felwood();
 
 //Feralas
 extern void AddSC_feralas();
@@ -305,10 +303,10 @@ extern void AddSC_hellfire_peninsula();
 //Hillsbrad Foothills
 //Hinterlands
 //Ironforge
-extern void AddSC_npcs_ironforge();
+extern void AddSC_ironforge();
 
 //Isle of Quel'Danas
-extern void AddSC_npcs_isle_of_queldanas();
+extern void AddSC_isle_of_queldanas();
 
 //Karazhan
 extern void AddSC_boss_attumen();
@@ -324,7 +322,7 @@ extern void AddSC_npcs_karazhan();
 extern void AddSC_instance_karazhan();
 
 //Loch Modan
-extern void AddSC_npcs_loch_modan();
+extern void AddSC_loch_modan();
 
 //Lower Blackrock Spire
 
@@ -988,7 +986,7 @@ void ScriptsInit()
     AddSC_azshara();
 
     //Azuremyst Isle
-    AddSC_npcs_azuremyst_isle();
+    AddSC_azuremyst_isle();
 
     //Badlands
     //Barrens
@@ -1066,13 +1064,13 @@ void ScriptsInit()
 
     //Blasted lands
     AddSC_boss_kruul();
-    AddSC_npcs_blasted_lands();
+    AddSC_blasted_lands();
 
     //Bloodmyst Isle
     AddSC_bloodmyst_isle();
 
     //Burning steppes
-    AddSC_npcs_burning_steppes();
+    AddSC_burning_steppes();
 
     //Caverns of Time
     //--Battle for Mt. Hyjal
@@ -1113,13 +1111,11 @@ void ScriptsInit()
     //Darkshore
     //Darnassus
     //Deadmines
-    AddSC_boss_deadmines();
-
     //Deadwind pass
     //Desolace
     //Dire Maul
     //Dun Morogh
-    AddSC_npc_narm_faulk();
+    AddSC_dun_morogh();
 
     //Durotar
     //Duskwood
@@ -1134,10 +1130,10 @@ void ScriptsInit()
     AddSC_eastern_plaguelands();
 
     //Elwynn Forest
-    AddSC_npc_henze_faulk();
+    AddSC_elwynn_forest();
 
     //Felwood
-    AddSC_npcs_felwood();
+    AddSC_felwood();
 
     //Feralas
     AddSC_feralas();
@@ -1176,10 +1172,10 @@ void ScriptsInit()
     //Hillsbrad Foothills
     //Hinterlands
     //Ironforge
-    AddSC_npcs_ironforge();
+    AddSC_ironforge();
 
     //Isle of Quel'Danas
-    AddSC_npcs_isle_of_queldanas();
+    AddSC_isle_of_queldanas();
 
     //Karazhan
     AddSC_boss_attumen();
@@ -1195,7 +1191,7 @@ void ScriptsInit()
     AddSC_instance_karazhan();
 
     //Loch Modan
-    AddSC_npcs_loch_modan();
+    AddSC_loch_modan();
 
     //Lower Blackrock Spire
     

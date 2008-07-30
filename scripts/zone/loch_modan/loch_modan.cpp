@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: npcs_loch_modan
+SDName: Loch_Modan
 SD%Complete: 100
 SDComment: Quest support: 3181 (only to argue with pebblebitty to get to searing gorge, before quest rewarded)
 SDCategory: Loch Modan
 EndScriptData */
+
+/* ContentData
+npc_mountaineer_pebblebitty
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -75,7 +79,7 @@ bool GossipSelect_npc_mountaineer_pebblebitty(Player *player, Creature *_Creatur
     return true;
 }
 
-void AddSC_npcs_loch_modan()
+void AddSC_loch_modan()
 {
     Script *newscript;
 
