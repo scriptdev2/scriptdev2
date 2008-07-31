@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npcs_Moonglade
+SDName: Moonglade
 SD%Complete: 100
 SDComment: Quest support: 30, 272, 5929, 5930. Special Flight Paths for Druid class.
 SDCategory: Moonglade
 EndScriptData */
+
+/* ContentData
+npc_bunthen_plainswind
+npc_great_bear_spirit
+npc_silva_filnaveth
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -186,7 +192,7 @@ bool GossipSelect_npc_silva_filnaveth(Player *player, Creature *_Creature, uint3
 ## 
 ######*/
 
-void AddSC_npcs_moonglade()
+void AddSC_moonglade()
 {
     Script *newscript;
 

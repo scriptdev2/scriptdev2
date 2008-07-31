@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Silithus
+SDName: Silithus
 SD%Complete: 100
 SDComment: Quest support: 8304.
 SDCategory: Silithus
 EndScriptData */
+
+/* ContentData
+npcs_rutgar_and_frankal
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -132,7 +136,7 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, u
 ## 
 ####*/
 
-void AddSC_npcs_silithus()
+void AddSC_silithus()
 {
     Script *newscript;
     newscript = new Script;

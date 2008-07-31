@@ -15,11 +15,19 @@
 */
 
 /* ScriptData
-SDName: Npcs_Stormwind_City
+SDName: Stormwind_City
 SD%Complete: 100
 SDComment: Quest support: 1640, 1447, 4185, 11223 (DB support required for spell 42711). Receive emote General Marcus
 SDCategory: Stormwind City
 EndScriptData */
+
+/* ContentData
+npc_archmage_malin
+npc_bartleby
+npc_dashel_stonefist
+npc_general_marcus_jonathan
+npc_lady_katrana_prestor
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -38,7 +46,7 @@ bool GossipHello_npc_archmage_malin(Player *player, Creature *_Creature)
     if(player->GetQuestStatus(11223) == QUEST_STATUS_COMPLETE && !player->GetQuestRewardStatus(11223))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_MALIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -87,7 +95,7 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER && done_by->GetGUID() == PlayerGUID)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1640);
+                ((Player*)done_by)->AreaExploredOrEventHappens(1640);
             }
             m_creature->CombatStop();
             EnterEvadeMode();
@@ -137,7 +145,7 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
             if (done_by->GetTypeId() == TYPEID_PLAYER)
             {
                 ((Player*)done_by)->AttackStop();
-                ((Player*)done_by)->CompleteQuest(1447);
+                ((Player*)done_by)->AreaExploredOrEventHappens(1447);
             }
             //m_creature->CombatStop();
             EnterEvadeMode();
@@ -201,7 +209,7 @@ bool GossipHello_npc_lady_katrana_prestor(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(4185) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_KAT_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(2693, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(2693, _Creature->GetGUID());
 
     return true;
 }
@@ -223,14 +231,14 @@ bool GossipSelect_npc_lady_katrana_prestor(Player *player, Creature *_Creature, 
             player->SEND_GOSSIP_MENU(2696, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(4185);
             break;
     }
     return true;
 }
 
-void AddSC_npcs_stormwind_city()
+void AddSC_stormwind_city()
 {
     Script *newscript;
 

@@ -15,20 +15,22 @@
 */
 
 /* ScriptData
-SDName: npcs_silvermoon_city
+SDName: Silvermoon_City
 SD%Complete: 100
-SDComment: Bloodknight Stillblade: For paladin quest
+SDComment: Quest support: 9685
 SDCategory: Silvermoon City
 EndScriptData */
+
+/* ContentData
+npc_blood_knight_stillblade
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
 /*#######
-# npc_bloodknight_stillblade
+# npc_blood_knight_stillblade
 #######*/
-
-// **** This script is still under Developement ****
 
 #define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
 
@@ -91,16 +93,16 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
 
 };
 
-CreatureAI* GetAInpc_blood_knight_stillblade(Creature *_Creature)
+CreatureAI* GetAI_npc_blood_knight_stillblade(Creature *_Creature)
 {
     return new npc_blood_knight_stillbladeAI (_Creature);
 }
 
-void AddSC_npcs_silvermoon_city()
+void AddSC_silvermoon_city()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="blood_knight_stillblade";
-    newscript->GetAI = GetAInpc_blood_knight_stillblade;
+    newscript->Name="npc_blood_knight_stillblade";
+    newscript->GetAI = GetAI_npc_blood_knight_stillblade;
     m_scripts[nrscripts++] = newscript;
 }

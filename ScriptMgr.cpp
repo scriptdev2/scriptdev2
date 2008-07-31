@@ -353,10 +353,10 @@ extern void AddSC_instance_molten_core();
 extern void AddSC_mobs_molten_core();
 
 //Moonglade
-extern void AddSC_npcs_moonglade();
+extern void AddSC_moonglade();
 
 //Mulgore
-extern void AddSC_npcs_mulgore();
+extern void AddSC_mulgore();
 
 //Nagrand
 extern void AddSC_nagrand();
@@ -420,7 +420,7 @@ extern void AddSC_boss_vectus();
 extern void AddSC_instance_scholomance();
 
 //Searing gorge
-extern void AddSC_npcs_searing_gorge();
+extern void AddSC_searing_gorge();
 
 //Shadowfang keep
 extern void AddSC_npcs_shadowfang_keep();
@@ -434,23 +434,23 @@ extern void AddSC_shadowmoon_valley();
 extern void AddSC_shattrath_city();
 
 //Silithus
-extern void AddSC_npcs_silithus();
+extern void AddSC_silithus();
 
 //Silvermoon
-extern void AddSC_npcs_silvermoon_city();
+extern void AddSC_silvermoon_city();
 
 //Silverpine forest
-extern void AddSC_npcs_silverpine_forest();
+extern void AddSC_silverpine_forest();
 
 //Stockade
 //Stonetalon mountains
 extern void AddSC_stonetalon_mountains();
 
 //Stormwind City
-extern void AddSC_npcs_stormwind_city();
+extern void AddSC_stormwind_city();
 
 //Stranglethorn Vale
-extern void AddSC_mobs_stranglethorn_vale();
+extern void AddSC_stranglethorn_vale();
 
 //Stratholme
 extern void AddSC_boss_magistrate_barthilas();
@@ -1222,10 +1222,10 @@ void ScriptsInit()
     AddSC_mobs_molten_core();
 
     //Moonglade
-    AddSC_npcs_moonglade();
+    AddSC_moonglade();
 
     //Mulgore
-    AddSC_npcs_mulgore();
+    AddSC_mulgore();
 
     //Nagrand
     AddSC_nagrand();
@@ -1289,7 +1289,7 @@ void ScriptsInit()
     AddSC_instance_scholomance();
 
     //Searing gorge
-    AddSC_npcs_searing_gorge();
+    AddSC_searing_gorge();
 
     //Shadowfang keep
     AddSC_npcs_shadowfang_keep();
@@ -1303,23 +1303,23 @@ void ScriptsInit()
     AddSC_shattrath_city();
 
     //Silithus
-    AddSC_npcs_silithus();
+    AddSC_silithus();
 
     //Silvermoon
-    AddSC_npcs_silvermoon_city();
+    AddSC_silvermoon_city();
 
     //Silverpine forest
-    AddSC_npcs_silverpine_forest();
+    AddSC_silverpine_forest();
 
     //Stockade
     //Stonetalon mountains
     AddSC_stonetalon_mountains();
 
     //Stormwind City
-    AddSC_npcs_stormwind_city();
+    AddSC_stormwind_city();
 
     //Stranglethorn Vale
-    AddSC_mobs_stranglethorn_vale();
+    AddSC_stranglethorn_vale();
 
     //Stratholme
     AddSC_boss_magistrate_barthilas();

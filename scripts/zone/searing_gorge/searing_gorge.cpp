@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npcs_Searing_Gorge
-SD%Complete: 100
+SDName: Searing_Gorge
+SD%Complete: 80
 SDComment: Quest support: 3377, 3441 (More accurate info on Kalaran needed). Lothos Riftwaker teleport to Molten Core.
 SDCategory: Searing Gorge
 EndScriptData */
+
+/* ContentData
+npc_kalaran_windblade
+npc_lothos_riftwaker
+npc_zamael_lunthistle
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -35,7 +41,7 @@ bool GossipHello_npc_kalaran_windblade(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(3441) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Tell me what drives this vengance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -53,7 +59,7 @@ bool GossipSelect_npc_kalaran_windblade(Player *player, Creature *_Creature, uin
             player->SEND_GOSSIP_MENU(1955, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(3441);
             break;
     }
@@ -66,16 +72,14 @@ bool GossipSelect_npc_kalaran_windblade(Player *player, Creature *_Creature, uin
 
 bool GossipHello_npc_lothos_riftwaker(Player *player, Creature *_Creature)
 {
-    if (player->GetQuestRewardStatus(7487)==1 || player->GetQuestRewardStatus(7848)==1)  {
-        player->ADD_GOSSIP_ITEM(2, "Teleport me to the Molten Core", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
-    }else{
-        uint64 guid = _Creature->GetGUID();
-        if (_Creature->isQuestGiver()) {
-            player->PrepareQuestMenu( guid );
-            player->SendPreparedQuest( guid );
-        }
-    }
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if (player->GetQuestRewardStatus(7487) || player->GetQuestRewardStatus(7848))
+        player->ADD_GOSSIP_ITEM(0, "Teleport me to the Molten Core", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
     return true;
 }
 
@@ -102,7 +106,7 @@ bool GossipHello_npc_zamael_lunthistle(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(3377) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Tell me your story", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(1920, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(1920, _Creature->GetGUID());
 
     return true;
 }
@@ -120,7 +124,7 @@ bool GossipSelect_npc_zamael_lunthistle(Player *player, Creature *_Creature, uin
             player->SEND_GOSSIP_MENU(1922, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(3377);
             break;
     }
@@ -131,7 +135,7 @@ bool GossipSelect_npc_zamael_lunthistle(Player *player, Creature *_Creature, uin
 ## 
 ######*/
 
-void AddSC_npcs_searing_gorge()
+void AddSC_searing_gorge()
 {
     Script *newscript;
 

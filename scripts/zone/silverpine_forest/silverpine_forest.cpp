@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Silverpine_Forest
+SDName: Silverpine_Forest
 SD%Complete: 100
 SDComment: Quest support: 1886
 SDCategory: Silverpine Forest
 EndScriptData */
+
+/* ContentData
+npc_astor_hadren
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -84,7 +88,7 @@ bool GossipSelect_npc_astor_hadren(Player *player, Creature *_Creature, uint32 s
 ## AddSC
 ######*/
 
-void AddSC_npcs_silverpine_forest()
+void AddSC_silverpine_forest()
 {
     Script *newscript;
 

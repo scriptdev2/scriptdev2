@@ -521,7 +521,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_great_bear_spirit' WHERE `entry
 UPDATE `creature_template` SET `ScriptName`='npc_silva_filnaveth' WHERE `entry`=11800;
 
 /* MULGORE */
-UPDATE `creature_template` SET `ScriptName`='skorn_whitecloud' WHERE `entry`=3052;
+UPDATE `creature_template` SET `ScriptName`='npc_skorn_whitecloud' WHERE `entry`=3052;
 
 /* NAGRAND */
 UPDATE `creature_template` SET `ScriptName`='mob_lump' WHERE `entry`=18351;
@@ -638,7 +638,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
 UPDATE `creature_template` SET `ScriptName`='npcs_rutgar_and_frankal' WHERE `entry` IN (15170,15171);
 
 /* SILVERMOON */
-UPDATE `creature_template` SET `ScriptName`='blood_knight_stillblade' WHERE `entry`=17768;
+UPDATE `creature_template` SET `ScriptName`='npc_blood_knight_stillblade' WHERE `entry`=17768;
 
 /* SILVERPINE FOREST */
 UPDATE `creature_template` SET `ScriptName`='npc_astor_hadren' WHERE `entry`=6497;

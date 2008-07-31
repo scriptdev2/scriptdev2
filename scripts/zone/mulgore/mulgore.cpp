@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: npcs_mulgore
+SDName: Mulgore
 SD%Complete: 100
 SDComment: Skorn Whitecloud: Just a story if not rewarded for quest
 SDCategory: Mulgore
 EndScriptData */
+
+/* ContentData
+npc_skorn_whitecloud
+EndContentData */
 
 #include "sc_gossip.h"
 
@@ -27,20 +31,20 @@ EndScriptData */
 # npc_skorn_whitecloud
 ######*/
 
-bool GossipHello_skorn_whitecloud(Player *player, Creature *_Creature)
+bool GossipHello_npc_skorn_whitecloud(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (!player->GetQuestRewardStatus(770) == 1)
+    if (!player->GetQuestRewardStatus(770))
         player->ADD_GOSSIP_ITEM( 0, "Tell me a story, Skorn.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF );
 
-    player->SEND_GOSSIP_MENU(522,_Creature->GetGUID());     // Skorn Whitecloud message
+    player->SEND_GOSSIP_MENU(522,_Creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_skorn_whitecloud(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_skorn_whitecloud(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
         player->SEND_GOSSIP_MENU(523,_Creature->GetGUID());
@@ -48,13 +52,13 @@ bool GossipSelect_skorn_whitecloud(Player *player, Creature *_Creature, uint32 s
     return true;
 }
 
-void AddSC_npcs_mulgore()
+void AddSC_mulgore()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="skorn_whitecloud";
-    newscript->pGossipHello          = &GossipHello_skorn_whitecloud;
-    newscript->pGossipSelect         = &GossipSelect_skorn_whitecloud;
+    newscript->Name="npc_skorn_whitecloud";
+    newscript->pGossipHello          = &GossipHello_npc_skorn_whitecloud;
+    newscript->pGossipSelect         = &GossipSelect_npc_skorn_whitecloud;
     m_scripts[nrscripts++] = newscript;
 }

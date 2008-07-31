@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: mobs_stranglethorn_vale
+SDName: Stranglethorn_Vale
 SD%Complete: 100
 SDComment: Quest support: 592
 SDCategory: Stranglethorn Vale
 EndScriptData */
+
+/* ContentData
+mob_yenniku
+EndContentData */
 
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -42,7 +46,6 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     void Reset()
     {
         Reset_Timer = 0;
-
         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
     }
 
@@ -73,7 +76,7 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
             {
                 EnterEvadeMode();
                 bReset = false;
-                m_creature->setFaction(28);                         //troll, bloodscalp
+                m_creature->setFaction(28);                 //troll, bloodscalp
             }
             else Reset_Timer -= diff;
 
@@ -93,7 +96,7 @@ CreatureAI* GetAI_mob_yenniku(Creature *_Creature)
 ## 
 ######*/
 
-void AddSC_mobs_stranglethorn_vale()
+void AddSC_stranglethorn_vale()
 {
     Script *newscript;
 

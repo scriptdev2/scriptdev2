@@ -449,7 +449,7 @@
 					Name="Moonglade"
 					>
 					<File
-						RelativePath="..\scripts\zone\moonglade\npcs_moonglade.cpp"
+						RelativePath="..\scripts\zone\moonglade\moonglade.cpp"
 						>
 					</File>
 				</Filter>
@@ -605,7 +605,7 @@
 					Name="Searing Gorge"
 					>
 					<File
-						RelativePath="..\scripts\zone\searing_gorge\npcs_searing_gorge.cpp"
+						RelativePath="..\scripts\zone\searing_gorge\searing_gorge.cpp"
 						>
 					</File>
 				</Filter>
@@ -725,7 +725,7 @@
 					Name="Mulgore"
 					>
 					<File
-						RelativePath="..\scripts\zone\mulgore\npcs_mulgore.cpp"
+						RelativePath="..\scripts\zone\mulgore\mulgore.cpp"
 						>
 					</File>
 				</Filter>
@@ -865,7 +865,7 @@
 					Name="Stranglethorn Vale"
 					>
 					<File
-						RelativePath="..\scripts\zone\stranglethorn_vale\mobs_stranglethorn_vale.cpp"
+						RelativePath="..\scripts\zone\stranglethorn_vale\stranglethorn_vale.cpp"
 						>
 					</File>
 				</Filter>
@@ -1005,7 +1005,7 @@
 					Name="Silithus"
 					>
 					<File
-						RelativePath="..\scripts\zone\silithus\npcs_silithus.cpp"
+						RelativePath="..\scripts\zone\silithus\silithus.cpp"
 						>
 					</File>
 				</Filter>
@@ -1013,7 +1013,7 @@
 					Name="Silverpine Forest"
 					>
 					<File
-						RelativePath="..\scripts\zone\silverpine_forest\npcs_silverpine_forest.cpp"
+						RelativePath="..\scripts\zone\silverpine_forest\silverpine_forest.cpp"
 						>
 					</File>
 				</Filter>
@@ -1617,7 +1617,7 @@
 					Name="Stormwind City"
 					>
 					<File
-						RelativePath="..\scripts\zone\stormwind\npcs_stormwind_city.cpp"
+						RelativePath="..\scripts\zone\stormwind\stormwind_city.cpp"
 						>
 					</File>
 				</Filter>
@@ -1769,7 +1769,7 @@
 					Name="Silvermoon City"
 					>
 					<File
-						RelativePath="..\scripts\zone\silvermoon\npcs_silvermoon_city.cpp"
+						RelativePath="..\scripts\zone\silvermoon\silvermoon_city.cpp"
 						>
 					</File>
 				</Filter>
