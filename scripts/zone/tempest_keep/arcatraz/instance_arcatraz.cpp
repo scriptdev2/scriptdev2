@@ -15,10 +15,10 @@
 */
 
 /* ScriptData
-SDName: Instance_arcatraz
+SDName: Instance_Arcatraz
 SD%Complete: 80
 SDComment: Mainly Harbringer Skyriss event
-SDCategory: Tempest Keep, Arcatraz
+SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
 #include "def_arcatraz.h"

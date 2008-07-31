@@ -18,7 +18,7 @@
 SDName: Boss_Epoch_Hunter
 SD%Complete: 60
 SDComment: Missing spawns, missing speech to be coordinated with rest of escort event. Mob should not complete quest, current code only temporary
-SDCategory: Caverns of Time, Old Hillsbrad
+SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
 #include "def_old_hillsbrad.h"

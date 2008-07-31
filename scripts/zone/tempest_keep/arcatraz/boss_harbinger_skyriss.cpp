@@ -18,7 +18,7 @@
 SDName: Boss_Harbinger_Skyriss
 SD%Complete: 30
 SDComment: Placeholder, only contain set/get instance data and some speech. Intro, combatAI etc not implemented yet.
-SDCategory: Tempest Keep, Arcatraz
+SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
 #include "def_arcatraz.h"

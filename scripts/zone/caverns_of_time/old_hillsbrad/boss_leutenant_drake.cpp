@@ -18,7 +18,7 @@
 SDName: Boss_Luetenant_Drake
 SD%Complete: 70
 SDComment: Missing proper code for patrolling area after being spawned. Also script for GO (barrels)(missing mangos support)
-SDCategory: Caverns of Time, Old Hillsbrad
+SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
 #include "def_old_hillsbrad.h"

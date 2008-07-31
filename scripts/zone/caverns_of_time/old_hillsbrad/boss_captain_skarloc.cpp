@@ -18,7 +18,7 @@
 SDName: Boss_Captain_Skarloc
 SD%Complete: 75
 SDComment: Missing adds, missing waypoints to move up to Thrall once spawned + speech before enter combat.
-SDCategory: Caverns of Time, Old Hillsbrad
+SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
 #include "def_old_hillsbrad.h"

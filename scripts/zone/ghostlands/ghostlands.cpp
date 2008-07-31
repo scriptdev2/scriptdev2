@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: Npcs_Ghostlands
+SDName: Ghostlands
 SD%Complete: 100
 SDComment: Quest support: 9692. Obtain Budd's Guise of Zul'aman. Vendor Rathis Tomber
 SDCategory: Ghostlands
