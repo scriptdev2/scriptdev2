@@ -1093,6 +1093,10 @@
 				<Filter
 					Name="Wailing Caverns"
 					>
+					<File
+						RelativePath="..\scripts\zone\wailing_caverns\instance_wailing_caverns.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Western Plaguelands"
@@ -1366,11 +1370,11 @@
 					Name="Blasted Lands"
 					>
 					<File
-						RelativePath="..\scripts\zone\blasted_lands\boss_kruul.cpp"
+						RelativePath="..\scripts\zone\blasted_lands\blasted_lands.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blasted_lands\blasted_lands.cpp"
+						RelativePath="..\scripts\zone\blasted_lands\boss_kruul.cpp"
 						>
 					</File>
 				</Filter>

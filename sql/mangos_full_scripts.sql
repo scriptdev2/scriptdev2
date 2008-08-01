@@ -787,7 +787,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_parqual_fintallas' WHERE `entry
 
 
 /* WAILING CAVERNS */
-UPDATE `creature_template` SET `ScriptName`='boss_wailing_caverns' WHERE `entry` =3654;
+
 
 /* WESTERN PLAGUELANDS */
 UPDATE `creature_template` SET `ScriptName`='npcs_dithers_and_arbington' WHERE `entry` IN (11056,11057);
@@ -834,7 +834,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_healing_ward' WHERE `entry`=149
 UPDATE `creature_template` SET `ScriptName`='mob_spawn_of_marli' WHERE `entry`=15041;
 UPDATE `creature_template` SET `ScriptName`='mob_batrider' WHERE `entry`=14965;
 UPDATE `creature_template` SET `ScriptName`='mob_shade_of_jindo' WHERE `entry`=14986;
-UPDATE `creature_template` SET `Scriptname`='mobs_zulgurub' WHERE `entry`=14883;
+UPDATE `creature_template` SET `ScriptName`='mobs_zulgurub' WHERE `entry`=14883;
 
 
 /* EOF */

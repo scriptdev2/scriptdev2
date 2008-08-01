@@ -137,8 +137,8 @@ scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/mob_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/blades_edge_mountains.cpp \
-scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/blasted_lands/blasted_lands.cpp \
+scripts/zone/blasted_lands/boss_kruul.cpp \
 scripts/zone/bloodmyst_isle/bloodmyst_isle.cpp \
 scripts/zone/burning_steppes/burning_steppes.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_aeonus.cpp \
@@ -356,6 +356,7 @@ scripts/zone/uldaman/boss_ironaya.cpp \
 scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/uldaman.cpp \
 scripts/zone/undercity/undercity.cpp \
+scripts/zone/wailing_caverns/instance_wailing_caverns.cpp \
 scripts/zone/western_plaguelands/western_plaguelands.cpp \
 scripts/zone/winterspring/winterspring.cpp \
 scripts/zone/zangarmarsh/zangarmarsh.cpp \
