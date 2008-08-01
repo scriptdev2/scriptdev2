@@ -17,13 +17,12 @@
 /* ScriptData
 SDName: Nagrand
 SD%Complete: 90
-SDComment: Quest support: 9849, 9918, 9935, 9935, 9874, 9991, 10107, 10108, 10044, 10172, 10646, 10085. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
+SDComment: Quest support: 9849, 9918, 9874, 9991, 10107, 10108, 10044, 10172, 10646, 10085. TextId's unknown for altruis_the_sufferer and greatmother_geyah (npc_text)
 SDCategory: Nagrand
 EndScriptData */
 
 /* ContentData
 mob_shattered_rumbler
-mobs_kilsorrow_agent
 mob_lump
 mob_sunspring_villager
 npc_altruis_the_sufferer
@@ -75,35 +74,9 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 }
 
 /*######
-## mobs_kilsorrow_agent - should be done with ACID
-######*/
-
-struct MANGOS_DLL_DECL mobs_kilsorrow_agentAI : public ScriptedAI
-{
-    mobs_kilsorrow_agentAI(Creature *c) : ScriptedAI(c) {Reset();}
-
-    void Reset() {}
-
-    void Aggro(Unit* who) {}
-
-    void JustDied(Unit* Killer)
-    {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            ((Player*)Killer)->KilledMonster(21276, m_creature->GetGUID());
-    }
-};
-CreatureAI* GetAI_mobs_kilsorrow_agent(Creature *_Creature)
-{
-    return new mobs_kilsorrow_agentAI (_Creature);
-}
-
-/*######
 ## mob_lump
 ######*/
 
-/*
-UPDATE `creature_template` SET `ScriptName` = 'mob_lump' WHERE `entry` = 18351;
-*/
 #define SPELL_VISUAL_SLEEP  16093
 #define SPELL_SPEAR_THROW   32248
 
@@ -560,11 +533,6 @@ void AddSC_nagrand()
     newscript = new Script;
     newscript->Name="mob_shattered_rumbler";
     newscript->GetAI = GetAI_mob_shattered_rumbler;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mobs_kilsorrow_agent";
-    newscript->GetAI = GetAI_mobs_kilsorrow_agent;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

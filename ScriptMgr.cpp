@@ -137,31 +137,23 @@ extern void AddSC_npcs_black_temple();
 
 //Blackfathom Depths
 //Blackrock Depths
+extern void AddSC_blackrock_depths();
 extern void AddSC_boss_ambassador_flamelash();
 extern void AddSC_boss_angerrel();
 extern void AddSC_boss_anubshiah();
-extern void AddSC_boss_baelgar();
 extern void AddSC_boss_doomrel();
 extern void AddSC_boss_doperel();
 extern void AddSC_boss_draganthaurissan();
-extern void AddSC_boss_fineous_darkvire();
 extern void AddSC_boss_general_angerforge();
 extern void AddSC_boss_gloomrel();
-extern void AddSC_boss_golemlordargelmach();
 extern void AddSC_boss_gorosh_the_dervish();
 extern void AddSC_boss_grizzle();
 extern void AddSC_boss_haterel();
 extern void AddSC_boss_high_interrogator_gerstahn();
-extern void AddSC_boss_lord_incendius();
-extern void AddSC_boss_lord_roccor();
 extern void AddSC_boss_magmus();
 extern void AddSC_boss_moira_bronzebeard();
-extern void AddSC_boss_pyromancer_loregrain();
 extern void AddSC_boss_seethrel();
-extern void AddSC_boss_verek();
 extern void AddSC_boss_vilerel();
-extern void AddSC_boss_warder_stilgiss();
-extern void AddSC_blackrock_depths();
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -187,7 +179,6 @@ extern void AddSC_boss_flamegor();
 extern void AddSC_boss_chromaggus();
 extern void AddSC_boss_nefarian();
 extern void AddSC_boss_victor_nefarius();
-extern void AddSC_mob_blackwing_lair();
 
 //Blade's Edge Mountains
 extern void AddSC_blades_edge_mountains();
@@ -297,7 +288,6 @@ extern void AddSC_boss_omor_the_unscarred();
 
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
-extern void AddSC_mobs_hellfire_peninsula();
 extern void AddSC_hellfire_peninsula();
 
 //Hillsbrad Foothills
@@ -514,7 +504,6 @@ extern void AddSC_tirisfal_glades();
 
 //Uldaman
 extern void AddSC_boss_ironaya();
-extern void AddSC_mob_uldaman();
 extern void AddSC_uldaman();
 
 //Undercity
@@ -550,7 +539,6 @@ extern void AddSC_boss_grilek();
 extern void AddSC_boss_hazzarah();
 extern void AddSC_boss_renataki();
 extern void AddSC_boss_wushoolay();
-extern void AddSC_mobs_zulgurub();
 extern void AddSC_instance_zulgurub();
 //Zul'Aman
 extern void AddSC_boss_janalai();
@@ -1007,31 +995,23 @@ void ScriptsInit()
 
     //Blackfathom Depths
     //Blackrock Depths
+    AddSC_blackrock_depths();
     AddSC_boss_ambassador_flamelash();
     AddSC_boss_angerrel();
     AddSC_boss_anubshiah();
-    AddSC_boss_baelgar();
     AddSC_boss_doomrel();
     AddSC_boss_doperel();
     AddSC_boss_draganthaurissan();
-    AddSC_boss_fineous_darkvire();
     AddSC_boss_general_angerforge();
     AddSC_boss_gloomrel();
-    AddSC_boss_golemlordargelmach();
     AddSC_boss_gorosh_the_dervish();
     AddSC_boss_grizzle();
     AddSC_boss_haterel();
     AddSC_boss_high_interrogator_gerstahn();
-    AddSC_boss_lord_incendius();
-    AddSC_boss_lord_roccor();
     AddSC_boss_magmus();
     AddSC_boss_moira_bronzebeard();
-    AddSC_boss_pyromancer_loregrain();
     AddSC_boss_seethrel();
-    AddSC_boss_verek();
     AddSC_boss_vilerel();
-    AddSC_boss_warder_stilgiss();
-    AddSC_blackrock_depths();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();
@@ -1057,7 +1037,6 @@ void ScriptsInit()
     AddSC_boss_chromaggus();
     AddSC_boss_nefarian();
     AddSC_boss_victor_nefarius();
-    AddSC_mob_blackwing_lair();
 
     //Blade's Edge Mountains
     AddSC_blades_edge_mountains();
@@ -1166,7 +1145,6 @@ void ScriptsInit()
 
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();
-    AddSC_mobs_hellfire_peninsula();
     AddSC_hellfire_peninsula();
 
     //Hillsbrad Foothills
@@ -1383,7 +1361,6 @@ void ScriptsInit()
 
     //Uldaman
     AddSC_boss_ironaya();
-    AddSC_mob_uldaman();
     AddSC_uldaman();
 
     //Undercity
@@ -1419,7 +1396,6 @@ void ScriptsInit()
     AddSC_boss_hazzarah();
     AddSC_boss_renataki();
     AddSC_boss_wushoolay();
-    AddSC_mobs_zulgurub();
     AddSC_instance_zulgurub();
 
     //Zul'Aman

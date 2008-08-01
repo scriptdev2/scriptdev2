@@ -446,10 +446,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\mob_blackwing_lair.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackwing_lair\npc_victor_nefarius.cpp"
 						>
 					</File>
@@ -1189,20 +1185,12 @@
 						RelativePath="..\scripts\zone\zulgurub\instance_zulgurub.cpp"
 						>
 					</File>
-					<File
-						RelativePath="..\scripts\zone\zulgurub\mobs_zulgurub.cpp"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="Uldaman"
 					>
 					<File
 						RelativePath="..\scripts\zone\uldaman\boss_ironaya.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\uldaman\mob_uldaman.cpp"
 						>
 					</File>
 					<File
@@ -1443,10 +1431,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\hellfire_peninsula\hellfire_peninsula.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\hellfire_peninsula\mobs_hellfire_peninsula.cpp"
 						>
 					</File>
 				</Filter>
@@ -1978,10 +1962,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_baelgar.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_doomrel.cpp"
 						>
 					</File>
@@ -1994,19 +1974,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_fineous_darkvire.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_general_angerforge.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_gloomrel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_golem_lord_argelmach.cpp"
 						>
 					</File>
 					<File
@@ -2026,14 +1998,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_incendius.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_lord_roccor.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_magmus.cpp"
 						>
 					</File>
@@ -2042,23 +2006,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_pyromancer_loregrain.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_seethrel.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_verek.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\blackrock_depths\boss_vilerel.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_depths\boss_warder_stilgiss.cpp"
 						>
 					</File>
 				</Filter>

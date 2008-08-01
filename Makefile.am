@@ -92,27 +92,19 @@ scripts/zone/blackrock_depths/blackrock_depths.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
 scripts/zone/blackrock_depths/boss_anubshiah.cpp \
-scripts/zone/blackrock_depths/boss_baelgar.cpp \
 scripts/zone/blackrock_depths/boss_doomrel.cpp \
 scripts/zone/blackrock_depths/boss_doperel.cpp \
 scripts/zone/blackrock_depths/boss_emperor_dagran_thaurissan.cpp \
-scripts/zone/blackrock_depths/boss_fineous_darkvire.cpp \
 scripts/zone/blackrock_depths/boss_general_angerforge.cpp \
 scripts/zone/blackrock_depths/boss_gloomrel.cpp \
-scripts/zone/blackrock_depths/boss_golem_lord_argelmach.cpp \
 scripts/zone/blackrock_depths/boss_gorosh_the_dervish.cpp \
 scripts/zone/blackrock_depths/boss_grizzle.cpp \
 scripts/zone/blackrock_depths/boss_haterel.cpp \
 scripts/zone/blackrock_depths/boss_high_interrogator_gerstahn.cpp \
-scripts/zone/blackrock_depths/boss_lord_incendius.cpp \
-scripts/zone/blackrock_depths/boss_lord_roccor.cpp \
 scripts/zone/blackrock_depths/boss_magmus.cpp \
 scripts/zone/blackrock_depths/boss_moira_bronzebeard.cpp \
-scripts/zone/blackrock_depths/boss_pyromancer_loregrain.cpp \
 scripts/zone/blackrock_depths/boss_seethrel.cpp \
-scripts/zone/blackrock_depths/boss_verek.cpp \
 scripts/zone/blackrock_depths/boss_vilerel.cpp \
-scripts/zone/blackrock_depths/boss_warder_stilgiss.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
 scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \
@@ -134,7 +126,6 @@ scripts/zone/blackwing_lair/boss_nefarian.cpp \
 scripts/zone/blackwing_lair/boss_razorgore.cpp \
 scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
-scripts/zone/blackwing_lair/mob_blackwing_lair.cpp \
 scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/blasted_lands.cpp \
@@ -193,7 +184,6 @@ scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
 scripts/zone/hellfire_peninsula/hellfire_peninsula.cpp \
-scripts/zone/hellfire_peninsula/mobs_hellfire_peninsula.cpp \
 scripts/zone/ironforge/ironforge.cpp \
 scripts/zone/isle_of_queldanas/isle_of_queldanas.cpp \
 scripts/zone/karazhan/boss_curator.cpp \
@@ -353,7 +343,6 @@ scripts/zone/terokkar_forest/terokkar_forest.cpp \
 scripts/zone/thunder_bluff/thunder_bluff.cpp \
 scripts/zone/tirisfal_glades/tirisfal_glades.cpp \
 scripts/zone/uldaman/boss_ironaya.cpp \
-scripts/zone/uldaman/mob_uldaman.cpp \
 scripts/zone/uldaman/uldaman.cpp \
 scripts/zone/undercity/undercity.cpp \
 scripts/zone/wailing_caverns/instance_wailing_caverns.cpp \
@@ -379,7 +368,6 @@ scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/def_zulgurub.h \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
-scripts/zone/zulgurub/mobs_zulgurub.cpp \
 svn_revision.h \
 system.cpp
 
