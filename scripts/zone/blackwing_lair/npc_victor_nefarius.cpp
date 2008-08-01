@@ -24,13 +24,16 @@ EndScriptData */
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
-#define SAY_GAMESBEGIN          "Let the games begin!"
+#define SAY_GAMESBEGIN_1        "In this world where time is your enemy, it is my greatest ally. This grand game of life that you think you play in fact plays you. To that I say..."
+#define SAY_GAMESBEGIN_2        "Let the games begin!"
 #define SAY_VAEL_INTRO          "<unknown>"
 
 #define SOUND_GAMESBEGIN        8280
 #define SOUND_VAEL_INTRO        8279
 
-#define GOSSIP_ITEM             "Start Event <Needs Gossip Text>"
+#define GOSSIP_ITEM_1           "I've made no mistakes."
+#define GOSSIP_ITEM_2           "You have lost your mind, Nefarius. You speak in riddles."
+#define GOSSIP_ITEM_3           "Please do."
 
 #define CREATURE_BRONZE_DRAKANOID       14263
 #define CREATURE_BLUE_DRAKANOID         14261
@@ -190,7 +193,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
     void BeginEvent(Player* target)
     {
-        DoYell(SAY_GAMESBEGIN,LANG_UNIVERSAL,NULL);
+        DoYell(SAY_GAMESBEGIN_2,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_GAMESBEGIN);
 
         //MaNGOS::Singleton<MapManager>::Instance().GetMap(m_creature->GetMapId(), m_creature)->GetPlayers().begin();
@@ -364,28 +367,38 @@ CreatureAI* GetAI_boss_victor_nefarius(Creature *_Creature)
     return new boss_victor_nefariusAI (_Creature);
 }
 
-bool GossipSelect_boss_victor_nefarius(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipHello_boss_victor_nefarius(Player *player, Creature *_Creature)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Fight time
-    {
-        player->PlayerTalkClass->CloseGossip();
-        ((boss_victor_nefariusAI*)_Creature->AI())->BeginEvent(player);
-    }
-
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->SEND_GOSSIP_MENU(7134,_Creature->GetGUID());
     return true;
 }
 
-bool GossipHello_boss_victor_nefarius(Player *player, Creature *_Creature)
+bool GossipSelect_boss_victor_nefarius(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->PlayerTalkClass->SendGossipMenu(907,_Creature->GetGUID());
-
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(7198, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(7199, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->CLOSE_GOSSIP_MENU();
+            _Creature->MonsterSay(SAY_GAMESBEGIN_1,LANG_UNIVERSAL,0);
+            ((boss_victor_nefariusAI*)_Creature->AI())->BeginEvent(player);
+            break;
+    }
     return true;
 }
 
 void AddSC_boss_victor_nefarius()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_victor_nefarius";
     newscript->GetAI = GetAI_boss_victor_nefarius;

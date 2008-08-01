@@ -67,7 +67,7 @@ bool GossipHello_npc_jaina_proudmoore(Player *player, Creature *_Creature)
     else if(RageEncounter == DONE && AnetheronEncounter == DONE)
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-    player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
 
     return true;
 }
@@ -127,7 +127,7 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     }
 
-    player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
 
     return true;
 }
@@ -156,7 +156,7 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
 bool GossipHello_npc_tyrande_whisperwind(Player* player, Creature* _Creature)
 {
     player->ADD_GOSSIP_ITEM(1, "Aid us in defending Nordrassil", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-    player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
     return true;
 }
 

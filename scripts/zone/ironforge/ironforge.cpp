@@ -74,7 +74,7 @@ bool GossipSelect_npc_royal_historian_archesonus(Player *player, Creature *_Crea
             player->SEND_GOSSIP_MENU(2239, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(3702);
             break;
     }

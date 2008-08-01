@@ -347,7 +347,7 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player *player, Creature *_Creatur
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 

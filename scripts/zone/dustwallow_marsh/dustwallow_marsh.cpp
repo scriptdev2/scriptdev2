@@ -95,7 +95,7 @@ CreatureAI* GetAI_mobs_risen_husk_spirit(Creature *_Creature)
 
 bool GossipHello_npc_restless_apparition(Player *player, Creature *_Creature)
 {
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
     _Creature->SetInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -132,7 +132,7 @@ bool GossipHello_npc_deserter_agitator(Player *player, Creature *_Creature)
         player->TalkedToCreature(_Creature->GetEntry(), _Creature->GetGUID());
     }
     else
-        player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }

@@ -49,7 +49,7 @@ bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature *_Creature)
     if (!player->GetQuestRewardStatus(10340))
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -58,7 +58,7 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -69,7 +69,7 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -101,7 +101,7 @@ bool GossipHello_npc_gryphoneer_windbellow(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(10382) != QUEST_STATUS_NONE && !player->GetQuestRewardStatus(10382))
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -110,7 +110,7 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -121,7 +121,7 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -158,7 +158,7 @@ bool GossipHello_npc_wing_commander_brack(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(10242) == QUEST_STATUS_COMPLETE && !player->GetQuestRewardStatus(10242))
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -167,7 +167,7 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -178,7 +178,7 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -189,7 +189,7 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 3)
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 

@@ -253,7 +253,7 @@ void SendDefaultMenu_boss_vael(Player *player, Creature *_Creature, uint32 actio
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Fight time
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
         ((boss_vaelAI*)_Creature->AI())->BeginSpeach((Unit*)player);
     }
 }
@@ -269,7 +269,7 @@ bool GossipSelect_boss_vael(Player *player, Creature *_Creature, uint32 sender, 
 bool GossipHello_boss_vael(Player *player, Creature *_Creature)
 {
     player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->PlayerTalkClass->SendGossipMenu(907,_Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(907,_Creature->GetGUID());
 
     return true;
 }

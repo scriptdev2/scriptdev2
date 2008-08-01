@@ -120,7 +120,7 @@ bool GossipSelect_npc_tirion_fordring(Player *player, Creature *_Creature, uint3
             player->SEND_GOSSIP_MENU(4495, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(5742);
             break;
     }

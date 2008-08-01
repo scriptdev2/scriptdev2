@@ -71,7 +71,7 @@ bool GossipSelect_npc_lorax(Player *player, Creature *_Creature, uint32 sender, 
             player->SEND_GOSSIP_MENU(3763, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(5126);
             break;
     }

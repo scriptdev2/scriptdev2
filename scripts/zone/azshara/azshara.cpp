@@ -116,7 +116,7 @@ bool GossipSelect_npc_loramus_thalipedes(Player *player, Creature *_Creature, ui
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(2744);
             break;
 
@@ -141,7 +141,7 @@ bool GossipSelect_npc_loramus_thalipedes(Player *player, Creature *_Creature, ui
             player->SEND_GOSSIP_MENU(1817, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+25:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(3141);
             break;
     }

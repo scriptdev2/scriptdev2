@@ -1884,7 +1884,7 @@ bool GossipSelect_npc_akama_at_illidan(Player *player, Creature *_Creature, uint
 {
     if(action == GOSSIP_ACTION_INFO_DEF) // Time to begin the event
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
         ((npc_akama_illidanAI*)_Creature->AI())->BeginDoorEvent(player);
     }
     return true;
@@ -1893,7 +1893,7 @@ bool GossipSelect_npc_akama_at_illidan(Player *player, Creature *_Creature, uint
 bool GossipHello_npc_akama_at_illidan(Player *player, Creature *_Creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    player->PlayerTalkClass->SendGossipMenu(10465, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(10465, _Creature->GetGUID());
 
     return true;
 }

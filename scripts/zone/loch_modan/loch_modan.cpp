@@ -39,7 +39,7 @@ bool GossipHello_npc_mountaineer_pebblebitty(Player *player, Creature *_Creature
     if (!player->GetQuestRewardStatus(3181) == 1)
         player->ADD_GOSSIP_ITEM( 0, "Open the gate please, i need to get to Searing Gorge", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -73,7 +73,7 @@ bool GossipSelect_npc_mountaineer_pebblebitty(Player *player, Creature *_Creatur
             player->SEND_GOSSIP_MENU(1838, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             break;
     }
     return true;

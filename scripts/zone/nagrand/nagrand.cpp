@@ -215,7 +215,7 @@ bool GossipHello_mob_lump(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "I need answers, ogre!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(9352, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(9352, _Creature->GetGUID());
 
     return true;
 }
@@ -328,7 +328,7 @@ bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature *_Creature, 
             player->SEND_GOSSIP_MENU(9427, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+21:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(9991);
             break;
 
@@ -337,7 +337,7 @@ bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature *_Creature, 
             player->SEND_GOSSIP_MENU(384, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+31:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->AreaExploredOrEventHappens(10646);
             break;
     }
@@ -348,7 +348,7 @@ bool QuestAccept_npc_altruis_the_sufferer(Player *player, Creature *creature, Qu
 {
     if ( !player->GetQuestRewardStatus(9991) )              //Survey the Land, q-id 9991
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
 
         std::vector<uint32> nodes;
 
@@ -460,7 +460,7 @@ bool GossipHello_npc_lantresor_of_the_blade(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "I have killed many of your ogres, Lantresor. I have no fear.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->PlayerTalkClass->SendGossipMenu(9361, _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(9361, _Creature->GetGUID());
 
     return true;
 }

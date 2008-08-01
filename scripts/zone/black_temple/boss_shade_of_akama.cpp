@@ -759,7 +759,7 @@ bool GossipSelect_npc_akama(Player *player, Creature *_Creature, uint32 sender, 
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)//Fight time
     {
-        player->PlayerTalkClass->CloseGossip();
+        player->CLOSE_GOSSIP_MENU();
         ((npc_akamaAI*)_Creature->AI())->BeginEvent(player);
     }
 
@@ -771,7 +771,7 @@ bool GossipHello_npc_akama(Player *player, Creature *_Creature)
     if(player->isAlive())
     {
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->PlayerTalkClass->SendGossipMenu(907, _Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
     }
 
     return true;

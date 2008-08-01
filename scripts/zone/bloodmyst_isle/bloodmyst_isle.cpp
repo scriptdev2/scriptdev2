@@ -117,7 +117,7 @@ bool GossipSelect_npc_captured_sunhawk_agent(Player *player, Creature *_Creature
             player->SEND_GOSSIP_MENU(9141, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            player->PlayerTalkClass->CloseGossip();
+            player->CLOSE_GOSSIP_MENU();
             player->TalkedToCreature(C_SUNHAWK_TRIGGER, _Creature->GetGUID());
             break;
     }

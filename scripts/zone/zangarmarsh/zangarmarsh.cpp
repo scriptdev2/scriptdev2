@@ -21,6 +21,13 @@ SDComment: Quest support: 9785, 9803, 10009. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
+/* ContentData
+npcs_ashyen_and_keleth
+npc_cooshcoosh
+npc_elder_kuruti
+npc_mortog_steamhead
+EndContentData */
+
 #include "sc_creature.h"
 #include "sc_gossip.h"
 
@@ -42,7 +49,7 @@ bool GossipHello_npcs_ashyen_and_keleth(Player *player, Creature *_Creature )
         if ( _Creature->GetEntry() == 17901)
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_BLESS_KEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     }
-    player->PlayerTalkClass->SendGossipMenu(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
