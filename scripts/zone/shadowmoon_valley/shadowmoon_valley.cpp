@@ -493,7 +493,7 @@ bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature *_C
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-	    ItemPosCountVec dest;
+        ItemPosCountVec dest;
         uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 30658, 1, false);
         if( msg == EQUIP_ERR_OK )
         {
@@ -503,7 +503,7 @@ bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature *_C
     }
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
-	    ItemPosCountVec dest;
+        ItemPosCountVec dest;
         uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, 30659, 1, false);
         if( msg == EQUIP_ERR_OK )
         {

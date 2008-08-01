@@ -224,10 +224,10 @@ bool GossipSelect_mob_lump(Player *player, Creature *_Creature, uint32 sender, u
 struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
 {
     mob_sunspring_villagerAI(Creature *c) : ScriptedAI(c) {Reset();}
-		
+
     void Reset()
     {
-		m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
+        m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
     }
 
@@ -236,10 +236,10 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if(spell->Id == 32146)
-		{
-			m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-			m_creature->RemoveCorpse();
-		}
+        {
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            m_creature->RemoveCorpse();
+        }
     }
 };
 CreatureAI* GetAI_mob_sunspring_villager(Creature *_Creature)

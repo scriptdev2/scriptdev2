@@ -131,8 +131,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     }
 
     void JustDied(Unit* Killer)    
-    {		
-        DoYell(YELL_DEATH,LANG_UNIVERSAL,NULL);		
+    {        
+        DoYell(YELL_DEATH,LANG_UNIVERSAL,NULL);        
         DoPlaySoundToSet(m_creature, SOUND_YELL_DEATH);  
     }
 

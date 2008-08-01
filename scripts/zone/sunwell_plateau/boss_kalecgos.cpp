@@ -18,6 +18,7 @@
 SDName: Boss_Kalecgos
 SD%Complete: 0
 SDComment: VERIFY SCRIPT
+SDCategory: Sunwell Plateau
 EndScriptData */
 
 
@@ -154,7 +155,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             uint64 GoGUID = pInstance->GetData64(KALECGOS_FORCE_FIELD);
             GameObject *GO = GameObject::GetGameObject(*m_creature,GoGUID);
             GO->SetLootState(GO_ACTIVATED);
-        }		
+        }        
     }
 
     void KilledUnit(Unit *victim)
@@ -442,7 +443,7 @@ struct MANGOS_DLL_DECL boss_SathrovarrAI : public ScriptedAI
             DoCast(m_creature,AURA_PLAYER_IS_TELEPORTED);
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;	
+            return;    
 
         if(refresh < diff)
         {
@@ -506,7 +507,7 @@ struct MANGOS_DLL_DECL boss_SathrovarrAI : public ScriptedAI
                 kalec->CastSpell(kalec,BERSERK,false);
             kalec_enranged = true;
         }
-        DoMeleeAttackIfReady();	
+        DoMeleeAttackIfReady();    
     }
 };
 struct MANGOS_DLL_DECL boss_kalecAI : public ScriptedAI
@@ -530,7 +531,7 @@ struct MANGOS_DLL_DECL boss_kalecAI : public ScriptedAI
     }
 
     void Reset()
-    {		
+    {        
         revitalize = 5000;
         heroic_timer = 3000;
         ShatGUID = pInstance->GetData64(DATA_SHATHROVARR);

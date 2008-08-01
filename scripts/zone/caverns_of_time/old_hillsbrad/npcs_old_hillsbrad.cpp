@@ -87,7 +87,7 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 {
     if( action == GOSSIP_ACTION_INFO_DEF+1 )
     {
-	    ItemPosCountVec dest;
+        ItemPosCountVec dest;
         uint8 msg = player->CanStoreNewItem( NULL_BAG, NULL_SLOT, dest, ITEM_ENTRY_BOMBS, 1, false);
         if( msg == EQUIP_ERR_OK )
         {

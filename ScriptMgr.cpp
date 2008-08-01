@@ -961,7 +961,7 @@ void ScriptsInit()
     //--Sekketh Halls
     AddSC_boss_darkweaver_syth();
     AddSC_boss_tailonking_ikiss();
-	AddSC_instance_sethekk_halls();
+    AddSC_instance_sethekk_halls();
 
     //--Shadow Labyrinth
     AddSC_boss_blackheart_the_inciter();

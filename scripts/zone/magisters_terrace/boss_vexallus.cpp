@@ -89,18 +89,18 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         //DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-		if (pInstance)
-		{
+        if (pInstance)
+        {
             pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
             
-			GameObject* Door = NULL;
+            GameObject* Door = NULL;
             Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_VEXALLUS_DOOR));
             if(Door)
-			{
+            {
                 DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
                 Door->SetGoState(0);
-			}
-		}
+            }
+        }
     }
 
     void Aggro(Unit *who)
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-				DoCast(target, SPELL_ARCANE_SHOCK);
+                DoCast(target, SPELL_ARCANE_SHOCK);
                 ArcaneShockTimer = 8000;
             }else
                 ArcaneShockTimer -= diff;

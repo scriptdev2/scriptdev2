@@ -94,14 +94,14 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
         {
         case 0: RandY = 0 - Rand; break;
         case 1: RandY = 0 + Rand; break;
-        }		
+        }        
         Rand = 0;
         Summoned = DoSpawnCreature(15316, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
         if(Summoned)
-	    {
-	        DoCast(Summoned,SPELL_MUTILATE_BUG);
+        {
+            DoCast(Summoned,SPELL_MUTILATE_BUG);
                 ((CreatureAI*)Summoned->AI())->AttackStart(victim);
-	    }
+        }
     }
 
     void Aggro(Unit *who) { }
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_veknilashAI : public ScriptedAI
         //Summon Scarabs
         if (Scarabs_Timer < diff)
         {                 
-            SummonScarabs(SelectUnit(SELECT_TARGET_RANDOM,0));				
+            SummonScarabs(SelectUnit(SELECT_TARGET_RANDOM,0));                
             Scarabs_Timer = 10000+rand()%5000;
         }else Scarabs_Timer -= diff;
 

@@ -33,14 +33,14 @@ EndScriptData */
 
 #define GOSSIP_READY        "I'm not an actor."
 
-#define SAY_READY			"Splendid, I'm going to get the audience ready. Break a leg!"
-#define SAY_OZ_INTRO1		"Finally, everything is in place. Are you ready for your big stage debut?"
-#define OZ_GOSSIP1			"I'm not an actor."
-#define SAY_OZ_INTRO2		"Don't worry, you'll be fine. You look like a natural!"
-#define OZ_GOSSIP2			"Ok, I'll give it a try, then."
+#define SAY_READY           "Splendid, I'm going to get the audience ready. Break a leg!"
+#define SAY_OZ_INTRO1       "Finally, everything is in place. Are you ready for your big stage debut?"
+#define OZ_GOSSIP1          "I'm not an actor."
+#define SAY_OZ_INTRO2       "Don't worry, you'll be fine. You look like a natural!"
+#define OZ_GOSSIP2          "Ok, I'll give it a try, then."
 
-#define SAY_RAJ_INTRO1		"The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
-#define RAJ_GOSSIP1			"I've never been more ready."
+#define SAY_RAJ_INTRO1      "The romantic plays are really tough, but you'll do better this time. You have TALENT. Ready?"
+#define RAJ_GOSSIP1         "I've never been more ready."
 
 struct Dialogue
 {
@@ -75,36 +75,36 @@ static Dialogue RAJDialogue[]=
 // Entries and spawn locations for creatures in Oz event
 float Spawns[6][2]=
 {
-    {17535, -10896}, // Dorothee
-    {17546, -10891}, // Roar
-    {17547, -10884}, // Tinhead
-    {17543, -10902}, // Strawman
-    {17603, -10892}, // Grandmother
-    {17534, -10900}, // Julianne
+    {17535, -10896},                                        // Dorothee
+    {17546, -10891},                                        // Roar
+    {17547, -10884},                                        // Tinhead
+    {17543, -10902},                                        // Strawman
+    {17603, -10892},                                        // Grandmother
+    {17534, -10900},                                        // Julianne
 };
 
 float StageLocations[6][2]=
 {
-    {-10866.711, -1779.816},  // Open door, begin walking (0)
-    {-10894.917, -1775.467}, // (1)
-    {-10896.044, -1782.619},  // Begin Speech after this (2)
-    {-10894.917, -1775.467},  // Resume walking (back to spawn point now) after speech (3)
-    {-10866.711, -1779.816}, // (4)
-    {-10866.700, -1781.030}   // Summon mobs, open curtains, close door (5)
+    {-10866.711, -1779.816},                                // Open door, begin walking (0)
+    {-10894.917, -1775.467},                                // (1)
+    {-10896.044, -1782.619},                                // Begin Speech after this (2)
+    {-10894.917, -1775.467},                                // Resume walking (back to spawn point now) after speech (3)
+    {-10866.711, -1779.816},                                // (4)
+    {-10866.700, -1781.030}                                 // Summon mobs, open curtains, close door (5)
 };
 
 #define CREATURE_SPOTLIGHT  19525
 
-#define SPELL_SPOTLIGHT		25824
+#define SPELL_SPOTLIGHT     25824
 #define SPELL_TUXEDO        32616
 
-#define EVENT_OZ	0
-#define EVENT_HOOD	1
-#define EVENT_RAJ	2
+#define EVENT_OZ            0
+#define EVENT_HOOD          1
+#define EVENT_RAJ           2
 
-#define SPAWN_Z	    90.5
-#define SPAWN_Y     -1758
-#define SPAWN_O     4.738
+#define SPAWN_Z             90.5
+#define SPAWN_Y             -1758
+#define SPAWN_O             4.738
 
 struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 {

@@ -15,9 +15,10 @@
 */
 
 /* ScriptData
-SDName: Boss_moroes
+SDName: Boss_Moroes
 SD%Complete: 100
 SDComment:
+SDCategory: Karazhan
 EndScriptData */
 
 #include "def_karazhan.h"
@@ -547,10 +548,10 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
     }
 };
 
-#define SPELL_DISPELMAGIC	        15090 //Self or other guest+Moroes
-#define SPELL_GREATERHEAL		    29564 //Self or other guest+Moroes
-#define SPELL_HOLYFIRE		        29563
-#define SPELL_PWSHIELD				29408
+#define SPELL_DISPELMAGIC           15090                   //Self or other guest+Moroes
+#define SPELL_GREATERHEAL           29564                   //Self or other guest+Moroes
+#define SPELL_HOLYFIRE              29563
+#define SPELL_PWSHIELD              29408
 
 struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestAI
 {
@@ -617,10 +618,10 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
     }
 };
 
-#define SPELL_CLEANSE	            29380 //Self or other guest+Moroes
-#define SPELL_GREATERBLESSOFMIGHT	29381 //Self or other guest+Moroes
-#define SPELL_HOLYLIGHT		        29562 //Self or other guest+Moroes
-#define SPELL_DIVINESHIELD			41367
+#define SPELL_CLEANSE               29380                   //Self or other guest+Moroes
+#define SPELL_GREATERBLESSOFMIGHT   29381                   //Self or other guest+Moroes
+#define SPELL_HOLYLIGHT             29562                   //Self or other guest+Moroes
+#define SPELL_DIVINESHIELD          41367
 
 struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 {
@@ -685,9 +686,9 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
     }
 };
 
-#define SPELL_HAMSTRING       9080
-#define SPELL_MORTALSTRIKE    29572
-#define SPELL_WHIRLWIND        29573
+#define SPELL_HAMSTRING         9080
+#define SPELL_MORTALSTRIKE      29572
+#define SPELL_WHIRLWIND         29573
 
 struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 {
@@ -734,9 +735,9 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
     }
 };
 
-#define SPELL_DISARM           8379
-#define SPELL_HEROICSTRIKE     29567
-#define SPELL_SHIELDBASH       11972
+#define SPELL_DISARM            8379
+#define SPELL_HEROICSTRIKE      29567
+#define SPELL_SHIELDBASH        11972
 #define SPELL_SHIELDWALL        29390
 
 struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
@@ -857,11 +858,11 @@ void AddSC_boss_moroes()
 
     newscript = new Script;
     newscript->Name="boss_lord_robin_daris";
-    newscript->GetAI = 	GetAI_lord_robin_daris;
+    newscript->GetAI = GetAI_lord_robin_daris;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="boss_lord_crispin_ference";
-    newscript->GetAI = 	GetAI_lord_crispin_ference;
+    newscript->GetAI = GetAI_lord_crispin_ference;
     m_scripts[nrscripts++] = newscript;
 }

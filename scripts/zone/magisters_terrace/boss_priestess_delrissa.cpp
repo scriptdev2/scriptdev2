@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: Boss_priestess_delrissa
+SDName: Boss_Priestess_Delrissa
 SD%Complete: 0
 SDComment: 
 SDCategory: Magister's Terrace
@@ -24,8 +24,8 @@ EndScriptData */
 #include "def_magisters_terrace.h"
 #include "GameObject.h"
 
-#define SAY_AGGRO           "Annihilate them!"
-#define SOUND_AGGRO         12395
+#define SAY_AGGRO               "Annihilate them!"
+#define SOUND_AGGRO             12395
 
 struct Speech
 {
@@ -50,17 +50,17 @@ static Speech PlayerDeath[]=
     {"It's been a kick, really", 12411},
 };
 
-#define SAY_DEATH           "Not what I had... planned..."
-#define SOUND_DEATH         12397
+#define SAY_DEATH               "Not what I had... planned..."
+#define SOUND_DEATH             12397
 
-#define SPELL_DISPEL_MAGIC        27609 
-#define SPELL_FLASH_HEAL          17843
-#define SPELL_SW_PAIN             15654
-#define SPELL_SHIELD              44291
-#define SPELL_RENEW               44174
+#define SPELL_DISPEL_MAGIC      27609 
+#define SPELL_FLASH_HEAL        17843
+#define SPELL_SW_PAIN           15654
+#define SPELL_SHIELD            44291
+#define SPELL_RENEW             44174
 
-#define ORIENT              4.98
-#define POS_Z               -19.9215
+#define ORIENT                  4.98
+#define POS_Z                   -19.9215
 
 float LackeyLocations[4][2]=
 {
@@ -78,8 +78,8 @@ const uint32 AddEntry[8]=
     24561,  //Yazzaj
     24559,  //Warlord Salaris
     24555,  //Garaxxas
-	24553,  //Apoko
-	24556,  //Zelfan
+    24553,  //Apoko
+    24556,  //Zelfan
 };
 
 struct Add
@@ -335,7 +335,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 };
 
 
-#define SPELL_HEALING_POTION	15503
+#define SPELL_HEALING_POTION    15503
 
 struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
 {
@@ -439,19 +439,19 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
     uint32 Gouge_Timer;
     uint32 Kick_Timer;
-	uint32 Vanish_Timer;
-	uint32 Eviscerate_Timer;
-	uint32 Wait_Timer;
-	bool InVanish;
+    uint32 Vanish_Timer;
+    uint32 Eviscerate_Timer;
+    uint32 Wait_Timer;
+    bool InVanish;
 
     void Reset()
     {
         Gouge_Timer = 5500;
         Kick_Timer = 7000;
-		Vanish_Timer = 2000;
-		Eviscerate_Timer = 6000;
-		Wait_Timer = 5000;
-		InVanish = false;
+        Vanish_Timer = 2000;
+        Eviscerate_Timer = 6000;
+        Wait_Timer = 5000;
+        InVanish = false;
         m_creature->SetVisibility(VISIBILITY_ON);
 
         boss_priestess_guestAI::Reset();
@@ -477,7 +477,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
         if(InVanish)
             if(Wait_Timer < diff)
-			{
+            {
                 DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
                 DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
                 m_creature->SetVisibility(VISIBILITY_ON);
@@ -505,7 +505,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
         if(!InVanish)
             DoMeleeAttackIfReady();
-	}
+    }
 };
 
 #define SPELL_IMMOLATE               44267
@@ -561,8 +561,8 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
     uint32 Immolate_Timer;
     uint32 Shadow_Bolt_Timer;
     uint32 Seed_of_Corruption_Timer;    
-	uint32 Curse_of_Agony_Timer;
-	uint32 Fear_Timer;
+    uint32 Curse_of_Agony_Timer;
+    uint32 Fear_Timer;
 
     void Reset()
     {
@@ -578,10 +578,10 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
         Immolate_Timer = 6000;
         Shadow_Bolt_Timer = 3000;
         Seed_of_Corruption_Timer = 2000;
-		Curse_of_Agony_Timer = 1000;
-		Fear_Timer = 10000;
+        Curse_of_Agony_Timer = 1000;
+        Fear_Timer = 10000;
 
-		boss_priestess_guestAI::Reset();
+        boss_priestess_guestAI::Reset();
     }
 
     void JustDied(Unit* killer)
@@ -661,8 +661,8 @@ void mob_fizzleAI::KilledUnit(Unit* victim)
         ((boss_ellris_duskhallowAI*)Ellris->AI())->KilledUnit(victim);
 }
 
-#define SPELL_KNOCKDOWN	        11428
-#define SPELL_SNAP_KICK		    46182
+#define SPELL_KNOCKDOWN            11428
+#define SPELL_SNAP_KICK            46182
 
 struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 {
@@ -703,13 +703,13 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
     }
 };
 
-#define SPELL_POLYMORPH                13323 
-#define SPELL_ICE_BLOCK	               27619 
-#define SPELL_BLIZZARD		           44178 
-#define SPELL_ICE_LANCE			       46194
-#define SPELL_CONE_OF_COLD	           38384 
-#define SPELL_FROSTBOLT	               15043 
-#define SPELL_BLINK         		   14514 
+#define SPELL_POLYMORPH             13323 
+#define SPELL_ICE_BLOCK             27619 
+#define SPELL_BLIZZARD              44178 
+#define SPELL_ICE_LANCE             46194
+#define SPELL_CONE_OF_COLD          38384 
+#define SPELL_FROSTBOLT             15043 
+#define SPELL_BLINK                 14514 
 
 struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 {
@@ -720,7 +720,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 
     uint32 Polymorph_Timer;
     uint32 Ice_Block_Timer;
-	uint32 Wait_Timer;
+    uint32 Wait_Timer;
     uint32 Blizzard_Timer;
     uint32 Ice_Lance_Timer;
     uint32 Cone_of_Cold_Timer;
@@ -732,13 +732,13 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
         HasIceBlocked = false;
 
         Polymorph_Timer = 1000;
-		Ice_Block_Timer = 20000;
-		Wait_Timer = 10000;
+        Ice_Block_Timer = 20000;
+        Wait_Timer = 10000;
         Blizzard_Timer = 8000;
         Ice_Lance_Timer = 12000;
         Cone_of_Cold_Timer = 10000;
-		Frostbolt_Timer = 3000;
-		Blink_Timer = 8000;
+        Frostbolt_Timer = 3000;
+        Blink_Timer = 8000;
 
         boss_priestess_guestAI::Reset();
     }
@@ -831,26 +831,26 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
     uint32 Intercept_Stun_Timer;
     uint32 Disarm_Timer;
     uint32 Piercing_Howl_Timer;
-	uint32 Frightening_Shout_Timer;
-	uint32 Hamstring_Timer;
-	uint32 Mortal_Strike_Timer;
+    uint32 Frightening_Shout_Timer;
+    uint32 Hamstring_Timer;
+    uint32 Mortal_Strike_Timer;
 
     void Reset()
     {
         Intercept_Stun_Timer = 500;
         Disarm_Timer = 6000;
         Piercing_Howl_Timer = 10000;
-	    Frightening_Shout_Timer = 18000;
-	    Hamstring_Timer = 4500;
-	    Mortal_Strike_Timer = 8000;
+        Frightening_Shout_Timer = 18000;
+        Hamstring_Timer = 4500;
+        Mortal_Strike_Timer = 8000;
         DoCast(m_creature, SPELL_BATTLE_SHOUT);
         boss_priestess_guestAI::Reset();
     }
 
-	void Aggro(Unit* who)
-	{
+    void Aggro(Unit* who)
+    {
         DoCast(m_creature, SPELL_BATTLE_SHOUT);
-	}
+    }
 
     void UpdateAI(const uint32 diff)
     {
@@ -954,8 +954,8 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
     uint32 Shoot_Timer;
     uint32 Concussive_Shot_Timer;
     uint32 Multi_Shot_Timer;
-	uint32 Wing_Clip_Timer;
-	uint32 Freezing_Trap_Timer;
+    uint32 Wing_Clip_Timer;
+    uint32 Freezing_Trap_Timer;
 
     void Reset()
     {
@@ -973,10 +973,10 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
         Shoot_Timer = 2500;
         Concussive_Shot_Timer = 8000;
         Multi_Shot_Timer = 10000;
-		Wing_Clip_Timer = 4000;
-		Freezing_Trap_Timer = 15000;
+        Wing_Clip_Timer = 4000;
+        Freezing_Trap_Timer = 15000;
 
-		boss_priestess_guestAI::Reset();
+        boss_priestess_guestAI::Reset();
     }
 
     void JustDied(Unit* killer)
@@ -1021,14 +1021,14 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
             if(Freezing_Trap_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
-			    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
                 Freezing_Trap_Timer = 30000;
             }else Freezing_Trap_Timer -= diff;
 
             if(!m_creature->getVictim()->hasUnitState(UNIT_STAT_STUNDED | UNIT_STAT_ROOT | UNIT_STAT_CONFUSED | UNIT_STAT_DISTRACTED))
                 DoMeleeAttackIfReady();
-		}else
-		{
+        }else
+        {
             if(Concussive_Shot_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CONCUSSIVE_SHOT);
@@ -1052,7 +1052,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
                 DoCast(m_creature->getVictim(), SPELL_SHOOT);
                 Shoot_Timer = 2500;
             }else Shoot_Timer -= diff;
-		}
+        }
     }
 };
 
@@ -1082,20 +1082,20 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
     boss_apokoAI(Creature *c) : boss_priestess_guestAI(c) {}
 
     uint32 Totem_Timer;
-	uint8  Totem_Amount;
-	uint32 War_Stomp_Timer;
+    uint8  Totem_Amount;
+    uint32 War_Stomp_Timer;
     uint32 Purge_Timer;
     uint32 Healing_Wave_Timer;
-	uint32 Frost_Shock_Timer;
+    uint32 Frost_Shock_Timer;
 
     void Reset()
     {
         Totem_Timer = 2000;
-		Totem_Amount = 1;
+        Totem_Amount = 1;
         War_Stomp_Timer = 10000;
         Purge_Timer = 8000;
         Healing_Wave_Timer = 5000;
-		Frost_Shock_Timer = 7000;
+        Frost_Shock_Timer = 7000;
 
         boss_priestess_guestAI::Reset();
     }
@@ -1120,8 +1120,8 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
                 case 2:
                     DoCast(m_creature, SPELL_EARTHBIND_TOTEM);
                     break;
-			}
-			++Totem_Amount;
+            }
+            ++Totem_Amount;
             Totem_Timer = Totem_Amount*2000;
         }else Totem_Timer -= diff;
 
@@ -1151,10 +1151,10 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
                 DoCast(pAdd, SPELL_LESSER_HEALING_WAVE);
                 Healing_Wave_Timer = 5000;
             }
-        }else Healing_Wave_Timer -= diff;	
+        }else Healing_Wave_Timer -= diff;    
 
-		DoMeleeAttackIfReady();
-	}
+        DoMeleeAttackIfReady();
+    }
 };
 
 #define SPELL_GOBLIN_DRAGON_GUN        44272
@@ -1230,7 +1230,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
             High_Explosive_Sheep_Timer = 65000;
         }else High_Explosive_Sheep_Timer -= diff;
 
-		DoMeleeAttackIfReady();
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -1349,22 +1349,22 @@ void AddSC_boss_priestess_delrissa()
 
     newscript = new Script;
     newscript->Name="boss_warlord_salaris";
-    newscript->GetAI = 	GetAI_warlord_salaris;
+    newscript->GetAI = GetAI_warlord_salaris;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="boss_garaxxas";
-    newscript->GetAI = 	GetAI_garaxxas;
+    newscript->GetAI = GetAI_garaxxas;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="boss_apoko";
-    newscript->GetAI = 	GetAI_apoko;
+    newscript->GetAI = GetAI_apoko;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="boss_zelfan";
-    newscript->GetAI = 	GetAI_zelfan;
+    newscript->GetAI = GetAI_zelfan;
     m_scripts[nrscripts++] = newscript;
 
     //newscript = new Script;

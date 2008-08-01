@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         {
         case 0: RandY = 0 - Rand; break;
         case 1: RandY = 0 + Rand; break;
-        }		
+        }        
         Rand = 0;
         Spawn = DoSpawnCreature(15630, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
         if(Spawn)
@@ -104,20 +104,20 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                     switch(rand()%3)
                     {
                         case 0:  
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
                             break;
                         case 1:
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
                             break;
                         case 2:
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
-                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));	
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
+                        SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));    
                             break;
  
                     }
-                    			
+                                
                 SpawnSpawns_Timer = 30000 + rand()%30000;;
             }else SpawnSpawns_Timer -= diff;
 
@@ -172,17 +172,13 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
                         Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-5, target->GetPositionY()+5, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         ((CreatureAI*)Hatchling->AI())->AttackStart(target);
                             break;
- 
                     }
-
-
             } 
             SpawnHatchlings_Timer = 45000 + rand()%15000;
         }else SpawnHatchlings_Timer -= diff;
      }
 
-
-            DoMeleeAttackIfReady();
+        DoMeleeAttackIfReady();
     }
 }; 
 
@@ -200,8 +196,6 @@ CreatureAI* GetAI_mob_spawn_of_fankriss(Creature *_Creature)
     ai->Spell[0].Cooldown = 1801000;
     ai->Spell[0].First_Cast = 20000;
     ai->Spell[0].Spell_Id = SPELL_ENRAGE;
-
-
 
     ai->EnterEvadeMode();
 

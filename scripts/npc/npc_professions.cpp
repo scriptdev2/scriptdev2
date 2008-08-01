@@ -245,7 +245,7 @@ bool EquippedOk(Player* player, uint32 spellId)
 }
 void ProfessionUnlearnSpells(Player *player, uint32 type)
 {
-	switch (type)
+    switch (type)
     {
         case 36436: // S_UNLEARN_WEAPON
             player->removeSpell(36125); // Light Earthforged Blade
@@ -843,7 +843,7 @@ void SendActionMenu_npc_prof_leather(Player *player, Creature *_Creature, uint32
         player->SEND_TRAINERLIST( _Creature->GetGUID() );
         break;
     //Unlearn Leather
-	case GOSSIP_ACTION_INFO_DEF + 1:
+    case GOSSIP_ACTION_INFO_DEF + 1:
         if( EquippedOk(player,S_UNLEARN_DRAGON) )
         {
             if( player->GetMoney() >= DoMedUnlearnCost(player) )

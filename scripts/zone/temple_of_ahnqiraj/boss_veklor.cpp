@@ -98,14 +98,14 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         {
         case 0: RandY = 0 - Rand; break;
         case 1: RandY = 0 + Rand; break;
-        }		
+        }        
         Rand = 0;
         Summoned = DoSpawnCreature(15317, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
         if(Summoned)
-	    {
-	        DoCast(Summoned, SPELL_EXPLODEBUG);
+        {
+            DoCast(Summoned, SPELL_EXPLODEBUG);
                 ((CreatureAI*)Summoned->AI())->AttackStart(victim);
-	    }
+        }
     }
 
     void Aggro(Unit *who) { }
@@ -155,7 +155,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         //Summon Scorpions
         if (Scorpions_Timer < diff)
         {                 
-            SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));				
+            SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));                
             Scorpions_Timer = 7000+rand()%3000;
         }else Scorpions_Timer -= diff;
 

@@ -45,11 +45,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     uint64 FelCrystals[NUMBER_OF_CRYSTALS];
     uint32 FilledCrystals;
     uint64 SelinGUID;
-	uint64 DelrissaGUID;
-	uint64 VexallusDoorGUID;
-	uint64 SelinDoorGUID;
+    uint64 DelrissaGUID;
+    uint64 VexallusDoorGUID;
+    uint64 SelinDoorGUID;
     uint64 SelinEncounterDoorGUID;
-	uint64 DelrissaDoorGUID;
+    uint64 DelrissaDoorGUID;
 
     void Initialize()
     {
@@ -60,11 +60,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
         FilledCrystals = 0;
         SelinGUID = 0;
-		DelrissaGUID = 0;
+        DelrissaGUID = 0;
         VexallusDoorGUID = 0;
-		SelinDoorGUID = 0;
-		SelinEncounterDoorGUID = 0;
-		DelrissaDoorGUID = 0;
+        SelinDoorGUID = 0;
+        SelinEncounterDoorGUID = 0;
+        DelrissaDoorGUID = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
                 return SelinGUID;
             case DATA_DELRISSA:
                 return DelrissaGUID;
-			case DATA_CRYSTAL_1:
+            case DATA_CRYSTAL_1:
                 return FelCrystals[0];
             case DATA_CRYSTAL_2:
                 return FelCrystals[1];
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
                 return SelinDoorGUID;
             case DATA_SELIN_ENCOUNTER_DOOR:
                 return SelinEncounterDoorGUID;
-			case DATA_DELRISSA_DOOR:
+            case DATA_DELRISSA_DOOR:
                 return DelrissaDoorGUID;
         }
         return 0;
@@ -177,11 +177,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
                 break;
             case 188118:
                 SelinEncounterDoorGUID = go->GetGUID();
-				break;
-			case 187770:
+                break;
+            case 187770:
                 DelrissaDoorGUID = go->GetGUID();
                 break;
-		}
+        }
     }
 };
 

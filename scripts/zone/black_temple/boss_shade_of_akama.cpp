@@ -607,10 +607,10 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
             return;
 
         if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
-		{
-			DoYell(SAY_LOW_HEALTH, LANG_UNIVERSAL, NULL);
-			DoPlaySoundToSet(m_creature, SOUND_LOW_HEALTH);
-		}
+        {
+            DoYell(SAY_LOW_HEALTH, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_LOW_HEALTH);
+        }
 
         if(ShadeGUID && !StartCombat)
         {

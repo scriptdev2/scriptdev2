@@ -108,7 +108,7 @@ EndScriptData */
 #define SAY_VERA_SPECIAL2         "Anar'alah belore!"
 #define SOUND_VERA_SPECIAL2       11529
 
-#define ERROR_INST_DATA	          "SD2 ERROR: Instance Data for Black Temple not set properly; abort Illidari Council event."
+#define ERROR_INST_DATA             "SD2 ERROR: Instance Data for Black Temple not set properly; abort Illidari Council event."
 struct Yells
 {
     char* text;

@@ -65,48 +65,48 @@ EndScriptData */
 #define CREATURE_CRONE          18168
 
 /***** Speech and Sound *****/
-#define SAY_DOROTHEE_DEATH	        "Oh at last, at last. I can go home."
-#define SOUND_DOROTHEE_DEATH	    9190
-#define SAY_DOROTHEE_SUMMON	        "Don't let them hurt us, Tito! Oh, you won't, will you?"
-#define SOUND_DOROTHEE_SUMMON	    9191
+#define SAY_DOROTHEE_DEATH          "Oh at last, at last. I can go home."
+#define SOUND_DOROTHEE_DEATH        9190
+#define SAY_DOROTHEE_SUMMON         "Don't let them hurt us, Tito! Oh, you won't, will you?"
+#define SOUND_DOROTHEE_SUMMON       9191
 #define SAY_DOROTHEE_TITO_DEATH     "Tito, oh Tito, no!"
-#define SOUND_DOROTHEE_TITO_DEATH	9192
-#define SAY_DOROTHEE_AGGRO	        "Oh dear, we simply must find a way home! The old wizard could be our only hope! Strawman, Roar, Tinhead, will you... wait! Oh golly, look! We have visitors!"
-#define SOUND_DOROTHEE_AGGRO	    9195
+#define SOUND_DOROTHEE_TITO_DEATH   9192
+#define SAY_DOROTHEE_AGGRO          "Oh dear, we simply must find a way home! The old wizard could be our only hope! Strawman, Roar, Tinhead, will you... wait! Oh golly, look! We have visitors!"
+#define SOUND_DOROTHEE_AGGRO        9195
 
 #define SAY_ROAR_AGGRO              "Wanna fight? Huh? Do ya? C'mon, I'll fight you with both claws behind my back!"
-#define SOUND_ROAR_AGGRO	        9227
+#define SOUND_ROAR_AGGRO            9227
 #define SAY_ROAR_DEATH              "You didn't have to go and do that."
-#define SOUND_ROAR_DEATH	        9229
+#define SOUND_ROAR_DEATH            9229
 #define SAY_ROAR_SLAY               "I think I'm going to go take fourty winks"
-#define SOUND_ROAR_SLAY		        9230
+#define SOUND_ROAR_SLAY             9230
 
 #define SAY_STRAWMAN_AGGRO          "Now what should I do with you? I simply can't make up my mind."
-#define SOUND_STRAWMAN_AGGRO	    9254
+#define SOUND_STRAWMAN_AGGRO        9254
 #define SAY_STRAWMAN_DEATH          "Don't let them make a mattress... out of me."
-#define SOUND_STRAWMAN_DEATH	    9256
+#define SOUND_STRAWMAN_DEATH        9256
 #define SAY_STRAWMAN_SLAY           "I guess I'm not a failure after all."
-#define SOUND_STRAWMAN_SLAY	        9257
+#define SOUND_STRAWMAN_SLAY         9257
 
 #define SAY_TINHEAD_AGGRO           "I could really use a heart. Say, can I have yours?"
-#define SOUND_TINHEAD_AGGRO	        9268
+#define SOUND_TINHEAD_AGGRO         9268
 #define SAY_TINHEAD_DEATH           "Back to being an old rustbucket."
-#define SOUND_TINHEAD_DEATH	        9270
+#define SOUND_TINHEAD_DEATH         9270
 #define SAY_TINHEAD_SLAY            "Guess I'm not so rusty, after all."
-#define SOUND_TINHEAD_SLAY	        9271
+#define SOUND_TINHEAD_SLAY          9271
 
 #define SAY_CRONE_AGGRO             "Woe to each and every one of you my pretties!"
-#define SOUND_CRONE_AGGRO	        9179
+#define SOUND_CRONE_AGGRO           9179
 #define SAY_CRONE_AGGRO2            "It will all be over soon!"
-#define SOUND_CRONE_AGGRO2	        9307
+#define SOUND_CRONE_AGGRO2          9307
 #define SAY_CRONE_DEATH             "How could you? What a cruel, cruel world!"
-#define SOUND_CRONE_DEATH	        9178
+#define SOUND_CRONE_DEATH           9178
 #define SAY_CRONE_SLAY              "Fixed you, didn't I?"
-#define SOUND_CRONE_SLAY	        9180
+#define SOUND_CRONE_SLAY            9180
 
 void SummonCroneIfReady(ScriptedInstance* pInstance, Creature *_Creature)
 {
-    pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, 0); // Increment DeathCount
+    pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, 0);        // Increment DeathCount
     if(pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
         Creature* Crone = _Creature->SummonCreature(CREATURE_CRONE,  -10891.96, -1755.95, _Creature->GetPositionZ(), 4.64, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
@@ -159,7 +159,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DOROTHEE_AGGRO);
     }
 
-    void SummonTito(); // See below
+    void SummonTito();                                      // See below
 
     void JustDied(Unit* killer)
     {
@@ -727,12 +727,12 @@ CreatureAI* GetAI_mob_cyclone(Creature* _Creature)
 
 /**** Yells for the Wolf ****/
 #define SAY_WOLF_AGGRO      "All the better to own you with!"
-#define SOUND_WOLF_AGGRO	9276
-#define SOUND_WOLF_DEATH	9275 // No speech
+#define SOUND_WOLF_AGGRO    9276
+#define SOUND_WOLF_DEATH    9275 // No speech
 #define SAY_WOLF_SLAY       "Mmmm... delicious."
-#define SOUND_WOLF_SLAY		9277
+#define SOUND_WOLF_SLAY     9277
 #define SAY_WOLF_HOOD       "Run away little girl, run away!"
-#define SOUND_WOLF_HOOD		9278
+#define SOUND_WOLF_HOOD     9278
 
 /**** The Wolf's Entry ****/
 #define CREATURE_BIG_BAD_WOLF           17521
@@ -917,7 +917,7 @@ CreatureAI* GetAI_boss_bigbadwolf(Creature* _Creature)
 #define SAY_JULIANNE_RESURRECT      "Come, gentle night; and give me back my Romulo!"
 #define SOUND_JULIANNE_RESURRECT    9200
 #define SAY_JULIANNE_SLAY           "Parting is such sweet sorrow."
-#define SOUND_JULIANNE_SLAY	        9201
+#define SOUND_JULIANNE_SLAY         9201
 
 /****** Romulo *******/
 #define SAY_ROMULO_AGGRO            "Wilt thou provoke me? Then have at thee, boy!"
@@ -932,9 +932,9 @@ CreatureAI* GetAI_boss_bigbadwolf(Creature* _Creature)
 #define SOUND_ROMULO_SLAY           9238
 
 /*** Misc. Information ****/
-#define CREATURE_ROMULO       17533
-#define ROMULO_X              -10900
-#define ROMULO_Y              -1758
+#define CREATURE_ROMULO             17533
+#define ROMULO_X                    -10900
+#define ROMULO_Y                    -1758
 
 enum RAJPhase
 {

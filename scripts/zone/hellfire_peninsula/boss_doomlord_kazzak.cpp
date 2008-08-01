@@ -23,14 +23,14 @@ EndScriptData */
 
 #include "sc_creature.h"
 
-#define SPELL_SHADOWVOLLEY                32963            
-#define SPELL_CLEAVE           	          31779
-#define SPELL_THUNDERCLAP                 36706
-#define SPELL_VOIDBOLT                    39329
-#define SPELL_MARKOFKAZZAK                32960
-#define SPELL_ENRAGE                      32964
-#define SPELL_CAPTURESOUL                 32966   
-#define SPELL_TWISTEDREFLECTION           21063
+#define SPELL_SHADOWVOLLEY              32963
+#define SPELL_CLEAVE                    31779
+#define SPELL_THUNDERCLAP               36706
+#define SPELL_VOIDBOLT                  39329
+#define SPELL_MARKOFKAZZAK              32960
+#define SPELL_ENRAGE                    32964
+#define SPELL_CAPTURESOUL               32966
+#define SPELL_TWISTEDREFLECTION         21063
 
 struct MANGOS_DLL_DECL boss_doomlordkazzakAI : public ScriptedAI
 {

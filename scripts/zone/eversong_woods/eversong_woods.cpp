@@ -63,7 +63,7 @@ CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
 struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
     // CreatureAI functions
-    npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {Reset();}	
+    npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {Reset();}    
 
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
@@ -91,14 +91,14 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     }
 
     void JustDied(Unit* killer)
-    {	
+    {
         //Default npc faction
         m_creature->setFaction(35);
     }
 
     void UpdateAI(const uint32 diff)
-    {	//Must update npc_escortAI
-        npc_escortAI::UpdateAI(diff);
+    {
+        npc_escortAI::UpdateAI(diff);                       //Must update npc_escortAI
 
     }
 };
