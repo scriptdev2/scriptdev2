@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Eastern_Plaguelands
 SD%Complete: 100
-SDComment: Quest support: 5211, 5742
+SDComment: Quest support: 5211, 5742. Special vendor Augustus the Touched
 SDCategory: Eastern Plaguelands
 EndScriptData */
 
 /* ContentData
 mobs_ghoul_flayer
+npc_augustus_the_touched
 npc_darrowshire_spirit
 npc_tirion_fordring
 EndContentData */
@@ -53,6 +54,29 @@ struct MANGOS_DLL_DECL mobs_ghoul_flayerAI : public ScriptedAI
 CreatureAI* GetAI_mobs_ghoul_flayer(Creature *_Creature)
 {
     return new mobs_ghoul_flayerAI (_Creature);
+}
+
+/*######
+## npc_augustus_the_touched
+######*/
+
+bool GossipHello_npc_augustus_the_touched(Player *player, Creature *_Creature)
+{
+    if( _Creature->isQuestGiver() )
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if( _Creature->isVendor() && player->GetQuestRewardStatus(6164) )
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+    return true; 
+}
+
+bool GossipSelect_npc_augustus_the_touched(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if( action == GOSSIP_ACTION_TRADE )
+        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    return true;
 }
 
 /*######
@@ -134,6 +158,12 @@ void AddSC_eastern_plaguelands()
     newscript = new Script;
     newscript->Name="mobs_ghoul_flayer";
     newscript->GetAI = GetAI_mobs_ghoul_flayer;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_augustus_the_touched";
+    newscript->pGossipHello = &GossipHello_npc_augustus_the_touched;
+    newscript->pGossipSelect = &GossipSelect_npc_augustus_the_touched;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
