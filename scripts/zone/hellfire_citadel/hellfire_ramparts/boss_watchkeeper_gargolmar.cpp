@@ -16,37 +16,40 @@
 
 /* ScriptData
 SDName: Boss_Watchkeeper_Gargolmar
-SD%Complete: 70
-SDComment: Missing adds to heal him
+SD%Complete: 80
+SDComment: Normal/Heroic support: both, to be tested. Missing adds to heal him. Surge should be used on target furthest away, not random.
 SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
 #include "sc_creature.h"
+#include "map.h"                                            //this to be included in sc_creature.h (or something similar...)
 
-//Adds NYI
+#define SAY_HEAL                "Heal me! QUICKLY!"
+#define SOUND_HEAL              10329
 
-#define SPELL_MORTAL_WOUND        30641
-#define SPELL_SURGE                25787
-#define SPELL_RETALIATION        40546
+#define SAY_SURGE               "Back off, pup!"
+#define SOUND_SURGE             10330
 
-#define SAY_TAUNT                "Do you smell that? Fresh meat has somehow breached our citadel. Be wary of any intruders." 
-#define SOUND_TAUNT                
+#define SAY_TAUNT               "Do you smell that? Fresh meat has somehow breached our citadel. Be wary of any intruders."
 
-#define SAY_AGGRO_1                "Heh... this may hurt a little."
-#define SOUND_AGGRO_1            10332
-#define SAY_AGGRO_2                "What do we have here? ..." 
-#define SOUND_AGGRO_2            10331
-#define SAY_AGGRO_3                "" 
-#define SOUND_AGGRO_3            10333
+#define SAY_AGGRO_1             "What have we here...?"
+#define SOUND_AGGRO_1           10331
+#define SAY_AGGRO_2             "Heh... this may hurt a little."
+#define SOUND_AGGRO_2           10332
+#define SAY_AGGRO_3             "I'm gonna enjoy this."
+#define SOUND_AGGRO_3           10333
 
+#define SAY_KILL_1              "Say farewell!"
+#define SOUND_KILL_1            10334
+#define SAY_KILL_2              "Much too easy..."
+#define SOUND_KILL_2            10335
 
-#define SAY_SURGE                "Back off, pup!" 
-#define SOUND_SURGE                10330    
+#define SOUND_DIE               10336
 
-#define SAY_HEAL                "Heal me! QUICKLY!" 
-#define SOUND_HEAL                10329
-
-#define SOUND_DIE                10336
+#define SPELL_MORTAL_WOUND      30641
+#define H_SPELL_MORTAL_WOUND    36814
+#define SPELL_SURGE             34645
+#define SPELL_RETALIATION       22857
 
 struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
@@ -58,116 +61,126 @@ struct MANGOS_DLL_DECL boss_watchkeeper_gargolmarAI : public ScriptedAI
 
     bool HasTaunted;
     bool YelledForHeal;
+    bool HeroicMode;
 
     void Reset()
-    {   
+    {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        if( HeroicMode )
+            debug_log("SD2: creature %u is in heroic mode",m_creature->GetEntry());
+
         Surge_Timer = 5000;
         MortalWound_Timer = 4000;
-        Retaliation_Timer = 5000;
+        Retaliation_Timer = 0;
 
         HasTaunted = false;
         YelledForHeal = false;
-
     }
 
     void Aggro(Unit *who)
     {
-                switch(rand()%2)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break;                    
-                }
+        switch(rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
+        }
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+    void MoveInLineOfSight(Unit* who)
+    {
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
         {
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
             float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
+            if(m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
                 DoStartAttackAndMovement(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 if (!InCombat)
                 {
-                    switch(rand()%2)
-                    {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break;
-                    }
+                    Aggro(who);
+                    InCombat = true;
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
             {
                 DoYell(SAY_TAUNT, LANG_UNIVERSAL, NULL);
-
                 HasTaunted = true;
             }
-
         }
-    }  
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        switch(rand()%2)
+        {
+            case 0:
+                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
+            case 1:
+                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;
+        }
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        DoPlaySoundToSet(m_creature,SOUND_DIE);
+    }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(MortalWound_Timer < diff)
-        {                   
-            DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
+        if( MortalWound_Timer < diff )
+        {
+            if( HeroicMode ) DoCast(m_creature->getVictim(),H_SPELL_MORTAL_WOUND);
+            else DoCast(m_creature->getVictim(),SPELL_MORTAL_WOUND);
 
             MortalWound_Timer = 5000+rand()%8000;
         }else MortalWound_Timer -= diff;
 
-        if(Surge_Timer < diff)
+        if( Surge_Timer < diff )
         {
             DoYell(SAY_SURGE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SURGE);
 
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            DoCast(target,SPELL_SURGE);
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_SURGE);
 
             Surge_Timer = 5000+rand()%8000;
         }else Surge_Timer -= diff;
 
         if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20)
         {
-            if(Retaliation_Timer < diff)
-            {              
-                DoCast(m_creature->getVictim(),SPELL_RETALIATION);
-                Retaliation_Timer = 5000;
+            if( Retaliation_Timer < diff )
+            {
+                DoCast(m_creature,SPELL_RETALIATION);
+                Retaliation_Timer = 30000;
             }else Retaliation_Timer -= diff;
         }
 
-        if(!YelledForHeal)
+        if( !YelledForHeal )
             if((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 40)
             {
                 DoYell(SAY_HEAL, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_HEAL);
-
-                //m_creature->SetHealth(m_creature->GetHealth() + m_creature->GetMaxHealth()*0.3);
                 YelledForHeal = true;        
             }
 
@@ -179,7 +192,6 @@ CreatureAI* GetAI_boss_watchkeeper_gargolmarAI(Creature *_Creature)
 {
     return new boss_watchkeeper_gargolmarAI (_Creature);
 }
-
 
 void AddSC_boss_watchkeeper_gargolmar()
 {
