@@ -22,7 +22,7 @@ SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
 #include "sc_creature.h"
-#include "map.h"                                            //this to be included in sc_creature.h (or something similar...)
+#include "Map.h"                                            //this to be included in sc_creature.h (or something similar...)
 
 #define SAY_HEAL                "Heal me! QUICKLY!"
 #define SOUND_HEAL              10329
