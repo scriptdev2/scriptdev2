@@ -661,7 +661,7 @@ void LoadDatabase()
         }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Summons. DB table `EventAI_Summons` is empty.");
 
         //Gather event data
-        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_param1`,`event_param2`,`event_param3`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
+        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
             "FROM `eventai_scripts`");
 
         //Drop Existing EventAI Map
@@ -685,9 +685,11 @@ void LoadDatabase()
                 temp.event_type = fields[2].GetUInt16();
                 temp.event_inverse_phase_mask = fields[3].GetUInt32();
                 temp.event_chance = fields[4].GetUInt8();
-                temp.event_param1 = fields[5].GetUInt32();
-                temp.event_param2 = fields[6].GetUInt32();
-                temp.event_param3 = fields[7].GetUInt32();
+                temp.event_flags = fields[5].GetUInt8();
+                temp.event_param1 = fields[6].GetUInt32();
+                temp.event_param2 = fields[7].GetUInt32();
+                temp.event_param3 = fields[8].GetUInt32();
+                temp.event_param4 = fields[9].GetUInt32();
 
                 //Report any errors in event
                 if (temp.event_type >= EVENT_T_END)
@@ -701,52 +703,54 @@ void LoadDatabase()
                 switch (temp.event_type)
                 {
                 case EVENT_T_HP:
-                    {
-                        if (temp.event_param2 > 100)
-                            error_log("SD2: Event %d has EVENT_T_HP with param2 (HpMinPercent) > 100. Event will never trigger! ", i);
-                    }
-                    break;
-
                 case EVENT_T_MANA:
+                case EVENT_T_TARGET_HP:
                     {
                         if (temp.event_param2 > 100)
-                            error_log("SD2: Event %d has EVENT_T_MANA with param2 (ManaMinPercent) > 100. Event will never trigger! ", i);
+                            error_log("SD2: Event %d is percentage event with param2 (MinPercent) > 100. Event will never trigger! ", i);
+
+                        if (temp.event_param1 <= temp.event_param2)
+                            error_log("SD2: Event %d is percentage event with param1 <= param2 (MaxPercent <= MinPercent). Event will never trigger! ", i);
+                    }
+                case EVENT_T_SPELLHIT:
+                case EVENT_T_RANGE:
+                case EVENT_T_OOC_LOS:
+                case EVENT_T_FRIENDLY_HP:
+                case EVENT_T_FRIENDLY_IS_CC:
+                case EVENT_T_FRIENDLY_MISSING_BUFF:
+                    {
+                        if (temp.event_param4 < temp.event_param3)
+                            error_log("SD2: Event %d is repeatable event with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", i);
                     }
                     break;
 
-                case EVENT_T_FRIENDLY_HP:
+                case EVENT_T_TIMER:
+                case EVENT_T_TIMER_OOC:
                     {
-                        if (temp.event_param3 < 1000)
-                        {
-                            error_log("SD2 WARNING: Event %d has EVENT_T_FRIENDLY_HP with param3 (TimeUntilRepeat) < 1000 ms. Defaulted to 1000 ms to prevent possible lag. ", i);
-                            temp.event_param3 = 1000;
-                        }
+                         if (temp.event_param2 < temp.event_param1)
+                            error_log("SD2: Event %d is timer event with param2 < param1 (InitialMax < InitialMin). Event will never repeat.", i);
+
+                         if (temp.event_param4 < temp.event_param3)
+                            error_log("SD2: Event %d is repeatable event with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", i);
                     }
                     break;
                 };
 
                 for (uint32 j = 0; j < MAX_ACTIONS; j++)
                 {
-                    temp.action[j].type = fields[8+(j*4)].GetUInt16();
-                    temp.action[j].param1 = fields[9+(j*4)].GetUInt32();
-                    temp.action[j].param2 = fields[10+(j*4)].GetUInt32();
-                    temp.action[j].param3 = fields[11+(j*4)].GetUInt32();
+                    temp.action[j].type = fields[10+(j*4)].GetUInt16();
+                    temp.action[j].param1 = fields[11+(j*4)].GetUInt32();
+                    temp.action[j].param2 = fields[12+(j*4)].GetUInt32();
+                    temp.action[j].param3 = fields[13+(j*4)].GetUInt32();
 
                     //Report any errors in actions
                     switch (temp.action[j].type)
                     {
-                    case ACTION_T_NONE:
-                        break;
-
                     case ACTION_T_SAY:
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
                         if (GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT)
                             error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
-                        break;
-
-                    case ACTION_T_SOUND:
-                    case ACTION_T_EMOTE:
                         break;
 
                     case ACTION_T_RANDOM_SAY:
@@ -756,10 +760,6 @@ void LoadDatabase()
                             (temp.action[j].param2 != 0xffffffff && GetLocalizedText(temp.action[j].param2) == DEFAULT_TEXT) ||
                             (temp.action[j].param3 != 0xffffffff && GetLocalizedText(temp.action[j].param3) == DEFAULT_TEXT))
                             error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
-                        break;
-
-                    case ACTION_T_RANDOM_SOUND:
-                    case ACTION_T_RANDOM_EMOTE:
                         break;
 
                     case ACTION_T_CAST:
@@ -796,11 +796,6 @@ void LoadDatabase()
                             error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
                         break;
 
-                    case ACTION_T_THREAT_ALL_PCT:
-                    case ACTION_T_AUTO_ATTACK:
-                    case ACTION_T_COMBAT_MOVEMENT:
-                        break;
-
                     case ACTION_T_SET_PHASE:
                         if (temp.action[j].param1 > 31)
                             error_log("SD2: Event %u Action %u is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j);
@@ -811,19 +806,9 @@ void LoadDatabase()
                             error_log("SD2: Event %u Action %u is incrementing phase by 0. Was this intended?", i, j);
                         break;
 
-                    case ACTION_T_EVADE:
-                    case ACTION_T_FLEE:
-                    case ACTION_T_QUEST_EVENT_ALL:
-                    case ACTION_T_CASTCREATUREGO_ALL:
-                        break;
-
                     case ACTION_T_KILLED_MONSTER:
                         if (temp.event_type != EVENT_T_DEATH)
                             outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j);
-                        break;
-
-                    case ACTION_T_SET_INST_DATA:
-                    case ACTION_T_SET_INST_DATA64:
                         break;
                     }
 

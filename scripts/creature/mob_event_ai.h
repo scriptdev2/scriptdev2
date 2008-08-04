@@ -19,23 +19,24 @@
 
 enum Event_Types
 {
-    EVENT_T_TIMER_REPEAT            = 0,    //Time, Initial, Random
-    EVENT_T_TIMER_SINGLE            = 1,    //Time
-    EVENT_T_TIMER_OOC_REPEAT        = 2,    //Time, Initial, Random
-    EVENT_T_TIMER_OOC_SINGLE        = 3,    //Time
-    EVENT_T_HP                      = 4,    //HPMax%, HPMin%, TimeUntilRepeat
-    EVENT_T_MANA                    = 5,    //ManaMax%,ManaMin% TimeUntilRepeat
-    EVENT_T_AGGRO                   = 6,    //NONE
-    EVENT_T_KILL                    = 7,    //TimeUntilRepeat
-    EVENT_T_DEATH                   = 8,    //NONE
-    EVENT_T_EVADE                   = 9,    //NONE
-    EVENT_T_SPELLHIT                = 10,   //SpellID, School, TimeUntilRepeat
-    EVENT_T_RANGE                   = 11,   //MinDist, MaxDist, TimeUnitlRepeat
-    EVENT_T_OOC_LOS                 = 12,   //NoHostile, NoFriendly, TimeUntilRepeat
-    EVENT_T_SPAWNED                 = 13,   //NONE
-    EVENT_T_TARGET_HP               = 14,   //HPMax%, HPMin%, TimeUntilRepeat
-    EVENT_T_TARGET_CASTING          = 15,   //TimeUntilRepeat
-    EVENT_T_FRIENDLY_HP             = 16,   //HPDeficit, Radius, TimeUntilRepeat
+    EVENT_T_TIMER                   = 0,    //InitialMin, InitialMax, RepeatMin, RepeatMax
+    EVENT_T_TIMER_OOC               = 1,    //InitialMin, InitialMax, RepeatMin, RepeatMax
+    EVENT_T_HP                      = 2,    //HPMax%, HPMin%, RepeatMin, RepeatMax
+    EVENT_T_MANA                    = 3,    //ManaMax%,ManaMin% RepeatMin, RepeatMax
+    EVENT_T_AGGRO                   = 4,    //NONE
+    EVENT_T_KILL                    = 5,    //RepeatMin, RepeatMax
+    EVENT_T_DEATH                   = 6,    //NONE
+    EVENT_T_EVADE                   = 7,    //NONE
+    EVENT_T_SPELLHIT                = 8,    //SpellID, School, RepeatMin, RepeatMax
+    EVENT_T_RANGE                   = 9,    //MinDist, MaxDist, RepeatMin, RepeatMax
+    EVENT_T_OOC_LOS                 = 10,   //NoHostile, NoFriendly, RepeatMin, RepeatMax
+    EVENT_T_SPAWNED                 = 11,   //NONE
+    EVENT_T_TARGET_HP               = 12,   //HPMax%, HPMin%, RepeatMin, RepeatMax
+    EVENT_T_TARGET_CASTING          = 13,   //RepeatMin, RepeatMax
+    EVENT_T_FRIENDLY_HP             = 14,   //HPDeficit, Radius, RepeatMin, RepeatMax
+    EVENT_T_FRIENDLY_IS_CC          = 15,   //DispelType, Radius, RepeatMin, RepeatMax
+    EVENT_T_FRIENDLY_MISSING_BUFF   = 16,   //SpellId, Radius, RepeatMin, RepeatMax
+    EVENT_T_SUMMONED_UNIT           = 17,   //CreatureId, RepeatMin, RepeatMax
     
     EVENT_T_END,
 };
@@ -79,6 +80,8 @@ enum Action_Types
     ACTION_T_SET_INST_DATA          = 34,   //Field, Data
     ACTION_T_SET_INST_DATA64        = 35,   //Field, Target
     ACTION_T_UPDATE_TEMPLATE        = 36,   //Entry, Team
+    ACTION_T_DIE                    = 37,   //No Params
+    ACTION_T_ZONE_COMBAT_PULSE      = 38,   //No Params
 
     ACTION_T_END,
 };
@@ -91,7 +94,7 @@ enum Target
     TARGET_T_HOSTILE_LAST_AGGRO,        //Dead last on aggro (no idea what this could be used for)
     TARGET_T_HOSTILE_RANDOM,            //Just any random target on our threat list
     TARGET_T_HOSTILE_RANDOM_NOT_TOP,    //Any random target except top threat
-    TARGET_T_ACTION_INVOKER,            //Unit who caused this Event to occur (only works for EVENT_T_AGGRO, EVENT_T_KILL, EVENT_T_DEATH, EVENT_T_SPELLHIT, EVENT_T_OOC_LOS)
+    TARGET_T_ACTION_INVOKER,            //Unit who caused this Event to occur (only works for EVENT_T_AGGRO, EVENT_T_KILL, EVENT_T_DEATH, EVENT_T_SPELLHIT, EVENT_T_OOC_LOS, EVENT_T_FRIENDLY_HP, EVENT_T_FRIENDLY_IS_CC, EVENT_T_FRIENDLY_MISSING_BUFF)
 
     TARGET_T_END
     //CAST_FRIENDLY_RANDOM,             //NOT YET IMPLEMENTED
@@ -106,6 +109,18 @@ enum CastFlags
     CAST_FORCE_TARGET_SELF      = 0x10,     //Forces the target to cast this spell on itself
 };
 
+enum EventFlags
+{
+    EFLAG_REPEATABLE            = 0x01,     //Event repeats
+    EFLAG_RESERVED_1            = 0x02,
+    EFLAG_RESERVED_2            = 0x04,
+    EFLAG_RESERVED_3            = 0x08,
+    EFLAG_RESERVED_4            = 0x10,
+    EFLAG_RESERVED_5            = 0x20,
+    EFLAG_RESERVED_6            = 0x40,
+    EFLAG_DEBUG_ONLY            = 0x80,      //Event only occurs in debug build of SD2 only
+};
+
 struct EventAI_Event
 {
     uint32 creature_id;
@@ -113,6 +128,7 @@ struct EventAI_Event
     uint16 event_type;
     uint32 event_inverse_phase_mask;
     uint8 event_chance;
+    uint8 event_flags;
     union
     {
         uint32 event_param1;
@@ -127,6 +143,11 @@ struct EventAI_Event
     {
         uint32 event_param3;
         int32 event_param3_s;
+    };
+    union
+    {
+        uint32 event_param4;
+        int32 event_param4_s;
     };
 
     struct _action
@@ -164,5 +185,3 @@ struct EventAI_Summon
 };
 
 extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
-
-

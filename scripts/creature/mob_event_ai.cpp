@@ -25,14 +25,17 @@ EndScriptData */
 #include "sc_instance.h"
 #include "Player.h"
 
+#include "sc_grid_searchers.h"
+
 #define EVENT_UPDATE_TIME               500
 #define SPELL_RUN_AWAY                  8225
 
 struct EventHolder
 {
-    EventHolder(EventAI_Event p) : Event(p), Time(0), Enabled(true){}
+    EventHolder(EventAI_Event p, uint32 i) : Event(p), EventId(i), Time(0), Enabled(true){}
 
     EventAI_Event Event;
+    uint32 EventId;
     uint32 Time;
     bool Enabled;
 };
@@ -133,47 +136,48 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             int32 param3_s;
         };
 
+        union 
+        {
+            uint32 param4;
+            int32 param4_s;
+        };
+
         param1 = pHolder.Event.event_param1;
         param2 = pHolder.Event.event_param2;
         param3 = pHolder.Event.event_param3;
+        param4 = pHolder.Event.event_param4;
 
         //Check event conditions based on the event type, also reset events
         switch (pHolder.Event.event_type)
         {
-        case EVENT_T_TIMER_REPEAT:
+        case EVENT_T_TIMER:
             {
                 if (!InCombat)
                     return;
 
-                if (param3 > 0)
-                    pHolder.Time = param1 + (rnd % param3);
-                else pHolder.Time = param1;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
-        case EVENT_T_TIMER_SINGLE:
-            {
-                if (!InCombat)
-                    return;
-
-                pHolder.Enabled = false;
-            }
-            break;
-        case EVENT_T_TIMER_OOC_REPEAT:
+        case EVENT_T_TIMER_OOC:
             {
                 if (InCombat)
                     return;
 
-                if (param3 > 0)
-                    pHolder.Time = param1 + (rnd % param3);
-                else pHolder.Time = param1;
-            }
-            break;
-        case EVENT_T_TIMER_OOC_SINGLE:
-            {
-                if (InCombat)
-                    return;
-
-                pHolder.Enabled = false;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_HP:
@@ -186,10 +190,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (perc > param1 || perc < param2)
                     return;
 
-                //Prevent repeat for param3 time, or disable if param3 not set
-                if (param3)
-                    pHolder.Time = param3;
-                else pHolder.Enabled = false;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_MANA:
@@ -202,9 +210,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (perc > param1 || perc < param2)
                     return;
 
-                if (param3)
-                    pHolder.Time = param3;
-                else pHolder.Enabled = false;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_AGGRO:
@@ -213,8 +226,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             break;
         case EVENT_T_KILL:
             {
-                if (param1)
-                    pHolder.Time = param1;
+                //Repeat Timers
+                if (param2 > param1)
+                    pHolder.Time = urand(param1, param2);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
         case EVENT_T_DEATH:
             {
@@ -227,26 +246,39 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_SPELLHIT:
             {
                 //Spell hit is special case, param1 and param2 handled within EventAI::SpellHit
-                if (param3)
-                    pHolder.Time = param3;
+                
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
                 else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_RANGE:
             {
-                if (param3)
-                    pHolder.Time = param3;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
                 else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_OOC_LOS:
             {
-                if (param3)
-                    pHolder.Time = param3;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
                 else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_SPAWNED:
@@ -263,10 +295,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (perc > param1 || perc < param2)
                     return;
 
-                //Prevent repeat for param3 time, or disable if param3 not set
-                if (param3)
-                    pHolder.Time = param3;
-                else pHolder.Enabled = false;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
         case EVENT_T_TARGET_CASTING:
@@ -274,13 +310,16 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 if (!InCombat || !m_creature->getVictim() || !m_creature->getVictim()->IsNonMeleeSpellCasted(false, false, true))
                     return;
 
-                //Prevent repeat for param1 time, or disable if param3 not set
-                if (param1)
-                    pHolder.Time = param1;
-                else pHolder.Enabled = false;
+                //Repeat Timers
+                if (param2 > param1)
+                    pHolder.Time = urand(param1, param2);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
-
         case EVENT_T_FRIENDLY_HP:
             {
                 if (!InCombat)
@@ -293,20 +332,96 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 pActionInvoker = pUnit;
 
-                if (param3)
-                    pHolder.Time = param3;
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
                 else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
+                }
+            }
+            break;
+
+        case EVENT_T_FRIENDLY_IS_CC:
+            {
+                if (!InCombat)
+                    return;
+
+                std::list<Creature*> pList = DoFindFriendlyCC(param2);
+                
+                //List is empty
+                if (pList.empty())
+                    return;
+
+                //We don't really care about the whole list, just return first available
+                pActionInvoker = *(pList.begin());
+
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
+            }
+            break;
+
+        case EVENT_T_FRIENDLY_MISSING_BUFF:
+            {
+                std::list<Creature*> pList = DoFindFriendlyMissingBuff(param2, param1);
+                
+                //List is empty
+                if (pList.empty())
+                    return;
+
+                //We don't really care about the whole list, just return first available
+                pActionInvoker = *(pList.begin());
+
+                //Repeat Timers
+                if (param4 > param3)
+                    pHolder.Time = urand(param3, param4);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
+            }
+            break;
+
+        case EVENT_T_SUMMONED_UNIT:
+            {
+                //Prevent event from occuring on no unit or non creatures
+                if (!pActionInvoker || pActionInvoker->GetTypeId()!=TYPEID_UNIT)
+                    return;
+
+                //Creature id doesn't match up
+                if (param1 && ((Creature*)pActionInvoker)->GetCreatureInfo()->Entry != param1)
+                    return;
+
+                //Repeat Timers
+                if (param3 > param2)
+                    pHolder.Time = urand(param2, param3);
+                else
+                {
+                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    pHolder.Enabled = false;
+                }
             }
             break;
         default:
-            error_log("Event type missing from ProcessEvent() Switch . Type = %d. CreatureEntry = %d", pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+            error_log("Event %d uses type missing from ProcessEvent() Switch . Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
             break;
         }
 
+        //Disable non-repeatable events
+        if (!(pHolder.Event.event_flags & EFLAG_REPEATABLE))
+            pHolder.Enabled = false;
+
         //Process actions
         for (uint32 j = 0; j < MAX_ACTIONS; j++)
-            ProcessAction(pHolder.Event.action[j].type, pHolder.Event.action[j].param1, pHolder.Event.action[j].param2, pHolder.Event.action[j].param3, rnd, pActionInvoker);
+            ProcessAction(pHolder.Event.action[j].type, pHolder.Event.action[j].param1, pHolder.Event.action[j].param2, pHolder.Event.action[j].param3, rnd, pHolder.EventId, pActionInvoker);
     }
 
     inline uint32 GetRandActionParam(uint32 rnd, uint32 param1, uint32 param2, uint32 param3)
@@ -359,7 +474,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         };
     }
 
-    void ProcessAction(uint16 type, uint32 param1, uint32 param2, uint32 param3, uint32 rnd, Unit* pActionInvoker)
+    void ProcessAction(uint16 type, uint32 param1, uint32 param2, uint32 param3, uint32 rnd, uint32 EventId, Unit* pActionInvoker)
     {
         switch (type)
         {
@@ -471,7 +586,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                         }else caster->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
 
-                    }else error_log("SD2: EventAI creature %d attempt to cast spell that doesn't exist %d", m_creature->GetCreatureInfo()->Entry, param1);
+                    }else error_log("SD2: EventAI event %d creature %d attempt to cast spell that doesn't exist %d", EventId, m_creature->GetCreatureInfo()->Entry, param1);
                 }
             }
             break;
@@ -487,7 +602,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 else pCreature = pCreature = DoSpawnCreature(param1, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
-                    error_log( "SD2: EventAI failed to spawn creature %u. Spawn event is on creature %d", param1, m_creature->GetCreatureInfo()->Entry);
+                    error_log( "SD2: EventAI failed to spawn creature %u. Spawn event %d is on creature %d", param1, EventId, m_creature->GetCreatureInfo()->Entry);
                 else if (param2 != TARGET_T_SELF && target)
                     pCreature->AI()->AttackStart(target);
             }
@@ -600,7 +715,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 Phase += param1;
 
                 if (Phase > 31)
-                    error_log( "SD2: Eventid incremented Phase above 31. Phase mask cannot be used with phases past 31. CreatureEntry = %d", m_creature->GetCreatureInfo()->Entry);
+                    error_log( "SD2: Event %d incremented Phase above 31. Phase mask cannot be used with phases past 31. CreatureEntry = %d", EventId, m_creature->GetCreatureInfo()->Entry);
             }
             break;
 
@@ -678,7 +793,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     Phase = param1 + (rnd % (param2 - param1));
                 }
-                else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero. CreatureEntry = %d", m_creature->GetCreatureInfo()->Entry);
+                else error_log( "SD2: ACTION_T_RANDOM_PHASE_RANGE cannot have Param2 <= Param1. Divide by Zero. Event = %d. CreatureEntry = %d", EventId, m_creature->GetCreatureInfo()->Entry);
             }
             break;
         case ACTION_T_SUMMON_ID:
@@ -692,7 +807,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (i == EventSummon_Map.end())
                 {
-                    error_log( "SD2: EventAI failed to spawn creature %u. Summon map index %u does not exist. CreatureID %d", param1, param3, m_creature->GetCreatureInfo()->Entry);
+                    error_log( "SD2: EventAI failed to spawn creature %u. Summon map index %u does not exist. EventID %d. CreatureID %d", param1, param3, EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
@@ -701,7 +816,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 else pCreature = m_creature->SummonCreature(param1, (*i).second.position_x, (*i).second.position_y, (*i).second.position_z, (*i).second.orientation, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0);
 
                 if (!pCreature)
-                    error_log( "SD2: EventAI failed to spawn creature %u. Event on Creature %d", param1, m_creature->GetCreatureInfo()->Entry);
+                    error_log( "SD2: EventAI failed to spawn creature %u. EventId %d.Creature %d", param1, EventId, m_creature->GetCreatureInfo()->Entry);
                 else if (param2 != TARGET_T_SELF && target)
                     pCreature->AI()->AttackStart(target);
             }
@@ -721,7 +836,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
                 if (!pInst)
                 {
-                    error_log("SD2: EventAI attempt to set instance data without instance script. Creature %d", m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d attempt to set instance data without instance script. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
@@ -735,7 +850,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (!target)
                 {
-                    error_log("SD2: EventAI attempt to set instance data64 but Target == NULL. Creature %d", m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d attempt to set instance data64 but Target == NULL. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
@@ -743,7 +858,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (!pInst)
                 {
-                    error_log("SD2: EventAI attempt to set instance data64 without instance script. Creature %d", m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d attempt to set instance data64 without instance script. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
@@ -755,11 +870,34 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 if (m_creature->GetCreatureInfo()->Entry == param1)
                 {
-                    error_log("SD2: EventAI ACTION_T_UPDATE_TEMPLATE call with param1 == current entry. Creature %d", m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d ACTION_T_UPDATE_TEMPLATE call with param1 == current entry. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
                 }
 
                 m_creature->UpdateEntry(param1, param2 ? HORDE : ALLIANCE);
+            }
+            break;
+
+        case ACTION_T_DIE:
+            {
+                if (m_creature->isDead())
+                {
+                    error_log("SD2: Event %d ACTION_T_DIE on dead creature. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
+                    return;
+                }
+                m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); 
+            }
+            break;
+
+        case ACTION_T_ZONE_COMBAT_PULSE:
+            {
+                if (!m_creature->isInCombat() || !m_creature->GetMap()->IsDungeon())
+                {
+                    error_log("SD2: Event %d ACTION_T_ZONE_COMBAT_PULSE on creature out of combat or in non-dungeon map. Creature %d", EventId, m_creature->GetCreatureInfo()->Entry);
+                    return;
+                }
+
+                DoZoneInCombat();
             }
             break;
         };
@@ -793,17 +931,16 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Reset all out of combat timers
-            case EVENT_T_TIMER_OOC_REPEAT:
-                if ((*i).Event.event_param3_s > 0)
-                    (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
-                else (*i).Time = (*i).Event.event_param2;
+            case EVENT_T_TIMER_OOC:
+                {
+                    if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                    {
+                        (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
+                        (*i).Enabled = true;
+                    }else 
+                        error_log("SD2: Event with RandomMax <= RandomMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
 
-                (*i).Enabled = true;
-                break;
-            case EVENT_T_TIMER_OOC_SINGLE:
-                (*i).Time = (*i).Event.event_param1;
-                (*i).Enabled = true;
-                break;
+                }break;
             }
         }
     }
@@ -869,6 +1006,24 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     }
 
+    void JustSummoned(Creature* pUnit)
+    {
+        if (!pUnit)
+            return;
+
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            switch ((*i).Event.event_type)
+            {
+                //Summoned
+            case EVENT_T_SUMMONED_UNIT:
+                ProcessEvent(*i, pUnit);
+                break;
+            }
+        }
+    }
+
+
     void Aggro(Unit *who)
     {
         //Check for on combat start events
@@ -881,16 +1036,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 break;
 
                 //Reset all in combat timers
-            case EVENT_T_TIMER_REPEAT:
-                if ((*i).Event.event_param3_s > 0)
-                    (*i).Time = (*i).Event.event_param2 + (rand() % (*i).Event.event_param3_s);
-                else (*i).Time = (*i).Event.event_param2;                 
+            case EVENT_T_TIMER:
 
-                (*i).Enabled = true;
-                break;
-            case EVENT_T_TIMER_SINGLE:
-                (*i).Time = (*i).Event.event_param1;
-                (*i).Enabled = true;
+                if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                {
+                    (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
+                    (*i).Enabled = true;
+                }else
+                    error_log("SD2: Event with RandomMax <= RandomMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
+
                 break;
 
                 //All normal events need to be re-enabled and their time set to 0
@@ -1038,10 +1192,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         switch ((*i).Event.event_type)
                         {
                             //Events that are updated every EVENT_UPDATE_TIME
-                        case EVENT_T_TIMER_REPEAT:
-                        case EVENT_T_TIMER_SINGLE:
-                        case EVENT_T_TIMER_OOC_REPEAT:
-                        case EVENT_T_TIMER_OOC_SINGLE:
+                        case EVENT_T_TIMER:
+                        case EVENT_T_TIMER_OOC:
                         case EVENT_T_MANA:
                         case EVENT_T_HP:
                         case EVENT_T_TARGET_HP:
@@ -1079,7 +1231,7 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
         if ((*i).second.creature_id == ID)
         {
             //Push back event
-            EventList.push_back(EventHolder((*i).second));
+            EventList.push_back(EventHolder((*i).second, (*i).first));
         }
     }
 
