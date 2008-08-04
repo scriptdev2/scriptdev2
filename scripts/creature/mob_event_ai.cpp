@@ -156,11 +156,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -171,11 +175,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -191,11 +199,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -211,11 +223,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -227,11 +243,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_KILL:
             {
                 //Repeat Timers
-                if (param2 > param1)
+                if (param1 == param2)
+                {
+                    pHolder.Time = param1;
+
+                }else if (param2 > param1)
                     pHolder.Time = urand(param1, param2);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -248,11 +268,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Spell hit is special case, param1 and param2 handled within EventAI::SpellHit
                 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -260,11 +284,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_RANGE:
             {
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -272,11 +300,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_OOC_LOS:
             {
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -296,11 +328,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -311,11 +347,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param2 > param1)
+                if (param1 == param2)
+                {
+                    pHolder.Time = param1;
+
+                }else if (param2 > param1)
                     pHolder.Time = urand(param1, param2);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -333,11 +373,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pActionInvoker = pUnit;
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -358,11 +402,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pActionInvoker = *(pList.begin());
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -380,11 +428,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pActionInvoker = *(pList.begin());
 
                 //Repeat Timers
-                if (param4 > param3)
+                if (param3 == param4)
+                {
+                    pHolder.Time = param3;
+
+                }else if (param4 > param3)
                     pHolder.Time = urand(param3, param4);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
@@ -401,11 +453,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
 
                 //Repeat Timers
-                if (param3 > param2)
+                if (param2 == param3)
+                {
+                    pHolder.Time = param2;
+
+                }else if (param3 > param2)
                     pHolder.Time = urand(param2, param3);
                 else
                 {
-                    error_log("SD2: Event %d with RandomMax <= RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                    error_log("SD2: Event %d with RandomMax < RandomMin. Event repeating disabled. Type = %d. CreatureEntry = %d", pHolder.EventId, pHolder.Event.event_type, m_creature->GetCreatureInfo()->Entry);
                     pHolder.Enabled = false;
                 }
             }
