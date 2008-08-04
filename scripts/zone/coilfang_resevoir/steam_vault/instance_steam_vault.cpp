@@ -15,9 +15,9 @@
 */
 
 /* ScriptData
-SDName: instance_steam_vault
-SD%Complete: 100
-SDComment: 
+SDName: Instance_Steam_Vault
+SD%Complete: 60
+SDComment: Temporary instance script, needs revision and adjustments. Need scripts for Gameobjects realted to opening of main chamber.
 SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         switch(type)
         {
             case DATA_HYDROMANCERTHESPIAEVENT:
-                if(data == 2)
+                if(data == DONE)
                 {
                     Encounters[0] = false;
                     IsHydromancerDied = true;
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
                 break;
 
             case DATA_MEKGINEERSTEAMRIGGEREVENT:
-                if(data == 2)
+                if(data == DONE)
                 {
                     Encounters[1] = false;
                     IsMekgineerDied = true;

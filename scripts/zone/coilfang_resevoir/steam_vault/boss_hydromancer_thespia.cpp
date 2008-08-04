@@ -16,43 +16,50 @@
 
 /* ScriptData
 SDName: Boss_Hydromancer_Thespia
-SD%Complete: 100
-SDComment: 
+SD%Complete: 80
+SDComment: Normal/heroic mode: to be tested. Needs additional adjustments (when instance script is adjusted)
 SDCategory: Coilfang Resevoir, Steam Vault
 EndScriptData */
 
+/* ContentData
+boss_hydromancer_thespia
+mob_coilfang_waterelemental
+EndContentData */
+
 #include "def_steam_vault.h"
 
-#define SPELL_LIGHTNING_CLOUD       25033
-#define SPELL_LUNG_BURST            31481 
-#define SPELL_ENVELOPING_WINDS      31718
-#define SPELL_FROST_BOLT_VOLLEY     36741
+#define SAY_SUMMON                  "Surge forth my pets!"
+#define SOUND_SUMMON                10360
 
 #define SAY_AGGRO_1                 "The depths will consume you!"
-#define SAY_AGGRO_2                 "Meet your doom, surface dwellers!"
-#define SAY_AGGRO_3                 "You will drown in blood!"
-#define SAY_SLAY_1                  "To the depths of oblivion with you!"
-#define SAY_SLAY_2                  "For my lady and master!"
-#define SAY_SUMMON                  "Surge forth my pets!"
-#define SAY_DEAD                    "Our matron will be.. the end of.. you.."
-
 #define SOUND_AGGRO_1               10361
+#define SAY_AGGRO_2                 "Meet your doom, surface dwellers!"
 #define SOUND_AGGRO_2               10362
+#define SAY_AGGRO_3                 "You will drown in blood!"
 #define SOUND_AGGRO_3               10363
+
+#define SAY_SLAY_1                  "To the depths of oblivion with you!"
 #define SOUND_SLAY_1                10364
+#define SAY_SLAY_2                  "For my lady and master!"
 #define SOUND_SLAY_2                10365
-#define SOUND_SUMMON                10360
+
+#define SAY_DEAD                    "Our matron will be.. the end of.. you.."
 #define SOUND_DEAD                  10366
+
+#define SPELL_LIGHTNING_CLOUD       25033
+#define SPELL_LUNG_BURST            31481
+#define SPELL_ENVELOPING_WINDS      31718
 
 struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 {
     boss_thespiaAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
     ScriptedInstance *pInstance;
+    bool HeroicMode;
 
     uint32 LightningCloud_Timer;
     uint32 LungBurst_Timer;
@@ -60,43 +67,39 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
     void Reset()
     {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+
         LightningCloud_Timer = 28000;
         LungBurst_Timer = 7000;
         EnvelopingWinds_Timer = 9000;
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 0);
+        if( pInstance ) pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
-    { 
+    {
         DoYell(SAY_DEAD, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEAD);
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 2);
+        if( pInstance ) pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, DONE);
     }
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%2)
-            return;
-
         switch(rand()%2)
-        {        
+        {
         case 0:
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
             break;
-
         case 1:
             DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;        
+            break;
         }
     }
 
-    void StartEvent()
+    void Aggro(Unit *who)
     {
         switch(rand()%3)
         {
@@ -104,113 +107,90 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
             DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
             break;
-
         case 1:
             DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            break; 
-
+            break;
         case 2:
             DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            break;   
+            break;
         }
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, 1);
-    }
-
-    void Aggro(Unit *who)
-    {
-        StartEvent();
+        if( pInstance ) pInstance->SetData(DATA_HYDROMANCERTHESPIAEVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
     {
-
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //LightningCloud_Timer
         if (LightningCloud_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            DoCast(target, SPELL_LIGHTNING_CLOUD);
+            //cast twice in Heroic mode
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target, SPELL_LIGHTNING_CLOUD);
+            if( HeroicMode )
+                if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                    DoCast(target, SPELL_LIGHTNING_CLOUD);
             LightningCloud_Timer = 28000;
-        }else (LightningCloud_Timer -=diff);
+        }else LightningCloud_Timer -=diff;
 
         //LungBurst_Timer
         if (LungBurst_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            DoCast(target, SPELL_LUNG_BURST);
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target, SPELL_LUNG_BURST);
             LungBurst_Timer = 10000+rand()%5000;
-        }else (LungBurst_Timer -=diff);
+        }else LungBurst_Timer -=diff;
 
         //EnvelopingWinds_Timer
         if (EnvelopingWinds_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-            DoCast(target, SPELL_ENVELOPING_WINDS);
+            //cast twice in Heroic mode
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target, SPELL_ENVELOPING_WINDS);
+            if( HeroicMode )
+                if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                    DoCast(target, SPELL_ENVELOPING_WINDS);
             EnvelopingWinds_Timer = 10000+rand()%5000;
-        }else (EnvelopingWinds_Timer -=diff);
+        }else EnvelopingWinds_Timer -=diff;
 
-        DoMeleeAttackIfReady();        
+        DoMeleeAttackIfReady();
     }
 };
+
+#define SPELL_WATER_BOLT_VOLLEY     34449
+#define H_SPELL_WATER_BOLT_VOLLEY   37924
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
     mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {Reset();} 
 
-    uint32 FrostBolt_Timer;
+    bool HeroicMode;
+    uint32 WaterBoltVolley_Timer;
 
     void Reset()
     {
-        FrostBolt_Timer = 10000;
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        WaterBoltVolley_Timer = 3000+rand()%3000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;    
+            return;
 
-        if (FrostBolt_Timer < diff)
+        if (WaterBoltVolley_Timer < diff)
         {
-            DoCast(m_creature->getVictim(),SPELL_FROST_BOLT_VOLLEY);
-            FrostBolt_Timer = 10000+rand()%5000;
-        }else (FrostBolt_Timer -= diff);
+            if( HeroicMode ) DoCast(m_creature,H_SPELL_WATER_BOLT_VOLLEY);
+            else DoCast(m_creature,SPELL_WATER_BOLT_VOLLEY);
+
+            WaterBoltVolley_Timer = 10000+rand()%5000;
+        }else WaterBoltVolley_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -234,7 +214,7 @@ void AddSC_boss_hydromancer_thespia()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_coilfang_waterelemental"; // 17917
+    newscript->Name="mob_coilfang_waterelemental";
     newscript->GetAI = GetAI_mob_coilfang_waterelementalAI;
     m_scripts[nrscripts++] = newscript;
 }
