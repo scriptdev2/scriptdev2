@@ -693,7 +693,7 @@ void LoadDatabase()
 
                 //Report any errors in event
                 if (temp.event_type >= EVENT_T_END)
-                    error_log("SD2: Event %d has incorrect event type", i);
+                    error_log("SD2: Event %d has incorrect event type. Maybe DB requires updated version of SD2.", i);
 
                 //No chance of this event occuring
                 if (temp.event_chance == 0)
@@ -813,7 +813,7 @@ void LoadDatabase()
                     }
 
                     if (temp.action[j].type >= ACTION_T_END)
-                        error_log("SD2: Event %u Action %u has incorrect action type", i, j);
+                        error_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j);
                 }
 
                 //Add to map

@@ -989,12 +989,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Reset all out of combat timers
             case EVENT_T_TIMER_OOC:
                 {
+                    if ((*i).Event.event_param2 == (*i).Event.event_param1)
+                    {
+                        (*i).Time = (*i).Event.event_param1;
+                        (*i).Enabled = true;
+                    }
                     if ((*i).Event.event_param2 > (*i).Event.event_param1)
                     {
                         (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
                         (*i).Enabled = true;
                     }else 
-                        error_log("SD2: Event with RandomMax <= RandomMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                        error_log("SD2: Event %d with InitialMax < InitialMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).EventId, (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
 
                 }break;
             }
@@ -1094,12 +1099,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Reset all in combat timers
             case EVENT_T_TIMER:
 
+                if ((*i).Event.event_param2 == (*i).Event.event_param1)
+                {
+                    (*i).Time = (*i).Event.event_param1;
+                    (*i).Enabled = true;
+                }
                 if ((*i).Event.event_param2 > (*i).Event.event_param1)
                 {
                     (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
                     (*i).Enabled = true;
-                }else
-                    error_log("SD2: Event with RandomMax <= RandomMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
+                }else 
+                    error_log("SD2: Event %d with InitialMax < InitialMin. Event disabled. Type = %d. CreatureEntry = %d", (*i).EventId, (*i).Event.event_type, m_creature->GetCreatureInfo()->Entry);
 
                 break;
 
