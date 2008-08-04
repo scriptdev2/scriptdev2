@@ -15,13 +15,21 @@
 */
 
 /* ScriptData
-SDName: boss_veklor
+SDName: Boss_Veklor
 SD%Complete: 75
-SDComment: HP not linked. Spells buggy.
+SDComment: HP not linked. Spells buggy. Sound not implemented
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "def_temple_of_ahnqiraj.h"
+
+#define SOUND_TOO_LATE              8623
+#define SOUND_A_FLY                 8624
+#define SOUND_BROTHER               8625
+#define SOUND_PREPARE               8626
+#define SOUND_DECORATE              8627
+#define SOUND_BRASH                 8628
+#define SOUND_WILL_NOT              8629
 
 #define SPELL_HEAL_BROTHER          7393
 #define SPELL_TWIN_TELEPORT         800                     //Visual only
@@ -30,7 +38,6 @@ EndScriptData */
 #define SPELL_BLIZZARD              26607
 #define SPELL_ARCANEBURST           568
 #define SPELL_EXPLODEBUG            804                     //Buggy. Same as Golemaggs trust spell. Its casted on gamers not on the right creature...
-
 
 //8657 - Aggro - To Late
 //8658 - Kill - You will not
@@ -70,16 +77,11 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         Heal_Timer = 25000 + rand()%15000;
         Teleport_Timer = 12000 + rand()%12000;
         ShadowBolt_Timer = 2000;
-        Blizzard_Timer = 15000 + rand()%5000;;
+        Blizzard_Timer = 15000 + rand()%5000;
         ArcaneBurst_Timer = 5000;
         Scorpions_Timer = 7000 + rand()%7000;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, true); //Added. Can be removed if its included in DB.
-
-//        m_creature->RemoveAllAuras();
-//        m_creature->DeleteThreatList();
-//        m_creature->CombatStop();
-//        DoGoHome();
     }
 
     void JustDied(Unit* Killer) { }
@@ -98,7 +100,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         {
         case 0: RandY = 0 - Rand; break;
         case 1: RandY = 0 + Rand; break;
-        }        
+        }
         Rand = 0;
         Summoned = DoSpawnCreature(15317, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
         if(Summoned)
@@ -138,7 +140,7 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
         {
             //Check if our attack isShock ready (swing timer)
             if( m_creature->isAttackReady() )
-            {                 
+            {
                 //Send our melee swing and then reset our attack timer
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
@@ -154,8 +156,8 @@ struct MANGOS_DLL_DECL boss_veklorAI : public ScriptedAI
 
         //Summon Scorpions
         if (Scorpions_Timer < diff)
-        {                 
-            SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));                
+        {
+            SummonScorpions(SelectUnit(SELECT_TARGET_RANDOM,0));
             Scorpions_Timer = 7000+rand()%3000;
         }else Scorpions_Timer -= diff;
 

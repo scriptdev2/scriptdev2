@@ -16,22 +16,21 @@
 
 /* ScriptData
 SDName: Boss_Gehennas
-SD%Complete: 100
+SD%Complete: 90
 SDComment: Adds MC NYI
 SDCategory: Molten Core
 EndScriptData */
 
 #include "sc_creature.h"
 
-
-
-#define SPELL_SHADOWBOLT            19729
+#define SPELL_SHADOWBOLT            19728
 #define SPELL_RAINOFFIRE            19717
 #define SPELL_GEHENNASCURSE         19716
 
 struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
 {
     boss_gehennasAI(Creature *c) : ScriptedAI(c) {Reset();}
+
     uint32 ShadowBolt_Timer;
     uint32 RainOfFire_Timer;
     uint32 GehennasCurse_Timer;
@@ -43,9 +42,7 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         GehennasCurse_Timer = 12000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -56,21 +53,15 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         //ShadowBolt_Timer
         if (ShadowBolt_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
-
-            //7 seconds until we should cast this agian
+            if( Unit* bTarget = SelectUnit(SELECT_TARGET_RANDOM,1) )
+                DoCast(bTarget,SPELL_SHADOWBOLT);
             ShadowBolt_Timer = 7000;
         }else ShadowBolt_Timer -= diff;
 
         //RainOfFire_Timer
         if (RainOfFire_Timer < diff)
         {
-            //Cast
-            Unit* target = NULL;
-
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_RAINOFFIRE);
 
             //4-12 seconds until we should cast this agian
@@ -80,11 +71,10 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         //GehennasCurse_Timer
         if (GehennasCurse_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_GEHENNASCURSE);
 
             //22-30 seconds until we should cast this agian
-            GehennasCurse_Timer = 22000 + rand()%8000;;
+            GehennasCurse_Timer = 22000 + rand()%8000;
         }else GehennasCurse_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -94,7 +84,6 @@ CreatureAI* GetAI_boss_gehennas(Creature *_Creature)
 {
     return new boss_gehennasAI (_Creature);
 }
-
 
 void AddSC_boss_gehennas()
 {
