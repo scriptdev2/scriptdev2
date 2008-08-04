@@ -1,9 +1,6 @@
 -- Structure updates
 
 ALTER TABLE eventai_scripts
-DROP event_flags, DROP event_param4;
-
-ALTER TABLE eventai_scripts
 ADD event_flags tinyint(3) unsigned NOT NULL default '0' AFTER event_chance;
 
 ALTER TABLE eventai_scripts

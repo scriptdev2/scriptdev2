@@ -993,8 +993,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     {
                         (*i).Time = (*i).Event.event_param1;
                         (*i).Enabled = true;
-                    }
-                    if ((*i).Event.event_param2 > (*i).Event.event_param1)
+
+                    }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
                     {
                         (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
                         (*i).Enabled = true;
@@ -1103,8 +1103,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 {
                     (*i).Time = (*i).Event.event_param1;
                     (*i).Enabled = true;
-                }
-                if ((*i).Event.event_param2 > (*i).Event.event_param1)
+
+                }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
                 {
                     (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
                     (*i).Enabled = true;
