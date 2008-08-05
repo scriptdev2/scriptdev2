@@ -66,10 +66,12 @@ EndScriptData */
 #define SACRIFICE_Z     179.720007
 
 #define PORTAL_Z        179.434
-#define PORTAL_X1       -11249.6933
-#define PORTAL_Y1       -1704.61023
-#define PORTAL_X2       -11242.1660
-#define PORTAL_Y2       -1713.33325
+
+float PortalLocations[2][2]=
+{
+    (-11349.6933, -1704.61023),
+    (-11242.1160, -1713.33325),
+};
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 {
@@ -92,9 +94,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         AmplifyTimer = 0;      
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void JustDied(Unit* Killer)
     {
@@ -262,19 +262,19 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         if(CheckKilrekTimer < diff)
         {
-            if(!pInstance)
-                return;
-
             CheckKilrekTimer = 5000;
 
-            Creature* Kilrek = ((Creature*)Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KILREK)));
+            if(pInstance)
+                uint64 KilrekGUID = pInstance->GetData64(DATA_KILREK);
+            else error_log("SD2: Instance Data incorrectly set for Karazhan. Unable to create pointer to Kilrek");
+
+            Creature* Kilrek = ((Creature*)Unit::GetUnit((*m_creature), KilrekGUID));
             if(SummonKilrek && Kilrek)
             {
                 Kilrek->Respawn();
                 Kilrek->AI()->AttackStart(m_creature->getVictim());
 
                 SummonKilrek = false;
-                return;
             }
 
             if(!Kilrek || !Kilrek->isAlive())
@@ -282,7 +282,6 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                 SummonKilrek = true;
                 CheckKilrekTimer = 45000;
             }
-
         }else CheckKilrekTimer -= diff;
 
         if(SacrificeTimer < diff)
@@ -291,7 +290,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             if(target && target->isAlive())
             {
                 DoCast(target, SPELL_SACRIFICE, true);
-                Creature* Chains = m_creature->SummonCreature(CREATURE_DEMONCHAINS, SACRIFICE_X, SACRIFICE_Y, SACRIFICE_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 21000);
+                Creature* Chains = m_creature->SummonCreature(CREATURE_DEMONCHAINS, SACRIFICE_X, SACRIFICE_Y, SACRIFICE_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
                 if(Chains)
                 {
                     ((mob_demon_chainAI*)Chains->AI())->SacrificeGUID = target->GetGUID();
@@ -322,12 +321,12 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         {
             if(!SummonedPortals)
             {
-                Creature* Portal1 = m_creature->SummonCreature(CREATURE_PORTAL, PORTAL_X1, PORTAL_Y1, PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                Creature* Portal2 = m_creature->SummonCreature(CREATURE_PORTAL, PORTAL_X2, PORTAL_Y2, PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                if(Portal1)
-                    PortalGUID[0] = Portal1->GetGUID();
-                if(Portal2)
-                    PortalGUID[1] = Portal2->GetGUID();
+                for(uint8 i = 0; i < 2; ++i)
+                {
+                    Creature* Portal = m_creature->SummonCreature(CREATURE_PORTAL, PortalLocations[i][0], PortalLocations[i][1], PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    if(Portal)
+                        PortalGUID[i] = Portal->GetGUID();
+                }
                 SummonedPortals = true;
                 switch(rand()%2)
                 {
@@ -341,22 +340,8 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                         break;
                 }
             }
-            float X = 0;
-            float Y = 0;
-            switch(rand()%2)
-            {
-                case 0:
-                    X = PORTAL_X1;
-                    Y = PORTAL_Y1;
-                    break;
-     
-                case 1:
-                    X = PORTAL_X2;
-                    Y = PORTAL_Y2;
-                    break;
-            }
-
-            Creature* Imp = m_creature->SummonCreature(CREATURE_FIENDISHIMP, X, Y, PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
+            uint32 random = rand()%2;
+            Creature* Imp = m_creature->SummonCreature(CREATURE_FIENDISHIMP, PortalLocations[random][0], PortalLocations[random][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
             if(Imp)
             {
                 Imp->AddThreat(m_creature->getVictim(), 1.0f);
@@ -387,9 +372,7 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
         FireboltTimer = 3000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {

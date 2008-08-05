@@ -1,6 +1,11 @@
 #include "Unit.h"
 #include "GameObject.h"
 
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+
 //Used in:
 //sc_creature.cpp - DoSelectLowestHpFriendly()
 class MostHPMissingInRange
@@ -83,15 +88,17 @@ private:
 
 //Used in:
 //hyjalAI.cpp
-class AllAncientGemVeinsInGrid
+class AllGameObjectsWithEntryInGrid
 {
 public:
-    AllAncientGemVeinsInGrid() {}
+    AllGameObjectsWithEntryInGrid(uint32 ent) : entry(ent) {}
     bool operator() (GameObject* g)
     {
-        if(g->GetEntry() == 185557)
+        if(g->GetEntry() == entry)
             return true;
 
         return false;
     }
+private:
+    uint32 entry;
 };

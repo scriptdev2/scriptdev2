@@ -308,10 +308,10 @@ void hyjalAI::Retreat()
 
     // Then get all Ancient Gem Veins
     std::list<GameObject*> goList;
-    AllAncientGemVeinsInGrid go_check;
-    MaNGOS::GameObjectListSearcher<AllAncientGemVeinsInGrid> go_search(goList, go_check);
+    AllGameObjectsWithEntryInGrid go_check(185557);
+    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid> go_search(goList, go_check);
     TypeContainerVisitor
-        <MaNGOS::GameObjectListSearcher<AllAncientGemVeinsInGrid>, GridTypeMapContainer> go_visit(go_search);
+        <MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid>, GridTypeMapContainer> go_visit(go_search);
 
     CellLock<GridReadGuard> cell_lock(cell, pair);
     cell_lock->Visit(cell_lock, creature_visitor, *(m_creature->GetMap())); // Get Creatures

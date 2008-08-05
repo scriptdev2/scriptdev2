@@ -512,8 +512,11 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             break;
         }
     } 
-    void JustDied(Unit *victim)
+    void JustDied(Unit *slayer)
     {
+        if(slayer == m_creature) // Don't do a yell if he kills self (if player goes too far or at the end).
+            return;
+
         switch(rand()%2)
         {
         case 0:

@@ -6,11 +6,6 @@
 #include "Player.h"
 #include "Spell.h"
 
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
-
 #include "sc_grid_searchers.h"
 
 // Spell summary for ScriptedAI::SelectSpell
