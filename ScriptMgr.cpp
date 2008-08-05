@@ -317,6 +317,7 @@ extern void AddSC_loch_modan();
 //Lower Blackrock Spire
 
 // Magister's Terrace
+extern void AddSC_boss_felblood_kaelthas();
 extern void AddSC_boss_selin_fireheart();
 extern void AddSC_boss_vexallus();
 extern void AddSC_boss_priestess_delrissa();
@@ -1159,6 +1160,7 @@ void ScriptsInit()
     //Lower Blackrock Spire
     
     // Magister's Terrace
+    AddSC_boss_felblood_kaelthas();
     AddSC_boss_selin_fireheart();
     AddSC_boss_vexallus();
     AddSC_boss_priestess_delrissa();

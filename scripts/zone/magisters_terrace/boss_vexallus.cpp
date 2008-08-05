@@ -16,11 +16,12 @@
 
 /* ScriptData
 SDName: Boss_Vexallus
-SD%Complete: 100
-SDComment: 
+SD%Complete: 90
+SDComment: Heroic and Normal support. Needs further testing.
 SDCategory: Magister's Terrace
 EndScriptData */
 
+#include "sc_creature.h"
 #include "def_magisters_terrace.h"
 #include "GameObject.h"
 
@@ -57,6 +58,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
+        Heroic = c->GetMap()->IsHeroic() ? true : false;
     }
 
     ScriptedInstance* pInstance;
@@ -67,6 +69,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     uint32 SpawnAddInterval;
     uint32 AlreadySpawnedAmount;
     bool Enraged;
+    bool Heroic;
 
     void Reset()
     {
@@ -75,8 +78,10 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         OverloadTimer = 2200; 
         SpawnAddInterval = 15;
         AlreadySpawnedAmount = 0;
+
         Enraged = false;
-        if (pInstance)
+
+        if(pInstance)
             pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
     }
 
@@ -88,7 +93,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        //DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         if (pInstance)
         {
             pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
@@ -96,10 +101,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             GameObject* Door = NULL;
             Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_VEXALLUS_DOOR));
             if(Door)
-            {
-                DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
                 Door->SetGoState(0);
-            }
         }
     }
 
@@ -115,8 +117,6 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
-        DoZoneInCombat(m_creature);
 
         if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11)
         {
@@ -135,7 +135,16 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (PureEnergyCreature && target)
                     PureEnergyCreature->AI()->AttackStart(target);
-                AlreadySpawnedAmount += 1;
+
+                if(Heroic) // *Heroic mode only - he summons two instead of one.
+                {
+                    PureEnergyCreature = DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    if (PureEnergyCreature && target)
+                        PureEnergyCreature->AI()->AttackStart(target);
+                }
+
+                ++AlreadySpawnedAmount;
             };
 
             if(ChainLightningTimer < diff)
@@ -144,8 +153,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(target, SPELL_CHAIN_LIGHTNING);
                 ChainLightningTimer = 10000;
-            }else
-                ChainLightningTimer -= diff;
+            }else ChainLightningTimer -= diff;
 
             if(ArcaneShockTimer < diff)
             {
@@ -153,8 +161,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(target, SPELL_ARCANE_SHOCK);
                 ArcaneShockTimer = 8000;
-            }else
-                ArcaneShockTimer -= diff;
+            }else ArcaneShockTimer -= diff;
         }else
         {
             if(OverloadTimer < diff)
@@ -163,8 +170,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(target, SPELL_OVERLOAD);
                 OverloadTimer = 2200;
-            }else
-                OverloadTimer -= diff;          
+            }else OverloadTimer -= diff;          
         }
         DoMeleeAttackIfReady();
     }
@@ -183,26 +189,26 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 
     void Reset()
     {
-        EnergyBoltTimer = 1750;
+        EnergyBoltTimer = 1700;
     }
 
-    void JustDied(Unit *Killer)
+    void JustDied(Unit* slayer)
     {
-        Killer->CastSpell(Killer, SPELL_ENERGY_FEEDBACK, true);
+        slayer->CastSpell(slayer, SPELL_ENERGY_FEEDBACK, true, 0, 0, m_creature->GetGUID());
     }
 
     void Aggro(Unit *who){}
 
     void UpdateAI(const uint32 diff)
     {
+        if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+            return;
+
         if(EnergyBoltTimer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-            DoCast(target, SPELL_ENERGY_BOLT);
-            EnergyBoltTimer = 1750;
-        }else
-            EnergyBoltTimer -= diff;   
+            DoCast(m_creature->getVictim(), SPELL_ENERGY_BOLT);
+            EnergyBoltTimer = 1700;
+        }else   EnergyBoltTimer -= diff;   
     }
 };
 

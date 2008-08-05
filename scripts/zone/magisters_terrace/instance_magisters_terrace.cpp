@@ -42,14 +42,17 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     }
 
     uint32 Encounters[NUMBER_OF_ENCOUNTERS];
-    uint64 FelCrystals[NUMBER_OF_CRYSTALS];
     uint32 FilledCrystals;
+    uint32 DelrissaDeathCount;
+    
+    uint64 FelCrystals[NUMBER_OF_CRYSTALS];
     uint64 SelinGUID;
     uint64 DelrissaGUID;
     uint64 VexallusDoorGUID;
     uint64 SelinDoorGUID;
     uint64 SelinEncounterDoorGUID;
     uint64 DelrissaDoorGUID;
+    uint64 KaelStatue[2];
 
     void Initialize()
     {
@@ -58,6 +61,8 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         for(uint8 i = 0; i < NUMBER_OF_CRYSTALS; i++)
             FelCrystals[i] = 0;
 
+        DelrissaDeathCount = 0;
+
         FilledCrystals = 0;
         SelinGUID = 0;
         DelrissaGUID = 0;
@@ -65,6 +70,8 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         SelinDoorGUID = 0;
         SelinEncounterDoorGUID = 0;
         DelrissaDoorGUID = 0;
+        KaelStatue[0] = 0;
+        KaelStatue[1] = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -79,17 +86,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     {
         switch(identifier)
         {
-            case DATA_SELIN_EVENT:
-                return Encounters[0];
-
-            case DATA_VEXALLUS_EVENT:
-                return Encounters[1];
-
-            case DATA_DELRISSA_EVENT:
-                return Encounters[2];
-
-            case DATA_KAELTHAS_EVENT:
-                return Encounters[3];
+            case DATA_SELIN_EVENT:          return Encounters[0];
+            case DATA_VEXALLUS_EVENT:       return Encounters[1];
+            case DATA_DELRISSA_EVENT:       return Encounters[2];
+            case DATA_KAELTHAS_EVENT:       return Encounters[3];
+            case DATA_DELRISSA_DEATH_COUNT: return DelrissaDeathCount;
         }
         return 0;
     }
@@ -98,21 +99,14 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     {
         switch(identifier)
         {                
-            case DATA_SELIN_EVENT:
-                Encounters[0] = data;
-                break;
-
-            case DATA_VEXALLUS_EVENT:
-                Encounters[1] = data;
-                break;
-
-            case DATA_DELRISSA_EVENT:
-                Encounters[2] = data;
-                break;
-
-            case DATA_KAELTHAS_EVENT:
-                Encounters[3] = data;
-                break;
+            case DATA_SELIN_EVENT:       Encounters[0] = data;  break;
+            case DATA_VEXALLUS_EVENT:    Encounters[1] = data;  break;
+            case DATA_DELRISSA_EVENT:    Encounters[2] = data;  break;
+            case DATA_KAELTHAS_EVENT:    Encounters[3] = data;  break;
+                
+            case DATA_DELRISSA_DEATH_COUNT:
+                if(data)  ++DelrissaDeathCount;
+                else      DelrissaDeathCount = 0;
         }
     }
 
@@ -139,28 +133,19 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     {
         switch(identifier)
         {
-            case DATA_SELIN:
-                return SelinGUID;
-            case DATA_DELRISSA:
-                return DelrissaGUID;
-            case DATA_CRYSTAL_1:
-                return FelCrystals[0];
-            case DATA_CRYSTAL_2:
-                return FelCrystals[1];
-            case DATA_CRYSTAL_3:
-                return FelCrystals[2];
-            case DATA_CRYSTAL_4:
-                return FelCrystals[3];
-            case DATA_CRYSTAL_5:
-                return FelCrystals[4];
-            case DATA_VEXALLUS_DOOR:
-                return VexallusDoorGUID;
-            case DATA_SELIN_DOOR:
-                return SelinDoorGUID;
-            case DATA_SELIN_ENCOUNTER_DOOR:
-                return SelinEncounterDoorGUID;
-            case DATA_DELRISSA_DOOR:
-                return DelrissaDoorGUID;
+            case DATA_SELIN:                return SelinGUID;
+            case DATA_DELRISSA:             return DelrissaGUID;
+			case DATA_CRYSTAL_1:            return FelCrystals[0];
+            case DATA_CRYSTAL_2:            return FelCrystals[1];
+            case DATA_CRYSTAL_3:            return FelCrystals[2];
+            case DATA_CRYSTAL_4:            return FelCrystals[3];
+            case DATA_CRYSTAL_5:            return FelCrystals[4];
+            case DATA_VEXALLUS_DOOR:        return VexallusDoorGUID;
+            case DATA_SELIN_DOOR:           return SelinDoorGUID;
+            case DATA_SELIN_ENCOUNTER_DOOR: return SelinEncounterDoorGUID;
+			case DATA_DELRISSA_DOOR:        return DelrissaDoorGUID;
+            case DATA_KAEL_STATUE_LEFT:     return KaelStatue[0];
+            case DATA_KAEL_STATUE_RIGHT:    return KaelStatue[1];
         }
         return 0;
     }
@@ -169,18 +154,12 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case 187896:
-                VexallusDoorGUID = go->GetGUID();
-                break;
-            case 187979:
-                SelinDoorGUID = go->GetGUID();
-                break;
-            case 188118:
-                SelinEncounterDoorGUID = go->GetGUID();
-                break;
-            case 187770:
-                DelrissaDoorGUID = go->GetGUID();
-                break;
+            case 187896:  VexallusDoorGUID = go->GetGUID();       break;
+            case 187979:  SelinDoorGUID = go->GetGUID();          break;
+            case 188118:  SelinEncounterDoorGUID = go->GetGUID(); break;
+			case 187770:  DelrissaDoorGUID = go->GetGUID();       break;
+            case 188165:  KaelStatue[0] = go->GetGUID();          break;
+            case 188166:  KaelStatue[1] = go->GetGUID();          break;
         }
     }
 };

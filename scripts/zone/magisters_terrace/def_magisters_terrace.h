@@ -22,6 +22,11 @@
 #define DATA_DELRISSA_DOOR           15
 #define DATA_SELIN_ENCOUNTER_DOOR    16
 
+#define DATA_KAEL_STATUE_LEFT       17
+#define DATA_KAEL_STATUE_RIGHT      18
+
+#define DATA_DELRISSA_DEATH_COUNT   19
+
 #define ERROR_INST_DATA      "SD2 Error: Instance Data not set properly for Magister's Terrace instance (map 585). Encounters will be buggy)"
 
 #endif

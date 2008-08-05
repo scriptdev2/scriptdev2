@@ -16,11 +16,12 @@
 
 /* ScriptData
 SDName: Boss_Priestess_Delrissa
-SD%Complete: 0
-SDComment: 
+SD%Complete: 80
+SDComment: No Heroic support yet. Needs further testing.
 SDCategory: Magister's Terrace
 EndScriptData */
 
+#include "sc_creature.h"
 #include "def_magisters_terrace.h"
 #include "GameObject.h"
 
@@ -135,7 +136,10 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         CheckAdds();
 
         if(pInstance)
+        {
             pInstance->SetData(DATA_DELRISSA_EVENT, NOT_STARTED);
+            pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 0);
+        }
         else error_log(ERROR_INST_DATA);
     }
 
@@ -144,13 +148,9 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        DoZoneInCombat();
-        for(std::vector<Add*>::iterator itr = Adds.begin(); itr != Adds.end(); ++itr)
-            if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
-            {
+        for(uint8 i = 0; i < Adds.size(); ++i)
+            if(Unit* pAdd = Unit::GetUnit(*m_creature, Adds[i]->guid))
                 pAdd->AddThreat(who, 1.0f);
-                DoZoneInCombat(pAdd);
-            }
     }
 
     void SummonAdds()
@@ -162,39 +162,38 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         while(AddList.size() > 4)
             AddList.erase(AddList.begin() + rand()%AddList.size());
 
-        uint8 i = 0;
-        for(std::vector<uint32>::iterator itr = AddList.begin(); itr != AddList.end(); ++itr)
+        for(uint8 i = 0; i < AddList.size(); ++i)
         {
-            Creature* pAdd = m_creature->SummonCreature(*itr, LackeyLocations[i][0], LackeyLocations[i][1], POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
+            Creature* pAdd = m_creature->SummonCreature(AddList[i], LackeyLocations[i][0], LackeyLocations[i][1], POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
             if(pAdd)
             {
-                Add* nAdd = new Add(*itr, pAdd->GetGUID());
+                Add* nAdd = new Add(AddList[i], pAdd->GetGUID());
                 Adds.push_back(nAdd);
-                ++i;
             }
         }
     }
 
     void CheckAdds()
     {
-        uint8 i = 0;
-        for(std::vector<Add*>::iterator itr = Adds.begin(); itr != Adds.end(); ++itr)
+        if(Adds.empty())
+            return;
+
+        for(uint8 i = 0; i < Adds.size(); ++i)
         {
             bool resummon = true;
-            Creature* pAdd = ((Creature*)Unit::GetUnit(*m_creature, (*itr)->guid));
+            Creature* pAdd = ((Creature*)Unit::GetUnit(*m_creature, Adds[i]->guid));
             if(pAdd && pAdd->isAlive())
             {
-                pAdd->DeleteThreatList(); // If they are in combat, force them out of it and reset.
+                pAdd->AI()->EnterEvadeMode(); // Force them out of combat and reset if they are in combat.
                 resummon = false;
             }
             if(resummon)
             {
-                pAdd = m_creature->SummonCreature((*itr)->entry, LackeyLocations[i][0], LackeyLocations[i][1], POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
-                Add* nAdd = new Add((*itr)->entry, pAdd->GetGUID());
-                Adds.erase(itr);
+                pAdd = m_creature->SummonCreature(Adds[i]->entry, LackeyLocations[i][0], LackeyLocations[i][1], POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
+                Add* nAdd = new Add(Adds[i]->entry, pAdd->GetGUID());
+                Adds.erase(Adds.begin() + i);
                 Adds.push_back(nAdd);
             }
-            ++i;
         }
     }
 
@@ -228,6 +227,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             return;
         }
 
+        pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 1);
         pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
         if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_DELRISSA_DOOR)))
             Door->SetGoState(0);
@@ -250,8 +250,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         {
             uint32 health = m_creature->GetHealth();
             Unit* target = m_creature;
-            for(std::vector<Add*>::iterator itr = Adds.begin(); itr != Adds.end(); ++itr)
-                if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
+            for(uint8 i = 0; i < Adds.size(); ++i)
+                if(Unit* pAdd = Unit::GetUnit(*m_creature, Adds[i]->guid))
                     if(pAdd->GetHealth() < health)
                         target = pAdd;
 
@@ -317,18 +317,19 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             SWPainTimer = 10000;
         }else SWPainTimer -= diff;
 
+        /*
         if(CombatPulseTimer < diff)
         {
             DoZoneInCombat();
-            for(std::vector<Add*>::iterator itr = Adds.begin(); itr != Adds.end(); ++itr)
+            for(uint8 i = 0; i < Adds.size(); ++i)
             {
-                if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
+                if(Unit* pAdd = Unit::GetUnit(*m_creature, Add[i]->guid))
                     if(pAdd->isAlive())
                         DoZoneInCombat(pAdd);
             }
 
             CombatPulseTimer = 10000;
-        }else CombatPulseTimer -= diff;
+        }else CombatPulseTimer -= diff;*/
 
         DoMeleeAttackIfReady();
     }
@@ -362,9 +363,7 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
         ResetThreatTimer = 5000 + rand()%15000; // These guys like to switch targets often, and are not meant to be tanked.
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void JustDied(Unit* killer)
     {
@@ -376,7 +375,13 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
 
         Creature* Delrissa = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_DELRISSA)));
         if(Delrissa)
+        {
             ((boss_priestess_delrissaAI*)Delrissa->AI())->KilledLackey();
+            if(!Delrissa->isAlive() && pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) > 3)
+                ((boss_priestess_delrissaAI*)Delrissa->AI())->CheckLootable();
+
+            pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 1);
+        }
     }
 
     void KilledUnit(Unit* victim)
@@ -1215,8 +1220,8 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 
         if(Recombobulate_Timer < diff)
         {
-            for(std::vector<Add*>::iterator itr = Group.begin(); itr != Group.end(); ++itr)
-                if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
+            for(uint8 i = 0; i < Group.size(); ++i)
+                if(Unit* pAdd = Unit::GetUnit(*m_creature, Group[i]->guid))
                     if(pAdd->IsPolymorphed())
                     {
                         DoCast(pAdd, SPELL_RECOMBOBULATE);

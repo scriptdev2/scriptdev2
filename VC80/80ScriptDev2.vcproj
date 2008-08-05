@@ -2074,6 +2074,10 @@
 					Name="Magister&apos;s Terrace"
 					>
 					<File
+						RelativePath="..\scripts\zone\magisters_terrace\boss_felblood_kaelthas.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\magisters_terrace\boss_priestess_delrissa.cpp"
 						>
 					</File>

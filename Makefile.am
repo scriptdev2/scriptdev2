@@ -200,6 +200,7 @@ scripts/zone/karazhan/def_karazhan.h \
 scripts/zone/karazhan/instance_karazhan.cpp \
 scripts/zone/karazhan/npcs_karazhan.cpp \
 scripts/zone/loch_modan/loch_modan.cpp \
+scripts/zone/magisters_terrace/boss_felblood_kaelthas.cpp \
 scripts/zone/magisters_terrace/boss_priestess_delrissa.cpp \
 scripts/zone/magisters_terrace/boss_selin_fireheart.cpp \
 scripts/zone/magisters_terrace/boss_vexallus.cpp \
@@ -374,9 +375,8 @@ system.cpp
 
 ## magic to include SVN revision number in SD2 version string
 svn_revision.h: FORCE tools/gensvnrevision/gensvnrevision
-	tools/gensvnrevision/gensvnrevision
-
-FORCE:
++ tools/gensvnrevision/gensvnrevision
++FORCE:
 
 ## libtool settings
 # API versioning
