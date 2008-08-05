@@ -1160,7 +1160,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     if ((*i).Event.event_param1 && m_creature->IsHostileTo(who))
                         break;
 
-                    if ((*i).Event.event_param2 && m_creature->IsFriendlyTo(who))
+                    if ((*i).Event.event_param2 && !m_creature->IsHostileTo(who))
                         break;
 
                     ProcessEvent(*i, who);
