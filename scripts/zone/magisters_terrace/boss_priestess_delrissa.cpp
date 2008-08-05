@@ -21,9 +21,7 @@ SDComment: No Heroic support yet. Needs further testing.
 SDCategory: Magister's Terrace
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_magisters_terrace.h"
-#include "GameObject.h"
 
 #define SAY_AGGRO               "Annihilate them!"
 #define SOUND_AGGRO             12395

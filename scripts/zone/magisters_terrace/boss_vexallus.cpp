@@ -21,9 +21,7 @@ SDComment: Heroic and Normal support. Needs further testing.
 SDCategory: Magister's Terrace
 EndScriptData */
 
-#include "sc_creature.h"
 #include "def_magisters_terrace.h"
-#include "GameObject.h"
 
 #define SAY_AGGRO           "Drain...life..."
 #define SOUND_AGGRO         12389

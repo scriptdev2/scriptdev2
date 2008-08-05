@@ -22,7 +22,6 @@ SDCategory: Magister's Terrace
 EndScriptData */
 
 #include "def_magisters_terrace.h"
-#include "GameObject.h"
 
 #define SAY_AGGRO           "You only waste my time!"
 #define SOUND_AGGRO         12378 

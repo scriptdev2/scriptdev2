@@ -3,6 +3,7 @@
 
 #include "sc_creature.h"
 #include "sc_instance.h"
+#include "GameObject.h"
 
 #define DATA_SELIN_EVENT             1
 #define DATA_VEXALLUS_EVENT          2
