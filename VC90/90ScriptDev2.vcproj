@@ -1034,11 +1034,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_veklor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_veknilash.cpp"
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\boss_twinemperors.cpp"
 						>
 					</File>
 					<File
