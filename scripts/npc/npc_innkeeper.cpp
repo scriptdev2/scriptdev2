@@ -15,12 +15,11 @@
 */
 
 /* ScriptData
-SDName: NPC_InnKeeper
+SDName: Npc_Innkeeper
 SD%Complete: 50
-SDComment: EventSystem cannot be used on Windows build of SD2
+SDComment: This script are currently not in use. EventSystem cannot be used on Windows build of SD2
 SDCategory: NPCs
 EndScriptData */
-
  
 #include "sc_creature.h"
 #include "sc_gossip.h"
@@ -51,13 +50,13 @@ bool isEventActive()
  
 bool GossipHello_npc_innkeeper(Player *player, Creature *_Creature)
 {
-    player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
-    _Creature->prepareGossipMenu(player,0);
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu( _Creature->GetGUID() );
 
     if (isEventActive()&& !player->GetAura(SPELL_TRICK_OR_TREATED,0))
     {
         char* localizedEntry;
-        switch (player->GetSession()->GetSessionLocaleIndex())
+        switch (player->GetSession()->GetSessionDbLocaleIndex())
         {
             case 0:
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
@@ -75,10 +74,11 @@ bool GossipHello_npc_innkeeper(Player *player, Creature *_Creature)
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
         }
  
-        player->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID,"",0);
+        player->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
     }
 
-    _Creature->sendPreparedGossip( player );
+    player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
     return true;
 }
  
@@ -97,43 +97,41 @@ bool GossipSelect_npc_innkeeper(Player *player, Creature *_Creature, uint32 send
         else
         {
             int32 trickspell=0;
-            switch (rand()%9)   // note that female characters can get male costumes and vice versa
+            switch (rand()%9)                               // note that female characters can get male costumes and vice versa
             {
                 case 0:
-                    trickspell=24753; // cannot cast, random 30sec
+                    trickspell=24753;                       // cannot cast, random 30sec
                     break;
                 case 1:
-                    trickspell=24713; // lepper gnome costume
+                    trickspell=24713;                       // lepper gnome costume
                     break;
                 case 2:
-                    trickspell=24735; // male ghost costume
+                    trickspell=24735;                       // male ghost costume
                     break;
                 case 3:
-                    trickspell=24736; // female ghostcostume
+                    trickspell=24736;                       // female ghostcostume
                     break;
                 case 4:
-                    trickspell=24710; // male ninja costume
+                    trickspell=24710;                       // male ninja costume
                     break;
                 case 5:
-                    trickspell=24711; // female ninja costume
+                    trickspell=24711;                       // female ninja costume
                     break;
                 case 6:
-                    trickspell=24708; // male pirate costume
+                    trickspell=24708;                       // male pirate costume
                     break;
                 case 7:
-                    trickspell=24709; // female pirate costume
+                    trickspell=24709;                       // female pirate costume
                     break;
                 case 8:
-                    trickspell=24723; // skeleton costume
+                    trickspell=24723;                       // skeleton costume
                     break;
             }
             player->CastSpell(player, trickspell, true);
         }
- 
-        return true;    // prevent mangos core handling
+        return true;                                        // prevent mangos core handling
     }
-    return false;       // the player didn't select "trick or treat" or cheated, normal core handling
- 
+    return false;                                           // the player didn't select "trick or treat" or cheated, normal core handling
 }
  
 void AddSC_npc_innkeeper()
@@ -141,7 +139,7 @@ void AddSC_npc_innkeeper()
     Script *newscript;
     newscript = new Script;
     newscript->Name="npc_innkeeper";
-    newscript->pGossipHello          = &GossipHello_npc_innkeeper;
-    newscript->pGossipSelect         = &GossipSelect_npc_innkeeper;
+    newscript->pGossipHello = &GossipHello_npc_innkeeper;
+    newscript->pGossipSelect = &GossipSelect_npc_innkeeper;
     m_scripts[nrscripts++] = newscript;
 }

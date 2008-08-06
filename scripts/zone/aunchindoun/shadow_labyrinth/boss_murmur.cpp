@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
     uint32 MagneticPull_Timer;
     bool CanSonicBoom;
     bool CanShockWave;
-    Unit* target;
+    uint64 pTarget;
 
     void Reset()
     {
@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         MagneticPull_Timer = 45000;
         CanSonicBoom = false;
         CanShockWave = false;
-        target = NULL;
+        pTarget = 0;
 
         //database should have `RegenHealth`=0 to prevent regen
         uint32 hp = m_creature->GetMaxHealth()*0.4;
@@ -150,19 +150,25 @@ struct MANGOS_DLL_DECL boss_murmurAI : public ScriptedAI
         {
             if( !CanShockWave )
             {
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if( target )
-                    DoCast(target, SPELL_MAGNETIC_PULL);
-                MagneticPull_Timer = 2500;
-                CanShockWave = true;
+                if( Unit* temp = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                {
+                    if( temp->GetTypeId() == TYPEID_PLAYER )
+                    {
+                        DoCast(temp, SPELL_MAGNETIC_PULL);
+                        pTarget = temp->GetGUID();
+                        CanShockWave = true;
+                    }
+                    MagneticPull_Timer = 2500;
+                }
             }
             else
             {
-                if( target && target->isAlive() )
+                if( Unit* target = Unit::GetUnit(*m_creature,pTarget) )
                     target->CastSpell(target,SPELL_SHOCKWAVE,true);
+
                 MagneticPull_Timer = 35000;
                 CanShockWave = false;
-                target = NULL;
+                pTarget = 0;
             }
         }else MagneticPull_Timer -= diff;
 
