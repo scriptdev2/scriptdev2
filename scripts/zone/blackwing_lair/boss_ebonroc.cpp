@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+                DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)

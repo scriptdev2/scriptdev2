@@ -488,9 +488,9 @@ extern void AddSC_boss_cthun();
 extern void AddSC_boss_fankriss();
 extern void AddSC_boss_huhuran();
 extern void AddSC_bug_trio();
+extern void AddSC_boss_sartura();
 extern void AddSC_boss_skeram();
-extern void AddSC_boss_veklor();
-extern void AddSC_boss_veknilash();
+extern void AddSC_boss_twinemperors();
 extern void AddSC_instance_temple_of_ahnqiraj();
 
 //Terokkar Forest
@@ -1331,9 +1331,9 @@ void ScriptsInit()
     AddSC_boss_fankriss();
     AddSC_boss_huhuran();
     AddSC_bug_trio();
+    AddSC_boss_sartura();
     AddSC_boss_skeram();
-    AddSC_boss_veklor();
-    AddSC_boss_veknilash();
+    AddSC_boss_twinemperors();
     AddSC_instance_temple_of_ahnqiraj();
 
     //Terokkar Forest

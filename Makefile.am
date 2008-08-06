@@ -335,8 +335,7 @@ scripts/zone/temple_of_ahnqiraj/boss_huhuran.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_ouro.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_sartura.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_skeram.cpp \
-scripts/zone/temple_of_ahnqiraj/boss_veklor.cpp \
-scripts/zone/temple_of_ahnqiraj/boss_veknilash.cpp \
+scripts/zone/temple_of_ahnqiraj/boss_twinemperors.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
 scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \

@@ -16,38 +16,53 @@
 
 /* ScriptData
 SDName: boss_sartura
-SD%Complete: 0
-SDComment: VERIFY SCRIPT
+SD%Complete: 99
+SDComment: 
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-/*
-To do:
-Change to random attack for 5seconds
-*/
 
 #include "sc_creature.h"
 
-#define SPELL_WHIRLWIND 37641
-#define SPELL_ENRAGE 28798
+#define SPELL_WHIRLWIND                              26083
+#define SPELL_ENRAGE                                 28747            //Not sure if right ID.
+#define SPELL_ENRAGEHARD                             28798
+
+//Guard Spell
+#define SPELL_WHIRLWINDADD                           26038
+#define SPELL_KNOCKBACK                              26027
 
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
     boss_sarturaAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 Whirlwind_Timer;
+    uint32 WhirlWind_Timer;
+    uint32 WhirlWindRandom_Timer;
+    uint32 WhirlWindEnd_Timer;
+    uint32 AggroReset_Timer;
+    uint32 AggroResetEnd_Timer;
+    uint32 EnrageHard_Timer;
+    
     bool Enraged;
+    bool EnragedHard;
+    bool WhirlWind;
+    bool AggroReset;
 
     void Reset()
     {
-        Whirlwind_Timer = 30000;
+        WhirlWind_Timer = 30000;
+        WhirlWindRandom_Timer = 3000 + rand()%4000;
+        WhirlWindEnd_Timer = 15000;
+        AggroReset_Timer = 45000 + rand()%10000;
+        AggroResetEnd_Timer = 5000;
+        EnrageHard_Timer = 10*60000;
+        
+        WhirlWind = false;
+        AggroReset = false;
         Enraged = false; 
+        EnragedHard = false;
 
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
@@ -60,30 +75,206 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //If he is 20% enrage
-        if (!Enraged)
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->IsNonMeleeSpellCasted(false))
+
+            if (!WhirlWind && WhirlWind_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_ENRAGE); 
-                Enraged = true;
+                DoCast(m_creature, SPELL_WHIRLWIND);
+                WhirlWind = true;
+                WhirlWind_Timer = 25000 + rand()%15000;
+                WhirlWindEnd_Timer = 15000;
+            }else WhirlWind_Timer -= diff;
+            
+            if (WhirlWind)
+            {
+                if (WhirlWindRandom_Timer < diff)
+                {
+                    //Attack random Gamers
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    if (target)
+                    DoStartAttackAndMovement(target);
+                
+                    WhirlWindRandom_Timer = 3000 + rand()%4000;
+                }else WhirlWindRandom_Timer -= diff;
+                
+                
+                if (WhirlWindEnd_Timer < diff)
+                {
+                    WhirlWind = false;              
+                }else WhirlWindEnd_Timer -= diff;
+            
             }
-
-
-            //Whirlwind_Timer (only in phase2)
-            if (Whirlwind_Timer < diff)
+            
+            if (!WhirlWind && AggroReset_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_WHIRLWIND);
-                Whirlwind_Timer = 30000;
-            }else Whirlwind_Timer -= diff;
+                //Attack random Gamers
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                if (target)
+                DoStartAttackAndMovement(target);
+                
+                
+                AggroReset = true;
+                AggroReset_Timer = 2000 + rand()%3000;
+            }else AggroReset_Timer -= diff;     
+   
+            if (AggroReset)
+            {
+            
+                if (AggroResetEnd_Timer <diff)
+                {        
+                    AggroReset = false;    
+                    AggroResetEnd_Timer = 5000;    
+                }AggroResetEnd_Timer -= diff;
+           
+            }       
+            
+            
+            //If she is 20% enrage
+            if (!Enraged)
+            {
+                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 20 && !m_creature->IsNonMeleeSpellCasted(false))
+                {
+                    DoCast(m_creature, SPELL_ENRAGE); 
+                    Enraged = true;
+                }
+            } 
+            
+            //After 10 minutes hard enrage
+            if (!EnragedHard)
+            {
+                if (EnrageHard_Timer < diff)
+                {
+                    DoCast(m_creature, SPELL_ENRAGEHARD); 
+                    EnragedHard = true;
+                }EnrageHard_Timer -= diff;
+            }                       
 
             DoMeleeAttackIfReady();
     }
 }; 
+
+
+struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
+{
+    mob_sartura_royal_guardAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 WhirlWind_Timer;
+    uint32 WhirlWindRandom_Timer;
+    uint32 WhirlWindEnd_Timer;
+    uint32 AggroReset_Timer;
+    uint32 AggroResetEnd_Timer;
+    uint32 KnockBack_Timer;
+    
+    bool WhirlWind;
+    bool AggroReset;
+
+    void Reset()
+    {
+        WhirlWind_Timer = 30000;
+        WhirlWindRandom_Timer = 3000 + rand()%4000;
+        WhirlWindEnd_Timer = 15000;
+        AggroReset_Timer = 45000 + rand()%10000;
+        AggroResetEnd_Timer = 5000;
+        KnockBack_Timer = 10000;
+        
+        WhirlWind = false;
+        AggroReset = false;
+
+    }
+
+    void Aggro(Unit *who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //Return since we have no target
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+
+            if (!WhirlWind && WhirlWind_Timer < diff)
+            {
+                DoCast(m_creature, SPELL_WHIRLWINDADD);
+                WhirlWind = true;
+                WhirlWind_Timer = 25000 + rand()%15000;
+                WhirlWindEnd_Timer = 15000;
+            }else WhirlWind_Timer -= diff;
+            
+            if (WhirlWind)
+            {
+                if (WhirlWindRandom_Timer < diff)
+                {
+                    //Attack random Gamers
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    if (target)
+                    DoStartAttackAndMovement(target);
+                
+                    WhirlWindRandom_Timer = 3000 + rand()%4000;
+                }else WhirlWindRandom_Timer -= diff;
+                
+                
+                if (WhirlWindEnd_Timer < diff)
+                {
+                    WhirlWind = false;              
+                }else WhirlWindEnd_Timer -= diff;
+            
+            }
+            
+            if (!WhirlWind)
+            {
+                if(AggroReset_Timer < diff)
+                {
+                    //Attack random Gamers
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    if (target)
+                    DoStartAttackAndMovement(target);
+                
+                
+                    AggroReset = true;
+                    AggroReset_Timer = 2000 + rand()%3000;
+                }else AggroReset_Timer -= diff;   
+
+                if (KnockBack_Timer < diff)
+                {
+
+                    DoCast(m_creature, SPELL_WHIRLWINDADD);
+
+                    KnockBack_Timer = 10000 + rand()%10000;
+                }else KnockBack_Timer -= diff;    
+                              
+           }   
+
+            if (AggroReset)
+            {
+            
+                if (AggroResetEnd_Timer <diff)
+                {        
+                    AggroReset = false;    
+                    AggroResetEnd_Timer = 5000;    
+                }AggroResetEnd_Timer -= diff;
+           
+            }   
+
+
+
+            DoMeleeAttackIfReady();
+    }
+}; 
+
 CreatureAI* GetAI_boss_sartura(Creature *_Creature)
 {
     return new boss_sarturaAI (_Creature);
 }
 
+
+CreatureAI* GetAI_mob_sartura_royal_guard(Creature *_Creature)
+{
+    return new mob_sartura_royal_guardAI (_Creature);
+}
 
 void AddSC_boss_sartura()
 {
@@ -92,4 +283,10 @@ void AddSC_boss_sartura()
     newscript->Name="boss_sartura";
     newscript->GetAI = GetAI_boss_sartura;
     m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_sartura_royal_guard";
+    newscript->GetAI = GetAI_mob_sartura_royal_guard;
+    m_scripts[nrscripts++] = newscript;
+
 }

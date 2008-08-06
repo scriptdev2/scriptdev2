@@ -50,12 +50,16 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         MortalStrike_Timer = 20000;
         KnockBack_Timer = 30000;
         LeashCheck_Timer = 2000;
+
+        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+        m_creature->ApplySpellImmune(1, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void Aggro(Unit *who)
     {
                 DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+                DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)

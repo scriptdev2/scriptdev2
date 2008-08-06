@@ -53,10 +53,14 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         WarStomp_Timer = 35000;
         FireballVolley_Timer = 7000;
         Conflagration_Timer = 12000;
+
+        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+        m_creature->ApplySpellImmune(1, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void Aggro(Unit *who)
     {
+                DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
@@ -103,12 +107,26 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         {
             //Cast
             DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
+            //We will remove this threat reduction and add an aura check.
+            
+            //if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            //m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
             //12 seconds until we should cast this agian
             Conflagration_Timer = 12000;
         }else Conflagration_Timer -= diff;
+        
+        // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
+        if (m_creature->getVictim()->HasAura(SPELL_CONFLAGRATION,0))
+        {
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,1);
+            if (target)
+            DoStartAttackAndMovement(target);
+
+        }       
+      
 
         DoMeleeAttackIfReady();
     }
