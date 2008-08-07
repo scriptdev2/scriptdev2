@@ -285,9 +285,12 @@ UPDATE `creature_template` SET `ScriptName`='boss_hungarfen' WHERE `entry`=17770
 
 /* THE STEAMVAULT */
 UPDATE `instance_template` SET `script`='instance_steam_vault' WHERE `map`=545;
-UPDATE `creature_template` SET `ScriptName`='boss_warlord_kalithresh' WHERE `entry`=17798;
 UPDATE `creature_template` SET `ScriptName`='boss_hydromancer_thespia' WHERE `entry`=17797;
+UPDATE `creature_template` SET `ScriptName`='boss_mekgineer_steamrigger' WHERE `entry`=17796;
+UPDATE `creature_template` SET `ScriptName`='boss_warlord_kalithresh' WHERE `entry`=17798;
 UPDATE `creature_template` SET `ScriptName`='mob_coilfang_waterelemental' WHERE `entry`=17917;
+UPDATE `creature_template` SET `ScriptName`='mob_naga_distiller' WHERE `entry`=17954;
+UPDATE `creature_template` SET `ScriptName`='mob_steamrigger_mechanic' WHERE `entry`=17951;
 
 /* SERPENTSHRINE CAVERN */
 UPDATE `instance_template` SET `script`='instance_serpent_shrine' WHERE `map`=548;

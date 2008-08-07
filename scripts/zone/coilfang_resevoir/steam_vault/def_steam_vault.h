@@ -4,9 +4,12 @@
 #include "sc_creature.h"
 #include "sc_instance.h"
 
-#define DATA_HYDROMANCERTHESPIAEVENT 1
-#define DATA_MEKGINEERSTEAMRIGGEREVENT 2
-#define DATA_WARLORDKALITHRESHEVENT 3
-#define DATA_NEARDISTILLER 4
-#define DATA_MEKGINEERSTEAMRIGGER 5
+#define TYPE_HYDROMANCER_THESPIA        1
+#define TYPE_MEKGINEER_STEAMRIGGER      2
+#define TYPE_WARLORD_KALITHRESH         3
+#define TYPE_DISTILLER                  4
+
+#define DATA_MEKGINEERSTEAMRIGGER       5
+#define DATA_KALITRESH                  6
+#define DATA_THESPIA                    7
 #endif

@@ -17,16 +17,18 @@
 /* ScriptData
 SDName: Instance_Steam_Vault
 SD%Complete: 60
-SDComment: Temporary instance script, needs revision and adjustments. Need scripts for Gameobjects realted to opening of main chamber.
-SDCategory: Coilfang Resevoir, Steam Vault
+SDComment: Workaround for opening of Main Chamber door. Mangos does not support scripting of Gameobject as this instance require.
+SDCategory: Coilfang Resevoir, The Steamvault
 EndScriptData */
 
 #include "def_steam_vault.h"
 #include "GameObject.h"
 
-#define ENCOUNTERS 3
+#define ENCOUNTERS 4
 
-#define MAIN_CHAMBERS_DOOR       183049 //door opened when hydromancer and mekgineer are died
+#define MAIN_CHAMBERS_DOOR      183049 //door opened when hydromancer and mekgineer are died
+#define ACCESS_PANEL_HYDRO      184125
+#define ACCESS_PANEL_MEK        184126
 
 /* Steam Vaults encounters:
 1 - Hydromancer Thespia Event
@@ -38,27 +40,53 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 {
     instance_steam_vault(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    bool Encounters[ENCOUNTERS];
+    uint64 ThespiaGUID;
+    uint64 MekgineerGUID;
+    uint64 KalithreshGUID;
+    uint32 Encounter[ENCOUNTERS];
 
-    bool IsHydromancerDied, IsMekgineerDied;
+    bool IsHydromancerDead, IsMekgineerDead;
     GameObject *MainChambersDoor;
+    GameObject *AccessPanelHydro;
+    GameObject *AccessPanelMek;
 
     void Initialize()
     {
-        IsHydromancerDied = false;
-        IsMekgineerDied = false;
+        ThespiaGUID = 0;
+        MekgineerGUID = 0;
+        KalithreshGUID = 0;
+        IsHydromancerDead = false;
+        IsMekgineerDead = false;
         MainChambersDoor = NULL;
+        AccessPanelHydro = NULL;
+        AccessPanelMek = NULL;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = false;
+            Encounter[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true;
+            if( Encounter[i] ) return true;
 
         return false;
+    }
+
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch(creature_entry)
+        {
+            case 17797:
+                ThespiaGUID = creature->GetGUID();
+                break;
+            case 17796:
+                MekgineerGUID = creature->GetGUID();
+                break;
+            case 17798:
+                KalithreshGUID = creature->GetGUID();
+                break;
+        }
     }
 
     void OnObjectCreate(GameObject *go)
@@ -66,24 +94,14 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
         switch(go->GetEntry())
         {
             case MAIN_CHAMBERS_DOOR:
-            MainChambersDoor = go;
-            break;
-        }
-    }
-
-    void OpenDoor(GameObject *go)
-    {
-        //open the door
-        go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetGoState(0);
-    }
-
-    void CheckInstanceStatus()
-    {
-        if(IsHydromancerDied) //ToDo: add IsMekgineerDied check when mekginner script is implemented
-        {
-            if(MainChambersDoor)
-                OpenDoor(MainChambersDoor);
+                MainChambersDoor = go;
+                break;
+            case ACCESS_PANEL_HYDRO:
+                AccessPanelHydro = go;
+                break;
+            case ACCESS_PANEL_MEK:
+                AccessPanelMek = go;
+                break;
         }
     }
 
@@ -91,32 +109,61 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_HYDROMANCERTHESPIAEVENT:
+            case TYPE_HYDROMANCER_THESPIA:
                 if(data == DONE)
                 {
-                    Encounters[0] = false;
-                    IsHydromancerDied = true;
-                    CheckInstanceStatus();
+                    IsHydromancerDead = true;
+                    if( IsMekgineerDead && MainChambersDoor )
+                        MainChambersDoor->SetGoState(0);
                 }
-                else
-                    Encounters[0] = (data) ? true : false;
+                Encounter[0] = data;
                 break;
-
-            case DATA_MEKGINEERSTEAMRIGGEREVENT:
+            case TYPE_MEKGINEER_STEAMRIGGER:
                 if(data == DONE)
                 {
-                    Encounters[1] = false;
-                    IsMekgineerDied = true;
-                    CheckInstanceStatus();
+                    IsMekgineerDead = true;
+                    if( IsHydromancerDead && MainChambersDoor )
+                        MainChambersDoor->SetGoState(0);
                 }
-                else
-                    Encounters[1] = (data) ? true : false;
+                Encounter[1] = data;
                 break;
-
-            case DATA_WARLORDKALITHRESHEVENT:
-                Encounters[2] = (data) ? true : false;
+            case TYPE_WARLORD_KALITHRESH:
+                Encounter[2] = data;
+                break;
+            case TYPE_DISTILLER:
+                Encounter[3] = data;
                 break;
         }
+    }
+
+    uint32 GetData(uint32 type)
+    {
+        switch(type)
+        {
+            case TYPE_HYDROMANCER_THESPIA:
+                return Encounter[0];
+            case TYPE_MEKGINEER_STEAMRIGGER:
+                return Encounter[1];
+            case TYPE_WARLORD_KALITHRESH:
+                return Encounter[2];
+            case TYPE_DISTILLER:
+                return Encounter[3];
+        }
+        return 0;
+    }
+
+    uint64 GetData64(uint32 data)
+    {
+        switch(data)
+        {
+            case DATA_THESPIA:
+                return ThespiaGUID;
+            case DATA_MEKGINEERSTEAMRIGGER:
+                return MekgineerGUID;
+            case DATA_KALITRESH:
+                return KalithreshGUID;
+        }
+        return 0;
     }
 };
 

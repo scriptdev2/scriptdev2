@@ -16,31 +16,91 @@
 
 /* ScriptData
 SDName: Boss_Warlord_Kalithres
-SD%Complete: 50
-SDComment: Missing connection to containers, making fight impossible
-SDCategory: Coilfang Resevoir, Steam Vault
+SD%Complete: 65
+SDComment: Contains workarounds regarding warlord's rage spells not acting as expected. Both scripts here require review and fine tuning.
+SDCategory: Coilfang Resevoir, The Steamvault
 EndScriptData */
 
 #include "def_steam_vault.h"
+#include "Cell.h"
+#include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
 
-#define SPELL_SPELL_REFLECTION  23920
-#define SPELL_IMPALE            26548
-#define SPELL_WARLORDS_RAGE     36453
+#define SAY_INTRO           "You deem yourselves worthy simply because you bested my guards? Our work here will not be compromised!"
+#define SOUND_INTRO         10390
 
-#define SOUND_INTRO         10390 // Intro
-#define SOUND_REGENERATE    10391 // Regen - He should regenerate at two objects but don't know how.....
-#define SOUND_AGGRO1        10392 // Aggro1
-#define SOUND_AGGRO2        10393 // Aggro2
-#define SOUND_AGGRO3        10394 // Aggro3
-#define SOUND_SLAY1         10395 // Slay1
-#define SOUND_SLAY2         10396 // Slay2
-#define SOUND_DEATH         10397 // Death
+#define SAY_REGEN           "This is not nearly over..."
+#define SOUND_REGEN         10391
+
+#define SAY_AGGRO1          "Your head will roll!"
+#define SOUND_AGGRO1        10392
+#define SAY_AGGRO2          "I despise all of your kind!"
+#define SOUND_AGGRO2        10393
+#define SAY_AGGRO3          "Ba'ahntha sol'dorei!"
+#define SOUND_AGGRO3        10394
+
+#define SAY_SLAY1           "Scram, surface filth!"
+#define SOUND_SLAY1         10395
+#define SAY_SLAY2           "Ah ha ha ha ha ha ha!"
+#define SOUND_SLAY2         10396
+
+#define SAY_DEATH           "For her Excellency... for... Vashj!"
+#define SOUND_DEATH         10397
+
+#define SPELL_SPELL_REFLECTION      31534
+#define SPELL_IMPALE                39061
+#define SPELL_WARLORDS_RAGE         37081
+#define SPELL_WARLORDS_RAGE_NAGA    31543
+
+#define SPELL_WARLORDS_RAGE_PROC    36453
+
+struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
+{
+    mob_naga_distillerAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
+
+    void Reset()
+    {
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+        //hack, due to really weird spell behaviour :(
+        if( pInstance )
+            if( pInstance->GetData(TYPE_DISTILLER) == IN_PROGRESS )
+            {
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            }
+    }
+
+    void Aggro(Unit *who) { }
+
+    void StartRageGen(Unit *caster)
+    {
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        DoCast(m_creature,SPELL_WARLORDS_RAGE_NAGA,true);
+        if( pInstance ) pInstance->SetData(TYPE_DISTILLER,IN_PROGRESS);
+    }
+
+    void DamageTaken(Unit *done_by, uint32 &damage)
+    {
+        if( m_creature->GetHealth() <= damage )
+            if( pInstance ) pInstance->SetData(TYPE_DISTILLER,DONE);
+    }
+};
 
 struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
 {
     boss_warlord_kalithreshAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
@@ -49,16 +109,37 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
     uint32 Reflection_Timer;
     uint32 Impale_Timer;
     uint32 Rage_Timer;
-    int RandTime(int time) { return ((rand()%time)*1000); }
+    bool CanRage;
 
     void Reset()
     {
         Reflection_Timer = 10000;
         Impale_Timer = 30000;
-        Rage_Timer = 60000;
+        Rage_Timer = 45000;
+        CanRage = false;
 
-        if(pInstance)
-            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);
+        if( pInstance ) pInstance->SetData(TYPE_WARLORD_KALITHRESH, NOT_STARTED);
+    }
+
+    void Aggro(Unit *who)
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+            break;
+        case 1:
+            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+            break;
+        case 2:
+            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+            break;
+        }
+
+        if( pInstance ) pInstance->SetData(TYPE_WARLORD_KALITHRESH, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* victim)
@@ -66,85 +147,95 @@ struct MANGOS_DLL_DECL boss_warlord_kalithreshAI : public ScriptedAI
         switch(rand()%2)
         {
         case 0:
+            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(victim, SOUND_SLAY1);
             break;
         case 1:
+            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(victim, SOUND_SLAY2);
             break;
         }
     }
 
+    Creature* SelectCreatureInGrid(uint32 entry, float range)
+    {
+        Creature* pCreature = NULL;
+
+        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
+        Cell cell(pair);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, entry, true, range);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+
+        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+
+        CellLock<GridReadGuard> cell_lock(cell, pair);
+        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
+
+        return pCreature;
+    }
+
+    void SpellHit(Unit *caster, const SpellEntry *spell)
+    {
+        //hack :(
+        if( spell->Id == SPELL_WARLORDS_RAGE_PROC )
+            if( pInstance )
+                if( pInstance->GetData(TYPE_DISTILLER) == DONE )
+                    m_creature->RemoveAurasDueToSpell(SPELL_WARLORDS_RAGE_PROC);
+    }
+
     void JustDied(Unit* Killer)
     {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
-        if(pInstance)
-            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 0);
-    }
-
-    void StartEvent()
-    {
-        switch(rand()%3)
-        {
-        case 0:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-            break;
-        case 1:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-            break;
-        case 2:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-            break;
-        }
-
-        if(pInstance)
-            pInstance->SetData(DATA_WARLORDKALITHRESHEVENT, 1);
-    }
-
-    void Aggro(Unit *who)
-    {
-            StartEvent();
+        if( pInstance ) pInstance->SetData(TYPE_WARLORD_KALITHRESH, DONE);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
+        if( Rage_Timer < diff )
+        {
+            Creature* distiller = SelectCreatureInGrid(17954, 100);
+            if( distiller )
+            {
+                DoYell(SAY_REGEN, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_REGEN);
+                DoCast(m_creature,SPELL_WARLORDS_RAGE);
+                ((mob_naga_distillerAI*)distiller->AI())->StartRageGen(m_creature);
+            }
+            Rage_Timer = 45000;
+        }else Rage_Timer -= diff;
+
         //Reflection_Timer
-        if (Reflection_Timer < diff)
+        if( Reflection_Timer < diff )
         {
             DoCast(m_creature, SPELL_SPELL_REFLECTION);
-            Reflection_Timer = RandTime(60);
+            Reflection_Timer = 20000+rand()%5000;
         }else Reflection_Timer -= diff;
 
         //Impale_Timer
-        if (Impale_Timer < diff)
+        if( Impale_Timer < diff )
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-            if (target)
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_IMPALE);
-            else
-                DoCast(m_creature->getVictim(), SPELL_IMPALE);
 
-            Impale_Timer = RandTime(40);
+            Impale_Timer = 7500+rand()%5000;
         }else Impale_Timer -= diff;
-
-        //Rage_Timer
-        if (Rage_Timer < diff)
-        {
-            DoCast(m_creature, SPELL_WARLORDS_RAGE);
-            Rage_Timer = 600000;
-        }else Rage_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
+CreatureAI* GetAI_mob_naga_distiller(Creature *_Creature)
+{
+    return new mob_naga_distillerAI (_Creature);
+}
 CreatureAI* GetAI_boss_warlord_kalithresh(Creature *_Creature)
 {
     return new boss_warlord_kalithreshAI (_Creature);
@@ -153,6 +244,12 @@ CreatureAI* GetAI_boss_warlord_kalithresh(Creature *_Creature)
 void AddSC_boss_warlord_kalithresh()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="mob_naga_distiller";
+    newscript->GetAI = GetAI_mob_naga_distiller;
+    m_scripts[nrscripts++] = newscript;
+
     newscript = new Script;
     newscript->Name="boss_warlord_kalithresh";
     newscript->GetAI = GetAI_boss_warlord_kalithresh;

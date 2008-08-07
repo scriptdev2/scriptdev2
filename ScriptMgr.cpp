@@ -223,8 +223,9 @@ extern void AddSC_instance_serpentshrine_cavern();
 //--Slave Pens
 
 //--Steam Vault
-extern void AddSC_boss_warlord_kalithresh();
 extern void AddSC_boss_hydromancer_thespia();
+extern void AddSC_boss_mekgineer_steamrigger();
+extern void AddSC_boss_warlord_kalithresh();
 extern void AddSC_instance_steam_vault();
 
 //--Underbog
@@ -1066,8 +1067,9 @@ void ScriptsInit()
 
     //--Slave Pens
     //--Steam Vault
-    AddSC_boss_warlord_kalithresh();
     AddSC_boss_hydromancer_thespia();
+    AddSC_boss_mekgineer_steamrigger();
+    AddSC_boss_warlord_kalithresh();
     AddSC_instance_steam_vault();
 
     //--Underbog

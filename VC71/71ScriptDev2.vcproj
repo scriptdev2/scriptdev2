@@ -1652,6 +1652,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_mekgineer_steamrigger.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\coilfang_resevoir\steam_vault\boss_warlord_kalithresh.cpp"
 							>
 						</File>
