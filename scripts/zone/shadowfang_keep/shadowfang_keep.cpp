@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: Npcs_Shadowfang_Keep
+SDName: Shadowfang_Keep
 SD%Complete: 75
-SDComment: Using escortAI for movement to door. Might need additional code in case being attacked. Add proper texts/say().
+SDComment: npc_shadowfang_prisoner using escortAI for movement to door. Might need additional code in case being attacked. Add proper texts/say().
 SDCategory: Shadowfang Keep
 EndScriptData */
+
+/* ContentData
+npc_shadowfang_prisoner
+EndContentData */
 
 #include "sc_gossip.h"
 #include "../../npc/npc_escortAI.h"
@@ -78,7 +82,7 @@ bool GossipHello_npc_shadowfang_prisoner(Player *player, Creature *_Creature)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
 
-    if( pInstance && (pInstance->GetData(TYPE_RETHILGORE) >= DONE) && (pInstance->GetData(TYPE_FREE_NPC) == NOT_STARTED) )
+    if( pInstance && !pInstance->GetData(TYPE_FREE_NPC) && pInstance->GetData(TYPE_RETHILGORE) == DONE )
         player->ADD_GOSSIP_ITEM( 0, "Thanks, I'll follow you to the door.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
@@ -100,7 +104,7 @@ bool GossipSelect_npc_shadowfang_prisoner(Player *player, Creature *_Creature, u
 ## AddSC
 ######*/
 
-void AddSC_npcs_shadowfang_keep()
+void AddSC_shadowfang_keep()
 {
     Script *newscript;
 

@@ -845,7 +845,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\shadowfang_keep\npcs_shadowfang_keep.cpp"
+						RelativePath="..\scripts\zone\shadowfang_keep\shadowfang_keep.cpp"
 						>
 					</File>
 				</Filter>
@@ -1437,7 +1437,7 @@
 					Name="Netherstorm"
 					>
 					<File
-						RelativePath="..\scripts\zone\netherstorm\npcs_netherstorm.cpp"
+						RelativePath="..\scripts\zone\netherstorm\netherstorm.cpp"
 						>
 					</File>
 				</Filter>

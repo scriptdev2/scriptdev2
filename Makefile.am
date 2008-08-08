@@ -248,7 +248,7 @@ scripts/zone/naxxramas/boss_stalagg.cpp \
 scripts/zone/naxxramas/boss_thaddius.cpp \
 scripts/zone/naxxramas/boss_thane_korthazz.cpp \
 scripts/zone/naxxramas/instance_naxxramas.cpp \
-scripts/zone/netherstorm/npcs_netherstorm.cpp \
+scripts/zone/netherstorm/netherstorm.cpp \
 scripts/zone/onyxias_lair/boss_onyxia.cpp \
 scripts/zone/orgrimmar/orgrimmar.cpp \
 scripts/zone/razorfen_downs/boss_amnennar_the_coldbringer.cpp \
@@ -286,7 +286,7 @@ scripts/zone/scholomance/instance_scholomance.cpp \
 scripts/zone/searing_gorge/searing_gorge.cpp \
 scripts/zone/shadowfang_keep/def_shadowfang_keep.h \
 scripts/zone/shadowfang_keep/instance_shadowfang_keep.cpp \
-scripts/zone/shadowfang_keep/npcs_shadowfang_keep.cpp \
+scripts/zone/shadowfang_keep/shadowfang_keep.cpp \
 scripts/zone/shadowmoon_valley/boss_doomwalker.cpp \
 scripts/zone/shadowmoon_valley/shadowmoon_valley.cpp \
 scripts/zone/shattrath/shattrath_city.cpp \

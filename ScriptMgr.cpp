@@ -370,7 +370,7 @@ extern void AddSC_boss_gluth();
 extern void AddSC_boss_sapphiron();
 
 //Netherstorm
-extern void AddSC_npcs_netherstorm();
+extern void AddSC_netherstorm();
 
 //Onyxia's Lair
 extern void AddSC_boss_onyxia();
@@ -415,7 +415,7 @@ extern void AddSC_instance_scholomance();
 extern void AddSC_searing_gorge();
 
 //Shadowfang keep
-extern void AddSC_npcs_shadowfang_keep();
+extern void AddSC_shadowfang_keep();
 extern void AddSC_instance_shadowfang_keep();
 
 //Shadowmoon Valley
@@ -1214,7 +1214,7 @@ void ScriptsInit()
     AddSC_boss_sapphiron();
 
     //Netherstorm
-    AddSC_npcs_netherstorm();
+    AddSC_netherstorm();
 
     //Onyxia's Lair
     AddSC_boss_onyxia();
@@ -1259,7 +1259,7 @@ void ScriptsInit()
     AddSC_searing_gorge();
 
     //Shadowfang keep
-    AddSC_npcs_shadowfang_keep();
+    AddSC_shadowfang_keep();
     AddSC_instance_shadowfang_keep();
 
     //Shadowmoon Valley

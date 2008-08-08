@@ -96,51 +96,32 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         switch(type)
         {
             case TYPE_FREE_NPC:
-            {
                 if(data == DONE)
                 {
-                    Encounter[0] = DONE;
                     if(DoorCourtyard)
                         DoorCourtyard->UseDoorOrButton();
                 }
-                else
-                    Encounter[0] = NOT_STARTED;
+                Encounter[0] = data;
                 break;
-            }
             case TYPE_RETHILGORE:
-            {
-                if(data == DONE)
-                {
-                    Encounter[1] = DONE;
-                }
-                else
-                    Encounter[1] = NOT_STARTED;
+                Encounter[1] = data;
                 break;
-            }
             case TYPE_FENRUS:
-            {
                 if(data == DONE)
                 {
-                    Encounter[2] = DONE;
                     if(DoorSorcerer)
                         DoorSorcerer->UseDoorOrButton();
                 }
-                else
-                    Encounter[2] = NOT_STARTED;
+                Encounter[2] = data;
                 break;
-            }
             case TYPE_NANDOS:
-            {
                 if(data == DONE)
                 {
-                    Encounter[3] = DONE;
                     if(DoorArugal)
                         DoorArugal->UseDoorOrButton();
                 }
-                else
-                    Encounter[3] = NOT_STARTED;
+                Encounter[3] = data;
                 break;
-            }
         }
     }
 
@@ -150,16 +131,12 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         {
             case TYPE_FREE_NPC:
                 return Encounter[0];
-                break;
             case TYPE_RETHILGORE:
                 return Encounter[1];
-                break;
             case TYPE_FENRUS:
                 return Encounter[2];
-                break;
             case TYPE_NANDOS:
                 return Encounter[3];
-                break;
         }
         return 0;
     }
