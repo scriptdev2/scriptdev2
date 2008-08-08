@@ -15,16 +15,20 @@
 */
 
 /* ScriptData
-SDName: mob_crystalcore_devastator
+SDName: The_Eye
 SD%Complete: 100
 SDComment: 
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
-#include "sc_creature.h"
+/* ContentData
+mob_crystalcore_devastator
+EndContentData */
 
-#define SPELL_COUNTERCHARGE         35035
-#define SPELL_KNOCKAWAY                22893
+#include "def_the_eye.h"
+
+#define SPELL_COUNTERCHARGE     35035
+#define SPELL_KNOCKAWAY         22893
 
 struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
 {
@@ -79,7 +83,6 @@ struct MANGOS_DLL_DECL mob_crystalcore_devastatorAI : public ScriptedAI
             Countercharge_Timer = 45000;
         }else Countercharge_Timer -= diff;
 
-
         DoMeleeAttackIfReady();
     }
 };
@@ -89,7 +92,7 @@ CreatureAI* GetAI_mob_crystalcore_devastator(Creature *_Creature)
     return new mob_crystalcore_devastatorAI (_Creature);
 }
 
-void AddSC_mob_crystalcore_devastator()
+void AddSC_the_eye()
 {
     Script *newscript;
     newscript = new Script;

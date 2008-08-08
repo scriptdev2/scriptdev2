@@ -112,11 +112,11 @@ scripts/zone/blackrock_spire/boss_highlord_omokk.cpp \
 scripts/zone/blackrock_spire/boss_mother_smolderweb.cpp \
 scripts/zone/blackrock_spire/boss_overlord_wyrmthalak.cpp \
 scripts/zone/blackrock_spire/boss_pyroguard_emberseer.cpp \
+scripts/zone/blackrock_spire/boss_quartermaster_zigris.cpp \
 scripts/zone/blackrock_spire/boss_rend_blackhand.cpp \
 scripts/zone/blackrock_spire/boss_shadow_hunter_voshgajin.cpp \
 scripts/zone/blackrock_spire/boss_the_beast.cpp \
 scripts/zone/blackrock_spire/boss_warmaster_voone.cpp \
-scripts/zone/blackrock_spire/mob_quartermaster_zigris.cpp \
 scripts/zone/blackwing_lair/boss_broodlord_lashlayer.cpp \
 scripts/zone/blackwing_lair/boss_chromaggus.cpp \
 scripts/zone/blackwing_lair/boss_ebonroc.cpp \
@@ -207,10 +207,10 @@ scripts/zone/magisters_terrace/boss_selin_fireheart.cpp \
 scripts/zone/magisters_terrace/boss_vexallus.cpp \
 scripts/zone/magisters_terrace/def_magisters_terrace.h \
 scripts/zone/magisters_terrace/instance_magisters_terrace.cpp \
+scripts/zone/maraudon/boss_celebras_the_cursed.cpp \
 scripts/zone/maraudon/boss_landslide.cpp \
 scripts/zone/maraudon/boss_noxxion.cpp \
 scripts/zone/maraudon/boss_princess_theradras.cpp \
-scripts/zone/maraudon/mob_celebras_the_cursed.cpp \
 scripts/zone/molten_core/boss_baron_geddon.cpp \
 scripts/zone/molten_core/boss_garr.cpp \
 scripts/zone/molten_core/boss_gehennas.cpp \
@@ -223,7 +223,7 @@ scripts/zone/molten_core/boss_shazzrah.cpp \
 scripts/zone/molten_core/boss_sulfuron_harbinger.cpp \
 scripts/zone/molten_core/def_molten_core.h \
 scripts/zone/molten_core/instance_molten_core.cpp \
-scripts/zone/molten_core/mobs_molten_core.cpp \
+scripts/zone/molten_core/molten_core.cpp \
 scripts/zone/moonglade/moonglade.cpp \
 scripts/zone/mulgore/mulgore.cpp \
 scripts/zone/nagrand/nagrand.cpp \
@@ -325,7 +325,7 @@ scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \
 scripts/zone/tempest_keep/the_eye/boss_void_reaver.cpp \
 scripts/zone/tempest_keep/the_eye/def_the_eye.h \
 scripts/zone/tempest_keep/the_eye/instance_the_eye.cpp \
-scripts/zone/tempest_keep/the_eye/mob_crystalcore_devastator.cpp \
+scripts/zone/tempest_keep/the_eye/the_eye.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_gyrokill.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_gatewatcher_ironhand.cpp \
 scripts/zone/tempest_keep/the_mechanar/boss_nethermancer_sepethrea.cpp \

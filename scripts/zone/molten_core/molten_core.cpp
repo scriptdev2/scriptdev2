@@ -15,27 +15,28 @@
 */
 
 /* ScriptData
-SDName: Mobs_Molten_Core
+SDName: Molten_Core
 SD%Complete: 100
-SDComment: All except ancient core hound in EAI
+SDComment: 
 SDCategory: Molten Core
 EndScriptData */
 
+/* ContentData
+mob_ancient_core_hound
+EndContentData */
+
 #include "../../creature/simple_ai.h"
 
-// -- Ancient Core Hound Spells --
- 
-//Standart Spells
 #define SPELL_CONE_OF_FIRE          19630
 #define SPELL_BITE                  19771
 
 //Random Debuff (each hound has only one of these)
-#define SPELL_GROUND_STOMP          19364    
-#define SPELL_ANCIENT_DREAD         19365                     
-#define SPELL_CAUTERIZING_FLAMES    19366 
-#define SPELL_WITHERING_HEAT        19367 
-#define SPELL_ANCIENT_DESPAIR       19369 
-#define SPELL_ANCIENT_HYSTERIA      19372     
+#define SPELL_GROUND_STOMP          19364
+#define SPELL_ANCIENT_DREAD         19365
+#define SPELL_CAUTERIZING_FLAMES    19366
+#define SPELL_WITHERING_HEAT        19367
+#define SPELL_ANCIENT_DESPAIR       19369
+#define SPELL_ANCIENT_HYSTERIA      19372
 
 CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
 {
@@ -75,15 +76,12 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
     return ai;
 }
  
-void AddSC_mobs_molten_core()
+void AddSC_molten_core()
 {
     Script *newscript;
-    
-    //Ancient Core Hound
+
     newscript = new Script;
     newscript->Name="mob_ancient_core_hound";
     newscript->GetAI = GetAI_mob_ancient_core_hound;
     m_scripts[nrscripts++] = newscript;
-
- 
 }

@@ -645,6 +645,10 @@
 					Name="Maraudon"
 					>
 					<File
+						RelativePath="..\scripts\zone\maraudon\boss_celebras_the_cursed.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\maraudon\boss_landslide.cpp"
 						>
 					</File>
@@ -654,10 +658,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\maraudon\boss_princess_theradras.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\maraudon\mob_celebras_the_cursed.cpp"
 						>
 					</File>
 				</Filter>
@@ -713,7 +713,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\molten_core\mobs_molten_core.cpp"
+						RelativePath="..\scripts\zone\molten_core\molten_core.cpp"
 						>
 					</File>
 				</Filter>
@@ -1508,7 +1508,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\zone\tempest_keep\the_eye\mob_crystalcore_devastator.cpp"
+							RelativePath="..\scripts\zone\tempest_keep\the_eye\the_eye.cpp"
 							>
 						</File>
 					</Filter>
@@ -1577,6 +1577,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\blackrock_spire\boss_quartermaster_zigris.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\blackrock_spire\boss_rend_blackhand.cpp"
 						>
 					</File>
@@ -1590,10 +1594,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\blackrock_spire\boss_warmaster_voone.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\blackrock_spire\mob_quartermaster_zigris.cpp"
 						>
 					</File>
 				</Filter>

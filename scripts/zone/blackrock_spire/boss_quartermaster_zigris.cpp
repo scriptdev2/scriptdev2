@@ -15,25 +15,32 @@
 */
 
 /* ScriptData
-SDName: Mob_Chromatic_Elite_Guard
+SDName: Boss_Quartmaster_Zigris
 SD%Complete: 100
-SDComment: 
+SDComment: Needs revision
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "sc_creature.h"
 
-#define SPELL_KNOCKDOWN                20276   
+#define SPELL_SHOOT             16496
+#define SPELL_STUNBOMB          16497
+#define SPELL_HEALING_POTION    15504
+#define SPELL_HOOKEDNET         15609
 
-struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
+struct MANGOS_DLL_DECL boss_quatermasterzigrisAI : public ScriptedAI
 {
-    mob_chromatic_elite_guardAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_quatermasterzigrisAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 KnockDown_Timer;
+    uint32 Shoot_Timer;
+    uint32 StunBomb_Timer;
+    //uint32 HelingPotion_Timer;
 
     void Reset()
-    {       
-        KnockDown_Timer = 20000;
+    {
+        Shoot_Timer = 1000;
+        StunBomb_Timer = 16000;
+        //HelingPotion_Timer = 25000;
     }
 
     void Aggro(Unit *who)
@@ -46,31 +53,34 @@ struct MANGOS_DLL_DECL mob_chromatic_elite_guardAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //KnockDown_Timer
-        if (KnockDown_Timer < diff)
+        //Shoot_Timer
+        if (Shoot_Timer < diff)
         {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_KNOCKDOWN);
+            DoCast(m_creature->getVictim(),SPELL_SHOOT);
+            Shoot_Timer = 500;
+        }else Shoot_Timer -= diff;
 
-            //8 seconds
-            KnockDown_Timer = 8000;
-        }else KnockDown_Timer -= diff;
+        //StunBomb_Timer
+        if (StunBomb_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_STUNBOMB);
+            StunBomb_Timer = 14000;
+        }else StunBomb_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 
-}; 
-CreatureAI* GetAI_mob_chromatic_elite_guard(Creature *_Creature)
+};
+CreatureAI* GetAI_boss_quatermasterzigris(Creature *_Creature)
 {
-    return new mob_chromatic_elite_guardAI (_Creature);
+    return new boss_quatermasterzigrisAI (_Creature);
 }
 
-
-void AddSC_mob_chromatic_elite_guard()
+void AddSC_boss_quatermasterzigris()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="mob_chromatic_elite_guard";
-    newscript->GetAI = GetAI_mob_chromatic_elite_guard;
+    newscript->Name="quartermaster_zigris";
+    newscript->GetAI = GetAI_boss_quatermasterzigris;
     m_scripts[nrscripts++] = newscript;
 }

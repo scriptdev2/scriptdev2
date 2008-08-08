@@ -325,10 +325,10 @@ extern void AddSC_boss_priestess_delrissa();
 extern void AddSC_instance_magisters_terrace();
 
 //Maraudon
+extern void AddSC_boss_celebras_the_cursed();
 extern void AddSC_boss_landslide();
 extern void AddSC_boss_noxxion();
 extern void AddSC_boss_ptheradras();
-extern void AddSC_celebras_the_cursed();
 
 //Molten core
 extern void AddSC_boss_lucifron();
@@ -342,7 +342,7 @@ extern void AddSC_boss_sulfuron();
 extern void AddSC_boss_majordomo();
 extern void AddSC_boss_ragnaros();
 extern void AddSC_instance_molten_core();
-extern void AddSC_mobs_molten_core();
+extern void AddSC_molten_core();
 
 //Moonglade
 extern void AddSC_moonglade();
@@ -476,9 +476,9 @@ extern void AddSC_boss_warp_splinter();
 //--The Eye
 extern void AddSC_boss_kaelthas();
 extern void AddSC_boss_void_reaver();
-extern void AddSC_instance_the_eye();
 extern void AddSC_boss_high_astromancer_solarian();
-extern void AddSC_mob_crystalcore_devastator();
+extern void AddSC_instance_the_eye();
+extern void AddSC_the_eye();
 
 //--The Mechanar
 extern void AddSC_boss_gatewatcher_iron_hand();
@@ -1169,10 +1169,10 @@ void ScriptsInit()
     AddSC_instance_magisters_terrace();
 
     //Maraudon
+    AddSC_boss_celebras_the_cursed();
     AddSC_boss_landslide();
     AddSC_boss_noxxion();
     AddSC_boss_ptheradras();
-    AddSC_celebras_the_cursed();
     
     //Molten core
     AddSC_boss_lucifron();
@@ -1186,7 +1186,7 @@ void ScriptsInit()
     AddSC_boss_majordomo();
     AddSC_boss_ragnaros();
     AddSC_instance_molten_core();
-    AddSC_mobs_molten_core();
+    AddSC_molten_core();
 
     //Moonglade
     AddSC_moonglade();
@@ -1320,9 +1320,9 @@ void ScriptsInit()
     //--The Eye
     AddSC_boss_kaelthas();
     AddSC_boss_void_reaver();
-    AddSC_instance_the_eye();
-    AddSC_mob_crystalcore_devastator();
     AddSC_boss_high_astromancer_solarian();
+    AddSC_instance_the_eye();
+    AddSC_the_eye();
 
     //--The Mechanar
     AddSC_boss_gatewatcher_iron_hand();

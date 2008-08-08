@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: Mob_Celebras_the_Cursed
+SDName: Boss_Celebras_the_Cursed
 SD%Complete: 100
 SDComment: 
 SDCategory: Maraudon
@@ -88,7 +88,7 @@ CreatureAI* GetAI_celebras_the_cursed(Creature *_Creature)
     return new celebras_the_cursedAI (_Creature);
 }
 
-void AddSC_celebras_the_cursed()
+void AddSC_boss_celebras_the_cursed()
 {
     Script *newscript;
     newscript = new Script;
