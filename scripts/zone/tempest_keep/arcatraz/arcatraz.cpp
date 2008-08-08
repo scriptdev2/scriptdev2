@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npcs_Arcatraz
+SDName: Arcatraz
 SD%Complete: 50
 SDComment: Warden Mellichar, event controller for Skyriss event. Millhouse Manastorm. TODO: coordinate speech and make combat AI for Millhouse + many details. mob_zerekethvoidzone to be removed later(database)
 SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
+
+/* ContentData
+npc_millhouse_manastorm
+npc_warden_mellichar
+mob_zerekethvoidzone
+EndContentData */
 
 #include "def_arcatraz.h"
 
@@ -502,7 +508,7 @@ CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
     return new mob_zerekethvoidzoneAI (_Creature);
 }
 
-void AddSC_npcs_arcatraz()
+void AddSC_arcatraz()
 {
     Script *newscript;
 

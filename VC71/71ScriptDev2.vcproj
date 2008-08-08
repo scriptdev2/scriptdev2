@@ -381,11 +381,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\instance_blackwing_lair.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\boss_victor_nefarius.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\blackwing_lair\npc_victor_nefarius.cpp"
+						RelativePath="..\scripts\zone\blackwing_lair\instance_blackwing_lair.cpp"
 						>
 					</File>
 				</Filter>
@@ -1217,6 +1217,10 @@
 					Name="Black Temple"
 					>
 					<File
+						RelativePath="..\scripts\zone\black_temple\black_temple.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\black_temple\boss_bloodboil.cpp"
 						>
 					</File>
@@ -1258,10 +1262,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\black_temple\instance_black_temple.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\black_temple\npcs_black_temple.cpp"
 						>
 					</File>
 				</Filter>
@@ -1421,7 +1421,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\karazhan\npcs_karazhan.cpp"
+						RelativePath="..\scripts\zone\karazhan\karazhan.cpp"
 						>
 					</File>
 				</Filter>
@@ -1460,6 +1460,10 @@
 						Name="Arcatraz"
 						>
 						<File
+							RelativePath="..\scripts\zone\tempest_keep\arcatraz\arcatraz.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\tempest_keep\arcatraz\boss_harbinger_skyriss.cpp"
 							>
 						</File>
@@ -1469,10 +1473,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\tempest_keep\arcatraz\instance_arcatraz.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\tempest_keep\arcatraz\npcs_arcatraz.cpp"
 							>
 						</File>
 					</Filter>
@@ -1720,7 +1720,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\npc_hyjal.cpp"
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
 							>
 						</File>
 					</Filter>
@@ -1748,7 +1748,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\npcs_old_hillsbrad.cpp"
+							RelativePath="..\scripts\zone\caverns_of_time\old_hillsbrad\old_hillsbrad.cpp"
 							>
 						</File>
 					</Filter>

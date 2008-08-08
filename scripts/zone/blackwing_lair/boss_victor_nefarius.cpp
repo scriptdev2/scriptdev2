@@ -15,7 +15,7 @@
 */
 
 /* ScriptData
-SDName: Npc_Victor_Nefarius
+SDName: Boss_Victor_Nefarius
 SD%Complete: 75
 SDComment: Missing some text, Vael beginning event, and spawns Nef in wrong place
 SDCategory: Blackwing Lair

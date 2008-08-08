@@ -15,11 +15,18 @@
 */
 
 /* ScriptData
-SDName: Npcs_Old_Hillsbrad
+SDName: Old_Hillsbrad
 SD%Complete: 40
 SDComment: All friendly NPC's. Thrall waypoints fairly complete, missing many details, but possible to complete escort.
 SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
+
+/* ContentData
+npc_brazen
+npc_erozion
+npc_thrall_old_hillsbrad
+npc_taretha
+EndContentData */
 
 #include "../../../npc/npc_escortAI.h"
 #include "def_old_hillsbrad.h"
@@ -855,7 +862,7 @@ bool GossipSelect_npc_taretha(Player *player, Creature *_Creature, uint32 sender
 ## AddSC
 ######*/
 
-void AddSC_npcs_old_hillsbrad()
+void AddSC_old_hillsbrad()
 {
     Script *newscript;
 

@@ -123,6 +123,7 @@ extern void AddSC_azuremyst_isle();
 extern void AddSC_the_barrens();
 
 //Black Temple
+extern void AddSC_black_temple();
 extern void AddSC_boss_illidan();
 extern void AddSC_boss_shade_of_akama();
 extern void AddSC_boss_supremus();
@@ -133,7 +134,6 @@ extern void AddSC_boss_teron_gorefiend();
 extern void AddSC_boss_najentus();
 extern void AddSC_boss_illidari_council();
 extern void AddSC_instance_black_temple();
-extern void AddSC_npcs_black_temple();
 
 //Blackfathom Depths
 //Blackrock Depths
@@ -204,7 +204,7 @@ extern void AddSC_boss_captain_skarloc();
 extern void AddSC_boss_epoch_hunter();
 extern void AddSC_boss_lieutenant_drake();
 extern void AddSC_instance_old_hillsbrad();
-extern void AddSC_npcs_old_hillsbrad();
+extern void AddSC_old_hillsbrad();
 
 //--The Dark Portal
 extern void AddSC_boss_aeonus();
@@ -309,8 +309,8 @@ extern void AddSC_boss_terestian_illhoof();
 extern void AddSC_netherspite_infernal();
 extern void AddSC_boss_moroes();
 extern void AddSC_bosses_opera();
-extern void AddSC_npcs_karazhan();
 extern void AddSC_instance_karazhan();
+extern void AddSC_karazhan();
 
 //Loch Modan
 extern void AddSC_loch_modan();
@@ -466,8 +466,8 @@ extern void AddSC_tanaris();
 //Teldrassil
 //Tempest Keep
 //--Arcatraz
+extern void AddSC_arcatraz();
 extern void AddSC_boss_harbinger_skyriss();
-extern void AddSC_npcs_arcatraz();
 extern void AddSC_instance_arcatraz();
 
 //--Botanica
@@ -968,6 +968,7 @@ void ScriptsInit()
     AddSC_the_barrens();
 
     //Black Temple
+    AddSC_black_temple();
     AddSC_boss_illidan();
     AddSC_boss_shade_of_akama();
     AddSC_boss_supremus();
@@ -978,7 +979,6 @@ void ScriptsInit()
     AddSC_boss_najentus();
     AddSC_boss_illidari_council();
     AddSC_instance_black_temple();
-    AddSC_npcs_black_temple();
 
     //Blackfathom Depths
     //Blackrock Depths
@@ -1049,7 +1049,7 @@ void ScriptsInit()
     AddSC_boss_epoch_hunter();
     AddSC_boss_lieutenant_drake();
     AddSC_instance_old_hillsbrad();
-    AddSC_npcs_old_hillsbrad();
+    AddSC_old_hillsbrad();
 
     //--The Dark Portal
     AddSC_boss_aeonus();
@@ -1153,8 +1153,8 @@ void ScriptsInit()
     AddSC_netherspite_infernal();
     AddSC_boss_moroes();
     AddSC_bosses_opera();
-    AddSC_npcs_karazhan();
     AddSC_instance_karazhan();
+    AddSC_karazhan();
 
     //Loch Modan
     AddSC_loch_modan();
@@ -1310,8 +1310,8 @@ void ScriptsInit()
     //Teldrassil
     //Tempest Keep
     //--Arcatraz
+    AddSC_arcatraz();
     AddSC_boss_harbinger_skyriss();
-    AddSC_npcs_arcatraz();
     AddSC_instance_arcatraz();
 
     //--Botanica

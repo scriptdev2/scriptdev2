@@ -15,11 +15,16 @@
 */
 
 /* ScriptData
-SDName: npcs_karazhan
+SDName: Karazhan
 SD%Complete: 75
 SDComment: Barnes: Not fully complete. Support for Berthold.
 SDCategory: Karazhan
 EndScriptData */
+
+/* ContentData
+npc_barnes
+npc_berthold
+EndContentData */
 
 #include "sc_gossip.h"
 #include "def_karazhan.h"
@@ -459,7 +464,7 @@ bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sende
     return true;
 }
 
-void AddSC_npcs_karazhan()
+void AddSC_karazhan()
 {
     Script* newscript;
     newscript = new Script;

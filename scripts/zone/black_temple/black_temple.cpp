@@ -15,11 +15,15 @@
 */
 
 /* ScriptData
-SDName: npcs_black_temple
+SDName: Black_Temple
 SD%Complete: 95
 SDComment: Spirit of Olum: Player Teleporter to Seer Kanai Teleport after defeating Naj'entus and Supremus. TODO: Find proper gossip.
 SDCategory: Black Temple
 EndScriptData */
+
+/* ContentData
+npc_spirit_of_olum
+EndContentData */
 
 #include "sc_gossip.h"
 #include "def_black_temple.h"
@@ -52,7 +56,7 @@ bool GossipSelect_npc_spirit_of_olum(Player* player, Creature* _Creature, uint32
     return true;
 }
 
-void AddSC_npcs_black_temple()
+void AddSC_black_temple()
 {
     Script *newscript;
 

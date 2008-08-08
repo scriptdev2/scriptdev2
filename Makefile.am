@@ -76,6 +76,7 @@ scripts/zone/azshara/azshara.cpp \
 scripts/zone/azshara/boss_azuregos.cpp \
 scripts/zone/azuremyst_isle/azuremyst_isle.cpp \
 scripts/zone/barrens/the_barrens.cpp \
+scripts/zone/black_temple/black_temple.cpp \
 scripts/zone/black_temple/boss_bloodboil.cpp \
 scripts/zone/black_temple/boss_illidan.cpp \
 scripts/zone/black_temple/boss_mother_shahraz.cpp \
@@ -87,7 +88,6 @@ scripts/zone/black_temple/boss_warlord_najentus.cpp \
 scripts/zone/black_temple/def_black_temple.h \
 scripts/zone/black_temple/illidari_council.cpp \
 scripts/zone/black_temple/instance_black_temple.cpp \
-scripts/zone/black_temple/npcs_black_temple.cpp \
 scripts/zone/blackrock_depths/blackrock_depths.cpp \
 scripts/zone/blackrock_depths/boss_ambassador_flamelash.cpp \
 scripts/zone/blackrock_depths/boss_angerrel.cpp \
@@ -125,8 +125,8 @@ scripts/zone/blackwing_lair/boss_flamegor.cpp \
 scripts/zone/blackwing_lair/boss_nefarian.cpp \
 scripts/zone/blackwing_lair/boss_razorgore.cpp \
 scripts/zone/blackwing_lair/boss_vaelastrasz.cpp \
+scripts/zone/blackwing_lair/boss_victor_nefarius.cpp \
 scripts/zone/blackwing_lair/instance_blackwing_lair.cpp \
-scripts/zone/blackwing_lair/npc_victor_nefarius.cpp \
 scripts/zone/blades_edge_mountains/blades_edge_mountains.cpp \
 scripts/zone/blasted_lands/blasted_lands.cpp \
 scripts/zone/blasted_lands/boss_kruul.cpp \
@@ -140,13 +140,13 @@ scripts/zone/caverns_of_time/hyjal/def_hyjal.h \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.h \
 scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
-scripts/zone/caverns_of_time/hyjal/npc_hyjal.cpp \
+scripts/zone/caverns_of_time/hyjal/hyjal.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_captain_skarloc.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_epoch_hunter.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_leutenant_drake.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/def_old_hillsbrad.h \
 scripts/zone/caverns_of_time/old_hillsbrad/instance_old_hillsbrad.cpp \
-scripts/zone/caverns_of_time/old_hillsbrad/npcs_old_hillsbrad.cpp \
+scripts/zone/caverns_of_time/old_hillsbrad/old_hillsbrad.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_fathomlord_karathress.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_hydross_the_unstable.cpp \
 scripts/zone/coilfang_resevoir/serpent_shrine/boss_lady_vashj.cpp \
@@ -199,7 +199,7 @@ scripts/zone/karazhan/boss_terestian_illhoof.cpp \
 scripts/zone/karazhan/bosses_opera.cpp \
 scripts/zone/karazhan/def_karazhan.h \
 scripts/zone/karazhan/instance_karazhan.cpp \
-scripts/zone/karazhan/npcs_karazhan.cpp \
+scripts/zone/karazhan/karazhan.cpp \
 scripts/zone/loch_modan/loch_modan.cpp \
 scripts/zone/magisters_terrace/boss_felblood_kaelthas.cpp \
 scripts/zone/magisters_terrace/boss_priestess_delrissa.cpp \
@@ -315,10 +315,10 @@ scripts/zone/sunwell_plateau/boss_kalecgos.cpp \
 scripts/zone/sunwell_plateau/def_sunwell_plateau.h \
 scripts/zone/sunwell_plateau/instance_sunwell_plateau.cpp \
 scripts/zone/tanaris/tanaris.cpp \
+scripts/zone/tempest_keep/arcatraz/arcatraz.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_harbinger_skyriss.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
-scripts/zone/tempest_keep/arcatraz/npcs_arcatraz.cpp \
 scripts/zone/tempest_keep/botanica/boss_warp_splinter.cpp \
 scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \
 scripts/zone/tempest_keep/the_eye/boss_kaelthas.cpp \

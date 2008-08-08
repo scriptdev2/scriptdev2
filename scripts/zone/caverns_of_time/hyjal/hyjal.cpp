@@ -15,11 +15,17 @@
 */
 
 /* ScriptData
-SDName: Npc_Hyjal
+SDName: Hyjal
 SD%Complete: 100
 SDComment: 
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
+
+/* ContentData
+npc_jaina_proudmoore
+npc_thrall
+npc_tyrande_whisperwind
+EndContentData */
 
 #include "hyjalAI.h"
 
