@@ -1167,7 +1167,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
                 DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
                 Healing_Wave_Timer = 5000;
            //    }
-            }
+           // }
         }else Healing_Wave_Timer -= diff;    
 
         DoMeleeAttackIfReady();
