@@ -101,7 +101,6 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         Reset_Timer = 60000;
         Spear_Throw_Timer = 2000;
 
-        m_creature->LoadCreaturesAddon();                   //reset to all default values. proper way?
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
