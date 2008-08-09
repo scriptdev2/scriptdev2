@@ -25,7 +25,6 @@ EndScriptData */
 #include "GameObject.h"
 
 #define NUMBER_OF_ENCOUNTERS      4
-#define NUMBER_OF_CRYSTALS        5
 
 /*
 0  - Selin Fireheart
@@ -42,10 +41,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     }
 
     uint32 Encounters[NUMBER_OF_ENCOUNTERS];
-    uint32 FilledCrystals;
     uint32 DelrissaDeathCount;
     
-    uint64 FelCrystals[NUMBER_OF_CRYSTALS];
+    std::list<uint64> FelCrystals;
+    std::list<uint64>::iterator CrystalItr;
+
     uint64 SelinGUID;
     uint64 DelrissaGUID;
     uint64 VexallusDoorGUID;
@@ -54,16 +54,17 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     uint64 DelrissaDoorGUID;
     uint64 KaelStatue[2];
 
+    bool InitializedItr;
+
     void Initialize()
     {
         for(uint8 i = 0; i < NUMBER_OF_ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
-        for(uint8 i = 0; i < NUMBER_OF_CRYSTALS; i++)
-            FelCrystals[i] = 0;
+
+        FelCrystals.clear();
 
         DelrissaDeathCount = 0;
 
-        FilledCrystals = 0;
         SelinGUID = 0;
         DelrissaGUID = 0;
         VexallusDoorGUID = 0;
@@ -72,6 +73,8 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         DelrissaDoorGUID = 0;
         KaelStatue[0] = 0;
         KaelStatue[1] = 0;
+
+        InitializedItr = false;
     }
 
     bool IsEncounterInProgress() const
@@ -91,6 +94,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case DATA_DELRISSA_EVENT:       return Encounters[2];
             case DATA_KAELTHAS_EVENT:       return Encounters[3];
             case DATA_DELRISSA_DEATH_COUNT: return DelrissaDeathCount;
+            case DATA_FEL_CRYSTAL_SIZE:     return FelCrystals.size();
         }
         return 0;
     }
@@ -121,11 +125,8 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
                 DelrissaGUID = creature->GetGUID();
                 break;
             case 24722:
-            {
-                FelCrystals[FilledCrystals] = creature->GetGUID();
-                ++FilledCrystals;
+                FelCrystals.push_back(creature->GetGUID());
                 break;
-            }
         }
     }
 
@@ -135,17 +136,31 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         {
             case DATA_SELIN:                return SelinGUID;
             case DATA_DELRISSA:             return DelrissaGUID;
-			case DATA_CRYSTAL_1:            return FelCrystals[0];
-            case DATA_CRYSTAL_2:            return FelCrystals[1];
-            case DATA_CRYSTAL_3:            return FelCrystals[2];
-            case DATA_CRYSTAL_4:            return FelCrystals[3];
-            case DATA_CRYSTAL_5:            return FelCrystals[4];
             case DATA_VEXALLUS_DOOR:        return VexallusDoorGUID;
             case DATA_SELIN_DOOR:           return SelinDoorGUID;
             case DATA_SELIN_ENCOUNTER_DOOR: return SelinEncounterDoorGUID;
 			case DATA_DELRISSA_DOOR:        return DelrissaDoorGUID;
             case DATA_KAEL_STATUE_LEFT:     return KaelStatue[0];
             case DATA_KAEL_STATUE_RIGHT:    return KaelStatue[1];
+
+            case DATA_FEL_CRYSTAL:
+                {
+                    if(FelCrystals.empty())
+                    {
+                        error_log("ERROR: No Fel Crystals loaded in Inst Data");
+                        return 0;
+                    }
+
+                    if(!InitializedItr)
+                    {
+                        CrystalItr = FelCrystals.begin();
+                        InitializedItr = true;
+                    }
+
+                    uint64 guid = *CrystalItr;
+                    ++CrystalItr;
+                    return guid;
+                }
         }
         return 0;
     }
@@ -178,3 +193,4 @@ void AddSC_instance_magisters_terrace()
     newscript->GetInstanceData = GetInstanceData_instance_magisters_terrace;
     m_scripts[nrscripts++] = newscript;
 }
+

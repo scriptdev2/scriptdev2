@@ -54,9 +54,11 @@ static Speech PlayerDeath[]=
 
 #define SPELL_DISPEL_MAGIC      27609 
 #define SPELL_FLASH_HEAL        17843
-#define SPELL_SW_PAIN           15654
+#define SPELL_SW_PAIN_NORMAL    14032
+#define SPELL_SW_PAIN_HEROIC    15654 // The IDs here do seem strange, they're according to WoWhead. Requires further correction.
 #define SPELL_SHIELD            44291
-#define SPELL_RENEW             44174
+#define SPELL_RENEW_NORMAL      44174
+#define SPELL_RENEW_HEROIC      46192
 
 #define ORIENT                  4.98
 #define POS_Z                   -19.9215
@@ -101,6 +103,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         Adds.clear();
         Reset();
         SummonAdds();
+        Heroic = c->GetMap()->IsHeroic() ? true : false;
     }
 
     ScriptedInstance* pInstance;
@@ -117,6 +120,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     uint32 DispelTimer;
 
     uint32 CombatPulseTimer; // Periodically puts all players in the instance in combat
+    
+    bool Heroic;
 
     void Reset()
     {
@@ -233,7 +238,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
     void CheckLootable()
     {
-        if(LackeysKilled < 4)
+        if(LackeysKilled > 4)
             m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
         else
             m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
@@ -250,7 +255,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             Unit* target = m_creature;
             for(uint8 i = 0; i < Adds.size(); ++i)
                 if(Unit* pAdd = Unit::GetUnit(*m_creature, Adds[i]->guid))
-                    if(pAdd->GetHealth() < health)
+                    if(pAdd->isAlive() && pAdd->GetHealth() < health)
                         target = pAdd;
 
             DoCast(target, SPELL_FLASH_HEAL);
@@ -263,10 +268,12 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             if(rand()%2 == 1)
             {
                 std::vector<Add*>::iterator itr = Adds.begin() + rand()%Adds.size();
-                if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
+                Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
+                if(pAdd && pAdd->isAlive())
                     target = pAdd;
             }
-            DoCast(target, SPELL_RENEW);
+            if(Heroic) DoCast(target, SPELL_RENEW_HEROIC);
+            else       DoCast(target, SPELL_RENEW_NORMAL);
             RenewTimer = 5000;
         }else RenewTimer -= diff;
 
@@ -277,7 +284,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             {
                 std::vector<Add*>::iterator itr = Adds.begin() + rand()%Adds.size();
                 if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
-                    if(!pAdd->HasAura(SPELL_SHIELD, 0))
+                    if(!pAdd->HasAura(SPELL_SHIELD, 0) && pAdd->isAlive())
                         target = pAdd;
             }
             DoCast(target, SPELL_SHIELD);
@@ -298,7 +305,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 else
                 {
                     std::vector<Add*>::iterator itr = Adds.begin() + rand()%Adds.size();
-                    if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
+                    Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
+                    if(pAdd && pAdd->isAlive())
                         target = pAdd;
                 }
             }
@@ -311,7 +319,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if(SWPainTimer < diff)
         {
-            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SW_PAIN);
+            if(Heroic) DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SW_PAIN_HEROIC);
+            else       DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SW_PAIN_NORMAL);
             SWPainTimer = 10000;
         }else SWPainTimer -= diff;
 
@@ -1148,11 +1157,16 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 
         if(Healing_Wave_Timer < diff)
         {
-            std::vector<Add*>::iterator itr = Group.begin() + rand()%Group.size();
-            if(Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid))
-            {
-                DoCast(pAdd, SPELL_LESSER_HEALING_WAVE);
+           // std::vector<Add*>::iterator itr = Group.begin() + rand()%Group.size();
+           // uint64 guid = (*itr)->guid;
+           // if(guid)
+           // {
+           //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
+           //   if(pAdd && pAdd->isAlive())
+           //   {
+                DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
                 Healing_Wave_Timer = 5000;
+           //    }
             }
         }else Healing_Wave_Timer -= diff;    
 
@@ -1385,3 +1399,4 @@ void AddSC_boss_priestess_delrissa()
     newscript->GetAI = GetAI_mob_sliver;
     m_scripts[nrscripts++] = newscript;
 }
+

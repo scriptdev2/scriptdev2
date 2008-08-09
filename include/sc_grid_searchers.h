@@ -102,3 +102,21 @@ public:
 private:
     uint32 entry;
 };
+
+class AllCreaturesOfEntryInRange
+{
+public:
+    AllCreaturesOfEntryInRange(Unit const* obj, uint32 ent, float ran) : pUnit(obj), entry(ent), range(ran) {}
+    bool operator() (Unit* u)
+    {
+        if(u->GetEntry() == entry && pUnit->IsWithinDistInMap(u, range))
+            return true;
+
+        return false;
+    }
+
+private:
+    Unit const* pUnit;
+    uint32 entry;
+    float range;
+};
