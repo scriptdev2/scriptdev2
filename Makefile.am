@@ -32,6 +32,7 @@ ScriptMgr.cpp \
 ScriptMgr.h \
 config.h \
 include/precompiled.cpp \
+include/precompiled.h \
 include/sc_creature.cpp \
 include/sc_creature.h \
 include/sc_gossip.h \
