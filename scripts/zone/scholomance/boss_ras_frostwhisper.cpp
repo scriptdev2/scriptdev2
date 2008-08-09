@@ -21,14 +21,14 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_FROSTBOLT                21369
-#define SPELL_ICEARMOR             18100       //This is actually a buff he gives himself
+#define SPELL_FROSTBOLT         21369
+#define SPELL_ICEARMOR          18100                       //This is actually a buff he gives himself
 #define SPELL_FREEZE            18763
-#define SPELL_FEAR                 26070
-#define SPELL_CHILLNOVA              18099       
-#define SPELL_FROSTVOLLEY         8398       
+#define SPELL_FEAR              26070
+#define SPELL_CHILLNOVA         18099       
+#define SPELL_FROSTVOLLEY       8398       
 
 struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
 {

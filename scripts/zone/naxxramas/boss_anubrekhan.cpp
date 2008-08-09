@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO1  "Just a little taste..."
 #define SAY_AGGRO2  "There is no way out."

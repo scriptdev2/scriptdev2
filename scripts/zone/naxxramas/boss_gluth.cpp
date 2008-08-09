@@ -21,11 +21,11 @@ SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_MORTALWOUND                25646    
-#define SPELL_DECIMATE             28374              
-#define SPELL_TERRIFYINGROAR            29685
+#define SPELL_MORTALWOUND       25646    
+#define SPELL_DECIMATE          28374              
+#define SPELL_TERRIFYINGROAR    29685
 #define SPELL_FRENZY            19812
 #define SPELL_ENRAGE            28747
 

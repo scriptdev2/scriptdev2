@@ -25,7 +25,7 @@ EndScriptData */
 npc_spirit_of_olum
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "def_black_temple.h"
 
 /*###

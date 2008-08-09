@@ -25,8 +25,7 @@ EndScriptData */
 npc_blood_knight_stillblade
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*#######
 # npc_blood_knight_stillblade

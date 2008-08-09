@@ -21,6 +21,7 @@ SDComment: Mind Control not working because of core bug. Shades visible for all.
 SDCategory: Zul'Gurub
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_zulgurub.h"
 
 

@@ -21,8 +21,8 @@ SDComment: World Packet workaround for World States
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
+#include "precompiled.h"
 #include "hyjalAI.h"
-#include "Map.h"
 #include "WorldPacket.h"
 #include "GameObject.h"
 #include "Cell.h"

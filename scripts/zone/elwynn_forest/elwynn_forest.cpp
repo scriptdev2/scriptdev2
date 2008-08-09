@@ -25,7 +25,7 @@ EndScriptData */
 npc_henze_faulk
 EndContentData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 /*######
 ## npc_henze_faulk

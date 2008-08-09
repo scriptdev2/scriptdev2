@@ -21,8 +21,7 @@ SDComment: Normal/Heroic support: both, to be tested. Missing adds to heal him. 
 SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
-#include "sc_creature.h"
-#include "Map.h"                                            //this to be included in sc_creature.h (or something similar...)
+#include "precompiled.h"
 
 #define SAY_HEAL                "Heal me! QUICKLY!"
 #define SOUND_HEAL              10329

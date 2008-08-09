@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Molten Core
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_molten_core.h"
 
 

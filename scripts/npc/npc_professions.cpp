@@ -21,6 +21,8 @@ SDComment: Provides learn/unlearn/relearn-options for professions. Not supported
 SDCategory: NPCs
 EndScriptData */
 
+#include "precompiled.h"
+
 /*
 A few notes for future developement:
 - A full implementation of gossip for GO's is required. They must have the same scripting capabilities as creatures. Basically, 
@@ -31,9 +33,6 @@ there is no difference here (except that default text is chosen with `gameobject
 /*
 -- UPDATE `gameobject_template` SET `ScriptName` = 'go_soothsaying_for_dummies' WHERE `entry` = 177226;
 */ 
-
-#include "sc_creature.h"
-#include "sc_gossip.h"
 
 /*###
 # to be removed from here (->ncp_text). This is data for database projects.

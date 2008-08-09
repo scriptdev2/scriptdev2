@@ -11,6 +11,7 @@ EndScriptData */
 //8806 slay - Death is the only escape.
 //8805 death - I... am... undone!
 
+#include "precompiled.h"
 //Gothik
 #define SPELL_HARVESTSOUL           28679
 #define SPELL_SHADOWBOLT            19729

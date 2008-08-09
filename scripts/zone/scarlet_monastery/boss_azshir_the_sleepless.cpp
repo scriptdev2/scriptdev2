@@ -21,9 +21,7 @@ SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
-
-
+#include "precompiled.h"
 
 #define SPELL_CALLOFTHEGRAVE            17831
 #define SPELL_TERRIFY                   7399

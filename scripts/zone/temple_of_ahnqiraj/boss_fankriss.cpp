@@ -21,7 +21,7 @@ SDComment: sound not implemented
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "../../creature/simple_ai.h"
 
 #define SOUND_SENTENCE_YOU 8588

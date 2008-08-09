@@ -21,9 +21,8 @@ SDComment: Darkglare tracking issue
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
-#include "Player.h"
 
 #define PI                          3.14
 

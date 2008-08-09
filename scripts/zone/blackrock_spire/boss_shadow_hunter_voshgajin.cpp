@@ -21,10 +21,10 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_CURSEOFBLOOD             24673
-#define SPELL_HEX             16708       
+#define SPELL_CURSEOFBLOOD      24673
+#define SPELL_HEX               16708       
 #define SPELL_CLEAVE            20691
 
 struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI

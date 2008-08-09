@@ -21,7 +21,7 @@ SDComment: Phase 2 has many errors. Recommend Rewrite of entire script.
 SDCategory: Onyxia's Lair
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_WINGBUFFET            18500
 #define SPELL_FLAMEBREATH           18435

@@ -29,8 +29,7 @@ npc_saikkal_the_elder
 npc_skyguard_handler_irena
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mobs_bladespire_ogre

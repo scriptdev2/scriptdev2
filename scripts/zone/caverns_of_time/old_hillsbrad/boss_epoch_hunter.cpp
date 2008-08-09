@@ -21,6 +21,7 @@ SDComment: Missing spawns, missing speech to be coordinated with rest of escort 
 SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_old_hillsbrad.h"
 
 #define QUEST_ENTRY_ESCAPE      10284

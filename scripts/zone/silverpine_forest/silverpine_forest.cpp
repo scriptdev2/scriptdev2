@@ -25,8 +25,7 @@ EndScriptData */
 npc_astor_hadren
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_astor_hadren

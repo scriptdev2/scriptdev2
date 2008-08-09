@@ -25,8 +25,7 @@ EndScriptData */
 npc_calvin_montague
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_calvin_montague

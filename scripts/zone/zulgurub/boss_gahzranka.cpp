@@ -21,9 +21,7 @@ SDComment: Massive Geyser with knockback not working. Spell buggy.
 SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
-
-
+#include "precompiled.h"
 
 #define SPELL_FROSTBREATH            21099
 #define SPELL_MASSIVEGEYSER          22421                //Not working. Cause its a summon...

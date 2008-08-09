@@ -21,10 +21,7 @@ SDComment: Adds NYI
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
-
-
-// Adds NYI
+#include "precompiled.h"
 
 // Garr spells
 #define SPELL_ANTIMAGICPULSE        19492

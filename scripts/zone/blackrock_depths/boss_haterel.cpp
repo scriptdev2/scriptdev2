@@ -21,17 +21,12 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-#define SPELL_SHADOWBOLT                17483         //Not sure if right ID            
-#define SPELL_MANABURN            10876
-#define SPELL_SHADOWSHIELD               22417
-#define SPELL_STRIKE               15580
-
-
-
+#define SPELL_SHADOWBOLT        17483                       //Not sure if right ID            
+#define SPELL_MANABURN          10876
+#define SPELL_SHADOWSHIELD      22417
+#define SPELL_STRIKE            15580
 
 struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
 {

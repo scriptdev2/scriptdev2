@@ -21,9 +21,7 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
+#include "precompiled.h"
 
 #define SPELL_MIGHTYBLOW            14099
 #define SPELL_HAMSTRING             9080

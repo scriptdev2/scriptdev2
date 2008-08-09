@@ -21,7 +21,7 @@ SDComment: Mark of Nature & Teleport missing
 SDCategory: Bosses
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SLEEP                24777
 #define SPELL_NOXIOUSBREATH        24818

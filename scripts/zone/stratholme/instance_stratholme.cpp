@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_stratholme.h"
 
 struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance

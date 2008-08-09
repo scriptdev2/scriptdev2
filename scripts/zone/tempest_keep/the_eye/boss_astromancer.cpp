@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_the_eye.h"
 
 #define SPELL_ARCANE_MISSILES                 33031

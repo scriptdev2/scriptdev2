@@ -26,10 +26,9 @@ npc_barnes
 npc_berthold
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "def_karazhan.h"
 #include "GameObject.h"
-#include "Map.h"
 #include "../../npc/npc_escortAI.h"
 
 /*######

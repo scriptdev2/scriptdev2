@@ -25,7 +25,7 @@ EndScriptData */
 npc_royal_historian_archesonus
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_royal_historian_archesonus

@@ -21,3 +21,5 @@ SDComment: Placeholder
 SDCategory: Deadmines
 EndScriptData */
 
+#include "precompiled.h"
+

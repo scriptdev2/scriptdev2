@@ -21,11 +21,11 @@ SDComment: Event to activate Emberseer NYI
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_FIRENOVA                23462    
-#define SPELL_FLAMEBUFFET             23341               
-#define SPELL_PYROBLAST            17274
+#define SPELL_FIRENOVA          23462    
+#define SPELL_FLAMEBUFFET       23341               
+#define SPELL_PYROBLAST         17274
 
 struct MANGOS_DLL_DECL boss_pyroguard_emberseerAI : public ScriptedAI
 {

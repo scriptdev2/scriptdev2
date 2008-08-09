@@ -21,9 +21,7 @@ SDComment: Missing adds spawn at death
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
-
-
+#include "precompiled.h"
 
 #define SPELL_RUSHINGCHARGE         32021
 #define SPELL_RUSHINGCHARGE1        6268

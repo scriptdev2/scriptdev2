@@ -21,13 +21,12 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
-
+#include "precompiled.h"
 
 #define SPELL_FIRENOVA                  23462        
 #define SPELL_CLEAVE                    20691
 #define SPELL_CONFLIGURATION            16805
-#define SPELL_THUNDERCLAP               15548        //Not sure if right ID. 23931 would be a harder possibility.
+#define SPELL_THUNDERCLAP               15548               //Not sure if right ID. 23931 would be a harder possibility.
 
 struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
 {

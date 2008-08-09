@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Maraudon
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_DUSTFIELD             21909
 #define SPELL_BOULDER               21832

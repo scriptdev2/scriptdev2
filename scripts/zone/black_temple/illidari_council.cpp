@@ -21,6 +21,7 @@ SDComment: Workarounds for Spellstealing Dampen Magic and Circle of Healing.
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
 
 // High Nethermancer Zerevor's spells

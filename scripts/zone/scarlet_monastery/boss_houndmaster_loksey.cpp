@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SUMMONSCARLETHOUND        17164
 #define SPELL_ENRAGE                    28747
@@ -29,7 +29,6 @@ EndScriptData */
 #define SAY_AGGRO                       "Release the hounds!"
 
 #define SOUND_AGGRO                     5841
-
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 {

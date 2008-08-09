@@ -21,11 +21,9 @@ SDComment: Missing model id for Mushrooms
 SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// Hungarfen
-
-#define SPELL_FOUL_SPORES 31673 // 100% correct,however,heals enemies either O.o
+#define SPELL_FOUL_SPORES 31673                             // 100% correct,however,heals enemies either O.o
 
 struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {

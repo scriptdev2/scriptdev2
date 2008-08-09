@@ -22,3 +22,4 @@ EndScriptData */
 //Andorov - no sound
 //"Remember, Rajaxx, when I said I'd kill you last? I lied..." 
 //"They come now. Try not to get yourself killed, young blood."
+#include "precompiled.h"

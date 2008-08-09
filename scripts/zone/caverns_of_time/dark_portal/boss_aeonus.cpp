@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAND_BREATH       31478
 #define TIME_STOP         31422

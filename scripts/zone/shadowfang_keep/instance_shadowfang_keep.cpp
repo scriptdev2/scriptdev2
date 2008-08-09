@@ -21,6 +21,7 @@ SDComment: TODO: check what other parts would require additional code (ex: make 
 SDCategory: Shadowfang Keep
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_shadowfang_keep.h"
 #include "GameObject.h"
 

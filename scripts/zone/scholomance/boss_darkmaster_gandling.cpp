@@ -21,12 +21,11 @@ SDComment: Doors missing in instance script.
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_ARCANEMISSILES           22272    
-#define SPELL_SHADOWSHIELD             22417    //Not right ID. But 12040 is wrong either.      
+#define SPELL_SHADOWSHIELD             22417                //Not right ID. But 12040 is wrong either.      
 #define SPELL_CURSE                    18702
-
 
 #define ADD_1X 170.205
 #define ADD_1Y 99.413
@@ -47,7 +46,6 @@ EndScriptData */
 #define ADD_4Y 99.373
 #define ADD_4Z 104.732
 #define ADD_4O 3.16
-
 
 struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
 {

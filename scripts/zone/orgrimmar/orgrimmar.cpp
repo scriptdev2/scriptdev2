@@ -27,8 +27,7 @@ npc_shenthul
 npc_thrall_warchief
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_neeru_fireblade

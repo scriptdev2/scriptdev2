@@ -21,17 +21,13 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-
-#define SPELL_FROSTBOLT                16799
-#define SPELL_FROSTARMOR             15784       //This is actually a buff he gives himself
-#define SPELL_BLIZZARD           19099
-#define SPELL_FROSTNOVA                 15063
-#define SPELL_FROSTWARD              15004       
-
+#define SPELL_FROSTBOLT         16799
+#define SPELL_FROSTARMOR        15784                       //This is actually a buff he gives himself
+#define SPELL_BLIZZARD          19099
+#define SPELL_FROSTNOVA         15063
+#define SPELL_FROSTWARD         15004       
 
 struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
 {

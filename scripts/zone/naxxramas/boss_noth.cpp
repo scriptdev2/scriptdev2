@@ -21,7 +21,7 @@ SDComment: Missing Balcony stage
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO1 "Glory to the master!"
 #define SAY_AGGRO2 "Your life is forfeit!"

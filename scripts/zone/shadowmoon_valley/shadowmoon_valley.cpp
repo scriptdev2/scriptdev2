@@ -33,8 +33,7 @@ npc_karynaku
 npc_oronok_tornheart
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"

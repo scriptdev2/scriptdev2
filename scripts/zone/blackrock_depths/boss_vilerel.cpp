@@ -21,14 +21,11 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-
-#define SPELL_MINDBLAST                15587  
-#define SPELL_HEAL                15586 
-#define SPELL_PRAYEROFHEALING                15585            
+#define SPELL_MINDBLAST             15587  
+#define SPELL_HEAL                  15586 
+#define SPELL_PRAYEROFHEALING       15585            
 #define SPELL_SHIELD                10901
 
 struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI

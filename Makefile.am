@@ -31,6 +31,7 @@ libmangosscript_la_SOURCES = \
 ScriptMgr.cpp \
 ScriptMgr.h \
 config.h \
+include/precompiled.cpp \
 include/sc_creature.cpp \
 include/sc_creature.h \
 include/sc_gossip.h \

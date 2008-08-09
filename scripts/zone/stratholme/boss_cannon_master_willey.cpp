@@ -21,9 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
+#include "precompiled.h"
 
 //front, left
 #define ADD_1X 3553.851807

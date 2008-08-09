@@ -37,8 +37,7 @@ item_yehkinyas_bramble(i10699)      Allow cast spell on vale screecher only and 
 item_zezzak_shard(i31463)           Quest The eyes of Grillok (q10813). Prevents abuse
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "SpellMgr.h"
 #include "Spell.h"
 #include "WorldPacket.h"

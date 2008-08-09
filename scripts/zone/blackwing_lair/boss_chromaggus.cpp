@@ -21,7 +21,7 @@ SDComment: Chromatic Mutation disabled due to lack of core support
 SDCategory: Blackwing Lair
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 //These spells are actually called elemental shield
 //What they do is decrease all damage by 75% then they increase

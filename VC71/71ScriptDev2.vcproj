@@ -26,6 +26,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -47,10 +48,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description=""
-				CommandLine=""
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -78,6 +76,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -100,10 +99,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description=""
-				CommandLine=""
-			/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -1708,6 +1704,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.cpp"
 							>
 						</File>
@@ -1717,10 +1717,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\instance_hyjal.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
 							>
 						</File>
 					</Filter>
@@ -1971,6 +1967,30 @@
 			Name="Include"
 			>
 			<File
+				RelativePath="..\include\precompiled.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\include\precompiled.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\sc_creature.cpp"
 				>
 			</File>
@@ -2016,7 +2036,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>
@@ -2027,7 +2047,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;;&#x0D;&#x0A;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>

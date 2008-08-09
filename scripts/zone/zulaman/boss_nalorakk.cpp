@@ -21,7 +21,7 @@ SDComment: Todo: Trash Waves
 SDCategory: Zul'Aman
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 //TODO: Trash Waves
 

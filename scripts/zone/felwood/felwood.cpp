@@ -25,7 +25,7 @@ EndScriptData */
 npcs_riverbreeze_and_silversky
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npcs_riverbreeze_and_silversky

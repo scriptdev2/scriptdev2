@@ -21,8 +21,8 @@ SDComment: Ending Cinematic needs testing and completing
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
-#include "sc_gossip.h"
 
 struct Location
 {

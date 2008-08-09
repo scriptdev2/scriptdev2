@@ -21,48 +21,42 @@ SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SAY_MIDNIGHT_KILL "Well done Midnight!"
-#define SOUND_MIDNIGHT_KILL 9173 
+#define SAY_MIDNIGHT_KILL       "Well done Midnight!"
+#define SOUND_MIDNIGHT_KILL     9173 
 
-#define SAY_APPEAR1 "Cowards! Wretches!"
-#define SOUND_APPEAR1 9167
+#define SAY_APPEAR1             "Cowards! Wretches!"
+#define SOUND_APPEAR1           9167
+#define SAY_APPEAR2             "Who dares attack the steed of the Huntsman?"
+#define SOUND_APPEAR2           9298
+#define SAY_APPEAR3             "Perhaps you would rather test yourselves against a more formidable opponent?! "
+#define SOUND_APPEAR3           9299
 
-#define SAY_APPEAR2 "Who dares attack the steed of the Huntsman?"
-#define SOUND_APPEAR2 9298
+#define SAY_MOUNT               "Come, Midnight, let\'s disperse this petty rabble! "
+#define SOUND_MOUNT             9168 
 
-#define SAY_APPEAR3 "Perhaps you would rather test yourselves against a more formidable opponent?! "
-#define SOUND_APPEAR3 9299
+#define SAY_KILL1               "It was... inevitable."
+#define SOUND_KILL1             9169
+#define SAY_KILL2               "Another trophy to add to my collection!"
+#define SOUND_KILL2             9300
 
-#define SAY_MOUNT "Come, Midnight, let\'s disperse this petty rabble! "
-#define SOUND_MOUNT 9168 
+#define SAY_DISARMED            "Weapons are merely a convenience for a warrior of my skill!"
+#define SOUND_DISARMED          9166
 
-#define SAY_KILL1 "It was... inevitable."
-#define SOUND_KILL1 9169
+#define SAY_DEATH               "I always knew... someday I would become... the hunted."
+#define SOUND_DEATH             9165 
 
-#define SAY_KILL2 "Another trophy to add to my collection!"
-#define SOUND_KILL2 9300
+#define SAY_RANDOM1             "Such easy sport."
+#define SOUND_RANDOM1           9170 
+#define SAY_RANDOM2             "Amateurs! Do not think you can best me! I kill for a living."
+#define SOUND_RANDOM2           9304 
 
-#define SAY_DISARMED "Weapons are merely a convenience for a warrior of my skill!"
-#define SOUND_DISARMED 9166
+#define SPELL_SHADOWCLEAVE          29832
+#define SPELL_INTANGIBLE_PRESENCE   29833
+#define SPELL_BERSERKER_CHARGE      26561                   //Only when mounted
 
-#define SAY_DEATH "I always knew... someday I would become... the hunted."
-#define SOUND_DEATH 9165 
-
-#define SAY_RANDOM1 "Such easy sport."
-#define SOUND_RANDOM1 9170 
-
-#define SAY_RANDOM2 "Amateurs! Do not think you can best me! I kill for a living."
-#define SOUND_RANDOM2 9304 
-
-//Spells
-
-#define SPELL_SHADOWCLEAVE 29832
-#define SPELL_INTANGIBLE_PRESENCE 29833
-#define SPELL_BERSERKER_CHARGE 26561 //Only when mounted
-
-#define MOUNTED_DISPLAYID   16040
+#define MOUNTED_DISPLAYID           16040
 
 //Attumen (TODO: Use the summoning spell instead of creature id. It works , but is not convenient for us)
 #define SUMMON_ATTUMEN 15550

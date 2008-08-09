@@ -21,8 +21,7 @@ SDComment: This script are currently not in use. EventSystem cannot be used on W
 SDCategory: NPCs
 EndScriptData */
  
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
  
 #define HALLOWEEN_EVENTID       12
 #define SPELL_TRICK_OR_TREATED  24755

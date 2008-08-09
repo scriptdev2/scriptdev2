@@ -21,6 +21,7 @@ SDComment: Missing adds, missing waypoints to move up to Thrall once spawned + s
 SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_old_hillsbrad.h"
 
 #define HOLY_LIGHT          29562

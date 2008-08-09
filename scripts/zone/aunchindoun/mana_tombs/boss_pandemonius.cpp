@@ -21,7 +21,7 @@ SDComment: Small chance of 1 player being hit by all 5 blasts (1/num_players^5)
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_VOID_BLAST                32325
 #define SPELL_DARK_SHELL                32358

@@ -27,7 +27,7 @@ npc_gryphoneer_windbellow
 npc_wing_commander_brack
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_wing_commander_dabiree

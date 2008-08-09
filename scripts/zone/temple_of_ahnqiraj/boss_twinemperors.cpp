@@ -21,21 +21,17 @@ SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
-#include "sc_creature.h"
-#include "Map.h"
 #include "WorldPacket.h"
 
 #include "Item.h"
-#include "Player.h"
 #include "Spell.h"
 
 #include "Cell.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
-
-#include "MapManager.h"
 
 #define SPELL_HEAL_BROTHER               7393
 #define SPELL_TWIN_TELEPORT               800		// CTRA watches for this spell to start its teleport timer

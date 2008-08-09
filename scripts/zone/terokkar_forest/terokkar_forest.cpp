@@ -30,8 +30,7 @@ npc_floon
 npc_skyguard_handler_deesak
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_unkor_the_ruthless

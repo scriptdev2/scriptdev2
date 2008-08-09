@@ -25,7 +25,7 @@ EndScriptData */
 npc_skorn_whitecloud
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 # npc_skorn_whitecloud

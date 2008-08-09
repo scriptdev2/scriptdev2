@@ -4,3 +4,5 @@ SD%Complete: 0
 SDComment: Place holder
 SDCategory: Naxxramas
 EndScriptData */
+
+#include "precompiled.h"

@@ -1,3 +1,7 @@
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software licensed under GPL version 2
+* Please see the included DOCS/LICENSE.TXT for more information */
+
 /* ScriptData
 SDName: instance_Sunwell_Plateau
 SD%Complete: 0
@@ -5,10 +9,9 @@ SDComment: VERIFY SCRIPT
 SDCategory: Sunwell_Plateau
 EndScriptData */
 
-
-#include "GameObject.h"
-#include "Player.h"
+#include "precompiled.h"
 #include "def_sunwell_plateau.h"
+#include "GameObject.h"
 
 #define ENCOUNTERS 7
 

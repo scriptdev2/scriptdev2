@@ -25,7 +25,7 @@ EndScriptData */
 npc_shadowfang_prisoner
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "../../npc/npc_escortAI.h"
 #include "def_shadowfang_keep.h"
 

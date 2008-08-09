@@ -21,6 +21,7 @@ SDComment: Missing Inner Demons
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_serpent_shrine.h"
 
 #define SPELL_WHIRLWIND         40653

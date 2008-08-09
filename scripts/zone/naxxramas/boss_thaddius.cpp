@@ -17,6 +17,7 @@ EndScriptData */
 //8871 elect - Now YOU feel pain!
 //8877 slay - You die now!
 //8870 die - Thank... you...
+#include "precompiled.h"
 
 #define SPELL_BALL_LIGHTNING                28299
 

@@ -21,6 +21,7 @@ SDComment: Incite Chaos NYI since core lacks Mind Control support
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_shadow_labyrinth.h"
 
 //#define SPELL_INCITE_CHAOS    33684

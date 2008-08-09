@@ -14,7 +14,6 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 /* ScriptData
 SDName: Boss_Prince_Malchezzar
 SD%Complete: 100
@@ -22,7 +21,7 @@ SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO           "Madness has brought you here to me. I shall be your undoing!"
 #define SOUND_AGGRO         9218

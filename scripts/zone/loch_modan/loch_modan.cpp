@@ -25,7 +25,7 @@ EndScriptData */
 npc_mountaineer_pebblebitty
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_mountaineer_pebblebitty

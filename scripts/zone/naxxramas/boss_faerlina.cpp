@@ -21,7 +21,7 @@ SDComment: Without Mindcontrol boss cannot be defeated
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_GREET           "Your old lives, your mortal desires, mean nothing. You are acolytes of the master now, and you will serve the cause without question! The greatest glory is to die in the master's service!"
 #define SAY_AGGRO1          "Slay them in the master's name!"
@@ -227,5 +227,6 @@ void AddSC_boss_faerlina()
     newscript->GetAI = GetAI_boss_faerlina;
     m_scripts[nrscripts++] = newscript;
 }
+
 
 

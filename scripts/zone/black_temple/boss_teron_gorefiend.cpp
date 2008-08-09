@@ -14,14 +14,15 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "def_black_temple.h"
-
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
 SD%Complete: 60
 SDComment: Requires Mind Control support for Ghosts.
 SDCategory: Black Temple
 EndScriptData */
+
+#include "precompiled.h"
+#include "def_black_temple.h"
 
 //Spells
 #define SPELL_INCINERATE                40239

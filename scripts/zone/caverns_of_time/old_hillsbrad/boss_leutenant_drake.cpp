@@ -21,6 +21,7 @@ SDComment: Missing proper code for patrolling area after being spawned. Also scr
 SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_old_hillsbrad.h"
 #include "GameObject.h"
 #include "../../../npc/npc_escortAI.h"

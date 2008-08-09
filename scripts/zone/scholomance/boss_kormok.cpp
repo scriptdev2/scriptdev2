@@ -21,11 +21,10 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_SHADOWBOLTVOLLEY                20741            
-#define SPELL_BONESHIELD                27688
-
+#define SPELL_SHADOWBOLTVOLLEY      20741            
+#define SPELL_BONESHIELD            27688
 
 struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
 {

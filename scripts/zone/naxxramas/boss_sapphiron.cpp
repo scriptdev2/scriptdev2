@@ -21,9 +21,8 @@ SDComment: Place Holder
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-//Spells
 #define SPELL_ICEBOLT                  28522
 #define SPELL_FROST_BREATH        29318
 #define SPELL_FROST_AURA            28531

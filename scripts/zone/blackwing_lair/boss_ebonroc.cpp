@@ -21,12 +21,12 @@ SDComment: Shadow of Ebonroc needs core support
 SDCategory: Blackwing Lair
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SHADOWFLAME           22539
 #define SPELL_WINGBUFFET            18500
 #define SPELL_SHADOWOFEBONROC       23340
-#define SPELL_HEAL                  41386    //Thea Heal spell of his Shadow
+#define SPELL_HEAL                  41386                   //Thea Heal spell of his Shadow
 
 struct MANGOS_DLL_DECL boss_ebonrocAI : public ScriptedAI
 {

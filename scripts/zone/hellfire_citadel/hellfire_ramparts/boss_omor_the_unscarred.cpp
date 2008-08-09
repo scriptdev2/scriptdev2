@@ -21,8 +21,7 @@ SDComment: Normal/Heroic support: both, to be tested. Temporary solution for orb
 SDCategory: Hellfire Citadel, Hellfire Ramparts
 EndScriptData */
 
-#include "sc_creature.h"
-#include "Map.h"                                            //this to be included in sc_creature.h (or something similar...)
+#include "precompiled.h"
 
 #define SPELL_ORBITAL_STRIKE        30637
 #define SPELL_SHADOW_WHIP           30638

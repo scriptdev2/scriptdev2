@@ -25,6 +25,7 @@ EndScriptData */
 mob_crystalcore_devastator
 EndContentData */
 
+#include "precompiled.h"
 #include "def_the_eye.h"
 
 #define SPELL_COUNTERCHARGE     35035

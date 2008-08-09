@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Auchindoun, Auchenai Crypts
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_RIBBON_OF_SOULS       32422
 #define SPELL_FEAR                  32421

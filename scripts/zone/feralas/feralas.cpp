@@ -21,7 +21,7 @@ SDComment: Quest support: 3520. Special vendor Gregan Brewspewer
 SDCategory: Feralas
 EndScriptData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_gregan_brewspewer

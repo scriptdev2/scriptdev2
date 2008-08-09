@@ -26,8 +26,7 @@ mob_webbed_creature
 npc_captured_sunhawk_agent
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_webbed_creature

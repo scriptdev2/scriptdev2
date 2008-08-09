@@ -21,11 +21,11 @@ SDComment:
 SDCategory: Blackwing Lair
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SHADOWFLAME        22539
 #define SPELL_WINGBUFFET         23339
-#define SPELL_FRENZY             23342      //This spell periodically triggers fire nova
+#define SPELL_FRENZY             23342                      //This spell periodically triggers fire nova
 
 struct MANGOS_DLL_DECL boss_flamegorAI : public ScriptedAI
 {

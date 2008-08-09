@@ -21,17 +21,16 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_WARSTOMP                24375
-#define SPELL_CLEAVE             15579  
+#define SPELL_WARSTOMP          24375
+#define SPELL_CLEAVE            15579  
 #define SPELL_STRIKE            18368
-#define SPELL_REND                 18106
-#define SPELL_SUNDERARMOR              24317       
-#define SPELL_KNOCKAWAY          20686
-#define SPELL_SLOW          22356
-#define SPELL_DAZED         1604
-
+#define SPELL_REND              18106
+#define SPELL_SUNDERARMOR       24317       
+#define SPELL_KNOCKAWAY         20686
+#define SPELL_SLOW              22356
+#define SPELL_DAZED             1604
 
 struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
 {

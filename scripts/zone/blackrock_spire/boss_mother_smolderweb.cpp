@@ -21,14 +21,12 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-
-#define SPELL_CRYSTALIZE                16104   
-#define SPELL_MOTHERSMILK             16468     
+#define SPELL_CRYSTALIZE        16104   
+#define SPELL_MOTHERSMILK       16468     
 #define SPELL_POSION            24097
-#define SPELL_WEBEXPLOSION                 16469    //Make all nearby mobs aggro  
-
+#define SPELL_WEBEXPLOSION      16469                       //Make all nearby mobs aggro  
 
 struct MANGOS_DLL_DECL boss_mothersmolderwebAI : public ScriptedAI
 {

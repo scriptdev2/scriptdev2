@@ -21,6 +21,7 @@ SDComment: Place holder
 SDCategory: Karazhan
 EndScriptData */
 
+#include "precompiled.h"
 #define SPELL_BELLOWING_ROAR        39427
 #define SPELL_CHARRED_EARTH         30129 //Also 30209 (Target Charred Earth) triggers this
 #define SPELL_DISTRACTING_ASH       30130

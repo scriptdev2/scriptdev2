@@ -21,7 +21,7 @@ SDComment: Includes Sapling (need some better control with these). Spells for bo
 SDCategory: Tempest Keep, The Botanica
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 /*#####
 # mob_treant (Sapling)

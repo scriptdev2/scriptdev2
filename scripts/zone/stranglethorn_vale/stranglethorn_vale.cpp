@@ -25,8 +25,7 @@ EndScriptData */
 mob_yenniku
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_yenniku

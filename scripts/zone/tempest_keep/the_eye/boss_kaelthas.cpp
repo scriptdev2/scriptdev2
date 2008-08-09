@@ -21,8 +21,8 @@ SDComment: SQL, phase 2, phase 3, Mind Control, taunt immunity
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_the_eye.h"
-#include "Player.h"
 #include "WorldPacket.h"
 
 //Phase 2 spells (Not used)

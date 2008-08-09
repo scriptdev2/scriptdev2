@@ -21,6 +21,7 @@ SDComment: Contains workarounds regarding warlord's rage spells not acting as ex
 SDCategory: Coilfang Resevoir, The Steamvault
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_steam_vault.h"
 #include "Cell.h"
 #include "CellImpl.h"

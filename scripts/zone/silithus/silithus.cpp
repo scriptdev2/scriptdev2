@@ -25,7 +25,7 @@ EndScriptData */
 npcs_rutgar_and_frankal
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*###
 ## npcs_rutgar_and_frankal

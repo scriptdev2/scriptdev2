@@ -21,15 +21,10 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-
-#define SPELL_FIERYBURST                13900             
-#define SPELL_WARSTOMP                24375
-
-
+#define SPELL_FIERYBURST        13900             
+#define SPELL_WARSTOMP          24375
 
 struct MANGOS_DLL_DECL boss_magmusAI : public ScriptedAI
 {

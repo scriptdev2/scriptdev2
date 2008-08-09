@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 //All horsemen
 #define SPELL_SHIELDWALL           29061

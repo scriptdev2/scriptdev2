@@ -16,3 +16,4 @@ EndScriptData */
 //8600 To your posts. Defend the city.
 //8601 Tresspassers will be terminated.
 //8602 You are terminated.
+#include "precompiled.h"

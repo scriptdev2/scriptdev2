@@ -44,8 +44,8 @@ guard_tirisfal
 guard_undercity
 EndContentData */
 
+#include "precompiled.h"
 #include "guard_ai.h"
-#include "sc_gossip.h"
 
 //script spesific action
 #define GOSSIP_ACTION_TAVERN                  101

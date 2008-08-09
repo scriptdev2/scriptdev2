@@ -21,7 +21,8 @@ SDComment:
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
+
 //--------------------------------------
 //Spells
 #define SPELL_SUNDER_ARMOR          30901

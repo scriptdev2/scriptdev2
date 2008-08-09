@@ -21,7 +21,7 @@ SDComment: Missing revive
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_DIVINESHIELD2         1020
 #define SPELL_CRUSADERSTRIKE5       35395

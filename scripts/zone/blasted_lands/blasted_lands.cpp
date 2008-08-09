@@ -26,7 +26,7 @@ npc_deathly_usher
 npc_fallen_hero_of_horde
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_deathly_usher

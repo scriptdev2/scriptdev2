@@ -29,8 +29,7 @@ npc_lady_jaina_proudmoore
 npc_nat_pagle
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mobs_risen_husk_spirit

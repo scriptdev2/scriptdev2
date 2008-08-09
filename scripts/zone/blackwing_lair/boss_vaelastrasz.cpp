@@ -21,17 +21,14 @@ SDComment: Burning Adrenaline not correctly implemented in core
 SDCategory: Blackwing Lair
 EndScriptData */
 
-//*** NEEDS ADDITIOINAL REVIEW ***
-
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 #define SPELL_ESSENCEOFTHERED       23513
 #define SPELL_FLAMEBREATH           23461       
 #define SPELL_FIRENOVA              23462
 #define SPELL_TAILSWIPE             15847
 #define SPELL_BURNINGADRENALINE     23620
-#define SPELL_CLEAVE                20684       //Chain cleave is most likely named something different and contains a dummy effect
+#define SPELL_CLEAVE                20684                   //Chain cleave is most likely named something different and contains a dummy effect
 
 #define SAY_LINE1           "Too late...friends. Nefarius' corruption has taken hold. I cannot...control myself. "
 #define SOUND_LINE1         8281

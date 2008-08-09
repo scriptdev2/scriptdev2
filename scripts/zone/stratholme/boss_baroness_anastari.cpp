@@ -21,11 +21,7 @@ SDComment: MC disabled
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
-
-//Status: possess disabled due to malfunction
+#include "precompiled.h"
 
 #define SPELL_BANSHEEWAIL   16565
 #define SPELL_BANSHEECURSE    16867

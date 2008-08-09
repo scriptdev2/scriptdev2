@@ -21,8 +21,7 @@ SDComment:
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
-
+#include "precompiled.h"
 
 #define SPELL_IMPENDINGDOOM 19702
 #define SPELL_LUCIFRONCURSE 19703

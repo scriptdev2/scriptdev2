@@ -21,6 +21,7 @@ SDComment: Saber Lash missing, Fatal Attraction slightly incorrect; need to dama
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
 
 //Spells

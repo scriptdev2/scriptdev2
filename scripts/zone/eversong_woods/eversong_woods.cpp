@@ -26,7 +26,7 @@ mobs_mana_tapped
 npc_prospector_anvilward
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "../../npc/npc_escortAI.h"
 
 /*######

@@ -26,8 +26,7 @@ npc_ayren_cloudbreaker
 npc_unrestrained_dragonhawk
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_ayren_cloudbreaker

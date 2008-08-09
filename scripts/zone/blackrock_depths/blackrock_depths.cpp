@@ -27,8 +27,7 @@ npc_kharan_mighthammer
 npc_lokhtos_darkbargainer
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_phalanx

@@ -21,14 +21,11 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-#define SPELL_SUNDERARMOR                24317                   
-#define SPELL_SHIELDBLOCK            12169
-#define SPELL_STRIKE               15580
-
+#define SPELL_SUNDERARMOR           24317                   
+#define SPELL_SHIELDBLOCK           12169
+#define SPELL_STRIKE                15580
 
 struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
 {

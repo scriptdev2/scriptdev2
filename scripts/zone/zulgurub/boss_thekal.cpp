@@ -21,6 +21,7 @@ SDComment: Almost finished.
 SDCategory: Zul'Gurub
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_zulgurub.h"
 
 #define SPELL_MORTALCLEAVE        22859

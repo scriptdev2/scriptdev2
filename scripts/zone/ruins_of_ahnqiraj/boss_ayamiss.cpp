@@ -21,20 +21,17 @@ SDComment: VERIFY SCRIPT
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
+#include "precompiled.h"
+
 /*
 To do:
 make him fly from 70-100%
 */
 
-#include "sc_creature.h"
-
-
-
 #define SPELL_STINGERSPRAY 25749
 #define SPELL_POISONSTINGER 25748 //only used in phase1
 #define SPELL_SUMMONSWARMER 25844 //might be 25708
 // #define SPELL_PARALYZE 23414 doesnt work correct (core)
-
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 {

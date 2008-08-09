@@ -27,8 +27,7 @@ npc_sputtervalve
 npc_taskmaster_fizzule      remove hack when mangos implement feature/detect spell kind to not aggro
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_beaten_corpse

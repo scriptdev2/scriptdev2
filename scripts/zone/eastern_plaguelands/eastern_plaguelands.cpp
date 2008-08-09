@@ -28,8 +28,7 @@ npc_darrowshire_spirit
 npc_tirion_fordring
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 //id8530 - cannibal ghoul
 //id8531 - gibbering ghoul

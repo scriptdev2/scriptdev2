@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Gruul's Lair
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_gruuls_lair.h"
 
 #define ENCOUNTERS 2

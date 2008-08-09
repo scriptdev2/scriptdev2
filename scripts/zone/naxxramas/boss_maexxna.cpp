@@ -20,7 +20,7 @@ SD%Complete: 80
 SDComment: 
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_WEBTRAP           28622   //Spell is normally used by the webtrap on the wall NOT by Maexxna
 #define SPELL_WEBSPRAY          29484

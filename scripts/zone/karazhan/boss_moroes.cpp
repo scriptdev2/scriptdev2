@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_karazhan.h"
 
 #define SAY_AGGRO           "Hmm, unannounced visitors? Preparations must be made."

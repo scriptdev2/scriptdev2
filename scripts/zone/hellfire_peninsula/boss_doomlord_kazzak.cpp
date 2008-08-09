@@ -21,7 +21,7 @@ SDComment: Using incorrect spell for Mark of Kazzak
 SDCategory: Hellfire Peninsula
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SHADOWVOLLEY              32963
 #define SPELL_CLEAVE                    31779

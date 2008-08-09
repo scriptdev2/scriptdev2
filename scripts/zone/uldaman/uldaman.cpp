@@ -26,8 +26,7 @@ mob_jadespine_basilisk
 npc_lore_keeper_of_norgannon
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_jadespine_basilisk

@@ -48,7 +48,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -129,7 +130,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCRIPT"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
@@ -1769,6 +1771,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjalAI.cpp"
 							>
 						</File>
@@ -1778,10 +1784,6 @@
 						</File>
 						<File
 							RelativePath="..\scripts\zone\caverns_of_time\hyjal\instance_hyjal.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\scripts\zone\caverns_of_time\hyjal\hyjal.cpp"
 							>
 						</File>
 					</Filter>
@@ -2031,6 +2033,30 @@
 		<Filter
 			Name="Include"
 			>
+			<File
+				RelativePath="..\include\precompiled.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\include\precompiled.h"
+				>
+			</File>
 			<File
 				RelativePath="..\include\sc_creature.cpp"
 				>

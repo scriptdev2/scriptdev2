@@ -31,8 +31,7 @@ npc_lantresor_of_the_blade
 npc_creditmarker_visit_with_ancestors
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mob_shattered_rumbler - this should be done with ACID

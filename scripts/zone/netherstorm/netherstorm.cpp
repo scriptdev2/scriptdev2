@@ -28,8 +28,7 @@ npc_protectorate_nether_drake
 npc_veronia
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "GameObject.h"
 
 /*######

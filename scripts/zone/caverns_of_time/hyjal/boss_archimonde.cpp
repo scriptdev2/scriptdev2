@@ -21,6 +21,7 @@ SDComment: Doomfires not completely offlike due to core limitations for random m
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_hyjal.h"
 #include "SpellAuras.h"
 

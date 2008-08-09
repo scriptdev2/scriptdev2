@@ -21,7 +21,7 @@ SDComment: Teleport not included, spell reflect not effecting dots (Core problem
 SDCategory: Azshara
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_MARKOFFROST        23182            
 #define SPELL_MANASTORM          21097

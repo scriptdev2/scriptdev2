@@ -22,6 +22,7 @@ SDCategory: Karazhan
 EndScriptData */
 
 //Casts
+#include "precompiled.h"
 #define SPELL_NETHERBURN_AURA       30522
 #define SPELL_VOIDZONE              37014 //Probably won't work
 #define SPELL_BERSERK               26662

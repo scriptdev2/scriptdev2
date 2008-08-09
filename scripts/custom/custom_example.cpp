@@ -18,11 +18,10 @@
 SDName: Custom_Example
 SD%Complete: 100
 SDComment: Short custom scripting example
-SDCategory: Custom
+SDCategory: Script Examples
 EndScriptData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 // **** This script is designed as an example for others to build on ****
 // **** Please modify whatever you'd like to as this script is only for developement ****

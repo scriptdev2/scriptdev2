@@ -21,8 +21,7 @@ SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_WHIRLWIND                              26083
 #define SPELL_ENRAGE                                 28747            //Not sure if right ID.

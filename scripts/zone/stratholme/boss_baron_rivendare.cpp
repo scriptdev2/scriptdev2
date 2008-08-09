@@ -21,9 +21,7 @@ SDComment: aura applied/defined in database
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
+#include "precompiled.h"
 
 #define SAY_0    "Intruders! More pawns of the Argent Dawn, no doubt. I already count one of their number among my prisoners. Withdraw from my domain before she is executed!"
 #define SAY_1    "You're still here? Your foolishness is amusing! The Argent Dawn wench needn't suffer in vain. Leave at once and she shall be spared!"

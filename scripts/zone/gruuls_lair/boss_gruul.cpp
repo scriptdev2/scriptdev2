@@ -21,6 +21,7 @@ SDComment: Ground Slam seriously messed up due to core problem
 SDCategory: Gruul's Lair
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_gruuls_lair.h"
 
 #define SPELL_GROWTH              36300

@@ -21,12 +21,12 @@ SDComment:
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_TAUNT           355
 #define SPELL_HASTE           31458
 #define SPELL_MORTAL_WOUND    28467
-#define SPELL_REFLECT         23920 //Not Implemented (Heroic mod)
+#define SPELL_REFLECT         23920                         //Not Implemented (Heroic mod)
 
 #define SAY_ENTER             "Why do you persist? Surely you can see the futility of it all. It is not too late! You may still leave with your lives ..."
 #define SAY_AGGRO             "So be it ... you have been warned."

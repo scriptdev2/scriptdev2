@@ -21,9 +21,8 @@ SDComment: trash mobs for strat. Simple AI mobs converted to EAI (except Mindles
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "../../creature/simple_ai.h"
-#include "sc_gossip.h"
 
 /*######
 ## mob_freed_soul

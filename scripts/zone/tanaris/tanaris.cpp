@@ -28,8 +28,7 @@ npc_steward_of_time
 npc_stone_watcher_of_norgannon
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include "WorldPacket.h"
 
 /*######

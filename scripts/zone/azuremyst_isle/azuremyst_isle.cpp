@@ -28,8 +28,7 @@ npc_injured_draenei
 npc_susurrus
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 #include <cmath>
 
 /*######

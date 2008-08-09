@@ -26,8 +26,7 @@ mobs_spitelashes
 npc_loramus_thalipedes
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## mobs_spitelashes

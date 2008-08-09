@@ -28,8 +28,7 @@ npc_elder_kuruti
 npc_mortog_steamhead
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npcs_ashyen_and_keleth

@@ -21,6 +21,9 @@ SDComment: VERIFY SCRIPT
 SDCategory: Sunwell Plateau
 EndScriptData */
 
+#include "precompiled.h"
+#include "def_sunwell_plateau.h"
+#include "GameObject.h"
 
 #define KALEC_SAY_NON_FRIENDLY_ON_AGGRO             "No longer will I be a slave to Malygos! Challenge me and you will be destroyed!"
 #define KALEC_SOUND_NON_FIRENDLY_ON_AGGRO           12422
@@ -83,11 +86,6 @@ EndScriptData */
 #define HEROIC_STRIKE               45026 //aggro..:)
 #define REVITALIZE                  45860
 
-
-#include "sc_creature.h"
-#include "GameObject.h"
-#include "sc_gossip.h"
-#include "def_sunwell_plateau.h"
 //timers not blizzlike
 //say @ spellcastion: not implemented
 

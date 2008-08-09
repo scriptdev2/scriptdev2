@@ -21,8 +21,8 @@ SDComment:  Designed only for Selin Fireheart
 SDCategory: Magister's Terrace
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_magisters_terrace.h"
-#include "GameObject.h"
 
 #define NUMBER_OF_ENCOUNTERS      4
 

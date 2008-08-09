@@ -21,12 +21,12 @@ SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_REPENTANCE          29511
-#define SPELL_HOLYFIRE            29522
-#define SPELL_HOLYWRATH           32445
-#define SPELL_HOLYGROUND          29512
+#define SPELL_REPENTANCE        29511
+#define SPELL_HOLYFIRE          29522
+#define SPELL_HOLYWRATH         32445
+#define SPELL_HOLYGROUND        29512
 
 #define SAY_AGGRO               "Your behavior will not be tolerated!"
 #define SAY_SLAY1               "Ah ah ah..."

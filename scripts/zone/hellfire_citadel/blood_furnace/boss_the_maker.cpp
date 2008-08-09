@@ -21,28 +21,28 @@ SDComment: Mind control no support
 SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_ACID_SPRAY        38153 // heroic 38973 ??? 38153
-#define SPELL_EXPLODING_BREAKER    30925 
-#define SPELL_KNOCKDOWN            20276
-#define SPELL_DOMINATION        25772 // ???
+#define SPELL_ACID_SPRAY            38153                   // heroic 38973 ??? 38153
+#define SPELL_EXPLODING_BREAKER     30925 
+#define SPELL_KNOCKDOWN             20276
+#define SPELL_DOMINATION            25772                   // ???
 
 
-#define SAY_KILL_1                "Let's see what I can make of you." 
-#define SOUND_KILL_1            10289
-#define SAY_KILL_2                "It is pointless to resist."
-#define SOUND_KILL_2            10290
+#define SAY_KILL_1          "Let's see what I can make of you." 
+#define SOUND_KILL_1        10289
+#define SAY_KILL_2          "It is pointless to resist."
+#define SOUND_KILL_2        10290
 
-#define SAY_AGGRO_1                "My work must not be interrupted."
-#define SOUND_AGGRO_1            10286
-#define SAY_AGGRO_2                "Perhaps I can find a use for you." 
-#define SOUND_AGGRO_2            10287
-#define SAY_AGGRO_3                "Anger... Hate... These are tools I can use."    
-#define SOUND_AGGRO_3            10288            
+#define SAY_AGGRO_1         "My work must not be interrupted."
+#define SOUND_AGGRO_1       10286
+#define SAY_AGGRO_2         "Perhaps I can find a use for you." 
+#define SOUND_AGGRO_2       10287
+#define SAY_AGGRO_3         "Anger... Hate... These are tools I can use."    
+#define SOUND_AGGRO_3       10288            
 
-#define SAY_DIE                    "Stay away from... me." 
-#define SOUND_DIE                10291                
+#define SAY_DIE             "Stay away from... me." 
+#define SOUND_DIE           10291                
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {

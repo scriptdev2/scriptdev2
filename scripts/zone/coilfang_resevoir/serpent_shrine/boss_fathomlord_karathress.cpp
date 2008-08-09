@@ -21,8 +21,8 @@ SDComment: Missing Multishot, pet, Totems, Windfury, Whirlwind
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_serpent_shrine.h"
-#include "Player.h"
 
 //Karathress spells
 #define SPELL_CATACLYSMIC_BOLT     38441

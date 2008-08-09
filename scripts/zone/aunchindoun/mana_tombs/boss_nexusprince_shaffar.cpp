@@ -21,7 +21,7 @@ SDComment: Missing some spells
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_ETHEREAL_BEACON           32371 // Summon 18431
 #define SPELL_FROSTBOLT                 32364

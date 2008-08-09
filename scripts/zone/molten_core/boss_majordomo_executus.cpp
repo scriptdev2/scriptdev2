@@ -21,15 +21,12 @@ SDComment: Correct spawning and Event NYI
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
-
-
-// Adds NYI
+#include "precompiled.h"
 
 #define SPELL_MAGICREFLECTION       20619
 #define SPELL_DAMAGEREFLECTION      21075
 #define SPELL_BLASTWAVE             20229
-#define SPELL_AEGIS                 20620       //This is self casted whenever we are below 50%
+#define SPELL_AEGIS                 20620                   //This is self casted whenever we are below 50%
 
 #define SAY_AGGRO       "Reckless mortals, none may challenge the sons of the living flame!"
 #define SOUND_AGGRO     8035

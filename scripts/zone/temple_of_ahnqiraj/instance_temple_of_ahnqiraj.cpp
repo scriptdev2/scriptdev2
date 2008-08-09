@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
 
 struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance

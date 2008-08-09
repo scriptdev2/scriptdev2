@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Razorfen Downs
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_0             "You'll never leave this place... alive."
 #define SAY_1             "Come, spirits, attend your master."

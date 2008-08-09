@@ -21,9 +21,9 @@ SDComment: Using a creature workaround instead of a GO for Impaling Spine.
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
 #include "GameObject.h"
-#include "Player.h"
 
 //Aggro
 #define SAY_AGGRO       "You will die, in the name of Lady Vashj!"

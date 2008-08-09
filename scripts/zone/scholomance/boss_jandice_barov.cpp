@@ -21,18 +21,13 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
-
-// Spells of Jandice Barov
+#include "precompiled.h"
 
 #define SPELL_CURSEOFBLOOD          24673
 //#define SPELL_ILLUSION              17773
 
-
 //Spells of Illusion of Jandice Barov
-
 #define SPELL_CLEAVE                15584
-
 
 struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
 {

@@ -21,9 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
+#include "precompiled.h"
 
 #define SPELL_ENCASINGWEBS          4962
 #define SPELL_PIERCEARMOR           6016

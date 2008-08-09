@@ -21,6 +21,7 @@ SDComment: Instance Data Scripts and functions to acquire mobs and set encounter
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
 #include "GameObject.h"
 

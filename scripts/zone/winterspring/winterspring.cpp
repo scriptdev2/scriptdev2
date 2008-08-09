@@ -27,7 +27,7 @@ npc_rivern_frostwind
 npc_witch_doctor_mauari
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_lorax

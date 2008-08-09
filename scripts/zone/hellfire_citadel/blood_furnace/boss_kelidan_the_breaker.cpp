@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SHADOW_BOLT_VOLLEY        29924
 #define SPELL_BURNING_NOVA                30940

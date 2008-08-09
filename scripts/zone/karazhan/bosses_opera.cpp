@@ -21,8 +21,8 @@ SDComment: Oz, and Hood event implemented. RAJ event disabled for now.
 SDCategory: Karazhan
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_karazhan.h"
-#include "sc_gossip.h"
 #include "GameObject.h"
 
 /***********************************/

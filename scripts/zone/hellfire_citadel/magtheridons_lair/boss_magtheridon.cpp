@@ -21,9 +21,8 @@ SDComment: In Development
 SDCategory: Hellfire Citadel, Magtheridon's lair
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_magtheridons_lair.h"
-#include "sc_gossip.h"
-#include "sc_instance.h"
 #include "GameObject.h"
 #include "WorldPacket.h"
 

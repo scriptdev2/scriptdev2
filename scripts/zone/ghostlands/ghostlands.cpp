@@ -27,8 +27,7 @@ npc_budd_nedreck
 npc_rathis_tomber
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_blood_knight_dawnstar

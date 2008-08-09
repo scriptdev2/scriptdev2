@@ -17,16 +17,13 @@
 /* ScriptData
 SDName: Boss_Razorgore
 SD%Complete: 50
-SDComment: Phase 1 NYI
+SDComment: Needs additional review. Phase 1 NYI
 SDCategory: Blackwing Lair
 EndScriptData */
 
-//*** NEEDS ADDITIOINAL REVIEW ***
+#include "precompiled.h"
 
 //Razorgore Phase 2 Script
-//Phase 1 script with adds NYI
-
-#include "sc_creature.h"
 
 #define SAY_NPC_DEATH "If I fall into the abyss I'll take all of you mortals with me..."
 #define SOUND_NPC_DEATH 8278

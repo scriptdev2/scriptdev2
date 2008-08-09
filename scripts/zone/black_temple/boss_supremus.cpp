@@ -21,6 +21,7 @@ SDComment: Need to implement doors.
 SDCategory: Black Temple
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_black_temple.h"
 
 //Spells

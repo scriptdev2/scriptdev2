@@ -21,10 +21,7 @@ SDComment: Intro Dialog and event NYI
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
-
-
-// Intro dialog is NYI
+#include "precompiled.h"
 
 #define SPELL_HANDOFRAGNAROS        19780
 #define SPELL_WRATHOFRAGNAROS       20566

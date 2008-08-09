@@ -15,15 +15,14 @@
 */
 
 /* ScriptData
-SDName: Test.cpp
+SDName: Test
 SD%Complete: 100
-SDComment: Script used for testing
-SDCategory: Custom
+SDComment: Script used for testing escortAI
+SDCategory: Script Examples
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "../npc/npc_escortAI.h"
-#include "sc_gossip.h"
 
 struct MANGOS_DLL_DECL npc_testAI : public npc_escortAI
 {

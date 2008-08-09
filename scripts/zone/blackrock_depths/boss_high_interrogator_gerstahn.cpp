@@ -21,17 +21,12 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-#define SPELL_SHADOWWORDPAIN                10894            
-#define SPELL_MANABURN            10876
-#define SPELL_PSYCHICSCREAM               8122
-#define SPELL_SHADOWSHIELD               22417
-
-
-
+#define SPELL_SHADOWWORDPAIN        10894            
+#define SPELL_MANABURN              10876
+#define SPELL_PSYCHICSCREAM         8122
+#define SPELL_SHADOWSHIELD          22417
 
 struct MANGOS_DLL_DECL boss_high_interrogator_gerstahnAI : public ScriptedAI
 {

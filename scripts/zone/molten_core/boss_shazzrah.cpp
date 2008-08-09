@@ -21,8 +21,7 @@ SDComment: Teleport NYI
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
-
+#include "precompiled.h"
 
 #define SPELL_ARCANEEXPLOSION           19712
 #define SPELL_SHAZZRAHCURSE             19713

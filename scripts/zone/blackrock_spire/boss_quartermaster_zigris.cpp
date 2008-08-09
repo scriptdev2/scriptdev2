@@ -21,7 +21,7 @@ SDComment: Needs revision
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SHOOT             16496
 #define SPELL_STUNBOMB          16497

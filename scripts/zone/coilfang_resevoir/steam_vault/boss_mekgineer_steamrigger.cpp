@@ -26,6 +26,7 @@ boss_mekgineer_steamrigger
 mob_steamrigger_mechanic
 EndContentData */
 
+#include "precompiled.h"
 #include "def_steam_vault.h"
 
 #define SAY_MECHANICS               "I'm bringin' the pain!"

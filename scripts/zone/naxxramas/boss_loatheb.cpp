@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO1          "You are mine now!"
 #define SAY_AGGRO2          "I see you!"
@@ -243,5 +243,6 @@ void AddSC_boss_loatheb()
     newscript->GetAI = GetAI_boss_loatheb;
     m_scripts[nrscripts++] = newscript;
 }
+
 
 

@@ -27,7 +27,7 @@ npc_great_bear_spirit
 npc_silva_filnaveth
 EndContentData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_bunthen_plainswind

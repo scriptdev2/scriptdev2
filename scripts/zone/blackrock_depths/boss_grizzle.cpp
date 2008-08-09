@@ -21,15 +21,10 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-
-#define SPELL_GROUNDTREMOR                6524            
+#define SPELL_GROUNDTREMOR          6524            
 #define SPELL_FRENZY                28371
-
-
 
 struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
 {

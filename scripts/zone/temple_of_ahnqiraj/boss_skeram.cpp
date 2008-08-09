@@ -21,9 +21,8 @@ SDComment: Mind Control buggy.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
-#include "Player.h"
 #include "Group.h"
 
 #define SPELL_ARCANE_EXPLOSION      25679

@@ -21,7 +21,7 @@ SDComment: Some issues with hateful strike inturrupting the melee swing timer. P
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO1      "Patchwerk want to play!"
 #define SAY_AGGRO2      "Kel'Thuzad make Patchwerk his Avatar of War!"

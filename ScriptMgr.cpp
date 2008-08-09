@@ -2,12 +2,10 @@
 * This program is free software licensed under GPL version 2
 * Please see the included DOCS/LICENSE.TXT for more information */
 
-#include "../../shared/Config/Config.h"
+#include "precompiled.h"
 
-#include "GossipDef.h"
-#include "Player.h"
+#include "../../shared/Config/Config.h"
 #include "GameObject.h"
-#include "Map.h"
 
 #include "ProgressBar.h"
 #include "Database/DBCStores.h"

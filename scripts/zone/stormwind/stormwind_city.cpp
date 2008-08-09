@@ -29,8 +29,7 @@ npc_general_marcus_jonathan
 npc_lady_katrana_prestor
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_archmage_malin

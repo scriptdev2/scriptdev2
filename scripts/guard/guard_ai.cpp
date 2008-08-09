@@ -21,6 +21,7 @@ SDComment: Core problems with Guards not helping dotted players
 SDCategory: Guards
 EndScriptData */
 
+#include "precompiled.h"
 #include "guard_ai.h"
 
 // **** This script is for use within every single guard to save coding time ****

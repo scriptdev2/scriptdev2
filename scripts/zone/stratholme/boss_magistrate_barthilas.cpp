@@ -21,11 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
-
-//Status: needs more testing
+#include "precompiled.h"
 
 #define SPELL_DRAININGBLOW    16793
 #define SPELL_CROWDPUMMEL    10887

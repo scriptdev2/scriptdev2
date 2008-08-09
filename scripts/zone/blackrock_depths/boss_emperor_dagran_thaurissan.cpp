@@ -21,15 +21,13 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
  
-#include "sc_creature.h"
+#include "precompiled.h"
  
-// Spells
-#define SPELL_HANDOFTHAURISSAN              17492            
-#define SPELL_AVATAROFFLAME                    15636
+#define SPELL_HANDOFTHAURISSAN          17492            
+#define SPELL_AVATAROFFLAME             15636
  
-// Speech
-#define    SAY_AGGRO            "Come to aid the Throne!"
-#define SAY_SLAY    "Hail to the king, baby!"
+#define SAY_AGGRO                       "Come to aid the Throne!"
+#define SAY_SLAY                        "Hail to the king, baby!"
  
 struct MANGOS_DLL_DECL boss_draganthaurissanAI : public ScriptedAI
 {

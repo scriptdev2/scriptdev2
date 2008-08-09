@@ -21,11 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
-
-
+#include "precompiled.h"
 
 #define SAY_SPAWN   "TIMMY!"
 

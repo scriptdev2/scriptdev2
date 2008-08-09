@@ -21,6 +21,7 @@ SDComment: Instance Data for Sethekk Halls instance
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_sethekk_halls.h"
 #include "GameObject.h"
 

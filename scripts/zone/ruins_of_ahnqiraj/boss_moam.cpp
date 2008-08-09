@@ -21,16 +21,15 @@ SDComment: VERIFY SCRIPT AND SQL
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
+#define SPELL_TRAMPLE           15550
+#define SPELL_DRAINMANA         27256
+#define SPELL_ARCANEERUPTION    25672 
+#define SPELL_SUMMONMANA        25681
+#define SPELL_GRDRSLEEP         24360                       //Greater Dreamless Sleep
 
-
-#define SPELL_TRAMPLE 15550
-#define SPELL_DRAINMANA 27256
-#define SPELL_ARCANEERUPTION 25672 
-#define SPELL_SUMMONMANA 25681
-#define SPELL_GRDRSLEEP 24360 //Greater Dreamless Sleep  
-#define SAY_MANA        "moam bristles with energy!"
+#define SAY_MANA                "moam bristles with energy!"
 
 struct MANGOS_DLL_DECL boss_moamAI : public ScriptedAI
 {

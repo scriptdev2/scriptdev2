@@ -26,6 +26,7 @@ boss_hydromancer_thespia
 mob_coilfang_waterelemental
 EndContentData */
 
+#include "precompiled.h"
 #include "def_steam_vault.h"
 
 #define SAY_SUMMON                  "Surge forth my pets!"

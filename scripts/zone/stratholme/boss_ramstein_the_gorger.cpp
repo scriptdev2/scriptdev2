@@ -21,11 +21,7 @@ SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
-#include "sc_creature.h"
-
-// **** This script is still under Developement ****
-
-
+#include "precompiled.h"
 
 #define SPELL_TRAMPLE    15550
 #define SPELL_KNOCKOUT    17307

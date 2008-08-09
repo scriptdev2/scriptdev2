@@ -21,6 +21,7 @@ SDComment: Verify that the script is working properly
 SDCategory: Gruul's Lair
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_gruuls_lair.h"
 
 #define SOUND_AGGRO              11367

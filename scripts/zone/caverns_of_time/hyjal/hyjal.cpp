@@ -27,6 +27,7 @@ npc_thrall
 npc_tyrande_whisperwind
 EndContentData */
 
+#include "precompiled.h"
 #include "hyjalAI.h"
 
 #define GOSSIP_ITEM_BEGIN_ALLY  "We are ready to defend the Alliance base."

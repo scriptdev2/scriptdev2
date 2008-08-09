@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_scholomance.h"
 
 struct MANGOS_DLL_DECL instance_scholomance : public ScriptedInstance

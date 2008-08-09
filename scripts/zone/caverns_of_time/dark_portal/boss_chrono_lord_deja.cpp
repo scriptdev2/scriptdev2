@@ -21,11 +21,11 @@ SDComment:
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define ARCANE_BLAST        24857
 #define TIME_LAPSE          31467
-#define MAGNETIC_PULL       28337 //Not Implemented (Heroic mod)
+#define MAGNETIC_PULL       28337                           //Not Implemented (Heroic mod)
 
 #define SAY_ENTER           "Why do you aid the Magus? Just think of how many lives could be saved if the portal is never opened, if the resulting wars could be erased ..."
 #define SAY_AGGRO           "If you will not cease this foolish quest, then you will die!"

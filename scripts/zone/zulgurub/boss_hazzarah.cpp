@@ -21,10 +21,8 @@ SDComment:
 SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_zulgurub.h"
-
-
 
 #define SPELL_MANABURN         26046
 #define SPELL_SLEEP            24664    

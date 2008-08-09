@@ -21,16 +21,15 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_SNAPKICK                15618
-#define SPELL_CLEAVE             15579  
-#define SPELL_UPPERCUT            10966
-#define SPELL_MORTALSTRIKE                 16856
-#define SPELL_PUMMEL              15615       
-#define SPELL_THROWAXE         16075
-#define SPELL_DAZED         1604
-
+#define SPELL_SNAPKICK          15618
+#define SPELL_CLEAVE            15579  
+#define SPELL_UPPERCUT          10966
+#define SPELL_MORTALSTRIKE      16856
+#define SPELL_PUMMEL            15615       
+#define SPELL_THROWAXE          16075
+#define SPELL_DAZED             1604
 
 struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
 {

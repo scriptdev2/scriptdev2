@@ -21,13 +21,11 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-#define SPELL_SINISTERSTRIKE                15581
-#define SPELL_BACKSTAB             15582  
-#define SPELL_GOUGE            13579
+#define SPELL_SINISTERSTRIKE        15581
+#define SPELL_BACKSTAB              15582  
+#define SPELL_GOUGE                 13579
 
 struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
 {

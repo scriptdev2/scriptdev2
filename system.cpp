@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2005,2006 MaNGOS <http://www.mangosproject.org/>
+ * Copyright (C) 2005-2008 MaNGOS <http://www.mangosproject.org/>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,4 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef WIN32
-#include <windows.h>
-BOOL APIENTRY DllMain( HANDLE hModule,
-DWORD  ul_reason_for_call,
-LPVOID lpReserved
-)
-{
-    return true;
-}
-#endif
+#include "precompiled.h"

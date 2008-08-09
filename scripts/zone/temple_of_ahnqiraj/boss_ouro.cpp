@@ -21,7 +21,7 @@ SDComment: No model for submerging. Currently just invisible.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_SWEEP             26103

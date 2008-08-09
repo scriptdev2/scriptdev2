@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_SLIME_SPRAY       30913
 #define SPELL_POISON_CLOUD      30916

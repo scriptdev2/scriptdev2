@@ -21,12 +21,12 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_BLASTWAVE                11130   
+#define SPELL_BLASTWAVE         11130   
 #define SPELL_SHOUT             23511     
 #define SPELL_CLEAVE            20691
-#define SPELL_KNOCKAWAY                 20686
+#define SPELL_KNOCKAWAY         20686
 
 #define ADD_1X -39.355381
 #define ADD_1Y -513.456482

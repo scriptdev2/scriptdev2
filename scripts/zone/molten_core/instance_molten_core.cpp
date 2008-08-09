@@ -21,6 +21,7 @@ SDComment: Place Holder
 SDCategory: Molten Core
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_molten_core.h"
 
 #define ID_LUCIFRON     12118

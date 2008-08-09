@@ -21,17 +21,13 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-
-#define SPELL_SHADOWBOLT                17228  
-#define SPELL_CURSEOFTONGUES               15470 
-#define SPELL_CURSEOFWEAKNESS                17227            
-#define SPELL_DEMONARMOR                11735
-#define SPELL_ENVELOPINGWEB               15471
-
+#define SPELL_SHADOWBOLT            17228  
+#define SPELL_CURSEOFTONGUES        15470 
+#define SPELL_CURSEOFWEAKNESS       17227            
+#define SPELL_DEMONARMOR            11735
+#define SPELL_ENVELOPINGWEB         15471
 
 struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
 {

@@ -21,6 +21,7 @@ SDComment: Complete!
 SDCategory: Karazhan
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_karazhan.h"
 
 #define SPELL_SUMMON_DEMONCHAINS    30120 // Summons demonic chains that maintain the ritual of sacrifice.

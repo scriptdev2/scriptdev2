@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 // Spells to be casted
 #define SPELL_SHADOW_POWER 35322

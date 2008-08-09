@@ -20,8 +20,8 @@ SD%Complete: 80
 SDComment: Needs intro. Talk to the dragon.
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_sunwell_plateau.h"
-#include "sc_creature.h"
 
 // Yells and Sounds used by boss.
 #define YELL_AGGRO "Ahh! More lambs to the slaughter!"

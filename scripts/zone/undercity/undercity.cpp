@@ -21,7 +21,7 @@ SDComment: Quest support: 6628(Parqual Fintallas questions/'answers' might have 
 SDCategory: Undercity
 EndScriptData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_parqual_fintallas

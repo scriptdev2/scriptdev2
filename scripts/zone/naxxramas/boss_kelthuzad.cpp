@@ -21,7 +21,7 @@ SDComment: VERIFY SCRIPT
 SDCategory: Naxxramas
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 //***THIS SCRIPTS IS UNDER DEVELOPMENT***
 /*

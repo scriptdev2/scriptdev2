@@ -26,8 +26,7 @@ npcs_dithers_and_arbington
 npc_the_scourge_cauldron
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npcs_dithers_and_arbington

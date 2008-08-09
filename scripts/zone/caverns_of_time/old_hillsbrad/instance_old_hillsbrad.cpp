@@ -25,6 +25,7 @@ EndScriptData */
 -- UPDATE `gameobject_template` SET `ScriptName`='go_barrel_old_hillsbrad' WHERE `entry`=182589;
 */
 
+#include "precompiled.h"
 #include "def_old_hillsbrad.h"
 
 #define ENCOUNTERS      6

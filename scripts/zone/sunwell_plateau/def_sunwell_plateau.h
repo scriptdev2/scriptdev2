@@ -1,7 +1,9 @@
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software licensed under GPL version 2
+* Please see the included DOCS/LICENSE.TXT for more information */
+
 #ifndef DEF_SUNWELLPLATEAU_H
 #define DEF_SUNWELLPLATEAU_H
-
-#include "sc_instance.h"
 
 #define KALEC_LOC_Z 53
 #define SHATROV_LOC_Z -74

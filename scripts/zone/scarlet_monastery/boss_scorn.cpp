@@ -21,8 +21,7 @@ SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
-
+#include "precompiled.h"
 
 #define SPELL_LICHSLAP                  28873
 #define SPELL_FROSTBOLTVOLLEY           8398

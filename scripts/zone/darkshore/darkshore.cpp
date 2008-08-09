@@ -21,3 +21,5 @@ SDComment: Placeholder
 SDCategory: Darkshore
 EndScriptData */
 
+#include "precompiled.h"
+

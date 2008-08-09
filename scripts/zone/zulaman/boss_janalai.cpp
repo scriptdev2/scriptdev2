@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Zul'Aman
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_zulaman.h"
 
 // Jan'alai

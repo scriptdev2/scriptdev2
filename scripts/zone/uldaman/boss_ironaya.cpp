@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Uldaman
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_ARCINGSMASH           39144
 #define SPELL_KNOCKAWAY             22893
@@ -29,7 +29,6 @@ EndScriptData */
 
 #define SAY_AGGRO           "None may steal the secrets of the makers!"
 #define SOUND_AGGRO         5851
-
 
 struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 {

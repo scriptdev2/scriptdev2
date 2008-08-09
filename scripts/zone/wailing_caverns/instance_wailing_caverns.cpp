@@ -20,3 +20,4 @@ SD%Complete: 0
 SDComment: Placeholder
 SDCategory: Wailing Caverns
 EndScriptData */
+#include "precompiled.h"

@@ -21,7 +21,7 @@ SDComment: Conflag on ground nyi, fear causes issues without VMAPs
 SDCategory: Molten Core
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_FRENZY                19451
 #define SPELL_MAGMASPIT             19449                   //This is actually a buff he gives himself

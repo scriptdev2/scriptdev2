@@ -21,9 +21,8 @@ SDComment:
 SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_zulgurub.h"
-
 
 #define SPELL_LIGHTNINGCLOUD         25033
 #define SPELL_LIGHTNINGWAVE          24819    

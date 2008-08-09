@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_temple_of_ahnqiraj.h"
 
 #define SPELL_CLEAVE        26350

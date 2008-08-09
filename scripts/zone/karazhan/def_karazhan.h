@@ -1,8 +1,9 @@
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software licensed under GPL version 2
+* Please see the included DOCS/LICENSE.TXT for more information */
+
 #ifndef DEF_KARAZHAN_H
 #define DEF_KARAZHAN_H
-
-#include "sc_creature.h"
-#include "sc_instance.h"
 
 #define DATA_ATTUMEN_EVENT               1
 #define DATA_MOROES_EVENT                2

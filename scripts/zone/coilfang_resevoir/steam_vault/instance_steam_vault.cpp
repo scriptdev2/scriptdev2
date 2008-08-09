@@ -21,6 +21,7 @@ SDComment: Workaround for opening of Main Chamber door. Mangos does not support 
 SDCategory: Coilfang Resevoir, The Steamvault
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_steam_vault.h"
 #include "GameObject.h"
 

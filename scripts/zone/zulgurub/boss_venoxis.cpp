@@ -22,6 +22,7 @@ SDCategory: Zul'Gurub
 EndScriptData */
 
 
+#include "precompiled.h"
 #include "def_zulgurub.h"
 
 #define SPELL_HOLY_FIRE     23860

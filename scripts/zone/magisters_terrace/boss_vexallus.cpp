@@ -21,6 +21,7 @@ SDComment: Heroic and Normal support. Needs further testing.
 SDCategory: Magister's Terrace
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_magisters_terrace.h"
 
 #define SAY_AGGRO           "Drain...life..."

@@ -21,14 +21,14 @@ SDComment: Healing of Emperor NYI
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_HEAL       10917
-#define SPELL_RENEW       10929
-#define SPELL_SHIELD       10901
-#define SPELL_MINDBLAST       10947
-#define SPELL_SHADOWWORDPAIN       10894
-#define SPELL_SMITE       10934
+#define SPELL_HEAL              10917
+#define SPELL_RENEW             10929
+#define SPELL_SHIELD            10901
+#define SPELL_MINDBLAST         10947
+#define SPELL_SHADOWWORDPAIN    10894
+#define SPELL_SMITE             10934
 
 struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
 {
@@ -107,5 +107,6 @@ void AddSC_boss_moira_bronzebeard()
     newscript->GetAI = GetAI_boss_moira_bronzebeard;
     m_scripts[nrscripts++] = newscript;
 }
+
 
 

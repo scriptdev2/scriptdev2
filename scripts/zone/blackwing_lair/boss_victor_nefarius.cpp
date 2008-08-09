@@ -21,8 +21,7 @@ SDComment: Missing some text, Vael beginning event, and spawns Nef in wrong plac
 SDCategory: Blackwing Lair
 EndScriptData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 #define SAY_GAMESBEGIN_1        "In this world where time is your enemy, it is my greatest ally. This grand game of life that you think you play in fact plays you. To that I say..."
 #define SAY_GAMESBEGIN_2        "Let the games begin!"
@@ -71,7 +70,6 @@ EndScriptData */
 //and allow players to start the event over
 //If nefarian dies then he will kill himself then he will kill himself in his hiding place
 //To prevent players from doing the event twice
-
 
 struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 {

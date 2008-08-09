@@ -21,6 +21,7 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_scholomance.h"
 
 #define SPELL_CALLOFGRAVES         17831

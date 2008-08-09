@@ -21,7 +21,7 @@ SDComment: Evocation may cause client crash (Core related)
 SDCategory: Karazhan
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SAY_AGGRO           "The Menagerie is for guests only."
 #define SOUND_AGGRO         9183

@@ -21,7 +21,7 @@ SDComment: Wrong cleave and red aura is missing.
 SDCategory: Zul'Gurub
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "def_zulgurub.h"
 
 #define SPELL_SHADOWWORDPAIN       23952

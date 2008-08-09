@@ -14,7 +14,14 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "sc_gossip.h"
+/* ScriptData
+SDName: Custom_Gossip_Codebox
+SD%Complete: 100
+SDComment: Show a codebox in gossip option
+SDCategory: Script Examples
+EndScriptData */
+
+#include "precompiled.h"
 #include <cstring>
 
 //This function is called when the player opens the gossip menubool 

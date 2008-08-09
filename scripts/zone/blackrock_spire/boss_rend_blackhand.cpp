@@ -21,13 +21,11 @@ SDComment: Intro event NYI
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-
-#define SPELL_WHIRLWIND                  26038        
+#define SPELL_WHIRLWIND                 26038        
 #define SPELL_CLEAVE                    20691
-#define SPELL_THUNDERCLAP               23931        //Not sure if he cast this spell
-
+#define SPELL_THUNDERCLAP               23931               //Not sure if he cast this spell
 
 struct MANGOS_DLL_DECL boss_rend_blackhandAI : public ScriptedAI
 {

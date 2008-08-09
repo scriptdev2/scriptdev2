@@ -21,12 +21,10 @@ SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-// **** This script is still under Developement ****
-
-#define SPELL_WHIRLWIND                15589
-#define SPELL_MORTALSTRIKE            24573
+#define SPELL_WHIRLWIND             15589
+#define SPELL_MORTALSTRIKE          24573
 
 struct MANGOS_DLL_DECL boss_gorosh_the_dervishAI : public ScriptedAI
 {

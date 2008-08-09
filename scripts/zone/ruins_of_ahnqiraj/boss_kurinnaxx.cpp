@@ -21,14 +21,11 @@ SDComment: VERIFY SCRIPT AND SQL
 SDCategory: Ruins of Ahn'Qiraj
 EndScriptData */
 
-#include "sc_creature.h"
-
-
+#include "precompiled.h"
 
 #define SPELL_MORTALWOUND 25646
 #define SPELL_SANDTRAP 25656
 #define SPELL_ENRAGE 28798
-
 
 struct MANGOS_DLL_DECL boss_kurinnaxxAI : public ScriptedAI
 {

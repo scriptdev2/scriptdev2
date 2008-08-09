@@ -32,8 +32,7 @@ npc_mount_vendor        100%    Regular mount vendors all over the world. Displa
 npc_sayge               100%    Darkmoon event fortune teller, buff player based on answers given
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*########
 # npc_chicken_cluck

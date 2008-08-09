@@ -28,8 +28,7 @@ npc_shattrathflaskvendors
 npc_zephyr
 EndContentData */
 
-#include "sc_creature.h"
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_raliq_the_drunk

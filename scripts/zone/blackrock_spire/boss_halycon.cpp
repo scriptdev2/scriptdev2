@@ -21,7 +21,7 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define SPELL_CROWDPUMMEL       10887   
 #define SPELL_MIGHTYBLOW        14099     
@@ -30,7 +30,6 @@ EndScriptData */
 #define ADD_1Y                  -324.961395
 #define ADD_1Z                  64.401443
 #define ADD_1O                  3.124724
-
 
 struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
 {

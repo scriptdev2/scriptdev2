@@ -1,12 +1,12 @@
-#include "sc_creature.h"
-#include "Map.h"
-#include "WorldPacket.h"
+/* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* This program is free software licensed under GPL version 2
+* Please see the included DOCS/LICENSE.TXT for more information */
 
+#include "precompiled.h"
 #include "Item.h"
-#include "Player.h"
-#include "Spell.h"
-
 #include "sc_grid_searchers.h"
+#include "Spell.h"
+#include "WorldPacket.h"
 
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {

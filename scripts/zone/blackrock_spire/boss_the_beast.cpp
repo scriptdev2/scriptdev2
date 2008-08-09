@@ -21,12 +21,11 @@ SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_FLAMEBREAK                16785    
-#define SPELL_IMMOLATE             20294              
-#define SPELL_TERRIFYINGROAR            14100
-
+#define SPELL_FLAMEBREAK            16785    
+#define SPELL_IMMOLATE              20294              
+#define SPELL_TERRIFYINGROAR        14100
 
 struct MANGOS_DLL_DECL boss_thebeastAI : public ScriptedAI
 {

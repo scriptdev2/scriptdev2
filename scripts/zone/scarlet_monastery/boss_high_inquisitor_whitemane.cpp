@@ -21,9 +21,7 @@ SDComment: Missing connection with commander mograine
 SDCategory: Scarlet Monastery
 EndScriptData */
 
-#include "sc_creature.h"
-
-
+#include "precompiled.h"
 
 #define SPELL_DEEPSLEEP                 9256
 #define SPELL_SCARLETRESURRECTION       9232

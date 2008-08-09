@@ -21,7 +21,7 @@ SDComment: Database should have `RegenHealth`=0 to prevent regen. Also, his shoc
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
 #define EMOTE_SONIC_BOOM            "draws energy from the air."
 

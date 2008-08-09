@@ -28,6 +28,7 @@ npc_thrall_old_hillsbrad
 npc_taretha
 EndContentData */
 
+#include "precompiled.h"
 #include "../../../npc/npc_escortAI.h"
 #include "def_old_hillsbrad.h"
 

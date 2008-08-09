@@ -21,7 +21,7 @@ SDComment: Quest support: 6627 (Braug Dimspirits questions/'answers' might have 
 SDCategory: Stonetalon Mountains
 EndScriptData */
 
-#include "sc_gossip.h"
+#include "precompiled.h"
 
 /*######
 ## npc_braug_dimspirit

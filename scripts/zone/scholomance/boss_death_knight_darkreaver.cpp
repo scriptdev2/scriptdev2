@@ -21,10 +21,7 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
-
-/*  
-*/
+#include "precompiled.h"
 
 struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
 {

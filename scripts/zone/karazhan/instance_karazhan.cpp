@@ -21,6 +21,7 @@ SDComment: Instance Script for Karazhan to help in various encounters
 SDCategory: Karazhan
 EndScriptData */
 
+#include "precompiled.h"
 #include "def_karazhan.h"
 #include "GameObject.h"
 

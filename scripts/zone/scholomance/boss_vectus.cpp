@@ -21,12 +21,11 @@ SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 
-#define SPELL_FIRESHIELD                19626           
-#define SPELL_BLASTWAVE            13021
-#define SPELL_FRENZY                28371
-
+#define SPELL_FIRESHIELD        19626           
+#define SPELL_BLASTWAVE         13021
+#define SPELL_FRENZY            28371
 
 struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
 {

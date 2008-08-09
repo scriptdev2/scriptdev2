@@ -21,11 +21,10 @@ SDComment:
 SDCategory: Black Temple
 EndScriptData */
 
-/******** Includes ************/
+#include "precompiled.h"
 #include "def_black_temple.h"
 #include "WorldPacket.h"
 #include "GameObject.h"
-#include "sc_gossip.h"
 #include "Cell.h"
 #include "CellImpl.h"
 #include "GridNotifiers.h"
