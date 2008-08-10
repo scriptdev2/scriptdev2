@@ -97,7 +97,7 @@ void hyjalAI::Reset()
 
     /** Reset Instance Data for trash count **/
     if(pInstance)
-        pInstance->SetData(DATA_TRASH, 20);
+        pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
     else error_log(ERROR_INST_DATA);
 
     /*** Visibility ***/
@@ -299,7 +299,7 @@ void hyjalAI::Retreat()
         <MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid>,
         GridTypeMapContainer> creature_visitor(creature_searcher);
 
-    // Then get all Ancient Gem Veins
+    // Then get all Ancient Gem Veins. NOTE: Grid Search will only be able to find those in the grid.
     std::list<GameObject*> goList;
     AllGameObjectsWithEntryInGrid go_check(185557);
     MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid> go_search(goList, go_check);

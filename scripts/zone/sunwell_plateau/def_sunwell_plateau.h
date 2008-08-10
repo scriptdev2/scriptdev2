@@ -5,25 +5,41 @@
 #ifndef DEF_SUNWELLPLATEAU_H
 #define DEF_SUNWELLPLATEAU_H
 
-#define KALEC_LOC_Z 53
-#define SHATROV_LOC_Z -74
-#define KALECGOS_FORCE_FIELD 188421
+#include "precompiled.h"
 
-#define DATA_KALECGOS 0
-#define DATA_SHATHROVARR 1
-#define DATA_KALEC_HUMAN 2
-#define DATA_MADRIGOSA 3 //eventai
-#define DATA_BRUTALLUS 4
-#define DATA_FELMYST 5
-#define DATA_SACROLASH 6
-#define DATA_ALYTHESS 7
-#define DATA_MURU 8
-#define DATA_ENTIPHOUS 9
-#define DATA_KILJADEN 10
+/*** Encounters ***/
+#define DATA_KALECGOS_EVENT         0
+#define DATA_BRUTALLUS_EVENT        1
+#define DATA_FELMYST_EVENT          2
+#define DATA_EREDAR_TWINS_EVENT     3
+#define DATA_MURU_EVENT             4
+#define DATA_KILJAEDEN_EVENT        5
 
-#define DATA_KALEC_FLY 0
-#define DATA_SHAT_DIE 1
-#define DATA_MADRIGOSA_DIE 2
-#define DATA_BRUTALLUS_DIE 3
+/*** Creatures ***/
+#define DATA_KALECGOS_DRAGON        6
+#define DATA_KALECGOS_HUMAN         7
+#define DATA_SATHROVARR             8
+#define DATA_BRUTALLUS              9
+#define DATA_FELMYST                10
+#define DATA_ALYTHESS               11
+#define DATA_SACROLASH              12
+#define DATA_MURU                   13
+#define DATA_KILJAEDEN              14
+#define DATA_KILJAEDEN_CONTROLLER   15
+#define DATA_ANVEENA                16
 
+/*** GameObjects ***/
+#define DATA_GO_FORCEFIELD          17
+#define DATA_GO_FIRE_BARRIER        18
+#define DATA_GATE_1                 19
+#define DATA_GATE_2                 20
+#define DATA_GATE_3                 21
+#define DATA_GATE_4                 22
+#define DATA_GATE_5                 23
+
+/*** Misc ***/
+#define DATA_PLAYER_SPECTRAL_REALM  24
+#define DATA_SET_SPECTRAL_CHECK     25
+#define DATA_RANDOM_SPECTRAL_PLAYER 26
+#define DATA_INST_EJECT_PLAYERS     27
 #endif

@@ -116,15 +116,11 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             case DATA_KAZROGALEVENT:        Encounters[2] = data; break;
             case DATA_AZGALOREVENT:         Encounters[3] = data; break;
             case DATA_ARCHIMONDEEVENT:      Encounters[4] = data; break;
+            case DATA_RESET_TRASH_COUNT:    Trash = 0;            break;
 
             case DATA_TRASH:
-                if(data)
-                {
-                    if(data < 20) // Max amount of trash per wave is 18
-                        Trash = data;
-                    else Trash = 0; // With this, we can reset the trash counter if the event resets.
-                }
-                else Trash--;
+                if(data) Trash = data;
+                else     Trash--;
                 UpdateWorldState(2453, data);
                 break;
         }
@@ -150,22 +146,16 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         data << field;
         data << value;
 
-        //TODO: check if this is really proper way
         ((InstanceMap*)instance)->SendToPlayers(&data);
     }
 
     const char* Save()
     {
-        if(Encounters[4] == DONE)
-            return "Archimonde complete";
-        else if(Encounters[3] == DONE)
-            return "Azgalor complete";
-        else if(Encounters[2] == DONE)
-            return "Kazrogal complete";
-        else if(Encounters[1] == DONE)
-            return "Anetheron complete";
-        else if(Encounters[0] == DONE)
-            return "Winterchill complete";
+        if(Encounters[4] == DONE)         return "Archimonde complete";
+        else if(Encounters[3] == DONE)    return "Azgalor complete";
+        else if(Encounters[2] == DONE)    return "Kazrogal complete";
+        else if(Encounters[1] == DONE)    return "Anetheron complete";
+        else if(Encounters[0] == DONE)    return "Winterchill complete";
 
         return NULL;
     }
