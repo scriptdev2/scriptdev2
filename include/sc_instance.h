@@ -5,7 +5,6 @@
 #ifndef SC_INSTANCE_H
 #define SC_INSTANCE_H
 
-//#include "../ScriptMgr.h"
 #include "InstanceData.h"
 #include "Map.h"
 

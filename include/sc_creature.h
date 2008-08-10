@@ -5,7 +5,6 @@
 #ifndef SC_CREATURE_H
 #define SC_CREATURE_H
 
-//#include "../ScriptMgr.h"
 #include "CreatureAI.h"
 #include "Creature.h"
 

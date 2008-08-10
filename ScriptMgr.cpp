@@ -6,12 +6,10 @@
 
 #include "../../shared/Config/Config.h"
 #include "GameObject.h"
-
 #include "ProgressBar.h"
 #include "Database/DBCStores.h"
 #include "Database/DatabaseMysql.h"
 #include "config.h"
-#include "ScriptMgr.h"
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***

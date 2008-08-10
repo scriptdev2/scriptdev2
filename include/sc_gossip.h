@@ -5,7 +5,6 @@
 #ifndef SC_PLAYER_H
 #define SC_PLAYER_H
 
-//#include "../ScriptMgr.h"
 #include "Player.h"
 #include "GossipDef.h"
 #include "QuestDef.h"
