@@ -491,9 +491,10 @@ void ScriptedAI::DoResetThreat()
 
 void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float o)
 {
-    if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+    if(!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
     {
-        error_log("SD2: Creature (Entry: %u) Tried to teleport non-player unit (Type: %u) to x: %f y:%f z: %f o: %f. Aborted.", m_creature->GetEntry(), pUnit->GetTypeId(), x, y, z, o);
+        if(pUnit)
+            error_log("SD2: Creature %u (Entry: %u) Tried to teleport non-player unit (Type: %u GUID: %u) to x: %f y:%f z: %f o: %f. Aborted.", m_creature->GetGUID(), m_creature->GetEntry(), pUnit->GetGUID(), pUnit->GetTypeId(), x, y, z, o);
         return;
     }
 
