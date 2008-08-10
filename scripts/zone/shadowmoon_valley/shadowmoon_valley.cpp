@@ -34,10 +34,6 @@ npc_oronok_tornheart
 EndContentData */
 
 #include "precompiled.h"
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
 
 /*#####
 # mob_mature_netherwing_drake

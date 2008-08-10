@@ -28,11 +28,6 @@ EndScriptData */
 #include "Item.h"
 #include "Spell.h"
 
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
-
 #define SPELL_HEAL_BROTHER               7393
 #define SPELL_TWIN_TELEPORT               800		// CTRA watches for this spell to start its teleport timer
 #define SPELL_TWIN_TELEPORT_VISUAL	26638	// visual 

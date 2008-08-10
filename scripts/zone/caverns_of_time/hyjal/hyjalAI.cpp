@@ -24,13 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "hyjalAI.h"
 #include "WorldPacket.h"
-#include "GameObject.h"
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
-
-#include "sc_grid_searchers.h"
 
 float AllianceBase[4][3]= // Locations for summoning waves in Alliance base
 {

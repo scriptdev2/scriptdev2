@@ -23,10 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_steam_vault.h"
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
 
 #define SAY_INTRO           "You deem yourselves worthy simply because you bested my guards? Our work here will not be compromised!"
 #define SOUND_INTRO         10390

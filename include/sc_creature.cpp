@@ -4,7 +4,6 @@
 
 #include "precompiled.h"
 #include "Item.h"
-#include "sc_grid_searchers.h"
 #include "Spell.h"
 #include "WorldPacket.h"
 

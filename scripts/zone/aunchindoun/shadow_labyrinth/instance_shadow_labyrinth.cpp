@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_shadow_labyrinth.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS 4
 

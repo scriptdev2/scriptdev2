@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_black_temple.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS     9
 

@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_shadowfang_keep.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS              4
 

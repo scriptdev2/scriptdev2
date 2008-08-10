@@ -26,7 +26,6 @@ EndScriptData */
 #include "../../../creature/simple_ai.h"
 #include "Item.h"
 #include "Spell.h"
-#include "GameObject.h"
 
 #define SPELL_MULTI_SHOT              38310
 #define SPELL_SHOCK_BLAST             38509

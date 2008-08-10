@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_sethekk_halls.h"
-#include "GameObject.h"
 
 #define IKISS_DOOR          177203 //udb spawn
 

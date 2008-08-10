@@ -11,7 +11,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_sunwell_plateau.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS 7
 

@@ -22,7 +22,6 @@ SDCategory: Game Objects
 EndScriptData */
  
 #include "precompiled.h"
-#include "GameObject.h"
  
 /*######
 ## go_crystal_pylons (3x)

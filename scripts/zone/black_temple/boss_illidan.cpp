@@ -24,12 +24,6 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_black_temple.h"
 #include "WorldPacket.h"
-#include "GameObject.h"
-#include "Cell.h"
-#include "CellImpl.h"
-#include "GridNotifiers.h"
-#include "GridNotifiersImpl.h"
-
 
 /************* Quotes and Sounds ***********************/
 // Gossip for when a player clicks Akama

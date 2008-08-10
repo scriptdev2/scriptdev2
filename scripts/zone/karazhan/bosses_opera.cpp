@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_karazhan.h"
-#include "GameObject.h"
 
 /***********************************/
 /*** OPERA WIZARD OF OZ EVENT *****/

@@ -5,7 +5,6 @@
 #include "precompiled.h"
 
 #include "../../shared/Config/Config.h"
-#include "GameObject.h"
 #include "ProgressBar.h"
 #include "Database/DBCStores.h"
 #include "Database/DatabaseMysql.h"

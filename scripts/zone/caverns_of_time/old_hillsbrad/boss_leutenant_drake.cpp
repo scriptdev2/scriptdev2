@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_old_hillsbrad.h"
-#include "GameObject.h"
 #include "../../../npc/npc_escortAI.h"
 
 /*######

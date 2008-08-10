@@ -28,7 +28,6 @@ EndContentData */
 
 #include "precompiled.h"
 #include "def_karazhan.h"
-#include "GameObject.h"
 #include "../../npc/npc_escortAI.h"
 
 /*######

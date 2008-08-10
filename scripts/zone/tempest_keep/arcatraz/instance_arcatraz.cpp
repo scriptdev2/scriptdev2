@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_arcatraz.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS 9
 

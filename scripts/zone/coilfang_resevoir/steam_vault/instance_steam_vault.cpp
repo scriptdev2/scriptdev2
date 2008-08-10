@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_steam_vault.h"
-#include "GameObject.h"
 
 #define ENCOUNTERS 4
 

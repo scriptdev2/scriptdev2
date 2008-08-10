@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "mob_event_ai.h"
-#include "sc_grid_searchers.h"
 
 #define EVENT_UPDATE_TIME               500
 #define SPELL_RUN_AWAY                  8225

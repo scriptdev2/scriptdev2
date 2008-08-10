@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_magtheridons_lair.h"
-#include "GameObject.h"
 #include "WorldPacket.h"
 
 //Phase 2 Spells

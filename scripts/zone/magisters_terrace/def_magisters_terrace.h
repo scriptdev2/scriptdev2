@@ -5,8 +5,6 @@
 #ifndef DEF_MAGISTERS_TERRACE_H
 #define DEF_MAGISTERS_TERRACE_H
 
-#include "GameObject.h"
-
 #define DATA_SELIN_EVENT             1
 #define DATA_VEXALLUS_EVENT          2
 #define DATA_DELRISSA_EVENT          3

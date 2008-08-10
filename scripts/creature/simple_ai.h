@@ -2,8 +2,8 @@
 * This program is free software licensed under GPL version 2
 * Please see the included DOCS/LICENSE.TXT for more information */
 
-#ifndef SD_SIMPLEAI_H
-#define SD_SIMPLEAI_H
+#ifndef SC_SIMPLEAI_H
+#define SC_SIMPLEAI_H
 
 enum CastTarget
 {
@@ -70,4 +70,5 @@ public:
 protected:
     uint32 Spell_Timer[10];
 };
+
 #endif

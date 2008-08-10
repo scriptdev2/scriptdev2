@@ -29,7 +29,6 @@ npc_veronia
 EndContentData */
 
 #include "precompiled.h"
-#include "GameObject.h"
 
 /*######
 ## npc_manaforge_control_console

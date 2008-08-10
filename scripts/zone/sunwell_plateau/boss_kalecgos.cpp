@@ -23,7 +23,6 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_sunwell_plateau.h"
-#include "GameObject.h"
 
 #define KALEC_SAY_NON_FRIENDLY_ON_AGGRO             "No longer will I be a slave to Malygos! Challenge me and you will be destroyed!"
 #define KALEC_SOUND_NON_FIRENDLY_ON_AGGRO           12422
