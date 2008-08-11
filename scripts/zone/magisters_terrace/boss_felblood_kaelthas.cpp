@@ -248,7 +248,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
    void UpdateAI(const uint32 diff)
    {
-        if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if(!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
         switch(Phase)

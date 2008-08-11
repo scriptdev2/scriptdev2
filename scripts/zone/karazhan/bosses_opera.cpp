@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Bosses_Opera
-SD%Complete: 80
-SDComment: Oz, and Hood event implemented. RAJ event disabled for now.
+SD%Complete: 90
+SDComment: Oz, Hood, and RAJ event implemented. RAJ event requires more testing.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -1007,7 +1007,10 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         if(RomuloGUID)
         {
             if(Unit* Romulo = Unit::GetUnit(*m_creature, RomuloGUID))
-                Romulo->setDeathState(JUST_DIED);
+            {
+                Romulo->SetVisibility(VISIBILITY_OFF);
+                Romulo->DealDamage(Romulo, Romulo->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
 
             RomuloGUID = 0;
         }
@@ -1154,7 +1157,7 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
 
 void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
 {
-    if(damage < m_creature->GetHealth() || done_by != m_creature || done_by->GetGUID() == RomuloGUID)
+    if(damage < m_creature->GetHealth() || done_by == m_creature || done_by->GetGUID() == RomuloGUID)
         return;
 
     if(Phase == PHASE_JULIANNE)
@@ -1182,6 +1185,13 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
         else
         {
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            if(Romulo)
+            {
+                Romulo->DealDamage(Romulo, Romulo->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                Romulo->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            }
+
             JustDied(done_by);
         }
  
@@ -1195,7 +1205,7 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
 
 void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
 {
-    if(damage < m_creature->GetHealth() || done_by != m_creature || done_by->GetGUID() != JulianneGUID)
+    if(damage < m_creature->GetHealth() || done_by == m_creature || done_by->GetGUID() == JulianneGUID)
         return;
 
     if(!IsFakingDeath)
@@ -1214,6 +1224,12 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
             else
             {
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                if(Julianne)
+                {
+                    Julianne->DealDamage(Julianne, Julianne->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    Julianne->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                }
                 JustDied(done_by);
             }
         }
@@ -1223,6 +1239,7 @@ void boss_romuloAI::DamageTaken(Unit* done_by, uint32 &damage)
             if(Julianne)
             {
                 Resurrect(Julianne);
+                m_creature->SetHealth(m_creature->GetMaxHealth());
                 ((boss_julianneAI*)Julianne->AI())->ResurrectTimer = 4000;
                 ((boss_julianneAI*)Julianne->AI())->RomuloDead = true;
                 ((boss_julianneAI*)Julianne->AI())->Phase = PHASE_BOTH;

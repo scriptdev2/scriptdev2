@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     uint32 Encounters[ENCOUNTERS];
 
-    uint32 OperaEvent; // 0 - OZ, 1 - RAJ, 2 - HOOD
+    uint32 OperaEvent; // 0 - OZ, 1 - HOOD, 2 - RAJ
     uint32 OzDeathCount;
 
     uint64 CurtainGUID;
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         for (uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
 
-        OperaEvent      = rand()%2; // This never gets altered. Romulo and Julianne event disabled for now.
+        OperaEvent      = rand()%3; // This never gets altered. Romulo and Julianne event disabled for now.
         OzDeathCount    = 0;
 
         CurtainGUID         = 0;
