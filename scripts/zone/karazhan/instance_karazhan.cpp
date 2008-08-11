@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Karazhan
 SD%Complete: 50
-SDComment: Instance Script for Karazhan to help in various encounters
+SDComment: Instance Script for Karazhan to help in various encounters. TODO: GameObject visibility for Opera event.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -64,7 +64,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         for (uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
 
-        OperaEvent      = rand()%3; // This never gets altered. Romulo and Julianne event disabled for now.
+        OperaEvent      = rand()%3; // This never gets altered.
         OzDeathCount    = 0;
 
         CurtainGUID         = 0;

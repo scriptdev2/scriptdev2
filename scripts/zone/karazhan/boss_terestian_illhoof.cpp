@@ -258,7 +258,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if(!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
         if(CheckKilrekTimer < diff)
@@ -288,7 +288,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         if(SacrificeTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(target && target->isAlive())
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCast(target, SPELL_SACRIFICE, true);
                 Creature* Chains = m_creature->SummonCreature(CREATURE_DEMONCHAINS, SACRIFICE_X, SACRIFICE_Y, SACRIFICE_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
