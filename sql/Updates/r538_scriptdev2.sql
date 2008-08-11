@@ -21,10 +21,10 @@ UPDATE eventai_scripts SET event_param4 = event_param3+event_param1, event_param
 UPDATE eventai_scripts SET event_param4 = event_param3+event_param1, event_param3 = event_param1, event_param1 = event_param2, event_type = 1 WHERE event_type = 3;
 
 -- EVENT_T_HP_SINGLE
-UPDATE eventai_scripts SET event_param4 = event_param3, event_flags = 1, event_type = 2 WHERE event_type = 4;
+UPDATE eventai_scripts SET event_param4 = event_param3, event_flags = 0, event_type = 2 WHERE event_type = 4;
 
 -- EVENT_T_MANA_SINGLE
-UPDATE eventai_scripts SET event_param4 = event_param3, event_flags = 1, event_type = 3 WHERE event_type = 5;
+UPDATE eventai_scripts SET event_param4 = event_param3, event_flags = 0, event_type = 3 WHERE event_type = 5;
 
 -- EVENT_T_AGGRO
 UPDATE eventai_scripts SET event_type = 4 WHERE event_type = 6;
