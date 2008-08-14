@@ -24,61 +24,62 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_serpent_shrine.h"
 
-#define SWITCH_RADIUS             15
+#define SWITCH_RADIUS               15
 
-#define MODEL_CORRUPT             20609
-#define MODEL_CLEAN               20162
+#define MODEL_CORRUPT               20609
+#define MODEL_CLEAN                 20162
 
-#define SPELL_WATER_TOMB          38235
-#define SPELL_MARK_OF_HYDROSS1    38215
-#define SPELL_MARK_OF_HYDROSS2    38216
-#define SPELL_MARK_OF_HYDROSS3    38217
-#define SPELL_MARK_OF_HYDROSS4    38218
-#define SPELL_MARK_OF_HYDROSS5    38231
-#define SPELL_MARK_OF_HYDROSS6    40584
-#define SPELL_MARK_OF_CORRUPTION1 38219
-#define SPELL_MARK_OF_CORRUPTION2 38220
-#define SPELL_MARK_OF_CORRUPTION3 38221
-#define SPELL_MARK_OF_CORRUPTION4 38222
-#define SPELL_MARK_OF_CORRUPTION5 38230
-#define SPELL_MARK_OF_CORRUPTION6 40583
-#define SPELL_VILE_SLUDGE         38246
-#define SPELL_ENRAGE              27680
+#define SPELL_WATER_TOMB            38235
+#define SPELL_MARK_OF_HYDROSS1      38215
+#define SPELL_MARK_OF_HYDROSS2      38216
+#define SPELL_MARK_OF_HYDROSS3      38217
+#define SPELL_MARK_OF_HYDROSS4      38218
+#define SPELL_MARK_OF_HYDROSS5      38231
+#define SPELL_MARK_OF_HYDROSS6      40584
+#define SPELL_MARK_OF_CORRUPTION1   38219
+#define SPELL_MARK_OF_CORRUPTION2   38220
+#define SPELL_MARK_OF_CORRUPTION3   38221
+#define SPELL_MARK_OF_CORRUPTION4   38222
+#define SPELL_MARK_OF_CORRUPTION5   38230
+#define SPELL_MARK_OF_CORRUPTION6   40583
+#define SPELL_VILE_SLUDGE           38246
+#define SPELL_ENRAGE                27680
+#define SPELL_SUMMON_WATER_ELEMENT  36459                   //not in use yet, workaround in script
 
-#define PURE_SPAWNS_OF_HYDROSS    22035
-#define TAINTED_SPAWN_OF_HYDROSS  22036
+#define PURE_SPAWNS_OF_HYDROSS      22035
+#define TAINTED_SPAWN_OF_HYDROSS    22036
 
-#define SAY_AGGRO                 "I cannot allow you to interfere!"
-#define SAY_SWITCH_TO_CLEAN       "Better, much better."
-#define SAY_CLEAN_SLAY1           "They have forced me to this..."
-#define SAY_CLEAN_SLAY2           "I have no choice."
-#define SAY_CLEAN_DEATH           "I am... released..."
-#define SAY_SWITCH_TO_CORRUPT     "Aaghh, the poison..."
-#define SAY_CORRUPT_SLAY1         "I will purge you from this place."
-#define SAY_CORRUPT_SLAY2         "You are no better than they!"
-#define SAY_CORRUPT_DEATH         "You are the disease, not I"
+#define SAY_AGGRO                   "I cannot allow you to interfere!"
+#define SAY_SWITCH_TO_CLEAN         "Better, much better."
+#define SAY_CLEAN_SLAY1             "They have forced me to this..."
+#define SAY_CLEAN_SLAY2             "I have no choice."
+#define SAY_CLEAN_DEATH             "I am... released..."
+#define SAY_SWITCH_TO_CORRUPT       "Aaghh, the poison..."
+#define SAY_CORRUPT_SLAY1           "I will purge you from this place."
+#define SAY_CORRUPT_SLAY2           "You are no better than they!"
+#define SAY_CORRUPT_DEATH           "You are the disease, not I"
 
-#define SOUND_AGGRO               11289
-#define SOUND_SWITCH_TO_CLEAN     11290
-#define SOUND_CLEAN_SLAY1         11291
-#define SOUND_CLEAN_SLAY2         11292
-#define SOUND_CLEAN_DEATH         11293
-#define SOUND_SWITCH_TO_CORRUPT   11297
-#define SOUND_CORRUPT_SLAY1       11298
-#define SOUND_CORRUPT_SLAY2       11299
-#define SOUND_CORRUPT_DEATH       11300
+#define SOUND_AGGRO                 11289
+#define SOUND_SWITCH_TO_CLEAN       11290
+#define SOUND_CLEAN_SLAY1           11291
+#define SOUND_CLEAN_SLAY2           11292
+#define SOUND_CLEAN_DEATH           11293
+#define SOUND_SWITCH_TO_CORRUPT     11297
+#define SOUND_CORRUPT_SLAY1         11298
+#define SOUND_CORRUPT_SLAY2         11299
+#define SOUND_CORRUPT_DEATH         11300
 
-#define ADDS_CLEAN                22035
-#define ADDS_CORRUPT              22036
+#define ADDS_CLEAN                  22035
+#define ADDS_CORRUPT                22036
 
-#define SPAWN_X_DIFF1             6.934003
-#define SPAWN_Y_DIFF1             -11.255012
-#define SPAWN_X_DIFF2             -6.934003
-#define SPAWN_Y_DIFF2             11.255012
-#define SPAWN_X_DIFF3             -12.577011
-#define SPAWN_Y_DIFF3             -4.72702
-#define SPAWN_X_DIFF4             12.577011
-#define SPAWN_Y_DIFF4             4.72702
+#define SPAWN_X_DIFF1               6.934003
+#define SPAWN_Y_DIFF1               -11.255012
+#define SPAWN_X_DIFF2               -6.934003
+#define SPAWN_Y_DIFF2               11.255012
+#define SPAWN_X_DIFF3               -12.577011
+#define SPAWN_Y_DIFF3               -4.72702
+#define SPAWN_X_DIFF4               12.577011
+#define SPAWN_Y_DIFF4               4.72702
 
 struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 {
@@ -235,26 +236,23 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             //MarkOfCorruption_Timer
             if(MarkOfCorruption_Timer < diff)
             {
-                if(MarkOfCorruption_Count <= 4)
+                if(MarkOfCorruption_Count <= 5)
                 {
                     uint32 mark_spell;
 
                     switch(MarkOfCorruption_Count)
                     {
                         case 0: mark_spell = SPELL_MARK_OF_CORRUPTION1; break;
-
                         case 1: mark_spell = SPELL_MARK_OF_CORRUPTION2; break;
-
                         case 2: mark_spell = SPELL_MARK_OF_CORRUPTION3; break;
-
                         case 3: mark_spell = SPELL_MARK_OF_CORRUPTION4; break;
-
                         case 4: mark_spell = SPELL_MARK_OF_CORRUPTION5; break;
+                        case 5: mark_spell = SPELL_MARK_OF_CORRUPTION6; break;
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
 
-                    if(MarkOfCorruption_Count < 4)
+                    if(MarkOfCorruption_Count < 5)
                         MarkOfCorruption_Count++;
                 }
 
@@ -309,26 +307,23 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             //MarkOfHydross_Timer
             if(MarkOfHydross_Timer < diff)
             {
-                if(MarkOfHydross_Count <= 4)
+                if(MarkOfHydross_Count <= 5)
                 {
                     uint32 mark_spell;
 
                     switch(MarkOfHydross_Count)
                     {
                         case 0:  mark_spell = SPELL_MARK_OF_HYDROSS1; break;
-
                         case 1:  mark_spell = SPELL_MARK_OF_HYDROSS2; break;
-
                         case 2:  mark_spell = SPELL_MARK_OF_HYDROSS3; break;
-
                         case 3:  mark_spell = SPELL_MARK_OF_HYDROSS4; break;
-
                         case 4:  mark_spell = SPELL_MARK_OF_HYDROSS5; break;
+                        case 5:  mark_spell = SPELL_MARK_OF_HYDROSS6; break;
                     }
 
                     DoCast(m_creature->getVictim(), mark_spell);
 
-                    if(MarkOfHydross_Count < 4)
+                    if(MarkOfHydross_Count < 5)
                         MarkOfHydross_Count++;
                 }
 
