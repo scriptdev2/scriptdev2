@@ -28,6 +28,7 @@ item_draenei_fishing_net(i23654)    Correctly implements chance to spawn item or
 item_disciplinary_rod               Prevents abuse
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 item_flying_machine(i34060,i34061)  Engineering crafted flying machines
+item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
 item_protovoltaic_magneto_collector Prevents abuse
 item_soul_cannon(i32825)            Prevents abuse of this item
 item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
@@ -154,6 +155,20 @@ bool ItemUse_item_flying_machine(Player *player, Item* _Item, SpellCastTargets c
 
     debug_log("SD2: Player attempt to use item %u, but did not meet riding requirement",itemId);
     player->SendEquipError(EQUIP_ERR_ERR_CANT_EQUIP_SKILL,_Item,NULL);
+    return true;
+}
+
+/*#####
+# item_gor_dreks_ointment
+#####*/
+
+bool ItemUse_item_gor_dreks_ointment(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 20748 && !targets.getUnitTarget()->HasAura(32578,0) )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
     return true;
 }
 
@@ -335,6 +350,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_flying_machine";
     newscript->pItemUse = ItemUse_item_flying_machine;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_gor_dreks_ointment";
+    newscript->pItemUse = ItemUse_item_gor_dreks_ointment;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
