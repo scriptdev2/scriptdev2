@@ -1194,7 +1194,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             switch ((*i).Event.event_type)
             {
-                //Spell hit
+            //Spell hit
             case EVENT_T_SPELLHIT:
                 {
                     //If spell id matches (or no spell id) & if spell school matches (or no spell school)

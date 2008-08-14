@@ -3,7 +3,6 @@
 * Please see the included DOCS/LICENSE.TXT for more information */
 
 #include "precompiled.h"
-
 #include "../../shared/Config/Config.h"
 #include "ProgressBar.h"
 #include "Database/DBCStores.h"
@@ -690,11 +689,17 @@ void LoadDatabase()
 
                 //Report any errors in event
                 if (temp.event_type >= EVENT_T_END)
-                    error_log("SD2: Event %d has incorrect event type. Maybe DB requires updated version of SD2.", i);
+                    error_log("SD2: Event %u has incorrect event type. Maybe DB requires updated version of SD2.", i);
 
                 //No chance of this event occuring
                 if (temp.event_chance == 0)
-                    error_log("SD2: Event %d has 0 percent chance. Event will never trigger!", i);
+                    error_log("SD2: Event %u has 0 percent chance. Event will never trigger!", i);
+                //Chance above 100, force it to be 100
+                if (temp.event_chance > 100)
+                {
+                    error_log("SD2: Creature %u are using event %u with more than 100 percent chance. Adjusting to 100 percent.", temp.creature_id, i);
+                    temp.event_chance = 100;
+                }
 
                 //Individual event checks
                 switch (temp.event_type)
@@ -704,12 +709,41 @@ void LoadDatabase()
                 case EVENT_T_TARGET_HP:
                     {
                         if (temp.event_param2 > 100)
-                            error_log("SD2: Event %d is percentage event with param2 (MinPercent) > 100. Event will never trigger! ", i);
+                            error_log("SD2: Creature %u are using percentage event(%u) with param2 (MinPercent) > 100. Event will never trigger! ", temp.creature_id, i);
 
                         if (temp.event_param1 <= temp.event_param2)
-                            error_log("SD2: Event %d is percentage event with param1 <= param2 (MaxPercent <= MinPercent). Event will never trigger! ", i);
+                            error_log("SD2: Creature %u are using percentage event(%u) with param1 <= param2 (MaxPercent <= MinPercent). Event will never trigger! ", temp.creature_id, i);
+
+                        if (temp.event_flags & EFLAG_REPEATABLE && !temp.event_param3 && !temp.event_param4)
+                        {
+                            error_log("SD2: Creature %u has param3 and param4=0 (RepeatMin/RepeatMax) but cannot be repeatable without timers. Removing EFLAG_REPEATABLE for event %u.", temp.creature_id, i);
+                            temp.event_flags &= ~EFLAG_REPEATABLE;
+                        }
                     }
+                    break;
+
                 case EVENT_T_SPELLHIT:
+                    {
+                        if (temp.event_param1)
+                        {
+                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.event_param1);
+                            if (!pSpell)
+                                error_log("SD2: Creature %u has non-existant SpellID(%u) defined in event %u.", temp.creature_id, temp.event_param1, i);
+
+                            if (temp.event_param2_s != -1)
+                                error_log("SD2: Creature %u has param1(spellId %u) but param2 is not -1. Event %u will not trigger for this spell.", temp.creature_id, temp.event_param1, i);
+                        }
+
+                        //TODO: fix this system with SPELL_SCHOOL_MASK. Current complicate things, using int32(-1) instead of just 0
+                        //SPELL_SCHOOL_MASK_NONE = 0 and does not exist, thus it can not ever trigger or be used in SpellHit()
+                        if (temp.event_param2_s != -1 && temp.event_param2_s > SPELL_SCHOOL_MASK_ALL)
+                            error_log("SD2: Creature %u is using invalid SpellSchoolMask(%u) defined in event %u.", temp.creature_id, temp.event_param2, i);
+
+                        if (temp.event_param4 < temp.event_param3)
+                            error_log("SD2: Creature %u are using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
+                    }
+                    break;
+
                 case EVENT_T_RANGE:
                 case EVENT_T_OOC_LOS:
                 case EVENT_T_FRIENDLY_HP:
@@ -717,18 +751,39 @@ void LoadDatabase()
                 case EVENT_T_FRIENDLY_MISSING_BUFF:
                     {
                         if (temp.event_param4 < temp.event_param3)
-                            error_log("SD2: Event %d is repeatable event with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", i);
+                            error_log("SD2: Creature %u are using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
                     }
                     break;
 
                 case EVENT_T_TIMER:
                 case EVENT_T_TIMER_OOC:
                     {
-                         if (temp.event_param2 < temp.event_param1)
-                            error_log("SD2: Event %d is timer event with param2 < param1 (InitialMax < InitialMin). Event will never repeat.", i);
+                        if (temp.event_param2 < temp.event_param1)
+                            error_log("SD2: Creature %u are using timed event(%u) with param2 < param1 (InitialMax < InitialMin). Event will never repeat.", temp.creature_id, i);
 
-                         if (temp.event_param4 < temp.event_param3)
-                            error_log("SD2: Event %d is repeatable event with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", i);
+                        if (temp.event_param4 < temp.event_param3)
+                            error_log("SD2: Creature %u are using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
+                    }
+                    break;
+
+                case EVENT_T_KILL:
+                case EVENT_T_TARGET_CASTING:
+                    {
+                        if (temp.event_param2 < temp.event_param1)
+                            error_log("SD2: Creature %u are using event(%u) with param2 < param1 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
+                    }
+                    break;
+
+                case EVENT_T_AGGRO:
+                case EVENT_T_DEATH:
+                case EVENT_T_EVADE:
+                case EVENT_T_SPAWNED:
+                    {
+                        if (temp.event_flags & EFLAG_REPEATABLE)
+                        {
+                            error_log("SD2: Creature %u has EFLAG_REPEATABLE set. Event can never be repeatable. Removing flag for event %u.", temp.creature_id, i);
+                            temp.event_flags &= ~EFLAG_REPEATABLE;
+                        }
                     }
                     break;
                 };
@@ -765,19 +820,55 @@ void LoadDatabase()
                             if (!pSpell)
                             {
                                 error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param1);
-                                error_log("Spell Store Size = %u.", GetSpellStore()->GetNumRows());
+                                //error_log("Spell Store Size = %u.", GetSpellStore()->GetNumRows());
                             }
-                        }
 
-                        if (temp.action[j].param2 >= TARGET_T_END)
-                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                            if (temp.action[j].param2 >= TARGET_T_END)
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                        }
+                        break;
+
+                    case ACTION_T_REMOVEAURASFROMSPELL:
+                        {
+                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
+                            if (!pSpell)
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param2);
+
+                            if (temp.action[j].param1 >= TARGET_T_END)
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                        }
+                        break;
+
+                    case ACTION_T_CASTCREATUREGO:
+                        {
+                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
+                            if (!pSpell)
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param2);
+
+                            if (temp.action[j].param1 >= TARGET_T_END)
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                        }
                         break;
 
                     //2nd param target
                     case ACTION_T_SUMMON_ID:
+                        {
                             if (EventSummon_Map.find(temp.action[j].param3) == EventSummon_Map.end())
                                 error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j, temp.action[j].param3);
+
+                            if (temp.action[j].param2 >= TARGET_T_END)
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                        }
+                        break;
+
+                    //TODO: here we need to fix things up, this goes for the whole event handeling of summons
+                    //possible check if creature we are manually summoning are summoned by spell?
                     case ACTION_T_SUMMON:
+                            /*if (!temp.action[j].param3)
+                            {
+                                error_log("SD2: Event %u Action %u summon with no duration defined. Using default time 5000.", i, j);
+                                temp.action[j].param3 = 5000;
+                            }*/
                     case ACTION_T_THREAT_SINGLE_PCT:
                     case ACTION_T_QUEST_EVENT:
                     case ACTION_T_SET_UNIT_FLAG:
@@ -787,7 +878,6 @@ void LoadDatabase()
                         break;
 
                     //3rd param target
-                    case ACTION_T_CASTCREATUREGO:
                     case ACTION_T_SET_UNIT_FIELD:
                         if (temp.action[j].param3 >= TARGET_T_END)
                             error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
