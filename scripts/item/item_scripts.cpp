@@ -29,6 +29,7 @@ item_disciplinary_rod               Prevents abuse
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 item_flying_machine(i34060,i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
+item_muiseks_vessel                 Cast on creature, they must be dead(q 3123,3124,3125,3126,3127)
 item_protovoltaic_magneto_collector Prevents abuse
 item_soul_cannon(i32825)            Prevents abuse of this item
 item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
@@ -169,6 +170,55 @@ bool ItemUse_item_gor_dreks_ointment(Player *player, Item* _Item, SpellCastTarge
         return false;
 
     player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    return true;
+}
+
+/*#####
+# item_muiseks_vessel
+#####*/
+
+bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    uint32 itemSpell = _Item->GetProto()->Spells[0].SpellId;
+    uint32 cEntry = 0;
+    uint32 cEntry2 = 0;
+    uint32 cEntry3 = 0;
+    uint32 cEntry4 = 0;
+
+    if(itemSpell)
+    {
+        switch(itemSpell)
+        {
+            case 11885: cEntry =  7584; break;              //Wandering Forest Walker
+            case 11886: cEntry =  2927;                     //Owlbeasts
+                        cEntry2 = 2928;
+                        cEntry3 = 2929;
+                        cEntry4 = 7808; break;
+            case 11887: cEntry =  5300;                     //Freyfeather Hippogryphs
+                        cEntry2 = 5304;
+                        cEntry3 = 5305;
+                        cEntry4 = 5306; break;
+            case 11888: cEntry =  5276;                     //Sprite Dragon Sprite Darters
+                        cEntry2 = 5278; break;
+            case 11889: cEntry =  5357;                     //Zapped Land Walker Land Walker Zapped Cliff Giant Cliff Giant
+                        cEntry2 = 5358;
+                        cEntry3 = 14640;
+                        cEntry4 = 14604; break;
+        }
+        if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && targets.getUnitTarget()->isDead() &&
+            targets.getUnitTarget()->GetEntry() == (cEntry || cEntry2 || cEntry3 || cEntry4) )
+        {
+            ((Creature*)targets.getUnitTarget())->RemoveCorpse();
+            return false;
+        }
+    }
+
+    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
+    data << uint32(_Item->GetEntry());                      // itemId
+    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
+    player->GetSession()->SendPacket(&data);                // send message: Invalid target
+
+    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
     return true;
 }
 
@@ -355,6 +405,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_gor_dreks_ointment";
     newscript->pItemUse = ItemUse_item_gor_dreks_ointment;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_muiseks_vessel";
+    newscript->pItemUse = ItemUse_item_muiseks_vessel;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
