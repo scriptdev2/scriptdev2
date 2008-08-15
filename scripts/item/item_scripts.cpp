@@ -31,9 +31,10 @@ item_flying_machine(i34060,i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
 item_muiseks_vessel                 Cast on creature, they must be dead(q 3123,3124,3125,3126,3127)
 item_protovoltaic_magneto_collector Prevents abuse
+item_tame_beast_rods(many)          Prevent cast on any other creature than the intended (for all tame beast quests)
+*item_temporal_phase_modulator(i30742)Randomly changes creature entry(q10609)
 item_soul_cannon(i32825)            Prevents abuse of this item
 item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
-item_tame_beast_rods(many)          Prevent cast on any other creature than the intended (for all tame beast quests)
 item_vorenthals_presence(i30259)    Prevents abuse of this item
 item_yehkinyas_bramble(i10699)      Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 item_zezzak_shard(i31463)           Quest The eyes of Grillok (q10813). Prevents abuse
@@ -179,6 +180,7 @@ bool ItemUse_item_gor_dreks_ointment(Player *player, Item* _Item, SpellCastTarge
 
 bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
+    Unit* uTarget = targets.getUnitTarget();
     uint32 itemSpell = _Item->GetProto()->Spells[0].SpellId;
     uint32 cEntry = 0;
     uint32 cEntry2 = 0;
@@ -205,10 +207,10 @@ bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets c
                         cEntry3 = 14640;
                         cEntry4 = 14604; break;
         }
-        if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && targets.getUnitTarget()->isDead() &&
-            targets.getUnitTarget()->GetEntry() == (cEntry || cEntry2 || cEntry3 || cEntry4) )
+        if( uTarget && uTarget->GetTypeId()==TYPEID_UNIT && uTarget->isDead() &&
+            (uTarget->GetEntry()==cEntry || uTarget->GetEntry()==cEntry2 || uTarget->GetEntry()==cEntry3 || uTarget->GetEntry()==cEntry4) )
         {
-            ((Creature*)targets.getUnitTarget())->RemoveCorpse();
+            ((Creature*)uTarget)->RemoveCorpse();
             return false;
         }
     }
@@ -267,6 +269,41 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
     player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
     return true;
 }
+
+/*#####
+# item_temporal_phase_modulator
+#####*/
+
+//Not in use, GetTypeId will not return TYPEID_UNIT even if target are in fact unit (why?)
+/*bool ItemUse_item_temporal_phase_modulator(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    Unit* uTarget = targets.getUnitTarget();
+    uint32 cEntry = 0;
+
+    if( uTarget && uTarget->GetTypeId() == TYPEID_UNIT && 
+        (uTarget->GetEntry() == 20021 || uTarget->GetEntry() == 21823 || uTarget->GetEntry() == 21821 || uTarget->GetEntry() == 21817) )
+    {
+        switch(rand()%4)
+        {
+        case 0: cEntry = 20021; break;                      //Nether Whelp
+        case 1: cEntry = 21823; break;                      //Nihil the Banished
+        case 2: cEntry = 21821; break;                      //Proto-Nether Drake
+        case 3: cEntry = 21817; break;                      //Adolescent Nether Drake
+        }
+
+        Creature* c = (Creature*)uTarget;
+        if( c->UpdateEntry(cEntry) )
+            return false;
+    }
+
+    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
+    data << uint32(_Item->GetEntry());                      // itemId
+    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
+    player->GetSession()->SendPacket(&data);                // send message: Invalid target
+
+    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);
+    return true;
+}*/
 
 /*#####
 # item_protovoltaic_magneto_collector
@@ -416,6 +453,11 @@ void AddSC_item_scripts()
     newscript->Name="item_tame_beast_rods";
     newscript->pItemUse = ItemUse_item_tame_beast_rods;
     m_scripts[nrscripts++] = newscript;
+
+    /*newscript = new Script;
+    newscript->Name="item_temporal_phase_modulator";
+    newscript->pItemUse = ItemUse_item_temporal_phase_modulator;
+    m_scripts[nrscripts++] = newscript;*/
 
     newscript = new Script;
     newscript->Name="item_protovoltaic_magneto_collector";
