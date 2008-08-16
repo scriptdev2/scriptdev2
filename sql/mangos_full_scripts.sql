@@ -825,6 +825,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_cooshcoosh' WHERE `entry`=18586
 UPDATE `creature_template` SET `ScriptName`='npc_elder_kuruti' WHERE `entry`=18197;
 UPDATE `creature_template` SET `ScriptName`='npc_mortog_steamhead' WHERE `entry`=23373;
 
+/* ZUL'AMAN */
+UPDATE `creature_template` SET `ScriptName`='npc_forest_frog' WHERE `entry`=24396;
+
 /* ZUL'FARRAK */
 
 

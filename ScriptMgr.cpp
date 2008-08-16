@@ -540,7 +540,7 @@ extern void AddSC_instance_zulgurub();
 extern void AddSC_boss_janalai();
 extern void AddSC_boss_nalorakk();
 extern void AddSC_instance_zulaman();
-
+extern void AddSC_zulaman();
 
 // -------------------
 void LoadDatabase()
@@ -1476,7 +1476,7 @@ void ScriptsInit()
     AddSC_boss_janalai();
     AddSC_boss_nalorakk();
     AddSC_instance_zulaman();
-
+    AddSC_zulaman();
 
     // -------------------
 
