@@ -826,6 +826,12 @@ UPDATE `creature_template` SET `ScriptName`='npc_elder_kuruti' WHERE `entry`=181
 UPDATE `creature_template` SET `ScriptName`='npc_mortog_steamhead' WHERE `entry`=23373;
 
 /* ZUL'AMAN */
+UPDATE `instance_template` SET `script`='instance_zulaman' WHERE `map`=568;
+UPDATE `creature_template` SET `ScriptName`='boss_janalai' WHERE `entry`=23578;
+UPDATE `creature_template` SET `ScriptName`='boss_nalorakk' WHERE `entry`=23576;
+UPDATE `creature_template` SET `ScriptName`='mob_jandalai_firebomb' WHERE `entry`=23920;
+UPDATE `creature_template` SET `ScriptName`='mob_amanishi_hatcher' WHERE `entry`=23818;
+UPDATE `creature_template` SET `ScriptName`='mob_hatchling' WHERE `entry`=23598;
 UPDATE `creature_template` SET `ScriptName`='npc_forest_frog' WHERE `entry`=24396;
 
 /* ZUL'FARRAK */
