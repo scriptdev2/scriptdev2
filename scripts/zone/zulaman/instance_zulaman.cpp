@@ -25,6 +25,7 @@ EndScriptData */
 #include "def_zulaman.h"
 
 #define ENCOUNTERS     1
+#define RAND_VENDOR    2
 
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
@@ -35,6 +36,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     uint32 janalai_eggs_r;
 
     uint32 Encounters[ENCOUNTERS];
+    uint32 RandVendor[RAND_VENDOR];
 
     void Initialize()
     {
@@ -42,9 +44,10 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         janalai_eggs_l = 20;
         janalai_eggs_r = 20;
 
-
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
+        for(uint8 i = 0; i < RAND_VENDOR; i++)
+            RandVendor[i] = NOT_STARTED;
     }
 
     bool IsEncounterInProgress() const 
@@ -85,13 +88,17 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 }
                 Encounters[0] = data;
                 break;
-
             case DATA_J_HATCHLEFT:
                 janalai_eggs_l -= data;
                 break;
-
             case DATA_J_HATCHRIGHT:
                 janalai_eggs_r -= data;
+                break;
+            case TYPE_RAND_VENDOR_1:
+                RandVendor[0] = data;
+                break;
+            case TYPE_RAND_VENDOR_2:
+                RandVendor[1] = data;
                 break;
         }
     }
@@ -102,14 +109,15 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         {
             case DATA_JANALAIEVENT:
                 return Encounters[0];
-
             case DATA_J_EGGSLEFT:
                 return janalai_eggs_l;
-
             case DATA_J_EGGSRIGHT:
                 return janalai_eggs_r;
+            case TYPE_RAND_VENDOR_1:
+                return RandVendor[0];
+            case TYPE_RAND_VENDOR_2:
+                return RandVendor[1];
         }
-
         return 0;
     }
 };

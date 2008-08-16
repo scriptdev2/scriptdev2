@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Zulaman
-SD%Complete: 75
-SDComment: Forest Frog will turn into different NPC's. Instance script to keep tack of previously spawned not implemented.
+SD%Complete: 90
+SDComment: Forest Frog will turn into different NPC's. Workaround to prevent new entry from running this script
 SDCategory: Zul'Aman
 EndScriptData */
 
@@ -26,47 +26,69 @@ npc_forest_frog
 EndContentData */
 
 #include "precompiled.h"
+#include "def_zulaman.h"
 
 /*######
 ## npc_forest_frog
 ######*/
 
+#define SPELL_REMOVE_AMANI_CURSE    43732
+#define SPELL_PUSH_MOJO             43923
+#define ENTRY_FOREST_FROG           24396
+
 struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 {
-    npc_forest_frogAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_forest_frogAI(Creature* c) : ScriptedAI(c)
+    { 
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
 
     void Reset() { }
+
     void Aggro(Unit *who) { }
+
+    void DoSpawnRandom()
+    {
+        if( pInstance )
+        {
+            uint32 cEntry = 0;
+            switch(rand()%10)
+            {
+                case 0: cEntry = 24024; break;          //Kraz
+                case 1: cEntry = 24397; break;          //Mannuth
+                case 2: cEntry = 24403; break;          //Deez
+                case 3: cEntry = 24404; break;          //Galathryn
+                case 4: cEntry = 24405; break;          //Adarrah
+                case 5: cEntry = 24406; break;          //Fudgerick
+                case 6: cEntry = 24407; break;          //Darwen
+                case 7: cEntry = 24445; break;          //Mitzi
+                case 8: cEntry = 24448; break;          //Christian
+                case 9: cEntry = 24453; break;          //Brennan
+                case 10: cEntry = 24455; break;         //Hollee
+            }
+
+            if( !pInstance->GetData(TYPE_RAND_VENDOR_1) )
+                if(rand()%10 == 1) cEntry = 24408;      //Gunter
+            if( !pInstance->GetData(TYPE_RAND_VENDOR_2) )
+                if(rand()%10 == 1) cEntry = 24409;      //Kyren
+
+            if( cEntry ) m_creature->UpdateEntry(cEntry);
+
+            if( cEntry == 24408) pInstance->SetData(TYPE_RAND_VENDOR_1,DONE);
+            if( cEntry == 24409) pInstance->SetData(TYPE_RAND_VENDOR_2,DONE);
+        }
+    }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-        if( spell->Id == 43732 && caster->GetTypeId() == TYPEID_PLAYER )
+        if( spell->Id == SPELL_REMOVE_AMANI_CURSE && caster->GetTypeId() == TYPEID_PLAYER && m_creature->GetEntry() == ENTRY_FOREST_FROG )
         {
-            if( rand()%99 == 50 )                           //increase or decrease chance?
-                DoCast(caster,43923,true);
-            else
-            {
-                uint32 cEntry = 0;
-
-                switch(rand()%12)
-                {
-                    case 0: cEntry = 24024; break;          //Kraz
-                    case 1: cEntry = 24397; break;          //Mannuth
-                    case 2: cEntry = 24403; break;          //Deez
-                    case 3: cEntry = 24404; break;          //Galathryn
-                    case 4: cEntry = 24405; break;          //Adarrah
-                    case 5: cEntry = 24406; break;          //Fudgerick
-                    case 6: cEntry = 24407; break;          //Darwen
-                    case 7: cEntry = 24408; break;          //Gunter
-                    case 8: cEntry = 24409; break;          //Kyren
-                    case 9: cEntry = 24445; break;          //Mitzi
-                    case 10: cEntry = 24448; break;         //Christian
-                    case 11: cEntry = 24453; break;         //Brennan
-                    case 12: cEntry = 24455; break;         //Hollee
-                }
-
-                if( cEntry ) m_creature->UpdateEntry(cEntry);
-            }
+            //increase or decrease chance of mojo?
+            if( rand()%99 == 50 ) DoCast(caster,SPELL_PUSH_MOJO,true);
+            else DoSpawnRandom();
         }
     }
 };
