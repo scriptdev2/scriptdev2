@@ -916,7 +916,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return;
                 }
 
-                pInst->SetData(param1, target->GetGUID());
+                pInst->SetData64(param1, target->GetGUID());
             }
             break;
 
