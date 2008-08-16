@@ -755,6 +755,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     {
                         m_creature->GetMotionMaster()->Clear(false);
                         m_creature->GetMotionMaster()->MoveIdle();
+                        m_creature->StopMoving();
                     }
             }
             break;

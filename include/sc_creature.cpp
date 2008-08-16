@@ -496,12 +496,6 @@ void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float x, float y, float z, float 
     }
 
     ((Player*)pUnit)->TeleportTo(pUnit->GetMapId(), x, y, z, o, TELE_TO_NOT_LEAVE_COMBAT);
-    // below creates issues on windows. The core has an option to prevent dropping combat in any case, so let's use that.
-    //Use work around packet to prevent player from being dropped from combat
-    //WorldPacket data;
-    //((Player*)pUnit)->BuildTeleportAckMsg(&data, x, y, z, o);
-    //((Player*)pUnit)->GetSession()->SendPacket(&data);
-    //((Player*)pUnit)->SetPosition( x, y, z, o, true);
 }
 
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
