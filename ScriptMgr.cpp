@@ -728,10 +728,13 @@ void LoadDatabase()
                         {
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.event_param1);
                             if (!pSpell)
+                            {
                                 error_log("SD2: Creature %u has non-existant SpellID(%u) defined in event %u.", temp.creature_id, temp.event_param1, i);
+                                continue;
+                            }
 
-                            if (temp.event_param2_s != -1)
-                                error_log("SD2: Creature %u has param1(spellId %u) but param2 is not -1. Event %u will not trigger for this spell.", temp.creature_id, temp.event_param1, i);
+                            if (temp.event_param2_s != -1 && temp.event_param2 != pSpell->SchoolMask)
+                                error_log("SD2: Creature %u has param1(spellId %u) but param2 is not -1 and not equal to spell's school mask. Event %u can never trigger.", temp.creature_id, temp.event_param1, i);
                         }
 
                         //TODO: fix this system with SPELL_SCHOOL_MASK. Current complicate things, using int32(-1) instead of just 0
@@ -802,7 +805,7 @@ void LoadDatabase()
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
                         if (GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT)
-                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
+                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
                         break;
 
                     case ACTION_T_RANDOM_SAY:
@@ -811,20 +814,17 @@ void LoadDatabase()
                         if ((temp.action[j].param1 != 0xffffffff && GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT) ||
                             (temp.action[j].param2 != 0xffffffff && GetLocalizedText(temp.action[j].param2) == DEFAULT_TEXT) ||
                             (temp.action[j].param3 != 0xffffffff && GetLocalizedText(temp.action[j].param3) == DEFAULT_TEXT))
-                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j);
+                            error_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
                         break;
 
                     case ACTION_T_CAST:
                         {
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param1);
                             if (!pSpell)
-                            {
-                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param1);
-                                //error_log("Spell Store Size = %u.", GetSpellStore()->GetNumRows());
-                            }
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param1);
 
                             if (temp.action[j].param2 >= TARGET_T_END)
-                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         }
                         break;
 
@@ -832,10 +832,10 @@ void LoadDatabase()
                         {
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
                             if (!pSpell)
-                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param2);
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param2);
 
                             if (temp.action[j].param1 >= TARGET_T_END)
-                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         }
                         break;
 
@@ -843,10 +843,10 @@ void LoadDatabase()
                         {
                             SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
                             if (!pSpell)
-                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j, temp.action[j].param2);
+                                error_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param2);
 
-                            if (temp.action[j].param1 >= TARGET_T_END)
-                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                            if (temp.action[j].param3 >= TARGET_T_END)
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         }
                         break;
 
@@ -854,53 +854,50 @@ void LoadDatabase()
                     case ACTION_T_SUMMON_ID:
                         {
                             if (EventSummon_Map.find(temp.action[j].param3) == EventSummon_Map.end())
-                                error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j, temp.action[j].param3);
+                                error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j+1, temp.action[j].param3);
 
                             if (temp.action[j].param2 >= TARGET_T_END)
-                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                                error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         }
                         break;
 
-                    //TODO: here we need to fix things up, this goes for the whole event handeling of summons
-                    //possible check if creature we are manually summoning are summoned by spell?
+                        //2nd param target
                     case ACTION_T_SUMMON:
-                            /*if (!temp.action[j].param3)
-                            {
-                                error_log("SD2: Event %u Action %u summon with no duration defined. Using default time 5000.", i, j);
-                                temp.action[j].param3 = 5000;
-                            }*/
                     case ACTION_T_THREAT_SINGLE_PCT:
                     case ACTION_T_QUEST_EVENT:
                     case ACTION_T_SET_UNIT_FLAG:
                     case ACTION_T_REMOVE_UNIT_FLAG:
                         if (temp.action[j].param2 >= TARGET_T_END)
-                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
 
                     //3rd param target
                     case ACTION_T_SET_UNIT_FIELD:
                         if (temp.action[j].param3 >= TARGET_T_END)
-                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j);
+                            error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
 
                     case ACTION_T_SET_PHASE:
                         if (temp.action[j].param1 > 31)
-                            error_log("SD2: Event %u Action %u is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j);
+                            error_log("SD2: Event %u Action %u is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j+1);
                             break;
 
                     case ACTION_T_INC_PHASE:
                         if (!temp.action[j].param1)
-                            error_log("SD2: Event %u Action %u is incrementing phase by 0. Was this intended?", i, j);
+                            error_log("SD2: Event %u Action %u is incrementing phase by 0. Was this intended?", i, j+1);
                         break;
 
                     case ACTION_T_KILLED_MONSTER:
                         if (temp.event_type != EVENT_T_DEATH)
-                            outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j);
+                            outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j+1);
+                        break;
+
+                    default:
                         break;
                     }
 
                     if (temp.action[j].type >= ACTION_T_END)
-                        error_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j);
+                        error_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j+1);
                 }
 
                 //Add to map
