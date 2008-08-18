@@ -35,6 +35,7 @@ item_tame_beast_rods(many)          Prevent cast on any other creature than the 
 *item_temporal_phase_modulator(i30742)Randomly changes creature entry(q10609)
 item_soul_cannon(i32825)            Prevents abuse of this item
 item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
+item_voodoo_charm                   Provide proper error message and target(q2561)
 item_vorenthals_presence(i30259)    Prevents abuse of this item
 item_yehkinyas_bramble(i10699)      Allow cast spell on vale screecher only and remove corpse if cast sucessful (q3520)
 item_zezzak_shard(i31463)           Quest The eyes of Grillok (q10813). Prevents abuse
@@ -350,6 +351,25 @@ bool ItemUse_item_sparrowhawk_net(Player *player, Item* _Item, SpellCastTargets 
 }
 
 /*#####
+# item_voodoo_charm
+#####*/
+
+bool ItemUse_item_voodoo_charm(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && targets.getUnitTarget()->isDead() &&
+        targets.getUnitTarget()->GetEntry()==7318 )
+        return false;
+
+    WorldPacket data(SMSG_CAST_FAILED, (4+2));              // prepare packet error message
+    data << uint32(_Item->GetEntry());                      // itemId
+    data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
+    player->GetSession()->SendPacket(&data);                // send message: Invalid target
+
+    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    return true;
+}
+
+/*#####
 # item_vorenthals_presence
 #####*/
 
@@ -472,6 +492,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_sparrowhawk_net";
     newscript->pItemUse = ItemUse_item_sparrowhawk_net;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_voodoo_charm";
+    newscript->pItemUse = ItemUse_item_voodoo_charm;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

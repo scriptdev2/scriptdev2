@@ -55,6 +55,7 @@ UPDATE `item_template` SET `ScriptName`='item_soul_cannon' WHERE `entry`=32825;
 UPDATE `item_template` SET `ScriptName`='item_sparrowhawk_net' WHERE `entry`=32321;
 UPDATE `item_template` SET `ScriptName`='item_tainted_core' WHERE `entry`=31088;
 UPDATE `item_template` SET `ScriptName`='item_tame_beast_rods' WHERE `entry` IN (15908,15911,15913,15914,15915,15916,15917,15919,15920,15921,15922,15923,23697,23702,23703,23896,23897,23898);
+UPDATE `item_template` SET `ScriptName`='item_voodoo_charm' WHERE `entry`=8149;
 UPDATE `item_template` SET `ScriptName`='item_vorenthals_presence' WHERE `entry`=30259;
 UPDATE `item_template` SET `ScriptName`='item_yehkinyas_bramble' WHERE `entry`=10699;
 UPDATE `item_template` SET `ScriptName`='item_zezzaks_shard' WHERE `entry`=31463;
