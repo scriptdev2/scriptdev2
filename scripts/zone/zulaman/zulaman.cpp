@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
         if( pInstance )
         {
             uint32 cEntry = 0;
-            switch(rand()%10)
+            switch(rand()%11)
             {
                 case 0: cEntry = 24024; break;          //Kraz
                 case 1: cEntry = 24397; break;          //Mannuth
