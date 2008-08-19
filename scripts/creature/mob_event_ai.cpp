@@ -1299,6 +1299,13 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
         }
     }
 
+    //EventAI is pointless to use without events and may cause crashes
+    if (EventList.empty())
+    {
+        error_log("SD2: Eventlist for Creature %i is empty but creature is using Mob_EventAI. Preventing EventAI on this creature.", _Creature->GetCreatureInfo()->Entry);
+        return NULL;
+    }
+
     return new Mob_EventAI (_Creature, EventList);
 }
 
