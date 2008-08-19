@@ -89,7 +89,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         Enrage_Timer = 600000; //10 minutes
 
         Creature* Advisor;
-        for(uint8 i = 0; i < 4; ++i)
+        for(uint8 i = 0; i < 3; ++i)
             if(Advisors[i])
             {
                 Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
@@ -105,8 +105,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                 }
             }
 
-        if(pInstance)
-            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void EventSharkkisDeath()
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
 
         pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-        pInstance->SetData(DATA_KARATHRESSEVENT, 1);
+        pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -178,8 +178,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
 
-        if(pInstance)
-            pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, NOT_STARTED);
 
         //support for quest 10944
         m_creature->SummonCreature(SEER_OLUM, OLUM_X, OLUM_Y, OLUM_Z, OLUM_O, TEMPSUMMON_TIMED_DESPAWN, 3600000);
@@ -262,8 +262,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         LeechingThrow_Timer = 20000;
         TheBeastWithin_Timer = 30000;
 
-        if(pInstance)
-            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         if(pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
+            pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
         }
     }
 
@@ -343,8 +343,8 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
     {
         FrostShock_Timer = 25000;
 
-        if(pInstance)
-            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
@@ -364,7 +364,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         if(pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
+            pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
         }
     }
 
@@ -422,7 +422,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         Heal_Timer = 55000;
 
         if(pInstance)
-            pInstance->SetData(DATA_KARATHRESSEVENT, 0);
+            pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
@@ -442,7 +442,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         if(pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
-            pInstance->SetData(DATA_KARATHRESSEVENT, 1);
+            pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
         }
     }
 
