@@ -16,12 +16,12 @@
 
 /* ScriptData
 SDName: Boss_Ambassador_Hellmaw
-SD%Complete: 100
-SDComment: 
+SD%Complete: 0
+SDComment: This script are currently disabled. Creature are temporarily running ACID script. Script need full rewrite along with instance script.
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
-#include "sc_creature.h"
+#include "precompiled.h"
 #include "../../../creature/simple_ai.h"
 
 #define CORROSIVE_ACID  23313

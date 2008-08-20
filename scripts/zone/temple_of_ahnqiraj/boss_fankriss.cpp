@@ -22,7 +22,6 @@ SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
-#include "../../creature/simple_ai.h"
 
 #define SOUND_SENTENCE_YOU 8588
 #define SOUND_SERVE_TO     8589
@@ -100,7 +99,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         {
             switch(rand()%3)
             {
-                case 0:  
+                case 0:
                     SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM,0));
                     break;
                 case 1:
@@ -180,21 +179,6 @@ CreatureAI* GetAI_boss_fankriss(Creature *_Creature)
 {
     return new boss_fankrissAI (_Creature);
 }
-CreatureAI* GetAI_mob_spawn_of_fankriss(Creature *_Creature)
-{
-    SimpleAI* ai = new SimpleAI (_Creature);
- 
-    //Cast enrage after 20 secs
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Cast_Target_Type = CAST_SELF;
-    ai->Spell[0].Cooldown = 1801000;
-    ai->Spell[0].First_Cast = 20000;
-    ai->Spell[0].Spell_Id = SPELL_ENRAGE;
-
-    ai->EnterEvadeMode();
-
-    return ai;
-}
 
 void AddSC_boss_fankriss()
 {
@@ -202,10 +186,5 @@ void AddSC_boss_fankriss()
     newscript = new Script;
     newscript->Name="boss_fankriss";
     newscript->GetAI = GetAI_boss_fankriss;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mob_spawn_of_fankriss";
-    newscript->GetAI = GetAI_mob_spawn_of_fankriss;
     m_scripts[nrscripts++] = newscript;
 }
