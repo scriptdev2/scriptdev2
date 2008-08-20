@@ -17,14 +17,14 @@
 /* ScriptData
 SDName: Boss_Hydross_The_Unstable
 SD%Complete: 90
-SDComment: Needs some corrections to switch radius and location
+SDComment: Some details and adjustments left to do, probably nothing major. Spawns may be spawned in different way/location.
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_serpent_shrine.h"
 
-#define SWITCH_RADIUS               15
+#define SWITCH_RADIUS               18
 
 #define MODEL_CORRUPT               20609
 #define MODEL_CLEAN                 20162
@@ -43,11 +43,13 @@ EndScriptData */
 #define SPELL_MARK_OF_CORRUPTION5   38230
 #define SPELL_MARK_OF_CORRUPTION6   40583
 #define SPELL_VILE_SLUDGE           38246
-#define SPELL_ENRAGE                27680
-#define SPELL_SUMMON_WATER_ELEMENT  36459                   //not in use yet, workaround in script
+#define SPELL_ENRAGE                27680                   //this spell need verification
+#define SPELL_SUMMON_WATER_ELEMENT  36459                   //not in use yet(in use ever?)
+#define SPELL_ELEMENTAL_SPAWNIN     25035
+//#define SPELL_BLUE_BEAM             38015                   //channeled Hydross Beam Helper (not in use yet)
 
-#define PURE_SPAWNS_OF_HYDROSS      22035
-#define TAINTED_SPAWN_OF_HYDROSS    22036
+#define ENTRY_PURE_SPAWN            22035
+#define ENTRY_TAINTED_SPAWN         22036
 
 #define SAY_AGGRO                   "I cannot allow you to interfere!"
 #define SAY_SWITCH_TO_CLEAN         "Better, much better."
@@ -69,8 +71,8 @@ EndScriptData */
 #define SOUND_CORRUPT_SLAY2         11299
 #define SOUND_CORRUPT_DEATH         11300
 
-#define ADDS_CLEAN                  22035
-#define ADDS_CORRUPT                22036
+#define HYDROSS_X                   -239.439
+#define HYDROSS_Y                   -363.481
 
 #define SPAWN_X_DIFF1               6.934003
 #define SPAWN_Y_DIFF1               -11.255012
@@ -96,48 +98,40 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
     uint32 MarkOfCorruption_Timer;
     uint32 WaterTomb_Timer;
     uint32 VileSludge_Timer;
-    uint32 Invisible_Timer;
     uint32 MarkOfHydross_Count;
     uint32 MarkOfCorruption_Count;
     uint32 EnrageTimer;
-
     bool CorruptedForm;
-    bool HasSpawnedInvisible;
-
-    uint64 InvisibleGUID;
 
     void Reset()
     {
-        PosCheck_Timer = 5000;
-        MarkOfHydross_Timer = 20000;
-        MarkOfCorruption_Timer = 20000;
+        PosCheck_Timer = 2500;
+        MarkOfHydross_Timer = 15000;
+        MarkOfCorruption_Timer = 15000;
         WaterTomb_Timer = 7000;
-        VileSludge_Timer = 15000;
-        Invisible_Timer = 2000;
+        VileSludge_Timer = 7000;
         MarkOfHydross_Count = 0;
         MarkOfCorruption_Count = 0;
         EnrageTimer = 600000;
 
-        // despawn invisible trigger
-        DespawnCreatureIfExists(InvisibleGUID);
-        InvisibleGUID = 0;
-
         CorruptedForm = false;
-        HasSpawnedInvisible = false;
+        m_creature->SetMeleeDamageSchool(SPELL_SCHOOL_FROST);
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CLEAN);
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
     }
 
-    void StartEvent()
+    void Aggro(Unit *who)
     {
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 1);
+        if( pInstance )
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -149,7 +143,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     DoYell(SAY_CORRUPT_SLAY1, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY1);
                     break;
-
                 case 1:
                     DoYell(SAY_CORRUPT_SLAY2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_CORRUPT_SLAY2);
@@ -163,7 +156,6 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     DoYell(SAY_CLEAN_SLAY1, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY1);
                     break;
-
                 case 1:
                     DoYell(SAY_CLEAN_SLAY2, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_CLEAN_SLAY2);
@@ -172,9 +164,19 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
         }
     }
 
+    void JustSummoned(Creature* summoned)
+    {
+        if( summoned->GetEntry() == ENTRY_PURE_SPAWN )
+            summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
+        if( summoned->GetEntry() == ENTRY_TAINTED_SPAWN )
+            summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, true);
+
+        summoned->CastSpell(summoned,SPELL_ELEMENTAL_SPAWNIN,true);
+    }
+
     void JustDied(Unit *victim)
     {
-        if(CorruptedForm)
+        if( CorruptedForm )
         {
             DoYell(SAY_CORRUPT_DEATH, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_CORRUPT_DEATH);
@@ -185,58 +187,23 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_CLEAN_DEATH);
         }
 
-        if(pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, 0);
-
-        // despawn invisible trigger
-        DespawnCreatureIfExists(InvisibleGUID);
-    }
-
-    void Aggro(Unit *who)
-    {
-        StartEvent();
-    }
-
-    void DespawnCreatureIfExists(uint64 GUID)
-    {
-        if(GUID)
-        {
-            Unit* pUnit = Unit::GetUnit((*m_creature), GUID);
-            if(pUnit && pUnit->isAlive())
-                pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }
+        if( pInstance )
+            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        // Invisible trigger to track his original position
-        if(!HasSpawnedInvisible)
-            if(Invisible_Timer < diff)
-            {
-                Creature* Invisible = m_creature->SummonCreature(12999, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                if(Invisible)
-                {
-                    //Root self
-                    Invisible->CastSpell(Invisible, 33356, true);
-
-                    Invisible->SetVisibility(VISIBILITY_OFF);
-                    InvisibleGUID = Invisible->GetGUID();
-                }else DoTextEmote("Unable to spawn invisible trigger", NULL);
-
-                HasSpawnedInvisible = true;
-            }else Invisible_Timer -= diff;
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
         // corrupted form
-        if(CorruptedForm)
+        if( CorruptedForm )
         {
             //MarkOfCorruption_Timer
-            if(MarkOfCorruption_Timer < diff)
+            if( MarkOfCorruption_Timer < diff )
             {
-                if(MarkOfCorruption_Count <= 5)
+                if( MarkOfCorruption_Count <= 5 )
                 {
                     uint32 mark_spell;
 
@@ -252,31 +219,27 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     DoCast(m_creature->getVictim(), mark_spell);
 
-                    if(MarkOfCorruption_Count < 5)
+                    if( MarkOfCorruption_Count < 5 )
                         MarkOfCorruption_Count++;
                 }
 
-                MarkOfCorruption_Timer = 10000+rand()%5000;
+                MarkOfCorruption_Timer = 15000;
             }else MarkOfCorruption_Timer -= diff;
 
             //VileSludge_Timer
-            if(VileSludge_Timer < diff)
+            if( VileSludge_Timer < diff )
             {
                 Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if(target)
+                if( target )
                     DoCast(target, SPELL_VILE_SLUDGE);
 
                 VileSludge_Timer = 15000;
             }else VileSludge_Timer -= diff;
 
             //PosCheck_Timer
-            if(PosCheck_Timer < diff)
+            if( PosCheck_Timer < diff )
             {
-                Unit* Invisible = NULL;
-                if(InvisibleGUID)
-                    Invisible = Unit::GetUnit((*m_creature), InvisibleGUID);
-
-                if(Invisible && m_creature->IsWithinDistInMap(Invisible, SWITCH_RADIUS))
+                if( m_creature->GetDistance2d(HYDROSS_X, HYDROSS_Y) < SWITCH_RADIUS )
                 {
                     // switch to clean form
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CLEAN);
@@ -288,26 +251,26 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     DoResetThreat();
 
                     // spawn 4 adds
-                    Creature *Adds;
-                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CLEAN, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    DoSpawnCreature(ENTRY_PURE_SPAWN, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_PURE_SPAWN, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_PURE_SPAWN, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_PURE_SPAWN, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    
                     m_creature->SetMeleeDamageSchool(SPELL_SCHOOL_FROST);
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, false);
                 }
 
-                PosCheck_Timer = 5000;
+                PosCheck_Timer = 2500;
             }else PosCheck_Timer -=diff;
         }
         // clean form
         else
         {
             //MarkOfHydross_Timer
-            if(MarkOfHydross_Timer < diff)
+            if( MarkOfHydross_Timer < diff )
             {
-                if(MarkOfHydross_Count <= 5)
+                if( MarkOfHydross_Count <= 5 )
                 {
                     uint32 mark_spell;
 
@@ -323,31 +286,27 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
 
                     DoCast(m_creature->getVictim(), mark_spell);
 
-                    if(MarkOfHydross_Count < 5)
+                    if( MarkOfHydross_Count < 5 )
                         MarkOfHydross_Count++;
                 }
 
-                MarkOfHydross_Timer = 10000+rand()%5000;
+                MarkOfHydross_Timer = 15000;
             }else MarkOfHydross_Timer -= diff;
 
             //WaterTomb_Timer
-            if(WaterTomb_Timer < diff)
+            if( WaterTomb_Timer < diff )
             {
                 Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if(target)
+                if( target )
                     DoCast(target, SPELL_WATER_TOMB);
 
                 WaterTomb_Timer = 7000;
             }else WaterTomb_Timer -= diff;
 
             //PosCheck_Timer
-            if(PosCheck_Timer < diff)
+            if( PosCheck_Timer < diff )
             {
-                Unit* Invisible = NULL;
-                if(InvisibleGUID)
-                    Invisible = Unit::GetUnit((*m_creature), InvisibleGUID);
-
-                if(Invisible && !m_creature->IsWithinDistInMap(Invisible, SWITCH_RADIUS))
+                if( m_creature->GetDistance2d(HYDROSS_X, HYDROSS_Y) >= SWITCH_RADIUS )
                 {
                     // switch to corrupted form
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_CORRUPT);
@@ -359,24 +318,24 @@ struct MANGOS_DLL_DECL boss_hydross_the_unstableAI : public ScriptedAI
                     DoResetThreat();
 
                     // spawn 4 adds
-                    Creature *Adds;
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
-                    Adds = DoSpawnCreature(ADDS_CORRUPT, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 999999);
+                    DoSpawnCreature(ENTRY_TAINTED_SPAWN, SPAWN_X_DIFF1, SPAWN_Y_DIFF1, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_TAINTED_SPAWN, SPAWN_X_DIFF2, SPAWN_Y_DIFF2, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_TAINTED_SPAWN, SPAWN_X_DIFF3, SPAWN_Y_DIFF3, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    DoSpawnCreature(ENTRY_TAINTED_SPAWN, SPAWN_X_DIFF4, SPAWN_Y_DIFF4, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                     m_creature->SetMeleeDamageSchool(SPELL_SCHOOL_NATURE);
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, true);
+                    m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, false);
                 }
 
-                PosCheck_Timer = 5000;
+                PosCheck_Timer = 2500;
             }else PosCheck_Timer -=diff;
         }
 
         //EnrageTimer
-        if(EnrageTimer < diff)
+        if( EnrageTimer < diff )
         {
             DoCast(m_creature, SPELL_ENRAGE);
-
             EnrageTimer = 60000;
         }else EnrageTimer -= diff;
 
