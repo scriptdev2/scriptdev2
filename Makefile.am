@@ -358,6 +358,7 @@ scripts/zone/zulaman/boss_nalorakk.cpp \
 scripts/zone/zulaman/def_zulaman.h \
 scripts/zone/zulaman/instance_zulaman.cpp \
 scripts/zone/zulaman/zulaman.cpp \
+scripts/zone/zulfarrak/zulfarrak.cpp \
 scripts/zone/zulgurub/boss_arlokk.cpp \
 scripts/zone/zulgurub/boss_gahzranka.cpp \
 scripts/zone/zulgurub/boss_grilek.cpp \

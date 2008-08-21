@@ -1291,6 +1291,10 @@
 				<Filter
 					Name="Zul&apos;Farrak"
 					>
+					<File
+						RelativePath="..\scripts\zone\zulfarrak\zulfarrak.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Zul&apos;Gurub"
