@@ -17,10 +17,22 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285, 4287, 4288 (crystal pylons in un'goro). Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
- 
+
+/* ContentData
+go_northern_crystal_pylon
+go_eastern_crystal_pylon
+go_western_crystal_pylon
+go_barov_journal
+go_field_repair_bot_74A
+go_orb_of_command
+go_tablet_of_madness
+go_tablet_of_the_seven
+go_teleporter
+EndContentData */
+
 #include "precompiled.h"
  
 /*######
@@ -70,19 +82,6 @@ bool GOHello_go_western_crystal_pylon(Player *player, GameObject* _GO)
 }
 
 /*######
-## go_field_repair_bot_74A
-######*/
-
-bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
-{
-    if(player->HasSkill(SKILL_ENGINERING) && player->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !player->HasSpell(22704)) 
-    {
-        player->CastSpell(player,22864,false);
-    }
-    return true;
-}
-
-/*######
 ## go_barov_journal
 ######*/
 
@@ -96,14 +95,14 @@ bool GOHello_go_barov_journal(Player *player, GameObject* _GO)
 }
 
 /*######
-## go_tablet_of_madness
+## go_field_repair_bot_74A
 ######*/
 
-bool GOHello_go_tablet_of_madness(Player *player, GameObject* _GO)
+bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
 {
-    if (player->HasSkill(SKILL_ALCHEMY) && player->GetSkillValue(SKILL_ALCHEMY) >= 300 && !player->HasSpell(24266)) 
+    if(player->HasSkill(SKILL_ENGINERING) && player->GetBaseSkillValue(SKILL_ENGINERING) >= 300 && !player->HasSpell(22704))
     {
-        player->CastSpell(player,24267,false);
+        player->CastSpell(player,22864,false);
     }
     return true;
 }
@@ -115,7 +114,36 @@ bool GOHello_go_tablet_of_madness(Player *player, GameObject* _GO)
 bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
 {
     if (player->GetQuestRewardStatus(7761)) 
-        player->TeleportTo(469,-7672,-1107,399, 0); 
+        player->TeleportTo(469,-7672,-1107,399, 0);
+
+    return true;
+}
+
+/*######
+## go_tablet_of_madness
+######*/
+
+bool GOHello_go_tablet_of_madness(Player *player, GameObject* _GO)
+{
+    if (player->HasSkill(SKILL_ALCHEMY) && player->GetSkillValue(SKILL_ALCHEMY) >= 300 && !player->HasSpell(24266))
+    {
+        player->CastSpell(player,24267,false);
+    }
+    return true;
+}
+
+/*######
+## go_tablet_of_the_seven
+######*/
+
+//TODO: use gossip option ("Transcript the Tablet") instead, if Mangos adds support.
+bool GOHello_go_tablet_of_the_seven(Player *player, GameObject* _GO)
+{
+    if (_GO->GetGoType() != GAMEOBJECT_TYPE_QUESTGIVER)
+        return true;
+
+    if (player->GetQuestStatus(4296) == QUEST_STATUS_INCOMPLETE)
+        player->CastSpell(player,15065,false);
 
     return true;
 }
@@ -150,13 +178,13 @@ void AddSC_go_scripts()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="go_field_repair_bot_74A";
-    newscript->pGOHello =           &GOHello_go_field_repair_bot_74A;
+    newscript->Name="go_barov_journal";
+    newscript->pGOHello =           &GOHello_go_barov_journal;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="go_barov_journal";
-    newscript->pGOHello =           &GOHello_go_barov_journal;
+    newscript->Name="go_field_repair_bot_74A";
+    newscript->pGOHello =           &GOHello_go_field_repair_bot_74A;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
@@ -165,12 +193,17 @@ void AddSC_go_scripts()
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="go_teleporter";
-    newscript->pGOHello =           GOHello_go_teleporter;
+    newscript->Name="go_tablet_of_madness";
+    newscript->pGOHello =           GOHello_go_tablet_of_madness;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="go_tablet_of_madness";
-    newscript->pGOHello =           GOHello_go_tablet_of_madness;
+    newscript->Name="go_tablet_of_the_seven";
+    newscript->pGOHello =           GOHello_go_tablet_of_the_seven;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="go_teleporter";
+    newscript->pGOHello =           GOHello_go_teleporter;
     m_scripts[nrscripts++] = newscript;
 }

@@ -10,13 +10,14 @@ UPDATE `creature_template` SET `ScriptName`='boss_azuregos' WHERE `entry`=6109;
 UPDATE `creature_template` SET `ScriptName`='mob_dementeddruids' WHERE `entry`=15260;
 
 /* GO */
-UPDATE `gameobject_template` SET `ScriptName`='go_orb_of_command' WHERE `entry`=179879;
-UPDATE `gameobject_template` SET `ScriptName`='go_barov_journal' WHERE `entry`=180794;
-UPDATE `gameobject_template` SET `ScriptName`='go_field_repair_bot_74A' where `entry`= 179552;
 UPDATE `gameobject_template` SET `ScriptName`='go_northern_crystal_pylon' WHERE `entry`=164955;
 UPDATE `gameobject_template` SET `ScriptName`='go_western_crystal_pylon' WHERE `entry`=164956;
 UPDATE `gameobject_template` SET `ScriptName`='go_eastern_crystal_pylon' WHERE `entry`=164957;
+UPDATE `gameobject_template` SET `ScriptName`='go_barov_journal' WHERE `entry`=180794;
+UPDATE `gameobject_template` SET `ScriptName`='go_field_repair_bot_74A' where `entry`= 179552;
+UPDATE `gameobject_template` SET `ScriptName`='go_orb_of_command' WHERE `entry`=179879;
 UPDATE `gameobject_template` SET `ScriptName`='go_tablet_of_madness' WHERE `entry`=180368;
+UPDATE `gameobject_template` SET `ScriptName`='go_tablet_of_the_seven' WHERE `entry`=169294;
 
 /* GUARD */
 UPDATE `creature_template` SET `ScriptName`='guard_azuremyst' WHERE `entry`=18038;
