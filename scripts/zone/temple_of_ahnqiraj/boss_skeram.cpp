@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     void Reset()
     {
         ArcaneExplosion_Timer = 6000 + rand()%6000;
-        EarthShock_Timer = 3000;
+        EarthShock_Timer = 2000;
         FullFillment_Timer = 15000;
         Blink_Timer = 8000 + rand()%12000;
         Invisible_Timer = 500;
@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                 DoCast(m_creature->getVictim(),SPELL_EARTH_SHOCK);
 
                 //1 seconds until we should cast this agian
-                EarthShock_Timer = 2000;
+                EarthShock_Timer = 1000;
             }else EarthShock_Timer -= diff;
         }
 

@@ -1216,6 +1216,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
 						>
 					</File>

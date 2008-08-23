@@ -24,15 +24,15 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_molten_core.h"
 
-
+#define SPELL_DARKSTRIKE            19777
 #define SPELL_DEMORALIZINGSHOUT     19778
 #define SPELL_INSPIRE               19779
 #define SPELL_KNOCKDOWN             19780
-#define SPELL_FLAMESPEAR            19781       //Might be NYI in core
+#define SPELL_FLAMESPEAR            19781  
 
 //Adds Spells
-#define SPELL_HEAL                  24208
-#define SPELL_SHADOWWORDPAIN        23952
+#define SPELL_HEAL                  19775
+#define SPELL_SHADOWWORDPAIN        19776
 #define SPELL_IMMOLATE              20294
 
 struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         Reset();
     }
 
-
+    uint32 Darkstrike_Timer;
     uint32 DemoralizingShout_Timer;
     uint32 Inspire_Timer;
     uint32 Knockdown_Timer;
@@ -52,7 +52,8 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
 
     void Reset()
     {
-        DemoralizingShout_Timer = 15000;      //These times are probably wrong
+        Darkstrike_Timer=10000;       //These times are probably wrong
+        DemoralizingShout_Timer = 15000;      
         Inspire_Timer = 13000;
         Knockdown_Timer = 6000;
         Flamespear_Timer = 2000;
@@ -81,7 +82,20 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
         //Inspire_Timer
         if (Inspire_Timer < diff)
         {
+        
+            Creature* target;
+            std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f,SPELL_INSPIRE);
+            if (!pList.empty())
+            {
+                std::list<Creature*>::iterator i = pList.begin();
+                advance(i, (rand()%pList.size()));
+                target = (*i);
+            }
+
             //Cast
+            if (target)
+            DoCast(target,SPELL_INSPIRE);
+
             DoCast(m_creature,SPELL_INSPIRE);
 
             //28-32 seconds until we should cast this agian
@@ -110,6 +124,16 @@ struct MANGOS_DLL_DECL boss_sulfuronAI : public ScriptedAI
             //12-16 seconds until we should cast this agian
             Flamespear_Timer = 12000 + rand()%4000;
         }else Flamespear_Timer -= diff;
+        
+        //DarkStrike_Timer
+        if (Darkstrike_Timer < diff)
+        {
+            //Cast
+            DoCast(m_creature, SPELL_DARKSTRIKE);
+
+            // 15 - 18 secs until we should cast this again
+            Darkstrike_Timer = 15000 + rand()%3000;
+        } Darkstrike_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -152,27 +176,10 @@ struct MANGOS_DLL_DECL mob_flamewaker_priestAI : public ScriptedAI
         //Casting Heal to Sulfuron or other Guards.
         if(Heal_Timer < diff)
         {
-                    if(pInstance)
-                    {    
-
-                     Unit *pSulfuron = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_SULFURON));
-                     Unit *pFlamewakerPriest = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_FLAMEWAKERPRIEST));
-
-
-
-                         switch(rand()%2)
-                         {
-                            case 0:  
-                            DoCast(pSulfuron, SPELL_HEAL);
-                            break;
-
-                            case 1:
-                            DoCast(pFlamewakerPriest, SPELL_HEAL);
-                            break;
-                         }
-
-
-                    }
+        
+            Unit* pUnit = DoSelectLowestHpFriendly(60.0f, 1);
+            if (!pUnit) return;
+            DoCast(pUnit, SPELL_HEAL);
                        
             Heal_Timer = 15000+rand()%5000;
         }else Heal_Timer -= diff;

@@ -153,9 +153,9 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-            //Only cast if we are behind
-            if (!m_creature->HasInArc( M_PI, target))
+
             DoCast(target,SPELL_TAILSWEEP);
+
             TailSweep_Timer = 2000;
         }else TailSweep_Timer -= diff;
 

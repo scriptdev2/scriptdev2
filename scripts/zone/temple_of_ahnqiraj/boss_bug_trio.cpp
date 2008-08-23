@@ -27,9 +27,9 @@ EndScriptData */
 #define SPELL_CLEAVE        26350
 #define SPELL_TOXIC_VOLLEY  25812
 #define SPELL_POISON_CLOUD  38718         //Only Spell with right dmg.
-#define SPELL_ENRAGE        25790
+#define SPELL_ENRAGE        34624         //Changed cause 25790 is casted on gamers too. Same prob with old explosion of twin emperors.
 
-#define SPELL_CHARGE        25821
+#define SPELL_CHARGE        26561
 #define SPELL_KNOCKBACK     26027
 
 #define SPELL_HEAL      25807
@@ -260,7 +260,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         for(int i = 0; i < 10;i++)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            Creature* Summoned = m_creature->SummonCreature(15621,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000);
+            Creature* Summoned = m_creature->SummonCreature(15621,m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
             if(Summoned)
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
         }

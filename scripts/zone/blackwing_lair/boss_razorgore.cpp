@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,1);
             if (target)
-            DoStartAttackAndMovement(target);
+            m_creature->TauntApply(target);
 
         }       
       

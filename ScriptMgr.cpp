@@ -487,6 +487,7 @@ extern void AddSC_bug_trio();
 extern void AddSC_boss_sartura();
 extern void AddSC_boss_skeram();
 extern void AddSC_boss_twinemperors();
+extern void AddSC_mob_anubisath_sentinel();
 extern void AddSC_instance_temple_of_ahnqiraj();
 
 //Terokkar Forest
@@ -1420,6 +1421,7 @@ void ScriptsInit()
     AddSC_boss_sartura();
     AddSC_boss_skeram();
     AddSC_boss_twinemperors();
+    AddSC_mob_anubisath_sentinel();
     AddSC_instance_temple_of_ahnqiraj();
 
     //Terokkar Forest

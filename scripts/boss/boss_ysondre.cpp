@@ -123,10 +123,10 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         if (TailSweep_Timer < diff)
         {
             Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            //Only cast if we are behind
-            if (!m_creature->HasInArc( M_PI, target))
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
+
             DoCast(target,SPELL_TAILSWEEP);
+
             TailSweep_Timer = 2000;
         }else TailSweep_Timer -= diff;
 

@@ -75,14 +75,6 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             return;
 
 
-            if (!WhirlWind && WhirlWind_Timer < diff)
-            {
-                DoCast(m_creature, SPELL_WHIRLWIND);
-                WhirlWind = true;
-                WhirlWind_Timer = 25000 + rand()%15000;
-                WhirlWindEnd_Timer = 15000;
-            }else WhirlWind_Timer -= diff;
-            
             if (WhirlWind)
             {
                 if (WhirlWindRandom_Timer < diff)
@@ -99,36 +91,48 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
                 
                 if (WhirlWindEnd_Timer < diff)
                 {
-                    WhirlWind = false;              
+                    WhirlWind = false;         
+                    WhirlWind_Timer = 25000 + rand()%15000;     
                 }else WhirlWindEnd_Timer -= diff;
             
             }
-            
-            if (!WhirlWind && AggroReset_Timer < diff)
+
+            if (!WhirlWind)
             {
-                //Attack random Gamers
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1);
-                if (target)
-                DoStartAttackAndMovement(target);
+
+
+                if (WhirlWind_Timer < diff)
+                {
+                    DoCast(m_creature, SPELL_WHIRLWIND);
+                    WhirlWind = true;
+                    WhirlWindEnd_Timer = 15000;
+                }else WhirlWind_Timer -= diff;
+
+
+                if (AggroReset_Timer < diff)
+                {
+                    //Attack random Gamers
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    if (target)
+                    m_creature->TauntApply(target);
                 
                 
-                AggroReset = true;
-                AggroReset_Timer = 2000 + rand()%3000;
-            }else AggroReset_Timer -= diff;     
+                    AggroReset = true;
+                    AggroReset_Timer = 2000 + rand()%3000;
+                }else AggroReset_Timer -= diff;     
    
-            if (AggroReset)
-            {
+                if (AggroReset)
+                {
             
-                if (AggroResetEnd_Timer <diff)
-                {        
-                    AggroReset = false;    
-                    AggroResetEnd_Timer = 5000;    
-                }AggroResetEnd_Timer -= diff;
+                    if (AggroResetEnd_Timer <diff)
+                    {        
+                        AggroReset = false;    
+                        AggroResetEnd_Timer = 5000;    
+                    }AggroResetEnd_Timer -= diff;
            
-            }       
-            
-            
+                }    
+
             //If she is 20% enrage
             if (!Enraged)
             {
@@ -150,6 +154,8 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             }                       
 
             DoMeleeAttackIfReady();
+      }   
+ 
     }
 }; 
 
@@ -209,7 +215,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
                     Unit* target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM,1);
                     if (target)
-                    DoStartAttackAndMovement(target);
+                    m_creature->TauntApply(target);
                 
                     WhirlWindRandom_Timer = 3000 + rand()%4000;
                 }else WhirlWindRandom_Timer -= diff;
