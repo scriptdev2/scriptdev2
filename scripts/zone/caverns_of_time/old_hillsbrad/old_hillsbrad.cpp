@@ -404,19 +404,17 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                         ((npc_escortAI*)(Taretha->AI()))->Start(false, false, true, 0);
                 }*/
 
-                //alot will happen here, thrall and taretha talk, erozion appear at spot to explain
-                m_creature->SummonCreature(EROZION_ENTRY,2646.47,680.416,55.38,4.16,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,60000);
-                break;
-            }
-            case 107:
-                //not entirely correct, Erozion should be the unit completing event
                 if( PlayerGUID )
                 {
                     Unit* player = ((Creature*)Unit::GetUnit((*m_creature), PlayerGUID));
                     if( player && player->GetTypeId() == TYPEID_PLAYER )
-                        ((Player*)player)->GroupEventHappens(QUEST_ENTRY_ESCAPE,m_creature);
+                        ((Player*)player)->KilledMonster(20156,m_creature->GetGUID());
                 }
-                break;
+
+                //alot will happen here, thrall and taretha talk, erozion appear at spot to explain
+                m_creature->SummonCreature(EROZION_ENTRY,2646.47,680.416,55.38,4.16,TEMPSUMMON_TIMED_DESPAWN,120000);
+            }
+            break;
         }
     }
 
