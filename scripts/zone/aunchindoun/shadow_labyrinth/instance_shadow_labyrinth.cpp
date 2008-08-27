@@ -16,18 +16,18 @@
 
 /* ScriptData
 SDName: Instance_Shadow_Labyrinth
-SD%Complete: 99
-SDComment: VERIFY SCRIPT
+SD%Complete: 85
+SDComment: Some cleanup left along with save
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_shadow_labyrinth.h"
 
-#define ENCOUNTERS 4
+#define ENCOUNTERS 5
 
-#define REFECTORY_DOOR          183296 //door opened when blackheart the inciter dies
-#define SCREAMING_HALL_DOOR     183295 //door opened when grandmaster vorpil dies
+#define REFECTORY_DOOR          183296                      //door opened when blackheart the inciter dies
+#define SCREAMING_HALL_DOOR     183295                      //door opened when grandmaster vorpil dies
 
 /* Shadow Labyrinth encounters:
 1 - Ambassador Hellmaw event
@@ -40,26 +40,28 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 {
     instance_shadow_labyrinth(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    bool Encounters[ENCOUNTERS];
+    uint32 Encounter[ENCOUNTERS];
 
     GameObject *RefectoryDoor;
     GameObject *ScreamingHallDoor;
     uint64 GrandmasterVorpil;
+    uint32 FelOverseerCount;
 
     void Initialize()
     {
         RefectoryDoor = NULL;
         ScreamingHallDoor = NULL;
         GrandmasterVorpil = 0;
+        FelOverseerCount = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = false;
+            Encounter[i] = false;
     }
 
     bool IsEncounterInProgress() const 
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true;
+            if(Encounter[i]) return true;
 
         return false;
     }
@@ -69,12 +71,11 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         switch(go->GetEntry())
         {
             case REFECTORY_DOOR:
-            RefectoryDoor = go;
-            break;
-
+                RefectoryDoor = go;
+                break;
             case SCREAMING_HALL_DOOR:
-            ScreamingHallDoor = go;
-            break;
+                ScreamingHallDoor = go;
+                break;
         }
     }
 
@@ -83,51 +84,72 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         switch(creature_entry)
         {
             case 18732:
-            GrandmasterVorpil = creature->GetGUID();
-            break;
+                GrandmasterVorpil = creature->GetGUID();
+                break;
+            case 18796:
+                ++FelOverseerCount;
+                debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
+                break;
         }
-    }
-
-    uint64 GetUnitGUID(uint32 identifier)
-    {
-        if(identifier  == DATA_GRANDMASTERVORPIL)
-            return GrandmasterVorpil;
-
-        return 0;
     }
 
     void SetData(uint32 type, uint32 data)
     {
         switch(type)
         {
-            case DATA_AMBASSADORHELLMAWEVENT:
-                Encounters[0] = (data) ? true : false;
+            case TYPE_HELLMAW:
+                Encounter[0] = data;
+                break;
+
+            case TYPE_OVERSEER:
+                if( data != DONE )
+                    error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
+                if( FelOverseerCount )
+                {
+                    --FelOverseerCount;
+                    debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.",FelOverseerCount);
+                }
+                if( FelOverseerCount == 0 )
+                {
+                    Encounter[1] = DONE;
+                    debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
+                }
                 break;
 
             case DATA_BLACKHEARTTHEINCITEREVENT:
-                if(data == 2)
+                if( data == DONE )
                 {
-                    Encounters[1] = false;
-                    if(RefectoryDoor)
+                    if( RefectoryDoor )
                         RefectoryDoor->UseDoorOrButton();
                 }
-                else
-                    Encounters[1] = (data) ? true : false;
+                Encounter[2] = data;
                 break;
+
             case DATA_GRANDMASTERVORPILEVENT:
-                if(data == 2)
+                if( data == DONE )
                 {
-                    Encounters[2] = false;
-                    if(ScreamingHallDoor)
+                    if( ScreamingHallDoor )
                         ScreamingHallDoor->UseDoorOrButton();
                 }
-                else
-                    Encounters[2] = (data) ? true : false;
+                Encounter[3] = data;
                 break;
+
             case DATA_MURMUREVENT:
-                Encounters[3] = (data) ? true : false;
+                Encounter[4] = data;
                 break;
         }
+    }
+
+    uint32 GetData(uint32 type)
+    {
+        switch( type )
+        {
+            case TYPE_HELLMAW:
+                return Encounter[0];
+            case TYPE_OVERSEER:
+                return Encounter[1];
+        }
+        return false;
     }
 };
 

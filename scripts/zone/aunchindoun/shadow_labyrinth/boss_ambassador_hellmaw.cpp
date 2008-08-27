@@ -16,55 +16,201 @@
 
 /* ScriptData
 SDName: Boss_Ambassador_Hellmaw
-SD%Complete: 0
-SDComment: This script are currently disabled. Creature are temporarily running ACID script. Script need full rewrite along with instance script.
+SD%Complete: 75
+SDComment: Waypoints after Intro not implemented. Enrage spell missing/not known
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
-#include "../../../creature/simple_ai.h"
+#include "def_shadow_labyrinth.h"
 
-#define CORROSIVE_ACID  23313
-#define TERRIFYING_HOWL 30752
+#define SAY_INTRO       "Infidels have invaded the sanctuary! Sniveling pests...You have yet to learn the true meaning of agony!"
+#define SOUND_INTRO     10473
 
+#define SAY_AGGRO1      "Pathetic mortals! You will pay dearly!"
+#define SOUND_AGGRO1    10475
+#define SAY_AGGRO2      "I will break you!"
+#define SOUND_AGGRO2    10476
+#define SAY_AGGRO3      "Finally! Something to relieve the tedium!"
+#define SOUND_AGGRO3    10477
+
+#define SAY_HELP        "Aid me, you fools, before it's too late!"
+#define SOUND_HELP      10474
+
+#define SAY_SLAY1       "Do you fear death?"
+#define SOUND_SLAY1     10478
+#define SAY_SLAY2       "This is the part I enjoy most."
+#define SOUND_SLAY2     10479
+
+#define SAY_DEATH       "Do not...grow...overconfident, mortal."
+#define SOUND_DEATH     10480
+
+#define SPELL_BANISH            30231
+#define SPELL_CORROSIVE_ACID    23313
+#define SPELL_FEAR              33547
+#define SPELL_ENRAGE            0                           //need to find proper spell
+
+struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
+{
+    boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+    bool HeroicMode;
+
+    uint32 EventCheck_Timer;
+    uint32 CorrosiveAcid_Timer;
+    uint32 Fear_Timer;
+    uint32 Enrage_Timer;
+    bool Intro;
+    bool IsBanished;
+
+    void Reset()
+    {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+
+        EventCheck_Timer = 5000;
+        CorrosiveAcid_Timer = 25000;
+        Fear_Timer = 40000;
+        Enrage_Timer = 180000;
+        Intro = false;
+        IsBanished = false;
+
+        if( pInstance )
+        {
+            if( pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED )
+            {
+                DoCast(m_creature,SPELL_BANISH);
+                IsBanished = true;
+            }
+            else pInstance->SetData(TYPE_HELLMAW,FAIL);
+
+            if( pInstance->GetData(TYPE_OVERSEER) == DONE )
+            {
+                if( m_creature->HasAura(SPELL_BANISH,0) )
+                    m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
+                Intro = true;
+            }
+        }
+    }
+
+    void MovementInform(uint32 type, uint32 id)
+    {
+        if( type != POINT_MOTION_TYPE )
+            return;
+    }
+
+    void DoIntro()
+    {
+        DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_INTRO);
+
+        if( m_creature->HasAura(SPELL_BANISH,0) )
+            m_creature->RemoveAurasDueToSpell(SPELL_BANISH);
+
+        IsBanished = false;
+        Intro = true;
+
+        if( pInstance )
+            pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+    }
+
+    void Aggro(Unit *who)
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+            break;
+        case 1:
+            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+            break;
+        case 2:
+            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+            break;
+        }
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        switch(rand()%2)
+        {
+        case 0:
+            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+            break;
+        case 1:
+            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+            break;
+        }
+    }
+
+    void JustDied(Unit *victim)
+    {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
+        if( pInstance )
+            pInstance->SetData(TYPE_HELLMAW, DONE);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if( !Intro )
+        {
+            if( EventCheck_Timer < diff )
+            {
+                if( pInstance )
+                {
+                    if( pInstance->GetData(TYPE_OVERSEER) == DONE )
+                        DoIntro();
+                }
+                EventCheck_Timer = 5000;
+            }else EventCheck_Timer -= diff;
+        }
+
+        if( !InCombat && !IsBanished )
+        {
+            //this is where we add MovePoint()
+            //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
+        }
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+            return;
+
+        if( CorrosiveAcid_Timer < diff )
+        {
+            DoCast(m_creature,SPELL_CORROSIVE_ACID);
+            CorrosiveAcid_Timer = 25000;
+        }else CorrosiveAcid_Timer -= diff;
+
+        if( Fear_Timer < diff )
+        {
+            DoCast(m_creature,SPELL_FEAR);
+            Fear_Timer = 35000;
+        }else Fear_Timer -= diff;
+
+        /*if( HeroicMode )
+        {
+            if( Enrage_Timer < diff )
+            {
+                DoCast(m_creature,SPELL_ENRAGE);
+            }else Enrage_Timer -= diff;
+        }*/
+
+        DoMeleeAttackIfReady();
+    }
+};
 CreatureAI* GetAI_boss_ambassador_hellmaw(Creature *_Creature)
 {
-    SimpleAI* ai = new SimpleAI (_Creature);
-
-    ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = CORROSIVE_ACID;
-    ai->Spell[0].Cooldown = 25000;
-    ai->Spell[0].First_Cast = 25000;
-    ai->Spell[0].Cast_Target_Type = CAST_SELF;
-
-    ai->Spell[1].Enabled = true;
-    ai->Spell[1].Spell_Id = TERRIFYING_HOWL;
-    ai->Spell[1].Cooldown = 30000;
-    ai->Spell[1].First_Cast = 40000;
-    ai->Spell[1].Cast_Target_Type = CAST_SELF;
-
-    ai->Aggro_Text[0] = "Pathetic mortals! You will pay dearly!";
-    ai->Aggro_Sound[0] = 10475;
-    ai->Aggro_Text[1] = "I will break you!";
-    ai->Aggro_Sound[1] = 10476;
-    ai->Aggro_Text[2] = "Finally! Something to relieve the tedium!";
-    ai->Aggro_Sound[2] = 10477;
-
-    ai->Death_Text[0] = "Do not grow overconfident...mortal.";
-    ai->Death_Sound[0] = 10480;
-    ai->Death_Text[1] = "Do not grow overconfident...mortal.";
-    ai->Death_Sound[1] = 10480;
-    ai->Death_Text[2] = "Do not grow overconfident...mortal.";
-    ai->Death_Sound[2] = 10480;
-
-    ai->Kill_Text[0] = "This is the part I enjoy most.";
-    ai->Kill_Sound[0] = 10479;
-    ai->Kill_Text[1] = "Do you fear death?";
-    ai->Kill_Sound[1] = 10478;
-
-    ai->EnterEvadeMode();
-
-    return ai;
+    return new boss_ambassador_hellmawAI (_Creature);
 }
 
 void AddSC_boss_ambassador_hellmaw()

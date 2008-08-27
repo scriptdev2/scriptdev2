@@ -17,16 +17,17 @@
 /* ScriptData
 SDName: Boss_Blackheart_the_Inciter
 SD%Complete: 75
-SDComment: Incite Chaos NYI since core lacks Mind Control support
+SDComment: Incite Chaos not functional since core lacks Mind Control support
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_shadow_labyrinth.h"
 
-//#define SPELL_INCITE_CHAOS    33684
-#define SPELL_CHARGE          24408
-#define SPELL_KNOCKBACK       37317
+#define SPELL_INCITE_CHAOS    33676
+#define SPELL_INCITE_CHAOS_B  33684                         //debuff applied to each member of party
+#define SPELL_CHARGE          33709
+#define SPELL_WAR_STOMP       33707
 
 #define SAY_AGGRO1            "You be dead people!"
 #define SAY_AGGRO2            "Time to kill!"
@@ -48,22 +49,28 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
 {
     boss_blackheart_the_inciterAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
     ScriptedInstance *pInstance;
 
+    bool InciteChaos;
+    uint32 InciteChaos_Timer;
+    uint32 InciteChaosWait_Timer;
     uint32 Charge_Timer;
     uint32 Knockback_Timer;
 
     void Reset()
     {
-        Charge_Timer = 20000;
+        InciteChaos = false;
+        InciteChaos_Timer = 20000;
+        InciteChaosWait_Timer = 15000;
+        Charge_Timer = 5000;
         Knockback_Timer = 15000;
 
-        if(pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 0);
+        if( pInstance )
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -71,19 +78,17 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         switch(rand()%3)
         {
             case 0:
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
             case 1:
-            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
-
+                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
             case 2:
-            DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            break;
+                DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+                break;
         }
     }
 
@@ -92,39 +97,30 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
-        if(pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 2);
-    }
-
-    void StartEvent()
-    {
-        switch(rand()%3)
-        {
-            case 0:
-            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-            break;
-
-            case 1:
-            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-            break;
-
-            case 2:
-            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-            break;
-        }
-
-        if(pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, 1);
+        if( pInstance )
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
     }
 
     void Aggro(Unit *who)
     {
-        
-                StartEvent();
+        switch(rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                break;
+        }
 
+        if( pInstance )
+            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
@@ -133,22 +129,47 @@ struct MANGOS_DLL_DECL boss_blackheart_the_inciterAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        //Charge_Timer
-        if(Charge_Timer < diff)
+        if( InciteChaos )
         {
-            Unit *target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if( InciteChaosWait_Timer < diff )
+            {
+                InciteChaos = false;
+                InciteChaosWait_Timer = 15000;
+            }else InciteChaosWait_Timer -= diff;
 
-            if(target)
+            return;
+        }
+
+        if( InciteChaos_Timer < diff )
+        {
+            DoCast(m_creature, SPELL_INCITE_CHAOS);
+
+            std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+            for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
+            {
+                Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                if( target && target->GetTypeId() == TYPEID_PLAYER )
+                    target->CastSpell(target,SPELL_INCITE_CHAOS_B,true);
+            }
+
+            DoResetThreat();
+            InciteChaos = true;
+            InciteChaos_Timer = 40000;
+            return;
+        }else InciteChaos_Timer -= diff;
+
+        //Charge_Timer
+        if( Charge_Timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0) )
                 DoCast(target, SPELL_CHARGE);
-
             Charge_Timer = 25000;
         }else Charge_Timer -= diff;
 
         //Knockback_Timer
-        if(Knockback_Timer < diff)
+        if( Knockback_Timer < diff )
         {
-            DoCast(m_creature->getVictim(), SPELL_KNOCKBACK);
+            DoCast(m_creature, SPELL_WAR_STOMP);
             Knockback_Timer = 20000;
         }else Knockback_Timer -= diff;
 
