@@ -18,7 +18,7 @@ bool ScriptedAI::IsVisible(Unit* who) const
     if (!who)
         return false;
 
-    return m_creature->IsWithinDistInMap(who, VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
+    return (m_creature->GetDistanceSq(who) < VISIBLE_RANGE_SQ) && who->isVisibleForOrDetect(m_creature,true);
 }
 
 void ScriptedAI::MoveInLineOfSight(Unit *who)

@@ -199,14 +199,6 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
 		} else Heal_Timer -= diff;
 	}
 
-	bool IsVisible(Unit *who) const
-	{
-		if (!who)
-			return false;
-
-		return m_creature->IsWithinDistInMap(who, 200.0f) && who->isVisibleForOrDetect(m_creature,true);
-	}
-
 	Unit *GetAnyoneCloseEnough(float dist, bool totallyRandom)
 	{
 		int cnt = 0;

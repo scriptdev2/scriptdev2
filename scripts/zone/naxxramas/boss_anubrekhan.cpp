@@ -99,15 +99,6 @@ struct MANGOS_DLL_DECL boss_anubrekhanAI : public ScriptedAI
                 }
     }
 
-    //Extended Visbility range for taunts
-    bool IsVisible(Unit *who) const
-    {
-        if (!who)
-            return false;
-
-        return m_creature->IsWithinDistInMap(who, 100.0f) && who->isVisibleForOrDetect(m_creature,true);
-    }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())

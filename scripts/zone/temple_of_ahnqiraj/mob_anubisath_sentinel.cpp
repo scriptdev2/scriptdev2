@@ -292,14 +292,6 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
 		}
 	}
 
-	bool IsVisible(Unit *who) const
-	{
-		if (!who)
-			return false;
-
-		return m_creature->IsWithinDistInMap(who, 150.0f) && who->isVisibleForOrDetect(m_creature,true);
-	}
-
 	Unit *GetHatedManaUser()
 	{
 		std::list<HostilReference*>::iterator i;

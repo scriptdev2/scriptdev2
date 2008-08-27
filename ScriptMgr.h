@@ -17,9 +17,9 @@ class GameObject;
 class SpellCastTargets;
 class Map;
 
-#define MAX_SCRIPTS     5000                                //72 bytes each (approx 351kb)
+#define MAX_SCRIPTS     5000            //72 bytes each (approx 351kb)
 
-#define VISIBLE_RANGE   (26.46f)
+#define VISIBLE_RANGE_SQ   (500.0f)
 
 #define DEFAULT_TEXT    "<ScriptDev2 Text Entry Missing!>"
 

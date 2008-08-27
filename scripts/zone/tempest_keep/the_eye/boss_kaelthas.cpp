@@ -499,15 +499,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     }
 
-    //Extended vision range
-    bool IsVisible(Unit* who)
-    {
-        if (!who)
-            return false;
-
-        return m_creature->IsWithinDistInMap(who, KAEL_VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
-    }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
