@@ -857,9 +857,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Duration
                 Creature* pCreature = NULL;
 
-                HM_NAMESPACE::hash_map<uint32, EventAI_Summon>::iterator i = EventSummon_Map.find(param3);
+                HM_NAMESPACE::hash_map<uint32, EventAI_Summon>::iterator i = EventAI_Summon_Map.find(param3);
 
-                if (i == EventSummon_Map.end())
+                if (i == EventAI_Summon_Map.end())
                 {
                     error_log( "SD2: EventAI failed to spawn creature %u. Summon map index %u does not exist. EventID %d. CreatureID %d", param1, param3, EventId, m_creature->GetCreatureInfo()->Entry);
                     return;
@@ -1282,6 +1282,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     }
 };
+
+
 CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
 {
     //Select events by creature id
@@ -1290,10 +1292,45 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
 
     HM_NAMESPACE::hash_map<uint32, EventAI_Event>::iterator i;
 
-    for (i = Event_Map.begin(); i != Event_Map.end(); ++i)
+    for (i = EventAI_Event_Map.begin(); i != EventAI_Event_Map.end(); ++i)
     {
         if ((*i).second.creature_id == ID)
         {
+            //Debug check
+#ifndef _DEBUG
+            if ((*i).second.event_flags & EFLAG_DEBUG_ONLY)
+                continue;
+#endif
+
+            //Heroic Instance Difficulty check
+            if ((*i).second.event_flags & EFLAG_HEROIC)
+            {
+                //Creature isn't even in a dungeon
+                if (!_Creature->GetMap() || !_Creature->GetMap()->IsDungeon())
+                {
+                    error_log("SD2: Creature %i, Event %i using EFLAG_HEROIC but creature is not inside of an instance. Event skipped.", _Creature->GetCreatureInfo()->Entry, (*i).first);
+                    continue;
+                }
+
+                if (!_Creature->GetMap()->IsHeroic())
+                    continue;
+            } else
+
+                //Normal Instance Difficulty check
+                if ((*i).second.event_flags & EFLAG_NORMAL)
+                {
+                    //Creature isn't even in a dungeon
+                    if (!_Creature->GetMap() || !_Creature->GetMap()->IsDungeon())
+                    {
+                        error_log("SD2: Creature %i, Event %i using EFLAG_NORMAL but creature is not inside of an instance. Event skipped.", _Creature->GetCreatureInfo()->Entry, (*i).first);
+                        continue;
+                    }
+
+                    if (_Creature->GetMap()->IsHeroic())
+                        continue;
+                } else if (_Creature->GetMap() && _Creature->GetMap()->IsDungeon())
+                        error_log("SD2 WARNING: Creature %i, Event %i. Creature is in instance but neither EFLAG_NORMAL or EFLAG_HEROIC are set.", _Creature->GetCreatureInfo()->Entry, (*i).first);
+
             //Push back event
             EventList.push_back(EventHolder((*i).second, (*i).first));
         }

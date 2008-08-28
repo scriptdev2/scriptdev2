@@ -32,10 +32,13 @@ HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 
 //*** EventAI data ***
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
-HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
+HM_NAMESPACE::hash_map<uint32, EventAI_Event> EventAI_Event_Map;
 
 //Event AI summon structure. Used exclusivly by mob_event_ai.cpp.
-HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
+HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
+
+//Event AI error prevention structure. Used at runtime to prevent error log spam of same creature id.
+//HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList; 
 
 //*** End EventAI data ***
 
@@ -624,7 +627,7 @@ void LoadDatabase()
             "FROM `eventai_summons`");
 
         //Drop Existing EventSummon Map
-        EventSummon_Map.clear();
+        EventAI_Summon_Map.clear();
 
         if (result)
         {
@@ -647,7 +650,7 @@ void LoadDatabase()
                 temp.SpawnTimeSecs = fields[5].GetUInt32();
 
                 //Add to map
-                EventSummon_Map[i] = temp;
+                EventAI_Summon_Map[i] = temp;
                 ++Count;
 
             }while (result->NextRow());
@@ -663,7 +666,7 @@ void LoadDatabase()
             "FROM `eventai_scripts`");
 
         //Drop Existing EventAI Map
-        Event_Map.clear();
+        EventAI_Event_Map.clear();
 
         if (result)
         {
@@ -855,7 +858,7 @@ void LoadDatabase()
                     //2nd param target
                     case ACTION_T_SUMMON_ID:
                         {
-                            if (EventSummon_Map.find(temp.action[j].param3) == EventSummon_Map.end())
+                            if (EventAI_Summon_Map.find(temp.action[j].param3) == EventAI_Summon_Map.end())
                                 error_log("SD2: Event %u Action %u summons missing EventAI_Summon %u", i, j+1, temp.action[j].param3);
 
                             if (temp.action[j].param2 >= TARGET_T_END)
@@ -903,7 +906,7 @@ void LoadDatabase()
                 }
 
                 //Add to map
-                Event_Map[i] = temp;
+                EventAI_Event_Map[i] = temp;
                 ++Count;
 
             }while (result->NextRow());

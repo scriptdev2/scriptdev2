@@ -118,13 +118,13 @@ enum CastFlags
 enum EventFlags
 {
     EFLAG_REPEATABLE            = 0x01,     //Event repeats
-    EFLAG_RESERVED_1            = 0x02,
-    EFLAG_RESERVED_2            = 0x04,
+    EFLAG_NORMAL                = 0x02,     //Event only occurs in Normal instance difficulty
+    EFLAG_HEROIC                = 0x04,     //Event only occurs in Heroic instance difficulty
     EFLAG_RESERVED_3            = 0x08,
     EFLAG_RESERVED_4            = 0x10,
     EFLAG_RESERVED_5            = 0x20,
     EFLAG_RESERVED_6            = 0x40,
-    EFLAG_DEBUG_ONLY            = 0x80,      //Event only occurs in debug build of SD2 only
+    EFLAG_DEBUG_ONLY            = 0x80,     //Event only occurs in debug build of SD2 only
 };
 
 struct EventAI_Event
@@ -177,7 +177,8 @@ struct EventAI_Event
     }action[MAX_ACTIONS];
 };
 
-extern HM_NAMESPACE::hash_map<uint32, EventAI_Event> Event_Map;
+//Event_Map
+extern HM_NAMESPACE::hash_map<uint32, EventAI_Event> EventAI_Event_Map;
 
 struct EventAI_Summon
 {
@@ -190,5 +191,23 @@ struct EventAI_Summon
     uint32 SpawnTimeSecs;
 };
 
-extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventSummon_Map;
+//EventSummon_Map
+extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
+
+//EventAI Error handling
+
+/*
+
+struct EventAI_CreatureError
+{
+    bool ListEmpty;
+    bool NoInstance;
+};
+
+//Error prevention list
+extern HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList; 
+
+//Defines
+#define EVENTAI_EMPTY_EVENTLIST         "SD2: Eventlist for Creature %i is empty but creature is using Mob_EventAI. Preventing EventAI on this creature."
+*/
 #endif
