@@ -1580,7 +1580,7 @@ bool GossipSelect( Player *player, Creature *_Creature,uint32 sender, uint32 act
 {
     Script *tmpscript = NULL;
 
-    debug_log("DEBUG: Gossip selection, sender: %d, action: %d",sender, action);
+    debug_log("SD2: Gossip selection, sender: %d, action: %d",sender, action);
 
     tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
     if(!tmpscript || !tmpscript->pGossipSelect) return false;
@@ -1594,7 +1594,7 @@ bool GossipSelectWithCode( Player *player, Creature *_Creature, uint32 sender, u
 {
     Script *tmpscript = NULL;
 
-    debug_log("DEBUG: Gossip selection, sender: %d, action: %d",sender, action);
+    debug_log("SD2: Gossip selection with code, sender: %d, action: %d",sender, action);
 
     tmpscript = GetScriptByName(_Creature->GetCreatureInfo()->ScriptName);
     if(!tmpscript || !tmpscript->pGossipSelectWithCode) return false;
