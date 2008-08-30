@@ -70,8 +70,8 @@ EndScriptData */
 
 float PortalLocations[2][2]=
 {
-    (-11349.6933, -1704.61023),
-    (-11242.1160, -1713.33325),
+    {-11249.6933, -1704.61023},
+    {-11242.1160, -1713.33325},
 };
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
@@ -95,7 +95,18 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         AmplifyTimer = 0;      
     }
 
-    void Aggro(Unit *who) {}
+    void Aggro(Unit *who)
+    {
+        if(!pInstance)
+        {
+            ERROR_INST_DATA(m_creature);
+            return;
+        }
+
+        Creature* Terestian = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_TERESTIAN)));
+        if(Terestian && (!Terestian->SelectHostilTarget() && !Terestian->getVictim()))
+            Terestian->AddThreat(who, 1.0f);
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -108,7 +119,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
                 if(Terestian && Terestian->isAlive())
                     DoCast(Terestian, SPELL_BROKEN_PACT, true);
             }
-        }
+        }else ERROR_INST_DATA(m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -126,7 +137,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
         }else AmplifyTimer -= diff;
 
         //Chain cast
-        if (!m_creature->IsNonMeleeSpellCasted(false))
+        if (!m_creature->IsNonMeleeSpellCasted(false) && m_creature->IsWithinDistInMap(m_creature->getVictim(), 30))
             DoCast(m_creature->getVictim(),SPELL_FIREBOLT);
         else DoMeleeAttackIfReady();
     }
@@ -217,7 +228,14 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
 
         if(pInstance)
+        {
+            // Put Kil'rek in combat against our target so players don't skip him
+            Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KILREK)));
+            if(Kilrek && (!Kilrek->SelectHostilTarget() && !Kilrek->getVictim()))
+                Kilrek->AddThreat(who, 1.0f);
+
             pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS); // In Progress
+        }else ERROR_INST_DATA(m_creature);
     }
 
     void KilledUnit(Unit *victim)
@@ -267,7 +285,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
             if(pInstance)
                 uint64 KilrekGUID = pInstance->GetData64(DATA_KILREK);
-            else error_log("SD2: Instance Data incorrectly set for Karazhan. Unable to create pointer to Kilrek");
+            else ERROR_INST_DATA(m_creature);
 
             Creature* Kilrek = ((Creature*)Unit::GetUnit((*m_creature), KilrekGUID));
             if(SummonKilrek && Kilrek)
