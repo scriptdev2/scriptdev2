@@ -5,8 +5,6 @@
 #ifndef DEF_SUNWELLPLATEAU_H
 #define DEF_SUNWELLPLATEAU_H
 
-#include "precompiled.h"
-
 /*** Encounters ***/
 #define DATA_KALECGOS_EVENT         0
 #define DATA_BRUTALLUS_EVENT        1
