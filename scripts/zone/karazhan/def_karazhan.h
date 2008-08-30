@@ -25,4 +25,16 @@
 #define DATA_GAMEOBJECT_CURTAINS        18
 #define DATA_GAMEOBJECT_STAGEDOORLEFT   19
 #define DATA_GAMEOBJECT_STAGEDOORRIGHT  20
+#define DATA_GAMEOBJECT_LIBRARY_DOOR    21
+#define DATA_GAMEOBJECT_MASSIVE_DOOR    22
+#define DATA_GAMEOBJECT_NETHER_DOOR     23
+#define DATA_GAMEOBJECT_GAME_DOOR       24
+#define DATA_GAMEOBJECT_GAME_EXIT_DOOR  25
+
+// Opera Performances
+#define EVENT_OZ        1
+#define EVENT_HOOD      2
+#define EVENT_RAJ       3
+
+#define ERROR_INST_DATA(a)     error_log("SD2: Instance Data for Karazhan not set properly. Encounter for Creature Entry %u may not work properly.", a->GetEntry());
 #endif

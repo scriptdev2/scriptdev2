@@ -95,49 +95,17 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 22887:
-                Najentus = creature->GetGUID();
-                break;
-
-            case 22990:
-                Akama = creature->GetGUID();
-                break;
-
-            case 23089:
-                Akama_Shade = creature->GetGUID();
-                break;
-
-            case 22841:
-                ShadeOfAkama = creature->GetGUID();
-                break;
-
-            case 22898:
-                Supremus = creature->GetGUID();
-                break;
-
-            case 22917:
-                IllidanStormrage = creature->GetGUID();
-                break;
-
-            case 22949:
-                GathiosTheShatterer = creature->GetGUID();
-                break;
-
-            case 22950:
-                HighNethermancerZerevor = creature->GetGUID();
-                break;
-
-            case 22951:
-                LadyMalande = creature->GetGUID();
-                break;
-
-            case 22952:
-                VerasDarkshadow = creature->GetGUID();
-                break;
-
-            case 23426:
-                IllidariCouncil = creature->GetGUID();
-                break;
+            case 22887:    Najentus = creature->GetGUID();                  break;
+            case 22990:    Akama = creature->GetGUID();                     break;
+            case 23089:    Akama_Shade = creature->GetGUID();               break;
+            case 22841:    ShadeOfAkama = creature->GetGUID();              break;
+            case 22898:    Supremus = creature->GetGUID();                  break;
+            case 22917:    IllidanStormrage = creature->GetGUID();          break;
+            case 22949:    GathiosTheShatterer = creature->GetGUID();       break;
+            case 22950:    HighNethermancerZerevor = creature->GetGUID();   break;
+            case 22951:    LadyMalande = creature->GetGUID();               break;
+            case 22952:    VerasDarkshadow = creature->GetGUID();           break;
+            case 23426:    IllidariCouncil = creature->GetGUID();           break;
         }
     }
 
@@ -167,50 +135,21 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(identifier)
         {
-             case DATA_HIGHWARLORDNAJENTUS:
-                 return Najentus;
-
-             case DATA_AKAMA:
-                 return Akama;
-
-             case DATA_AKAMA_SHADE:
-                 return Akama_Shade;
-
-             case DATA_SHADEOFAKAMA:
-                 return ShadeOfAkama;
-
-             case DATA_SUPREMUS:
-                 return Supremus;
-
-             case DATA_ILLIDANSTORMRAGE:
-                 return IllidanStormrage;
-
-             case DATA_GATHIOSTHESHATTERER:
-                 return GathiosTheShatterer;
-
-             case DATA_HIGHNETHERMANCERZEREVOR:
-                 return HighNethermancerZerevor;
-
-             case DATA_LADYMALANDE:
-                 return LadyMalande;
-
-             case DATA_VERASDARKSHADOW:
-                 return VerasDarkshadow;
-
-             case DATA_ILLIDARICOUNCIL:
-                 return IllidariCouncil;
-
-             case DATA_NAJENTUS_SPINE:
-                 return NajentusSpine;
-                 
-             case DATA_GAMEOBJECT_ILLIDAN_GATE:
-                 return IllidanGate;
-
-             case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:
-                 return IllidanDoor[0];
-
-             case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:
-                 return IllidanDoor[1];
+             case DATA_HIGHWARLORDNAJENTUS:         return Najentus;
+             case DATA_AKAMA:                       return Akama;
+             case DATA_AKAMA_SHADE:                 return Akama_Shade;
+             case DATA_SHADEOFAKAMA:                return ShadeOfAkama;
+             case DATA_SUPREMUS:                    return Supremus;
+             case DATA_ILLIDANSTORMRAGE:            return IllidanStormrage;
+             case DATA_GATHIOSTHESHATTERER:         return GathiosTheShatterer;
+             case DATA_HIGHNETHERMANCERZEREVOR:     return HighNethermancerZerevor;
+             case DATA_LADYMALANDE:                 return LadyMalande;
+             case DATA_VERASDARKSHADOW:             return VerasDarkshadow;
+             case DATA_ILLIDARICOUNCIL:             return IllidariCouncil;
+             case DATA_NAJENTUS_SPINE:              return NajentusSpine;
+             case DATA_GAMEOBJECT_ILLIDAN_GATE:     return IllidanGate;
+             case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:   return IllidanDoor[0];
+             case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:   return IllidanDoor[1];
         }
 
         return 0;
@@ -220,78 +159,85 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_HIGHWARLORDNAJENTUSEVENT:
-                Encounters[0] = data;
-                break;
-
-            case DATA_SUPREMUSEVENT:
-                Encounters[1] = data;
-                break;
-
-            case DATA_SHADEOFAKAMAEVENT:
-                Encounters[2] = data;
-                break;
-
-            case DATA_TERONGOREFIENDEVENT:
-                Encounters[3] = data;
-                break;
-
-            case DATA_GURTOGGBLOODBOILEVENT:
-                Encounters[4] = data;
-                break;
-
-            case DATA_RELIQUARYOFSOULSEVENT:
-                Encounters[5] = data;
-                break;
-
-            case DATA_MOTHERSHAHRAZEVENT:
-                Encounters[6] = data;
-                break;
-
-            case DATA_ILLIDARICOUNCILEVENT:
-                Encounters[7] = data;
-                break;
-
-            case DATA_ILLIDANSTORMRAGEEVENT:
-                Encounters[8] = data;
-                break;
+            case DATA_HIGHWARLORDNAJENTUSEVENT:   Encounters[0] = data;         break;
+            case DATA_SUPREMUSEVENT:              Encounters[1] = data;         break;
+            case DATA_SHADEOFAKAMAEVENT:          Encounters[2] = data;         break;
+            case DATA_TERONGOREFIENDEVENT:        Encounters[3] = data;         break;
+            case DATA_GURTOGGBLOODBOILEVENT:      Encounters[4] = data;         break;
+            case DATA_RELIQUARYOFSOULSEVENT:      Encounters[5] = data;         break;
+            case DATA_MOTHERSHAHRAZEVENT:         Encounters[6] = data;         break;
+            case DATA_ILLIDARICOUNCILEVENT:       Encounters[7] = data;         break;
+            case DATA_ILLIDANSTORMRAGEEVENT:      Encounters[8] = data;         break;
         }
+
+        if(data == DONE)
+            SaveToDB();
     }
 
     uint32 GetData(uint32 type)
     {
         switch(type)
         {
-            case DATA_HIGHWARLORDNAJENTUSEVENT:
-                return Encounters[0];
-
-             case DATA_SUPREMUSEVENT:
-                return Encounters[1];
-
-             case DATA_SHADEOFAKAMAEVENT:
-                return Encounters[2];
-
-             case DATA_TERONGOREFIENDEVENT:
-                return Encounters[3];
-
-             case DATA_GURTOGGBLOODBOILEVENT:
-                return Encounters[4];
-
-             case DATA_RELIQUARYOFSOULSEVENT:
-                return Encounters[5];
-
-             case DATA_MOTHERSHAHRAZEVENT:
-                return Encounters[6];
-
-             case DATA_ILLIDARICOUNCILEVENT:
-                return Encounters[7];
-
-             case DATA_ILLIDANSTORMRAGEEVENT:
-                return Encounters[8];
+             case DATA_HIGHWARLORDNAJENTUSEVENT:         return Encounters[0];
+             case DATA_SUPREMUSEVENT:                    return Encounters[1];
+             case DATA_SHADEOFAKAMAEVENT:                return Encounters[2];
+             case DATA_TERONGOREFIENDEVENT:              return Encounters[3];
+             case DATA_GURTOGGBLOODBOILEVENT:            return Encounters[4];
+             case DATA_RELIQUARYOFSOULSEVENT:            return Encounters[5];
+             case DATA_MOTHERSHAHRAZEVENT:               return Encounters[6];
+             case DATA_ILLIDARICOUNCILEVENT:             return Encounters[7];
+             case DATA_ILLIDANSTORMRAGEEVENT:            return Encounters[8];
         }
 
         return 0;
     }
+
+/* Causes crashes. Disabled till it's fixed.
+    const char* Save()
+    {
+        OUT_SAVE_INST_DATA;
+        std::ostringstream stream;
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        {
+            // Add space only if there's more to come (just for visual)
+            if(i == ENCOUNTERS)    stream << Encounters[i];
+            else                   stream << Encounters[i] << " ";
+
+            if(Encounters[i] == IN_PROGRESS)
+                outstring_log("SD2: WARNING: Encounter %u saved as IN_PROGRESS. Will be reset to NOT_STARTED on inst data load.", i);
+        }
+        char* out = NULL;
+        strcpy(out, stream.str().c_str());
+        if(out)
+        {
+            OUT_SAVE_INST_DATA_COMPLETE;
+            return out;
+        }
+
+        return NULL;
+    }
+
+    void Load(const char* in)
+    {
+        if(!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+        std::istringstream stream(in);
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        {
+            stream >> Encounters[i];
+            if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as "In Progress" - reset it instead.
+            {
+                outstring_log("SD2: Encounter %u loading as IN_PROGRESS. Resetting to NOT_STARTED", i);
+                Encounters[i] = NOT_STARTED;
+            }
+        }
+        OUT_LOAD_INST_DATA_COMPLETE;
+    }*/
 };
 
 InstanceData* GetInstanceData_instance_black_temple(Map* map)

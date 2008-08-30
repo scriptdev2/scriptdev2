@@ -24,6 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "../../creature/simple_ai.h"
 #include "def_karazhan.h"
+#include "GameObject.h"
 
 //Aggro
 #define SAY_AGGRO1 "Please, no more. My son... he's gone mad!"
@@ -130,6 +131,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     uint32 NormalCastTimer;
     uint32 SuperCastTimer;
     uint32 BerserkTimer;
+    uint32 CloseDoorTimer; // Don't close the door right on aggro in case some people are still entering.
 
     uint8 LastSuperSpell;
 
@@ -156,6 +158,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         NormalCastTimer = 0;
         SuperCastTimer = 35000;
         BerserkTimer = 720000;
+        CloseDoorTimer = 15000;
 
         LastSuperSpell = rand()%3;
 
@@ -174,7 +177,12 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         DrinkInturrupted = false;
 
         if(pInstance)
+        {
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED); // Not in progress
+
+            if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                Door->SetGoState(0);
+        }
     }
 
     void KilledUnit(Unit *victim)
@@ -198,7 +206,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         DoPlaySoundToSet(NULL, SOUND_DEATH);
 
         if(pInstance)
+        {
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE); // Completed
+            if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                Door->SetGoState(0);
+        }
     }
 
     void Aggro(Unit *who)
@@ -261,6 +273,16 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
+
+        if(CloseDoorTimer)
+            if(CloseDoorTimer <= diff)
+            {
+                if(pInstance)
+                    if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                        Door->SetGoState(1);
+                CloseDoorTimer = 0;
+            }
+            else CloseDoorTimer -= diff;
 
         //Cooldowns for casts
         if (ArcaneCooldown)
@@ -617,9 +639,10 @@ CreatureAI* GetAI_water_elemental(Creature *_Creature)
 {
     return new water_elementalAI (_Creature);
 }
-
+// CONVERT TO ACID
 CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
 {
+    outstring_log("SD2: Convert simpleAI script for Creature Entry %u to ACID", _Creature->GetEntry());
     SimpleAI* ai = new SimpleAI (_Creature);
 
     ai->Spell[0].Enabled = true;

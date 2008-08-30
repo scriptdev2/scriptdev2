@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Karazhan
-SD%Complete: 50
+SD%Complete: 70
 SDComment: Instance Script for Karazhan to help in various encounters. TODO: GameObject visibility for Opera event.
 SDCategory: Karazhan
 EndScriptData */
@@ -58,10 +58,15 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     uint64 KilrekGUID;
     uint64 TerestianGUID;
     uint64 MoroesGUID;
+    uint64 LibraryDoor;            // Door at Shade of Aran
+    uint64 MassiveDoor;            // Door at Netherspite
+    uint64 GamesmansDoor;          // Door before Chess
+    uint64 GamesmansExitDoor;      // Door after Chess
+    uint64 NetherspaceDoor;        // Door at Malchezaar
 
     void Initialize()
     {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
+        for (uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
 
         OperaEvent      = rand()%3; // This never gets altered.
@@ -74,6 +79,12 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         KilrekGUID          = 0;
         TerestianGUID       = 0;
         MoroesGUID          = 0;
+
+        LibraryDoor         = 0;
+        MassiveDoor         = 0;
+        GamesmansDoor       = 0;
+        GamesmansExitDoor   = 0;
+        NetherspaceDoor     = 0;
     }
 
     bool IsEncounterInProgress() const
@@ -88,44 +99,20 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (identifier)
         {
-            case DATA_ATTUMEN_EVENT:
-                return Encounters[0];
-
-            case DATA_MOROES_EVENT:
-                return Encounters[1];
-
-            case DATA_MAIDENOFVIRTUE_EVENT:
-                return Encounters[2];
-
-            case DATA_OPTIONAL_BOSS_EVENT:
-                return Encounters[3];
-
-            case DATA_OPERA_EVENT:
-                return Encounters[4];
-
-            case DATA_CURATOR_EVENT:
-                return Encounters[5];
-
-            case DATA_SHADEOFARAN_EVENT:
-                return Encounters[6];
-
-            case DATA_TERESTIAN_EVENT:
-                return Encounters[7];
-
-            case DATA_CHESS_EVENT:
-                return Encounters[8];
-
-            case DATA_MALCHEZZAR_EVENT:
-                return Encounters[9];
-
-            case DATA_NETHERBANE_EVENT:
-                return Encounters[10];
-
-            case DATA_OPERA_PERFORMANCE:
-                return OperaEvent;
-
-            case DATA_OPERA_OZ_DEATHCOUNT:
-                return OzDeathCount;
+            case DATA_ATTUMEN_EVENT:          return Encounters[0];
+            case DATA_MOROES_EVENT:           return Encounters[1];
+            case DATA_MAIDENOFVIRTUE_EVENT:   return Encounters[2];
+            case DATA_OPTIONAL_BOSS_EVENT:    return Encounters[3];
+            case DATA_OPERA_EVENT:            return Encounters[4];
+            case DATA_CURATOR_EVENT:          return Encounters[5];
+            case DATA_SHADEOFARAN_EVENT:      return Encounters[6];
+            case DATA_TERESTIAN_EVENT:        return Encounters[7];
+            case DATA_NETHERSPITE_EVENT:      return Encounters[8];
+            case DATA_CHESS_EVENT:            return Encounters[9];
+            case DATA_MALCHEZZAR_EVENT:       return Encounters[10];
+            case DATA_NETHERBANE_EVENT:       return Encounters[11];
+            case DATA_OPERA_PERFORMANCE:      return OperaEvent;
+            case DATA_OPERA_OZ_DEATHCOUNT:    return OzDeathCount;
         }
 
         return 0;
@@ -135,17 +122,9 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (entry)
         {
-            case 17229:
-                KilrekGUID = creature->GetGUID();
-                break;
-
-            case 15688:
-                TerestianGUID = creature->GetGUID();
-                break;
-
-            case 15687:
-                MoroesGUID = creature->GetGUID();
-                break;
+            case 17229:   KilrekGUID = creature->GetGUID();      break;
+            case 15688:   TerestianGUID = creature->GetGUID();   break;
+            case 15687:   MoroesGUID = creature->GetGUID();      break;
         }
     }
 
@@ -153,23 +132,17 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (identifier)
         {
-            case DATA_KILREK:
-                return KilrekGUID;
-
-            case DATA_TERESTIAN:
-                return TerestianGUID;
-           
-            case DATA_MOROES:
-                return MoroesGUID;
-
-            case DATA_GAMEOBJECT_STAGEDOORLEFT:
-                return StageDoorLeftGUID;
-
-            case DATA_GAMEOBJECT_STAGEDOORRIGHT:
-                return StageDoorRightGUID;
-
-            case DATA_GAMEOBJECT_CURTAINS:
-                return CurtainGUID;
+            case DATA_KILREK:                      return KilrekGUID;
+            case DATA_TERESTIAN:                   return TerestianGUID;
+            case DATA_MOROES:                      return MoroesGUID;
+            case DATA_GAMEOBJECT_STAGEDOORLEFT:    return StageDoorLeftGUID;
+            case DATA_GAMEOBJECT_STAGEDOORRIGHT:   return StageDoorRightGUID;
+            case DATA_GAMEOBJECT_CURTAINS:         return CurtainGUID;
+            case DATA_GAMEOBJECT_LIBRARY_DOOR:     return LibraryDoor;
+            case DATA_GAMEOBJECT_MASSIVE_DOOR:     return MassiveDoor;
+            case DATA_GAMEOBJECT_GAME_DOOR:        return GamesmansDoor;
+            case DATA_GAMEOBJECT_GAME_EXIT_DOOR:   return GamesmansExitDoor;
+            case DATA_GAMEOBJECT_NETHER_DOOR:      return NetherspaceDoor;
         }
 
         return 0;
@@ -179,73 +152,100 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (identifier)
         {
-            case DATA_ATTUMEN_EVENT:
-                Encounters[0] = data;
-                break;
+            case DATA_ATTUMEN_EVENT:           Encounters[0]  = data; break;
+            case DATA_MOROES_EVENT:            Encounters[1]  = data; break;
+            case DATA_MAIDENOFVIRTUE_EVENT:    Encounters[2]  = data; break;
+            case DATA_OPTIONAL_BOSS_EVENT:     Encounters[3]  = data; break;
+            case DATA_OPERA_EVENT:             Encounters[4]  = data; break;
+            case DATA_CURATOR_EVENT:           Encounters[5]  = data; break;
+            case DATA_SHADEOFARAN_EVENT:       Encounters[6]  = data; break;
+            case DATA_TERESTIAN_EVENT:         Encounters[7]  = data; break;
+            case DATA_NETHERSPITE_EVENT:       Encounters[8]  = data; break;
+            case DATA_CHESS_EVENT:             Encounters[9]  = data; break;
+            case DATA_MALCHEZZAR_EVENT:        Encounters[10] = data; break;
+            case DATA_NETHERBANE_EVENT:        Encounters[11] = data; break;
 
-            case DATA_MOROES_EVENT:
-                Encounters[1] = data;
-                break;
-
-            case DATA_MAIDENOFVIRTUE_EVENT:
-                Encounters[2] = data;
-                break;
-
-            case DATA_OPTIONAL_BOSS_EVENT:
-                Encounters[3] = data;
-                break;
-
-            case DATA_OPERA_EVENT:
-                Encounters[4] = data;
-                break;
-
-            case DATA_CURATOR_EVENT:
-                Encounters[5] = data;
-                break;
-
-            case DATA_SHADEOFARAN_EVENT:
-                Encounters[6] = data;
-                break;
-
-            case DATA_TERESTIAN_EVENT:
-                Encounters[7] = data;
-                break;
-
-            case DATA_CHESS_EVENT:
-                Encounters[8] = data;
-                break;
-
-            case DATA_MALCHEZZAR_EVENT:
-                Encounters[9] = data;
-                break;
-
-            case DATA_NETHERBANE_EVENT:
-                Encounters[10] = data;
-                break;
-
-            case DATA_OPERA_OZ_DEATHCOUNT:
-                OzDeathCount++;
-                break;
+            case DATA_OPERA_OZ_DEATHCOUNT:     ++OzDeathCount;        break;
         }
+
+        if(data == DONE)
+            SaveToDB();
     }
 
     void OnObjectCreate(GameObject* go)
     {
         switch(go->GetEntry())
         {
-            case 183932:
-                CurtainGUID = go->GetGUID();
+            case 183932:   CurtainGUID          = go->GetGUID();         break;
+            case 184278:   StageDoorLeftGUID    = go->GetGUID();         break;
+            case 184279:   StageDoorRightGUID   = go->GetGUID();         break;
+            case 184517:   LibraryDoor          = go->GetGUID();         break;
+            case 185521:   MassiveDoor          = go->GetGUID();         break;
+            case 184276:   GamesmansDoor        = go->GetGUID();         break;
+            case 184277:   GamesmansExitDoor    = go->GetGUID();         break;
+            case 185134:   NetherspaceDoor      = go->GetGUID();         break;
+        }
+
+        switch(OperaEvent)
+        {
+            //TODO: Set Object visibilities for Opera based on performance
+            case EVENT_OZ:
                 break;
 
-            case 184278:
-                StageDoorLeftGUID = go->GetGUID();
+            case EVENT_HOOD:
                 break;
 
-            case 184279:
-                StageDoorRightGUID = go->GetGUID();
+            case EVENT_RAJ:
                 break;
         }
     }
+
+    /* Causes crashes. Disabled till it's fixed.
+    const char* Save()
+    {
+        OUT_SAVE_INST_DATA;
+        std::ostringstream stream;
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        {
+            // Add space only if there's more to come (just for visual)
+            if(i == ENCOUNTERS)    stream << Encounters[i];
+            else                   stream << Encounters[i] << " ";
+
+            if(Encounters[i] == IN_PROGRESS)
+                outstring_log("SD2: WARNING: Encounter %u saved as IN_PROGRESS. Will be reset to NOT_STARTED on inst data load.", i);
+        }
+        char* out = NULL;
+        strcpy(out, stream.str().c_str());
+        if(out)
+        {
+            OUT_SAVE_INST_DATA_COMPLETE;
+            return out;
+        }
+
+        return NULL;
+    }
+
+    void Load(const char* in)
+    {
+        if(!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+        std::istringstream stream(in);
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+        {
+            stream >> Encounters[i];
+            if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as "In Progress" - reset it instead.
+            {
+                outstring_log("SD2: Encounter %u loading as IN_PROGRESS. Resetting to NOT_STARTED", i);
+                Encounters[i] = NOT_STARTED;
+            }
+        }
+        OUT_LOAD_INST_DATA_COMPLETE;
+    }*/
 };
 
 InstanceData* GetInstanceData_instance_karazhan(Map* map)

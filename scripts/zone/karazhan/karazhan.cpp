@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Karazhan
-SD%Complete: 75
-SDComment: Barnes: Not fully complete. Support for Berthold.
+SD%Complete: 100
+SDComment: Support for Barnes (Opera controller) and Berthold (Doorman).
 SDCategory: Karazhan
 EndScriptData */
 
@@ -101,10 +101,6 @@ float StageLocations[6][2]=
 #define SPELL_SPOTLIGHT     25824
 #define SPELL_TUXEDO        32616
 
-#define EVENT_OZ            0
-#define EVENT_HOOD          1
-#define EVENT_RAJ           2
-
 #define SPAWN_Z             90.5
 #define SPAWN_Y             -1758
 #define SPAWN_O             4.738
@@ -155,8 +151,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
             if(Curtain)
                 Curtain->SetGoState(1);
-
-            debug_log("SD2: Barnes Opera Event - Event is %d", Event);
         }
     }
 
@@ -177,7 +171,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 50000);
                 if(Spotlight)
                 {
-                    debug_log("SD2: Barnes Opera Event - Spotlight summoned, begin introduction");
                     Spotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT, false);
                     SpotlightGUID = Spotlight->GetGUID();
@@ -232,8 +225,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
         }
 
-        debug_log("SD2: Barnes' Opera Event Introduction: Event - %d, Count - %d, Timer - %d", Event, TalkCount, TalkTimer);
-
         if(text)
             DoYell(text, LANG_UNIVERSAL, 0);
         if(sound)
@@ -250,7 +241,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             {
                 if(TalkCount > 3)
                 {
-                    debug_log("SD2: Barnes - Introduction complete - removing Spotlight and re-enabling Escort");
                     Unit* Spotlight = Unit::GetUnit((*m_creature), SpotlightGUID);
                     if(Spotlight)
                     {
@@ -281,10 +271,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     if(!pInstance)
                         return;
 
-                    debug_log("SD2: Barnes Opera Event - Opening Curtains");
                     GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
                     if(Curtain)
-                        Curtain->UseDoorOrButton();
+                        Curtain->SetGoState(0);
 
                     CurtainTimer = 0;
                 }else CurtainTimer -= diff;
@@ -337,12 +326,11 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
         GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
         if(Door)
-            Door->UseDoorOrButton();
+            Door->SetGoState(0);
 
         m_creature->CastSpell(m_creature, SPELL_TUXEDO, true);
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 
-        debug_log("SD2: Beginning Opera Event - Barnes Introduction");
         Start(false, false, false);
     }
 
@@ -379,7 +367,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // In case database has bad flags
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
-            debug_log("SD2: Barnes Opera Event - Summoned creature (%d) at %f %f %f", entry, PosX, SPAWN_Y, SPAWN_Z);
         }
 
         CurtainTimer = 10000;
@@ -459,6 +446,7 @@ bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sende
     if(action == GOSSIP_ACTION_INFO_DEF + 1)
         player->CastSpell(player, SPELL_TELEPORT, true);
 
+    player->CLOSE_GOSSIP_MENU();
     return true;
 }
 
