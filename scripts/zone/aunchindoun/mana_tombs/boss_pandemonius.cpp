@@ -49,7 +49,6 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     uint32 darkshell_timer;
     uint32 voidblast_counter;
 
-
     void Reset()
     {   
         voidblast_timer = 30000;
@@ -65,20 +64,17 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%2)
-            return;
-
         switch(rand()%2)
         {        
-        case 0:
-            DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-            break;
+            case 0:
+                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
 
-        case 1:
-            DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-            break;        
+            case 1:
+                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;        
         }
     }
 
@@ -86,37 +82,38 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-            break;
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
 
-        case 1:
-            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            break; 
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break; 
 
-        case 2:
-            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
         }
 
     }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if(voidblast_timer < diff)
         {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            DoCast(target,SPELL_VOID_BLAST);
-            voidblast_timer = 500;
-            voidblast_counter++;
+            if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            {
+                DoCast(target,SPELL_VOID_BLAST);
+                voidblast_timer = 500;
+                ++voidblast_counter;
+            }
+
             if(voidblast_counter == 5)
             {
                 voidblast_timer = 25000+rand()%10000;
@@ -124,7 +121,7 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
             }
         }else voidblast_timer -= diff;
 
-        if(voidblast_counter == 0)
+        if(!voidblast_counter)
             if(darkshell_timer < diff)
             {                   
                 DoCast(m_creature,SPELL_DARK_SHELL);

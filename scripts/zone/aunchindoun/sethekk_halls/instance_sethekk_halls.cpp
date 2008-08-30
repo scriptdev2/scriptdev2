@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_sethekk_halls.h"
 
-#define IKISS_DOOR          177203 //udb spawn
+#define IKISS_DOOR          177203
 
 struct MANGOS_DLL_DECL instance_sethekk_halls : public ScriptedInstance
 {

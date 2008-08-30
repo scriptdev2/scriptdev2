@@ -93,45 +93,40 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%2)
-            return;
-
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-            break;
+            case 0:
+                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                break;
 
-        case 1:
-            DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;        
+            case 1:
+                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                break;        
         }
     }
 
     void Aggro(Unit *who)
-    {
-       
-                switch(rand()%3)
-                {
-                    case 0:
-                        DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                        break;
+    {  
+        switch(rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
 
-                    case 1:
-                        DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                        break; 
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break; 
 
-                    case 2:
-                        DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                        break;
-                }
-                manashield_timer = 15000+rand()%20000; // I dont now when he is casting that so totalrandom in fight (casted once);
-                
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
+        }
+        manashield_timer = 15000+rand()%20000; // I dont know when he is casting that so totalrandom in fight (casted once);        
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -191,7 +186,7 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                     {
                         DoCast(target,SPELL_POLYMORPH);
                         sheep_timer = 5000;
-                        sheep++;
+                        ++sheep;
                     }
                     if(sheep == 2) blink_timer = 5000; 
                 }else sheep_timer -= diff;

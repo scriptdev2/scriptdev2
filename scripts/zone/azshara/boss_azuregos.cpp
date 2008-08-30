@@ -58,17 +58,13 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         Enraged = false;
     }
 
-    void Aggro(Unit *who)
-    {
-
-    }
+    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-
 
           if(Teleport_Timer < diff)
           {
@@ -79,7 +75,7 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
                  Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
                  if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                  {
-                 DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
+                     DoTeleportPlayer(pUnit, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ()+3, pUnit->GetOrientation());
                  }
              }
 

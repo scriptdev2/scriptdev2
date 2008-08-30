@@ -42,26 +42,23 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
         Spirit_Timer = 24000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void SummonSpirits(Unit* victim)
     {
         Rand = rand()%10;
         switch (rand()%2)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            case 0: RandX -= Rand; break;
+            case 1: RandX += Rand; break;
         }
         Rand = 0;
         Rand = rand()%10;
         switch (rand()%2)
         {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
+            case 0: RandY -= Rand; break;
+            case 1: RandY += Rand; break;
         }
-        Rand = 0;
         Summoned = DoSpawnCreature(9178, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
         if(Summoned)
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);

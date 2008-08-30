@@ -70,38 +70,13 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         isMove = false;
         UnSpawn    = false;
         HealSay = false;
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->CastSpell(m_creature, 29152, false, NULL); //cast red shining
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3); //ley down
     }
 
-    //void CreatureMove(float DestX, float DestY, float DestZ)
-    //{
-    //    float FromX = m_creature->GetPositionX();
-    //    float FromY = m_creature->GetPositionY();
-    //    float FromZ = m_creature->GetPositionZ();
-
-    //    float dx = DestX - FromX;
-    //    float dy = DestY - FromY;
-    //    float dz = DestZ - FromZ;
-    //    double dist = ::sqrt((dx*dx) + (dy*dy) + (dz*dz));
-    //    double speed = m_creature->GetSpeed(MOVE_RUN);
-
-    //    if(speed<=0)
-    //        speed = 2.5f;
-    //    speed *= 0.001f;
-
-    //    uint32 TotalTime = static_cast<uint32>( dist/speed + 0.5 );
-    //    m_creature->SendMonsterMove(DestX,DestY,DestZ,0,true,TotalTime);
-    //}
-
-
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who) //MoveInLineOfSight is called if creature could see you, updated all 100 ms
     {
@@ -112,40 +87,37 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         {
             switch (rand()%4)//Random switch between 4 texts
             {
-            case 0:
-                DoSay(HELP1, LANG_UNIVERSAL, NULL);
-                SayingTimer = 15000;
-                say = false;
-                break;
-            case 1:
-                DoSay(HELP2, LANG_UNIVERSAL, NULL);
-                SayingTimer = 15000;
-                say = false;
-                break;
-            case 2:
-                DoSay(HELP3, LANG_UNIVERSAL, NULL);
-                SayingTimer = 15000;
-                say = false;
-                break;
-            case 3:
-                DoSay(HELP4, LANG_UNIVERSAL, NULL);
-                SayingTimer = 15000;
-                say = false;
-                break;
+                case 0:
+                    DoSay(HELP1, LANG_UNIVERSAL, NULL);
+                    SayingTimer = 15000;
+                    say = false;
+                    break;
+                case 1:
+                    DoSay(HELP2, LANG_UNIVERSAL, NULL);
+                    SayingTimer = 15000;
+                    say = false;
+                    break;
+                case 2:
+                    DoSay(HELP3, LANG_UNIVERSAL, NULL);
+                    SayingTimer = 15000;
+                    say = false;
+                    break;
+                case 3:
+                    DoSay(HELP4, LANG_UNIVERSAL, NULL);
+                    SayingTimer = 15000;
+                    say = false;
+                    break;
             }
         }else{ isRun = false; }
     }
 
     void UpdateAI(const uint32 diff)//Is also called each ms for Creature AI Updates...
     {
-
         if (m_creature->GetHealth() > 50)
         {
             if(ResetlifeTimer < diff)
             {
                 ResetlifeTimer = 60000;
-                //m_creature->RemoveAllAuras();
-                //m_creature->DeleteThreatList();
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
                 m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,3); // ley down
@@ -169,14 +141,12 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MovePoint(0, -4115.053711f, -13754.831055f, 73.508949f);
-                //CreatureMove(-4115.053711f,-13754.831055f,73.508949f);
                 isMove = false;
             }
 
             if (UnSpawnTimer < diff)
             {
                 m_creature->StopMoving();
-                //m_creature->Despawn(0);
                 EnterEvadeMode();
                 m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
 
@@ -191,22 +161,20 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)//Called if you cast a spell and do some things if Specified spell is true!
     {
-        if (Spellkind->Id == 28880)
+        if (Hitter && Spellkind->Id == 28880)
         {
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
             m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED);
             m_creature->HandleEmoteCommand(ANIM_RISE);
-            //m_creature->RemoveAllAuras();
             switch (rand()%4)//This switch doesn't work at all, creature say nothing!
             {
-            case 0: DoSay(HEAL1, LANG_UNIVERSAL, Hitter); break;
-            case 1: DoSay(HEAL2, LANG_UNIVERSAL, Hitter); break;
-            case 2: DoSay(HEAL3, LANG_UNIVERSAL, Hitter); break;
-            case 3: DoSay(HEAL4, LANG_UNIVERSAL, Hitter); break;
+                case 0: DoSay(HEAL1, LANG_UNIVERSAL, Hitter); break;
+                case 1: DoSay(HEAL2, LANG_UNIVERSAL, Hitter); break;
+                case 2: DoSay(HEAL3, LANG_UNIVERSAL, Hitter); break;
+                case 3: DoSay(HEAL4, LANG_UNIVERSAL, Hitter); break;
             }
             HealSay    = true;
         }
-        return;
     }
 };
 CreatureAI* GetAI_npc_draenei_survivor(Creature *_Creature)
@@ -299,9 +267,6 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //DoGoHome();
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
         switch (rand()%2)
@@ -311,9 +276,7 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
         }
     }
     
-    void Aggro(Unit *who)
-    {
-    }
+    void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who)
     {
