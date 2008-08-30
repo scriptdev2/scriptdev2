@@ -168,8 +168,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_OPERA_OZ_DEATHCOUNT:     ++OzDeathCount;        break;
         }
 
-        if(data == DONE)
-            SaveToDB();
+//        if(data == DONE)
+//            SaveToDB();
     }
 
     void OnObjectCreate(GameObject* go)

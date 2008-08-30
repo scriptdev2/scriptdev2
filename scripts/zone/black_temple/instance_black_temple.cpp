@@ -170,8 +170,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case DATA_ILLIDANSTORMRAGEEVENT:      Encounters[8] = data;         break;
         }
 
-        if(data == DONE)
-            SaveToDB();
+//        if(data == DONE)
+//            SaveToDB();
     }
 
     uint32 GetData(uint32 type)
