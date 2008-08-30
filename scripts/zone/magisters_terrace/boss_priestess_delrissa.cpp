@@ -208,14 +208,16 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         DoYell(PlayerDeath[PlayersKilled].text, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, PlayerDeath[PlayersKilled].sound);
-        ++PlayersKilled;
+        if( PlayersKilled < 4 )
+            ++PlayersKilled;
     }
 
     void KilledLackey()
     {
         DoYell(LackeyDeath[LackeysKilled].text, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, LackeyDeath[LackeysKilled].sound);
-        ++LackeysKilled;
+        if( LackeysKilled < 3 )
+            ++LackeysKilled;
     }
 
     void JustDied(Unit* killer)

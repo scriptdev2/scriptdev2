@@ -86,8 +86,10 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->CombatStop();
     m_creature->LoadCreaturesAddon();
 
-    if(m_creature->isAlive())
+    if( m_creature->isAlive() )
         m_creature->GetMotionMaster()->MoveTargetedHome();
+
+    m_creature->SetLootRecipient(NULL);
 
     InCombat = false;
     Reset();

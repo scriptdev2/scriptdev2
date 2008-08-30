@@ -1007,8 +1007,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
         m_creature->LoadCreaturesAddon();
-        if(m_creature->isAlive())
+        if( m_creature->isAlive() )
             m_creature->GetMotionMaster()->MoveTargetedHome();
+
+        m_creature->SetLootRecipient(NULL);
 
         InCombat = false;
         Reset();

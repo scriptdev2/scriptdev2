@@ -111,6 +111,7 @@ void npc_escortAI::EnterEvadeMode()
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
     m_creature->CombatStop();
+    m_creature->SetLootRecipient(NULL);
 
     if (IsBeingEscorted)
     {
