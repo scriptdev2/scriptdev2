@@ -21,7 +21,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\..\..\bin\win32_debug"
-			IntermediateDirectory=".\ScriptDev2__Win32_Debug"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -70,7 +70,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug;..\..\..\..\dep\lib\win32_debug\"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Debug;..\..\..\..\win\VC80\mangosd__Win32_Debug;..\..\..\..\dep\lib\win32_debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -105,7 +105,7 @@
 		<Configuration
 			Name="Debug|x64"
 			OutputDirectory="..\..\..\..\bin\x64_debug"
-			IntermediateDirectory=".\ScriptDev2__x64_Debug"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -155,7 +155,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__x64_Debug;..\..\..\..\win\VC80\mangosd__x64_Debug;..\..\..\..\dep\lib\x64_debug\"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__x64_Debug;..\..\..\..\win\VC80\mangosd__x64_Debug"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/MaNGOSScript.pdb"
 				SubSystem="2"
@@ -190,7 +190,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\..\..\bin\win32_release"
-			IntermediateDirectory=".\ScriptDev2__Win32_Release"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -237,7 +237,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Release;..\..\..\..\win\VC80\mangosd__Win32_Release;"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__Win32_Release;..\..\..\..\win\VC80\mangosd__Win32_Release"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -273,7 +273,7 @@
 		<Configuration
 			Name="Release|x64"
 			OutputDirectory="..\..\..\..\bin\x64_release"
-			IntermediateDirectory=".\ScriptDev2__x64_Release"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -321,7 +321,7 @@
 				AdditionalDependencies="mangosd.lib zthread.lib"
 				OutputFile="$(OutDir)/MaNGOSScript.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__x64_Release;..\..\..\..\win\VC80\mangosd__x64_Release;"
+				AdditionalLibraryDirectories="..\..\..\..\win\VC80\zthread__x64_Release;..\..\..\..\win\VC80\mangosd__x64_Release"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -1216,15 +1216,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
 						>
 					</File>
 				</Filter>

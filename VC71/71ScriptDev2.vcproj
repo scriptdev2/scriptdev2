@@ -14,7 +14,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\..\..\..\bin\win32_debug"
-			IntermediateDirectory=".\ScriptDev2__Win32_Debug"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -67,7 +67,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\..\..\..\bin\win32_release"
-			IntermediateDirectory=".\ScriptDev2__Win32_Release"
+			IntermediateDirectory=".\ScriptDev2__$(PlatformName)_$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -977,15 +977,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\def_temple_of_ahnqiraj.h"
 						>
 					</File>
 					<File
 						RelativePath="..\scripts\zone\temple_of_ahnqiraj\instance_temple_of_ahnqiraj.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\temple_of_ahnqiraj\mob_anubisath_sentinel.cpp"
 						>
 					</File>
 				</Filter>
