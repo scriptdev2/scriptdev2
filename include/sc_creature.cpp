@@ -108,9 +108,6 @@ void ScriptedAI::DoStartAttackAndMovement(Unit* victim, float distance, float an
     {
         m_creature->GetMotionMaster()->MoveChase(victim, distance, angle);
         m_creature->AddThreat(victim, 0.0f);
-
-        if (victim->GetTypeId() == TYPEID_PLAYER)
-            m_creature->SetLootRecipient((Player*)victim);
     }
 }
 
@@ -122,9 +119,6 @@ void ScriptedAI::DoStartAttackNoMovement(Unit* victim)
     if ( m_creature->Attack(victim, true) )
     {
         m_creature->AddThreat(victim, 0.0f);
-
-        if (victim->GetTypeId() == TYPEID_PLAYER)
-            m_creature->SetLootRecipient((Player*)victim);
     }
 }
 

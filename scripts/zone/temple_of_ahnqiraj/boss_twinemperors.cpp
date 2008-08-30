@@ -639,8 +639,6 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
 			{
 				m_creature->GetMotionMaster()->MoveChase(who, VEKLOR_DIST, 0);
 				m_creature->AddThreat(who, 0.0f);
-				if (who->GetTypeId() == TYPEID_PLAYER)
-					m_creature->SetLootRecipient((Player*)who);
 			}
 
 			if (!InCombat)
