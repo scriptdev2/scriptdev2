@@ -790,8 +790,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_lore_keeper_of_norgannon' WHERE
 
 
 /* UNDERCITY */
+UPDATE `creature_template` SET `ScriptName`='npc_lady_sylvanas_windrunner' WHERE `entry`=10181;
+UPDATE `creature_template` SET `ScriptName`='npc_highborne_lamenter' WHERE `entry`=21628;
 UPDATE `creature_template` SET `ScriptName`='npc_parqual_fintallas' WHERE `entry`=4488;
-
 
 /* WAILING CAVERNS */
 

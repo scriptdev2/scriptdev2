@@ -17,11 +17,182 @@
 /* ScriptData
 SDName: Undercity
 SD%Complete: 95
-SDComment: Quest support: 6628(Parqual Fintallas questions/'answers' might have more to it, need more info)
+SDComment: Quest support: 6628(Parqual Fintallas questions/'answers' might have more to it, need more info), 9180(post-event).
 SDCategory: Undercity
 EndScriptData */
 
+/* ContentData
+npc_lady_sylvanas_windrunner
+npc_highborne_lamenter
+npc_parqual_fintallas
+EndContentData */
+
 #include "precompiled.h"
+
+/*######
+## npc_lady_sylvanas_windrunner
+######*/
+
+#define SAY_LAMENT_END              "Belore..."
+#define EMOTE_LAMENT_END            "kneels down and pick up the amulet."
+
+#define SOUND_CREDIT                10896
+#define ENTRY_HIGHBORNE_LAMENTER    21628
+#define ENTRY_HIGHBORNE_BUNNY       21641
+
+#define SPELL_HIGHBORNE_AURA        37090
+#define SPELL_SYLVANAS_CAST         36568
+#define SPELL_RIBBON_OF_SOULS       34432                   //the real one to use might be 37099
+
+float HighborneLoc[4][3]=
+{
+    {1285.41, 312.47, 0.51},
+    {1286.96, 310.40, 1.00},
+    {1289.66, 309.66, 1.52},
+    {1292.51, 310.50, 1.99},
+};
+#define HIGHBORNE_LOC_Y             -61.00
+#define HIGHBORNE_LOC_Y_NEW         -55.50
+
+struct MANGOS_DLL_DECL npc_lady_sylvanas_windrunnerAI : public ScriptedAI
+{
+    npc_lady_sylvanas_windrunnerAI(Creature *c) : ScriptedAI(c) { Reset(); }
+
+    uint32 LamentEvent_Timer;
+    bool LamentEvent;
+    uint64 targetGUID;
+
+    float myX;
+    float myY;
+    float myZ;
+
+    void Reset()
+    {
+        myX = m_creature->GetPositionX();
+        myY = m_creature->GetPositionY();
+        myZ = m_creature->GetPositionZ();
+
+        LamentEvent_Timer = 5000;
+        LamentEvent = false;
+        targetGUID = 0;
+    }
+
+    void Aggro(Unit *who) {}
+
+    void JustSummoned(Creature *summoned)
+    {
+        if( summoned->GetEntry() == ENTRY_HIGHBORNE_BUNNY )
+        {
+            if( Unit* target = Unit::GetUnit(*summoned,targetGUID) )
+            {
+                target->SendMonsterMove(target->GetPositionX(),target->GetPositionY(),myZ+15.0,0,0,0);
+                target->Relocate(target->GetPositionX(),target->GetPositionY(),myZ+15.0);
+                summoned->CastSpell(target,SPELL_RIBBON_OF_SOULS,false);
+            }
+
+            summoned->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
+            targetGUID = summoned->GetGUID();
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if( LamentEvent )
+        {
+            if( LamentEvent_Timer < diff )
+            {
+                float raX = myX;
+                float raY = myY;
+                float raZ = myZ;
+
+                m_creature->GetRandomPoint(myX,myY,myZ,20.0,raX,raY,raZ);
+                m_creature->SummonCreature(ENTRY_HIGHBORNE_BUNNY,raX,raY,myZ,0,TEMPSUMMON_TIMED_DESPAWN,3000);
+
+                LamentEvent_Timer = 2000;
+                if( !m_creature->HasAura(SPELL_SYLVANAS_CAST,0) )
+                {
+                    DoSay(SAY_LAMENT_END,LANG_UNIVERSAL,NULL);
+                    DoTextEmote(EMOTE_LAMENT_END,NULL);
+                    LamentEvent = false;
+                }
+            }else LamentEvent_Timer -= diff;
+        }
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature *_Creature)
+{
+    return new npc_lady_sylvanas_windrunnerAI (_Creature);
+}
+
+bool ChooseReward_npc_lady_sylvanas_windrunner(Player *player, Creature *_Creature, const Quest *_Quest, uint32 slot)
+{
+    if( _Quest->GetQuestId() == 9180 )
+    {
+        ((npc_lady_sylvanas_windrunnerAI*)_Creature->AI())->LamentEvent = true;
+        ((npc_lady_sylvanas_windrunnerAI*)_Creature->AI())->DoPlaySoundToSet(_Creature,SOUND_CREDIT);
+        _Creature->CastSpell(_Creature,SPELL_SYLVANAS_CAST,false);
+
+        for( uint8 i = 0; i < 4; i++ )
+            _Creature->SummonCreature(ENTRY_HIGHBORNE_LAMENTER, HighborneLoc[i][0], HighborneLoc[i][1], HIGHBORNE_LOC_Y, HighborneLoc[i][2], TEMPSUMMON_TIMED_DESPAWN, 160000);
+    }
+
+    return true;
+}
+
+/*######
+## npc_highborne_lamenter
+######*/
+
+struct MANGOS_DLL_DECL npc_highborne_lamenterAI : public ScriptedAI
+{
+    npc_highborne_lamenterAI(Creature *c) : ScriptedAI(c) { Reset(); }
+
+    uint32 EventMove_Timer;
+    uint32 EventCast_Timer;
+    bool EventMove;
+    bool EventCast;
+
+    void Reset()
+    {
+        EventMove_Timer = 10000;
+        EventCast_Timer = 17500;
+        EventMove = true;
+        EventCast = true;
+    }
+
+    void Aggro(Unit *who) {}
+
+    void UpdateAI(const uint32 diff)
+    {
+        if( EventMove )
+        {
+            if( EventMove_Timer < diff )
+            {
+                m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT | MOVEMENTFLAG_LEVITATING);
+                m_creature->SendMonsterMoveWithSpeed(m_creature->GetPositionX(),m_creature->GetPositionY(),HIGHBORNE_LOC_Y_NEW,MOVEMENTFLAG_ONTRANSPORT,5000);
+                m_creature->GetMap()->CreatureRelocation(m_creature,m_creature->GetPositionX(),m_creature->GetPositionY(),HIGHBORNE_LOC_Y_NEW,m_creature->GetOrientation());
+                EventMove = false;
+            }else EventMove_Timer -= diff;
+        }
+        if( EventCast )
+        {
+            if( EventCast_Timer < diff )
+            {
+                DoCast(m_creature,SPELL_HIGHBORNE_AURA);
+                EventCast = false;
+            }else EventCast_Timer -= diff;
+        }
+    }
+};
+CreatureAI* GetAI_npc_highborne_lamenter(Creature *_Creature)
+{
+    return new npc_highborne_lamenterAI (_Creature);
+}
 
 /*######
 ## npc_parqual_fintallas
@@ -69,6 +240,17 @@ bool GossipSelect_npc_parqual_fintallas(Player *player, Creature *_Creature, uin
 void AddSC_undercity()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_lady_sylvanas_windrunner";
+    newscript->GetAI = GetAI_npc_lady_sylvanas_windrunner;
+    newscript->pChooseReward = &ChooseReward_npc_lady_sylvanas_windrunner;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_highborne_lamenter";
+    newscript->GetAI = GetAI_npc_highborne_lamenter;
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="npc_parqual_fintallas";
