@@ -168,8 +168,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_OPERA_OZ_DEATHCOUNT:     ++OzDeathCount;        break;
         }
 
-//        if(data == DONE)
-//            SaveToDB();
+        if(data == DONE)
+            SaveToDB();
     }
 
     void OnObjectCreate(GameObject* go)
@@ -200,21 +200,14 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         }
     }
 
-    /* Causes crashes. Disabled till it's fixed.
     const char* Save()
     {
         OUT_SAVE_INST_DATA;
         std::ostringstream stream;
-        for(uint8 i = 0; i < ENCOUNTERS; ++i)
-        {
-            // Add space only if there's more to come (just for visual)
-            if(i == ENCOUNTERS)    stream << Encounters[i];
-            else                   stream << Encounters[i] << " ";
-
-            if(Encounters[i] == IN_PROGRESS)
-                outstring_log("SD2: WARNING: Encounter %u saved as IN_PROGRESS. Will be reset to NOT_STARTED on inst data load.", i);
-        }
-        char* out = NULL;
+        stream << Encounters[0] << " "  << Encounters[1] << " "  << Encounters[2] << " "  << Encounters[3] << " "
+               << Encounters[4] << " "  << Encounters[5] << " "  << Encounters[6] << " "  << Encounters[7] << " "
+               << Encounters[8] << " "  << Encounters[9] << " "  << Encounters[10];
+        char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
         if(out)
         {
@@ -235,17 +228,14 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         OUT_LOAD_INST_DATA(in);
         std::istringstream stream(in);
+        stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3] 
+               >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7] 
+               >> Encounters[8] >> Encounters[9] >> Encounters[10];
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-        {
-            stream >> Encounters[i];
             if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as "In Progress" - reset it instead.
-            {
-                outstring_log("SD2: Encounter %u loading as IN_PROGRESS. Resetting to NOT_STARTED", i);
                 Encounters[i] = NOT_STARTED;
-            }
-        }
         OUT_LOAD_INST_DATA_COMPLETE;
-    }*/
+    }
 };
 
 InstanceData* GetInstanceData_instance_karazhan(Map* map)

@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
 
     void SetFaction(uint32 _faction) { Faction = _faction; } // Set the faction to either Alliance or Horde in Hyjal
 
-    void Retreat(); // "Teleport" (teleport visual + set invisible) all friendly creatures from the base away.
+    void Retreat(); // "Teleport" (teleport visual + set invisible) all friendly creatures away from the base.
 
     void SummonCreature(uint32 entry, float Base[4][3]); // Summons a creature for that wave in that base
     
@@ -184,11 +184,14 @@ public:
     uint32 CheckTimer;
     uint32 Faction;
     uint32 EnemyCount;
+    uint32 RetreatTimer;
 
     bool EventBegun;
     bool FirstBossDead;
     bool SecondBossDead;
     bool Summon;
+    bool bRetreat;
+    bool Debug;
 
     struct Spell
     {
@@ -199,5 +202,6 @@ public:
 
 private:
     uint32 SpellTimer[3];
+    std::list<uint64> CreatureList;
 };
 #endif

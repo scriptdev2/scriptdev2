@@ -75,11 +75,10 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         Attumen = 0;
         Mount_Timer = 0;
 
+        m_creature->SetVisibility(VISIBILITY_ON);
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void KilledUnit(Unit *victim)
     {
@@ -204,6 +203,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         CurseTimer = 30000;
         RandomYellTimer = 30000 + (rand()%31)*1000; //Occasionally yell
         ChargeTimer = 20000;
+        ResetTimer = 0;
     }
 
     uint64 Midnight;
@@ -219,9 +219,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
         ResetTimer = 2000;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void KilledUnit(Unit *victim)
     {
@@ -260,6 +258,9 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                     pMidnight->SetVisibility(VISIBILITY_ON);
                 }
                 Midnight = 0;
+
+                m_creature->SetVisibility(VISIBILITY_OFF);
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             else ResetTimer -= diff;
 
@@ -351,8 +352,6 @@ void boss_midnightAI::SetMidnight(Creature *pAttumen, uint64 value)
 {
     ((boss_attumenAI*)pAttumen->AI())->Midnight = value;
 }
-
-
 
 CreatureAI* GetAI_boss_attumen(Creature *_Creature)
 {

@@ -124,6 +124,9 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 UpdateWorldState(2453, data);
                 break;
         }
+
+        if(data == DONE)
+            SaveToDB();
     }
 
     uint32 GetData(uint32 type)
@@ -151,11 +154,18 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 
     const char* Save()
     {
-        if(Encounters[4] == DONE)         return "Archimonde complete";
-        else if(Encounters[3] == DONE)    return "Azgalor complete";
-        else if(Encounters[2] == DONE)    return "Kazrogal complete";
-        else if(Encounters[1] == DONE)    return "Anetheron complete";
-        else if(Encounters[0] == DONE)    return "Winterchill complete";
+        OUT_SAVE_INST_DATA;
+        std::ostringstream stream;
+        stream << Encounters[0] << " " << Encounters[1] << " "
+               << Encounters[2] << " " << Encounters[3] << " "
+               << Encounters[4];
+        char* out = new char[stream.str().length() + 1];
+        strcpy(out, stream.str().c_str());
+        if(out)
+        {
+            OUT_SAVE_INST_DATA_COMPLETE;
+            return out;
+        }
 
         return NULL;
     }
@@ -163,17 +173,18 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     void Load(const char* load)
     {
         if(!load)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
             return;
+        }
         
-        uint8 r = 0;
-        if(load == "Archimonde complete") r = 4;
-        else if(load == "Azgalor complete") r = 3;
-        else if(load == "Kazrogal complete") r = 2;
-        else if(load == "Anetheron complete") r = 1;
-        else if(load == "Winterchill complete") r = 0;
-
-        for(uint8 i = 0; i <= r; ++i)
-            Encounters[i] = DONE;
+        OUT_LOAD_INST_DATA(load);
+        std::istringstream stream;
+        stream >> Encounters[1] >> Encounters[2] >> Encounters[3] >> Encounters[4];
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as IN_PROGRESS - reset it instead.
+                Encounters[i] = NOT_STARTED;
+        OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 

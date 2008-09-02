@@ -74,6 +74,9 @@ bool GossipHello_npc_jaina_proudmoore(Player *player, Creature *_Creature)
     else if(RageEncounter == DONE && AnetheronEncounter == DONE)
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
+    if(player->isGameMaster())
+        player->ADD_GOSSIP_ITEM(2, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+
     player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
 
     return true;
@@ -82,18 +85,23 @@ bool GossipHello_npc_jaina_proudmoore(Player *player, Creature *_Creature)
 bool GossipSelect_npc_jaina_proudmoore(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     player->PlayerTalkClass->GetGossipMenu();
+    hyjalAI* ai = ((hyjalAI*)_Creature->AI());
     switch(action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-            ((hyjalAI*)_Creature->AI())->StartEvent(player);
+            ai->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            ((hyjalAI*)_Creature->AI())->FirstBossDead = true;
-            ((hyjalAI*)_Creature->AI())->WaveCount = 9;
-            ((hyjalAI*)_Creature->AI())->StartEvent(player);
+            ai->FirstBossDead = true;
+            ai->WaveCount = 9;
+            ai->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->Retreat();
+            ai->Retreat();
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 4:
+            ai->Debug = !ai->Debug;
+            outstring_log("SD2 : HyjalAI - Debug mode has been toggled");
             break;
     }
 
@@ -134,6 +142,9 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_RETREAT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
     }
 
+    if(player->isGameMaster())
+    player->ADD_GOSSIP_ITEM(2, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+
     player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
 
     return true;
@@ -142,18 +153,23 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
 bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     player->PlayerTalkClass->GetGossipMenu();
+    hyjalAI* ai = ((hyjalAI*)_Creature->AI());
     switch(action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-            ((hyjalAI*)_Creature->AI())->StartEvent(player);
+            ai->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            ((hyjalAI*)_Creature->AI())->FirstBossDead = true;
-            ((hyjalAI*)_Creature->AI())->WaveCount = 9;
-            ((hyjalAI*)_Creature->AI())->StartEvent(player);
+            ai->FirstBossDead = true;
+            ai->WaveCount = 9;
+            ai->StartEvent(player);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            ((hyjalAI*)_Creature->AI())->Retreat();
+            ai->Retreat();
+            break;
+        case GOSSIP_ACTION_INFO_DEF + 4:
+            ai->Debug = !ai->Debug;
+            outstring_log("SD2 : HyjalAI - Debug mode has been toggled");
             break;
     }
 

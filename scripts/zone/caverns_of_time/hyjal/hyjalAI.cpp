@@ -63,6 +63,7 @@ void hyjalAI::Reset()
     /** Timers **/
     NextWaveTimer = 10000;
     CheckTimer = 0;
+    RetreatTimer = 1000;
 
     /** Misc **/
     WaveCount = 0;
@@ -83,6 +84,7 @@ void hyjalAI::Reset()
     FirstBossDead = false;
     SecondBossDead = false;
     Summon = false;
+    bRetreat = false;
 
     /** Flags **/
     m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -102,6 +104,14 @@ void hyjalAI::Reset()
 
     /*** Visibility ***/
     m_creature->SetVisibility(VISIBILITY_ON);
+
+    /** If Jaina evades, reset the visibility of all other creatures in the grid. **/
+    if(CreatureList.empty())    return; 
+    for(std::list<uint64>::iterator itr = CreatureList.begin(); itr != CreatureList.end(); ++itr)
+        if(Creature* cr = ((Creature*)Unit::GetUnit(*m_creature, *itr)))
+            cr->SetVisibility(VISIBILITY_ON);
+
+    CreatureList.clear();
 }
 
 void hyjalAI::EnterEvadeMode()
@@ -151,9 +161,8 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         // Check if creature is a boss.
         if(pCreature->GetCreatureInfo()->rank == 3)
         {
-            if(!FirstBossDead)
-                BossGUID[0] = pCreature->GetGUID();
-            else BossGUID[1] = pCreature->GetGUID();
+            if(!FirstBossDead)  BossGUID[0] = pCreature->GetGUID();
+            else                BossGUID[1] = pCreature->GetGUID();
             CheckTimer = 5000;
         }
     }
@@ -186,7 +195,13 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         UpdateWorldState(WORLDSTATE_ENEMY, 1);
         //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount); // Let Instance Script handle this
         pInstance->SetData(DATA_TRASH, EnemyCount);
-        NextWaveTimer = wave[Count].WaveTimer;
+        if(!Debug)
+            NextWaveTimer = wave[Count].WaveTimer;
+        else
+        {
+            NextWaveTimer = 15000;
+            DoTextEmote(": Debug Mode is enabled. Next Wave in 15 seconds", NULL);
+        }
     }
     else
     {
@@ -292,9 +307,9 @@ void hyjalAI::Retreat()
     cell.SetNoCreate();
 
     // First get all creatures.
-    std::list<Creature*> creatureList;
+    std::list<Creature*> creatures;
     AllFriendlyCreaturesInGrid creature_check(m_creature);
-    MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid> creature_searcher(creatureList, creature_check);
+    MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
     TypeContainerVisitor
         <MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid>,
         GridTypeMapContainer> creature_visitor(creature_searcher);
@@ -310,16 +325,18 @@ void hyjalAI::Retreat()
     cell_lock->Visit(cell_lock, creature_visitor, *(m_creature->GetMap())); // Get Creatures
     cell_lock->Visit(cell_lock, go_visit, *(m_creature->GetMap())); // Get GOs
 
-    if(!creatureList.empty())
+    CreatureList.clear();
+    if(!creatures.empty())
     {
-        for(std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+        for(std::list<Creature*>::iterator itr = creatures.begin(); itr != creatures.end(); ++itr)
         {
             (*itr)->CastSpell(*itr, SPELL_TELEPORT_VISUAL, true);
-            (*itr)->SetVisibility(VISIBILITY_OFF);
+            CreatureList.push_back((*itr)->GetGUID());
         }
 
         DoCast(m_creature, SPELL_TELEPORT_VISUAL);
-        m_creature->SetVisibility(VISIBILITY_OFF);
+        bRetreat = true;
+        RetreatTimer = 1000;
     }
 
     if(!goList.empty())
@@ -331,6 +348,20 @@ void hyjalAI::Retreat()
 
 void hyjalAI::UpdateAI(const uint32 diff)
 {
+    if(bRetreat)
+        if(RetreatTimer < diff)
+        {
+            bRetreat = false;
+            if(CreatureList.empty())
+                return;
+            
+            for(std::list<uint64>::iterator itr = CreatureList.begin(); itr != CreatureList.end(); ++itr)
+                if(Unit* pUnit = Unit::GetUnit(*m_creature, *itr))
+                    pUnit->SetVisibility(VISIBILITY_OFF);
+
+            m_creature->SetVisibility(VISIBILITY_OFF);
+        }else RetreatTimer -= diff;
+
     if(!EventBegun) return;
 
     if(Summon)
