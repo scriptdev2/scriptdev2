@@ -809,7 +809,7 @@ public:
     AgonizingFlamesTargetCheck(Unit const* unit) : pUnit(unit) {}
     bool operator() (Player* plr)
     {
-        if(plr->isGameMaster() && pUnit->GetDistance2d(plr) > 225) // Faster than square rooting
+        if(!plr->isGameMaster() && pUnit->GetDistance2d(plr) > 225) // Faster than square rooting
             return true;
 
         return false;
