@@ -43,6 +43,7 @@ CREATE TABLE `localized_texts` (
 `locale_5` varchar(255) NOT NULL default '',
 `locale_6` varchar(255) NOT NULL default '',
 `locale_7` varchar(255) NOT NULL default '',
+`locale_8` varchar(255) NOT NULL default '',
 
 `comment` varchar(255) NOT NULL default '' COMMENT 'Text Comment',
   PRIMARY KEY  (`id`)

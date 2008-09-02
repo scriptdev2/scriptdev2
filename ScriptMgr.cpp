@@ -25,6 +25,7 @@ struct Localized_Text
     std::string locale_5;
     std::string locale_6;
     std::string locale_7;
+    std::string locale_8;
 };
 
 HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
@@ -39,6 +40,8 @@ HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
 
 //Event AI error prevention structure. Used at runtime to prevent error log spam of same creature id.
 //HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList; 
+
+uint32 EAI_ErrorLevel;
 
 //*** End EventAI data ***
 
@@ -581,7 +584,7 @@ void LoadDatabase()
         Localized_Text_Map.clear();
 
         //Gather Localized Text Entries
-        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`"
+        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
             "FROM `localized_texts`");
 
         if (result)
@@ -606,6 +609,7 @@ void LoadDatabase()
                 temp.locale_5 = fields[6].GetString();
                 temp.locale_6 = fields[7].GetString();
                 temp.locale_7 = fields[8].GetString();
+                temp.locale_8 = fields[9].GetString();
 
                 if (!strlen(temp.locale_0.c_str()))
                     error_log("SD2: locale_0 for text %u is empty", i);
@@ -958,8 +962,12 @@ void ScriptsInit()
     outstring_log("MM    M   M   M");
     outstring_log(" MMM  M   M  M");
     outstring_log("   MM M   M MMMM");
-    outstring_log("MM  M M  M ScriptDev2 initializing");
-    outstring_log(" MMM  MMM  %s", _FULLVERSION);
+    outstring_log("MM  M M  M ");
+    outstring_log(" MMM  MMM  http://www.scriptdev2.com");
+    outstring_log("");
+
+    outstring_log("ScriptDev2 initializing %s", _FULLVERSION);
+
     outstring_log("");
 
     //Get configuration file
@@ -975,13 +983,36 @@ void ScriptsInit()
     //Locale
     Locale = SD2Config.GetIntDefault("Locale", 0);
 
-    if (Locale > 7)
+    if (Locale > 8)
     {
         Locale = 0;
         error_log("SD2: Locale set to invalid language id. Defaulting to 0.");
     }
 
     outstring_log("SD2: Using locale %u", Locale);
+    outstring_log("");
+
+    EAI_ErrorLevel = SD2Config.GetIntDefault("EAIErrorLevel", 1);
+
+    switch (EAI_ErrorLevel)
+    {
+    case 0:
+        outstring_log("SD2: EventAI Error Reporting level set to 0 (Startup Errors only)");
+        break;
+
+    case 1:
+        outstring_log("SD2: EventAI Error Reporting level set to 1 (Startup errors and Runtime event errors)");
+        break;
+
+    case 2:
+        outstring_log("SD2: EventAI Error Reporting level set to 2 (Startup errors, Runtime event errors, and Creation errors)");
+        break;
+
+    default:
+        outstring_log("SD2: Unknown EventAI Error Reporting level. Defaulting to 1 (Startup errors and Runtime event errors)");
+        EAI_ErrorLevel = 1;
+        break;
+    }
     outstring_log("");
 
     //Load database (must be called after SD2Config.SetSource)
@@ -1549,6 +1580,10 @@ const char* GetLocalizedText(uint32 Entry)
 
         case 7:
         temp =  (*i).second.locale_7.c_str();
+        break;
+
+        case 8:
+        temp =  (*i).second.locale_8.c_str();
         break;
     };
 

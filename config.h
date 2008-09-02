@@ -24,7 +24,7 @@
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
-#define SD2_CONF_VERSION    2008011901
+#define SD2_CONF_VERSION    2008100201
 
 #ifdef WIN32
   #define MANGOS_DLL_EXPORT extern "C" __declspec(dllexport)
@@ -47,7 +47,7 @@
   #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
 #else
   #define _FULLVERSION _VERSION " (Unix)"
-  #define _SCRIPTDEV2_CONFIG  "@prefix@/etc/scriptdev2.conf"
+  #define _SCRIPTDEV2_CONFIG  "@sysconfigdir@/etc/scriptdev2.conf"
 #endif
 
 #endif

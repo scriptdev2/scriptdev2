@@ -195,7 +195,7 @@ struct EventAI_Summon
 extern HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
 
 //EventAI Error handling
-
+extern uint32 EAI_ErrorLevel;
 /*
 
 struct EventAI_CreatureError
