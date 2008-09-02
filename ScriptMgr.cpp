@@ -948,7 +948,13 @@ void ScriptsInit()
 {
     //ScriptDev2 startup
     outstring_log("");
-    outstring_log("SD2: ScriptDev2 initializing %s", _FULLVERSION);
+    outstring_log(" MMM  MMM    MM");
+    outstring_log("M  MM M  M  M  M");
+    outstring_log("MM    M   M   M");
+    outstring_log(" MMM  M   M  M");
+    outstring_log("   MM M   M MMMM");
+    outstring_log("MM  M M  M ScriptDev2 initializing");
+    outstring_log(" MMM  MMM  %s", _FULLVERSION);
     outstring_log("");
 
     //Get configuration file
