@@ -866,12 +866,12 @@ void LoadDatabase()
                         }
                         break;
 
-                        //2nd param target
                     case ACTION_T_SUMMON:
                     case ACTION_T_THREAT_SINGLE_PCT:
                     case ACTION_T_QUEST_EVENT:
                     case ACTION_T_SET_UNIT_FLAG:
                     case ACTION_T_REMOVE_UNIT_FLAG:
+                    case ACTION_T_SET_INST_DATA64:
                         if (temp.action[j].param2 >= TARGET_T_END)
                             error_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
@@ -884,8 +884,8 @@ void LoadDatabase()
 
                     case ACTION_T_SET_PHASE:
                         if (temp.action[j].param1 > 31)
-                            error_log("SD2: Event %u Action %u is attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j+1);
-                            break;
+                            error_log("SD2: Event %u Action %u attempts to set phase > 31. Phase mask cannot be used past phase 31.", i, j+1);
+                        break;
 
                     case ACTION_T_INC_PHASE:
                         if (!temp.action[j].param1)
@@ -895,6 +895,11 @@ void LoadDatabase()
                     case ACTION_T_KILLED_MONSTER:
                         if (temp.event_type != EVENT_T_DEATH)
                             outstring_log("SD2 WARNING: Event %u Action %u calling ACTION_T_KILLED_MONSTER outside of EVENT_T_DEATH", i, j+1);
+                        break;
+
+                    case ACTION_T_SET_INST_DATA:
+                        if (temp.action[j].param2 > 3)
+                            error_log("SD2: Event %u Action %u attempts to set instance data above encounter state 3. Custom case?", i, j+1);
                         break;
 
                     default:
