@@ -52,6 +52,7 @@ UPDATE `item_template` SET `ScriptName`='item_gor_dreks_ointment' WHERE `entry`=
 UPDATE `item_template` SET `ScriptName`='item_muiseks_vessel' WHERE `entry` IN (9606,9618,9619,9620,9621);
 UPDATE `item_template` SET `ScriptName`='item_nether_wraith_beacon' WHERE `entry`=31742;
 UPDATE `item_template` SET `ScriptName`='item_protovoltaic_magneto_collector' WHERE `entry`=30656;
+UPDATE `item_template` SET `ScriptName`='item_razorthorn_flayer_gland' WHERE `entry`=34255;
 UPDATE `item_template` SET `ScriptName`='item_soul_cannon' WHERE `entry`=32825;
 UPDATE `item_template` SET `ScriptName`='item_sparrowhawk_net' WHERE `entry`=32321;
 UPDATE `item_template` SET `ScriptName`='item_tainted_core' WHERE `entry`=31088;

@@ -31,6 +31,7 @@ item_flying_machine(i34060,i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
 item_muiseks_vessel                 Cast on creature, they must be dead(q 3123,3124,3125,3126,3127)
 item_protovoltaic_magneto_collector Prevents abuse
+item_razorthorn_flayer_gland        Quest Discovering Your Roots (q11520) and Rediscovering Your Roots (q11521). Prevents abuse
 item_tame_beast_rods(many)          Prevent cast on any other creature than the intended (for all tame beast quests)
 item_soul_cannon(i32825)            Prevents abuse of this item
 item_sparrowhawk_net(i32321)        Quest To Catch A Sparrowhawk (q10987). Prevents abuse
@@ -221,6 +222,20 @@ bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets c
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
     player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    return true;
+}
+
+/*#####
+# item_razorthorn_flayer_gland
+#####*/
+
+bool ItemUse_item_razorthorn_flayer_gland(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 24922 )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
     return true;
 }
 
@@ -431,6 +446,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_muiseks_vessel";
     newscript->pItemUse = ItemUse_item_muiseks_vessel;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_razorthorn_flayer_gland";
+    newscript->pItemUse = ItemUse_item_razorthorn_flayer_gland;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
