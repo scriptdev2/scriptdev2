@@ -47,7 +47,7 @@
   #define _SCRIPTDEV2_CONFIG  "scriptdev2.conf"
 #else
   #define _FULLVERSION _VERSION " (Unix)"
-  #define _SCRIPTDEV2_CONFIG  "@sysconfigdir@/etc/scriptdev2.conf"
+  #define _SCRIPTDEV2_CONFIG  "@sysconfdir@/scriptdev2.conf"
 #endif
 
 #endif
