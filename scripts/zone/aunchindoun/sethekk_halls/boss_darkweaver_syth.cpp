@@ -15,29 +15,13 @@
 */
 
 /* ScriptData
-SDName: Boss_DarkWeaver_Syth
-SD%Complete: 100
-SDComment: 
+SDName: Boss_Darkweaver_Syth
+SD%Complete: 85
+SDComment: Shock spells/times need more work. Heroic not implemented.
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "precompiled.h"
-
-#define SPELL_FROST_SHOCK           37865
-#define SPELL_FLAME_SHOCK           34354
-#define SPELL_SHADOW_SHOCK          30138
-#define SPELL_ARCANE_SHOCK          37132
-#define SPELL_CHAIN_LIGHTNING       39945
-
-#define SPELL_SUMMON_SYTH_FIRE      33537 // Spawns 19203
-#define SPELL_SUMMON_SYTH_ARCANE    33538 // Spawns 19205
-#define SPELL_SUMMON_SYTH_FROST     33539 // Spawns 19204
-#define SPELL_SUMMON_SYTH_SHADOW    33540 // Spawns 19206
-
-#define SPELL_FLAME_BUFFET          33526
-#define SPELL_ARCANE_BUFFET         33527
-#define SPELL_FROST_BUFFET          33528
-#define SPELL_SHADOW_BUFFET         33529
 
 #define SAY_SUMMON                  "I have pets..<squawk>..of my own!"
 #define SOUND_SUMMON                10502
@@ -57,43 +41,75 @@ EndScriptData */
 #define SAY_DEATH                   "No more life..hrm. No more pain. <squawks weakly>"
 #define SOUND_DEATH                 10508
 
+#define SPELL_FROST_SHOCK           37865
+#define SPELL_FLAME_SHOCK           34354
+#define SPELL_SHADOW_SHOCK          30138
+#define SPELL_ARCANE_SHOCK          37132
+
+#define SPELL_CHAIN_LIGHTNING       39945
+
+#define SPELL_SUMMON_SYTH_FIRE      33537                   // Spawns 19203
+#define SPELL_SUMMON_SYTH_ARCANE    33538                   // Spawns 19205
+#define SPELL_SUMMON_SYTH_FROST     33539                   // Spawns 19204
+#define SPELL_SUMMON_SYTH_SHADOW    33540                   // Spawns 19206
+
+#define SPELL_FLAME_BUFFET          33526
+#define H_SPELL_FLAME_BUFFET        38141
+#define SPELL_ARCANE_BUFFET         33527
+#define H_SPELL_ARCANE_BUFFET       38138
+#define SPELL_FROST_BUFFET          33528
+#define H_SPELL_FROST_BUFFET        38142
+#define SPELL_SHADOW_BUFFET         33529
+#define H_SPELL_SHADOW_BUFFET       38143
 
 struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
 {
-    boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 flameshock_timer;
     uint32 arcaneshock_timer;
     uint32 frostshock_timer;
     uint32 shadowshock_timer;
-    
     uint32 chainlightning_timer;
-    
-    bool summon75;
-    bool summon50;
-    bool summon25;
-    
-    //uint32 sythflame_timer;
-    //uint32 sytharcane_timer;
-    //uint32 sythfrost_timer;
-    //uint32 sythshadow_timer;
 
+    bool summon90;
+    bool summon50;
+    bool summon10;
 
     void Reset()
-    {   
+    {
         flameshock_timer = 2000;
-        arcaneshock_timer = 3000;
-        frostshock_timer = 4000;
-        shadowshock_timer = 5000;
-        chainlightning_timer = 10000;
-        
-        summon75 = false;
+        arcaneshock_timer = 4000;
+        frostshock_timer = 6000;
+        shadowshock_timer = 8000;
+        chainlightning_timer = 15000;
+
+        summon90 = false;
         summon50 = false;
-        summon25 = false;
+        summon10 = false;
+    }
+
+    void Aggro(Unit *who)
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+            break;
+        case 1:
+            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+            break; 
+        case 2:
+            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+            break;
+        }
     }
 
     void JustDied(Unit* Killer)
-    { 
+    {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
@@ -109,171 +125,104 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
             break;
-
         case 1:
             DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;        
+            break;
         }
     }
 
-    void Aggro(Unit *who)
+    void JustSummoned(Creature *summoned)
     {
+        if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            summoned->AI()->AttackStart(target);
 
-                switch(rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break; 
-
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;
-                }
-                
-    }
-
-    float DoCalculateRandomLocation()
-    {
-        float Loc;
-        float Rand = rand()%6;
-
-        switch(rand()%2)
-        {
-            case 0:
-            Loc = 0 + Rand;
-            break;
-
-            case 1:
-            Loc = 0 - Rand;
-            break;
-        }
-
-        return Loc;
+        if( ((Pet*)summoned)->isControlled() )
+            DoYell("isControlled", LANG_UNIVERSAL, NULL);
     }
 
     void SythSummoning()
     {
         DoYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_SUMMON);
-        Creature* Summoned = NULL;
-        Unit* target = NULL;
-          
-        Summoned = DoSpawnCreature(19203,5,5,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000);
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-        Summoned = DoSpawnCreature(19205,-5,5,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000);
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-        Summoned = DoSpawnCreature(19204,-5,-5,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000);
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-        Summoned = DoSpawnCreature(19206, 5,-5,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000);
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-        //DoCast(m_creature,SPELL_SUMMON_SYTH_FIRE);
-        //DoCast(m_creature,SPELL_SUMMON_SYTH_ARCANE);
-        //DoCast(m_creature,SPELL_SUMMON_SYTH_FROST);
-        //DoCast(m_creature,SPELL_SUMMON_SYTH_SHADOW);
-        //SPELLS DOSENT WORK ... I TAKE SUMMAN INSTEAD ... WORKS IN SAME WAY
+
+        if( m_creature->IsNonMeleeSpellCasted(false) )
+            m_creature->InterruptNonMeleeSpells(false);
+
+        DoCast(m_creature,SPELL_SUMMON_SYTH_ARCANE);        //front
+        DoCast(m_creature,SPELL_SUMMON_SYTH_FIRE);          //back
+        DoCast(m_creature,SPELL_SUMMON_SYTH_FROST);         //left
+        DoCast(m_creature,SPELL_SUMMON_SYTH_SHADOW);        //right
     }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-            
-        if( ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 75) && !summon75)
+
+        if( ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 90) && !summon90)
         {
-        SythSummoning();
-        summon75 = true;
+            SythSummoning();
+            summon90 = true;
         }
-        
+
         if( ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 50) && !summon50)
         {
-        SythSummoning();
-        summon50 = true;
+            SythSummoning();
+            summon50 = true;
         }
-        
-        if( ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 25) && !summon25)
+
+        if( ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 10) && !summon10)
         {
-        SythSummoning();
-        summon25 = true;
+            SythSummoning();
+            summon10 = true;
         }
-        
-        if(flameshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+
+        if( flameshock_timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_FLAME_SHOCK);
-                flameshock_timer = 10000 + rand()%5000;
-            }
+
+            flameshock_timer = 10000 + rand()%5000;
         }else flameshock_timer -= diff;
-        
-        if(arcaneshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+
+        if( arcaneshock_timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_ARCANE_SHOCK);
-                arcaneshock_timer = 10000 + rand()%5000;
-            }
+
+            arcaneshock_timer = 10000 + rand()%5000;
         }else arcaneshock_timer -= diff;
-        
-        if(frostshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+
+        if( frostshock_timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_FROST_SHOCK);
-                frostshock_timer = 10000 + rand()%5000;
-            }
+
+            frostshock_timer = 10000 + rand()%5000;
         }else frostshock_timer -= diff;
-        
-        if(shadowshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+
+        if( shadowshock_timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_SHADOW_SHOCK);
-                shadowshock_timer = 10000 + rand()%5000;
-            }
+
+            shadowshock_timer = 10000 + rand()%5000;
         }else shadowshock_timer -= diff;
-        
-        if(chainlightning_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
-                DoCast(target,SPELL_CHAIN_LIGHTNING );
-                chainlightning_timer = 25000;
-            }
+
+        if( chainlightning_timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_CHAIN_LIGHTNING);
+
+            chainlightning_timer = 25000;
         }else chainlightning_timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
-CreatureAI* GetAI_boss_darkweaver_sythAI(Creature *_Creature)
+CreatureAI* GetAI_boss_darkweaver_syth(Creature *_Creature)
 {
     return new boss_darkweaver_sythAI (_Creature);
 }
@@ -282,293 +231,184 @@ CreatureAI* GetAI_boss_darkweaver_sythAI(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
 {
-    mob_syth_fireAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    mob_syth_fireAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 flameshock_timer;
     uint32 flamebuffet_timer;
 
     void Reset()
     {
-
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
         flameshock_timer = 2500;
         flamebuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who)
-    {
-
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-                   
+
         if(flameshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_FLAME_SHOCK);
-                flameshock_timer = 5000;
-            }
+
+            flameshock_timer = 5000;
         }else flameshock_timer -= diff;
         
         if(flamebuffet_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
-                DoCast(target,SPELL_FLAME_BUFFET );
-                flamebuffet_timer = 5000;
-            }
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_FLAME_BUFFET);
+
+            flamebuffet_timer = 5000;
         }else flamebuffet_timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
-CreatureAI* GetAI_mob_syth_fireAI(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_fire(Creature *_Creature)
 {
     return new mob_syth_fireAI (_Creature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
 {
-    mob_syth_arcaneAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    mob_syth_arcaneAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 arcaneshock_timer;
     uint32 arcanebuffet_timer;
 
     void Reset()
     {
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_ARCANE, true);
         arcaneshock_timer = 2500;
         arcanebuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who)
-    {
-        
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-                   
+
         if(arcaneshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_ARCANE_SHOCK);
-                arcaneshock_timer = 5000;
-            }
+
+            arcaneshock_timer = 5000;
         }else arcaneshock_timer -= diff;
         
         if(arcanebuffet_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
-                DoCast(target,SPELL_ARCANE_BUFFET );
-                arcanebuffet_timer = 5000;
-            }
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_ARCANE_BUFFET);
+
+            arcanebuffet_timer = 5000;
         }else arcanebuffet_timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
-CreatureAI* GetAI_mob_syth_arcaneAI(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_arcane(Creature *_Creature)
 {
     return new mob_syth_arcaneAI (_Creature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
 {
-    mob_syth_frostAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    mob_syth_frostAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 frostshock_timer;
     uint32 frostbuffet_timer;
 
     void Reset()
-    {   
+    {
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
         frostshock_timer = 2500;
         frostbuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who)
-    {
-       
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-                   
+
         if(frostshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_FROST_SHOCK);
-                frostshock_timer = 5000;
-            }
+
+            frostshock_timer = 5000;
         }else frostshock_timer -= diff;
         
         if(frostbuffet_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
-                DoCast(target,SPELL_FROST_BUFFET );
-                frostbuffet_timer = 5000;
-            }
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_FROST_BUFFET);
+
+            frostbuffet_timer = 5000;
         }else frostbuffet_timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
-CreatureAI* GetAI_mob_syth_frostAI(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_frost(Creature *_Creature)
 {
     return new mob_syth_frostAI (_Creature);
 }
 
 struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
 {
-    mob_syth_shadowAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    mob_syth_shadowAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 shadowshock_timer;
     uint32 shadowbuffet_timer;
 
     void Reset()
-    {   
+    {
+        m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_SHADOW, true);
         shadowshock_timer = 2500;
         shadowbuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who)
-    {
-        
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }
+    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-                   
+
         if(shadowshock_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
                 DoCast(target,SPELL_SHADOW_SHOCK);
-                shadowshock_timer = 5000;
-            }
+
+            shadowshock_timer = 5000;
         }else shadowshock_timer -= diff;
         
         if(shadowbuffet_timer < diff)
-        {     
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
-            {
-                DoCast(target,SPELL_SHADOW_BUFFET );
-                shadowbuffet_timer = 5000;
-            }
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_SHADOW_BUFFET);
+
+            shadowbuffet_timer = 5000;
         }else shadowbuffet_timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
-CreatureAI* GetAI_mob_syth_shadowAI(Creature *_Creature)
+CreatureAI* GetAI_mob_syth_shadow(Creature *_Creature)
 {
     return new mob_syth_shadowAI (_Creature);
 }
@@ -578,26 +418,26 @@ void AddSC_boss_darkweaver_syth()
     Script *newscript;
     newscript = new Script;
     newscript->Name="boss_darkweaver_syth";
-    newscript->GetAI = GetAI_boss_darkweaver_sythAI;
+    newscript->GetAI = GetAI_boss_darkweaver_syth;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="mob_syth_fire";
-    newscript->GetAI = GetAI_mob_syth_arcaneAI;
+    newscript->GetAI = GetAI_mob_syth_arcane;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="mob_syth_arcane";
-    newscript->GetAI = GetAI_mob_syth_arcaneAI;
+    newscript->GetAI = GetAI_mob_syth_arcane;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="mob_syth_frost";
-    newscript->GetAI = GetAI_mob_syth_frostAI;
+    newscript->GetAI = GetAI_mob_syth_frost;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="mob_syth_shadow";
-    newscript->GetAI = GetAI_mob_syth_shadowAI;
+    newscript->GetAI = GetAI_mob_syth_shadow;
     m_scripts[nrscripts++] = newscript;
 }
