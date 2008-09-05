@@ -140,10 +140,10 @@ scripts/zone/caverns_of_time/dark_portal/boss_chrono_lord_deja.cpp \
 scripts/zone/caverns_of_time/dark_portal/boss_temporus.cpp \
 scripts/zone/caverns_of_time/hyjal/boss_archimonde.cpp \
 scripts/zone/caverns_of_time/hyjal/def_hyjal.h \
+scripts/zone/caverns_of_time/hyjal/hyjal.cpp \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.cpp \
 scripts/zone/caverns_of_time/hyjal/hyjalAI.h \
 scripts/zone/caverns_of_time/hyjal/instance_hyjal.cpp \
-scripts/zone/caverns_of_time/hyjal/hyjal.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_captain_skarloc.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_epoch_hunter.cpp \
 scripts/zone/caverns_of_time/old_hillsbrad/boss_leutenant_drake.cpp \
@@ -341,9 +341,9 @@ scripts/zone/temple_of_ahnqiraj/boss_sartura.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_skeram.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_twinemperors.cpp \
 scripts/zone/temple_of_ahnqiraj/boss_viscidus.cpp \
-scripts/zone/temple_of_ahnqiraj/mob_anubisath_sentinel.cpp \
 scripts/zone/temple_of_ahnqiraj/def_temple_of_ahnqiraj.h \
 scripts/zone/temple_of_ahnqiraj/instance_temple_of_ahnqiraj.cpp \
+scripts/zone/temple_of_ahnqiraj/mob_anubisath_sentinel.cpp \
 scripts/zone/terokkar_forest/terokkar_forest.cpp \
 scripts/zone/thunder_bluff/thunder_bluff.cpp \
 scripts/zone/tirisfal_glades/tirisfal_glades.cpp \
