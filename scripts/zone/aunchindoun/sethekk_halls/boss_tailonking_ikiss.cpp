@@ -15,20 +15,14 @@
 */
 
 /* ScriptData
-SDName: Boss_TailonKing_Ikiss
-SD%Complete: 100
-SDComment: 
+SDName: Boss_Talon_King_Ikiss
+SD%Complete: 80
+SDComment: Heroic supported. Some details missing, but most are spell related.
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_sethekk_halls.h"
-
-#define SPELL_BLINK                 38194
-#define SPELL_ARCANE_VOLLEY         36738
-#define SPELL_POLYMORPH             12826
-#define SPELL_ARCANE_EXPLOSION      38197
-#define SPELL_MANA_SHIELD            38151
 
 #define SAY_INTRO                   "<squawk>..Trinkets yes pretty Trinkets..<squawk>..power, great power.<squawk>..power in Trinkets..<squawk>"
 #define SOUND_INTRO                 10557
@@ -48,67 +42,88 @@ EndScriptData */
 #define SAY_DEATH                   "Ikiss will not..<squawk>..die"
 #define SOUND_DEATH                 10560
 
-struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
+#define EMOTE_ARCANE_EXP            "begins to channel arcane energy..."
+
+#define SPELL_BLINK                 38194
+#define SPELL_BLINK_TELEPORT        38203
+#define SPELL_MANA_SHIELD           38151
+#define SPELL_ARCANE_BUBBLE         9438
+#define H_SPELL_SLOW                35032
+
+#define SPELL_POLYMORPH             38245
+#define H_SPELL_POLYMORPH           43309
+
+#define SPELL_ARCANE_VOLLEY         35059
+#define H_SPELL_ARCANE_VOLLEY       40424
+
+#define SPELL_ARCANE_EXPLOSION      38197
+#define H_SPELL_ARCANE_EXPLOSION    40425
+
+struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 {
-    boss_tailonking_ikissAI(Creature *c) : ScriptedAI(c) 
+    boss_talon_king_ikissAI(Creature *c) : ScriptedAI(c)
     {
-        Reset();
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-    }   
+        Reset();
+    }
 
     ScriptedInstance* pInstance;
 
-    uint32 arcanevolley_timer;
-    uint32 sheep_timer;
-    uint32 blink_timer;
-    uint32 wait_timer;
-    uint32 manashield_timer;
-    uint32 sheep;
+    bool HeroicMode;
 
-    bool manashield;
-    bool blink;
-    bool wait;
-    bool intro;
+    uint32 ArcaneVolley_Timer;
+    uint32 Sheep_Timer;
+    uint32 Blink_Timer;
+    uint32 Slow_Timer;
+
+    bool ManaShield;
+    bool Blink;
+    bool Intro;
 
     void Reset()
-    {   
-        arcanevolley_timer = 5000; 
-        sheep_timer = 7000;
-        blink_timer = 1000;
-        blink = false;
-        wait = false;
-        intro = false;
-        sheep = 0;
-        manashield = false;
-    }
-
-    void JustDied(Unit* Killer)
-    { 
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
-
-        if(pInstance)
-            pInstance->SetData(DATA_IKISSDOOREVENT, 1);
-    }
-
-    void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
-        {
-            case 0:
-                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-                break;
+        HeroicMode = m_creature->GetMap()->IsHeroic();
 
-            case 1:
-                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-                break;        
+        ArcaneVolley_Timer = 5000; 
+        Sheep_Timer = 8000;
+        Blink_Timer = 35000;
+        Slow_Timer = 15000+rand()%15000;
+        Blink = false;
+        Intro = false;
+        ManaShield = false;
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        {
+            if(!Intro && m_creature->IsWithinDistInMap(who, 100))
+            {
+                Intro = true;
+                DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_INTRO);
+            }
+
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+            {
+                DoStartAttackAndMovement(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+                    Aggro(who);
+                    InCombat = true;
+                }
+            }
         }
     }
 
     void Aggro(Unit *who)
-    {  
+    {
         switch(rand()%3)
         {
             case 0:
@@ -126,33 +141,30 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
                 break;
         }
-        manashield_timer = 15000+rand()%20000; // I dont know when he is casting that so totalrandom in fight (casted once);        
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
+    void JustDied(Unit* Killer)
+    {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who) && !wait)
+        if( pInstance )
+            pInstance->SetData(DATA_IKISSDOOREVENT, DONE);
+    }
+
+    void KilledUnit(Unit* victim)
+    {
+        switch(rand()%2)
         {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
+            case 0:
+                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                break;
 
-                Aggro(who);
-            }else
-            {
-                if(!intro)
-                {
-                    intro=true;
-                    DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_INTRO);
-                }
-            }
+            case 1:
+                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                break;
         }
     }
 
@@ -160,98 +172,85 @@ struct MANGOS_DLL_DECL boss_tailonking_ikissAI : public ScriptedAI
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-        
-        if(!wait)
-        {   
-            if(!manashield)
-                if(manashield_timer < diff)
-                {     
-                        DoCast(m_creature,SPELL_MANA_SHIELD);
-                        manashield = true;
-                }else manashield_timer -= diff;
 
-            if(arcanevolley_timer < diff)
-            {
-                DoCast(m_creature, SPELL_ARCANE_VOLLEY);
-                arcanevolley_timer = 3000+ rand()%8000;
-            }else arcanevolley_timer -= diff;
-        
-            if(sheep < 2)
-            {
-                if(sheep_timer < diff)
-                {     
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if(target)
-                    {
-                        DoCast(target,SPELL_POLYMORPH);
-                        sheep_timer = 5000;
-                        ++sheep;
-                    }
-                    if(sheep == 2) blink_timer = 5000; 
-                }else sheep_timer -= diff;
-            }
-            
-            DoMeleeAttackIfReady();
-                       
-            if(sheep == 2 && !blink)
-            {
-                if(blink_timer < diff)
-                {     
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    if(target)
-                    {
-                        //THIS SPELL DOESNT WORK
-                        //if(target != m_creature->getVictim()) DoCast(target,SPELL_BLINK);
-                        float X = target->GetPositionX();
-                        float Y = target->GetPositionY();
-                        float Z = target->GetPositionZ();
-                        m_creature->Relocate(X,Y,Z);
-                        m_creature->SendMonsterMove(X, Y, Z, 0, true, 0);
-                        blink = true;
-                    }
-                }else blink_timer -= diff;
-            }
-                    
-            if(blink)
-            {
-                wait = true;
-                wait_timer = 5000;
-                DoCast(m_creature,SPELL_ARCANE_EXPLOSION);
-                wait_timer = 5100;
-                blink = false;
-            }             
-        }
-        
-        if(wait)
+        if( Blink )
         {
-            if (wait_timer < diff)
-            {
-                sheep = 0;
-                sheep_timer= 5000;
-                wait = false;
-            }
-            else
-            {
-                wait_timer -= diff;
-                //m_creature->StopMoving();
-            }
+            DoCast(m_creature,HeroicMode ? H_SPELL_ARCANE_EXPLOSION : SPELL_ARCANE_EXPLOSION);
+            m_creature->CastSpell(m_creature,SPELL_ARCANE_BUBBLE,true);
+            Blink = false;
         }
-    }
 
+        if( ArcaneVolley_Timer < diff )
+        {
+            DoCast(m_creature,HeroicMode ? H_SPELL_ARCANE_VOLLEY : SPELL_ARCANE_VOLLEY);
+            ArcaneVolley_Timer = 10000+rand()%5000;
+        }else ArcaneVolley_Timer -= diff;
+
+        if( Sheep_Timer < diff )
+        {
+            //second top aggro target in normal, random target in heroic correct?
+            Unit *target = NULL;
+            if( HeroicMode ? target = SelectUnit(SELECT_TARGET_RANDOM,0) : target = SelectUnit(SELECT_TARGET_TOPAGGRO,1) )
+                DoCast(target,HeroicMode ? H_SPELL_POLYMORPH : SPELL_POLYMORPH);
+            Sheep_Timer = 15000+rand()%2500;
+        }else Sheep_Timer -= diff;
+
+        //may not be correct time to cast
+        if( !ManaShield && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 20) )
+        {
+            DoCast(m_creature,SPELL_MANA_SHIELD);
+            ManaShield = true;
+        }
+
+        if( HeroicMode )
+        {
+            if( Slow_Timer < diff )
+            {
+                DoCast(m_creature,H_SPELL_SLOW);
+                Slow_Timer = 15000+rand()%25000;
+            }else Slow_Timer -= diff;
+        }
+
+        if( Blink_Timer < diff )
+        {
+            DoTextEmote(EMOTE_ARCANE_EXP,NULL);             //should be CHAT_MSG_RAID_BOSS_EMOTE
+
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            {
+                if( m_creature->IsNonMeleeSpellCasted(false) )
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                //Spell doesn't work, but we use for visual effect at least
+                DoCast(target,SPELL_BLINK);
+
+                float X = target->GetPositionX();
+                float Y = target->GetPositionY();
+                float Z = target->GetPositionZ();
+
+                m_creature->Relocate(X,Y,Z);
+                m_creature->SendMonsterMove(X, Y, Z, 0, 0, 0);
+
+                DoCast(target,SPELL_BLINK_TELEPORT);
+                Blink = true;
+            }
+            Blink_Timer = 35000+rand()%5000;
+        }else Blink_Timer -= diff;
+
+        if( !Blink )
+            DoMeleeAttackIfReady();
+    }
 };
 
-CreatureAI* GetAI_boss_tailonking_ikissAI(Creature *_Creature)
+CreatureAI* GetAI_boss_talon_king_ikiss(Creature *_Creature)
 {
-    return new boss_tailonking_ikissAI (_Creature);
+    return new boss_talon_king_ikissAI (_Creature);
 }
 
-void AddSC_boss_tailonking_ikiss()
+void AddSC_boss_talon_king_ikiss()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_tailonking_ikiss";
-    newscript->GetAI = GetAI_boss_tailonking_ikissAI;
+    newscript->Name="boss_talon_king_ikiss";
+    newscript->GetAI = GetAI_boss_talon_king_ikiss;
     m_scripts[nrscripts++] = newscript;
 }

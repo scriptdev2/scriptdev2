@@ -47,20 +47,13 @@ struct MANGOS_DLL_DECL instance_sethekk_halls : public ScriptedInstance
         }
     }
 
-    void OpenDoor(GameObject *go)
-    {
-        //open the door
-        go->SetUInt32Value(GAMEOBJECT_FLAGS, 33);
-        go->SetGoState(0);
-    }
-
     void SetData(uint32 type, uint32 data)
     {
         switch(type)
         {
             case DATA_IKISSDOOREVENT:
-                    if(IkissDoor)
-                        OpenDoor(IkissDoor);
+                    if( IkissDoor )
+                        IkissDoor->SetGoState(0);
                     break;
         }
     }
