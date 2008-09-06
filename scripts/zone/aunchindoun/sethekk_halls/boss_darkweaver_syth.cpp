@@ -137,8 +137,6 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
             summoned->AI()->AttackStart(target);
 
-        if( ((Pet*)summoned)->isControlled() )
-            DoYell("isControlled", LANG_UNIVERSAL, NULL);
     }
 
     void SythSummoning()

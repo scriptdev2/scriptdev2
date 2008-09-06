@@ -42,11 +42,11 @@ EndScriptData */
 
 class ov_mycoordinates {
 public:
-	float x,y,z,r;
-	ov_mycoordinates(float cx, float cy, float cz, float cr)
-	{
-		x = cx; y = cy; z = cz; r = cr;
-	}
+    float x,y,z,r;
+    ov_mycoordinates(float cx, float cy, float cz, float cr)
+    {
+        x = cx; y = cy; z = cz; r = cr;
+    }
 };
 
 struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
@@ -54,7 +54,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     boss_skeramAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
-		IsImage = false;
+        IsImage = false;
         Reset();
     }
 
@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
     bool Images75;
     bool Images50;
     bool Images25;
-	bool IsImage;
+    bool IsImage;
     bool Invisible;
 
     void Reset()
@@ -90,8 +90,8 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->SetVisibility(VISIBILITY_ON);
 
-		if (IsImage)
-			m_creature->setDeathState(JUST_DIED);
+        if (IsImage)
+            m_creature->setDeathState(JUST_DIED);
     }
     
     void KilledUnit(Unit* victim)
@@ -115,29 +115,29 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-		if (!IsImage)
-			DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        if (!IsImage)
+            DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
-	void Aggro(Unit *who)
-	{
-		if (IsImage || Images75)
-			return;
-		switch(rand()%3)
-		{
-		case 0:  
-			DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-			break;
+    void Aggro(Unit *who)
+    {
+        if (IsImage || Images75)
+            return;
+        switch(rand()%3)
+        {
+        case 0:  
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+            break;
 
-		case 1:
-			DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-			break;
+        case 1:
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+            break;
 
-		case 2:
-			DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-			break;
-		}
-	}
+        case 2:
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+            break;
+        }
+    }
 
     void UpdateAI(const uint32 diff)
     {
@@ -199,27 +199,27 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
                        DoResetThreat();
                 break;
            }
-			DoStopAttack();
+            DoStopAttack();
 
             //20-40 seconds until we should cast this agian
             Blink_Timer= 20000 + rand()%20000;
         }else Blink_Timer -= diff;
         
-		int procent = (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5);
+        int procent = (int) (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() +0.5);
         //Summoning 2 Images and teleporting to a random position on 75% health
         if ( (!Images75 && !IsImage) &&
-				(procent <= 75 && procent > 70) )
-			DoSplit(75);
+                (procent <= 75 && procent > 70) )
+            DoSplit(75);
 
-		//Summoning 2 Images and teleporting to a random position on 50% health
-		if ( (!Images50 && !IsImage) &&
-				(procent <= 50 && procent > 45) )
-			DoSplit(50);
+        //Summoning 2 Images and teleporting to a random position on 50% health
+        if ( (!Images50 && !IsImage) &&
+                (procent <= 50 && procent > 45) )
+            DoSplit(50);
 
-		//Summoning 2 Images and teleporting to a random position on 25% health
-		if ( (!Images25 && !IsImage) &&
-				(procent <= 25 && procent > 20) )
-			DoSplit(25);
+        //Summoning 2 Images and teleporting to a random position on 25% health
+        if ( (!Images25 && !IsImage) &&
+                (procent <= 25 && procent > 20) )
+            DoSplit(25);
         
         //Invisible_Timer
         if (Invisible) 
@@ -232,99 +232,98 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
 
                 //10-25 seconds until we should cast this agian
                 Invisible_Timer = 2500;
-				Invisible = false;
-			}else Invisible_Timer -= diff;
-		}
+                Invisible = false;
+            }else Invisible_Timer -= diff;
+        }
 
-		DoMeleeAttackIfReady();
-	}
+        DoMeleeAttackIfReady();
+    }
 
-	void DoSplit(int atPercent /* 75 50 25 */)
-	{
-		DoPlaySoundToSet(m_creature,SOUND_SPLIT);
-		Unit* target = NULL;
-		target = SelectUnit(SELECT_TARGET_RANDOM,0);
+    void DoSplit(int atPercent /* 75 50 25 */)
+    {
+        DoPlaySoundToSet(m_creature,SOUND_SPLIT);
+        Unit* target = NULL;
+        target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-		ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227,2083.814453,125.648788,0);
-		ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875,2118.504639,133.058151,0);
-		ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266,2058.231201,133.058151,0);
+        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227,2083.814453,125.648788,0);
+        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875,2118.504639,133.058151,0);
+        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266,2058.231201,133.058151,0);
 
-		ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
+        ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
 
-		switch(rand()%3)
-		{
-		case 0: 
-			bossc=place1;i1=place2;i2=place3;
-			break;
-		case 1:
-			bossc=place2;i1=place1;i2=place3;
-			break;
-		case 2:
-			bossc=place3;i1=place1;i2=place2;
-			break;
-		}
+        switch(rand()%3)
+        {
+        case 0: 
+            bossc=place1;i1=place2;i2=place3;
+            break;
+        case 1:
+            bossc=place2;i1=place1;i2=place3;
+            break;
+        case 2:
+            bossc=place3;i1=place1;i2=place2;
+            break;
+        }
 
-		for (int tryi = 0; tryi < 41; tryi ++)
-		{
-			Unit *targetpl = SelectUnit(SELECT_TARGET_RANDOM, 0);
-			if (targetpl->isType(TYPEMASK_PLAYER))
-			{
-				Group *grp = ((Player *)targetpl)->GetGroup();
-				if (grp)
-				{
-					for (int ici = 0; ici < TARGETICONCOUNT; ici++)
-					{
-						//if (grp ->m_targetIcons[ici] == m_creature->GetGUID()) -- private member:(
-						grp->SetTargetIcon(ici, 0);
-					}
-				}
-				break;
-			}
-		}
+        for (int tryi = 0; tryi < 41; tryi ++)
+        {
+            Unit *targetpl = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            if (targetpl->isType(TYPEMASK_PLAYER))
+            {
+                Group *grp = ((Player *)targetpl)->GetGroup();
+                if (grp)
+                {
+                    for (int ici = 0; ici < TARGETICONCOUNT; ici++)
+                    {
+                        //if (grp ->m_targetIcons[ici] == m_creature->GetGUID()) -- private member:(
+                        grp->SetTargetIcon(ici, 0);
+                    }
+                }
+                break;
+            }
+        }
 
-		m_creature->RemoveAllAuras();
-		m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-		m_creature->SetVisibility(VISIBILITY_OFF);
-		m_creature->Relocate(bossc->x, bossc->y, bossc->z, bossc->r);
-		Invisible = true;
-		DoResetThreat();
-		DoStopAttack();
+        m_creature->RemoveAllAuras();
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetVisibility(VISIBILITY_OFF);
+        m_creature->Relocate(bossc->x, bossc->y, bossc->z, bossc->r);
+        Invisible = true;
+        DoResetThreat();
+        DoStopAttack();
 
-		switch (atPercent)
-		{
-			case 75:
-				Images75 = true;
-				break;
-			case 50:
-				Images50 = true;
-				break;
-			case 25:
-				Images25 = true;
-				break;
-		}
+        switch (atPercent)
+        {
+            case 75:
+                Images75 = true;
+                break;
+            case 50:
+                Images50 = true;
+                break;
+            case 25:
+                Images25 = true;
+                break;
+        }
 
-		Image1 = m_creature->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-		Image1->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-		Image1->SetHealth(m_creature->GetHealth() / 5);
-		Image1->AI()->AttackStart(target); 
+        Image1 = m_creature->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+        Image1->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+        Image1->SetHealth(m_creature->GetHealth() / 5);
+        Image1->AI()->AttackStart(target); 
 
-		Image2 = m_creature->SummonCreature(15263,i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-		Image2->SetMaxHealth(m_creature->GetMaxHealth() / 5);
-		Image2->SetHealth(m_creature->GetHealth() / 5);
-		Image2->AI()->AttackStart(target);
+        Image2 = m_creature->SummonCreature(15263,i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+        Image2->SetMaxHealth(m_creature->GetMaxHealth() / 5);
+        Image2->SetHealth(m_creature->GetHealth() / 5);
+        Image2->AI()->AttackStart(target);
 
-		((boss_skeramAI*)Image1->AI())->IsImage = true;
-		((boss_skeramAI*)Image2->AI())->IsImage = true;
+        ((boss_skeramAI*)Image1->AI())->IsImage = true;
+        ((boss_skeramAI*)Image2->AI())->IsImage = true;
 
-		Invisible = true;
-	}
+        Invisible = true;
+    }
 }; 
 
 CreatureAI* GetAI_boss_skeram(Creature *_Creature)
 {
     return new boss_skeramAI (_Creature);
 }
-
 
 void AddSC_boss_skeram()
 {

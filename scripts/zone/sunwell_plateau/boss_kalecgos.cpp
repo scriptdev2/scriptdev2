@@ -163,7 +163,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
     bool Uncorrupted;
     bool Banished;
     bool Checked;
-	bool Enraged;
+    bool Enraged;
 
     void Reset()
     {
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         Uncorrupted = false;
         Banished    = false;
         Checked     = false;
-		Enraged     = false;
+        Enraged     = false;
 
         // Reset Sathrovarr too
         if(pInstance)
@@ -260,8 +260,8 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             Kalec->SetVisibility(VISIBILITY_OFF);
         }
 
-		m_creature->GetMotionMaster()->MoveIdle();
-		m_creature->setFaction(35);
+        m_creature->GetMotionMaster()->MoveIdle();
+        m_creature->setFaction(35);
     }
 
     void MovementInform(uint32 type, uint32 id)
@@ -291,14 +291,14 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
         if(!m_creature->getVictim() || !m_creature->SelectHostilTarget() || Banished)
             return;
 
-		if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
-		{
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        {
             Unit* Sathrovarr = Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_SATHROVARR));
-			if(Sathrovarr)
-				Sathrovarr->CastSpell(Sathrovarr, SPELL_CRAZED_RAGE, true);
-			DoCast(m_creature, SPELL_CRAZED_RAGE, true);
-		    Enraged = true;
-		}
+            if(Sathrovarr)
+                Sathrovarr->CastSpell(Sathrovarr, SPELL_CRAZED_RAGE, true);
+            DoCast(m_creature, SPELL_CRAZED_RAGE, true);
+            Enraged = true;
+        }
 
         if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 1) && !Checked)
         {
@@ -388,7 +388,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
                 Unit* pUnit = Unit::GetUnit((*m_creature), TeleportTargetGUID);
                 if(pUnit)
                 {
-					pUnit->CastSpell(pUnit, SPELL_SPECTRAL_BLAST, true);
+                    pUnit->CastSpell(pUnit, SPELL_SPECTRAL_BLAST, true);
                     TeleportToInnerVeil((Player*)pUnit);
                 }
                 else error_log(ERROR_MISSING_TELEPORT_GUID);
@@ -419,7 +419,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
     uint32 CurseOfBoundlessAgonyTimer;
     uint32 ShadowBoltVolleyTimer;
     bool Banished;
-	bool Enraged;
+    bool Enraged;
 
     void Reset()
     {
@@ -429,7 +429,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         ShadowBoltVolleyTimer = 10000;
 
         Banished = false;
-		Enraged  = false;
+        Enraged  = false;
 
         DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
     }
@@ -439,12 +439,12 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         DoYell(SAY_SATH_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_SATH_AGGRO);
 
-		Creature* Kalec = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KALECGOS_HUMAN)));
-		if(Kalec)
-		{
-			m_creature->AddThreat(Kalec, 10000000.0f);
-			Kalec->AddThreat(m_creature, 10000000.0f);
-		}
+        Creature* Kalec = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KALECGOS_HUMAN)));
+        if(Kalec)
+        {
+            m_creature->AddThreat(Kalec, 10000000.0f);
+            Kalec->AddThreat(m_creature, 10000000.0f);
+        }
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)
@@ -496,14 +496,14 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         if(!m_creature->getVictim() || !m_creature->SelectHostilTarget() || Banished)
             return;
 
-		if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
-		{
+        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        {
             Unit* Kalecgos = Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KALECGOS_DRAGON));
-			if(Kalecgos)
-				Kalecgos->CastSpell(Kalecgos, SPELL_CRAZED_RAGE, true);
-			DoCast(m_creature, SPELL_CRAZED_RAGE, true);
-		    Enraged = true;
-		}
+            if(Kalecgos)
+                Kalecgos->CastSpell(Kalecgos, SPELL_CRAZED_RAGE, true);
+            DoCast(m_creature, SPELL_CRAZED_RAGE, true);
+            Enraged = true;
+        }
 
         if(CorruptingStrikeTimer < diff)
         {

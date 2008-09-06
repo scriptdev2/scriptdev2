@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case DATA_VEXALLUS_DOOR:        return VexallusDoorGUID;
             case DATA_SELIN_DOOR:           return SelinDoorGUID;
             case DATA_SELIN_ENCOUNTER_DOOR: return SelinEncounterDoorGUID;
-			case DATA_DELRISSA_DOOR:        return DelrissaDoorGUID;
+            case DATA_DELRISSA_DOOR:        return DelrissaDoorGUID;
             case DATA_KAEL_STATUE_LEFT:     return KaelStatue[0];
             case DATA_KAEL_STATUE_RIGHT:    return KaelStatue[1];
 
@@ -172,7 +172,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case 187896:  VexallusDoorGUID = go->GetGUID();       break;
             case 187979:  SelinDoorGUID = go->GetGUID();          break;
             case 188118:  SelinEncounterDoorGUID = go->GetGUID(); break;
-			case 187770:  DelrissaDoorGUID = go->GetGUID();       break;
+            case 187770:  DelrissaDoorGUID = go->GetGUID();       break;
             case 188165:  KaelStatue[0] = go->GetGUID();          break;
             case 188166:  KaelStatue[1] = go->GetGUID();          break;
         }
@@ -193,4 +193,3 @@ void AddSC_instance_magisters_terrace()
     newscript->GetInstanceData = GetInstanceData_instance_magisters_terrace;
     m_scripts[nrscripts++] = newscript;
 }
-
