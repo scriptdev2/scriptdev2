@@ -18,7 +18,7 @@ bool ScriptedAI::IsVisible(Unit* who) const
     if (!who)
         return false;
 
-    return (m_creature->GetDistanceSq(who) < VISIBLE_RANGE_SQ) && who->isVisibleForOrDetect(m_creature,true);
+    return (m_creature->GetDistance(who) < VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
 }
 
 void ScriptedAI::MoveInLineOfSight(Unit *who)
@@ -341,7 +341,7 @@ bool ScriptedAI::CanCast(Unit* Target, SpellEntry const *Spell, bool Triggered)
         return false;
 
     //Unit is out of range of this spell
-    if (m_creature->GetDistanceSq(Target) > TempRange->maxRange*TempRange->maxRange || m_creature->GetDistanceSq(Target) < TempRange->minRange*TempRange->minRange)
+    if (m_creature->GetDistance(Target) > TempRange->maxRange || m_creature->GetDistance(Target) < TempRange->minRange)
         return false;
 
     return true;

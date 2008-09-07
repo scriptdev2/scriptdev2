@@ -73,8 +73,8 @@ struct MANGOS_DLL_DECL boss_broodlordAI : public ScriptedAI
         {
             float rx,ry,rz;
             m_creature->GetRespawnCoord(rx, ry, rz);
-            float spawndist_sq = m_creature->GetDistanceSq(rx,ry,rz);
-            if ( spawndist_sq > 2500 )
+            float spawndist = m_creature->GetDistance(rx,ry,rz);
+            if ( spawndist > 250 )
             { 
                 EnterEvadeMode();
                 return;

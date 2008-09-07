@@ -20,7 +20,7 @@ bool npc_escortAI::IsVisible(Unit* who) const
     if (!who)
         return false;
 
-    return (m_creature->GetDistanceSq(who) < VISIBLE_RANGE_SQ) && who->isVisibleForOrDetect(m_creature,true);
+    return (m_creature->GetDistance(who) < VISIBLE_RANGE) && who->isVisibleForOrDetect(m_creature,true);
 }
 
 void npc_escortAI::AttackStart(Unit *who)

@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
             //Cast spell one on our current target.
             if (rand()%50 > 10)
                 DoCast(m_creature->getVictim(),SPELL_ONE_ALT);
-            else if (m_creature->GetDistanceSq(m_creature->getVictim()) < 250)
+            else if (m_creature->GetDistance(m_creature->getVictim()) < 25)
                 DoCast(m_creature->getVictim(),SPELL_ONE);
 
             Spell_1_Timer = 5000;
