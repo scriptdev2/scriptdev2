@@ -1363,6 +1363,14 @@
 							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_nethekurse.cpp"
 							>
 						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\def_shattered_halls.h"
+							>
+						</File>
+						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\instance_shattered_halls.cpp"
+							>
+						</File>
 					</Filter>
 				</Filter>
 				<Filter

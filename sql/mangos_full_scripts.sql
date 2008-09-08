@@ -409,7 +409,9 @@ UPDATE `creature_template` SET `ScriptName`='boss_watchkeeper_gargolmar' WHERE `
 /* SHATTERED HALLS */
 /* Nethekurse and his spawned shadowfissure */
 UPDATE `creature_template` SET `ScriptName`='boss_grand_warlock_nethekurse' WHERE `entry`=16807;
-UPDATE `creature_template` SET `ScriptName`='mob_nethe_shadowfissure' WHERE `entry`=17471;
+UPDATE `creature_template` SET `ScriptName`='mob_fel_orc_convert' WHERE `entry`=17083;
+UPDATE `creature_template` SET `ScriptName`='mob_lesser_shadow_fissure' WHERE `entry`=17471;
+UPDATE `instance_template` SET `script`='instance_shattered_halls' WHERE `map`=540;
 
 /* MAGTHERIDON'S LAIR */
 UPDATE `instance_template` SET `script`='instance_magtheridons_lair' WHERE `map`=544;

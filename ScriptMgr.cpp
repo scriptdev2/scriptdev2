@@ -283,6 +283,7 @@ extern void AddSC_instance_magtheridons_lair();
 
 //--Shattered Halls
 extern void AddSC_boss_grand_warlock_nethekurse();
+extern void AddSC_instance_shattered_halls();
 
 //--Ramparts
 extern void AddSC_boss_watchkeeper_gargolmar();
@@ -1256,6 +1257,7 @@ void ScriptsInit()
 
     //--Shattered Halls
     AddSC_boss_grand_warlock_nethekurse();
+    AddSC_instance_shattered_halls();
 
     //--Ramparts
     AddSC_boss_watchkeeper_gargolmar();
