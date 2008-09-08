@@ -2442,11 +2442,11 @@ void SendBattleMasterMenu_guard_shattrath(Player *player, Creature *_Creature, u
             player->SEND_GOSSIP_MENU(10389, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->SEND_POI(-1774, 5251, 6, 6, 0, "Horde Battlemasters");
+            player->SEND_POI(-1963, 5263, 6, 6, 0, "Horde Battlemasters");
             player->SEND_GOSSIP_MENU(10390,  _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            player->SEND_POI(-1774, 5251, 6, 6, 0, "Arena Battlemasters");
+            player->SEND_POI(-1960, 5175, 6, 6, 0, "Arena Battlemasters");
             player->SEND_GOSSIP_MENU(12510,  _Creature->GetGUID());
             break;
     }
