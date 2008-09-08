@@ -177,10 +177,18 @@ void ScriptedAI::DoYell(const char* text, uint32 language, Unit* target)
     else m_creature->Yell(text, language, 0);
 }
 
-void ScriptedAI::DoTextEmote(const char* text, Unit* target)
+void ScriptedAI::DoTextEmote(const char* text, Unit* target, bool IsBossEmote)
 {
-    if (target)m_creature->TextEmote(text, target->GetGUID());
-    else m_creature->TextEmote(text, 0);
+    if (target)m_creature->TextEmote(text, target->GetGUID(), IsBossEmote);
+    else m_creature->TextEmote(text, 0, IsBossEmote);
+}
+
+void ScriptedAI::DoWhisper(Unit* reciever, const char* text, bool IsBossWhisper)
+{
+    if (!reciever || reciever->GetTypeId() != TYPEID_PLAYER)
+        return;
+
+    m_creature->Whisper(reciever->GetGUID(), text, IsBossWhisper);
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)

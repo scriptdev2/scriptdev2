@@ -213,7 +213,7 @@ struct MANGOS_DLL_DECL boss_talon_king_ikissAI : public ScriptedAI
 
         if( Blink_Timer < diff )
         {
-            DoTextEmote(EMOTE_ARCANE_EXP,NULL);             //should be CHAT_MSG_RAID_BOSS_EMOTE
+            DoTextEmote(EMOTE_ARCANE_EXP,NULL,true);
 
             if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
             {
