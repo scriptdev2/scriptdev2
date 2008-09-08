@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if(target && target->GetDistance2dSq(m_creature) > 144 ) // checking if > 144 is faster than doing a square root and checking if > 12
+                if(target && target->GetDistance2d(m_creature) > 12 )
                     target_list.push_back(target);
                 target = NULL;
             }

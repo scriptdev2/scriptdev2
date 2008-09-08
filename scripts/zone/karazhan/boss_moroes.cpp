@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if(target && target->GetDistance2dSq(m_creature) < 25)
+                if(target && target->GetDistance2d(m_creature) < 5)
                     target_list.push_back(target);
             }
             if(target_list.size())

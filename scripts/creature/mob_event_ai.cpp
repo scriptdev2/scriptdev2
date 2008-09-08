@@ -96,21 +96,21 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
     }
 
-    void ProcessEvent(EventHolder& pHolder, Unit* pActionInvoker = NULL)
+    bool ProcessEvent(EventHolder& pHolder, Unit* pActionInvoker = NULL)
     {  
         if (!pHolder.Enabled || pHolder.Time)
-            return;
+            return false;
 
         //Check the inverse phase mask (event doesn't trigger if current phase bit is set in mask)
         if (pHolder.Event.event_inverse_phase_mask & (1 << Phase))
-            return;
+            return false;
 
         //Store random here so that all random actions match up
         uint32 rnd = rand();
 
         //Return if chance for event is not met
         if (pHolder.Event.event_chance <= rnd % 100)
-            return;
+            return false;
 
         union 
         {
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_TIMER:
             {
                 if (!InCombat)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param3 == param4)
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_TIMER_OOC:
             {
                 if (InCombat)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param3 == param4)
@@ -187,12 +187,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_HP:
             {
                 if (!InCombat || !m_creature->GetMaxHealth())
-                    return;
+                    return false;
 
                 uint32 perc = (m_creature->GetHealth()*100) / m_creature->GetMaxHealth();
 
                 if (perc > param1 || perc < param2)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param3 == param4)
@@ -212,12 +212,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_MANA:
             {
                 if (!InCombat || !m_creature->GetMaxPower(POWER_MANA))
-                    return;
+                    return false;
 
                 uint32 perc = (m_creature->GetPower(POWER_MANA)*100) / m_creature->GetMaxPower(POWER_MANA);
 
                 if (perc > param1 || perc < param2)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param3 == param4)
@@ -322,12 +322,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_TARGET_HP:
             {
                 if (!InCombat || !m_creature->getVictim() || !m_creature->getVictim()->GetMaxHealth())
-                    return;
+                    return false;
 
                 uint32 perc = (m_creature->getVictim()->GetHealth()*100) / m_creature->getVictim()->GetMaxHealth();
 
                 if (perc > param1 || perc < param2)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param3 == param4)
@@ -347,7 +347,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_TARGET_CASTING:
             {
                 if (!InCombat || !m_creature->getVictim() || !m_creature->getVictim()->IsNonMeleeSpellCasted(false, false, true))
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param1 == param2)
@@ -367,12 +367,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_FRIENDLY_HP:
             {
                 if (!InCombat)
-                    return;
+                    return false;
 
                 Unit* pUnit = DoSelectLowestHpFriendly(param2, param1);
 
                 if (!pUnit)
-                    return;
+                    return false;
 
                 pActionInvoker = pUnit;
 
@@ -395,13 +395,13 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_FRIENDLY_IS_CC:
             {
                 if (!InCombat)
-                    return;
+                    return false;
 
                 std::list<Creature*> pList = DoFindFriendlyCC(param2);
                 
                 //List is empty
                 if (pList.empty())
-                    return;
+                    return false;
 
                 //We don't really care about the whole list, just return first available
                 pActionInvoker = *(pList.begin());
@@ -428,7 +428,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 
                 //List is empty
                 if (pList.empty())
-                    return;
+                    return false;
 
                 //We don't really care about the whole list, just return first available
                 pActionInvoker = *(pList.begin());
@@ -453,11 +453,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 //Prevent event from occuring on no unit or non creatures
                 if (!pActionInvoker || pActionInvoker->GetTypeId()!=TYPEID_UNIT)
-                    return;
+                    return false;
 
                 //Creature id doesn't match up
                 if (param1 && ((Creature*)pActionInvoker)->GetCreatureInfo()->Entry != param1)
-                    return;
+                    return false;
 
                 //Repeat Timers
                 if (param2 == param3)
@@ -487,6 +487,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         //Process actions
         for (uint32 j = 0; j < MAX_ACTIONS; j++)
             ProcessAction(pHolder.Event.action[j].type, pHolder.Event.action[j].param1, pHolder.Event.action[j].param2, pHolder.Event.action[j].param3, rnd, pHolder.EventId, pActionInvoker);
+
+        return true;
     }
 
     inline uint32 GetRandActionParam(uint32 rnd, uint32 param1, uint32 param2, uint32 param3)

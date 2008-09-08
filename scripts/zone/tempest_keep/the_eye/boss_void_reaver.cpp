@@ -143,7 +143,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if(target && target->GetDistance2dSq(m_creature) > 225)     //15 yard radius minimum
+                if(target && target->GetDistance2d(m_creature) > 15)     //15 yard radius minimum
                     target_list.push_back(target);
                 target = NULL;
             }

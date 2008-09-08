@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         pAttumen->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         float angle = m_creature->GetAngle(pAttumen);
-        float distance = m_creature->GetDistance2dSq(pAttumen) - 3;
+        float distance = m_creature->GetDistance2d(pAttumen);
         float newX = m_creature->GetPositionX() + cos(angle)*(distance/2) ;
         float newY = m_creature->GetPositionY() + sin(angle)*(distance/2) ;
         float newZ = 50;
@@ -310,7 +310,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
                     for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                     {
                         target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                        if(target && target->GetDistance2dSq(m_creature) > 25) // checking if > 25 is faster than doing a square root and checking if > 5
+                        if(target && target->GetDistance2d(m_creature) > 5)
                             target_list.push_back(target);
                         target = NULL;
                     }

@@ -488,7 +488,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public ScriptedAI
 
             if(target)
             {
-                if(m_creature->GetDistance2dSq(target) > 196 && m_creature->GetDistance2dSq(target) < 1764) // is in ~10-40 yd range
+                if(m_creature->GetDistance2d(target) > 10 && m_creature->GetDistance2d(target) < 40) // is in ~10-40 yd range
                 {
                     DoCast(target, SPELL_HAMMER_OF_JUSTICE);
                     HammerOfJusticeTimer = 20000;
