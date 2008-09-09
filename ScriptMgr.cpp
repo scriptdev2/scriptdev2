@@ -33,7 +33,7 @@ HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 
 //*** EventAI data ***
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
-HM_NAMESPACE::hash_map<uint32, EventAI_Event> EventAI_Event_Map;
+std::list<EventAI_Event> EventAI_Event_List;
 
 //Event AI summon structure. Used exclusivly by mob_event_ai.cpp.
 HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
@@ -670,8 +670,8 @@ void LoadDatabase()
         result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
             "FROM `eventai_scripts`");
 
-        //Drop Existing EventAI Map
-        EventAI_Event_Map.clear();
+        //Drop Existing EventAI List
+        EventAI_Event_List.clear();
 
         if (result)
         {
@@ -686,7 +686,8 @@ void LoadDatabase()
 
                 EventAI_Event temp;
 
-                uint32 i = fields[0].GetUInt32();
+                temp.event_id = fields[0].GetUInt32();
+                uint32 i = temp.event_id;
                 temp.creature_id = fields[1].GetUInt32();
                 temp.event_type = fields[2].GetUInt16();
                 temp.event_inverse_phase_mask = fields[3].GetUInt32();
@@ -915,8 +916,8 @@ void LoadDatabase()
                         error_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j+1);
                 }
 
-                //Add to map
-                EventAI_Event_Map[i] = temp;
+                //Add to list
+                EventAI_Event_List.push_back(temp);
                 ++Count;
 
             }while (result->NextRow());

@@ -129,6 +129,8 @@ enum EventFlags
 
 struct EventAI_Event
 {
+    uint32 event_id;
+
     uint32 creature_id;
 
     uint16 event_type;
@@ -178,7 +180,7 @@ struct EventAI_Event
 };
 
 //Event_Map
-extern HM_NAMESPACE::hash_map<uint32, EventAI_Event> EventAI_Event_Map;
+extern std::list<EventAI_Event> EventAI_Event_List;
 
 struct EventAI_Summon
 {
