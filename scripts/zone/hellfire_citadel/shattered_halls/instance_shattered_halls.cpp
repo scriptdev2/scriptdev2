@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_shattered_halls.h"
 
-#define ENCOUNTERS  1
+#define ENCOUNTERS  2
 
 #define DOOR_NETHEKURSE     1
 
@@ -68,6 +68,9 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
             case TYPE_NETHEKURSE:
                 Encounter[0] = data;
                 break;
+            case TYPE_OMROGG:
+                Encounter[1] = data;
+                break;
         }
     }
 
@@ -77,6 +80,8 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
         {
             case TYPE_NETHEKURSE:
                 return Encounter[0];
+            case TYPE_OMROGG:
+                return Encounter[1];
         }
         return 0;
     }

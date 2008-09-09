@@ -9,4 +9,6 @@
 #define DATA_NETHEKURSE         2
 #define DATA_NETHEKURSE_DOOR    3
 
+#define TYPE_OMROGG             4
+
 #endif

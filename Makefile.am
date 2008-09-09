@@ -186,6 +186,7 @@ scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/def_magtheridons_lair.h \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/boss_nethekurse.cpp \
+scripts/zone/hellfire_citadel/shattered_halls/boss_warbringer_omrogg.cpp \
 scripts/zone/hellfire_citadel/shattered_halls/def_shattered_halls.h \
 scripts/zone/hellfire_citadel/shattered_halls/instance_shattered_halls.cpp \
 scripts/zone/hellfire_peninsula/boss_doomlord_kazzak.cpp \
