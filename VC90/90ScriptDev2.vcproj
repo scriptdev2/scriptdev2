@@ -183,9 +183,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -351,9 +348,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2320,18 +2314,18 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>
 			</FileConfiguration>
- 			<FileConfiguration
+			<FileConfiguration
 				Name="Debug|x64"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>
@@ -2342,7 +2336,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>
@@ -2353,7 +2347,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;&#x0D;&#x0A;"
+					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;$(SolutionDir)\..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"
 				/>
