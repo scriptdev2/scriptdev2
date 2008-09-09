@@ -29,6 +29,7 @@ npc_guardian            100%    guardianAI used to prevent players from accessin
 npc_injured_patient     100%    patients for triage-quests (6622 and 6624)
 npc_doctor              100%    Gustaf Vanhowzen and Gregory Victor, quest 6622 and 6624 (Triage)
 npc_mount_vendor        100%    Regular mount vendors all over the world. Display gossip if player doesn't meet the requirements to buy
+npc_rogue_trainer       80%     Scripted trainers, so they are able to offer item 17126 for class quest 6681
 npc_sayge               100%    Darkmoon event fortune teller, buff player based on answers given
 EndContentData */
 
@@ -614,6 +615,50 @@ bool GossipSelect_npc_mount_vendor(Player *player, Creature *_Creature, uint32 s
 }
 
 /*######
+## npc_rogue_trainer
+######*/
+
+bool GossipHello_npc_rogue_trainer(Player *player, Creature *_Creature)
+{
+    if( _Creature->isQuestGiver() )
+        player->PrepareQuestMenu( _Creature->GetGUID() );
+
+    if( _Creature->isTrainer() )
+        player->ADD_GOSSIP_ITEM(2, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
+
+    if( _Creature->isCanTrainingAndResetTalentsOf(player) )
+        player->ADD_GOSSIP_ITEM(2, "I wish to unlearn my talents", GOSSIP_SENDER_MAIN, GOSSIP_OPTION_UNLEARNTALENTS);
+
+    if( player->getClass() == CLASS_ROGUE && player->getLevel() >= 24 && !player->HasItemCount(17126,1) && !player->GetQuestRewardStatus(6681) )
+    {
+        player->ADD_GOSSIP_ITEM(0, "<Take the letter>", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(5996, _Creature->GetGUID());
+    } else
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+
+    return true;
+}
+
+bool GossipSelect_npc_rogue_trainer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    switch( action )
+    {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->CLOSE_GOSSIP_MENU();
+            player->CastSpell(player,21100,false);
+            break;
+        case GOSSIP_ACTION_TRAIN:
+            player->SEND_TRAINERLIST( _Creature->GetGUID() );
+            break;
+        case GOSSIP_OPTION_UNLEARNTALENTS:
+            player->CLOSE_GOSSIP_MENU();
+            player->SendTalentWipeConfirm( _Creature->GetGUID() );
+            break;
+    }
+    return true;
+}
+
+/*######
 ## npc_sayge
 ######*/
 
@@ -784,6 +829,12 @@ void AddSC_npcs_special()
     newscript->Name="npc_mount_vendor";
     newscript->pGossipHello =  &GossipHello_npc_mount_vendor;
     newscript->pGossipSelect = &GossipSelect_npc_mount_vendor;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_rogue_trainer";
+    newscript->pGossipHello =  &GossipHello_npc_rogue_trainer;
+    newscript->pGossipSelect = &GossipSelect_npc_rogue_trainer;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
