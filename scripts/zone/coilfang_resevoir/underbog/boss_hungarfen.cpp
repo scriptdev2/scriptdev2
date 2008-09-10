@@ -16,26 +16,34 @@
 
 /* ScriptData
 SDName: Boss_Hungarfen
-SD%Complete: 100
-SDComment: Missing model id for Mushrooms
+SD%Complete: 95
+SDComment: Need confirmation if spell data are same in both modes. Summons should have faster rate in heroic
 SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FOUL_SPORES 31673                             // 100% correct,however,heals enemies either O.o
+#define SPELL_FOUL_SPORES   31673
+#define SPELL_ACID_GEYSER   38739
 
 struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
 {
-    boss_hungarfenAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_hungarfenAI(Creature *c) : ScriptedAI(c)
+    {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        Reset();
+    }
 
+    bool HeroicMode;
     bool Root;
-    uint32 Mushroom_timer;
+    uint32 Mushroom_Timer;
+    uint32 AcidGeyser_Timer;
 
     void Reset()
     {
         Root = false;
-        Mushroom_timer = 5000;     // 1 mushroom after 5s, then one per 10s.
+        Mushroom_Timer = 5000;                              // 1 mushroom after 5s, then one per 10s. This should be different in heroic mode
+        AcidGeyser_Timer = 10000;
     }
 
     void Aggro(Unit *who)
@@ -47,32 +55,33 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->getVictim() && m_creature->isAlive()) {
-            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 20) { // under 20% self root for up to 11sec. and cast soul spores every sec.
-                if (!Root) {
-                    DoCast(m_creature, SPELL_FOUL_SPORES);
-                    Root = true;
-                }
+        if( (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 20 )
+        {
+            if( !Root )
+            {
+                DoCast(m_creature,SPELL_FOUL_SPORES);
+                Root = true;
             }
-
-            if (Mushroom_timer < diff) {
-                Unit* target = NULL;
-                Unit* pSummon = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                if (target)     // spawn a mushroom around random player
-                    pSummon = m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%3), target->GetPositionY()+(rand()%3), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
-                else            // if player not found, spawn around boss
-                    pSummon = m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 30000);
-                
-                if (pSummon)
-                    pSummon->setFaction(m_creature->getFaction());
-
-                Mushroom_timer = 10000;
-            }else Mushroom_timer -= diff;
-
-            DoMeleeAttackIfReady();
         }
+
+        if( Mushroom_Timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                m_creature->SummonCreature(17990, target->GetPositionX()+(rand()%8), target->GetPositionY()+(rand()%8), target->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
+            else
+                m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
+
+             Mushroom_Timer = 10000;
+        }else Mushroom_Timer -= diff;
+
+        if( AcidGeyser_Timer < diff )
+        {
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_ACID_GEYSER);
+            AcidGeyser_Timer = 10000+rand()%7500;
+        }else AcidGeyser_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
@@ -80,71 +89,60 @@ CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
     return new boss_hungarfenAI (_Creature);
 }
 
+#define SPELL_SPORE_CLOUD       34168
 
-// Underbog Mushroom: 17990
-
-#define SPELL_SPORE_CLOUD 31689
+#define SPELL_PUTRID_MUSHROOM   31690
+#define SPELL_GROW              31698
 
 struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
 {
-    mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) { Reset(); }
 
-    uint32 Grow_timer;    // grow for 20s (adjust scale modifiers with this!)
-    uint32 Shrink_timer;  // shrink in 3s
-    float Scale;
-    bool Exploded;
-    bool RootSelf;
+    bool Stop;
+    uint32 Grow_Timer;
+    uint32 Shrink_Timer;
 
-    void Reset() {
-        Grow_timer = 20000;    // grow for 20s
-        Shrink_timer = 3000;   // shrink in 3s
-        Scale = 0.1;           // start with small mushroomie
-        Exploded = false;
-        RootSelf = false;
+    void Reset()
+    {
+        Stop = false;
+        Grow_Timer = 0;
+        Shrink_Timer = 20000;
+
+        DoCast(m_creature,SPELL_PUTRID_MUSHROOM,true);
+        DoCast(m_creature,SPELL_SPORE_CLOUD,true);
     }
+
+    void MoveInLineOfSight(Unit *who)
+    { return; }
+
+    void AttackStart(Unit* who)
+    { return; }
 
     void Aggro(Unit* who)
-    {
-    }
+    { }
 
     void UpdateAI(const uint32 diff) 
     {
-        if (!RootSelf) {
-            DoCast(m_creature, 33356);  // stun animation :/
-            RootSelf = true;
-        }
+        if( Stop )
+            return;
 
-        if (!(Grow_timer < diff)) 
-        { // keep growing for 20s
-            m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, Scale);
-            Scale += 0.013;  // needs testing, final value 2.7
-            Grow_timer -= diff;
-        }else
-        {                      // explode when grown
-            if (!Exploded) 
-            {
-                DoCast(m_creature, SPELL_SPORE_CLOUD);
-                Exploded = true;
-            }
+        if( Grow_Timer <= diff )
+        {
+            DoCast(m_creature,SPELL_GROW);
+            Grow_Timer = 3000;
+        }else Grow_Timer -= diff;
 
-            if (!(Shrink_timer < diff)) 
-            {   // start shrinking,then turn invisible;
-                Scale -= 0.08;
-                m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, Scale);
-                Shrink_timer -= diff;
-            }else
-            {
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);  // invisible
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // kill
-            }
-        }
+        if( Shrink_Timer <= diff )
+        {
+            m_creature->RemoveAurasDueToSpell(SPELL_GROW);
+            Stop = true;
+        }else Shrink_Timer -= diff;
     }
 };
 CreatureAI* GetAI_mob_underbog_mushroom(Creature *_Creature)
 {
     return new mob_underbog_mushroomAI (_Creature);
 }
-
 
 void AddSC_boss_hungarfen()
 {
