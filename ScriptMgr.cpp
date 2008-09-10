@@ -14,10 +14,36 @@
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
-// Localized Text structure for storing locales. 
+// Text Map for Event AI
+HM_NAMESPACE::hash_map<uint32, std::string> EventAI_Text_Map;
+
+// Script Text used as says / yells / text emotes / whispers in scripts.
+struct ScriptText
+{
+    std::string ScriptName;
+    uint32 Entry;
+    uint32 SoundId;
+    uint8  Type;
+    uint32 Language;
+    std::string Text;
+};
+
+// Enums used by ScriptText::Type
+enum ChatType
+{
+    CHAT_TYPE_SAY               = 0,
+    CHAT_TYPE_YELL              = 1,
+    CHAT_TYPE_TEXT_EMOTE        = 2,
+    CHAT_TYPE_BOSS_EMOTE        = 3,
+    CHAT_TYPE_WHISPER           = 4,
+    CHAT_TYPE_BOSS_WHISPER      = 5,
+};
+
+std::list<ScriptText> ScriptTextList;
+
+// Localized Text structure for storing locales (for EAI and SD2 scripts). 
 struct Localized_Text
 {
-    std::string locale_0;
     std::string locale_1;
     std::string locale_2;
     std::string locale_3;
@@ -27,8 +53,9 @@ struct Localized_Text
     std::string locale_7;
     std::string locale_8;
 };
+HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap; 
+HM_NAMESPACE::hash_map<uint32, Localized_Text> Script_LocalizedTextMap;
 
-HM_NAMESPACE::hash_map<uint32, Localized_Text> Localized_Text_Map;
 //*** End Global data ***
 
 //*** EventAI data ***
@@ -582,41 +609,115 @@ void LoadDatabase()
 
         }else error_db_log("SD2: Missing sd2_db_version information.");
 
-        //Drop existing Localized Text has map
-        Localized_Text_Map.clear();
+        // Drop existing Event AI Localized Text hash map
+        EventAI_LocalizedTextMap.clear();
 
-        //Gather Localized Text Entries
-        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_0`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
-            "FROM `localized_texts`");
+        // Gather EventAI Localized Texts
+        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
+            "FROM `eventai_localized_texts`");
 
-        if (result)
+        if(result)
         {
-            outstring_log( "SD2: Loading Localized_Texts...");
+            outstring_log("Loading EAI Localized Texts....");
             barGoLink bar(result->GetRowCount());
-            uint32 Count = 0;
+            uint32 count = 0;
 
             do
             {
                 Localized_Text temp;
                 bar.step();
+                
                 Field *fields = result->Fetch();
 
                 uint32 i = fields[0].GetInt32();
 
-                temp.locale_0 = fields[1].GetString();
-                temp.locale_1 = fields[2].GetString();
-                temp.locale_2 = fields[3].GetString();
-                temp.locale_3 = fields[4].GetString();
-                temp.locale_4 = fields[5].GetString();
-                temp.locale_5 = fields[6].GetString();
-                temp.locale_6 = fields[7].GetString();
-                temp.locale_7 = fields[8].GetString();
-                temp.locale_8 = fields[9].GetString();
+                temp.locale_1 = fields[1].GetString();
+                temp.locale_2 = fields[2].GetString();
+                temp.locale_3 = fields[3].GetString();
+                temp.locale_4 = fields[4].GetString();
+                temp.locale_5 = fields[5].GetString();
+                temp.locale_6 = fields[6].GetString();
+                temp.locale_7 = fields[7].GetString();
+                temp.locale_8 = fields[8].GetString();
 
-                if (!strlen(temp.locale_0.c_str()))
-                    error_db_log("SD2: locale_0 for text %u is empty", i);
+                EventAI_LocalizedTextMap[i] = temp;
+                ++count;
 
-                Localized_Text_Map[i] = temp;
+            }while(result->NextRow());
+
+            delete result;
+
+            outstring_log("");
+            outstring_log("SD2: Loaded %u EventAI Localized Texts", count);
+        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI Localized Texts. Database table `eventai_localized_texts` is empty");
+
+        // Drop Existing Script Localized Text Hash Map
+        Script_LocalizedTextMap.clear();
+
+        // Gather Script Localized Texts
+        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
+            "FROM `script_localized_texts`");
+
+        if(result)
+        {
+            outstring_log("Loading Script Localized Texts....");
+            barGoLink bar(result->GetRowCount());
+            uint32 count = 0;
+
+            do
+            {
+                Localized_Text temp;
+                bar.step();
+                
+                Field *fields = result->Fetch();
+
+                uint32 i = fields[0].GetInt32();
+
+                temp.locale_1 = fields[1].GetString();
+                temp.locale_2 = fields[2].GetString();
+                temp.locale_3 = fields[3].GetString();
+                temp.locale_4 = fields[4].GetString();
+                temp.locale_5 = fields[5].GetString();
+                temp.locale_6 = fields[6].GetString();
+                temp.locale_7 = fields[7].GetString();
+                temp.locale_8 = fields[8].GetString();
+
+                Script_LocalizedTextMap[i] = temp;
+                ++count;
+
+            }while(result->NextRow());
+
+            delete result;
+
+            outstring_log("");
+            outstring_log("SD2: Loaded %u Script Localized Texts", count);
+        }else error_db_log("SD2: WARNING >> Loaded 0 Script Localized Texts. Database table `script_localized_texts` is empty");
+
+        //Drop existing EventAI Text hash map
+        EventAI_Text_Map.clear();
+
+        //Gather EventAI Text Entries
+        result = ScriptDev2DB.PQuery("SELECT `id`,`text` FROM `eventai_texts`");
+
+        if (result)
+        {
+            outstring_log( "SD2: Loading EventAI_Texts...");
+            barGoLink bar(result->GetRowCount());
+            uint32 Count = 0;
+
+            do
+            {
+                bar.step();
+                Field *fields = result->Fetch();
+
+                uint32 i = fields[0].GetInt32();
+
+                std::string text = fields[1].GetString();
+
+                if (!strlen(text.c_str()))
+                    error_db_log("SD2: EventAI text %u is empty", i);
+
+                EventAI_Text_Map[i] = text;
                 ++Count;
 
             }while (result->NextRow());
@@ -624,9 +725,9 @@ void LoadDatabase()
             delete result;
 
             outstring_log("");
-            outstring_log("SD2: >> Loaded %u Localized_Texts", Count);
+            outstring_log("SD2: >> Loaded %u EventAI_Texts", Count);
 
-        }else error_db_log("SD2: WARNING >> Loaded 0 Localized_Texts. DB table `Localized_Texts` is empty.");
+        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI_Texts. DB table `EventAI_Texts` is empty.");
 
         //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`"
@@ -816,16 +917,16 @@ void LoadDatabase()
                     case ACTION_T_SAY:
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
-                        if (GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT)
+                        if (GetEventAIText(temp.action[j].param1) == DEFAULT_TEXT)
                             error_db_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
                         break;
 
                     case ACTION_T_RANDOM_SAY:
                     case ACTION_T_RANDOM_YELL:
                     case ACTION_T_RANDOM_TEXTEMOTE:
-                        if ((temp.action[j].param1 != 0xffffffff && GetLocalizedText(temp.action[j].param1) == DEFAULT_TEXT) ||
-                            (temp.action[j].param2 != 0xffffffff && GetLocalizedText(temp.action[j].param2) == DEFAULT_TEXT) ||
-                            (temp.action[j].param3 != 0xffffffff && GetLocalizedText(temp.action[j].param3) == DEFAULT_TEXT))
+                        if ((temp.action[j].param1 != 0xffffffff && GetEventAIText(temp.action[j].param1) == DEFAULT_TEXT) ||
+                            (temp.action[j].param2 != 0xffffffff && GetEventAIText(temp.action[j].param2) == DEFAULT_TEXT) ||
+                            (temp.action[j].param3 != 0xffffffff && GetEventAIText(temp.action[j].param3) == DEFAULT_TEXT))
                             error_db_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
                         break;
 
@@ -928,6 +1029,56 @@ void LoadDatabase()
             outstring_log("SD2: >> Loaded %u EventAI_Events", Count);
 
         }else error_db_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
+
+        // Gather Script Text 
+        result = ScriptDev2DB.PQuery("SELECT `scriptname`, `id`, `sound`, `type`, `language`, `text`"
+            "FROM `script_texts`;");
+
+        // Drop Existing Script Text List
+        ScriptTextList.clear();
+
+        if(result)
+        {
+            outstring_log("SD2: Loading Script Text...");
+            barGoLink bar(result->GetRowCount());
+            uint32 count = 0;
+
+            do
+            {
+                bar.step();
+                Field* fields = result->Fetch();
+                ScriptText temp;
+
+                std::string scr = fields[0].GetString();
+                uint32 id       = fields[1].GetInt32();
+                uint32 sound    = fields[2].GetInt32();
+                uint8 chat      = fields[3].GetInt32();
+                uint32 lang     = fields[4].GetInt32();
+                std::string str = fields[5].GetString();
+
+                if(!strlen(scr.c_str()))
+                    error_db_log("SD2: Script Name for Script Text %u is empty!", id);
+                if(!strlen(str.c_str()))
+                    error_db_log("SD2: Script Text %s %u is empty!", scr.c_str(), id);
+
+                temp.ScriptName  = scr; 
+                temp.Entry       = id;
+                temp.SoundId     = sound;
+                temp.Type        = chat;
+                temp.Language    = lang;
+                temp.Text        = str;
+
+                ScriptTextList.push_back(temp);
+                ++count;
+
+            }while(result->NextRow());
+
+            delete result;
+
+            outstring_log("");
+            outstring_log("SD2: Loaded %u Script Texts", count);
+
+        }else error_db_log("SD2 WARNING >> Loaded 0 Script Texts. Database table `script_texts` is empty.");
 
         //Free database thread and resources
         ScriptDev2DB.HaltDelayThread();
@@ -1538,67 +1689,211 @@ void ScriptsInit()
 //*********************************
 //*** Functions used internally ***
 
-const char* GetLocalizedText(uint32 Entry)
+const char* GetEventAILocalizedText(uint32 entry)
 {
-    if (Entry == 0xffffffff)
-        error_log("SD2: Entry = -1, GetLocalizedText should not be called in this case.");
+    if (entry == 0xffffffff)
+        error_log("SD2: Entry = -1, GetEventAILocalizedText should not be called in this case.");
 
     const char* temp = NULL;
 
-    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = Localized_Text_Map.find(Entry);
+    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = EventAI_LocalizedTextMap.find(entry);
 
-    if (i == Localized_Text_Map.end())
+    if (i == EventAI_LocalizedTextMap.end())
     {
-        error_log("SD2: Localized_Text %u not found", Entry);
+        error_log("SD2: EventAI Localized Text %u not found", entry);
         return DEFAULT_TEXT;
     }
 
     switch (Locale)
     {
-        case 0:
-        temp =  (*i).second.locale_0.c_str();
-        break;
-
         case 1:
-        temp =  (*i).second.locale_1.c_str();
-        break;
+            temp =  (*i).second.locale_1.c_str();
+            break;
 
         case 2:
-        temp =  (*i).second.locale_2.c_str();
-        break;
+            temp =  (*i).second.locale_2.c_str();
+            break;
 
         case 3:
-        temp =  (*i).second.locale_3.c_str();
-        break;
+            temp =  (*i).second.locale_3.c_str();
+            break;
 
         case 4:
-        temp =  (*i).second.locale_4.c_str();
-        break;
+            temp =  (*i).second.locale_4.c_str();
+            break;
 
         case 5:
-        temp =  (*i).second.locale_5.c_str();
-        break;
+            temp =  (*i).second.locale_5.c_str();
+            break;
 
         case 6:
-        temp =  (*i).second.locale_6.c_str();
-        break;
+            temp =  (*i).second.locale_6.c_str();
+            break;
 
         case 7:
-        temp =  (*i).second.locale_7.c_str();
-        break;
+            temp =  (*i).second.locale_7.c_str();
+            break;
 
         case 8:
-        temp =  (*i).second.locale_8.c_str();
-        break;
+            temp =  (*i).second.locale_8.c_str();
+            break;
     };
 
     if (strlen(temp))
         return temp;
 
-    if (strlen((*i).second.locale_0.c_str()))
-        return (*i).second.locale_0.c_str();
+    return DEFAULT_TEXT;
+}
+
+const char* GetScriptLocalizedText(uint32 entry)
+{   
+    const char* temp = NULL;
+
+    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = Script_LocalizedTextMap.find(entry);
+
+    if (i == Script_LocalizedTextMap.end())
+    {
+        error_log("SD2: Script Localized Text %u not found", entry);
+        return DEFAULT_TEXT;
+    }
+
+    switch (Locale)
+    {
+        case 1:
+            temp =  (*i).second.locale_1.c_str();
+            break;
+
+        case 2:
+            temp =  (*i).second.locale_2.c_str();
+            break;
+
+        case 3:
+            temp =  (*i).second.locale_3.c_str();
+            break;
+
+        case 4:
+            temp =  (*i).second.locale_4.c_str();
+            break;
+
+        case 5:
+            temp =  (*i).second.locale_5.c_str();
+            break;
+
+        case 6:
+            temp =  (*i).second.locale_6.c_str();
+            break;
+
+        case 7:
+            temp =  (*i).second.locale_7.c_str();
+            break;
+            
+        case 8:
+            temp =  (*i).second.locale_8.c_str();
+            break;
+    };
+
+    if (strlen(temp))
+        return temp;
 
     return DEFAULT_TEXT;
+}
+
+const char* GetEventAIText(uint32 entry)
+{
+    if(entry == 0xffffffff)
+        error_log("SD2: Entry = -1, GetEventAIText should not be called in this case.");
+
+    const char* str = NULL;
+
+    HM_NAMESPACE::hash_map<uint32, std::string>::iterator itr = EventAI_Text_Map.find(entry);
+    if(itr == EventAI_Text_Map.end())
+    {
+        error_log("SD2 ERROR: Unable to find EventAI Text %u", entry);
+        return DEFAULT_TEXT;
+    }
+
+    str = (*itr).second.c_str();
+
+    if(strlen(str))
+        return str;
+
+    if(strlen((*itr).second.c_str()))
+        return (*itr).second.c_str();
+
+    return DEFAULT_TEXT;
+}
+
+void ProcessScriptText(uint32 entry, Creature* pCreature, Unit* target)
+{    
+    if(!pCreature)
+    {
+        error_log("SD2 ERROR: Unable to process Script Text. Invalid Creature passed");
+        return;
+    }
+
+    uint32 sound     = 0;
+    uint8  type      = 0;
+    uint32 lang      = 0;
+    const char* text = NULL;
+
+    if(ScriptTextList.empty())
+    {
+        error_log("SD2 ERROR: Script Text List is empty. Unable to find entry %u for script %s", entry, pCreature->GetScriptName());
+        return;
+    }
+
+    std::list<ScriptText>::iterator itr = ScriptTextList.begin();
+    for( ; itr != ScriptTextList.end(); ++itr)
+    {
+        if((*itr).ScriptName == pCreature->GetScriptName() && (*itr).Entry == entry)
+        {
+            sound = (*itr).SoundId;
+            type  = (*itr).Type;
+            lang  = (*itr).Language;
+            text  = (*itr).Text.c_str();
+        }
+    }
+
+    if(sound)
+    {
+        WorldPacket data(4);
+        data.SetOpcode(SMSG_PLAY_SOUND);
+        data << uint32(sound);
+        if(pCreature) pCreature->SendMessageToSet(&data, false);
+        else          target->SendMessageToSet(&data, false);
+    }
+
+    if(!text || !strlen(text))
+        text = DEFAULT_TEXT;
+
+    switch(type)
+    {
+        case CHAT_TYPE_SAY:
+            pCreature->Say(text, lang, target ? target->GetGUID() : 0);
+            break;
+
+        case CHAT_TYPE_YELL:
+            pCreature->Yell(text, lang, target ? target->GetGUID() : 0);
+            break;
+
+        case CHAT_TYPE_TEXT_EMOTE:
+            pCreature->TextEmote(text, target ? target->GetGUID() : 0);
+            break;
+
+        case CHAT_TYPE_BOSS_EMOTE:
+            pCreature->TextEmote(text, target ? target->GetGUID() : 0, true);
+            break;
+
+        case CHAT_TYPE_WHISPER:
+            if(target)  pCreature->Whisper(target->GetGUID(), text);
+            else error_log("SD2 ERROR: Unable to process script text whisper %u %s - invalid target", entry, pCreature->GetScriptName());
+            break;
+
+        case CHAT_TYPE_BOSS_WHISPER:
+            if(target) pCreature->Whisper(target->GetGUID(), text, true);
+            else error_log("SD2 ERROR: Unable to process script text boss whisper %u %s - invalid target", entry, pCreature->GetScriptName());
+            break;
+    }
 }
 
 Script* GetScriptByName(std::string Name)

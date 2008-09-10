@@ -16,6 +16,7 @@ class Item;
 class GameObject;
 class SpellCastTargets;
 class Map;
+class Unit;
 
 #define MAX_SCRIPTS     5000            //72 bytes each (approx 351kb)
 
@@ -63,8 +64,15 @@ InstanceData* (*GetInstanceData)(Map*);
 extern int nrscripts;
 extern Script *m_scripts[MAX_SCRIPTS];
 
-//Localized text function
-const char* GetLocalizedText(uint32 Entry);
+// Localized Text function
+const char* GetEventAILocalizedText(uint32 entry);
+const char* GetScriptLocalizedText(uint32 entry);
+
+//EventAI text function
+const char* GetEventAIText(uint32 entry); // TODO: Locales
+
+// Script Text function
+void ProcessScriptText(uint32 entry, Creature* pCreature, Unit* target = NULL); // TODO: Locales
 
 #if COMPILER == COMPILER_GNU
 #define FUNC_PTR(name,callconvention,returntype,parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));

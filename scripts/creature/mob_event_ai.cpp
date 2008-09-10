@@ -545,15 +545,15 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         switch (type)
         {
         case ACTION_T_SAY:
-            DoSay(GetLocalizedText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
+            DoSay(GetEventAIText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_YELL:
-            DoYell(GetLocalizedText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
+            DoYell(GetEventAIText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_TEXTEMOTE:
-            DoTextEmote(GetLocalizedText(param1), pActionInvoker ? pActionInvoker : m_creature->getVictim());
+            DoTextEmote(GetEventAIText(param1), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
 
         case ACTION_T_SOUND:
@@ -569,7 +569,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoSay(GetLocalizedText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
+                    DoSay(GetEventAIText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
@@ -578,7 +578,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoYell(GetLocalizedText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
+                    DoYell(GetEventAIText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
@@ -587,7 +587,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
 
                 if (temp != 0xffffffff)
-                    DoTextEmote(GetLocalizedText(temp), pActionInvoker ? pActionInvoker : m_creature->getVictim());
+                    DoTextEmote(GetEventAIText(temp), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
 
