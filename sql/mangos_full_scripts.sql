@@ -717,6 +717,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_nethermancer_sepethrea' WHERE 
 UPDATE `creature_template` SET `ScriptName`='mob_ragin_flames' WHERE `entry`=20481;
 
 /* THE BOTANICA */
+UPDATE `creature_template` SET `ScriptName`='boss_laj' WHERE `entry`=17980;
 UPDATE `creature_template` SET `ScriptName`='boss_warp_splinter' WHERE `entry`=17977;
 UPDATE `creature_template` SET `ScriptName`='mob_warp_splinter_treant' WHERE `entry`=19949;
 

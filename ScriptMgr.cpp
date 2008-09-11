@@ -501,6 +501,7 @@ extern void AddSC_boss_harbinger_skyriss();
 extern void AddSC_instance_arcatraz();
 
 //--Botanica
+extern void AddSC_boss_laj();
 extern void AddSC_boss_warp_splinter();
 
 //--The Eye
@@ -1601,6 +1602,7 @@ void ScriptsInit()
     AddSC_instance_arcatraz();
 
     //--Botanica
+    AddSC_boss_laj();
     AddSC_boss_warp_splinter();
 
     //--The Eye
