@@ -17,12 +17,13 @@
 /* ScriptData
 SDName: Isle_of_Queldanas
 SD%Complete: 100
-SDComment: Quest support: 11532, 11533, 11542, 11543
+SDComment: Quest support: 11524, 11525, 11532, 11533, 11542, 11543
 SDCategory: Isle Of Quel'Danas
 EndScriptData */
 
 /* ContentData
 npc_ayren_cloudbreaker
+npc_converted_sentry
 npc_unrestrained_dragonhawk
 EndContentData */
 
@@ -72,6 +73,55 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
 }
 
 /*######
+## npc_converted_sentry
+######*/
+
+#define SAY_CONVERTED_1         "Deployment sucessful. Trespassers will be neutralized."
+#define SAY_CONVERTED_2         "Objective acquired. Initiating security routines."
+
+#define SPELL_CONVERT_CREDIT    45009
+
+struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
+{
+    npc_converted_sentryAI(Creature *c) : ScriptedAI(c) { Reset(); }
+
+    bool Credit;
+    uint32 Timer;
+
+    void Reset()
+    {
+        Credit = false;
+        Timer = 2500;
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    { return; }
+    void Aggro(Unit* who)
+    { }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if( !Credit )
+        {
+            if( Timer <= diff )
+            {
+                uint32 i = urand(1,2);
+                if( i=1 ) DoSay(SAY_CONVERTED_1,LANG_UNIVERSAL,NULL);
+                else DoSay(SAY_CONVERTED_2,LANG_UNIVERSAL,NULL);
+
+                DoCast(m_creature,SPELL_CONVERT_CREDIT);
+                ((Pet*)m_creature)->SetDuration(7500);
+                Credit = true;
+            }else Timer -= diff;
+        }
+    }
+};
+CreatureAI* GetAI_npc_converted_sentry(Creature *_Creature)
+{
+    return new npc_converted_sentryAI (_Creature);
+}
+
+/*######
 ## npc_unrestrained_dragonhawk
 ######*/
 
@@ -108,6 +158,11 @@ void AddSC_isle_of_queldanas()
     newscript->Name="npc_ayren_cloudbreaker";
     newscript->pGossipHello = &GossipHello_npc_ayren_cloudbreaker;
     newscript->pGossipSelect = &GossipSelect_npc_ayren_cloudbreaker;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="npc_converted_sentry";
+    newscript->GetAI = GetAI_npc_converted_sentry;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;

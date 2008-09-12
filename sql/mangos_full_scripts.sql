@@ -44,6 +44,7 @@ UPDATE `creature_template` SET `ScriptName`='guard_shattrath_scryer' WHERE `entr
 
 /* ITEM */
 UPDATE `item_template` SET `ScriptName`='item_area_52_special' WHERE `entry`=28132;
+UPDATE `item_template` SET `ScriptName`='item_attuned_crystal_cores' WHERE `entry`=34368;
 UPDATE `item_template` SET `ScriptName`='item_blackwhelp_net' WHERE `entry`=31129;
 UPDATE `item_template` SET `ScriptName`='item_disciplinary_rod' WHERE `entry`=22473;
 UPDATE `item_template` SET `ScriptName`='item_draenei_fishing_net' WHERE `entry`=23654;
@@ -439,6 +440,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_royal_historian_archesonus' WHE
 
 /* ISLE OF QUEL'DANAS */
 UPDATE `creature_template` SET `ScriptName`='npc_ayren_cloudbreaker' WHERE `entry`=25059;
+UPDATE `creature_template` SET `ScriptName`='npc_converted_sentry' WHERE `entry`=24981;
 UPDATE `creature_template` SET `ScriptName`='npc_unrestrained_dragonhawk' WHERE `entry`=25236;
 
 /* KARAZHAN */

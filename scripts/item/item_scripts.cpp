@@ -23,6 +23,7 @@ EndScriptData */
 
 /* ContentData
 item_area_52_special(i28132)        Prevents abuse of this item
+item_attuned_crystal_cores(i34368)  Prevent abuse(quest 11524 & 11525)
 item_blackwhelp_net(i31129)         Quest Whelps of the Wyrmcult (q10747). Prevents abuse
 item_draenei_fishing_net(i23654)    Correctly implements chance to spawn item or creature
 item_disciplinary_rod               Prevents abuse
@@ -61,6 +62,20 @@ bool ItemUse_item_area_52_special(Player *player, Item* _Item, SpellCastTargets 
         player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE,_Item,NULL);
         return true;
     }
+}
+
+/*#####
+# item_attuned_crystal_cores
+#####*/
+
+bool ItemUse_item_attuned_crystal_cores(Player *player, Item* _Item, SpellCastTargets const& targets)
+{
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        targets.getUnitTarget()->GetEntry() == 24972 && targets.getUnitTarget()->isDead() )
+        return false;
+
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    return true;
 }
 
 /*#####
@@ -411,6 +426,11 @@ void AddSC_item_scripts()
     newscript = new Script;
     newscript->Name="item_area_52_special";
     newscript->pItemUse = ItemUse_item_area_52_special;
+    m_scripts[nrscripts++] = newscript;
+
+    newscript = new Script;
+    newscript->Name="item_attuned_crystal_cores";
+    newscript->pItemUse = ItemUse_item_attuned_crystal_cores;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
