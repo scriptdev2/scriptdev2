@@ -118,6 +118,8 @@ extern void AddSC_npcs_special();
 //------ ZONE --------
 
 //Alterac Mountains
+extern void AddSC_alterac_mountains();
+
 //Arathi Highlands
 //Ashenvale Forest
 //Aunchindoun
@@ -1220,6 +1222,8 @@ void ScriptsInit()
     //------ ZONE --------
 
     //Alterac Mountains
+    AddSC_alterac_mountains();
+
     //Arathi Highlands
     //Ashenvale Forest
     //Aunchindoun

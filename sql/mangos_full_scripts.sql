@@ -83,7 +83,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_sayge' WHERE `entry`=14822;
 /* */
 
 /* ALTERAC MOUNTAINS */
-
+UPDATE `creature_template` SET `ScriptName`='npc_ravenholdt' WHERE `entry`=13936;
 
 /* ALTERAC VALLEY */
 

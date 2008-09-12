@@ -260,6 +260,10 @@
 				<Filter
 					Name="Alterac Mountains"
 					>
+					<File
+						RelativePath="..\scripts\zone\alterac_mountains\alterac_mountains.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Ashenvale Forest"
