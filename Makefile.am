@@ -325,6 +325,7 @@ scripts/zone/tempest_keep/arcatraz/arcatraz.cpp \
 scripts/zone/tempest_keep/arcatraz/boss_harbinger_skyriss.cpp \
 scripts/zone/tempest_keep/arcatraz/def_arcatraz.h \
 scripts/zone/tempest_keep/arcatraz/instance_arcatraz.cpp \
+scripts/zone/tempest_keep/botanica/boss_high_botanist_freywinn.cpp \
 scripts/zone/tempest_keep/botanica/boss_laj.cpp \
 scripts/zone/tempest_keep/botanica/boss_warp_splinter.cpp \
 scripts/zone/tempest_keep/the_eye/boss_astromancer.cpp \

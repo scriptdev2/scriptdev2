@@ -1738,6 +1738,10 @@
 						Name="Botanica"
 						>
 						<File
+							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_high_botanist_freywinn.cpp"
+							>
+						</File>
+						<File
 							RelativePath="..\scripts\zone\tempest_keep\botanica\boss_laj.cpp"
 							>
 						</File>
