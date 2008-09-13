@@ -36,11 +36,17 @@ void guardAI::Reset()
 
 void guardAI::Aggro(Unit *who)
 {
+}
+
+void guardAI::JustDied(Unit *Killer)
+{
     //Send Zone Under Attack message to the LocalDefense and WorldDefense Channels
-    if (who->GetTypeId() == TYPEID_PLAYER && !ZoneAttackMsgTimer)
+    if( Killer->GetTypeId() == TYPEID_PLAYER )
+        m_creature->SendZoneUnderAttackMessage((Player*)Killer);
+    else if( Unit *owner = Killer->GetOwner() )
     {
-        m_creature->SendZoneUnderAttackMessage((Player*)who);
-        ZoneAttackMsgTimer = 30000;
+        if( owner->GetTypeId() == TYPEID_PLAYER )
+            m_creature->SendZoneUnderAttackMessage((Player*)owner);
     }
 }
 
@@ -50,12 +56,6 @@ void guardAI::UpdateAI(const uint32 diff)
     if (GlobalCooldown > diff)
         GlobalCooldown -= diff;
     else GlobalCooldown = 0;
-
-    //Always decrease ZoneAttackMsgTimer
-    if (ZoneAttackMsgTimer > diff)
-        ZoneAttackMsgTimer -= diff;
-    else ZoneAttackMsgTimer = 0;
-
 
     //Buff timer (only buff when we are alive and not in combat
     if (m_creature->isAlive() && !InCombat)
