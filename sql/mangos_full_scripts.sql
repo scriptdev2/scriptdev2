@@ -106,6 +106,8 @@ UPDATE `creature_template` SET `ScriptName`='mob_ethereal_apprentice' WHERE `ent
 
 /* AUCHENAI CRYPTS */
 UPDATE `creature_template` SET `ScriptName`='boss_exarch_maladaar' WHERE `entry`=18373;
+UPDATE `creature_template` SET `ScriptName`='mob_avatar_of_martyred' WHERE `entry`=18478;
+UPDATE `creature_template` SET `ScriptName`='mob_stolen_soul' WHERE `entry`=18441;
 
 /* SETHEKK HALLS */
 UPDATE `instance_template` SET `script`='instance_sethekk_halls' WHERE `map`=556;
