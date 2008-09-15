@@ -16,22 +16,19 @@
 
 /* ScriptData
 SDName: Boss_Pandemonius
-SD%Complete: 100
-SDComment: Small chance of 1 player being hit by all 5 blasts (1/num_players^5)
+SD%Complete: 75
+SDComment: Not known how void blast is done (amount of rapid cast seems to be related to players in party). All mobs remaining in surrounding area should aggro when engaged.
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
 #include "precompiled.h"
-
-#define SPELL_VOID_BLAST                32325
-#define SPELL_DARK_SHELL                32358
 
 #define SAY_AGGRO_1                     "I will feed on your soul."
 #define SOUND_AGGRO_1                   10561
 #define SAY_AGGRO_2                     "So... full of life!"
 #define SOUND_AGGRO_2                   10562
 #define SAY_AGGRO_3                     "Do not... resist."
-#define SOUND_AGGRO_3                   10563           
+#define SOUND_AGGRO_3                   10563
 
 #define SAY_KILL_1                      "Yes! I am... empowered!"
 #define SOUND_KILL_1                    10564
@@ -41,23 +38,35 @@ EndScriptData */
 #define SAY_DEATH                       "To the void... once... more.."
 #define SOUND_DEATH                     10566
 
+#define EMOTE_DARK_SHELL                "shifts into the void..."
+
+#define SPELL_VOID_BLAST                32325
+#define H_SPELL_VOID_BLAST              38760
+#define SPELL_DARK_SHELL                32358
+#define H_SPELL_DARK_SHELL              38759
+
 struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
 {
-    boss_pandemoniusAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_pandemoniusAI(Creature *c) : ScriptedAI(c)
+    {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        Reset();
+    }
 
-    uint32 voidblast_timer;
-    uint32 darkshell_timer;
-    uint32 voidblast_counter;
+    bool HeroicMode;
+    uint32 VoidBlast_Timer;
+    uint32 DarkShell_Timer;
+    uint32 VoidBlast_Counter;
 
     void Reset()
-    {   
-        voidblast_timer = 30000;
-        darkshell_timer = 20000;
-        voidblast_counter = 0;
+    {
+        VoidBlast_Timer = 30000;
+        DarkShell_Timer = 20000;
+        VoidBlast_Counter = 0;
     }
 
     void JustDied(Unit* Killer)
-    { 
+    {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
@@ -65,16 +74,15 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
     void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
-        {        
+        {
             case 0:
                 DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_KILL_1);
                 break;
-
             case 1:
                 DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-                break;        
+                break;
         }
     }
 
@@ -86,12 +94,10 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
                 DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
                 break;
-
             case 1:
                 DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
                 break; 
-
             case 2:
                 DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
@@ -105,34 +111,40 @@ struct MANGOS_DLL_DECL boss_pandemoniusAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(voidblast_timer < diff)
-        {     
-            if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+        if( VoidBlast_Timer < diff )
+        {
+            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0) )
             {
-                DoCast(target,SPELL_VOID_BLAST);
-                voidblast_timer = 500;
-                ++voidblast_counter;
+                DoCast(target,HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                VoidBlast_Timer = 500;
+                ++VoidBlast_Counter;
             }
 
-            if(voidblast_counter == 5)
+            if( VoidBlast_Counter == 5 )
             {
-                voidblast_timer = 25000+rand()%10000;
-                voidblast_counter = 0;
+                VoidBlast_Timer = 25000+rand()%10000;
+                VoidBlast_Counter = 0;
             }
-        }else voidblast_timer -= diff;
+        }else VoidBlast_Timer -= diff;
 
-        if(!voidblast_counter)
-            if(darkshell_timer < diff)
-            {                   
-                DoCast(m_creature,SPELL_DARK_SHELL);
-                darkshell_timer = 20000;
-            }else darkshell_timer -= diff;
+        if( !VoidBlast_Counter )
+        {
+            if( DarkShell_Timer < diff )
+            {
+                if( m_creature->IsNonMeleeSpellCasted(false) )
+                    m_creature->InterruptNonMeleeSpells(true);
+
+                DoTextEmote(EMOTE_DARK_SHELL,NULL,true);
+                DoCast(m_creature,HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                DarkShell_Timer = 20000;
+            }else DarkShell_Timer -= diff;
+        }
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_boss_pandemoniusAI(Creature *_Creature)
+CreatureAI* GetAI_boss_pandemonius(Creature *_Creature)
 {
     return new boss_pandemoniusAI (_Creature);
 }
@@ -142,6 +154,6 @@ void AddSC_boss_pandemonius()
     Script *newscript;
     newscript = new Script;
     newscript->Name="boss_pandemonius";
-    newscript->GetAI = GetAI_boss_pandemoniusAI;
+    newscript->GetAI = GetAI_boss_pandemonius;
     m_scripts[nrscripts++] = newscript;
 }
