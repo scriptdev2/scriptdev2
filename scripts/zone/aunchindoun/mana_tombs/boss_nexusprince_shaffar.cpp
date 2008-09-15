@@ -16,353 +16,298 @@
 
 /* ScriptData
 SDName: Boss_NexusPrince_Shaffar
-SD%Complete: 50
-SDComment: Missing some spells
+SD%Complete: 80
+SDComment: Need more tuning of spell timers, it should not be as linear fight as current. Also should possibly find a better way to deal with his three initial beacons to make sure all aggro.
 SDCategory: Auchindoun, Mana Tombs
 EndScriptData */
 
+/* ContentData
+boss_nexusprince_shaffar
+mob_ethereal_beacon
+EndContentData */
+
 #include "precompiled.h"
 
-#define SPELL_ETHEREAL_BEACON           32371 // Summon 18431
+#define SAY_INTRO           "What is this? You must forgive me, but I was not expecting company. As you can see, we are somewhat preoccupied right now. But no matter. As I am a gracious host, I will tend to you... personally."
+#define SOUND_INTRO         10539
+
+#define SAY_AGGRO_1         "We have not yet been properly introduced."
+#define SOUND_AGGRO_1       10541
+#define SAY_AGGRO_2         "An epic battle. How exciting!"
+#define SOUND_AGGRO_2       10542
+#define SAY_AGGRO_3         "I have longed for a good adventure."
+#define SOUND_AGGRO_3       10543
+
+#define SAY_SLAY_1          "It has been... entertaining."
+#define SOUND_SLAY_1        10544
+#define SAY_SLAY_2          "And now we part company."
+#define SOUND_SLAY_2        10545
+
+#define SAY_SUMMON          "I have such fascinating things to show you."
+#define SOUND_SUMMON        10540
+
+#define SAY_DEAD            "I must bid you... farewell."
+#define SOUND_DEAD          10546
+
+#define SPELL_BLINK                     34605
 #define SPELL_FROSTBOLT                 32364
-#define SPELL_FIREBOLT                  32363
+#define SPELL_FIREBALL                  32363
 #define SPELL_FROSTNOVA                 32365
 
-//Spells for Beacon
-#define SPELL_ARCANE_BOLT              36712
-#define SPELL_ETHEREAL_APPRENTICE       32372 // Summon 18430
-#define SPELL_VISUAL_EFFECT             32368
+#define SPELL_ETHEREAL_BEACON           32371               // Summon 18431
+#define SPELL_ETHEREAL_BEACON_VISUAL    32368
 
-//Spells for Apprentice
-#define SPELL_ETHEREAL_FIREBALL         32369
-#define SPELL_ETHEREAL_FROSTBOLT        32370
-
-#define SAY_INTRO       "What is this? You must forgive me, but I was not expecting company. As you can see, we are somewhat preoccupied right now. But no matter. As I am a gracious host, I will tend to you... personally."     
-#define SOUND_INTRO     10539
-
-#define SAY_AGGRO_1        "We have not yet been properly introduced."
-#define SOUND_AGGRO_1    10541
-#define SAY_AGGRO_2        "An epic battle. How exciting!"
-#define    SOUND_AGGRO_2    10542
-#define SAY_AGGRO_3        "I have longed for a good adventure."
-#define    SOUND_AGGRO_3    10543        
-
-#define SAY_SLAY_1        "It has been... entertaining."
-#define SOUND_SLAY_1    10544    
-#define SAY_SLAY_2        "And now we part company."
-#define SOUND_SLAY_2    10545        
-
-#define SAY_SUMMON        "I have such fascinating things to show you."
-#define SOUND_SUMMON    10540
-
-#define SAY_DEAD        "I must bid you... farewell."
-#define SOUND_DEAD        10546
-
+#define ENTRY_BEACON                    18431
 
 struct MANGOS_DLL_DECL boss_nexusprince_shaffarAI : public ScriptedAI
 {
-    boss_nexusprince_shaffarAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_nexusprince_shaffarAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 beacon_timer;
-    uint32 firebolt_timer;
-    uint32 frostbolt_timer;
-    uint32 frostnova_timer;
+    uint32 Blink_Timer;
+    uint32 Beacon_Timer;
+    uint32 FireBall_Timer;
+    uint32 Frostbolt_Timer;
+    uint32 FrostNova_Timer;
 
     bool HasTaunted;
+    bool CanBlink;
 
     void Reset()
-    {   
-
-        beacon_timer = 10000;
-        firebolt_timer = 8000;
-        frostbolt_timer = 4000;
-        frostnova_timer = 7000;
+    {
+        Blink_Timer = 1500;
+        Beacon_Timer = 10000;
+        FireBall_Timer = 8000;
+        Frostbolt_Timer = 4000;
+        FrostNova_Timer = 15000;
 
         HasTaunted = false;
+        CanBlink = false;
     }
 
-    void JustDied(Unit* Killer)
-    { 
-        DoYell(SAY_DEAD, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEAD);
+    void MoveInLineOfSight(Unit *who)
+    {
+        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        {
+            if( !HasTaunted && m_creature->IsWithinDistInMap(who, 100.0) )
+            {
+                DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_INTRO);
+                HasTaunted = true;
+            }
+
+            if (m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+            {
+                DoStartAttackAndMovement(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+
+                if (!InCombat)
+                {
+                    Aggro(who);
+                    InCombat = true;
+                }
+            }
+        }
+    }
+
+    void Aggro(Unit *who)
+    {
+        switch(rand()%3)
+        {
+        case 0:
+            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+            break;
+        case 1:
+            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+            break;
+        case 2:
+            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+            break;
+        }
+    }
+
+    void JustSummoned(Creature *summoned)
+    {
+        if( summoned->GetEntry() == ENTRY_BEACON )
+        {
+            summoned->CastSpell(summoned,SPELL_ETHEREAL_BEACON_VISUAL,false);
+
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                summoned->AI()->AttackStart(target);
+        }
     }
 
     void KilledUnit(Unit* victim)
     {
-        if (rand()%2)
-            return;
-
         switch(rand()%2)
-        {        
+        {
         case 0:
             DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
             break;
-
         case 1:
             DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;        
+            break;
         }
     }
 
-    void Aggro(Unit *who)
+    void JustDied(Unit* Killer)
     {
-
-                switch(rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break;  
-
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break; 
-                }
+        DoYell(SAY_DEAD, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature,SOUND_DEAD);
     }
-
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-                
-                Aggro(who);
-            }
-            else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
-            {
-                DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-
-                HasTaunted = true;
-            }
-        }
-    }  
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(frostbolt_timer < diff)
-        {   
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target) 
-            {
-                DoCast(target,SPELL_FROSTBOLT);
-                frostbolt_timer = 8000 + rand()%5000;
-            }
-        }else frostbolt_timer -= diff;
+        if( FrostNova_Timer < diff )
+        {
+            if( m_creature->IsNonMeleeSpellCasted(false) )
+                m_creature->InterruptNonMeleeSpells(true);
 
-        if(firebolt_timer < diff)
-        {   
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target) 
-            {
-                DoCast(target,SPELL_FROSTBOLT);
-                firebolt_timer = 8000 + rand()%5000;
-            }
-        }else firebolt_timer -= diff;
-
-        if(frostnova_timer < diff)
-        {   
             DoCast(m_creature,SPELL_FROSTNOVA);
-            frostnova_timer  = 10000 + rand()%5000;
-        }else frostnova_timer -= diff;
+            FrostNova_Timer  = 17500 + rand()%7500;
+            CanBlink = true;
+        }else FrostNova_Timer -= diff;
 
-        if(beacon_timer < diff)
-        {     
-            DoYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SUMMON);
-            //DoCast(m_creature,SPELL_ETHEREAL_BEACON);
+        if( Frostbolt_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
+            Frostbolt_Timer = 4500 + rand()%1500;
+        }else Frostbolt_Timer -= diff;
 
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            Creature* Summoned = NULL;
-            Summoned = DoSpawnCreature(18431, 0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 21000);
-            if (Summoned && target)
-                Summoned->AI()->AttackStart(target);
+        if( FireBall_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_FIREBALL);
+            FireBall_Timer = 4500 + rand()%1500;
+        }else FireBall_Timer -= diff;
 
-            beacon_timer = 10000;
+        if( CanBlink )
+        {
+            if( Blink_Timer < diff )
+            {
+                if( m_creature->IsNonMeleeSpellCasted(false) )
+                    m_creature->InterruptNonMeleeSpells(true);
 
-        }else beacon_timer -= diff;
+                DoCast(m_creature,SPELL_BLINK);
+                Blink_Timer = 1000 + rand()%1500;
+                CanBlink = false;
+            }else Blink_Timer -= diff;
+        }
+
+        if( Beacon_Timer < diff)
+        {
+            if( m_creature->IsNonMeleeSpellCasted(false) )
+                m_creature->InterruptNonMeleeSpells(true);
+
+            if( !urand(0,3) )
+            {
+                DoYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SUMMON);
+            }
+            DoCast(m_creature,SPELL_ETHEREAL_BEACON);
+
+            Beacon_Timer = 10000;
+        }else Beacon_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-
-
-CreatureAI* GetAI_boss_nexusprince_shaffarAI(Creature *_Creature)
+CreatureAI* GetAI_boss_nexusprince_shaffar(Creature *_Creature)
 {
     return new boss_nexusprince_shaffarAI (_Creature);
 }
 
+#define SPELL_ARCANE_BOLT               15254
+#define SPELL_ETHEREAL_APPRENTICE       32372               // Summon 18430
 
 struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
-    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c)
+    {
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        Reset();
+    }
 
-    uint32 apprentice_timer;
-    uint32 arcanebolt_timer;
-
-    bool onlyonce;
-    bool apprentice;
+    bool HeroicMode;
+    bool CanEvade;
+    uint32 Apprentice_Timer;
+    uint32 ArcaneBolt_Timer;
 
     void Reset()
-    {   
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
+    {
+        if( CanEvade )
+            m_creature->SetVisibility(VISIBILITY_OFF);
 
-        apprentice_timer = 20000;
-        arcanebolt_timer = 3000;
-        onlyonce = true;
-        apprentice = false;
+        CanEvade = false;
+        Apprentice_Timer = (HeroicMode ? 10000 : 20000);
+        ArcaneBolt_Timer = 1000;
     }
 
     void Aggro(Unit *who)
     {
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {  
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH); 
-                DoStartAttackAndMovement(who);
-            }
-        }
-    }  
-
-    void UpdateAI(const uint32 diff)
+    void JustSummoned(Creature *summoned)
     {
-        if(onlyonce)
-        {
-            DoCast(m_creature,SPELL_VISUAL_EFFECT );
-            onlyonce = false;
-        }
-
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-        if(!apprentice)
-        {
-            if(apprentice_timer < diff)
-            {   
-                //DoCast(m_creature,SPELL_ETHEREAL_APPRENTICE);
-                apprentice = true;
-                //m_creature->RemoveFromWorld();
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                Creature* Summoned = NULL;
-                Summoned = DoSpawnCreature(18430, 0,0,0,0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 240000);
-                if (Summoned && target)
-                    Summoned->AI()->AttackStart(target);
-            }else apprentice_timer -= diff;
-
-            if(arcanebolt_timer < diff)
-            {   
-                DoCast(m_creature->getVictim(),SPELL_ARCANE_BOLT);
-                arcanebolt_timer = 2000 + rand()%5000;
-            }else arcanebolt_timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
-    }
-};
-
-
-
-CreatureAI* GetAI_mob_ethereal_beaconAI(Creature *_Creature)
-{
-    return new mob_ethereal_beaconAI (_Creature);
-}
-
-struct MANGOS_DLL_DECL mob_ethereal_apprenticeAI : public ScriptedAI
-{
-    mob_ethereal_apprenticeAI(Creature *c) : ScriptedAI(c) {Reset();}   
-
-    uint32 etherealfireball_timer;
-    uint32 etherealfrostbolt_timer;
-
-
-    void Reset()
-    {   
-
-        etherealfireball_timer = 3000;
-        etherealfrostbolt_timer = 6000;
-    }
-
-    void Aggro(Unit *who)
-    {
+        summoned->AI()->AttackStart(m_creature->getVictim());
     }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(etherealfireball_timer < diff)
-        {   
-            DoCast(m_creature->getVictim(),SPELL_ETHEREAL_FIREBALL);
-            etherealfireball_timer = 6000;
-        }else etherealfireball_timer -= diff;
+        if( ArcaneBolt_Timer < diff )
+        {
+            DoCast(m_creature->getVictim(),SPELL_ARCANE_BOLT);
+            ArcaneBolt_Timer = 2000 + rand()%2500;
+        }else ArcaneBolt_Timer -= diff;
 
-        if(etherealfrostbolt_timer < diff)
-        {   
-            DoCast(m_creature->getVictim(),SPELL_ETHEREAL_FROSTBOLT);
-            etherealfrostbolt_timer = 6000;
-        }else etherealfrostbolt_timer -= diff;
+        if( Apprentice_Timer < diff )
+        {
+            if( m_creature->IsNonMeleeSpellCasted(false) )
+                m_creature->InterruptNonMeleeSpells(true);
+
+            m_creature->CastSpell(m_creature,SPELL_ETHEREAL_APPRENTICE,true);
+            if( m_creature->GetOwner() )
+                ((Pet*)m_creature)->SetDuration(0);
+            CanEvade = true;
+        }else Apprentice_Timer -= diff;
+
+        if( CanEvade )
+            EnterEvadeMode();
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_mob_ethereal_apprenticeAI(Creature *_Creature)
+CreatureAI* GetAI_mob_ethereal_beacon(Creature *_Creature)
 {
-    return new mob_ethereal_apprenticeAI (_Creature);
+    return new mob_ethereal_beaconAI (_Creature);
 }
 
 void AddSC_boss_nexusprince_shaffar()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_nexusprince_shaffar";
-    newscript->GetAI = GetAI_boss_nexusprince_shaffarAI;
+    newscript->GetAI = GetAI_boss_nexusprince_shaffar;
     m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->Name="mob_ethereal_beacon";
-    newscript->GetAI = GetAI_mob_ethereal_beaconAI;
-    m_scripts[nrscripts++] = newscript;
-
-    newscript = new Script;
-    newscript->Name="mob_ethereal_apprentice";
-    newscript->GetAI = GetAI_mob_ethereal_apprenticeAI;
+    newscript->GetAI = GetAI_mob_ethereal_beacon;
     m_scripts[nrscripts++] = newscript;
 }
