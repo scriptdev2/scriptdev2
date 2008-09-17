@@ -3,7 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptDev2", "VC80\80ScriptDev2.vcproj", "{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
 	ProjectSection(ProjectDependencies) = postProject
 		{803F488E-4C5A-4866-8D5C-1E6C03C007C2} = {803F488E-4C5A-4866-8D5C-1E6C03C007C2}
-	EndProjectSectionEndProject
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gensvnrevision", "VC80\gensvnrevision.vcproj", "{803F488E-4C5A-4866-8D5C-1E6C03C007C2}"
 EndProject
 Global
