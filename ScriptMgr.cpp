@@ -20,8 +20,6 @@ HM_NAMESPACE::hash_map<uint32, std::string> EventAI_Text_Map;
 // Script Text used as says / yells / text emotes / whispers in scripts.
 struct ScriptText
 {
-    std::string ScriptName;
-    uint32 Entry;
     uint32 SoundId;
     uint8  Type;
     uint32 Language;
@@ -39,7 +37,7 @@ enum ChatType
     CHAT_TYPE_BOSS_WHISPER      = 5,
 };
 
-std::list<ScriptText> ScriptTextList;
+HM_NAMESPACE::hash_map<uint32, ScriptText> Script_TextMap;
 
 // Localized Text structure for storing locales (for EAI and SD2 scripts). 
 struct Localized_Text
@@ -1038,8 +1036,8 @@ void LoadDatabase()
         result = ScriptDev2DB.PQuery("SELECT `scriptname`, `id`, `sound`, `type`, `language`, `text`"
             "FROM `script_texts`;");
 
-        // Drop Existing Script Text List
-        ScriptTextList.clear();
+        // Drop Existing Script Text Map
+        Script_TextMap.clear();
 
         if(result)
         {
@@ -1053,26 +1051,16 @@ void LoadDatabase()
                 Field* fields = result->Fetch();
                 ScriptText temp;
 
-                std::string scr = fields[0].GetString();
-                uint32 id       = fields[1].GetInt32();
-                uint32 sound    = fields[2].GetInt32();
-                uint8 chat      = fields[3].GetInt32();
-                uint32 lang     = fields[4].GetInt32();
-                std::string str = fields[5].GetString();
+                uint32 i            = fields[0].GetInt32();
+                temp.SoundId        = fields[1].GetInt32();
+                temp.Type           = fields[2].GetInt32();
+                temp.Language       = fields[3].GetInt32();
+                temp.Text           = fields[4].GetString();
 
-                if(!strlen(scr.c_str()))
-                    error_db_log("SD2: Script Name for Script Text %u is empty!", id);
-                if(!strlen(str.c_str()))
-                    error_db_log("SD2: Script Text %s %u is empty!", scr.c_str(), id);
+                if(!strlen(temp.Text.c_str()))
+                    error_db_log("SD2: Script Text %u is empty!", i);
 
-                temp.ScriptName  = scr; 
-                temp.Entry       = id;
-                temp.SoundId     = sound;
-                temp.Type        = chat;
-                temp.Language    = lang;
-                temp.Text        = str;
-
-                ScriptTextList.push_back(temp);
+                Script_TextMap[i] = temp;
                 ++count;
 
             }while(result->NextRow());
@@ -1082,7 +1070,7 @@ void LoadDatabase()
             outstring_log("");
             outstring_log("SD2: Loaded %u Script Texts", count);
 
-        }else error_db_log("SD2 WARNING >> Loaded 0 Script Texts. Database table `script_texts` is empty.");
+        }else outstring_log("SD2 WARNING >> Loaded 0 Script Texts. Database table `script_texts` is empty.");
 
         //Free database thread and resources
         ScriptDev2DB.HaltDelayThread();
@@ -1831,76 +1819,61 @@ const char* GetEventAIText(uint32 entry)
     return DEFAULT_TEXT;
 }
 
-void ProcessScriptText(uint32 entry, Creature* pCreature, Unit* target)
-{    
-    if(!pCreature)
+void ProcessScriptText(uint32 entry, WorldObject* pSource, Unit* target)
+{
+    if (!pSource)
     {
-        error_log("SD2 ERROR: Unable to process Script Text. Invalid Creature passed");
+        error_log("SD2 ERROR: ProcessScriptText invalid Source pointer.");
         return;
     }
 
-    uint32 sound     = 0;
-    uint8  type      = 0;
-    uint32 lang      = 0;
-    const char* text = NULL;
+    HM_NAMESPACE::hash_map<uint32, ScriptText>::iterator i = Script_TextMap.find(entry);
 
-    if(ScriptTextList.empty())
+    if (i == Script_TextMap.end())
     {
-        error_log("SD2 ERROR: Script Text List is empty. Unable to find entry %u for script %s", entry, pCreature->GetScriptName());
+        error_log("SD2 ERROR: ProcessScriptText could not find entry %i.");
         return;
     }
 
-    std::list<ScriptText>::iterator itr = ScriptTextList.begin();
-    for( ; itr != ScriptTextList.end(); ++itr)
-    {
-        if((*itr).ScriptName == pCreature->GetScriptName() && (*itr).Entry == entry)
-        {
-            sound = (*itr).SoundId;
-            type  = (*itr).Type;
-            lang  = (*itr).Language;
-            text  = (*itr).Text.c_str();
-        }
-    }
-
-    if(sound)
+    if((*i).second.SoundId)
     {
         WorldPacket data(4);
         data.SetOpcode(SMSG_PLAY_SOUND);
-        data << uint32(sound);
-        if(pCreature) pCreature->SendMessageToSet(&data, false);
-        else          target->SendMessageToSet(&data, false);
+        data << uint32((*i).second.SoundId);
+        pSource->SendMessageToSet(&data,false);
     }
 
-    if(!text || !strlen(text))
-        text = DEFAULT_TEXT;
-
-    switch(type)
+    switch((*i).second.Type)
     {
         case CHAT_TYPE_SAY:
-            pCreature->Say(text, lang, target ? target->GetGUID() : 0);
+            pSource->MonsterSay((*i).second.Text.c_str(), (*i).second.Language, target ? target->GetGUID() : 0);
             break;
 
         case CHAT_TYPE_YELL:
-            pCreature->Yell(text, lang, target ? target->GetGUID() : 0);
+            pSource->MonsterYell((*i).second.Text.c_str(), (*i).second.Language, target ? target->GetGUID() : 0);
             break;
 
         case CHAT_TYPE_TEXT_EMOTE:
-            pCreature->TextEmote(text, target ? target->GetGUID() : 0);
+            pSource->MonsterTextEmote((*i).second.Text.c_str(), target ? target->GetGUID() : 0);
             break;
 
         case CHAT_TYPE_BOSS_EMOTE:
-            pCreature->TextEmote(text, target ? target->GetGUID() : 0, true);
+            pSource->MonsterTextEmote((*i).second.Text.c_str(), target ? target->GetGUID() : 0, true);
             break;
 
         case CHAT_TYPE_WHISPER:
-            if(target)  pCreature->Whisper(target->GetGUID(), text);
-            else error_log("SD2 ERROR: Unable to process script text whisper %u %s - invalid target", entry, pCreature->GetScriptName());
-            break;
+            {
+                if (target)
+                    pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str());
+                else error_log("SD2 ERROR: ProcessScriptText cannot whisper without target unit. Entry %d. ", entry);
+            }break;
 
         case CHAT_TYPE_BOSS_WHISPER:
-            if(target) pCreature->Whisper(target->GetGUID(), text, true);
-            else error_log("SD2 ERROR: Unable to process script text boss whisper %u %s - invalid target", entry, pCreature->GetScriptName());
-            break;
+            {
+                if(target)
+                    pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str(), true);
+                else error_log("SD2 ERROR: ProcessScriptText cannot whsiper without target unit. Entry %d.", entry);
+            }break;
     }
 }
 

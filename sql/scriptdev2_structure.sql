@@ -72,14 +72,13 @@ PRIMARY KEY (`id`)
 
 DROP TABLE IF EXISTS `script_texts`;
 CREATE TABLE `script_texts` (
-`ScriptName` varchar(255) NOT NULL default '',
-`Id` int(11) unsigned NOT NULL default '0',
-`Sound` int(11) unsigned NOT NULL default '0',
-`Type` int(11) unsigned NOT NULL default '0',
-`Language` int(11) unsigned NOT NULL default '0',
-`Text` varchar(255) NOT NULL default '',
-`Comment` varchar(255) NOT NULL default '',
-PRIMARY KEY  (`ScriptName`,`Id`)
+`id` int(11) unsigned NOT NULL auto_increment COMMENT 'Identifier',
+`sound` int(11) unsigned NOT NULL default '0',
+`type` int(11) unsigned NOT NULL default '0',
+`language` int(11) unsigned NOT NULL default '0',
+`text` varchar(255) NOT NULL default '',
+`comment` varchar(255) NOT NULL default '',
+PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Script Texts';
 
 
