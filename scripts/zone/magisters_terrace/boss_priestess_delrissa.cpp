@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Priestess_Delrissa
-SD%Complete: 80
-SDComment: No Heroic support yet. Needs further testing.
+SD%Complete: 45
+SDComment: No Heroic support yet. Needs further testing. Several scripts for pets disabled, not seem to require any special script.
 SDCategory: Magister's Terrace
 EndScriptData */
 
@@ -56,7 +56,7 @@ static Speech PlayerDeath[]=
 #define SPELL_DISPEL_MAGIC      27609 
 #define SPELL_FLASH_HEAL        17843
 #define SPELL_SW_PAIN_NORMAL    14032
-#define SPELL_SW_PAIN_HEROIC    15654 // The IDs here do seem strange, they're according to WoWhead. Requires further correction.
+#define SPELL_SW_PAIN_HEROIC    15654
 #define SPELL_SHIELD            44291
 #define SPELL_RENEW_NORMAL      44174
 #define SPELL_RENEW_HEROIC      46192
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         Adds.clear();
         Reset();
         SummonAdds();
-        Heroic = c->GetMap()->IsHeroic() ? true : false;
+        Heroic = c->GetMap()->IsHeroic();
     }
 
     ScriptedInstance* pInstance;
@@ -120,7 +120,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     uint32 SWPainTimer;
     uint32 DispelTimer;
 
-    uint32 CombatPulseTimer; // Periodically puts all players in the instance in combat
+    uint32 CombatPulseTimer;                                // Periodically puts all players in the instance in combat
     
     bool Heroic;
 
@@ -188,7 +188,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             Creature* pAdd = ((Creature*)Unit::GetUnit(*m_creature, Adds[i]->guid));
             if(pAdd && pAdd->isAlive())
             {
-                pAdd->AI()->EnterEvadeMode(); // Force them out of combat and reset if they are in combat.
+                pAdd->AI()->EnterEvadeMode();               // Force them out of combat and reset if they are in combat.
                 resummon = false;
             }
             if(resummon)
@@ -275,8 +275,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 if(pAdd && pAdd->isAlive())
                     target = pAdd;
             }
-            if(Heroic) DoCast(target, SPELL_RENEW_HEROIC);
-            else       DoCast(target, SPELL_RENEW_NORMAL);
+            DoCast(target,Heroic ? SPELL_RENEW_HEROIC : SPELL_RENEW_NORMAL);
             RenewTimer = 5000;
         }else RenewTimer -= diff;
 
@@ -322,8 +321,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
         if(SWPainTimer < diff)
         {
-            if(Heroic) DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SW_PAIN_HEROIC);
-            else       DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_SW_PAIN_NORMAL);
+            DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0),Heroic ? SPELL_SW_PAIN_HEROIC : SPELL_SW_PAIN_NORMAL);
             SWPainTimer = 10000;
         }else SWPainTimer -= diff;
 
@@ -370,7 +368,7 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
     {
         UsedPotion = false;
 
-        ResetThreatTimer = 5000 + rand()%15000; // These guys like to switch targets often, and are not meant to be tanked.
+        ResetThreatTimer = 5000 + rand()%15000;             // These guys like to switch targets often, and are not meant to be tanked.
     }
 
     void Aggro(Unit* who) {}
@@ -481,7 +479,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
         if(Vanish_Timer < diff)
         {
-            m_creature->SetVisibility(VISIBILITY_OFF);
+            m_creature->SetVisibility(VISIBILITY_OFF);      // ...? Hacklike
             DoCast(m_creature, SPELL_VANISH);
             InVanish = true;
             Vanish_Timer = 30000;
@@ -495,7 +493,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
             {
                 DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
                 DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
-                m_creature->SetVisibility(VISIBILITY_ON);
+                m_creature->SetVisibility(VISIBILITY_ON);   // ...? Hacklike
                 InVanish = false;
             }else Wait_Timer -= diff;
 
@@ -529,11 +527,12 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 #define SPELL_CURSE_OF_AGONY         14875
 #define SPELL_FEAR                   38595
 #define SPELL_IMP_FIREBALL           44164
-#define CREATURE_IMP                 44163
+#define SPELL_SUMMON_IMP             44163
 
-#define CREATURE_FIZZLE              24656
+//#define CREATURE_IMP                 44163
+//#define CREATURE_FIZZLE              24656
 
-struct MANGOS_DLL_DECL mob_fizzleAI : public ScriptedAI
+/*struct MANGOS_DLL_DECL mob_fizzleAI : public ScriptedAI
 {
     mob_fizzleAI(Creature *c) : ScriptedAI(c)
     {
@@ -560,17 +559,15 @@ struct MANGOS_DLL_DECL mob_fizzleAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_IMP_FIREBALL);
         else DoMeleeAttackIfReady();
     }
-};
+};*/
 
 struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 {
     //Warlock
     boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c)
     {
-        ImpGUID = 0;
     }
 
-    uint64 ImpGUID;
     bool HasSummonedImp;
 
     uint32 Immolate_Timer;
@@ -581,14 +578,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 
     void Reset()
     {
-        if(ImpGUID)
-        {
-            Creature* Fizzle = ((Creature*)Unit::GetUnit(*m_creature, ImpGUID));
-            if(Fizzle && Fizzle->isAlive())
-                Fizzle->DealDamage(Fizzle, Fizzle->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            ImpGUID = 0;
-        }
-        HasSummonedImp = false;
+        //HasSummonedImp = false;
 
         Immolate_Timer = 6000;
         Shadow_Bolt_Timer = 3000;
@@ -601,14 +591,6 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 
     void JustDied(Unit* killer)
     {
-        if(ImpGUID)
-        {
-            Creature* Fizzle = ((Creature*)Unit::GetUnit(*m_creature, ImpGUID));
-            if(Fizzle && Fizzle->isAlive())
-                Fizzle->DealDamage(Fizzle, Fizzle->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            ImpGUID = 0;
-        }
-
         boss_priestess_guestAI::JustDied(killer);
     }
 
@@ -616,13 +598,9 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
     {
         if(!HasSummonedImp)
         {
-            Creature* Imp = m_creature->SummonCreature(CREATURE_FIZZLE, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-            if(Imp)
-            {
-                ImpGUID = Imp->GetGUID();
-                ((mob_fizzleAI*)Imp->AI())->EllrisGUID = m_creature->GetGUID();
-                HasSummonedImp = true;
-            }
+            //Imp will not despawn unless it's killed, even if owner dies, this is correct way.
+            DoCast(m_creature,SPELL_SUMMON_IMP);
+            HasSummonedImp = true;
         }
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
@@ -664,7 +642,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
     }
 };
 
-void mob_fizzleAI::JustDied(Unit* killer)
+/*void mob_fizzleAI::JustDied(Unit* killer)
 {
     if(Creature* Ellris = ((Creature*)Unit::GetUnit(*m_creature, EllrisGUID)))
         ((boss_ellris_duskhallowAI*)Ellris->AI())->ImpGUID = 0;
@@ -674,7 +652,7 @@ void mob_fizzleAI::KilledUnit(Unit* victim)
 {
     if(Creature* Ellris = ((Creature*)Unit::GetUnit(*m_creature, EllrisGUID)))
         ((boss_ellris_duskhallowAI*)Ellris->AI())->KilledUnit(victim);
-}
+}*/
 
 #define SPELL_KNOCKDOWN            11428
 #define SPELL_SNAP_KICK            46182
@@ -937,13 +915,12 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
 
 #define CREATURE_SLIVER             24552
 
-struct MANGOS_DLL_DECL mob_sliverAI : public ScriptedAI
+/*struct MANGOS_DLL_DECL mob_sliverAI : public ScriptedAI
 {
     mob_sliverAI(Creature *c) : ScriptedAI(c)
     {
         Reset();
     }
-
 
     uint64 GaraxxasGUID;
 
@@ -954,15 +931,14 @@ struct MANGOS_DLL_DECL mob_sliverAI : public ScriptedAI
 
     void Aggro(Unit* who){}
 
-};
+};*/
 
 struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
 {
     //Hunter
     boss_garaxxasAI(Creature *c) : boss_priestess_guestAI(c) {}
 
-    uint64 SliverGUID;
-
+    //uint64 SliverGUID;
     bool HasSummonedSliver;
 
     uint32 Aimed_Shot_Timer;
@@ -974,15 +950,8 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
 
     void Reset()
     {
-        if(SliverGUID)
-        {
-            Unit* Sliver = Unit::GetUnit(*m_creature, SliverGUID);
-            if(Sliver && Sliver->isAlive())
-                Sliver->DealDamage(Sliver, Sliver->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            SliverGUID = 0;
-        }
-
-        HasSummonedSliver = false;
+        //SliverGUID = 0;
+        //HasSummonedSliver = false;
 
         Aimed_Shot_Timer = 6000;
         Shoot_Timer = 2500;
@@ -996,14 +965,6 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
 
     void JustDied(Unit* killer)
     {        
-        if(SliverGUID)
-        {
-            Unit* Sliver = Unit::GetUnit(*m_creature, SliverGUID);
-            if(Sliver && Sliver->isAlive())
-                Sliver->DealDamage(Sliver, Sliver->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            SliverGUID = 0;
-        }
-
         boss_priestess_guestAI::JustDied(killer);
     }
 
@@ -1014,8 +975,8 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
             Creature* Sliver = m_creature->SummonCreature(CREATURE_SLIVER, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
             if(Sliver)
             {
-                ((mob_sliverAI*)Sliver->AI())->GaraxxasGUID = m_creature->GetGUID();
-                SliverGUID = Sliver->GetGUID();
+                //((mob_sliverAI*)Sliver->AI())->GaraxxasGUID = m_creature->GetGUID();
+                //SliverGUID = Sliver->GetGUID();
                 HasSummonedSliver = true;
             }
         }
@@ -1071,7 +1032,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
     }
 };
 
-void mob_sliverAI::JustDied(Unit* killer)
+/*void mob_sliverAI::JustDied(Unit* killer)
 {
     if(Creature* Garaxxas = ((Creature*)Unit::GetUnit(*m_creature, GaraxxasGUID)))
         ((boss_garaxxasAI*)Garaxxas->AI())->SliverGUID = 0;
@@ -1081,7 +1042,7 @@ void mob_sliverAI::KilledUnit(Unit* victim)
 {
     if(Creature* Garaxxas = ((Creature*)Unit::GetUnit(*m_creature, GaraxxasGUID)))
         ((boss_garaxxasAI*)Garaxxas->AI())->KilledUnit(victim);
-}
+}*/
 
 #define SPELL_WINDFURY_TOTEM         27621
 #define SPELL_WAR_STOMP              46026
@@ -1246,7 +1207,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 
         if(High_Explosive_Sheep_Timer < diff)
         {
-            //DoCast(m_creature, SPELL_HIGH_EXPLOSIVE_SHEEP);
+            DoCast(m_creature, SPELL_HIGH_EXPLOSIVE_SHEEP);
             High_Explosive_Sheep_Timer = 65000;
         }else High_Explosive_Sheep_Timer -= diff;
 
@@ -1279,20 +1240,20 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 //    }
 //};
 
-CreatureAI* GetAI_mob_sliver(Creature *_Creature)
+/*CreatureAI* GetAI_mob_sliver(Creature *_Creature)
 {
     return new mob_sliverAI (_Creature);
-};
+};*/
 
 //CreatureAI* GetAI_mob_high_explosive_sheep(Creature *_Creature)
 //{
 //    return new mob_high_explosive_sheepAI (_Creature);
 //};
 
-CreatureAI* GetAI_mob_fizzle(Creature *_Creature)
+/*CreatureAI* GetAI_mob_fizzle(Creature *_Creature)
 {
     return new mob_fizzleAI (_Creature);
-};
+};*/
 
 CreatureAI* GetAI_boss_priestess_delrissa(Creature *_Creature)
 {
@@ -1387,19 +1348,19 @@ void AddSC_boss_priestess_delrissa()
     newscript->GetAI = GetAI_zelfan;
     m_scripts[nrscripts++] = newscript;
 
-    //newscript = new Script;
-    //newscript->Name="mob_high_explosive_sheep";
-    //newscript->GetAI = GetAI_mob_high_explosive_sheep;
-    //m_scripts[nrscripts++] = newscript;
+    /*newscript = new Script;
+    newscript->Name="mob_high_explosive_sheep";
+    newscript->GetAI = GetAI_mob_high_explosive_sheep;
+    m_scripts[nrscripts++] = newscript;*/
 
-    newscript = new Script;
+    /*newscript = new Script;
     newscript->Name="mob_fizzle";
     newscript->GetAI = GetAI_mob_fizzle;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[nrscripts++] = newscript;*/
 
-    newscript = new Script;
+    /*newscript = new Script;
     newscript->Name="mob_sliver";
     newscript->GetAI = GetAI_mob_sliver;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[nrscripts++] = newscript;*/
 }
 

@@ -127,6 +127,16 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case 24722:
                 FelCrystals.push_back(creature->GetGUID());
                 break;
+            case 24553:
+            case 24554:
+            case 24555:
+            case 24556:
+            case 24557:
+            case 24558:
+            case 24559:
+            case 24561:
+                debug_log("SD2: Magisters Terrace: one or more creature for Priestess Delrissa-event are spawned by default, this is not expected.");
+                break;
         }
     }
 
@@ -147,7 +157,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
                 {
                     if(FelCrystals.empty())
                     {
-                        error_log("ERROR: No Fel Crystals loaded in Inst Data");
+                        error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
                         return 0;
                     }
 
