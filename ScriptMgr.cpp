@@ -923,6 +923,11 @@ void LoadDatabase()
                             error_db_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
                         break;
 
+                    case ACTION_T_SOUND:
+                        if (!GetSoundEntriesStore()->LookupEntry(temp.action[j].param1))
+                            error_db_log("SD2: Event %u Action %u uses non-existant SoundID %u.", i, j+1, temp.action[j].param1);
+                        break;
+
                     case ACTION_T_RANDOM_SAY:
                     case ACTION_T_RANDOM_YELL:
                     case ACTION_T_RANDOM_TEXTEMOTE:

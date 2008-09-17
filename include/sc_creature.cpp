@@ -196,6 +196,12 @@ void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)
     if (!unit)
         return;
 
+    if (!GetSoundEntriesStore()->LookupEntry(sound))
+    {
+        error_log("SD2: Invalid soundId %u used in DoPlaySoundToSet (by unit TypeId %u, guid %u)", sound, unit->GetTypeId(), unit->GetGUID());
+        return;
+    }
+
     WorldPacket data(4);
     data.SetOpcode(SMSG_PLAY_SOUND);
     data << uint32(sound);
