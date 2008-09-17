@@ -651,7 +651,7 @@ void LoadDatabase()
 
             outstring_log("");
             outstring_log("SD2: Loaded %u EventAI Localized Texts", count);
-        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI Localized Texts. Database table `eventai_localized_texts` is empty");
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI Localized Texts. Database table `eventai_localized_texts` is empty");
 
         // Drop Existing Script Localized Text Hash Map
         Script_LocalizedTextMap.clear();
@@ -693,7 +693,7 @@ void LoadDatabase()
 
             outstring_log("");
             outstring_log("SD2: Loaded %u Script Localized Texts", count);
-        }else error_db_log("SD2: WARNING >> Loaded 0 Script Localized Texts. Database table `script_localized_texts` is empty");
+        }else outstring_log("SD2: WARNING >> Loaded 0 Script Localized Texts. Database table `script_localized_texts` is empty");
 
         //Drop existing EventAI Text hash map
         EventAI_Text_Map.clear();
@@ -729,7 +729,7 @@ void LoadDatabase()
             outstring_log("");
             outstring_log("SD2: >> Loaded %u EventAI_Texts", Count);
 
-        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI_Texts. DB table `EventAI_Texts` is empty.");
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Texts. DB table `EventAI_Texts` is empty.");
 
         //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`"
@@ -768,7 +768,7 @@ void LoadDatabase()
             outstring_log("");
             outstring_log("SD2: >> Loaded %u EventAI_Summons", Count);
 
-        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI_Summons. DB table `EventAI_Summons` is empty.");
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Summons. DB table `EventAI_Summons` is empty.");
 
         //Gather event data
         result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
@@ -934,8 +934,7 @@ void LoadDatabase()
 
                     case ACTION_T_CAST:
                         {
-                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param1);
-                            if (!pSpell)
+                            if (!GetSpellStore()->LookupEntry(temp.action[j].param1))
                                 error_db_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param1);
 
                             if (temp.action[j].param2 >= TARGET_T_END)
@@ -945,8 +944,7 @@ void LoadDatabase()
 
                     case ACTION_T_REMOVEAURASFROMSPELL:
                         {
-                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
-                            if (!pSpell)
+                            if (!GetSpellStore()->LookupEntry(temp.action[j].param2))
                                 error_db_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param2);
 
                             if (temp.action[j].param1 >= TARGET_T_END)
@@ -956,8 +954,7 @@ void LoadDatabase()
 
                     case ACTION_T_CASTCREATUREGO:
                         {
-                            SpellEntry const* pSpell = GetSpellStore()->LookupEntry(temp.action[j].param2);
-                            if (!pSpell)
+                            if (!GetSpellStore()->LookupEntry(temp.action[j].param2))
                                 error_db_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param2);
 
                             if (temp.action[j].param3 >= TARGET_T_END)
@@ -1030,10 +1027,10 @@ void LoadDatabase()
             outstring_log("");
             outstring_log("SD2: >> Loaded %u EventAI_Events", Count);
 
-        }else error_db_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
+        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
 
         // Gather Script Text 
-        result = ScriptDev2DB.PQuery("SELECT `scriptname`, `id`, `sound`, `type`, `language`, `text`"
+        result = ScriptDev2DB.PQuery("SELECT `id`, `sound`, `type`, `language`, `text`"
             "FROM `script_texts`;");
 
         // Drop Existing Script Text Map
@@ -1057,8 +1054,14 @@ void LoadDatabase()
                 temp.Language       = fields[3].GetInt32();
                 temp.Text           = fields[4].GetString();
 
+                if (temp.SoundId)
+                {
+                    if (!GetSoundEntriesStore()->LookupEntry(temp.SoundId))
+                        error_db_log("SD2: Id %u in table script_texts has soundid %u but sound does not exist.",i,temp.SoundId);
+                }
+
                 if(!strlen(temp.Text.c_str()))
-                    error_db_log("SD2: Script Text %u is empty!", i);
+                    error_db_log("SD2: Id %u in table script_texts has no text.", i);
 
                 Script_TextMap[i] = temp;
                 ++count;
@@ -1819,28 +1822,33 @@ const char* GetEventAIText(uint32 entry)
     return DEFAULT_TEXT;
 }
 
-void ProcessScriptText(uint32 entry, WorldObject* pSource, Unit* target)
+void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target)
 {
     if (!pSource)
     {
-        error_log("SD2 ERROR: ProcessScriptText invalid Source pointer.");
+        error_log("SD2: ProcessScriptText invalid Source pointer.");
         return;
     }
 
-    HM_NAMESPACE::hash_map<uint32, ScriptText>::iterator i = Script_TextMap.find(entry);
+    HM_NAMESPACE::hash_map<uint32, ScriptText>::iterator i = Script_TextMap.find(id);
 
     if (i == Script_TextMap.end())
     {
-        error_log("SD2 ERROR: ProcessScriptText could not find entry %i.");
+        error_log("SD2: ProcessScriptText could not find id %u.",id);
         return;
     }
 
     if((*i).second.SoundId)
     {
-        WorldPacket data(4);
-        data.SetOpcode(SMSG_PLAY_SOUND);
-        data << uint32((*i).second.SoundId);
-        pSource->SendMessageToSet(&data,false);
+        if(GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
+        {
+            WorldPacket data(4);
+            data.SetOpcode(SMSG_PLAY_SOUND);
+            data << uint32((*i).second.SoundId);
+            pSource->SendMessageToSet(&data,false);
+        }
+        else
+            error_log("SD2: ProcessScriptText id %u tried to process invalid soundid %u.",id,(*i).second.SoundId);
     }
 
     switch((*i).second.Type)
@@ -1863,16 +1871,16 @@ void ProcessScriptText(uint32 entry, WorldObject* pSource, Unit* target)
 
         case CHAT_TYPE_WHISPER:
             {
-                if (target)
+                if (target && target->GetTypeId() == TYPEID_PLAYER)
                     pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str());
-                else error_log("SD2 ERROR: ProcessScriptText cannot whisper without target unit. Entry %d. ", entry);
+                else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
             }break;
 
         case CHAT_TYPE_BOSS_WHISPER:
             {
-                if(target)
+                if (target && target->GetTypeId() == TYPEID_PLAYER)
                     pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str(), true);
-                else error_log("SD2 ERROR: ProcessScriptText cannot whsiper without target unit. Entry %d.", entry);
+                else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
             }break;
     }
 }

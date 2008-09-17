@@ -73,7 +73,7 @@ const char* GetScriptLocalizedText(uint32 entry);
 const char* GetEventAIText(uint32 entry); // TODO: Locales
 
 // Script Text function
-void ProcessScriptText(uint32 entry, WorldObject* pSource, Unit* target = NULL); // TODO: Locales
+void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target = NULL); // TODO: Locales
 
 #if COMPILER == COMPILER_GNU
 #define FUNC_PTR(name,callconvention,returntype,parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
