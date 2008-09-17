@@ -59,24 +59,12 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 133;                                     //from expedition point
-        nodes[1] = 134;                                     //end at expedition point
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 585
+        player->CastSpell(player,33768,true);               //TaxiPath 585 (Gateways Murket and Shaadraz)
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 133;                                     //from Quest - Hellfire Peninsula (Alliance Path) Start
-        nodes[1] = 149;                                     //to Shatter Point, Hellfire Peninsula
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 612
+        player->CastSpell(player,35069,true);               //TaxiPath 612 (Taxi - Hellfire Peninsula - Expedition Point to Shatter Point)
     }
     return true;
 }
@@ -111,24 +99,12 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 137;                                     //from shatter point
-        nodes[1] = 138;                                     //end at shatter point
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 589
+        player->CastSpell(player,33899,true);               //TaxiPath 589 (Aerial Assault Flight (Alliance))
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 148;                                     //from shatter point
-        nodes[1] = 147;                                     //end at honor point
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 607
+        player->CastSpell(player,35065,true);               //TaxiPath 607 (Taxi - Hellfire Peninsula - Shatter Point to Beach Head)
     }
     return true;
 }
@@ -168,35 +144,17 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, 
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 131;                                     //from Reaver's Fall
-        nodes[1] = 132;                                     //end at Reaver's Fall
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 584
+        player->CastSpell(player,33659,true);               //TaxiPath 584 (Gateways Murket and Shaadraz)
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 135;                                     //from Reaver's Fall
-        nodes[1] = 136;                                     //end at Reaver's Fall
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 587
+        player->CastSpell(player,33825,true);               //TaxiPath 587 (Aerial Assault Flight (Horde))
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 3)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 142;                                     //from Reaver's Fall
-        nodes[1] = 141;                                     //end at Spinebreaker Post
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 604
+        player->CastSpell(player,34578,true);               //TaxiPath 604 (Taxi - Reaver's Fall to Spinebreaker Ridge)
     }
     return true;
 }

@@ -191,6 +191,7 @@ CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
 {
     return new mob_rotting_forest_ragerAI (_Creature);
 }
+
 /*######
 ## mob_netherweb_victim
 ######*/
@@ -347,13 +348,7 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player *player, Creature *_Creatur
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 171;                                     //from skettis
-        nodes[1] = 172;                                     //end at ogri'la
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 705
+        player->CastSpell(player,41279,true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
     }
     return true;
 }

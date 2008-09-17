@@ -155,35 +155,16 @@ bool GossipHello_npc_steward_of_time(Player *player, Creature *_Creature)
 
 bool QuestAccept_npc_steward_of_time(Player *player, Creature *creature, Quest const *quest )
 {
-    if(quest->GetQuestId() == 10279) //Quest: To The Master's Lair
-    {
-        std::vector<uint32> nodes;
+    if(quest->GetQuestId() == 10279)                        //Quest: To The Master's Lair
+        player->CastSpell(player,34891,true);               //(Flight through Caverns)
 
-        nodes.resize(2);// Creature No.20142
-        nodes[0] = 144; // Quest - Caverns of Time (Intro Flight Path) (Start)
-        nodes[1] = 143; // Quest - Caverns of Time (Intro Flight Path) (End)
-        player->ActivateTaxiPathTo(nodes);
-    }
     return false;
-}
-
-void SendDefaultMenu_npc_steward_of_time(Player *player, Creature *_Creature, uint32 action)
-{
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
-    {
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);// Creature No.20142
-        nodes[0] = 144; // Quest - Caverns of Time (Intro Flight Path) (Start)
-        nodes[1] = 143; // Quest - Caverns of Time (Intro Flight Path) (End)
-        player->ActivateTaxiPathTo(nodes);
-    }
 }
 
 bool GossipSelect_npc_steward_of_time(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_npc_steward_of_time(player, _Creature, action);
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+        player->CastSpell(player,34891,true);               //(Flight through Caverns)
 
     return true;
 }

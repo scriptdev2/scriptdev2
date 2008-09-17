@@ -367,10 +367,6 @@ bool GossipSelect_npc_protectorate_nether_drake(Player *player, Creature *_Creat
 ## npc_veronia
 ######*/
 
-/*
-UPDATE `creature_template` SET `ScriptName` = 'npc_veronia' WHERE `entry` = 20162;
-*/
-
 bool GossipHello_npc_veronia(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
@@ -390,13 +386,7 @@ bool GossipSelect_npc_veronia(Player *player, Creature *_Creature, uint32 sender
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 145;                                     //from area 52
-        nodes[1] = 146;                                     //end at manaforge coruu
-        player->ActivateTaxiPathTo(nodes,6851);             //TaxiPath 606
+        player->CastSpell(player,34905,true);               //TaxiPath 606
     }
     return true;
 }
