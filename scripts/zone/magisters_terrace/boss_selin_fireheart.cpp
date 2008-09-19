@@ -46,13 +46,13 @@ EndScriptData */
 #define SPELL_FEL_CRYSTAL_COSMETIC        44374
 #define SPELL_FEL_CRYSTAL_DUMMY           44329
 #define SPELL_FEL_CRYSTAL_VISUAL          44355
-#define SPELL_MANA_RAGE                   44320 // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
+#define SPELL_MANA_RAGE                   44320             // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
 
 //Selin's spells
 #define SPELL_DRAIN_LIFE                  44294
 #define SPELL_FEL_EXPLOSION               44314   
 
-#define SPELL_DRAIN_MANA                  46153 // Heroic only
+#define SPELL_DRAIN_MANA                  46153             // Heroic only
 
 #define CRYSTALS_NUMBER           5
 #define DATA_CRYSTALS             6
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
     bool IsDraining;
     bool DrainingCrystal;
     bool Heroic;
-    uint64 CrystalGUID; // This will help us create a pointer to the crystal we are draining. We store GUIDs, never units in case unit is deleted/offline (offline if player of course).
+    uint64 CrystalGUID;                                     // This will help us create a pointer to the crystal we are draining. We store GUIDs, never units in case unit is deleted/offline (offline if player of course).
 
     void Reset()
     {
@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 if(pUnit)
                 {
                     if(!pUnit->isAlive())
-                        ((Creature*)pUnit)->Respawn(); // Let MaNGOS handle setting death state, etc.
+                        ((Creature*)pUnit)->Respawn();      // Let MaNGOS handle setting death state, etc.
 
                     // Only need to set unselectable flag. You can't attack unselectable units so non_attackable flag is not necessary here.
                     pUnit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -117,9 +117,10 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
             GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR));
             if(Door)
-                Door->SetGoState(0); // Close the door. Open it only in JustDied.
+                Door->SetGoState(0);                        // Close the door. Open it only in JustDied.
 
-            pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED); // Set Inst data for encounter
+            // Set Inst data for encounter
+            pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
         }else error_log(ERROR_INST_DATA);
 
         DrainLifeTimer = 3000 + rand()%4000;
@@ -155,7 +156,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 {
                     ShortestDistance = m_creature->GetDistance2d(pCrystal);
                     CrystalGUID = pCrystal->GetGUID();
-                    CrystalChosen = pCrystal;// Store a copy of pCrystal so we don't need to recreate a pointer to closest crystal for the movement and yell.
+                    CrystalChosen = pCrystal;               // Store a copy of pCrystal so we don't need to recreate a pointer to closest crystal for the movement and yell.
                 }
             }
         }
@@ -165,7 +166,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_ENERGY);
             CrystalChosen->CastSpell(CrystalChosen, SPELL_FEL_CRYSTAL_COSMETIC, true);
             
-            float x, y, z; // coords that we move to, close to the crystal.
+            float x, y, z;                                  // coords that we move to, close to the crystal.
             CrystalChosen->GetClosePoint(x, y, z, m_creature->GetObjectSize(), CONTACT_DISTANCE);
 
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
@@ -243,14 +244,14 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             return;
         }
 
-        pInstance->SetData(DATA_SELIN_EVENT, DONE); // Encounter complete!
+        pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
         GameObject* EncounterDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR));
         if(EncounterDoor)
-            EncounterDoor->SetGoState(1); // Open the door
+            EncounterDoor->SetGoState(1);                   // Open the door
 
         ShatterRemainingCrystals();
     }
-         
+
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -258,24 +259,27 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
         if(!DrainingCrystal)
         {
-            if(m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA) < 10)
+            uint32 maxPowerMana = m_creature->GetMaxPower(POWER_MANA);
+            if( maxPowerMana && ((m_creature->GetPower(POWER_MANA)*100 / maxPowerMana) < 10) )
             {
-                if(DrainLifeTimer < diff)
+                if( DrainLifeTimer < diff )
                 {
                     DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DRAIN_LIFE);
                     DrainLifeTimer = 10000;
                 }else DrainLifeTimer -= diff;
 
                 // Heroic only
-                if(Heroic)
-                    if(DrainManaTimer < diff)
+                if( Heroic )
+                {
+                    if( DrainManaTimer < diff )
                     {
                         DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_DRAIN_MANA);
                         DrainManaTimer = 10000;
-                    }else DrainManaTimer -= diff; 
+                    }else DrainManaTimer -= diff;
+                }
             }
 
-            if(FelExplosionTimer < diff)
+            if( FelExplosionTimer < diff )
             {
                 if(!m_creature->IsNonMeleeSpellCasted(false))
                 {
@@ -283,8 +287,10 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                     FelExplosionTimer = 2000;
                 }
             }else FelExplosionTimer -= diff;
-            
-            if(m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA) < 10) // If below 10% mana, start recharging
+
+            // If below 10% mana, start recharging
+            maxPowerMana = m_creature->GetMaxPower(POWER_MANA);
+            if( maxPowerMana && ((m_creature->GetPower(POWER_MANA)*100 / maxPowerMana) < 10) )
             {
                 if(DrainCrystalTimer < diff)
                 {
@@ -314,7 +320,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
                 }else EmpowerTimer -= diff;
         }
         
-        DoMeleeAttackIfReady(); // No need to check if we are draining crystal here, as the spell has a stun.
+        DoMeleeAttackIfReady();                             // No need to check if we are draining crystal here, as the spell has a stun.
     }
 };
 

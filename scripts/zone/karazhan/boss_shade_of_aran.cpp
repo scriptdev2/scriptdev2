@@ -300,7 +300,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 FrostCooldown -= diff;
             else FrostCooldown = 0;
 
-        if(!Drinking && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
+        if(!Drinking && m_creature->GetMaxPower(POWER_MANA) && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
             Drinking = true;
             m_creature->InterruptNonMeleeSpells(false);
