@@ -147,10 +147,10 @@ struct MANGOS_DLL_DECL boss_darkweaver_sythAI : public ScriptedAI
         if( m_creature->IsNonMeleeSpellCasted(false) )
             m_creature->InterruptNonMeleeSpells(false);
 
-        DoCast(m_creature,SPELL_SUMMON_SYTH_ARCANE);        //front
-        DoCast(m_creature,SPELL_SUMMON_SYTH_FIRE);          //back
-        DoCast(m_creature,SPELL_SUMMON_SYTH_FROST);         //left
-        DoCast(m_creature,SPELL_SUMMON_SYTH_SHADOW);        //right
+        DoCast(m_creature,SPELL_SUMMON_SYTH_ARCANE,true);   //front
+        DoCast(m_creature,SPELL_SUMMON_SYTH_FIRE,true);     //back
+        DoCast(m_creature,SPELL_SUMMON_SYTH_FROST,true);    //left
+        DoCast(m_creature,SPELL_SUMMON_SYTH_SHADOW,true);   //right
     }
 
     void UpdateAI(const uint32 diff)
