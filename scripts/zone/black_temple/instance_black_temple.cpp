@@ -52,9 +52,11 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 HighNethermancerZerevor;
     uint64 VerasDarkshadow;
     uint64 IllidariCouncil;
+    uint64 BloodElfCouncilVoice;
     uint64 IllidanStormrage;
 
-    uint64 NajentusSpine;
+    uint64 NajentusGate;
+    uint64 MainTempleDoors;
     uint64 IllidanGate;
     uint64 IllidanDoor[2];
 
@@ -72,12 +74,14 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         HighNethermancerZerevor = 0;
         VerasDarkshadow = 0;
         IllidariCouncil = 0;
+        BloodElfCouncilVoice = 0;
         IllidanStormrage = 0;
         
-        NajentusSpine  = 0;
-        IllidanGate    = 0;
-        IllidanDoor[0] = 0;
-        IllidanDoor[1] = 0;
+        NajentusGate    = 0;
+        MainTempleDoors = 0;
+        IllidanGate     = 0;
+        IllidanDoor[0]  = 0;
+        IllidanDoor[1]  = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
@@ -96,8 +100,8 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         switch(creature_entry)
         {
             case 22887:    Najentus = creature->GetGUID();                  break;
-            case 22990:    Akama = creature->GetGUID();                     break;
-            case 23089:    Akama_Shade = creature->GetGUID();               break;
+            case 23089:    Akama = creature->GetGUID();                     break;
+            case 22990:    Akama_Shade = creature->GetGUID();               break;
             case 22841:    ShadeOfAkama = creature->GetGUID();              break;
             case 22898:    Supremus = creature->GetGUID();                  break;
             case 22917:    IllidanStormrage = creature->GetGUID();          break;
@@ -106,6 +110,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case 22951:    LadyMalande = creature->GetGUID();               break;
             case 22952:    VerasDarkshadow = creature->GetGUID();           break;
             case 23426:    IllidariCouncil = creature->GetGUID();           break;
+            case 23499:    BloodElfCouncilVoice = creature->GetGUID();      break;
         }
     }
 
@@ -113,8 +118,12 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case 185584:
-                NajentusSpine = go->GetGUID();
+            case 185483: // Gate past Naj'entus (at the entrance to Supermoose's courtyards)
+                NajentusGate = go->GetGUID();
+                break;
+
+            case 185882: // Main Temple Doors - right past Supermoose (Supremus)
+                MainTempleDoors = go->GetGUID();
                 break;
 
             case 185905: // Gate leading to Temple Summit
@@ -146,10 +155,12 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
              case DATA_LADYMALANDE:                 return LadyMalande;
              case DATA_VERASDARKSHADOW:             return VerasDarkshadow;
              case DATA_ILLIDARICOUNCIL:             return IllidariCouncil;
-             case DATA_NAJENTUS_SPINE:              return NajentusSpine;
+             case DATA_GAMEOBJECT_NAJENTUS_GATE:    return NajentusGate;
              case DATA_GAMEOBJECT_ILLIDAN_GATE:     return IllidanGate;
              case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:   return IllidanDoor[0];
              case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:   return IllidanDoor[1];
+             case DATA_GAMEOBJECT_SUPREMUS_DOORS:   return MainTempleDoors;
+             case DATA_BLOOD_ELF_COUNCIL_VOICE:     return BloodElfCouncilVoice;
         }
 
         return 0;

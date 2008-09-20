@@ -143,9 +143,10 @@ UPDATE `creature_template` SET `ScriptName`='npc_taskmaster_fizzule' WHERE `entr
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script`='instance_black_temple' WHERE `map`=564;
-UPDATE `creature_template` SET `ScriptName`='npc_akama_shade' WHERE `entry`=23089; -- Akama at Shade of Akama
-UPDATE `creature_template` SET `ScriptName`='npc_akama_illidan' WHERE `entry`=22990; -- Akama at Illidan
-UPDATE `creature_template` SET `ScriptName`='illidari_council' WHERE `entry`=23426; -- Illidari Council controller mob
+UPDATE `creature_template` SET `ScriptName`='npc_akama_shade' WHERE `entry`=22990; -- Akama at Shade of Akama
+UPDATE `creature_template` SET `ScriptName`='npc_akama_illidan' WHERE `entry`=23089; -- Akama at Illidan
+UPDATE `creature_template` SET `ScriptName`='mob_illidari_council' WHERE `entry`=23426; -- Illidari Council controller mob
+UPDATE `creature_template` SET `ScriptName`='mob_blood_elf_council_voice_trigger' WHERE `entry` = 23499; -- Voice Trigger Mob (Controls Aggro + Enrage yells)
 UPDATE `creature_template` SET `ScriptName`='boss_veras_darkshadow' WHERE `entry`=22952; -- Rogue of Illidari Council
 UPDATE `creature_template` SET `ScriptName`='boss_teron_gorefiend' WHERE `entry`=22871; -- Teron Gorefiend
 UPDATE `creature_template` SET `ScriptName`='boss_supremus' WHERE `entry`=22898; -- Supremus

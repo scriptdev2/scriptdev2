@@ -167,7 +167,14 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
+        {
+            if(m_creature->isAlive())
+            {
+                pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
+                ToggleDoors(true);
+            }
+            else ToggleDoors(false);
+        }
 
         HurtfulStrikeTimer = 5000;
         SummonFlameTimer = 20000;
@@ -187,11 +194,23 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
             pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
     }
 
+    void ToggleDoors(bool close)
+    {
+        if(GameObject* Doors = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
+        {
+            if(close)
+                Doors->SetGoState(1); // Closed
+            else Doors->SetGoState(0); // Open
+        }
+    }
 
     void JustDied(Unit *killer)
     {
         if(pInstance)
+        {
             pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
+            ToggleDoors(false);
+        }
     }
 
     float CalculateRandomCoord(float initial)

@@ -150,7 +150,14 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         SpineGUID = 0;
 
         if(pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
+        {
+            if(m_creature->isAlive())
+            {
+                pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
+                ToggleGate(true);
+            }
+            else  ToggleGate(false);
+        }
     }
 
     void KilledUnit(Unit *victim)
@@ -171,10 +178,20 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         if(pInstance)
+        {
             pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
+            ToggleGate(false);
+        }
 
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
+    }
+
+    void ToggleGate(bool close)
+    {
+        if(GameObject* Gate = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
+            if(close)   Gate->SetGoState(0); // Closed
+            else        Gate->SetGoState(2); // Opened           
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -224,31 +241,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             ((mob_najentus_spineAI*)Spine->AI())->SetSpineVictimGUID(target->GetGUID());
             SpineTargetGUID = target->GetGUID();
         }
-    }
-
-    void SummonImpalingSpine(Unit* target)
-    {
-        if(!pInstance || !target)
-            return;
-
-        SpineGUID = pInstance->GetData64(DATA_NAJENTUS_SPINE);
-        if(!SpineGUID)
-            return;
-
-        GameObject* Spine = GameObject::GetGameObject((*m_creature), SpineGUID);
-        if(!Spine)
-            return;
-
-        float x = target->GetPositionX();
-        float y = target->GetPositionY();
-        float z = target->GetPositionZ();
-        Spine->Relocate(x, y, z, Spine->GetOrientation());
-        Spine->SetFloatValue(GAMEOBJECT_POS_X, x);
-        Spine->SetFloatValue(GAMEOBJECT_POS_Y, y);
-        Spine->SetFloatValue(GAMEOBJECT_POS_Z, z);
-        Spine->SetUInt32Value(GAMEOBJECT_DISPLAYID, DISPLAYID_SPINE);
-
-        Spine->SendUpdateObjectToAllExcept(NULL);
     }
 
     bool RemoveImpalingSpine(uint64 guid)
@@ -320,7 +312,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         // Needle
         if(NeedleSpineTimer < diff)
         {
-            for(uint8 i = 0; i < 3; i++)
+            for(uint8 i = 0; i < 3; ++i)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
                 if(!target)
@@ -359,7 +351,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 DoCast(target, SPELL_IMPALING_SPINE);
                 //DoImpalingSpineWorkaround(target);
                 SpineTargetGUID = target->GetGUID();
-                SummonImpalingSpine(target);
                 ImpalingSpineTimer = 45000;
             
                 switch(rand()%2)
@@ -405,7 +396,7 @@ bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
             if(Najentus)
             {
                 if(((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine(player->GetGUID()))
-                    _GO->SendObjectDeSpawnAnim(_GO->GetGUID());
+                    return true;
             }else error_log("ERROR: Na'entus Spine GameObject unable to find Naj'entus");
         }else error_log("ERROR: Invalid GUID acquired for Naj'entus by Naj'entus Spine GameObject");
     }
