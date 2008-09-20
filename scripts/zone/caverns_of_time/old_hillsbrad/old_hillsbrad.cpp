@@ -843,7 +843,7 @@ bool GossipSelect_npc_taretha(Player *player, Creature *_Creature, uint32 sender
         if( pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS )
         {
             pInstance->SetData(TYPE_THRALL_PART4,IN_PROGRESS);
-            _Creature->SummonCreature(18096,2639.13,698.55,65.43,4.59,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,900000);
+            _Creature->SummonCreature(18096,2639.13,698.55,65.43,4.59,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
 
             uint64 ThrallGUID = pInstance->GetData64(DATA_THRALL);
             if(ThrallGUID)
