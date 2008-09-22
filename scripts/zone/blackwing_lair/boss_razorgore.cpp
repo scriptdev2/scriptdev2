@@ -25,15 +25,15 @@ EndScriptData */
 
 //Razorgore Phase 2 Script
 
-#define SAY_NPC_DEATH "If I fall into the abyss I'll take all of you mortals with me..."
-#define SOUND_NPC_DEATH 8278
-#define SAY_EGGS_BREAK3 "No! Not another one! I'll have your heads for this atrocity. "
-#define SOUND_EGGS_BREAK3 8277
+#define SAY_NPC_DEATH           "If I fall into the abyss I'll take all of you mortals with me..."
+#define SOUND_NPC_DEATH         8278
+#define SAY_EGGS_BREAK3         "No! Not another one! I'll have your heads for this atrocity."
+#define SOUND_EGGS_BREAK3       8277
 
-#define SPELL_CLEAVE                22540
-#define SPELL_WARSTOMP              24375      
-#define SPELL_FIREBALLVOLLEY        22425       //This fireball does not enouph dmg so we will castcustom
-#define SPELL_CONFLAGRATION         23023
+#define SPELL_CLEAVE            22540
+#define SPELL_WARSTOMP          24375
+#define SPELL_FIREBALLVOLLEY    22425
+#define SPELL_CONFLAGRATION     23023
 
 struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 {
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
     void Reset()
     {
-        Cleave_Timer = 15000;      //These times are probably wrong
+        Cleave_Timer = 15000;                               //These times are probably wrong
         WarStomp_Timer = 35000;
         FireballVolley_Timer = 7000;
         Conflagration_Timer = 12000;
@@ -57,7 +57,7 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoZoneInCombat();
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
@@ -69,71 +69,53 @@ struct MANGOS_DLL_DECL boss_razorgoreAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //7-14 seconds until we should cast this agian
             Cleave_Timer = 7000 + rand()%3000;
         }else Cleave_Timer -= diff;
 
         //WarStomp_Timer
         if (WarStomp_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_WARSTOMP);
-
-            //20-30 seconds until we should cast this agian
             WarStomp_Timer = 15000 + rand()%10000;
         }else WarStomp_Timer -= diff;
 
         //FireballVolley_Timer
         if (FireballVolley_Timer < diff)
         {
-       
-            int damage = 1400 + rand()%1800;
-            //Cast
-            //DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
-            m_creature->CastCustomSpell(m_creature->getVictim(), SPELL_FIREBALLVOLLEY, &damage, NULL, NULL, false, NULL, NULL, m_creature->GetGUID());  
-
-            //10-15 seconds until we should cast this agian
+            DoCast(m_creature->getVictim(),SPELL_FIREBALLVOLLEY);
             FireballVolley_Timer = 12000 + rand()%3000;
         }else FireballVolley_Timer -= diff;
 
         //Conflagration_Timer
         if (Conflagration_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CONFLAGRATION);
             //We will remove this threat reduction and add an aura check.
-            
+
             //if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
             //m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-50);
 
-            //12 seconds until we should cast this agian
             Conflagration_Timer = 12000;
         }else Conflagration_Timer -= diff;
         
         // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
         if (m_creature->getVictim()->HasAura(SPELL_CONFLAGRATION,0))
         {
-
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,1);
             if (target)
-            m_creature->TauntApply(target);
-
-        }       
-      
+                m_creature->TauntApply(target);
+        }
 
         DoMeleeAttackIfReady();
     }
-
 };
+
 CreatureAI* GetAI_boss_razorgore(Creature *_Creature)
 {
     return new boss_razorgoreAI (_Creature);
 }
-
 
 void AddSC_boss_razorgore()
 {
