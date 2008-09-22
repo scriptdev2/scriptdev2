@@ -316,13 +316,14 @@ bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sende
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->CLOSE_GOSSIP_MENU();
+        player->CastSpell(player,32474,true);               //apparently correct spell, possible not correct place to cast, or correct caster
 
         std::vector<uint32> nodes;
 
         nodes.resize(2);
         nodes[0] = 92;                                      //from susurrus
         nodes[1] = 91;                                      //end at exodar
-        player->ActivateTaxiPathTo(nodes,22460);            //TaxiPath 506. This is NOT correct model to use, but closest found so far.
+        player->ActivateTaxiPathTo(nodes,11686);            //TaxiPath 506. Using invisible model, possible mangos must allow 0(from dbc) for cases like this.
     }
     return true;
 }
