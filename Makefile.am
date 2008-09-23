@@ -412,4 +412,23 @@ libmangosscript_la_LIBFLAGS = -version-info $(LTMANGOS_CURRENT):$(LTMANGOS_REVIS
 EXTRA_DIST = \
 	Scripts/sc_default.cpp \
 	Scripts/sc_defines.cpp \
-	Scripts/sc_defines.h
+	Scripts/sc_defines.h \
+	scriptdev2.conf.dist
+
+## Additional files to install
+sysconf_DATA = \
+	scriptdev2.conf.dist
+
+install-data-hook:
+	@list='$(sysconf_DATA)'; for p in $$list; do \
+      dest=`echo $$p | sed -e s/.dist//`; \
+	  if test -f $(DESTDIR)$(sysconfdir)/$$dest; then \
+        echo "$@ will not overwrite existing $(DESTDIR)$(sysconfdir)/$$dest"; \
+      else \
+	    echo " $(INSTALL_DATA) $$p $(DESTDIR)$(sysconfdir)/$$dest"; \
+	    $(INSTALL_DATA) $$p $(DESTDIR)$(sysconfdir)/$$dest; \
+	  fi; \
+	done
+
+clean-local:
+	rm -f $(sysconf_DATA)
