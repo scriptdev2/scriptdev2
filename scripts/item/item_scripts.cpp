@@ -25,7 +25,7 @@ EndScriptData */
 item_area_52_special(i28132)        Prevents abuse of this item
 item_attuned_crystal_cores(i34368)  Prevent abuse(quest 11524 & 11525)
 item_blackwhelp_net(i31129)         Quest Whelps of the Wyrmcult (q10747). Prevents abuse
-item_draenei_fishing_net(i23654)    Correctly implements chance to spawn item or creature
+item_draenei_fishing_net(i23654)    Hacklike implements chance to spawn item or creature
 item_disciplinary_rod               Prevents abuse
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
 item_flying_machine(i34060,i34061)  Engineering crafted flying machines
@@ -96,32 +96,35 @@ bool ItemUse_item_blackwhelp_net(Player *player, Item* _Item, SpellCastTargets c
 # item_draenei_fishing_net
 #####*/
 
+//This is just a hack and should be removed from here.
+//Creature/Item are in fact created before spell are sucessfully casted, without any checks at all to ensure proper/expected behavior.
 bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    Item* item = NULL;
-    ItemPosCountVec dest;
-
-    if (player->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE)
-    {
-        if (rand()%100 < 35)
+    //if( targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT &&
+        //targets.getGOTarget()->GetGOInfo()->type == GAMEOBJECT_TYPE_SPELL_FOCUS && targets.getGOTarget()->GetEntry() == 181616 )
+    //{
+        if( player->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE )
         {
-            Creature *Murloc;
-            Murloc = player->SummonCreature(17102,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN,180000);
-            if (Murloc)
-                ((CreatureAI*)Murloc->AI())->AttackStart(player);
-        }    
-        else
-        {    
-            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
-            if(msg == EQUIP_ERR_OK)
+            if( rand()%100 < 35 )
             {
-                item = player->StoreNewItem(dest, 23614, true);
-                player->SendNewItem(item, 1, true, false);    
-
+                Creature *Murloc = player->SummonCreature(17102,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
+                if( Murloc )
+                    Murloc->AI()->AttackStart(player);
             }
-
+            else
+            {
+                ItemPosCountVec dest;
+                uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
+                if( msg == EQUIP_ERR_OK )
+                {
+                    Item* item = player->StoreNewItem(dest,23614,true);
+                    if( item )
+                        player->SendNewItem(item,1,false,true);
+                }else
+                    player->SendEquipError(msg,NULL,NULL);
+            }
         }
-    }
+    //}
     return false;
 }
 
