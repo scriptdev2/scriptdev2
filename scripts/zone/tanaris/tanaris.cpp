@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Tanaris
@@ -65,8 +65,8 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 
     void SendItem(Unit* receiver)
     {
-        if (((Player*)receiver)->HasItemCount(11169,1,false) && 
-            ((Player*)receiver)->HasItemCount(11172,11,false) && 
+        if (((Player*)receiver)->HasItemCount(11169,1,false) &&
+            ((Player*)receiver)->HasItemCount(11172,11,false) &&
             ((Player*)receiver)->HasItemCount(11173,1,false) &&
             !((Player*)receiver)->HasItemCount(11522,1,true))
         {
@@ -153,33 +153,33 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
     {
         switch( i )
         {
-        case 0: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_1); break;
-        case 1: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_2); break;
-        case 2: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_3); break;
-        case 3: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-        case 5: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_5); break;
-        case 6: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_6); break;
-        case 7: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_7); break;
-        case 8: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_8); break;
-        case 9: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_9); break;
-        case 10: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-        case 13: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_10); break;
-        case 14: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-        case 16: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_11); break;
-        case 17: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_12); break;
-        case 18: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-        case 22: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_13); break;
-        case 23: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-        case 24:
-            m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_14);
-            if( Unit *temp = Unit::GetUnit(*m_creature,PlayerGUID) )
-            {
-                m_creature->CastSpell(temp,34883,true);
-                //below here is temporary workaround, to be removed when spell works properly
-                if( temp->GetTypeId() == TYPEID_PLAYER )
-                    ((Player*)temp)->AreaExploredOrEventHappens(10277);
-            }
-            break;
+            case 0: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_1); break;
+            case 1: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_2); break;
+            case 2: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_3); break;
+            case 3: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 5: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_5); break;
+            case 6: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_6); break;
+            case 7: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_7); break;
+            case 8: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_8); break;
+            case 9: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_9); break;
+            case 10: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 13: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_10); break;
+            case 14: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 16: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_11); break;
+            case 17: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_12); break;
+            case 18: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 22: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_13); break;
+            case 23: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 24:
+                m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_14);
+                if( Unit *temp = Unit::GetUnit(*m_creature,PlayerGUID) )
+                {
+                    m_creature->CastSpell(temp,34883,true);
+                    //below here is temporary workaround, to be removed when spell works properly
+                    if( temp->GetTypeId() == TYPEID_PLAYER )
+                        ((Player*)temp)->AreaExploredOrEventHappens(10277);
+                }
+                break;
         }
     }
 
@@ -212,7 +212,7 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 };
 
 CreatureAI* GetAI_npc_custodian_of_time(Creature *_Creature)
-{    
+{
     npc_custodian_of_timeAI* custodian_of_timeAI = new npc_custodian_of_timeAI(_Creature);
 
     custodian_of_timeAI->AddWaypoint(0, -8374.93,-4250.21, -204.38,5000);

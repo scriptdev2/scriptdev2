@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Stranglethorn_Vale
@@ -33,7 +33,7 @@ EndContentData */
 
 struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
 {
-    mob_yennikuAI(Creature *c) : ScriptedAI(c) 
+    mob_yennikuAI(Creature *c) : ScriptedAI(c)
     {
         bReset = false;
         Reset();
@@ -52,7 +52,8 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     {
         if (caster->GetTypeId() == TYPEID_PLAYER)
         {
-            if(!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)//Yenniku's Release
+                                                            //Yenniku's Release
+            if(!bReset && ((Player*)caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
             {
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
                 m_creature->CombatStop();                   //stop combat
@@ -72,12 +73,12 @@ struct MANGOS_DLL_DECL mob_yennikuAI : public ScriptedAI
     {
         if (bReset)
             if(Reset_Timer < diff)
-            {
-                EnterEvadeMode();
-                bReset = false;
-                m_creature->setFaction(28);                 //troll, bloodscalp
-            }
-            else Reset_Timer -= diff;
+        {
+            EnterEvadeMode();
+            bReset = false;
+            m_creature->setFaction(28);                     //troll, bloodscalp
+        }
+        else Reset_Timer -= diff;
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
@@ -92,7 +93,7 @@ CreatureAI* GetAI_mob_yenniku(Creature *_Creature)
 }
 
 /*######
-## 
+##
 ######*/
 
 void AddSC_stranglethorn_vale()

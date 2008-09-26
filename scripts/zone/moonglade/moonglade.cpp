@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Moonglade
@@ -68,8 +68,8 @@ bool GossipSelect_npc_bunthen_plainswind(Player *player, Creature *_Creature, ui
                 std::vector<uint32> nodes;
 
                 nodes.resize(2);
-                nodes[0] = 63; // Nighthaven, Moonglade
-                nodes[1] = 22; // Thunder Bluff, Mulgore
+                nodes[0] = 63;                              // Nighthaven, Moonglade
+                nodes[1] = 22;                              // Thunder Bluff, Mulgore
                 player->ActivateTaxiPathTo(nodes);
             }
             break;
@@ -95,7 +95,8 @@ bool GossipSelect_npc_bunthen_plainswind(Player *player, Creature *_Creature, ui
 
 bool GossipHello_npc_great_bear_spirit(Player *player, Creature *_Creature)
 {
-    if (player->GetQuestStatus(5929) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(5930) == QUEST_STATUS_INCOMPLETE)//ally or horde quest
+    //ally or horde quest
+    if (player->GetQuestStatus(5929) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(5930) == QUEST_STATUS_INCOMPLETE)
     {
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_BEAR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
         player->SEND_GOSSIP_MENU(4719, _Creature->GetGUID());
@@ -172,8 +173,8 @@ bool GossipSelect_npc_silva_filnaveth(Player *player, Creature *_Creature, uint3
                 std::vector<uint32> nodes;
 
                 nodes.resize(2);
-                nodes[0] = 62; // Nighthaven, Moonglade
-                nodes[1] = 27; // Rut'theran Village, Teldrassil
+                nodes[0] = 62;                              // Nighthaven, Moonglade
+                nodes[1] = 27;                              // Rut'theran Village, Teldrassil
                 player->ActivateTaxiPathTo(nodes);
             }
             break;
@@ -189,7 +190,7 @@ bool GossipSelect_npc_silva_filnaveth(Player *player, Creature *_Creature, uint3
 }
 
 /*######
-## 
+##
 ######*/
 
 void AddSC_moonglade()

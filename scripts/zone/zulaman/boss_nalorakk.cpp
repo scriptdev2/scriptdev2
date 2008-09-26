@@ -1,18 +1,18 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Nalorakk
@@ -36,7 +36,6 @@ EndScriptData */
 #define SOUND_NALORAKK_EVENT2   12079
 */
 
-
 //General defines
 #define YELL_AGGRO              "You be dead soon enough!"
 #define SOUND_YELL_AGGRO        12070
@@ -46,10 +45,11 @@ EndScriptData */
 #define SOUND_YELL_KILL_TWO     12076
 #define YELL_DEATH              "I... be waitin' on da udda side...."
 #define SOUND_YELL_DEATH        12077
-#define YELL_BERSERK            "You had your chance, now it be too late!" //Never seen this being used, so just guessing from what I hear.
+                                                            //Never seen this being used, so just guessing from what I hear.
+#define YELL_BERSERK            "You had your chance, now it be too late!"
 #define SOUND_YELL_BERSERK      12074
 
-#define SPELL_BERSERK           45078 //unsure, this increases damage, size and speed
+#define SPELL_BERSERK           45078                       //unsure, this increases damage, size and speed
 
 //Defines for Troll form
 #define SPELL_BRUTALSWIPE       42384
@@ -72,7 +72,6 @@ EndScriptData */
 #define YELL_SHIFTEDTOBEAR      "You call on da beast, you gonna get more dan you bargain for!"
 #define SOUND_YELL_TOBEAR       12072
 
-
 struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 {
     boss_nalorakkAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -92,7 +91,7 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     bool ChangedToTroll;
 
     void Reset()
-    {       
+    {
         ChangeForm_Timer = 45000;
         BrutalSwipe_Timer = 12000;
         Mangle_Timer = 15000;
@@ -114,26 +113,25 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_YELL_AGGRO);
     }
 
-    void KilledUnit(Unit* victim)    
+    void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_ONE);
-            break;
-
-        case 1:
-            DoYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_TWO);
-            break;        
+            case 0:
+                DoYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_ONE);
+                break;
+            case 1:
+                DoYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_TWO);
+                break;
         }
     }
 
-    void JustDied(Unit* Killer)    
-    {        
-        DoYell(YELL_DEATH,LANG_UNIVERSAL,NULL);        
-        DoPlaySoundToSet(m_creature, SOUND_YELL_DEATH);  
+    void JustDied(Unit* Killer)
+    {
+        DoYell(YELL_DEATH,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_YELL_DEATH);
     }
 
     void UpdateAI(const uint32 diff)
@@ -216,9 +214,9 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 ChangeForm_Timer = 75000;
             }else ChangeForm_Timer -= diff;
         }
-
         //Spells for Bear Form (only to be casted if we have bear phase aura)
-        else {
+        else
+        {
             //We just changed to bear form!
             if (!ChangedToBear)
             {
@@ -257,7 +255,6 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-
 };
 
 CreatureAI* GetAI_boss_nalorakk(Creature *_Creature)

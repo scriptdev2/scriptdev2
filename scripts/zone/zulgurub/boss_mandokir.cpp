@@ -1,21 +1,21 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
-SDName: boss_Mandokir
+SDName: Boss_Mandokir
 SD%Complete: 90
 SDComment: Ohgan function needs improvements.
 SDCategory: Zul'Gurub
@@ -24,24 +24,23 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
-#define SPELL_CHARGE        24315
-#define SPELL_CLEAVE        20691
-#define SPELL_FEAR        29321
-#define SPELL_WHIRLWIND        24236
-#define SPELL_MORTAL_STRIKE    24573
-#define SPELL_ENRAGE        23537
-#define SPELL_WATCH        24314
-#define SPELL_LEVEL_UP        24312
+#define SPELL_CHARGE            24315
+#define SPELL_CLEAVE            20691
+#define SPELL_FEAR              29321
+#define SPELL_WHIRLWIND         24236
+#define SPELL_MORTAL_STRIKE     24573
+#define SPELL_ENRAGE            23537
+#define SPELL_WATCH             24314
+#define SPELL_LEVEL_UP          24312
 
 //Ohgans Spells
+#define SPELL_SUNDERARMOR       24317
 
-#define SPELL_SUNDERARMOR     24317     
+#define SAY_AGGRO               "I'll feed your souls to Hakkar himself!"
+#define SOUND_AGGRO             8413
 
-#define SAY_AGGRO               "I'll feed your souls to Hakkar himself!" 
-#define SAY_WATCH        "I'm keeping my eye on you, $N!"
-#define SAY_KILL        "DING!"
-
-#define SOUND_AGGRO             8413 
+#define SAY_WATCH               "I'm keeping my eye on you, $N!"
+#define SAY_KILL                "DING!"
 
 struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 {
@@ -92,7 +91,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
         RaptorDead = false;
         CombatStart = false;
 
-        DoCast(m_creature, 23243); 
+        DoCast(m_creature, 23243);
     }
 
     void KilledUnit(Unit* victim)
@@ -113,24 +112,24 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
         if( m_creature->getVictim() && m_creature->isAlive())
         {
-            if(!CombatStart) 
+            if(!CombatStart)
             {
                 //At combat Start Mandokir is mounted so we must unmount it first
                 m_creature->Unmount();
-                
+
                 //And summon his raptor
-                m_creature->SummonCreature(14988, m_creature->getVictim()->GetPositionX(), m_creature->getVictim()->GetPositionY(), m_creature->getVictim()->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);     
+                m_creature->SummonCreature(14988, m_creature->getVictim()->GetPositionX(), m_creature->getVictim()->GetPositionY(), m_creature->getVictim()->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
                 CombatStart = true;
             }
 
-            if (Watch_Timer < diff) //Every 20 Sec Mandokir will check this
+            if (Watch_Timer < diff)                         //Every 20 Sec Mandokir will check this
             {
-                if(WatchTarget) //If someone is watched and If the Position of the watched target is different from the one stored, or are attacking, mandokir will charge him
+                if(WatchTarget)                             //If someone is watched and If the Position of the watched target is different from the one stored, or are attacking, mandokir will charge him
                 {
                     Unit* pUnit = Unit::GetUnit(*m_creature, WatchTarget);
-                    
+
                     if( pUnit && (
-                        targetX != pUnit->GetPositionX() || 
+                        targetX != pUnit->GetPositionX() ||
                         targetY != pUnit->GetPositionY() ||
                         targetZ != pUnit->GetPositionZ() ||
                         pUnit->isInCombat()))
@@ -151,8 +150,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                 Watch_Timer = 20000;
             }else Watch_Timer -= diff;
 
-
-            if ((Watch_Timer < 8000) && !someWatched) //8 sec(cast time + expire time) before the check for the watch effect mandokir will cast watch debuff on a random target
+            if ((Watch_Timer < 8000) && !someWatched)       //8 sec(cast time + expire time) before the check for the watch effect mandokir will cast watch debuff on a random target
             {
                 Unit* p = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if(p)
@@ -165,7 +163,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                 }
             }
 
-            if ((Watch_Timer < 1000) && endWatch) //1 sec before the debuf expire, store the target position
+            if ((Watch_Timer < 1000) && endWatch)           //1 sec before the debuf expire, store the target position
             {
                 Unit* pUnit = Unit::GetUnit(*m_creature, WatchTarget);
                 if (pUnit)
@@ -179,30 +177,22 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
 
             if(!someWatched)
             {
-
                 //Cleave
                 if (Cleave_Timer < diff)
                 {
-
                     DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-                    //7 Seconds
                     Cleave_Timer = 7000;
                 }else Cleave_Timer -= diff;
 
                 //Whirlwind
                 if (Whirlwind_Timer < diff)
                 {
-
                     DoCast(m_creature,SPELL_WHIRLWIND);
-
-                    //18 Seconds
                     Whirlwind_Timer = 18000;
                 }else Whirlwind_Timer -= diff;
 
-
                 //If more then 3 targets in melee range mandokir will cast fear
-                if (Fear_Timer < diff)    
+                if (Fear_Timer < diff)
                 {
                     TargetInRange = 0;
 
@@ -220,15 +210,12 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
                     Fear_Timer = 4000;
                 }else Fear_Timer -=diff;
 
-
-
                 //Mortal Strike if target below 50% hp
                 if (m_creature->getVictim()->GetHealth() < m_creature->getVictim()->GetMaxHealth()*0.5)
                 {
                     if (MortalStrike_Timer < diff)
                     {
                         DoCast(m_creature->getVictim(),SPELL_MORTAL_STRIKE);
-
                         MortalStrike_Timer = 15000;
                     }else MortalStrike_Timer -= diff;
                 }
@@ -237,15 +224,14 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             if(Check_Timer < diff)
             {
                 if(pInstance)
-                {    
+                {
                     if(pInstance->GetData(DATA_OHGANISDEAD))
                     {
                         if (!RaptorDead)
-                        {               
+                        {
                             DoCast(m_creature, SPELL_ENRAGE);
                             RaptorDead = true;
                         }
-
                     }
                 }
 
@@ -255,8 +241,7 @@ struct MANGOS_DLL_DECL boss_mandokirAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
     }
-}; 
-
+};
 
 //Ohgan
 struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
@@ -293,7 +278,6 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
         if(SunderArmor_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SUNDERARMOR);
-
             SunderArmor_Timer = 10000 + rand()%5000;
         }else SunderArmor_Timer -= diff;
 
@@ -301,11 +285,11 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
     }
 };
 
-
 CreatureAI* GetAI_boss_mandokir(Creature *_Creature)
 {
     return new boss_mandokirAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_ohgan(Creature *_Creature)
 {
     return new mob_ohganAI (_Creature);
@@ -314,6 +298,7 @@ CreatureAI* GetAI_mob_ohgan(Creature *_Creature)
 void AddSC_boss_mandokir()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_mandokir";
     newscript->GetAI = GetAI_boss_mandokir;
@@ -323,5 +308,4 @@ void AddSC_boss_mandokir()
     newscript->Name="mob_ohgan";
     newscript->GetAI = GetAI_mob_ohgan;
     m_scripts[nrscripts++] = newscript;
-
 }

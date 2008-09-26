@@ -1,21 +1,21 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
-SDName: boss_Jeklik
+SDName: Boss_Jeklik
 SD%Complete: 85
 SDComment: Problem in finding the right flying batriders for spawning and making them fly.
 SDCategory: Zul'Gurub
@@ -25,17 +25,17 @@ EndScriptData */
 #include "def_zulgurub.h"
 
 #define SPELL_CHARGE              22911
-#define SPELL_SONICBURST          23918  
-#define SPELL_SCREECH             6605   
-#define SPELL_SHADOW_WORD_PAIN    23952 
+#define SPELL_SONICBURST          23918
+#define SPELL_SCREECH             6605
+#define SPELL_SHADOW_WORD_PAIN    23952
 #define SPELL_MIND_FLAY           23953
-#define SPELL_CHAIN_MIND_FLAY     26044      //Right ID unknown. So disabled
+#define SPELL_CHAIN_MIND_FLAY     26044                     //Right ID unknown. So disabled
 #define SPELL_GREATERHEAL         23954
 #define SPELL_BAT_FORM            23966
 
 // Batriders Spell
 
-#define SPELL_BOMB                40332      //Wrong ID but Magmadars bomb is not working...
+#define SPELL_BOMB                40332                     //Wrong ID but Magmadars bomb is not working...
 
 #define SAY_AGGRO         "Lord Hireek grant me wings of vengance!"
 #define SAY_DEATH         "Hireek - Finnaly death. Curse you Hakkar! Curse you!"
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         DoPlaySoundToSet(m_creature,SOUND_AGGRO);
         DoCast(m_creature,SPELL_BAT_FORM);
     }
-    
+
     void JustDied(Unit* Killer)
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
@@ -89,10 +89,9 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         ScriptedInstance *pInstance = ((ScriptedInstance*)m_creature->GetInstanceData());
         if(pInstance)
             pInstance->SetData(DATA_JEKLIK_DEATH, 0);
-
     }
 
-     void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget())
             return;
@@ -101,22 +100,21 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
         {
             if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 50))
             {
-
                 if (Charge_Timer < diff)
-                {                
+                {
                     Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if(target)
                     {
                         DoCast(target,SPELL_CHARGE);
 
-                        m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0); 
+                        m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
                         m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                         DoStartAttackAndMovement(target);
                     }
-                    
+
                     Charge_Timer = 15000 + rand()%15000;
                 }else Charge_Timer -= diff;
-                
+
                 if (SonicBurst_Timer < diff)
                 {
                     DoCast(m_creature->getVictim(),SPELL_SONICBURST);
@@ -129,11 +127,10 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     Screech_Timer = 18000 + rand()%8000;
                 }else Screech_Timer -= diff;
 
-
                 if (SpawnBats_Timer < diff)
                 {
                     Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                    
+
                     Creature* Bat = NULL;
                     Bat = m_creature->SummonCreature(11368,-12291.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
@@ -151,11 +148,9 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
                     Bat = m_creature->SummonCreature(11368,-12293.6220,-1380.2640,144.8304,5.483, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                     if(target && Bat ) { Bat ->AI()->AttackStart(target); }
-                                                   
+
                     SpawnBats_Timer = 60000;
                 }else SpawnBats_Timer -= diff;
-                
-                
             }
             else
             {
@@ -170,53 +165,53 @@ struct MANGOS_DLL_DECL boss_jeklikAI : public ScriptedAI
                             ShadowWordPain_Timer = 12000 + rand()%6000;
                         }
                     }ShadowWordPain_Timer -=diff;
-                    
+
                     if(MindFlay_Timer < diff)
                     {
                         DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
                         MindFlay_Timer = 16000;
                     }MindFlay_Timer -=diff;
-                    
+
                     if(ChainMindFlay_Timer < diff)
                     {
                         m_creature->InterruptNonMeleeSpells(false);
-                        DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);                    
+                        DoCast(m_creature->getVictim(), SPELL_CHAIN_MIND_FLAY);
                         ChainMindFlay_Timer = 15000 + rand()%15000;
                     }ChainMindFlay_Timer -=diff;
-                    
+
                     if(GreaterHeal_Timer < diff)
                     {
                         m_creature->InterruptNonMeleeSpells(false);
                         DoCast(m_creature,SPELL_GREATERHEAL);
                         GreaterHeal_Timer = 25000 + rand()%10000;
                     }GreaterHeal_Timer -=diff;
-                    
+
                     if(SpawnFlyingBats_Timer < diff)
                     {
                         Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            
+
                         Creature* FlyingBat = m_creature->SummonCreature(14965, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()+15, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                         if(FlyingBat)
                         {
                             if(target)
                                 FlyingBat->AI()->AttackStart(target);
                         }
-                             
+
                         SpawnFlyingBats_Timer = 10000 + rand()%5000;
                     }SpawnFlyingBats_Timer -=diff;
                 }
                 else
-                {   
+                {
                     m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15219);
                     DoResetThreat();
                     PhaseTwo = true;
                 }
-
             }
+
             DoMeleeAttackIfReady();
         }
     }
-}; 
+};
 
 //Flying Bat
 struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
@@ -228,10 +223,10 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     }
 
     ScriptedInstance *pInstance;
-     
+
     uint32 Bomb_Timer;
     uint32 Check_Timer;
- 
+
     void Reset()
     {
         Bomb_Timer = 2000;
@@ -241,19 +236,16 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
     }
 
     void Aggro(Unit *who) {}
- 
+
     void UpdateAI (const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
-     
+
         //Bomb_Timer
         if(Bomb_Timer < diff)
         {
             Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-            //Casting Bomb on random target
             if(target)
             {
                 DoCast(target, SPELL_BOMB);
@@ -268,7 +260,6 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
             {
                 if(pInstance->GetData(DATA_JEKLIKISDEAD))
                 {
-                    //remove
                     m_creature->setDeathState(JUST_DIED);
                     m_creature->RemoveCorpse();
                 }
@@ -278,7 +269,6 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         }else Check_Timer -= diff;
 
         DoMeleeAttackIfReady();
-
     }
 };
 

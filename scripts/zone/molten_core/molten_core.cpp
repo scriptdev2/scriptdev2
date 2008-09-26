@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Molten_Core
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Molten Core
 EndScriptData */
 
@@ -42,13 +42,13 @@ EndContentData */
 CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
 {
     SimpleAI *ai = new SimpleAI(_Creature);
- 
+
     ai->Spell[0].Enabled          = true;
     ai->Spell[0].Spell_Id         = SPELL_CONE_OF_FIRE;
     ai->Spell[0].Cooldown         = 7000;
     ai->Spell[0].First_Cast       = 10000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
- 
+
     uint32 RandDebuff;
     switch(rand()%6)
     {
@@ -59,7 +59,7 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
         case 4 : RandDebuff = SPELL_ANCIENT_DESPAIR;    break;
         case 5 : RandDebuff = SPELL_ANCIENT_HYSTERIA;   break;
     }
- 
+
     ai->Spell[1].Enabled          = true;
     ai->Spell[1].Spell_Id         = RandDebuff;
     ai->Spell[1].Cooldown         = 24000;
@@ -71,12 +71,12 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature *_Creature)
     ai->Spell[2].Cooldown         = 6000;
     ai->Spell[2].First_Cast       = 4000;
     ai->Spell[2].Cast_Target_Type = CAST_HOSTILE_TARGET;
-    
+
     ai->EnterEvadeMode();
- 
+
     return ai;
 }
- 
+
 void AddSC_molten_core()
 {
     Script *newscript;

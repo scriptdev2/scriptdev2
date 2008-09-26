@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Priestess_Delrissa
@@ -53,7 +53,7 @@ static Speech PlayerDeath[]=
 #define SAY_DEATH               "Not what I had... planned..."
 #define SOUND_DEATH             12397
 
-#define SPELL_DISPEL_MAGIC      27609 
+#define SPELL_DISPEL_MAGIC      27609
 #define SPELL_FLASH_HEAL        17843
 #define SPELL_SW_PAIN_NORMAL    14032
 #define SPELL_SW_PAIN_HEROIC    15654
@@ -74,14 +74,14 @@ float LackeyLocations[4][2]=
 
 const uint32 AddEntry[8]=
 {
-    24557,  //Kagani Nightstrike
-    24558,  //Elris Duskhallow
-    24554,  //Eramas Brightblaze
-    24561,  //Yazzaj
-    24559,  //Warlord Salaris
-    24555,  //Garaxxas
-    24553,  //Apoko
-    24556,  //Zelfan
+    24557,                                                  //Kagani Nightstrike
+    24558,                                                  //Elris Duskhallow
+    24554,                                                  //Eramas Brightblaze
+    24561,                                                  //Yazzaj
+    24559,                                                  //Warlord Salaris
+    24555,                                                  //Garaxxas
+    24553,                                                  //Apoko
+    24556,                                                  //Zelfan
 };
 
 struct Add
@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     uint32 DispelTimer;
 
     uint32 CombatPulseTimer;                                // Periodically puts all players in the instance in combat
-    
+
     bool Heroic;
 
     void Reset()
@@ -343,7 +343,6 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     }
 };
 
-
 #define SPELL_HEALING_POTION    15503
 
 struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
@@ -490,12 +489,12 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
         if(InVanish)
             if(Wait_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
-                DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
-                m_creature->SetVisibility(VISIBILITY_ON);   // ...? Hacklike
-                InVanish = false;
-            }else Wait_Timer -= diff;
+        {
+            DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
+            DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
+            m_creature->SetVisibility(VISIBILITY_ON);       // ...? Hacklike
+            InVanish = false;
+        }else Wait_Timer -= diff;
 
         if(Gouge_Timer < diff)
         {
@@ -552,7 +551,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
-            return; 
+            return;
 
         //Chain cast
         if (!m_creature->IsNonMeleeSpellCasted(false))
@@ -572,7 +571,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 
     uint32 Immolate_Timer;
     uint32 Shadow_Bolt_Timer;
-    uint32 Seed_of_Corruption_Timer;    
+    uint32 Seed_of_Corruption_Timer;
     uint32 Curse_of_Agony_Timer;
     uint32 Fear_Timer;
 
@@ -669,7 +668,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
     {
         Knockdown_Timer = 6000;
         Snap_Kick_Timer = 4500;
-        
+
         boss_priestess_guestAI::Reset();
     }
 
@@ -696,13 +695,13 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
     }
 };
 
-#define SPELL_POLYMORPH             13323 
-#define SPELL_ICE_BLOCK             27619 
-#define SPELL_BLIZZARD              44178 
+#define SPELL_POLYMORPH             13323
+#define SPELL_ICE_BLOCK             27619
+#define SPELL_BLIZZARD              44178
 #define SPELL_ICE_LANCE             46194
-#define SPELL_CONE_OF_COLD          38384 
-#define SPELL_FROSTBOLT             15043 
-#define SPELL_BLINK                 14514 
+#define SPELL_CONE_OF_COLD          38384
+#define SPELL_FROSTBOLT             15043
+#define SPELL_BLINK                 14514
 
 struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 {
@@ -791,11 +790,12 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
             for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if(Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
-                    if (target->IsWithinDistInMap(m_creature, 5)) //if in melee range
-                    {
-                        InMeleeRange = true;
-                        break;
-                    }
+                    //if in melee range
+                    if (target->IsWithinDistInMap(m_creature, 5))
+                {
+                    InMeleeRange = true;
+                    break;
+                }
             }
             //if anybody is in melee range than escape by blink
             if(InMeleeRange)
@@ -803,7 +803,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 
             Blink_Timer = 8000;
         }else Blink_Timer -= diff;
-        
+
         DoMeleeAttackIfReady();
     }
 };
@@ -859,11 +859,12 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
             for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if(Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
-                    if (target->IsWithinDistInMap(m_creature, 5)) //if in melee range
-                    {
-                        InMeleeRange = true;
-                        break;
-                    }
+                                                            //if in melee range
+                    if (target->IsWithinDistInMap(m_creature, 5))
+                {
+                    InMeleeRange = true;
+                    break;
+                }
             }
             //if nobody is in melee range than try to use Intercept
             if(!InMeleeRange)
@@ -964,7 +965,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
     }
 
     void JustDied(Unit* killer)
-    {        
+    {
         boss_priestess_guestAI::JustDied(killer);
     }
 
@@ -1086,7 +1087,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
         if(Totem_Timer < diff)
         {
             switch(rand()%3)
-            {   
+            {
                 case 0:
                     DoCast(m_creature, SPELL_WINDFURY_TOTEM);
                     break;
@@ -1121,18 +1122,18 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 
         if(Healing_Wave_Timer < diff)
         {
-           // std::vector<Add*>::iterator itr = Group.begin() + rand()%Group.size();
-           // uint64 guid = (*itr)->guid;
-           // if(guid)
-           // {
-           //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
-           //   if(pAdd && pAdd->isAlive())
-           //   {
-                DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
-                Healing_Wave_Timer = 5000;
-           //    }
-           // }
-        }else Healing_Wave_Timer -= diff;    
+            // std::vector<Add*>::iterator itr = Group.begin() + rand()%Group.size();
+            // uint64 guid = (*itr)->guid;
+            // if(guid)
+            // {
+            //   Unit* pAdd = Unit::GetUnit(*m_creature, (*itr)->guid);
+            //   if(pAdd && pAdd->isAlive())
+            //   {
+            DoCast(m_creature, SPELL_LESSER_HEALING_WAVE);
+            Healing_Wave_Timer = 5000;
+            //    }
+            // }
+        }else Healing_Wave_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -1218,7 +1219,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 //struct MANGOS_DLL_DECL mob_high_explosive_sheepAI : public ScriptedAI
 //{
 //    mob_high_explosive_sheepAI(Creature *c) : ScriptedAI(c) {Reset();}
-//    
+//
 //    uint32 Explosion_Timer;
 //
 //    void Reset()
@@ -1236,7 +1237,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 //        {
 //            DoCast(m_creature->getVictim(), SPELL_SHEEP_EXPLOSION);
 //        }else
-//            Explosion_Timer -= diff;   
+//            Explosion_Timer -= diff;
 //    }
 //};
 
@@ -1303,6 +1304,7 @@ CreatureAI* GetAI_zelfan(Creature *_Creature)
 void AddSC_boss_priestess_delrissa()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_priestess_delrissa";
     newscript->GetAI = GetAI_boss_priestess_delrissa;
@@ -1363,4 +1365,3 @@ void AddSC_boss_priestess_delrissa()
     newscript->GetAI = GetAI_mob_sliver;
     m_scripts[nrscripts++] = newscript;*/
 }
-

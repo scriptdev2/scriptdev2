@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Bloodmage_Thalnos
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
@@ -60,13 +60,12 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -86,50 +85,35 @@ struct MANGOS_DLL_DECL boss_bloodmage_thalnosAI : public ScriptedAI
         //FrostNova2_Timer
         if (FrostNova2_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FROSTNOVA2);
-
-            //30 seconds until we should cast this agian
             FrostNova2_Timer = 10000;
         }else FrostNova2_Timer -= diff;
 
         //FlameShock3_Timer
         if (FlameShock3_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FLAMESHOCK3);
-
-            //30 seconds until we should cast this agian
             FlameShock3_Timer = 15000;
         }else FlameShock3_Timer -= diff;
 
         //ShadowBolt5_Timer
         if (ShadowBolt5_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT5);
-
-            //45 seconds until we should cast this agian
             ShadowBolt5_Timer = 20000;
         }else ShadowBolt5_Timer -= diff;
 
         //FlameSpike_Timer
         if (FlameSpike_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FLAMESPIKE);
-
-            //45 seconds until we should cast this agian
             FlameSpike_Timer = 30000;
         }else FlameSpike_Timer -= diff;
 
         //FireNova_Timer
         if (FireNova_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
-
-            //30 seconds until we should cast this agian
             FireNova_Timer = 20000;
         }else FireNova_Timer -= diff;
 
@@ -141,7 +125,6 @@ CreatureAI* GetAI_boss_bloodmage_thalnos(Creature *_Creature)
 {
     return new boss_bloodmage_thalnosAI (_Creature);
 }
-
 
 void AddSC_boss_bloodmage_thalnos()
 {

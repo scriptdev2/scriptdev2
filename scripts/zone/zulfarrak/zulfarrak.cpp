@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Zulfarrak
@@ -42,13 +42,13 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
 {
-    npc_sergeant_blyAI(Creature *c) : ScriptedAI(c) 
+    npc_sergeant_blyAI(Creature *c) : ScriptedAI(c)
     {
         //pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
-    //ScriptedInstance* pInstance; 
+    //ScriptedInstance* pInstance;
 
     uint32 ShieldBash_Timer;
     uint32 Revenge_Timer;                                   //this is wrong, spell should never be used unless m_creature->getVictim() dodge, parry or block attack. Mangos support required.
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL npc_sergeant_blyAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_npc_sergeant_bly(Creature *_Creature)
 {
     return new npc_sergeant_blyAI (_Creature);
@@ -105,8 +105,8 @@ bool GossipHello_npc_sergeant_bly(Player *player, Creature *_Creature )
 {
     /*if( pInstance->GetData(0) == DONE )
     {*/
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(1517, _Creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(1, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->SEND_GOSSIP_MENU(1517, _Creature->GetGUID());
     /*}
     else if( pInstance->GetData(0) == IN_PROGRESS )
         player->SEND_GOSSIP_MENU(1516, _Creature->GetGUID());
@@ -115,6 +115,7 @@ bool GossipHello_npc_sergeant_bly(Player *player, Creature *_Creature )
 
     return true;
 }
+
 bool GossipSelect_npc_sergeant_bly(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if( action == GOSSIP_ACTION_INFO_DEF+1 )
@@ -139,13 +140,13 @@ bool GossipSelect_npc_sergeant_bly(Player *player, Creature *_Creature, uint32 s
 
 struct MANGOS_DLL_DECL npc_weegli_blastfuseAI : public ScriptedAI
 {
-    npc_weegli_blastfuseAI(Creature *c) : ScriptedAI(c) 
+    npc_weegli_blastfuseAI(Creature *c) : ScriptedAI(c)
     {
         //pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
-    //ScriptedInstance* pInstance; 
+    //ScriptedInstance* pInstance;
 
     void Reset()
     {
@@ -172,7 +173,7 @@ struct MANGOS_DLL_DECL npc_weegli_blastfuseAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_npc_weegli_blastfuse(Creature *_Creature)
 {
     return new npc_weegli_blastfuseAI (_Creature);
@@ -189,9 +190,10 @@ bool GossipHello_npc_weegli_blastfuse(Player *player, Creature *_Creature )
     else if( pInstance->GetData(0) == IN_PROGRESS )
         player->SEND_GOSSIP_MENU(1513, _Creature->GetGUID());//if event are in progress
     else*/
-        player->SEND_GOSSIP_MENU(1511, _Creature->GetGUID());//if event not started
+    player->SEND_GOSSIP_MENU(1511, _Creature->GetGUID());   //if event not started
     return true;
 }
+
 bool GossipSelect_npc_weegli_blastfuse(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if( action == GOSSIP_ACTION_INFO_DEF+1 )

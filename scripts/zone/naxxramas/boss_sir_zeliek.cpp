@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Sir_Zeliek
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -57,9 +57,9 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
     bool ShieldWall2;
 
     void Reset()
-    {       
-        Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
-        HolyWrath_Timer = 12000; // right
+    {
+        Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+        HolyWrath_Timer = 12000;                            // right
         ShieldWall1 = true;
         ShieldWall2 = true;
     }
@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-            InitialYell();
+        InitialYell();
     }
 
     void UpdateAI(const uint32 diff)
@@ -103,7 +103,7 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
             Mark_Timer = 12000;
         }else Mark_Timer -= diff;
 
-        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
             if(ShieldWall1)
@@ -130,12 +130,11 @@ struct MANGOS_DLL_DECL boss_sir_zeliekAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_sir_zeliek(Creature *_Creature)
 {
     return new boss_sir_zeliekAI (_Creature);
 }
-
 
 void AddSC_boss_sir_zeliek()
 {

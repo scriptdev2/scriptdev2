@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Silithus
@@ -56,12 +56,12 @@ bool GossipHello_npcs_rutgar_and_frankal(Player *player, Creature *_Creature)
     if (_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE && 
+    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
         _Creature->GetEntry() == 15170 &&
         !player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR ))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE && 
+    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
         _Creature->GetEntry() == 15171 &&
         player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR ))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
@@ -101,7 +101,8 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, u
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:
             player->SEND_GOSSIP_MENU(7761, _Creature->GetGUID());
-            player->KilledMonster( TRIGGER_RUTGAR, _Creature->GetGUID() );//'kill' our trigger to update quest status
+                                                            //'kill' our trigger to update quest status
+            player->KilledMonster( TRIGGER_RUTGAR, _Creature->GetGUID() );
             break;
 
         case GOSSIP_ACTION_INFO_DEF + 9:
@@ -126,14 +127,15 @@ bool GossipSelect_npcs_rutgar_and_frankal(Player *player, Creature *_Creature, u
             break;
         case GOSSIP_ACTION_INFO_DEF + 14:
             player->SEND_GOSSIP_MENU(7767, _Creature->GetGUID());
-            player->KilledMonster( TRIGGER_FRANKAL, _Creature->GetGUID() );//'kill' our trigger to update quest status
+                                                            //'kill' our trigger to update quest status
+            player->KilledMonster( TRIGGER_FRANKAL, _Creature->GetGUID() );
             break;
     }
     return true;
 }
 
 /*###
-## 
+##
 ####*/
 
 void AddSC_silithus()

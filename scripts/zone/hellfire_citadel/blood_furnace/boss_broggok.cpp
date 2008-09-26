@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Broggok
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
@@ -25,7 +25,7 @@ EndScriptData */
 
 #define SPELL_SLIME_SPRAY       30913
 #define SPELL_POISON_CLOUD      30916
-#define SPELL_POISON_BOLT       30917    
+#define SPELL_POISON_BOLT       30917
 
 #define SPELL_POISON            30914
 
@@ -33,14 +33,14 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
-    boss_broggokAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_broggokAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 AcidSpray_Timer;
     uint32 PoisonSpawn_Timer;
     uint32 PoisonBolt_Timer;
 
     void Reset()
-    {   
+    {
         AcidSpray_Timer = 10000;
         PoisonSpawn_Timer = 5000;
         PoisonBolt_Timer = 7000;
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -56,7 +56,6 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-
 
         if(AcidSpray_Timer < diff)
         {
@@ -82,12 +81,12 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
-    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {Reset();} 
+    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     bool Start;
 
     void Reset()
-    {   
+    {
         Start = false;
     }
 

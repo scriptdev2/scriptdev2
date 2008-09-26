@@ -1,18 +1,18 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Karazhan
@@ -265,19 +265,19 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         {
             if(CurtainTimer)
                 if(CurtainTimer <= diff)
-                {
-                    PrepareEncounter();
+            {
+                PrepareEncounter();
 
-                    if(!pInstance)
-                        return;
+                if(!pInstance)
+                    return;
 
-                    GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
-                    if(Curtain)
-                        Curtain->SetGoState(0);
+                GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
+                if(Curtain)
+                    Curtain->SetGoState(0);
 
-                    CurtainTimer = 0;
-                }else CurtainTimer -= diff;
-            
+                CurtainTimer = 0;
+            }else CurtainTimer -= diff;
+
             if(!RaidWiped)
             {
                 if(WipeTimer < diff)
@@ -341,7 +341,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         uint8 count = 0;
         switch(Event)
         {
-            case EVENT_OZ: 
+            case EVENT_OZ:
                 index = 0;
                 count = 4;
                 break;
@@ -364,7 +364,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
             if(pCreature)
             {
-                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // In case database has bad flags
+                                                            // In case database has bad flags
+                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
         }
@@ -373,7 +374,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         PerformanceReady = true;
         RaidWiped = false;
     }
-
 };
 
 CreatureAI* GetAI_npc_barnesAI(Creature* _Creature)
@@ -393,7 +393,7 @@ bool GossipHello_npc_barnes(Player* player, Creature* _Creature)
     if(pInstance && (pInstance->GetData(DATA_MOROES_EVENT) >= DONE))
     {
         player->ADD_GOSSIP_ITEM(0, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        
+
         if(!((npc_barnesAI*)_Creature->AI())->RaidWiped)
             player->SEND_GOSSIP_MENU(8970, _Creature->GetGUID());
         else
@@ -434,7 +434,8 @@ bool GossipSelect_npc_barnes(Player *player, Creature *_Creature, uint32 sender,
 bool GossipHello_npc_berthold(Player* player, Creature* _Creature)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
-    if(pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE)) // Check if Shade of Aran is dead or not
+                                                            // Check if Shade of Aran is dead or not
+    if(pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
@@ -453,6 +454,7 @@ bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sende
 void AddSC_karazhan()
 {
     Script* newscript;
+
     newscript = new Script;
     newscript->GetAI = GetAI_npc_barnesAI;
     newscript->Name = "npc_barnes";

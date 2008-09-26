@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Maiden_of_Virtue
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Karazhan
 EndScriptData */
 
@@ -38,7 +38,7 @@ EndScriptData */
 
 #define SOUND_AGGRO             9204
 #define SOUND_SLAY1             9207
-#define SOUND_SLAY2             9312 
+#define SOUND_SLAY2             9312
 #define SOUND_SLAY3             9311
 #define SOUND_REPENTANCE1       9313
 #define SOUND_REPENTANCE2       9208
@@ -67,18 +67,18 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
-        case 2:
-            DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,Victim);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,Victim);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
+            case 2:
+                DoYell(SAY_SLAY3,LANG_UNIVERSAL,Victim);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+                break;
         }
     }
 
@@ -90,19 +90,18 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
         if (Holyground_Timer < diff)
         {
-            DoCast(m_creature, SPELL_HOLYGROUND, true); //Triggered so it doesn't interrupt her at all
+            DoCast(m_creature, SPELL_HOLYGROUND, true);     //Triggered so it doesn't interrupt her at all
             Holyground_Timer = 3000;
         }else Holyground_Timer -= diff;
 
@@ -112,16 +111,16 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
 
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
-                break;
-            case 1:
-                DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
-                break;
+                case 0:
+                    DoYell(SAY_REPENTANCE1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_REPENTANCE1);
+                    break;
+                case 1:
+                    DoYell(SAY_REPENTANCE2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_REPENTANCE2);
+                    break;
             }
-            Repentance_Timer = 30000 + rand()%15000; //A little randomness on that spell
+            Repentance_Timer = 30000 + rand()%15000;        //A little randomness on that spell
         }else Repentance_Timer -= diff;
 
         if (Holyfire_Timer < diff)
@@ -139,10 +138,10 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             }
             if(target_list.size())
                 target = *(target_list.begin()+rand()%target_list.size());
-            
+
             DoCast(target,SPELL_HOLYFIRE);
-            
-            Holyfire_Timer = 8000 + rand()%17000; //Anywhere from 8 to 25 seconds, good luck having several of those in a row!
+
+            Holyfire_Timer = 8000 + rand()%17000;           //Anywhere from 8 to 25 seconds, good luck having several of those in a row!
         }else Holyfire_Timer -= diff;
 
         if (Holywrath_Timer < diff)
@@ -153,8 +152,7 @@ struct MANGOS_DLL_DECL boss_maiden_of_virtueAI : public ScriptedAI
             if (target)
             {
                 DoCast(target,SPELL_HOLYWRATH);
-
-                Holywrath_Timer = 20000+(rand()%10000); //20-30 secs sounds nice
+                Holywrath_Timer = 20000+(rand()%10000);     //20-30 secs sounds nice
             }
         }else Holywrath_Timer -= diff;
 

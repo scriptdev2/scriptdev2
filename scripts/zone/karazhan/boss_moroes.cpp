@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Moroes
@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     uint32 Wait_Timer;
     uint32 CheckAdds_Timer;
     uint32 AddId[4];
-    
+
     bool FirstTime;
     bool InVanish;
     bool Enrage;
@@ -129,7 +129,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     void Aggro(Unit* who)
     {
         StartEvent();
-        
+
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
         AddsAttack();
@@ -171,12 +171,12 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         if(pUnit)
         {
             if(!pUnit->isAlive())
-                return 1; // Exists but is dead
+                return 1;                                   // Exists but is dead
             else
-                return 2; // Exists and is alive
+                return 2;                                   // Exists and is alive
         }
 
-        return 0; // Does not exist
+        return 0;                                           // Does not exist
     }
 
     void SpawnAdds()
@@ -220,7 +220,6 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                         if(pCreature)
                             AddGUID[i] = pCreature->GetGUID();
                         break;
-
                     case 1:
                         pCreature = ((Creature*)Unit::GetUnit((*m_creature), AddGUID[i]));
                         if(pCreature)
@@ -229,7 +228,6 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                             pCreature->AI()->EnterEvadeMode();
                         }
                         break;
-
                     case 2:
                         pCreature = ((Creature*)Unit::GetUnit((*m_creature), AddGUID[i]));
                         if(!pCreature->IsInEvadeMode())
@@ -331,7 +329,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if(target)
                     target->CastSpell(target, SPELL_GARROTE,true);
-                
+
                 m_creature->setFaction(16);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -353,7 +351,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         {
             Unit* target = NULL;
             std::list<HostilReference*> t_list = m_creature->getThreatManager().getThreatList();
-            
+
             if(t_list.empty())
                 return;
 
@@ -460,7 +458,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
         ManaBurn_Timer = 7000;
         MindFlay_Timer = 1000;
         ShadowWordPain_Timer = 6000;
-       
+
         DoCast(m_creature,SPELL_SHADOWFORM, true);
 
         boss_moroes_guestAI::Reset();
@@ -476,7 +474,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
         if(MindFlay_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_MINDFLY);
-            MindFlay_Timer = 12000; //3sec channeled
+            MindFlay_Timer = 12000;                         //3sec channeled
         }else MindFlay_Timer -= diff;
 
         if(ManaBurn_Timer < diff)
@@ -484,7 +482,7 @@ struct MANGOS_DLL_DECL boss_baroness_dorothea_millstipeAI : public boss_moroes_g
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target && (target->getPowerType() == POWER_MANA))
                 DoCast(target,SPELL_MANABURN);
-            ManaBurn_Timer = 5000; //3 sec cast
+            ManaBurn_Timer = 5000;                          //3 sec cast
         }else ManaBurn_Timer -= diff;
 
         if(ShadowWordPain_Timer < diff)
@@ -510,7 +508,7 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 
     uint32 HammerOfJustice_Timer;
     uint32 SealOfCommand_Timer;
-    uint32 JudgementOfCommand_Timer;    
+    uint32 JudgementOfCommand_Timer;
 
     void Reset()
     {
@@ -572,7 +570,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
         PowerWordShield_Timer = 1000;
 
         AcquireGUID();
-        
+
         boss_moroes_guestAI::Reset();
     }
 
@@ -832,6 +830,7 @@ CreatureAI* GetAI_lord_crispin_ference(Creature *_Creature)
 void AddSC_boss_moroes()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_moroes";
     newscript->GetAI = GetAI_boss_moroes;

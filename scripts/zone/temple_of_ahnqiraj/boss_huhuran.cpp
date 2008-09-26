@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
-SDName: boss_huhuran
+SDName: Boss_Huhuran
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
     void Reset()
     {
-        Frenzy_Timer = 25000 + rand()%10000; 
+        Frenzy_Timer = 25000 + rand()%10000;
         Wyvern_Timer = 18000 + rand()%10000;
         Spit_Timer = 8000;
         PoisonBolt_Timer = 4000;
@@ -67,14 +67,10 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-
         //Frenzy_Timer
         if (!Frenzy && Frenzy_Timer < diff)
         {
-            //Cast
             DoCast(m_creature, SPELL_FRENZY);
-
-            //30 seconds until we should cast this agian
             Frenzy = true;
             PoisonBolt_Timer = 3000;
             Frenzy_Timer = 25000 + rand()%10000;
@@ -83,31 +79,22 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         // Wyvern Timer
         if (Wyvern_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            DoCast(target,SPELL_WYVERNSTING);
-
-            //35 seconds until we should cast this again
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_WYVERNSTING);
             Wyvern_Timer = 15000 + rand()%17000;
         }else Wyvern_Timer -= diff;
 
         //Spit Timer
         if (Spit_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ACIDSPIT);
-
-            //5-10 seconds until we should cast this agian
             Spit_Timer = 5000 + rand()%5000;
         }else Spit_Timer -= diff;
 
         //NoxiousPoison_Timer
         if (NoxiousPoison_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_NOXIOUSPOISON);
-
-            //12-24 seconds until we should cast this agian
             NoxiousPoison_Timer = 12000 + rand()%12000;
         }else NoxiousPoison_Timer -= diff;
 
@@ -116,10 +103,7 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
         {
             if (PoisonBolt_Timer < diff)
             {
-                //Cast
                 DoCast(m_creature->getVictim(),SPELL_POISONBOLT);
-
-                //3 seconds until we should cast this again
                 PoisonBolt_Timer = 3000;
             }else PoisonBolt_Timer -= diff;
         }
@@ -142,14 +126,12 @@ struct MANGOS_DLL_DECL boss_huhuranAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-
 };
 
 CreatureAI* GetAI_boss_huhuran(Creature *_Creature)
 {
     return new boss_huhuranAI (_Creature);
 }
-
 
 void AddSC_boss_huhuran()
 {

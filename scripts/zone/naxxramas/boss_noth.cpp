@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Noth
@@ -44,7 +44,7 @@ EndScriptData */
 #define TELE_Z 274.040
 #define TELE_O 6.277
 
-#define SPELL_BLINK                           29211      
+#define SPELL_BLINK                           29211
 #define SPELL_CRIPPLE                         29212
 #define SPELL_CURSEPLAGUEBRINGER              28213
 #define SPELL_WRATHPLAGUEBRINGER              28214
@@ -61,17 +61,15 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
     uint32 Summon_Timer;
 
     void Reset()
-    {       
+    {
         Blink_Timer = 25000;
         Curse_Timer = 4000;
         Wrath_Timer = 9000;
         Summon_Timer = 12000;
     }
 
-
     void Aggro(Unit *who)
     {
-        //Say our dialog on initial aggro
         switch (rand()%3)
         {
             case 0:
@@ -104,58 +102,46 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
         }
     }
 
-
     void JustDied(Unit* Killer)
     {
         DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
     }
 
-
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Blink_Timer
         if (Blink_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CRIPPLE);
             DoCast(m_creature,SPELL_BLINK);
 
-            //25 seconds
             Blink_Timer = 25000;
         }else Blink_Timer -= diff;
 
         //Curse_Timer
         if (Curse_Timer < diff)
         {
-
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CURSEPLAGUEBRINGER);
-
-            //28 seconds until we should cast this agian
             Curse_Timer = 28000;
         }else Curse_Timer -= diff;
 
         //Wrath_Timer
         if (Wrath_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_WRATHPLAGUEBRINGER);
-
-            //18 seconds until we should cast this agian
             Wrath_Timer = 18000;
         }else Wrath_Timer -= diff;
 
         //Summon_Timer
         if (Summon_Timer < diff)
         {
-
             DoYell(SAY_SUMMON,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature,SOUND_SUMMON);
+
             Unit* target = NULL;
             Unit* SummonedSkeletons = NULL;
 
@@ -173,18 +159,16 @@ struct MANGOS_DLL_DECL boss_nothAI : public ScriptedAI
                     SummonedSkeletons->AddThreat(target,1.0f);
             }
 
-            //30 seconds until we should cast this agian
             Summon_Timer = 30500;
         } else Summon_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_noth(Creature *_Creature)
 {
     return new boss_nothAI (_Creature);
 }
-
 
 void AddSC_boss_noth()
 {

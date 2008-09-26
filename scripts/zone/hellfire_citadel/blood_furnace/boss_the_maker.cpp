@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_The_Maker
@@ -24,29 +24,28 @@ EndScriptData */
 #include "precompiled.h"
 
 #define SPELL_ACID_SPRAY            38153                   // heroic 38973 ??? 38153
-#define SPELL_EXPLODING_BREAKER     30925 
+#define SPELL_EXPLODING_BREAKER     30925
 #define SPELL_KNOCKDOWN             20276
 #define SPELL_DOMINATION            25772                   // ???
 
-
-#define SAY_KILL_1          "Let's see what I can make of you." 
+#define SAY_KILL_1          "Let's see what I can make of you."
 #define SOUND_KILL_1        10289
 #define SAY_KILL_2          "It is pointless to resist."
 #define SOUND_KILL_2        10290
 
 #define SAY_AGGRO_1         "My work must not be interrupted."
 #define SOUND_AGGRO_1       10286
-#define SAY_AGGRO_2         "Perhaps I can find a use for you." 
+#define SAY_AGGRO_2         "Perhaps I can find a use for you."
 #define SOUND_AGGRO_2       10287
-#define SAY_AGGRO_3         "Anger... Hate... These are tools I can use."    
-#define SOUND_AGGRO_3       10288            
+#define SAY_AGGRO_3         "Anger... Hate... These are tools I can use."
+#define SOUND_AGGRO_3       10288
 
-#define SAY_DIE             "Stay away from... me." 
-#define SOUND_DIE           10291                
+#define SAY_DIE             "Stay away from... me."
+#define SOUND_DIE           10291
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
-    boss_the_makerAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_the_makerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 AcidSpray_Timer;
     uint32 ExplodingBreaker_Timer;
@@ -54,33 +53,30 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     uint32 Knockdown_Timer;
 
     void Reset()
-    {   
+    {
         AcidSpray_Timer = 10000;
         ExplodingBreaker_Timer = 4000;
         Domination_Timer = 120000;
         Knockdown_Timer    = 6000;
-
     }
 
     void Aggro(Unit *who)
     {
-                switch(rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-                    break;  
-
-                case 2:
-                    DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                    break;  
-                }
+        switch(rand()%3)
+        {
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
+        }
     }
 
     void KilledUnit(Unit* victim)
@@ -90,27 +86,25 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-            break;
-
-        case 1:
-            DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-            break;               
+            case 0:
+                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
+            case 1:
+                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);  
+        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DIE);
     }
 
     void UpdateAI(const uint32 diff)
     {
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -155,7 +149,6 @@ CreatureAI* GetAI_boss_the_makerAI(Creature *_Creature)
 {
     return new boss_the_makerAI (_Creature);
 }
-
 
 void AddSC_boss_the_maker()
 {

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Omar_The_Unscarred
@@ -48,7 +48,7 @@ EndScriptData */
 #define SAY_KILL_1                  "Die, weakling!"
 #define SOUND_KILL_1                10282
 
-#define SAY_DIE                     "It is... not over." 
+#define SAY_DIE                     "It is... not over."
 #define SOUND_DIE                   10284
 
 #define SAY_WIPE                    "I am victorious!"
@@ -56,7 +56,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 {
-    boss_omor_the_unscarredAI(Creature *c) : ScriptedAI(c) {Reset();}   
+    boss_omor_the_unscarredAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 OrbitalStrike_Timer;
     uint32 ShadowWhip_Timer;
@@ -72,8 +72,6 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
     void Reset()
     {
         HeroicMode = m_creature->GetMap()->IsHeroic();
-        if( HeroicMode )
-            debug_log("SD2: creature %u is in heroic mode",m_creature->GetEntry());
 
         DoYell(SAY_WIPE,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_WIPE);
@@ -104,7 +102,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
             case 2:
                 DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-                break;   
+                break;
         }
     }
 
@@ -169,7 +167,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL); 
+        DoYell(SAY_DIE,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature,SOUND_DIE);
     }
 
@@ -260,7 +258,7 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 Shadowbolt_Timer = 4000+rand()%2500;
             }
         }else Shadowbolt_Timer -= diff;
-    }   
+    }
 };
 
 CreatureAI* GetAI_boss_omor_the_unscarredAI(Creature *_Creature)

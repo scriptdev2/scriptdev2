@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Shazzrah
@@ -40,10 +40,10 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 
     void Reset()
     {
-        ArcaneExplosion_Timer = 6000;      //These times are probably wrong
+        ArcaneExplosion_Timer = 6000;                       //These times are probably wrong
         ShazzrahCurse_Timer = 10000;
         DeadenMagic_Timer = 24000;
-        Countspell_Timer = 15000; 
+        Countspell_Timer = 15000;
         Blink_Timer = 30000;
     }
 
@@ -53,83 +53,63 @@ struct MANGOS_DLL_DECL boss_shazzrahAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ArcaneExplosion_Timer
         if (ArcaneExplosion_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION);
-
-            //6 seconds until we should cast this agian
             ArcaneExplosion_Timer = 5000 + rand()%4000;
         }else ArcaneExplosion_Timer -= diff;
 
         //ShazzrahCurse_Timer
         if (ShazzrahCurse_Timer < diff)
         {
-            //Cast
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_SHAZZRAHCURSE);
+            if (target) DoCast(target,SPELL_SHAZZRAHCURSE);
 
-            //30 seconds until we should cast this agian
             ShazzrahCurse_Timer = 25000 + rand()%5000;
         }else ShazzrahCurse_Timer -= diff;
 
         //DeadenMagic_Timer
         if (DeadenMagic_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_DEADENMAGIC);
-
-            //45 seconds until we should cast this agian
             DeadenMagic_Timer = 35000;
         }else DeadenMagic_Timer -= diff;
 
         //Countspell_Timer
         if (Countspell_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_COUNTERSPELL);
-
-            //20 seconds until we should cast this agian
             Countspell_Timer = 16000 + rand()%4000;
         }else Countspell_Timer -= diff;
-
 
         //Blink_Timer
         if (Blink_Timer < diff)
         {
+            // Teleporting him to a random gamer and casting Arcane Explosion after that.
+            // Blink is not working cause of LoS System we need to do this hardcoded.
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-        // Teleporting him to a random gamer and casting Arcane Explosion after that.
-        // Blink is not working cause of LoS System we need to do this hardcoded.
-            
-        Unit* target = NULL;
-            
-        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            
-        m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
-        m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,true,0);
-        DoCast(target,SPELL_ARCANEEXPLOSION);
-        DoResetThreat();
+            m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0);
+            m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0,true,0);
+            DoCast(target,SPELL_ARCANEEXPLOSION);
+            DoResetThreat();
 
             Blink_Timer = 45000;
         }else Blink_Timer -= diff;
 
-
-
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_shazzrah(Creature *_Creature)
 {
     return new boss_shazzrahAI (_Creature);
 }
-
 
 void AddSC_boss_shazzrah()
 {

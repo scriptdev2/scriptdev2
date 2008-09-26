@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Curator
@@ -60,7 +60,6 @@ EndScriptData */
 #define SPELL_ENRAGE                    28131
 #define SPELL_BERSERK                   26662
 
-
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
 {
     boss_curatorAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -75,8 +74,8 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     void Reset()
     {
         AddTimer = 10000;
-        HatefulBoltTimer = 15000; // This time is probably wrong
-        BerserkTimer = 720000; //12 minutes
+        HatefulBoltTimer = 15000;                           // This time is probably wrong
+        BerserkTimer = 720000;                              //12 minutes
         Enraged = false;
         Evocating = false;
     }
@@ -85,14 +84,14 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(victim, SOUND_KILL1);
-            break;
-        case 1:
-            DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(victim, SOUND_KILL2);
-            break;
+            case 0:
+                DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(victim, SOUND_KILL1);
+                break;
+            case 1:
+                DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(victim, SOUND_KILL2);
+                break;
         }
     }
 
@@ -103,15 +102,13 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     }
 
     void Aggro(Unit *who)
-    {        
+    {
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
     {
-
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -143,18 +140,18 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 }
 
                 //Reduce Mana by 10%
-                int32 mana = (int32)(0.1f*(m_creature->GetMaxPower(POWER_MANA)));               
+                int32 mana = (int32)(0.1f*(m_creature->GetMaxPower(POWER_MANA)));
                 m_creature->ModifyPower(POWER_MANA, -mana);
                 switch(rand()%4)
                 {
-                case 0:
-                    DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
-                    break;
-                case 1:
-                    DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                    break;
+                    case 0:
+                        DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
+                        break;
+                    case 1:
+                        DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
+                        break;
                 }
                 AddTimer = 10000;
             }else AddTimer -= diff;
@@ -182,13 +179,11 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             DoCast(m_creature, SPELL_BERSERK);
             DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-        }else BerserkTimer -= diff; 
+        }else BerserkTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
-
 
 CreatureAI* GetAI_boss_curator(Creature *_Creature)
 {
@@ -201,6 +196,5 @@ void AddSC_boss_curator()
     newscript = new Script;
     newscript->Name="boss_curator";
     newscript->GetAI = GetAI_boss_curator;
-
     m_scripts[nrscripts++] = newscript;
 }

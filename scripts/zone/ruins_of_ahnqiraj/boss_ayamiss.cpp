@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Ayamiss
@@ -29,8 +29,8 @@ make him fly from 70-100%
 */
 
 #define SPELL_STINGERSPRAY 25749
-#define SPELL_POISONSTINGER 25748 //only used in phase1
-#define SPELL_SUMMONSWARMER 25844 //might be 25708
+#define SPELL_POISONSTINGER 25748                           //only used in phase1
+#define SPELL_SUMMONSWARMER 25844                           //might be 25708
 // #define SPELL_PARALYZE 23414 doesnt work correct (core)
 
 struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
@@ -50,21 +50,15 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         POISONSTINGER_Timer = 30000;
         SUMMONSWARMER_Timer = 60000;
         phase=1;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit *who)
-    {  
-            pTarget = who;
+    {
+        pTarget = who;
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -72,7 +66,6 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
         if (phase==1 && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 70 && !m_creature->IsNonMeleeSpellCasted(false))
         {
             phase=2;
-
         }
 
         //STINGERSPRAY_Timer (only in phase2)
@@ -98,12 +91,11 @@ struct MANGOS_DLL_DECL boss_ayamissAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_ayamiss(Creature *_Creature)
 {
     return new boss_ayamissAI (_Creature);
 }
-
 
 void AddSC_boss_ayamiss()
 {

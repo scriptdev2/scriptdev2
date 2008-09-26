@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_Karazhan
@@ -49,7 +49,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     uint32 Encounters[ENCOUNTERS];
 
-    uint32 OperaEvent; // 0 - OZ, 1 - HOOD, 2 - RAJ
+    uint32 OperaEvent;                                      // 0 - OZ, 1 - HOOD, 2 - RAJ
     uint32 OzDeathCount;
 
     uint64 CurtainGUID;
@@ -58,18 +58,18 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     uint64 KilrekGUID;
     uint64 TerestianGUID;
     uint64 MoroesGUID;
-    uint64 LibraryDoor;            // Door at Shade of Aran
-    uint64 MassiveDoor;            // Door at Netherspite
-    uint64 GamesmansDoor;          // Door before Chess
-    uint64 GamesmansExitDoor;      // Door after Chess
-    uint64 NetherspaceDoor;        // Door at Malchezaar
+    uint64 LibraryDoor;                                     // Door at Shade of Aran
+    uint64 MassiveDoor;                                     // Door at Netherspite
+    uint64 GamesmansDoor;                                   // Door before Chess
+    uint64 GamesmansExitDoor;                               // Door after Chess
+    uint64 NetherspaceDoor;                                 // Door at Malchezaar
 
     void Initialize()
     {
         for (uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
 
-        OperaEvent      = rand()%3; // This never gets altered.
+        OperaEvent      = rand()%3;                         // This never gets altered.
         OzDeathCount    = 0;
 
         CurtainGUID         = 0;
@@ -205,8 +205,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         OUT_SAVE_INST_DATA;
         std::ostringstream stream;
         stream << Encounters[0] << " "  << Encounters[1] << " "  << Encounters[2] << " "  << Encounters[3] << " "
-               << Encounters[4] << " "  << Encounters[5] << " "  << Encounters[6] << " "  << Encounters[7] << " "
-               << Encounters[8] << " "  << Encounters[9] << " "  << Encounters[10];
+            << Encounters[4] << " "  << Encounters[5] << " "  << Encounters[6] << " "  << Encounters[7] << " "
+            << Encounters[8] << " "  << Encounters[9] << " "  << Encounters[10];
         char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
         if(out)
@@ -228,11 +228,11 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         OUT_LOAD_INST_DATA(in);
         std::istringstream stream(in);
-        stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3] 
-               >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7] 
-               >> Encounters[8] >> Encounters[9] >> Encounters[10];
+        stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
+            >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7]
+            >> Encounters[8] >> Encounters[9] >> Encounters[10];
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as "In Progress" - reset it instead.
+            if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
                 Encounters[i] = NOT_STARTED;
         OUT_LOAD_INST_DATA_COMPLETE;
     }

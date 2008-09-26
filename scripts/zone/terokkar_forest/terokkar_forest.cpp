@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Terokkar_Forest
 SD%Complete: 80
-SDComment: Quest support: 9889(test script only), 10009, 10873, 10896, 11096. Skettis->Ogri'la Flight
+SDComment: Quest support: 9889(test script only, sql inside script), 10009, 10873, 10896, 11096. Skettis->Ogri'la Flight
 SDCategory: Terokkar Forest
 EndScriptData */
 
@@ -83,29 +83,29 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
     {
         if( done_by->GetTypeId() == TYPEID_PLAYER )
             if( (m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 30 )
+        {
+            if( Group* pGroup = ((Player*)done_by)->GetGroup() )
             {
-                if( Group* pGroup = ((Player*)done_by)->GetGroup() )
+                for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
                 {
-                    for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
+                    Player *pGroupie = itr->getSource();
+                    if( pGroupie &&
+                        pGroupie->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
+                        pGroupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
                     {
-                        Player *pGroupie = itr->getSource();
-                        if( pGroupie && 
-                            pGroupie->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE && 
-                            pGroupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
-                        {
-                            pGroupie->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
-                            if( !CanDoQuest )
-                                CanDoQuest = true;
-                        }
+                        pGroupie->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
+                        if( !CanDoQuest )
+                            CanDoQuest = true;
                     }
-                } else
-                    if( ((Player*)done_by)->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE && 
-                        ((Player*)done_by)->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
-                    {
-                        ((Player*)done_by)->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
-                        CanDoQuest = true;
-                    }
+                }
+            } else
+            if( ((Player*)done_by)->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
+                ((Player*)done_by)->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10 )
+            {
+                ((Player*)done_by)->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
+                CanDoQuest = true;
             }
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -155,12 +155,13 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
     void Reset() { }
     void Aggro(Unit *who) { }
 
-    void DamageTaken(Unit *done_by, uint32 &damage) 
+    void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
             if (m_creature->GetHealth() <= damage)
                 if (rand()%100 < 75)
-                    m_creature->CastSpell(m_creature,39130,true);//Summon Wood Mites
+                    //Summon Wood Mites
+                    m_creature->CastSpell(m_creature,39130,true);
     }
 };
 CreatureAI* GetAI_mob_infested_root_walker(Creature *_Creature)
@@ -179,12 +180,13 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
     void Reset() { }
     void Aggro(Unit *who) { }
 
-    void DamageTaken(Unit *done_by, uint32 &damage) 
+    void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
             if (m_creature->GetHealth() <= damage)
                 if (rand()%100 < 75)
-                    m_creature->CastSpell(m_creature,39134,true);//Summon Lots of Wood Mights
+                    //Summon Lots of Wood Mights
+                    m_creature->CastSpell(m_creature,39134,true);
     }
 };
 CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
@@ -199,7 +201,7 @@ CreatureAI* GetAI_mob_rotting_forest_rager(Creature *_Creature)
 #define QUEST_TARGET        22459
 //#define SPELL_FREE_WEBBED   38950
 
-const uint32 netherwebVictims[6] = 
+const uint32 netherwebVictims[6] =
 {
     18470, 16805, 21242, 18452, 22482, 21285
 };
@@ -222,7 +224,7 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
                     DoSpawnCreature(QUEST_TARGET,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
                     ((Player*)Killer)->KilledMonster(QUEST_TARGET, m_creature->GetGUID());
                 }else
-                    DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
+                DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
 
                 if( rand()%100 < 75 )
                     DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
@@ -303,19 +305,20 @@ CreatureAI* GetAI_npc_floon(Creature *_Creature)
 bool GossipHello_npc_floon(Player *player, Creature *_Creature )
 {
     if( player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     player->SEND_GOSSIP_MENU(9442, _Creature->GetGUID());
     return true;
 }
+
 bool GossipSelect_npc_floon(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    if( action == GOSSIP_ACTION_INFO_DEF+1 )
+    if( action == GOSSIP_ACTION_INFO_DEF )
     {
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         player->SEND_GOSSIP_MENU(9443, _Creature->GetGUID());
     }
-    if( action == GOSSIP_ACTION_INFO_DEF+2 )
+    if( action == GOSSIP_ACTION_INFO_DEF+1 )
     {
         player->CLOSE_GOSSIP_MENU();
         _Creature->setFaction(FACTION_HOSTILE_FL);
@@ -343,6 +346,7 @@ bool GossipHello_npc_skyguard_handler_deesak(Player *player, Creature *_Creature
 
     return true;
 }
+
 bool GossipSelect_npc_skyguard_handler_deesak(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)

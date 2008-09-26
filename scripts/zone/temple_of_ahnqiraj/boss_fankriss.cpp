@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Fankriss
@@ -61,15 +61,15 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
         Rand = 10 + (rand()%10);
         switch (rand()%2)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            case 0: RandX = 0 - Rand; break;
+            case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
         Rand =  10 + (rand()%10);
         switch (rand()%2)
         {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
+            case 0: RandY = 0 - Rand; break;
+            case 1: RandY = 0 + Rand; break;
         }
         Rand = 0;
         Spawn = DoSpawnCreature(15630, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
@@ -132,7 +132,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 
                     switch(rand()%3)
                     {
-                        case 0:  
+                        case 0:
                             DoTeleportPlayer(target, -8106.0142,1289.2900,-74.419533,5.112);
                             Hatchling = m_creature->SummonCreature(15962, target->GetPositionX()-3, target->GetPositionY()-3, target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
                             ((CreatureAI*)Hatchling->AI())->AttackStart(target);
@@ -173,7 +173,7 @@ struct MANGOS_DLL_DECL boss_fankrissAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 
 CreatureAI* GetAI_boss_fankriss(Creature *_Creature)
 {

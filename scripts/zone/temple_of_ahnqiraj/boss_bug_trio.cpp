@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: boss_kri, boss_yauj, boss_vem : The Bug Trio
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
@@ -26,8 +26,8 @@ EndScriptData */
 
 #define SPELL_CLEAVE        26350
 #define SPELL_TOXIC_VOLLEY  25812
-#define SPELL_POISON_CLOUD  38718         //Only Spell with right dmg.
-#define SPELL_ENRAGE        34624         //Changed cause 25790 is casted on gamers too. Same prob with old explosion of twin emperors.
+#define SPELL_POISON_CLOUD  38718                           //Only Spell with right dmg.
+#define SPELL_ENRAGE        34624                           //Changed cause 25790 is casted on gamers too. Same prob with old explosion of twin emperors.
 
 #define SPELL_CHARGE        26561
 #define SPELL_KNOCKBACK     26027
@@ -71,7 +71,8 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         if(pInstance)
         {
             if(pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if death
+                                                            // Unlootable if death
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
             pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
         }
@@ -82,20 +83,19 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-            //Cleave_Timer
-            if (Cleave_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-                Cleave_Timer = 5000 + rand()%7000;
-            }else Cleave_Timer -= diff;
+        //Cleave_Timer
+        if (Cleave_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_CLEAVE);
+            Cleave_Timer = 5000 + rand()%7000;
+        }else Cleave_Timer -= diff;
 
-            //ToxicVolley_Timer
-            if (ToxicVolley_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
-                ToxicVolley_Timer = 10000 + rand()%5000;
-            }else ToxicVolley_Timer -= diff;
-
+        //ToxicVolley_Timer
+        if (ToxicVolley_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_TOXIC_VOLLEY);
+            ToxicVolley_Timer = 10000 + rand()%5000;
+        }else ToxicVolley_Timer -= diff;
 
         if (m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05 && !Death)
         {
@@ -109,7 +109,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
             if(Check_Timer < diff)
             {
                 if(pInstance && pInstance->GetData(DATA_VEMISDEAD))
-                {    
+                {
                     DoCast(m_creature, SPELL_ENRAGE);
                     VemDead = true;
                 }
@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 
 struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
 {
@@ -146,18 +146,17 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         Enraged = false;
     }
 
-
     void JustDied(Unit* Killer)
     {
         if(pInstance)
         {
             pInstance->SetData(DATA_VEM_DEATH, 0);
             if(pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if death
+                                                            // Unlootable if death
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
         }
     }
-    
 
     void Aggro(Unit *who)
     {
@@ -187,41 +186,40 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-            //Charge_Timer
-            if (Charge_Timer < diff)
-            {                
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if(target)
-                {
-                    DoCast(target, SPELL_CHARGE);
-                    m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                    DoStartAttackAndMovement(target);
-                }
-                   
-                Charge_Timer = 8000 + rand()%8000;
-            }else Charge_Timer -= diff;
-
-            //KnockBack_Timer
-            if (KnockBack_Timer < diff)
+        //Charge_Timer
+        if (Charge_Timer < diff)
+        {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if(target)
             {
-                DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
-                if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
-                KnockBack_Timer = 15000 + rand()%10000;
-            }else KnockBack_Timer -= diff;
+                DoCast(target, SPELL_CHARGE);
+                m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                DoStartAttackAndMovement(target);
+            }
 
-            //Enrage_Timer
-            if (!Enraged && Enrage_Timer < diff)
-            {
-                DoCast(m_creature,SPELL_ENRAGE);
-                Enraged = true;
-            }else Charge_Timer -= diff;
+            Charge_Timer = 8000 + rand()%8000;
+        }else Charge_Timer -= diff;
 
+        //KnockBack_Timer
+        if (KnockBack_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_KNOCKBACK);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
+            KnockBack_Timer = 15000 + rand()%10000;
+        }else KnockBack_Timer -= diff;
 
-            DoMeleeAttackIfReady();
+        //Enrage_Timer
+        if (!Enraged && Enrage_Timer < diff)
+        {
+            DoCast(m_creature,SPELL_ENRAGE);
+            Enraged = true;
+        }else Charge_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
-}; 
+};
 
 struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 {
@@ -253,7 +251,8 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         if(pInstance)
         {
             if(pInstance->GetData(DATA_BUG_TRIO_DEATH) < 2)
-                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE); // Unlootable if death
+                                                            // Unlootable if death
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             pInstance->SetData(DATA_BUG_TRIO_DEATH, 1);
         }
 
@@ -265,7 +264,6 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
         }
     }
-    
 
     void Aggro(Unit *who)
     {
@@ -295,13 +293,13 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-            //Fear_Timer
-            if (Fear_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_FEAR);
-                DoResetThreat();
-                Fear_Timer = 20000;
-            }else Fear_Timer -= diff;
+        //Fear_Timer
+        if (Fear_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_FEAR);
+            DoResetThreat();
+            Fear_Timer = 20000;
+        }else Fear_Timer -= diff;
 
         //Casting Heal to other twins or herself.
         if(Heal_Timer < diff)
@@ -313,22 +311,20 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 
                 switch(rand()%3)
                 {
-                    case 0: 
+                    case 0:
                         if(pKri)
                             DoCast(pKri, SPELL_HEAL);
                         break;
-
                     case 1:
                         if(pVem)
                             DoCast(pVem, SPELL_HEAL);
                         break;
-
                     case 2:
                         DoCast(m_creature, SPELL_HEAL);
                         break;
                 }
             }
-                       
+
             Heal_Timer = 15000+rand()%15000;
         }else Heal_Timer -= diff;
 
@@ -338,7 +334,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
             if (!VemDead)
             {
                 if(pInstance)
-                {    
+                {
                     if(pInstance->GetData(DATA_VEMISDEAD))
                     {
                         DoCast(m_creature, SPELL_ENRAGE);
@@ -351,7 +347,7 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 
 CreatureAI* GetAI_boss_yauj(Creature *_Creature)
 {

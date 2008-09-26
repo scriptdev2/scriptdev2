@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Bosses_Opera
@@ -152,7 +152,7 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
         InCombat = false;
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_DOROTHEE_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DOROTHEE_AGGRO);
@@ -189,10 +189,10 @@ struct MANGOS_DLL_DECL boss_dorotheeAI : public ScriptedAI
     {
         if(AggroTimer)
             if(AggroTimer <= diff)
-            {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                AggroTimer = 0;
-            }else AggroTimer -= diff;
+        {
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            AggroTimer = 0;
+        }else AggroTimer -= diff;
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -264,7 +264,7 @@ struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_YIPPING);
             YipTimer = 10000;
         }else YipTimer -= diff;
-        
+
         DoMeleeAttackIfReady();
     }
 };
@@ -285,7 +285,7 @@ void boss_dorotheeAI::SummonTito()
 
 struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
 {
-    boss_strawmanAI(Creature* c) : ScriptedAI(c) 
+    boss_strawmanAI(Creature* c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -320,7 +320,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(who);
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_STRAWMAN_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_STRAWMAN_AGGRO);
@@ -348,13 +348,13 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
     }
 
     void UpdateAI(const uint32 diff)
-    {        
+    {
         if(AggroTimer)
             if(AggroTimer <= diff)
-            {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                AggroTimer = 0;
-            }else AggroTimer -= diff;
+        {
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            AggroTimer = 0;
+        }else AggroTimer -= diff;
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -370,7 +370,7 @@ struct MANGOS_DLL_DECL boss_strawmanAI : public ScriptedAI
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_BRAIN_WIPE);
             BrainWipeTimer = 20000;
         }else BrainWipeTimer -= diff;
-        
+
         DoMeleeAttackIfReady();
     }
 };
@@ -400,7 +400,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
         RustCount   = 0;
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_TINHEAD_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_TINHEAD_AGGRO);
@@ -413,7 +413,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
 
         ScriptedAI::AttackStart(who);
     }
-    
+
     void MoveInLineOfSight(Unit* who)
     {
         if(m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
@@ -438,13 +438,13 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
     }
 
     void UpdateAI(const uint32 diff)
-    {        
+    {
         if(AggroTimer)
             if(AggroTimer < diff)
-            {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                AggroTimer = 0;
-            }else AggroTimer -= diff;
+        {
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            AggroTimer = 0;
+        }else AggroTimer -= diff;
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -465,7 +465,7 @@ struct MANGOS_DLL_DECL boss_tinheadAI : public ScriptedAI
                 RustTimer = 6000;
             }else RustTimer -= diff;
         }
-        
+
         DoMeleeAttackIfReady();
     }
 };
@@ -509,7 +509,7 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
         ScriptedAI::AttackStart(who);
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_ROAR_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_ROAR_AGGRO);
@@ -534,10 +534,10 @@ struct MANGOS_DLL_DECL boss_roarAI : public ScriptedAI
     {
         if(AggroTimer)
             if(AggroTimer <= diff)
-            {
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                AggroTimer = 0;
-            }else AggroTimer -= diff;
+        {
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            AggroTimer = 0;
+        }else AggroTimer -= diff;
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -583,7 +583,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
         ChainLightningTimer = 10000;
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         switch(rand()%2)
         {
@@ -596,7 +596,6 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_CRONE_AGGRO2);
                 break;
         }
-
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
@@ -635,7 +634,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_CHAIN_LIGHTNING);
             ChainLightningTimer = 15000;
         }else ChainLightningTimer -= diff;
-        
+
         DoMeleeAttackIfReady();
     }
 };
@@ -712,7 +711,6 @@ CreatureAI* GetAI_mob_cyclone(Creature* _Creature)
     return new mob_cycloneAI(_Creature);
 }
 
-
 /**************************************/
 /**** Opera Red Riding Hood Event ****/
 /************************************/
@@ -727,7 +725,7 @@ CreatureAI* GetAI_mob_cyclone(Creature* _Creature)
 /**** Yells for the Wolf ****/
 #define SAY_WOLF_AGGRO      "All the better to own you with!"
 #define SOUND_WOLF_AGGRO    9276
-#define SOUND_WOLF_DEATH    9275 // No speech
+#define SOUND_WOLF_DEATH    9275                            // No speech
 #define SAY_WOLF_SLAY       "Mmmm... delicious."
 #define SOUND_WOLF_SLAY     9277
 #define SAY_WOLF_HOOD       "Run away little girl, run away!"
@@ -881,7 +879,6 @@ CreatureAI* GetAI_boss_bigbadwolf(Creature* _Creature)
     return new boss_bigbadwolfAI(_Creature);
 }
 
-
 /**********************************************/
 /******** Opera Romeo and Juliet Event *******/
 /********************************************/
@@ -953,7 +950,7 @@ void PretendToDie(Creature* _Creature)
     _Creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
     _Creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     _Creature->ClearAllReactives();
-    _Creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
+    _Creature->SetUInt64Value(UNIT_FIELD_TARGET,0);
     _Creature->GetMotionMaster()->Clear();
     _Creature->GetMotionMaster()->MoveIdle();
     _Creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
@@ -1116,9 +1113,9 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage);
-    
-    void Aggro(Unit* who) 
-    {        
+
+    void Aggro(Unit* who)
+    {
         DoYell(SAY_ROMULO_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_ROMULO_AGGRO);
         if(JulianneGUID)
@@ -1194,7 +1191,7 @@ void boss_julianneAI::DamageTaken(Unit* done_by, uint32 &damage)
 
             JustDied(done_by);
         }
- 
+
         IsFakingDeath = true;
         PretendToDie(m_creature);
         damage = 0;
@@ -1258,59 +1255,59 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
 {
     if(EntryYellTimer)
         if(EntryYellTimer < diff)
-        {
-            DoYell(SAY_JULIANNE_ENTER, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_JULIANNE_ENTER);
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            EntryYellTimer = 0;
-        }else EntryYellTimer -= diff;
+    {
+        DoYell(SAY_JULIANNE_ENTER, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_JULIANNE_ENTER);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        EntryYellTimer = 0;
+    }else EntryYellTimer -= diff;
 
     if(AggroYellTimer)
         if(AggroYellTimer < diff)
-        {
-            DoYell(SAY_JULIANNE_AGGRO, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_JULIANNE_AGGRO);
-            AggroYellTimer = 0;
-        }else AggroYellTimer -= diff;
+    {
+        DoYell(SAY_JULIANNE_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_JULIANNE_AGGRO);
+        AggroYellTimer = 0;
+    }else AggroYellTimer -= diff;
 
-        if(Phase == PHASE_ROMULO && !SummonedRomulo)
+    if(Phase == PHASE_ROMULO && !SummonedRomulo)
+    {
+        if(SummonRomuloTimer < diff)
         {
-            if(SummonRomuloTimer < diff)
+            Creature* Romulo = m_creature->SummonCreature(CREATURE_ROMULO, ROMULO_X, ROMULO_Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
+            if(Romulo)
             {
-                Creature* Romulo = m_creature->SummonCreature(CREATURE_ROMULO, ROMULO_X, ROMULO_Y, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
-                if(Romulo)
+                RomuloGUID = Romulo->GetGUID();
+                ((boss_romuloAI*)Romulo->AI())->JulianneGUID = m_creature->GetGUID();
+                ((boss_romuloAI*)Romulo->AI())->Phase = PHASE_ROMULO;
+                if(m_creature->getVictim())
                 {
-                    RomuloGUID = Romulo->GetGUID();
-                    ((boss_romuloAI*)Romulo->AI())->JulianneGUID = m_creature->GetGUID();
-                    ((boss_romuloAI*)Romulo->AI())->Phase = PHASE_ROMULO;
-                    if(m_creature->getVictim())
-                    {
-                        Romulo->AI()->AttackStart(m_creature->getVictim());
-                        Romulo->AddThreat(m_creature->getVictim(), 50.0f);
-                    }
-                    DoZoneInCombat(Romulo);
+                    Romulo->AI()->AttackStart(m_creature->getVictim());
+                    Romulo->AddThreat(m_creature->getVictim(), 50.0f);
                 }
-                SummonedRomulo = true;
-            }else SummonRomuloTimer -= diff;
-        }
+                DoZoneInCombat(Romulo);
+            }
+            SummonedRomulo = true;
+        }else SummonRomuloTimer -= diff;
+    }
 
     if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() ||IsFakingDeath)
         return;
- 
+
     if(RomuloDead)
         if(ResurrectTimer < diff)
+    {
+        Creature* Romulo = ((Creature*)Unit::GetUnit((*m_creature), RomuloGUID));
+        if(Romulo && ((boss_romuloAI*)Romulo->AI())->IsFakingDeath)
         {
-            Creature* Romulo = ((Creature*)Unit::GetUnit((*m_creature), RomuloGUID));
-            if(Romulo && ((boss_romuloAI*)Romulo->AI())->IsFakingDeath)
-            {
-                DoYell(SAY_JULIANNE_RESURRECT, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_JULIANNE_RESURRECT);
-                Resurrect(Romulo);
-                ((boss_romuloAI*)Romulo->AI())->IsFakingDeath = false;
-                ResurrectTimer = 10000;
-            }
-            RomuloDead = false;
-        }else ResurrectTimer -= diff;
+            DoYell(SAY_JULIANNE_RESURRECT, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_JULIANNE_RESURRECT);
+            Resurrect(Romulo);
+            ((boss_romuloAI*)Romulo->AI())->IsFakingDeath = false;
+            ResurrectTimer = 10000;
+        }
+        RomuloDead = false;
+    }else ResurrectTimer -= diff;
 
     if(BlindingPassionTimer < diff)
     {
@@ -1352,22 +1349,22 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
 {
     if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() || IsFakingDeath)
         return;
-    
+
     if(JulianneDead)
         if(ResurrectTimer < diff)
+    {
+        Creature* Julianne = ((Creature*)Unit::GetUnit((*m_creature), JulianneGUID));
+        if(Julianne && ((boss_julianneAI*)Julianne->AI())->IsFakingDeath)
         {
-            Creature* Julianne = ((Creature*)Unit::GetUnit((*m_creature), JulianneGUID));
-            if(Julianne && ((boss_julianneAI*)Julianne->AI())->IsFakingDeath)
-            {
-                DoYell(SAY_ROMULO_RESURRECT, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ROMULO_RESURRECT);
-                Resurrect(Julianne);
-                ((boss_julianneAI*)Julianne->AI())->IsFakingDeath = false;
-                ResurrectTimer = 10000;
-            }
-            JulianneDead = false;
-        }else ResurrectTimer -= diff;
-    
+            DoYell(SAY_ROMULO_RESURRECT, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ROMULO_RESURRECT);
+            Resurrect(Julianne);
+            ((boss_julianneAI*)Julianne->AI())->IsFakingDeath = false;
+            ResurrectTimer = 10000;
+        }
+        JulianneDead = false;
+    }else ResurrectTimer -= diff;
+
     if(BackwardLungeTimer < diff)
     {
         Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
@@ -1412,7 +1409,7 @@ CreatureAI* GetAI_boss_romulo(Creature* _Creature)
 void AddSC_bosses_opera()
 {
     Script* newscript;
-    
+
     // Oz
     newscript = new Script;
     newscript->GetAI = GetAI_boss_dorothee;
@@ -1437,7 +1434,7 @@ void AddSC_bosses_opera()
     newscript = new Script;
     newscript->GetAI = GetAI_boss_crone;
     newscript->Name = "boss_crone";
-    m_scripts[nrscripts++] = newscript;    
+    m_scripts[nrscripts++] = newscript;
 
     newscript = new Script;
     newscript->GetAI = GetAI_mob_tito;
@@ -1455,7 +1452,7 @@ void AddSC_bosses_opera()
     newscript->pGossipSelect = GossipSelect_npc_grandmother;
     newscript->Name = "npc_grandmother";
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->GetAI = GetAI_boss_bigbadwolf;
     newscript->Name = "boss_bigbadwolf";

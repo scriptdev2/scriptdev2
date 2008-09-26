@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Shadowmoon_Valley
@@ -62,7 +62,7 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
     uint32 CastTimer;
     uint32 EatTimer;
 
-    void Reset() 
+    void Reset()
     {
         IsEating = false;
         Evade = false;
@@ -115,38 +115,38 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
     {
         if(IsEating)
             if(EatTimer < diff)
+        {
+            IsEating = false;
+            DoCast(m_creature, SPELL_JUST_EATEN);
+            m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
+            DoSay(SAY_JUST_EATEN, LANG_DRACONIC, NULL);
+            if(PlayerGUID)
             {
-                IsEating = false;
-                DoCast(m_creature, SPELL_JUST_EATEN);
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-                DoSay(SAY_JUST_EATEN, LANG_DRACONIC, NULL);
-                if(PlayerGUID)
+                Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
+                if(plr && plr->GetQuestStatus(10804) == QUEST_STATUS_INCOMPLETE)
                 {
-                    Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-                    if(plr && plr->GetQuestStatus(10804) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        plr->KilledMonster(22131, m_creature->GetGUID());
-                        Evade = true;
-                        PlayerGUID = 0;
-                    }
+                    plr->KilledMonster(22131, m_creature->GetGUID());
+                    Evade = true;
+                    PlayerGUID = 0;
                 }
-            }else EatTimer -= diff;
+            }
+        }else EatTimer -= diff;
 
         if(Evade)
             if(ResetTimer < diff)
                 EnterEvadeMode();
-            else ResetTimer -= diff;
+        else ResetTimer -= diff;
 
-            if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-                return;
+        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
 
-            if(CastTimer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_NETHER_BREATH);
-                CastTimer = 5000;
-            }else CastTimer -= diff;
+        if(CastTimer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_NETHER_BREATH);
+            CastTimer = 5000;
+        }else CastTimer -= diff;
 
-            DoMeleeAttackIfReady();
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -160,7 +160,7 @@ CreatureAI* GetAI_mob_mature_netherwing_drake(Creature *_creature)
 ####*/
 
 #define FACTION_DEFAULT     62
-#define FACTION_FRIENDLY    1840 // Not sure if this is correct, it was taken off of Mordenai.
+#define FACTION_FRIENDLY    1840                            // Not sure if this is correct, it was taken off of Mordenai.
 
 #define SPELL_HIT_FORCE_OF_NELTHARAKU   38762
 #define SPELL_FORCE_OF_NELTHARAKU       38775
@@ -269,38 +269,38 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         {
             if(Tapped)
                 if(FlyTimer < diff)
+            {
+                Tapped = false;
+                if(PlayerGUID)
                 {
-                    Tapped = false;
-                    if(PlayerGUID)
+                    Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
+                    if(plr && plr->GetQuestStatus(10854) == QUEST_STATUS_INCOMPLETE)
                     {
-                        Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-                        if(plr && plr->GetQuestStatus(10854) == QUEST_STATUS_INCOMPLETE)
+                        plr->KilledMonster(22316, m_creature->GetGUID());
+                        /*
+                        float x,y,z;
+                        m_creature->GetPosition(x,y,z);
+
+                        float dx,dy,dz;
+                        m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
+                        dz += 20; // so it's in the air, not ground*/
+
+                        float dx, dy, dz;
+
+                        Creature* EscapeDummy = SelectCreatureInGrid(CREATURE_ESCAPE_DUMMY, 30);
+                        if(EscapeDummy)
+                            EscapeDummy->GetPosition(dx, dy, dz);
+                        else
                         {
-                            plr->KilledMonster(22316, m_creature->GetGUID());
-                            /*
-                            float x,y,z;
-                            m_creature->GetPosition(x,y,z);
-
-                            float dx,dy,dz;
-                            m_creature->GetRandomPoint(x, y, z, 20, dx, dy, dz);
-                            dz += 20; // so it's in the air, not ground*/
-
-                            float dx, dy, dz;
-
-                            Creature* EscapeDummy = SelectCreatureInGrid(CREATURE_ESCAPE_DUMMY, 30);
-                            if(EscapeDummy)
-                                EscapeDummy->GetPosition(dx, dy, dz);
-                            else
-                            {
-                                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20, dx, dy, dz);
-                                dz += 25;
-                            }
-
-                            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
-                            m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
+                            m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 20, dx, dy, dz);
+                            dz += 25;
                         }
+
+                        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
+                        m_creature->GetMotionMaster()->MovePoint(1, dx, dy, dz);
                     }
-                }else FlyTimer -= diff;
+                }
+            }else FlyTimer -= diff;
             return;
         }
 
@@ -371,16 +371,16 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
     {
         if(PoisonTimer)
             if(PoisonTimer <= diff)
+        {
+            if(PlayerGUID)
             {
-                if(PlayerGUID)
-                {
-                    Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
-                    if(plr && plr->GetQuestStatus(11020) == QUEST_STATUS_INCOMPLETE)
-                        plr->KilledMonster(23209, m_creature->GetGUID());
-                }
-                PoisonTimer = 0;
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }else PoisonTimer -= diff;
+                Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));
+                if(plr && plr->GetQuestStatus(11020) == QUEST_STATUS_INCOMPLETE)
+                    plr->KilledMonster(23209, m_creature->GetGUID());
+            }
+            PoisonTimer = 0;
+            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        }else PoisonTimer -= diff;
     }
 };
 
@@ -530,26 +530,32 @@ bool GossipSelect_npc_murkblood_overseer(Player *player, Creature *_Creature, ui
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             player->ADD_GOSSIP_ITEM(0, "How dare you question an overseer of the Dragonmaw!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             player->ADD_GOSSIP_ITEM(0, "Who speaks of me? What are you talking about, broken?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             player->ADD_GOSSIP_ITEM(0, "Continue please.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             player->ADD_GOSSIP_ITEM(0, "Who are these bidders?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             player->ADD_GOSSIP_ITEM(0, "Well... yes.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
-            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());//correct id not known
+                                                            //correct id not known
+            player->SEND_GOSSIP_MENU(10940, _Creature->GetGUID());
             _Creature->CastSpell(player,41121,false);
             player->AreaExploredOrEventHappens(QUEST_11082);
             break;
@@ -616,13 +622,13 @@ bool GossipHello_npc_oronok_tornheart(Player *player, Creature *_Creature)
         player->PrepareQuestMenu( _Creature->GetGUID() );
     if (_Creature->isVendor())
         player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-    
+
     if (player->GetQuestStatus(10519) == QUEST_STATUS_INCOMPLETE)
     {
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ORONOK1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
         player->SEND_GOSSIP_MENU(10312, _Creature->GetGUID());
     }else
-        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
 
     return true;
 }
@@ -672,15 +678,15 @@ bool GossipSelect_npc_oronok_tornheart(Player *player, Creature *_Creature, uint
 
 bool QuestAccept_npc_karynaku(Player* player, Creature* creature, Quest const* quest)
 {
-    if(quest->GetQuestId() == 10870) // Ally of the Netherwing
+    if(quest->GetQuestId() == 10870)                        // Ally of the Netherwing
     {
         std::vector<uint32> nodes;
 
         nodes.resize(2);
-        nodes[0] = 161; // From Karynaku
-        nodes[1] = 162; // To Mordenai
+        nodes[0] = 161;                                     // From Karynaku
+        nodes[1] = 162;                                     // To Mordenai
         error_log("SD2: Player %s started quest 10870 which has disabled taxi node, need to be fixed in core", player->GetName());
-//        player->ActivateTaxiPathTo(nodes, 20811);
+        //player->ActivateTaxiPathTo(nodes, 20811);
     }
 
     return true;

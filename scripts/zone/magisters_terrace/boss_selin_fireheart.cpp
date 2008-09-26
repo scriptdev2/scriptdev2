@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Selin_Fireheart
@@ -25,10 +25,10 @@ EndScriptData */
 #include "def_magisters_terrace.h"
 
 #define SAY_AGGRO           "You only waste my time!"
-#define SOUND_AGGRO         12378 
+#define SOUND_AGGRO         12378
 
 #define SAY_ENERGY          "My hunger knows no bounds! "
-#define SOUND_ENERGY        12381 
+#define SOUND_ENERGY        12381
 
 #define SAY_EMPOWERED       "Yes! I am a god!"
 #define SOUND_EMPOWERED     12382
@@ -38,26 +38,26 @@ EndScriptData */
 
 #define SAY_KILL_2          "I am invincible!"
 #define SOUND_KILL_2        12385
- 
+
 #define SAY_DEATH           "No! More... I must have more!"
 #define SOUND_DEATH         12383
 
 //Crystal efect spells
-#define SPELL_FEL_CRYSTAL_COSMETIC        44374
-#define SPELL_FEL_CRYSTAL_DUMMY           44329
-#define SPELL_FEL_CRYSTAL_VISUAL          44355
-#define SPELL_MANA_RAGE                   44320             // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
+#define SPELL_FEL_CRYSTAL_COSMETIC      44374
+#define SPELL_FEL_CRYSTAL_DUMMY         44329
+#define SPELL_FEL_CRYSTAL_VISUAL        44355
+#define SPELL_MANA_RAGE                 44320               // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
 
 //Selin's spells
-#define SPELL_DRAIN_LIFE                  44294
-#define SPELL_FEL_EXPLOSION               44314   
+#define SPELL_DRAIN_LIFE                44294
+#define SPELL_FEL_EXPLOSION             44314
 
-#define SPELL_DRAIN_MANA                  46153             // Heroic only
+#define SPELL_DRAIN_MANA                46153               // Heroic only
 
-#define CRYSTALS_NUMBER           5
-#define DATA_CRYSTALS             6
+#define CRYSTALS_NUMBER                 5
+#define DATA_CRYSTALS                   6
 
-#define CREATURE_FEL_CRYSTAL      24722
+#define CREATURE_FEL_CRYSTAL            24722
 
 struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 {
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
             DoYell(SAY_ENERGY, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_ENERGY);
             CrystalChosen->CastSpell(CrystalChosen, SPELL_FEL_CRYSTAL_COSMETIC, true);
-            
+
             float x, y, z;                                  // coords that we move to, close to the crystal.
             CrystalChosen->GetClosePoint(x, y, z, m_creature->GetObjectSize(), CONTACT_DISTANCE);
 
@@ -213,31 +213,31 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
 
     void MovementInform(uint32 type, uint32 id)
     {
-         if(type == POINT_MOTION_TYPE && id == 1)
-         {
-             Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
-             if(CrystalChosen && CrystalChosen->isAlive())
-             {
-                 // Make the crystal attackable
-                 // We also remove NON_ATTACKABLE in case the database has it set.
-                 CrystalChosen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE + UNIT_FLAG_NOT_SELECTABLE);
-                 CrystalChosen->CastSpell(m_creature, SPELL_MANA_RAGE, true);
-                 IsDraining = true;
-             }
-             else
-             {
-                 // Make an error message in case something weird happened here
-                 error_log("SD2: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
-                 DrainingCrystal = false;
-             }
-         }
+        if(type == POINT_MOTION_TYPE && id == 1)
+        {
+            Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
+            if(CrystalChosen && CrystalChosen->isAlive())
+            {
+                // Make the crystal attackable
+                // We also remove NON_ATTACKABLE in case the database has it set.
+                CrystalChosen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE + UNIT_FLAG_NOT_SELECTABLE);
+                CrystalChosen->CastSpell(m_creature, SPELL_MANA_RAGE, true);
+                IsDraining = true;
+            }
+            else
+            {
+                // Make an error message in case something weird happened here
+                error_log("SD2: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
+                DrainingCrystal = false;
+            }
+        }
     }
-    
+
     void JustDied(Unit* killer)
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);     
-         
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
         if(!pInstance)
         {
             error_log(ERROR_INST_DATA);
@@ -304,22 +304,23 @@ struct MANGOS_DLL_DECL boss_selin_fireheartAI : public ScriptedAI
         {
             if(IsDraining)
                 if(EmpowerTimer < diff)
-                {
-                    IsDraining = false;
-                    DrainingCrystal = false;
-                    DoYell(SAY_EMPOWERED, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_EMPOWERED);
-                    Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
-                    if(CrystalChosen && CrystalChosen->isAlive())
-                        CrystalChosen->DealDamage(CrystalChosen, CrystalChosen->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); // Use Deal Damage to kill it, not setDeathState.
-                 
-                    CrystalGUID = 0;
+            {
+                IsDraining = false;
+                DrainingCrystal = false;
+                DoYell(SAY_EMPOWERED, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_EMPOWERED);
+                Unit* CrystalChosen = Unit::GetUnit(*m_creature, CrystalGUID);
+                if(CrystalChosen && CrystalChosen->isAlive())
+                    // Use Deal Damage to kill it, not setDeathState.
+                    CrystalChosen->DealDamage(CrystalChosen, CrystalChosen->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
-                    m_creature->GetMotionMaster()->Clear();
-                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-                }else EmpowerTimer -= diff;
+                CrystalGUID = 0;
+
+                m_creature->GetMotionMaster()->Clear();
+                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+            }else EmpowerTimer -= diff;
         }
-        
+
         DoMeleeAttackIfReady();                             // No need to check if we are draining crystal here, as the spell has a stun.
     }
 };
@@ -348,7 +349,8 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
             {
                 if(((boss_selin_fireheartAI*)Selin->AI())->CrystalGUID == m_creature->GetGUID())
                 {
-                    ((boss_selin_fireheartAI*)Selin->AI())->DrainingCrystal = false; // Set this to false if we are the creature that Selin is draining so his AI flows properly
+                    // Set this to false if we are the creature that Selin is draining so his AI flows properly
+                    ((boss_selin_fireheartAI*)Selin->AI())->DrainingCrystal = false;
                     ((boss_selin_fireheartAI*)Selin->AI())->IsDraining = false;
                     ((boss_selin_fireheartAI*)Selin->AI())->EmpowerTimer = 10000;
                     if(Selin->getVictim())
@@ -381,4 +383,3 @@ void AddSC_boss_selin_fireheart()
     newscript->GetAI = GetAI_mob_fel_crystal;
     m_scripts[nrscripts++] = newscript;
 }
-

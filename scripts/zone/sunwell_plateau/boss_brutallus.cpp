@@ -1,18 +1,18 @@
 /* Copyright © 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 /* ScriptData
 SDName: Boss_Brutallus
@@ -39,7 +39,7 @@ EndScriptData */
 #define YELL_KILL3 "Too easy!"
 #define SOUND_KILL3 12466
 
-#define YELL_CHARGE "I will crush you!" //I think it use this for stomp. No?
+#define YELL_CHARGE "I will crush you!"                     //I think it use this for stomp. No?
 #define SOUND_CHARGE 12460
 
 #define YELL_DEATH "Gah! Well done... Now... this gets... interesting..."
@@ -85,23 +85,22 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
-
     void KilledUnit(Unit* victim)
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(YELL_KILL1,LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL1);
-            break;
-        case 1:
-            DoYell(YELL_KILL2,LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL2);
-            break;
-        case 2:
-            DoYell(YELL_KILL3,LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL3);
-            break;
+            case 0:
+                DoYell(YELL_KILL1,LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL1);
+                break;
+            case 1:
+                DoYell(YELL_KILL2,LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL2);
+                break;
+            case 2:
+                DoYell(YELL_KILL3,LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL3);
+                break;
         }
     }
 
@@ -113,7 +112,6 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -121,18 +119,18 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
         {
             switch(rand()%3)
             {
-            case 0:
-                DoYell(YELL_LOVE1,LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_LOVE1);
-                break;
-            case 1:
-                DoYell(YELL_LOVE2,LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_LOVE2);
-                break;
-            case 2:
-                DoYell(YELL_LOVE3,LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_LOVE3);
-                break;
+                case 0:
+                    DoYell(YELL_LOVE1,LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_LOVE1);
+                    break;
+                case 1:
+                    DoYell(YELL_LOVE2,LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_LOVE2);
+                    break;
+                case 2:
+                    DoYell(YELL_LOVE3,LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_LOVE3);
+                    break;
             }
             LoveTimer = 15000 + rand()%8000;
         }else LoveTimer -= diff;
@@ -160,6 +158,7 @@ struct MANGOS_DLL_DECL boss_brutallusAI : public ScriptedAI
             BurnTimer = 60000;
         }
         else BurnTimer -= diff;
+
         DoMeleeAttackIfReady();
 
         if(BerserkTimer < diff)

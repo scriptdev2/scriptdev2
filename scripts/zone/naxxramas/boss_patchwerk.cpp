@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Patchwerk
@@ -52,9 +52,9 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 
     void Reset()
     {
-        HatefullStrike_Timer = 1200;        //1.2 seconds
-        Enrage_Timer = 420000;              //7 minutes 420,000
-        Slimebolt_Timer = 450000;           //7.5 minutes 450,000
+        HatefullStrike_Timer = 1200;                        //1.2 seconds
+        Enrage_Timer = 420000;                              //7 minutes 420,000
+        Slimebolt_Timer = 450000;                           //7.5 minutes 450,000
         Enraged = false;
     }
 
@@ -75,21 +75,20 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if (rand()%2)
-                {
-                    DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                }
-                else
-                {
-                    DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                }
+        if (rand()%2)
+        {
+            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+        }
+        else
+        {
+            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+        }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -116,28 +115,22 @@ struct MANGOS_DLL_DECL boss_patchwerkAI : public ScriptedAI
             if (pMostHPTarget)
                 DoCast(pMostHPTarget, SPELL_HATEFULSTRIKE);
 
-            //1.2 seconds until we should cast this agian
             HatefullStrike_Timer = 1200;
         }else HatefullStrike_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer < diff)
         {
-            //Cast Berserker Rage
             DoCast(m_creature, SPELL_BERSERK);
             DoTextEmote(EMOTE_BERSERK, m_creature->getVictim());
 
-            //5 minutes until we should cast this agian
             Enrage_Timer = 300000;
         }else Enrage_Timer -= diff;
 
         //Slimebolt_Timer
         if (Slimebolt_Timer < diff)
         {
-            //Cast Slime bolt
             DoCast(m_creature->getVictim(),SPELL_SLIMEBOLT);
-
-            //5 seconds until we should cast this agian
             Slimebolt_Timer = 5000;
         }else Slimebolt_Timer -= diff;
 
@@ -156,7 +149,6 @@ CreatureAI* GetAI_boss_patchwerk(Creature *_Creature)
 {
     return new boss_patchwerkAI (_Creature);
 }
-
 
 void AddSC_boss_patchwerk()
 {

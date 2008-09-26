@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Harbinger_Skyriss
@@ -160,7 +160,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     }
 
     void JustDied(Unit* Killer)
-    { 
+    {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_DEATH);
         if( pInstance )
@@ -174,14 +174,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-            break;
-        case 1:
-            DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-            break;
+            case 0:
+                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
+            case 1:
+                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;
         }
     }
 
@@ -215,29 +215,29 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             {
                 switch( Intro_Phase )
                 {
-                case 1:
-                    DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_INTRO);
-                    ++Intro_Phase;
-                    Intro_Timer = 25000;
-                    break;
-                case 2:
-                    DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                    if( Unit *mellic = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MELLICHAR)) )
-                    {
-                        //should have a better way to do this. possibly spell exist.
-                        mellic->setDeathState(JUST_DIED);
-                        mellic->SetHealth(0);
-                    }
-                    ++Intro_Phase;
-                    Intro_Timer = 3000;
-                    break;
-                case 3:
-                    Intro = true;
-                    break;
-                default:
-                    break;
+                    case 1:
+                        DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_INTRO);
+                        ++Intro_Phase;
+                        Intro_Timer = 25000;
+                        break;
+                    case 2:
+                        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                        if( Unit *mellic = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MELLICHAR)) )
+                        {
+                            //should have a better way to do this. possibly spell exist.
+                            mellic->setDeathState(JUST_DIED);
+                            mellic->SetHealth(0);
+                        }
+                        ++Intro_Phase;
+                        Intro_Timer = 3000;
+                        break;
+                    case 3:
+                        Intro = true;
+                        break;
+                    default:
+                        break;
                 }
             }else Intro_Timer -=diff;
         }
@@ -273,14 +273,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_FEAR_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_FEAR_1);
-                break;
-            case 1:
-                DoYell(SAY_FEAR_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_FEAR_2);
-                break;
+                case 0:
+                    DoYell(SAY_FEAR_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_FEAR_1);
+                    break;
+                case 1:
+                    DoYell(SAY_FEAR_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_FEAR_2);
+                    break;
             }
 
             if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
@@ -298,14 +298,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_MIND_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_MIND_1);
-                break;
-            case 1:
-                DoYell(SAY_MIND_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_MIND_2);
-                break;
+                case 0:
+                    DoYell(SAY_MIND_1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_MIND_1);
+                    break;
+                case 1:
+                    DoYell(SAY_MIND_2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_MIND_2);
+                    break;
             }
 
             if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
@@ -354,10 +354,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
     ScriptedInstance *pInstance;
     bool HeroicMode;
 
-    void Reset()
-    { }
-    void Aggro(Unit *who)
-    { }
+    void Reset() { }
+
+    void Aggro(Unit *who) { }
 };
 
 CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature *_Creature)

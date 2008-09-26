@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Highlord_Mograine
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -29,7 +29,7 @@ EndScriptData */
 
 // highlord mograine
 #define SPELL_MARK_OF_MOGRAINE     28834
-#define SPELL_RIGHTEOUS_FIRE       28882 // Applied as a 25% chance on melee hit to proc. m_creature->GetVictim()
+#define SPELL_RIGHTEOUS_FIRE       28882                    // Applied as a 25% chance on melee hit to proc. m_creature->GetVictim()
 
 #define SAY_TAUNT1                 "Enough prattling. Let them come! We shall grind their bones to dust."
 #define SAY_TAUNT2                 "Conserve your anger! Harness your rage! You will all have outlets for your frustration soon enough."
@@ -65,9 +65,9 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     bool ShieldWall2;
 
     void Reset()
-    {       
-        Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
-        RighteousFire_Timer = 2000; // applied approx 1 out of 4 attacks
+    {
+        Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+        RighteousFire_Timer = 2000;                         // applied approx 1 out of 4 attacks
         ShieldWall1 = true;
         ShieldWall2 = true;
     }
@@ -78,20 +78,18 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
         {
             switch(rand()%3)
             {
-            case 0:
-                DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                break;
-
-            case 1:
-                DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                break;
-
-            case 2:
-                DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                break;
+                case 0:
+                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                    break;
+                case 1:
+                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                    break;
+                case 2:
+                    DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                    break;
             }
         }
     }
@@ -100,15 +98,14 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-            break;
-
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+                break;
         }
     }
 
@@ -125,7 +122,6 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -136,7 +132,7 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
             Mark_Timer = 12000;
         }else Mark_Timer -= diff;
 
-        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
             if(ShieldWall1)
@@ -157,21 +153,20 @@ struct MANGOS_DLL_DECL boss_highlord_mograineAI : public ScriptedAI
         // Righteous Fire
         if(RighteousFire_Timer < diff)
         {
-            if(rand()%4 == 1) // 1/4
+            if(rand()%4 == 1)                               // 1/4
             {
                 DoCast(m_creature->getVictim(),SPELL_RIGHTEOUS_FIRE);
             }
-            RighteousFire_Timer = 2000; // right
+            RighteousFire_Timer = 2000;
         }else RighteousFire_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_highlord_mograine(Creature *_Creature)
 {
     return new boss_highlord_mograineAI (_Creature);
 }
-
 
 void AddSC_boss_highlord_mograine()
 {

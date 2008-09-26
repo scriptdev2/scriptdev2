@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Arcanist_Doan
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
@@ -76,14 +76,12 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //If we are <50% hp cast Arcane Bubble and start casting SPECIAL FIRE AOE
         if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
-
             if (Polymorph_Timer < diff)
             {
                 Unit* target = NULL;
@@ -116,66 +114,48 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
         //AoESilence_Timer
         if (AoESilence_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_AOESILENCE);
-
-            //60 seconds until we should cast this agian
             AoESilence_Timer = 30000;
         }else AoESilence_Timer -= diff;
 
         //ArcaneExplosion3_Timer
         if (ArcaneExplosion3_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION3);
-
-            //8 seconds until we should cast this agian
             ArcaneExplosion3_Timer = 8000;
         }else ArcaneExplosion3_Timer -= diff;
 
         //ArcaneExplosion4_Timer
         if (ArcaneExplosion4_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ARCANEEXPLOSION4);
-
-            //10 seconds until we should cast this agian
             ArcaneExplosion4_Timer = 10000;
         }else ArcaneExplosion4_Timer -= diff;
 
         //Blink_Timer
         if (Blink_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_BLINK);
-
-            //30 seconds until we should cast this agian
             Blink_Timer = 30000;
         }else Blink_Timer -= diff;
 
         //Fireball_Timer
         if (Fireball_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FIREBALL);
-
-            //12 seconds until we should cast this agian
             Fireball_Timer = 12000;
         }else Fireball_Timer -= diff;
 
         //ManaShiled4_Timer
         if (ManaShield4_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_MANASHIELD4);
-
-            //35 seconds until we should cast this agian
             ManaShield4_Timer = 70000;
         }else ManaShield4_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_arcanist_doan(Creature *_Creature)
 {
     return new boss_arcanist_doanAI (_Creature);

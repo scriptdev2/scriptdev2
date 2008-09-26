@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Arcatraz
@@ -167,14 +167,14 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL_1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-            break;
-        case 1:
-            DoYell(SAY_KILL_2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-            break;
+            case 0:
+                DoYell(SAY_KILL_1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
+            case 1:
+                DoYell(SAY_KILL_2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;
         }
     }
 
@@ -475,8 +475,8 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                     case 2:
                         switch( rand()%2 )
                         {
-                        case 0: m_creature->SummonCreature(ENTRY_TRICKSTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                        case 1: m_creature->SummonCreature(ENTRY_PH_HUNTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: m_creature->SummonCreature(ENTRY_TRICKSTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 1: m_creature->SummonCreature(ENTRY_PH_HUNTER,478.326,-148.505,42.56,3.19,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                         }
                         break;
                     case 3:
@@ -489,15 +489,15 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                     case 5:
                         switch( rand()%2 )
                         {
-                        case 0: m_creature->SummonCreature(ENTRY_AKKIRIS,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                        case 1: m_creature->SummonCreature(ENTRY_SULFURON,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: m_creature->SummonCreature(ENTRY_AKKIRIS,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 1: m_creature->SummonCreature(ENTRY_SULFURON,420.179,-174.396,42.58,0.02,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                         }
                         break;
                     case 6:
                         switch( rand()%2 )
                         {
-                        case 0: m_creature->SummonCreature(ENTRY_TW_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                        case 1: m_creature->SummonCreature(ENTRY_BL_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: m_creature->SummonCreature(ENTRY_TW_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 1: m_creature->SummonCreature(ENTRY_BL_DRAK,471.795,-174.58,42.58,3.06,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
                         }
                         break;
                     case 7:

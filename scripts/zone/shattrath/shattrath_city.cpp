@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Shattrath_City
@@ -82,6 +82,7 @@ bool GossipHello_npc_raliq_the_drunk(Player *player, Creature *_Creature )
     player->SEND_GOSSIP_MENU(9440, _Creature->GetGUID());
     return true;
 }
+
 bool GossipSelect_npc_raliq_the_drunk(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if( action == GOSSIP_ACTION_INFO_DEF+1 )
@@ -121,11 +122,11 @@ struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
     {
         if( done_by->GetTypeId() == TYPEID_PLAYER )
             if( (m_creature->GetHealth()-damage)*100 / m_creature->GetMaxHealth() < 20 )
-            {
-                ((Player*)done_by)->GroupEventHappens(QUEST_10004,m_creature);
-                damage = 0;
-                EnterEvadeMode();
-            }
+        {
+            ((Player*)done_by)->GroupEventHappens(QUEST_10004,m_creature);
+            damage = 0;
+            EnterEvadeMode();
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -166,12 +167,12 @@ bool GossipHello_npc_salsalabim(Player *player, Creature *_Creature)
 /*
 ##################################################
 Shattrath City Flask Vendors provides flasks to people exalted with 3 factions:
-Haldor the Compulsive 
+Haldor the Compulsive
 Arcanist Xorith
 Both sell special flasks for use in Outlands 25man raids only,
 purchasable for one Mark of Illidari each
 Purchase requires exalted reputation with Scryers/Aldor, Cenarion Expedition and The Sha'tar
-################################################## 
+##################################################
 */
 
 bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature *_Creature)
@@ -201,7 +202,7 @@ bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature *_Creature)
         else
         {
             player->SEND_GOSSIP_MENU(11084, _Creature->GetGUID());
-        }        
+        }
     }
 
     return true;
@@ -228,6 +229,7 @@ bool GossipHello_npc_zephyr(Player *player, Creature *_Creature)
 
     return true;
 }
+
 bool GossipSelect_npc_zephyr(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
     if( action == GOSSIP_ACTION_INFO_DEF+1 )

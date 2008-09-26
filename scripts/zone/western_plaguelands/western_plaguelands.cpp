@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Western_Plaguelands
@@ -56,29 +56,29 @@ bool GossipSelect_npcs_dithers_and_arbington(Player *player, Creature *_Creature
 {
     switch(action)
     {
-    case GOSSIP_ACTION_TRADE:
-        player->SEND_VENDORLIST( _Creature->GetGUID() );
-        break;
-    case GOSSIP_ACTION_INFO_DEF+1:
-        player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(3980, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(3981, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+3:
-        player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(3982, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+4:
-        player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(3983, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+5:
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->CastSpell(player, 17529, false);
-        break;
+        case GOSSIP_ACTION_TRADE:
+            player->SEND_VENDORLIST( _Creature->GetGUID() );
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(3980, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(3981, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(3982, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM(0, "Thanks, i need a Vitreous Focuser", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(3983, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->CLOSE_GOSSIP_MENU();
+            _Creature->CastSpell(player, 17529, false);
+            break;
     }
     return true;
 }
@@ -115,15 +115,15 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
             switch(m_creature->GetAreaId())
             {
                 case 199:                                   //felstone
-                    if( ((Player*)who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE || 
+                    if( ((Player*)who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE ||
                         ((Player*)who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE )
                     {
                         DoSpawnCreature(11075,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
                         DoDie();
-                    } 
+                    }
                     break;
                 case 200:                                   //dalson
-                    if( ((Player*)who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE || 
+                    if( ((Player*)who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE ||
                         ((Player*)who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE )
                     {
                         DoSpawnCreature(11077,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
@@ -131,7 +131,7 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
                     }
                     break;
                 case 201:                                   //gahrron
-                    if( ((Player*)who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE || 
+                    if( ((Player*)who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
                         ((Player*)who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE )
                     {
                         DoSpawnCreature(11078,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL npc_the_scourge_cauldronAI : public ScriptedAI
                     }
                     break;
                 case 202:                                   //writhing
-                    if( ((Player*)who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE || 
+                    if( ((Player*)who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
                         ((Player*)who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE )
                     {
                         DoSpawnCreature(11076,0,0,0,m_creature->GetOrientation(),TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
@@ -156,7 +156,7 @@ CreatureAI* GetAI_npc_the_scourge_cauldron(Creature *_Creature)
 }
 
 /*######
-## 
+##
 ######*/
 
 void AddSC_western_plaguelands()

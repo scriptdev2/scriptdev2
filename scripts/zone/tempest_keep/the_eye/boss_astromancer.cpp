@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/   
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: boss_astromancer
 SD%Complete: 75
-SDComment: 
+SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
@@ -37,10 +37,12 @@ EndScriptData */
 #define SOUND_PHASE2                         11140
 #define SAY_PHASE21                          "Ha ha ha! You are hopelessly outmatched!"
 #define SOUND_PHASE21                        11139
+
 #define SAY_VOID                             "Enough of this! Now I call upon the fury of the cosmos itself."
 //#define SOUND_VOID                         Not found :(
 #define SAY_VOID1                            "I become ONE... with the VOID!"
 //#define SOUND_VOID1                        Not found :(
+
 #define SAY_KILL1                            "Your soul belongs to the Abyss!"
 #define SOUND_KILL1                          11136
 #define SAY_KILL2                            "By the blood of the Highborne!"
@@ -148,20 +150,18 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL1);
-            break;
-
-        case 1:
-            DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL2);
-            break;
-
-        case 2:
-            DoYell(SAY_KILL3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_KILL3);
-            break;
+            case 0:
+                DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL1);
+                break;
+            case 1:
+                DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL2);
+                break;
+            case 2:
+                DoYell(SAY_KILL3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_KILL3);
+                break;
         }
     }
 
@@ -204,15 +204,14 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0: z = 1; break;
-        case 1: z = -1; break;
+            case 0: z = 1; break;
+            case 1: z = -1; break;
         }
         return (z*sqrt(radius*radius - (x - CENTER_X)*(x - CENTER_X)) + CENTER_Y);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -227,15 +226,14 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 {
                     switch (rand()%2)
                     {
-                    case 0:
-                        DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-                        break;
-
-                    case 1:
-                        DoYell(SAY_PHASE21, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_PHASE21);
-                        break;
+                        case 0:
+                            DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_PHASE2);
+                            break;
+                        case 1:
+                            DoYell(SAY_PHASE21, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_PHASE21);
+                            break;
                     }
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->SetVisibility(VISIBILITY_OFF);
@@ -270,7 +268,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                                 Jump_Timer=8000;
                                 WrathTarget=currentUnit->GetGUID();
                                 hasJumped = true;
-                                break;                                               
+                                break;
                             }
                         }
                     }
@@ -299,7 +297,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             //MarkOfTheSolarian_Timer
             if (MarkOfTheSolarian_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), MARK_OF_SOLARIAN);            
+                DoCast(m_creature->getVictim(), MARK_OF_SOLARIAN);
                 MarkOfTheSolarian_Timer = 45000;
             }else MarkOfTheSolarian_Timer -= diff;
 
@@ -397,9 +395,11 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 int i = rand()%3;
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->Relocate(Portals[i][0], Portals[i][1], Portals[i][2], CENTER_O);
+
                 for (int j=0; j<=2; j++)
                     if (j!=i)
                         SummonMinion(SOLARIUM_PRIEST, Portals[j][0], Portals[j][1], Portals[j][2]);
+
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_creature->SetVisibility(VISIBILITY_ON);
 
@@ -424,7 +424,7 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
                 DoCast(m_creature->getVictim(), SPELL_VOID_BOLT);
                 VoidBolt_Timer = 10000;
             }else VoidBolt_Timer -= diff;
-        } 
+        }
 
         //When Solarian reaches 20% she will transform into a huge void walker.
         if(Phase != 4 && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth())<20))
@@ -436,13 +436,12 @@ struct MANGOS_DLL_DECL boss_high_astromancer_solarianAI : public ScriptedAI
             m_creature->SetVisibility(VISIBILITY_ON);
             switch(rand()%2)
             {
-            case 0:
-                DoYell(SAY_VOID, LANG_UNIVERSAL, NULL);
-                break;
-
-            case 1:
-                DoYell(SAY_VOID1, LANG_UNIVERSAL, NULL);
-                break;
+                case 0:
+                    DoYell(SAY_VOID, LANG_UNIVERSAL, NULL);
+                    break;
+                case 1:
+                    DoYell(SAY_VOID1, LANG_UNIVERSAL, NULL);
+                    break;
             }
 
             m_creature->SetArmor(WV_ARMOR);
@@ -479,7 +478,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who)
-    { 
+    {
         if (!who || m_creature->getVictim())
             return;
 
@@ -492,7 +491,6 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 DoStartAttackAndMovement(who);
-
             }
         }
     }
@@ -508,15 +506,15 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
 
             switch(rand()%2)
             {
-            case 0:
-                if(pInstance)
-                    target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ASTROMANCER));
-                break;
-
-            case 1:
-                target = m_creature;
-                break;
+                case 0:
+                    if(pInstance)
+                        target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ASTROMANCER));
+                    break;
+                case 1:
+                    target = m_creature;
+                    break;
             }
+
             if(target)
             {
                 DoCast(target,SOLARIUM_HEAL);
@@ -530,7 +528,7 @@ struct MANGOS_DLL_DECL mob_solarium_priestAI : public ScriptedAI
             holysmiteTimer = 4000;
         } else holysmiteTimer -= diff;
 
-        if (aoesilenceTimer < diff) 
+        if (aoesilenceTimer < diff)
         {
             DoCast(m_creature->getVictim(), SOLARIUM_SILENCE);
             aoesilenceTimer = 13000;

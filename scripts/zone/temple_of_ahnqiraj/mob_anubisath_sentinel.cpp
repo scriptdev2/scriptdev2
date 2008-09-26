@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: mob_anubisath_sentinel
@@ -20,7 +20,6 @@ SD%Complete: 95
 SDComment: Shadow storm is not properly implemented in core it should only target ppl outside of melee range.
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
-
 
 #include "precompiled.h"
 #include "WorldPacket.h"
@@ -34,44 +33,44 @@ EndScriptData */
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 
+#define SPELL_MENDING_BUFF      2147
 
-#define SPELL_MENDING_BUFF     2147 
-
-#define SPELL_KNOCK_BUFF    21737
-#define SPELL_KNOCK        25778
-#define SPELL_MANAB_BUFF      812
-#define SPELL_MANAB        25779
+#define SPELL_KNOCK_BUFF        21737
+#define SPELL_KNOCK             25778
+#define SPELL_MANAB_BUFF        812
+#define SPELL_MANAB             25779
 
 #define SPELL_REFLECTAF_BUFF    13022
-#define SPELL_REFLECTSFr_BUFF    19595
-#define SPELL_THORNS_BUFF    25777
+#define SPELL_REFLECTSFr_BUFF   19595
+#define SPELL_THORNS_BUFF       25777
 
-#define SPELL_THUNDER_BUFF     2834
-#define SPELL_THUNDER         8732
+#define SPELL_THUNDER_BUFF      2834
+#define SPELL_THUNDER           8732
 
-#define SPELL_MSTRIKE_BUFF     9347
-#define SPELL_MSTRIKE        24573
+#define SPELL_MSTRIKE_BUFF      9347
+#define SPELL_MSTRIKE           24573
 
-#define SPELL_STORM_BUFF     2148
-#define SPELL_STORM        26546
+#define SPELL_STORM_BUFF        2148
+#define SPELL_STORM             26546
 
 class NearbyAQSentinel
 {
-public:
-    NearbyAQSentinel(Unit const* obj) : i_obj(obj) {}
-    bool operator()(Unit* u)
-    {
-        if (u->GetEntry() == 15264 && i_obj->IsWithinDistInMap(u, 70) && !u->isDead())
-            return true;
-        else
-            return false;
-    }
-private:
-    Unit const* i_obj;
+    public:
+        NearbyAQSentinel(Unit const* obj) : i_obj(obj) {}
+        bool operator()(Unit* u)
+        {
+            if (u->GetEntry() == 15264 && i_obj->IsWithinDistInMap(u, 70) && !u->isDead())
+                return true;
+            else
+                return false;
+        }
+    private:
+        Unit const* i_obj;
 };
 
 struct MANGOS_DLL_DECL aqsentinelAI;
-class MANGOS_DLL_DECL SentinelAbilityAura : public Aura {
+class MANGOS_DLL_DECL SentinelAbilityAura : public Aura
+{
     public:
         ~SentinelAbilityAura();
         Unit* GetTriggerTarget() const;
@@ -91,30 +90,22 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
     {
         switch (asel)
         {
-            case 0:
-                ability = SPELL_MENDING_BUFF;break;
-            case 1:
-                ability = SPELL_KNOCK_BUFF;break;
-            case 2:
-                ability = SPELL_MANAB_BUFF;break;
-            case 3:
-                ability = SPELL_REFLECTAF_BUFF;break;
-            case 4:
-                ability = SPELL_REFLECTSFr_BUFF;break;
-            case 5:
-                ability = SPELL_THORNS_BUFF;break;
-            case 6:
-                ability = SPELL_THUNDER_BUFF;break;
-            case 7:
-                ability = SPELL_MSTRIKE_BUFF;break;
-            case 8:
-                ability = SPELL_STORM_BUFF;break;
+            case 0: ability = SPELL_MENDING_BUFF;break;
+            case 1: ability = SPELL_KNOCK_BUFF;break;
+            case 2: ability = SPELL_MANAB_BUFF;break;
+            case 3: ability = SPELL_REFLECTAF_BUFF;break;
+            case 4: ability = SPELL_REFLECTSFr_BUFF;break;
+            case 5: ability = SPELL_THORNS_BUFF;break;
+            case 6: ability = SPELL_THUNDER_BUFF;break;
+            case 7: ability = SPELL_MSTRIKE_BUFF;break;
+            case 8: ability = SPELL_STORM_BUFF;break;
         }
     }
 
-    aqsentinelAI(Creature *c) : ScriptedAI(c) {
+    aqsentinelAI(Creature *c) : ScriptedAI(c)
+    {
         ClearBudyList();
-        abselected = 0; // just initialization of variable
+        abselected = 0;                                     // just initialization of variable
         Reset();
     }
 
@@ -129,7 +120,8 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
     {
         if (c==m_creature)
             return;
-        for (int i=0; i<3; i++){
+        for (int i=0; i<3; i++)
+        {
             if (nearby[i] == c)
                 return;
             if (!nearby[i])
@@ -179,7 +171,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
-        
+
         std::list<Creature*> assistList;
 
         NearbyAQSentinel u_check(nears);
@@ -205,7 +197,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
                 }
             }
         }
-        return 0; // should never happen
+        return 0;                                           // should never happen
     }
 
     void GetOtherSentinels(Unit *who)
@@ -232,6 +224,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
     }
 
     bool gatherOthersWhenAggro;
+
     void Reset()
     {
         if (!m_creature->isDead())
@@ -271,6 +264,7 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
     {
         if (gatherOthersWhenAggro)
             GetOtherSentinels(who);
+
         GainSentinelAbility(ability);
         DoZoneInCombat();
     }
@@ -303,12 +297,11 @@ struct MANGOS_DLL_DECL aqsentinelAI : public ScriptedAI
         }
         return NULL;
     }
-}; 
+};
 CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature *_Creature)
 {
     return new aqsentinelAI (_Creature);
 }
-
 
 void AddSC_mob_anubisath_sentinel()
 {
@@ -320,7 +313,8 @@ void AddSC_mob_anubisath_sentinel()
 }
 
 SentinelAbilityAura::~SentinelAbilityAura() {}
-Unit* SentinelAbilityAura::GetTriggerTarget() const {
+Unit* SentinelAbilityAura::GetTriggerTarget() const
+{
     switch (abilityId)
     {
         case SPELL_KNOCK_BUFF:
@@ -340,6 +334,7 @@ Unit* SentinelAbilityAura::GetTriggerTarget() const {
             return aOwner->m_creature;
     }
 }
+
 SentinelAbilityAura::SentinelAbilityAura(aqsentinelAI *abilityOwner, SpellEntry *spell, uint32 ability, uint32 eff)
 : Aura(spell, eff, NULL, abilityOwner->m_creature, abilityOwner->m_creature, NULL)
 {

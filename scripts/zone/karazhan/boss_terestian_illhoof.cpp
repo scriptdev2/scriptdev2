@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Terestian_Illhoof
@@ -24,18 +24,18 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_karazhan.h"
 
-#define SPELL_SUMMON_DEMONCHAINS    30120 // Summons demonic chains that maintain the ritual of sacrifice.
-#define SPELL_DEMON_CHAINS          30206 // Instant - Visual Effect 
-#define SPELL_ENRAGE                23537 // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
-#define SPELL_SHADOW_BOLT           30055 // Hurls a bolt of dark magic at an enemy, inflicting Shadow damage.
-#define SPELL_SACRIFICE             30115 // Teleports and adds the debuff
-#define SPELL_BERSERK               32965 // Increases attack speed by 75%. Periodically casts Shadow Bolt Volley.
+#define SPELL_SUMMON_DEMONCHAINS    30120                   // Summons demonic chains that maintain the ritual of sacrifice.
+#define SPELL_DEMON_CHAINS          30206                   // Instant - Visual Effect
+#define SPELL_ENRAGE                23537                   // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
+#define SPELL_SHADOW_BOLT           30055                   // Hurls a bolt of dark magic at an enemy, inflicting Shadow damage.
+#define SPELL_SACRIFICE             30115                   // Teleports and adds the debuff
+#define SPELL_BERSERK               32965                   // Increases attack speed by 75%. Periodically casts Shadow Bolt Volley.
 
-#define SPELL_FIREBOLT              18086 // Blasts a target for 150 Fire damage.
+#define SPELL_FIREBOLT              18086                   // Blasts a target for 150 Fire damage.
 
-#define SPELL_BROKEN_PACT           30065 // All damage taken increased by 25%.
-#define SPELL_AMPLIFY_FLAMES        30053 // Increases the Fire damage taken by an enemy by 500 for 25 sec.
-#define SPELL_FIREBOLT              18086 // Blasts a target for 150 Fire damage.
+#define SPELL_BROKEN_PACT           30065                   // All damage taken increased by 25%.
+#define SPELL_AMPLIFY_FLAMES        30053                   // Increases the Fire damage taken by an enemy by 500 for 25 sec.
+#define SPELL_FIREBOLT              18086                   // Blasts a target for 150 Fire damage.
 
 #define SAY_SLAY1           "Your blood will anoint my circle."
 #define SOUND_SLAY1         9264
@@ -76,7 +76,7 @@ float PortalLocations[2][2]=
 
 struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
 {
-    mob_kilrekAI(Creature *c) : ScriptedAI(c) 
+    mob_kilrekAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
     {
         TerestianGUID = 0;
 
-        AmplifyTimer = 0;      
+        AmplifyTimer = 0;
     }
 
     void Aggro(Unit *who)
@@ -234,7 +234,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             if(Kilrek && (!Kilrek->SelectHostilTarget() && !Kilrek->getVictim()))
                 Kilrek->AddThreat(who, 1.0f);
 
-            pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS); // In Progress
+            pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS);
         }else ERROR_INST_DATA(m_creature);
     }
 
@@ -271,7 +271,7 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
         if(pInstance)
-            pInstance->SetData(DATA_TERESTIAN_EVENT, DONE); // Complete
+            pInstance->SetData(DATA_TERESTIAN_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -371,10 +371,10 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
 
         if(!Berserk)
             if(BerserkTimer < diff)
-            {
-                DoCast(m_creature, SPELL_BERSERK);
-                Berserk = true;
-            }else BerserkTimer -= diff;
+        {
+            DoCast(m_creature, SPELL_BERSERK);
+            Berserk = true;
+        }else BerserkTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -436,7 +436,7 @@ void AddSC_boss_terestian_illhoof()
     newscript->Name="boss_terestian_illhoof";
     newscript->GetAI = GetAI_boss_terestian_illhoof;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="mob_karazhan_imp";
     newscript->GetAI = GetAI_mob_karazhan_imp;

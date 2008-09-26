@@ -1,28 +1,29 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Maexxna
 SD%Complete: 80
-SDComment: 
+SDComment:
+SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_WEBTRAP           28622   //Spell is normally used by the webtrap on the wall NOT by Maexxna
+#define SPELL_WEBTRAP           28622                       //Spell is normally used by the webtrap on the wall NOT by Maexxna
 #define SPELL_WEBSPRAY          29484
 #define SPELL_POISONSHOCK       28741
 #define SPELL_NECROTICPOISON    28776
@@ -76,20 +77,16 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-
     }
 
     void UpdateAI(const uint32 diff)
     {
-
     }
 };
-
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 {
@@ -104,11 +101,11 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
 
     void Reset()
     {
-        WebTrap_Timer = 20000;          //20 sec init, 40 sec normal
-        WebSpray_Timer = 40000;         //40 seconds
-        PoisonShock_Timer = 20000;      //20 seconds
-        NecroticPoison_Timer = 30000;   //30 seconds
-        SummonSpiderling_Timer = 30000; //30 sec init, 40 sec normal
+        WebTrap_Timer = 20000;                              //20 sec init, 40 sec normal
+        WebSpray_Timer = 40000;                             //40 seconds
+        PoisonShock_Timer = 20000;                          //20 seconds
+        NecroticPoison_Timer = 30000;                       //30 seconds
+        SummonSpiderling_Timer = 30000;                     //30 sec init, 40 sec normal
         Enraged = false;
     }
 
@@ -128,15 +125,17 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         //begin + 1 , so we don't target the one with the highest threat
         std::list<HostilReference *>::iterator itr = t_list.begin();
         std::advance(itr, 1);
-        for( ; itr!= t_list.end(); ++itr) //store the threat list in a different container
+        for( ; itr!= t_list.end(); ++itr)                   //store the threat list in a different container
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+                                                            //only on alive players
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
                 targets.push_back( target);
         }
 
         while(targets.size() > 3)
-            targets.erase(targets.begin()+rand()%targets.size()); //cut down to size if we have more than 3 targets
+                                                            //cut down to size if we have more than 3 targets
+            targets.erase(targets.begin()+rand()%targets.size());
 
         int i = 0;
         for(std::vector<Unit *>::iterator itr = targets.begin(); itr!= targets.end(); ++itr, ++i)
@@ -148,18 +147,18 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
             {
                 switch(i)
                 {
-                case 0:
-                    DoTeleportPlayer(target, LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
-                    Wrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                    break;
-                case 1:
-                    DoTeleportPlayer(target, LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
-                    Wrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                    break;
-                case 2:
-                    DoTeleportPlayer(target, LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
-                    Wrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                    break;
+                    case 0:
+                        DoTeleportPlayer(target, LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
+                        Wrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                        break;
+                    case 1:
+                        DoTeleportPlayer(target, LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
+                        Wrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                        break;
+                    case 2:
+                        DoTeleportPlayer(target, LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
+                        Wrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                        break;
                 }
                 if(Wrap)
                 {
@@ -170,10 +169,8 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         }
     }
 
-
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -181,46 +178,34 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         if (WebTrap_Timer < diff)
         {
             DoCastWebWrap();
-            WebTrap_Timer = 40000;            //40 seconds until we should cast this again
+            WebTrap_Timer = 40000;
         }else WebTrap_Timer -= diff;
 
         //WebSpray_Timer
         if (WebSpray_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_WEBSPRAY);
-
-            //40 seconds until we should cast this agian
             WebSpray_Timer = 40000;
         }else WebSpray_Timer -= diff;
 
         //PoisonShock_Timer
         if (PoisonShock_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_POISONSHOCK);
-
-            //20 seconds until we should cast this agian
             PoisonShock_Timer = 20000;
         }else PoisonShock_Timer -= diff;
 
         //NecroticPoison_Timer
         if (NecroticPoison_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_NECROTICPOISON);
-
-            //30 seconds until we should cast this agian
             NecroticPoison_Timer = 30000;
         }else NecroticPoison_Timer -= diff;
 
         //SummonSpiderling_Timer
         if (SummonSpiderling_Timer < diff)
         {
-            //Cast
             DoCast(m_creature, SPELL_SUMMON_SPIDERLING);
-
-            //40 seconds until we should cast this agian
             SummonSpiderling_Timer = 40000;
         }else SummonSpiderling_Timer -= diff;
 
@@ -248,6 +233,7 @@ CreatureAI* GetAI_boss_maexxna(Creature *_Creature)
 void AddSC_boss_maexxna()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_maexxna";
     newscript->GetAI = GetAI_boss_maexxna;

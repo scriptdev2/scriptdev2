@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Orgrimmar
@@ -94,20 +94,20 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
     {
         if( CanEmote )
             if( Reset_Timer < diff )
-            {
-                if( Unit* temp = Unit::GetUnit((*m_creature),playerGUID) )
-                    if( temp->GetTypeId() == TYPEID_PLAYER )
-                        ((Player*)temp)->FailQuest(QUEST_2460);
-                Reset();
-            } else Reset_Timer -= diff;
+        {
+            if( Unit* temp = Unit::GetUnit((*m_creature),playerGUID) )
+                if( temp->GetTypeId() == TYPEID_PLAYER )
+                    ((Player*)temp)->FailQuest(QUEST_2460);
+            Reset();
+        } else Reset_Timer -= diff;
 
         if( CanTalk && !CanEmote )
             if( Salute_Timer < diff )
-            {
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                CanEmote = true;
-                Reset_Timer = 60000;
-            } else Salute_Timer -= diff;
+        {
+            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+            CanEmote = true;
+            Reset_Timer = 60000;
+        } else Salute_Timer -= diff;
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -129,14 +129,15 @@ bool QuestAccept_npc_shenthul(Player* player, Creature* creature, Quest const* q
     }
     return true;
 }
+
 bool ReciveEmote_npc_shenthul(Player *player, Creature *_Creature, uint32 emote)
 {
     if( emote == TEXTEMOTE_SALUTE && player->GetQuestStatus(QUEST_2460) == QUEST_STATUS_INCOMPLETE )
         if( ((npc_shenthulAI*)_Creature->AI())->CanEmote )
-        {
-            player->AreaExploredOrEventHappens(QUEST_2460);
-            ((npc_shenthulAI*)_Creature->AI())->Reset();
-        }
+    {
+        player->AreaExploredOrEventHappens(QUEST_2460);
+        ((npc_shenthulAI*)_Creature->AI())->Reset();
+    }
     return true;
 }
 

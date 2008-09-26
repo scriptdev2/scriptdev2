@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Ragnaros
@@ -27,10 +27,10 @@ EndScriptData */
 #define SPELL_WRATHOFRAGNAROS       20566
 #define SPELL_LAVABURST             21158
 
-#define SPELL_MAGMABURST            20565       //Ranged attack
+#define SPELL_MAGMABURST            20565                   //Ranged attack
 
-#define SPELL_SONSOFFLAME_DUMMY     21108       //Server side effect
-#define SPELL_RAGSUBMERGE           21107       //Stealth aura
+#define SPELL_SONSOFFLAME_DUMMY     21108                   //Server side effect
+#define SPELL_RAGSUBMERGE           21107                   //Stealth aura
 #define SPELL_RAGEMERGE             20568
 #define SPELL_MELTWEAPON            21388
 #define SPELL_ELEMENTALFIRE         20564
@@ -64,7 +64,7 @@ EndScriptData */
 #define ADD_2X 852.560791
 #define ADD_2Y -849.861511
 #define ADD_2Z -228.560974
-#define ADD_2O 2.836073  
+#define ADD_2O 2.836073
 
 #define ADD_3X 808.710632
 #define ADD_3Y -852.845764
@@ -111,7 +111,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
     Creature *Summoned;
     bool HasYelledMagmaBurst;
     bool HasSubmergedOnce;
-    bool WasBanished; 
+    bool WasBanished;
     bool HasAura;
 
     void Reset()
@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         Attack_Timer = 90000;
         HasYelledMagmaBurst = false;
         HasSubmergedOnce = false;
-        WasBanished = false; 
+        WasBanished = false;
 
         m_creature->CastSpell(m_creature,SPELL_MELTWEAPON,true);
         HasAura = true;
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
     {
         if (WasBanished && Attack_Timer < diff)
         {
-            //Become unbanished again 
+            //Become unbanished again
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             DoCast(m_creature,SPELL_RAGEMERGE);
@@ -170,64 +170,49 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
         //WrathOfRagnaros_Timer
         if (WrathOfRagnaros_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_WRATHOFRAGNAROS);
 
             if (rand()%2 == 0)
             {
-                //Say our dialog
                 DoYell(SAY_WRATH,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_WRATH);
             }
 
-            //60 seconds until we should cast this agian
             WrathOfRagnaros_Timer = 30000;
         }else WrathOfRagnaros_Timer -= diff;
 
         //HandOfRagnaros_Timer
         if (HandOfRagnaros_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_HANDOFRAGNAROS);
 
             if (rand()%2==0)
             {
-                //Say our dialog
                 DoYell(SAY_HAND,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_HAND);
             }
 
-            //60 seconds until we should cast this agian
             HandOfRagnaros_Timer = 25000;
         }else HandOfRagnaros_Timer -= diff;
 
         //LavaBurst_Timer
         if (LavaBurst_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_LAVABURST);
-
-            //10 seconds until we should cast this agian
             LavaBurst_Timer = 10000;
         }else LavaBurst_Timer -= diff;
 
         //Erruption_Timer
         if (LavaBurst_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ERRUPTION);
-
-            //10 seconds until we should cast this agian
             Erruption_Timer = 20000 + rand()%25000;
         }else Erruption_Timer -= diff;
 
         //ElementalFire_Timer
         if (ElementalFire_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_ELEMENTALFIRE);
-
-            //10 seconds until we should cast this agian
             ElementalFire_Timer = 10000 + rand()%4000;
         }else ElementalFire_Timer -= diff;
 
@@ -247,8 +232,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-
 
             if (!HasSubmergedOnce)
             {
@@ -271,7 +254,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
 
             }else
             {
-                //Say our dialog
                 DoYell(SAY_REINFORCEMENTS2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_REINFORCEMENTS2);
 
@@ -288,7 +270,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
                 Attack_Timer = 90000;
             }
 
-            //3 minutes until we should cast this agian
             Submerge_Timer = 180000;
         }else Submerge_Timer -= diff;
 
@@ -306,7 +287,6 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
             //MagmaBurst_Timer
             if (MagmaBurst_Timer < diff)
             {
-                //Cast
                 DoCast(m_creature->getVictim(),SPELL_MAGMABURST);
 
                 if (!HasYelledMagmaBurst)
@@ -317,17 +297,15 @@ struct MANGOS_DLL_DECL boss_ragnarosAI : public Scripted_NoMovementAI
                     HasYelledMagmaBurst = true;
                 }
 
-                //3 seconds until we should cast this agian
                 MagmaBurst_Timer = 2500;
             }else MagmaBurst_Timer -= diff;
         }
     }
-}; 
+};
 CreatureAI* GetAI_boss_ragnaros(Creature *_Creature)
 {
     return new boss_ragnarosAI (_Creature);
 }
-
 
 void AddSC_boss_ragnaros()
 {

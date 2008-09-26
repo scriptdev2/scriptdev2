@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 #ifndef DEF_MAGISTERS_TERRACE_H
 #define DEF_MAGISTERS_TERRACE_H
@@ -26,6 +26,4 @@
 #define DATA_DELRISSA_DEATH_COUNT   15
 
 #define ERROR_INST_DATA      "SD2 Error: Instance Data not set properly for Magister's Terrace instance (map 585). Encounters will be buggy."
-
 #endif
-

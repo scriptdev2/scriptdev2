@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 /* ScriptData
 SDName: instance_sunwell_plateau
@@ -47,9 +47,9 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
     uint64 Anveena;
 
     /** GameObjects **/
-    uint64 ForceField; // Kalecgos Encounter
-    uint64 FireBarrier; // Brutallus Encounter
-    uint64 Gate[5]; // Rename this to be more specific after door placement is verified.
+    uint64 ForceField;                                      // Kalecgos Encounter
+    uint64 FireBarrier;                                     // Brutallus Encounter
+    uint64 Gate[5];                                         // Rename this to be more specific after door placement is verified.
 
     /*** Misc ***/
     uint32 SpectralRealmTimer;
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         /*** GameObjects ***/
         ForceField  = 0;
         FireBarrier = 0;
-        Gate[0]     = 0; // TODO: Rename Gate[n] with gate_<boss name> for better specificity
+        Gate[0]     = 0;                                    // TODO: Rename Gate[n] with gate_<boss name> for better specificity
         Gate[1]     = 0;
         Gate[2]     = 0;
         Gate[3]     = 0;
@@ -160,8 +160,8 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
             case DATA_ANVEENA:              return Anveena;             break;
 
             case DATA_RANDOM_SPECTRAL_PLAYER:
-                    return *(SpectralRealmList.begin() + rand()%SpectralRealmList.size());
-                    break;
+                return *(SpectralRealmList.begin() + rand()%SpectralRealmList.size());
+                break;
         }
         return 0;
     }
@@ -208,7 +208,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
     void EjectPlayer(Player* plr)
     {
-        outstring_log("INST: Ejecting Player %s from Spectral Realm", plr->GetName());
+        debug_log("SD2: INST: Ejecting Player %s from Spectral Realm", plr->GetName());
         // Remove player from Sathrovarr's threat list
         Creature* Sath = ((Creature*)Unit::GetUnit(*plr, Sathrovarr));
         if(Sath && Sath->isAlive())
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
             if(ref)
             {
                 ref->removeReference();
-                outstring_log("INST: Deleting %s from Sathrovarr's threatlist", plr->GetName());
+                debug_log("SD2: INST: Deleting %s from Sathrovarr's threatlist", plr->GetName());
             }
         }
 
@@ -225,7 +225,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         Creature* Kalecgos = ((Creature*)Unit::GetUnit(*plr, Kalecgos_Dragon));
         if(Kalecgos && Kalecgos->isAlive())
         {
-            outstring_log("INST: Putting %s in Kalecgos' threatlist", plr->GetName());
+            debug_log("SD2: INST: Putting %s in Kalecgos' threatlist", plr->GetName());
             Kalecgos->AddThreat(plr, 1.0f);
         }
 
@@ -253,10 +253,10 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         // Only check for Spectral Realm if Kalecgos Encounter is running
         if(Encounters[0] == IN_PROGRESS)
             if(SpectralRealmTimer < diff)
-            {
-                EjectPlayers();
-                SpectralRealmTimer = 5000;
-            }else SpectralRealmTimer -= diff;
+        {
+            EjectPlayers();
+            SpectralRealmTimer = 5000;
+        }else SpectralRealmTimer -= diff;
     }
 };
 

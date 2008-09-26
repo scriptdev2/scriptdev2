@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Grand_Warlock_Nethekurse
@@ -159,25 +159,25 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
             IsIntroEvent = false;
             IsMainEvent = true;
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        }    
+        }
     }
 
     void DoTauntPeons()
     {
         switch(rand()%3)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature,SOUND_TAUNT_1);
-            DoYell(SAY_TAUNT_1,LANG_UNIVERSAL,NULL);
-            break;
-        case 1:
-            DoPlaySoundToSet(m_creature,SOUND_TAUNT_2);
-            DoYell(SAY_TAUNT_2,LANG_UNIVERSAL,NULL);
-            break;
-        case 2:
-            DoPlaySoundToSet(m_creature,SOUND_TAUNT_3);
-            DoYell(SAY_TAUNT_3,LANG_UNIVERSAL,NULL);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature,SOUND_TAUNT_1);
+                DoYell(SAY_TAUNT_1,LANG_UNIVERSAL,NULL);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature,SOUND_TAUNT_2);
+                DoYell(SAY_TAUNT_2,LANG_UNIVERSAL,NULL);
+                break;
+            case 2:
+                DoPlaySoundToSet(m_creature,SOUND_TAUNT_3);
+                DoYell(SAY_TAUNT_3,LANG_UNIVERSAL,NULL);
+                break;
         }
 
         //TODO: kill the peons first
@@ -248,18 +248,18 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-            DoYell(SAY_AGGRO_1,LANG_UNIVERSAL,NULL);
-            break;
-        case 1:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            DoYell(SAY_AGGRO_2,LANG_UNIVERSAL,NULL);
-            break; 
-        case 2:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            DoYell(SAY_AGGRO_3,LANG_UNIVERSAL,NULL);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                DoYell(SAY_AGGRO_1,LANG_UNIVERSAL,NULL);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                DoYell(SAY_AGGRO_2,LANG_UNIVERSAL,NULL);
+                break;
+            case 2:
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                DoYell(SAY_AGGRO_3,LANG_UNIVERSAL,NULL);
+                break;
         }
     }
 
@@ -274,14 +274,14 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-            DoYell(SAY_SLAY_1,LANG_UNIVERSAL,NULL);
-            break;
-        case 1:
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            DoYell(SAY_SLAY_2,LANG_UNIVERSAL,NULL);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                DoYell(SAY_SLAY_1,LANG_UNIVERSAL,NULL);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                DoYell(SAY_SLAY_2,LANG_UNIVERSAL,NULL);
+                break;
         }
     }
 
@@ -432,7 +432,7 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
 //NOTE: this creature are also summoned by other spells, for different creatures
 struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public ScriptedAI
 {
-    mob_lesser_shadow_fissureAI(Creature *c) : ScriptedAI(c) {Reset();} 
+    mob_lesser_shadow_fissureAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     bool Start;
     uint32 Stop_Timer;
@@ -443,14 +443,11 @@ struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public ScriptedAI
         Stop_Timer = 30000;
     }
 
-    void Aggro(Unit* who)
-    { }
+    void Aggro(Unit* who) { }
 
-    void MoveInLineOfSight(Unit *who)
-    { return; }
+    void MoveInLineOfSight(Unit *who) { return; }
 
-    void AttackStart(Unit* who)
-    { return; }
+    void AttackStart(Unit* who) { return; }
 
     void UpdateAI(const uint32 diff)
     {
@@ -476,10 +473,12 @@ CreatureAI* GetAI_boss_grand_warlock_nethekurse(Creature *_Creature)
 {
     return new boss_grand_warlock_nethekurseAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_fel_orc_convert(Creature *_Creature)
 {
     return new mob_fel_orc_convertAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_lesser_shadow_fissure(Creature *_Creature)
 {
     return new mob_lesser_shadow_fissureAI (_Creature);

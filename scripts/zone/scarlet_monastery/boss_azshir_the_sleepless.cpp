@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Azshir_the_Sleepless
-SD%Complete: 100
-SDComment: 
+SD%Complete: 80
+SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
@@ -48,7 +48,6 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -58,11 +57,9 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
             //SoulSiphon_Timer
             if (SoulSiphon_Timer < diff)
             {
-
                 DoCast(m_creature->getVictim(),SPELL_SOULSIPHON);
                 return;
 
-                //180 seconds until we should cast this agian
                 SoulSiphon_Timer = 20000;
             }else SoulSiphon_Timer -= diff;
         }
@@ -70,20 +67,14 @@ struct MANGOS_DLL_DECL boss_azshir_the_sleeplessAI : public ScriptedAI
         //CallOfTheGrave_Timer
         if (CallOftheGrave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CALLOFTHEGRAVE);
-
-            //70 seconds until we should cast this agian
             CallOftheGrave_Timer = 30000;
         }else CallOftheGrave_Timer -= diff;
 
         //Terrify_Timer
         if (Terrify_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_TERRIFY);
-
-            //45 seconds until we should cast this agian
             Terrify_Timer = 20000;
         }else Terrify_Timer -= diff;
 

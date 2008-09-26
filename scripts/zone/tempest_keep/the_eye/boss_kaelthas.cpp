@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: boss_Kaelthas
@@ -37,7 +37,7 @@ EndScriptData */
 #define SPELL_RES_VISUAL                  24171
 #define SPELL_WEAPON_SPAWN                41236
 //Phase 4 spells
-#define SPELL_FIREBALL                    22088 //wrong but works with CastCustomSpell
+#define SPELL_FIREBALL                    22088             //wrong but works with CastCustomSpell
 #define SPELL_PYROBLAST                   36819
 #define SPELL_FLAME_STRIKE                36735
 #define SPELL_FLAME_STRIKE_VIS            36730
@@ -59,7 +59,7 @@ EndScriptData */
 //Lord Sanguinar spells
 #define SPELL_BELLOWING_ROAR              40636
 //Grand Astromancer Capernian spells
-#define CAPERNIAN_DISTANCE                20 //she casts away from the target
+#define CAPERNIAN_DISTANCE                20                //she casts away from the target
 #define SPELL_CAPERNIAN_FIREBALL          36971
 #define SPELL_CONFLAGRATION               37018
 #define SPELL_ARCANE_EXPLOSION            36970
@@ -165,13 +165,13 @@ EndScriptData */
 //weapon id + position
 float KaelthasWeapons[7][5] =
 {
-    {21270, 794.38, 15, 48.72, 2.9}, //[Cosmic Infuser]
-    {21269, 785.47, 12.12, 48.72, 3.14}, //[Devastation]
-    {21271, 781.25, 4.39, 48.72, 3.14}, //[Infinity Blade]
-    {21273, 777.38, -0.81, 48.72, 3.06}, //[Phaseshift Bulwark]
-    {21274, 781.48, -6.08, 48.72, 3.9}, //[Staff of Disintegration]
-    {21272, 785.42, -13.59, 48.72, 3.4}, //[Warp Slicer]
-    {21268, 793.06, -16.61, 48.72, 3.10} //[Netherstrand Longbow]
+    {21270, 794.38, 15, 48.72, 2.9},                        //[Cosmic Infuser]
+    {21269, 785.47, 12.12, 48.72, 3.14},                    //[Devastation]
+    {21271, 781.25, 4.39, 48.72, 3.14},                     //[Infinity Blade]
+    {21273, 777.38, -0.81, 48.72, 3.06},                    //[Phaseshift Bulwark]
+    {21274, 781.48, -6.08, 48.72, 3.9},                     //[Staff of Disintegration]
+    {21272, 785.42, -13.59, 48.72, 3.4},                    //[Warp Slicer]
+    {21268, 793.06, -16.61, 48.72, 3.10}                    //[Netherstrand Longbow]
 };
 
 #define GRAVITY_X 795.0f
@@ -240,7 +240,6 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         }
     }
 
-
     void Reset()
     {
         FakeDeath = false;
@@ -298,7 +297,7 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
             m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->ClearAllReactives();
-            m_creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
+            m_creature->SetUInt64Value(UNIT_FIELD_TARGET,0);
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveIdle();
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
@@ -312,18 +311,18 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
     {
         if (DelayRes_Timer)
             if (DelayRes_Timer <= diff)
-            {
-                DelayRes_Timer = 0;
-                FakeDeath = false;
+        {
+            DelayRes_Timer = 0;
+            FakeDeath = false;
 
-                Unit* Target = Unit::GetUnit((*m_creature), DelayRes_Target);
-                if (!Target)Target = m_creature->getVictim();
-                DoResetThreat();
-                AttackStart(Target);
-                m_creature->GetMotionMaster()->Clear();
-                m_creature->GetMotionMaster()->MoveChase(Target);
-                m_creature->AddThreat(Target, 0.0f);
-            }else DelayRes_Timer -= diff;
+            Unit* Target = Unit::GetUnit((*m_creature), DelayRes_Target);
+            if (!Target)Target = m_creature->getVictim();
+            DoResetThreat();
+            AttackStart(Target);
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MoveChase(Target);
+            m_creature->AddThreat(Target, 0.0f);
+        }else DelayRes_Timer -= diff;
     }
 
 };
@@ -354,8 +353,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     uint32 FlameStrike_Timer;
     uint32 MindControl_Timer;
     uint32 Phase;
-    uint32 PhaseSubphase; //generic
-    uint32 Phase_Timer; //generic timer
+    uint32 PhaseSubphase;                                   //generic
+    uint32 Phase_Timer;                                     //generic timer
     uint32 PyrosCasted;
 
     bool InGravityLapse;
@@ -422,7 +421,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         {
             error_log("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3");
             DoYell("SD2: Kael'Thas One or more advisors missing, Skipping Phases 1-3", LANG_UNIVERSAL, NULL);
-        
+
             DoYell(SAY_PHASE4, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_PHASE4);
             Phase = 4;
@@ -438,7 +437,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             {
                 DoStartAttackAndMovement(target);
             }
-        }else 
+        }else
         {
             PrepareAdvisors();
 
@@ -458,15 +457,14 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-            break;
-
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+                break;
         }
     }
 
@@ -496,7 +494,6 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
     {
         if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
             StartEvent();
-
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -530,7 +527,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         //Phase 1
         switch (Phase)
         {
-        case 1:
+            case 1:
             {
                 Unit *target;
                 Creature* Advisor;
@@ -539,165 +536,165 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                 switch(PhaseSubphase)
                 {
                     //Subphase 1 - Start
-                case 0:
-                    if(Phase_Timer < diff)
-                    {
-                        DoYell(SAY_THALADRED_THE_DARKENER, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_THALADRED_THE_DARKENER);
+                    case 0:
+                        if(Phase_Timer < diff)
+                        {
+                            DoYell(SAY_THALADRED_THE_DARKENER, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_THALADRED_THE_DARKENER);
 
-                        //start advisor within 7 seconds
-                        Phase_Timer = 7000;
+                            //start advisor within 7 seconds
+                            Phase_Timer = 7000;
 
-                        PhaseSubphase++;
-                    }else Phase_Timer -= diff;
-                    break;
+                            PhaseSubphase++;
+                        }else Phase_Timer -= diff;
+                        break;
 
-                    //Subphase 1 - Unlock advisor
-                case 1:
-                    if(Phase_Timer < diff)
-                    {
+                        //Subphase 1 - Unlock advisor
+                    case 1:
+                        if(Phase_Timer < diff)
+                        {
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
+
+                            if(Advisor)
+                            {
+                                Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                                Advisor->setFaction(m_creature->getFaction());
+
+                                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                if(target)
+                                    Advisor->AI()->AttackStart(target);
+                            }
+
+                            PhaseSubphase++;
+                        }else Phase_Timer -= diff;
+                        break;
+
+                        //Subphase 2 - Start
+                    case 2:
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
-
-                        if(Advisor)
+                        if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            Advisor->setFaction(m_creature->getFaction());
+                            DoYell(SAY_LORD_SANGUINAR, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_LORD_SANGUINAR);
 
-                            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            if(target)
-                                Advisor->AI()->AttackStart(target);
+                            //start advisor within 12.5 seconds
+                            Phase_Timer = 12500;
+
+                            PhaseSubphase++;
                         }
+                        break;
 
-                        PhaseSubphase++;
-                    }else Phase_Timer -= diff;
-                    break;
+                        //Subphase 2 - Unlock advisor
+                    case 3:
+                        if(Phase_Timer < diff)
+                        {
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[1]));
 
-                    //Subphase 2 - Start
-                case 2:
-                    Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[0]));
-                    if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
-                    {
-                        DoYell(SAY_LORD_SANGUINAR, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_LORD_SANGUINAR);
+                            if(Advisor)
+                            {
+                                Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                                Advisor->setFaction(m_creature->getFaction());
 
-                        //start advisor within 12.5 seconds
-                        Phase_Timer = 12500;
+                                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                if(target)
+                                    Advisor->AI()->AttackStart(target);
+                            }
 
-                        PhaseSubphase++;
-                    }
-                    break;
+                            PhaseSubphase++;
+                        }else Phase_Timer -= diff;
+                        break;
 
-                    //Subphase 2 - Unlock advisor
-                case 3:
-                    if(Phase_Timer < diff)
-                    {
+                        //Subphase 3 - Start
+                    case 4:
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[1]));
-
-                        if(Advisor)
+                        if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            Advisor->setFaction(m_creature->getFaction());
+                            DoYell(SAY_ASTROMANCER_CAPERNIAN, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_ASTROMANCER_CAPERNIAN);
 
-                            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            if(target)
-                                Advisor->AI()->AttackStart(target);
+                            //start advisor within 7 seconds
+                            Phase_Timer = 7000;
+
+                            PhaseSubphase++;
                         }
+                        break;
 
-                        PhaseSubphase++;
-                    }else Phase_Timer -= diff;
-                    break;
+                        //Subphase 3 - Unlock advisor
+                    case 5:
+                        if(Phase_Timer < diff)
+                        {
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[2]));
 
-                    //Subphase 3 - Start
-                case 4:
-                    Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[1]));
-                    if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
-                    {
-                        DoYell(SAY_ASTROMANCER_CAPERNIAN, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_ASTROMANCER_CAPERNIAN);
+                            if(Advisor)
+                            {
+                                Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                                Advisor->setFaction(m_creature->getFaction());
 
-                        //start advisor within 7 seconds
-                        Phase_Timer = 7000;
+                                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                if(target)
+                                    Advisor->AI()->AttackStart(target);
+                            }
 
-                        PhaseSubphase++;
-                    }
-                    break;
+                            PhaseSubphase++;
+                        }else Phase_Timer -= diff;
+                        break;
 
-                    //Subphase 3 - Unlock advisor
-                case 5:
-                    if(Phase_Timer < diff)
-                    {
+                        //Subphase 4 - Start
+                    case 6:
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[2]));
-
-                        if(Advisor)
+                        if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            Advisor->setFaction(m_creature->getFaction());
+                            DoYell(SAY_ENGINEER_TELONICUS, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_ENGINEER_TELONICUS);
 
-                            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            if(target)
-                                Advisor->AI()->AttackStart(target);
+                            //start advisor within 8.4 seconds
+                            Phase_Timer = 8400;
+
+                            PhaseSubphase++;
                         }
+                        break;
 
-                        PhaseSubphase++;
-                    }else Phase_Timer -= diff;
-                    break;
+                        //Subphase 4 - Unlock advisor
+                    case 7:
+                        if(Phase_Timer < diff)
+                        {
+                            Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
 
-                    //Subphase 4 - Start
-                case 6:
-                    Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[2]));
-                    if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
-                    {
-                        DoYell(SAY_ENGINEER_TELONICUS, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_ENGINEER_TELONICUS);
+                            if(Advisor)
+                            {
+                                Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                                Advisor->setFaction(m_creature->getFaction());
 
-                        //start advisor within 8.4 seconds
-                        Phase_Timer = 8400;
+                                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                if(target)
+                                    Advisor->AI()->AttackStart(target);
+                            }
 
-                        PhaseSubphase++;
-                    }
-                    break;
+                            Phase_Timer = 3000;
 
-                    //Subphase 4 - Unlock advisor
-                case 7:
-                    if(Phase_Timer < diff)
-                    {
+                            PhaseSubphase++;
+                        }else Phase_Timer -= diff;
+                        break;
+
+                        //End of phase 1
+                    case 8:
                         Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
-
-                        if(Advisor)
+                        if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
                         {
-                            Advisor->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            Advisor->setFaction(m_creature->getFaction());
+                            Phase = 2;
+                            pInstance->SetData(DATA_KAELTHASEVENT, 2);
 
-                            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            if(target)
-                                Advisor->AI()->AttackStart(target);
+                            DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_PHASE2);
+                            PhaseSubphase = 0;
+                            Phase_Timer = 3500;
+                            DoCast(m_creature, SPELL_SUMMON_WEAPONS);
                         }
-
-                        Phase_Timer = 3000;
-
-                        PhaseSubphase++;
-                    }else Phase_Timer -= diff;
-                    break;
-
-                    //End of phase 1
-                case 8:
-                    Advisor = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[3]));
-                    if(Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == PLAYER_STATE_DEAD))
-                    {
-                        Phase = 2;
-                        pInstance->SetData(DATA_KAELTHASEVENT, 2);
-
-                        DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-                        PhaseSubphase = 0;
-                        Phase_Timer = 3500;
-                        DoCast(m_creature, SPELL_SUMMON_WEAPONS);
-                    }
-                    break;
+                        break;
                 }
             }break;
 
-        case 2:
+            case 2:
             {
                 if (PhaseSubphase == 0)
                 {
@@ -733,16 +730,16 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                 if (PhaseSubphase == 2)
                     if (Phase_Timer < diff)
-                    {
-                        DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_PHASE3);
-                        pInstance->SetData(DATA_KAELTHASEVENT, 3);
-                        Phase = 3;
-                        PhaseSubphase = 0;
-                    }else Phase_Timer -= diff;
+                {
+                    DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_PHASE3);
+                    pInstance->SetData(DATA_KAELTHASEVENT, 3);
+                    Phase = 3;
+                    PhaseSubphase = 0;
+                }else Phase_Timer -= diff;
             }break;
 
-        case 3:
+            case 3:
             {
                 if (PhaseSubphase == 0)
                 {
@@ -784,9 +781,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             }
             break;
 
-        case 4:
-        case 5:
-        case 6:
+            case 4:
+            case 5:
+            case 6:
             {
                 //Return since we have no target
                 if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
@@ -838,12 +835,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                     {
                         if (m_creature->getThreatManager().getThreatList().size() >= 2)
                             for (uint32 i = 0; i < 3; i++)
-                            {
-                                error_log("SD2: Kael'Thas mind control not supported.");
-                                Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                                m_creature->Whisper(pUnit->GetGUID(), TEMP_MC_WHISPER);
-                                //DoCast(pUnit, SPELL_MIND_CONTROL);
-                            }
+                        {
+                            error_log("SD2: Kael'Thas mind control not supported.");
+                            Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                            m_creature->Whisper(pUnit->GetGUID(), TEMP_MC_WHISPER);
+                            //DoCast(pUnit, SPELL_MIND_CONTROL);
+                        }
 
                         MindControl_Timer = 60000;
                     }MindControl_Timer -= diff;
@@ -864,18 +861,18 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     switch(rand()%2)
                     {
-                    case 0:
-                        DoYell(SAY_SUMMON_PHOENIX1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX1);
-                        break;
+                        case 0:
+                            DoYell(SAY_SUMMON_PHOENIX1, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX1);
+                            break;
 
-                    case 1:
-                        DoYell(SAY_SUMMON_PHOENIX2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX2);
-                        break;
+                        case 1:
+                            DoYell(SAY_SUMMON_PHOENIX2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX2);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
                     }
 
                     Phoenix_Timer = 60000;
@@ -922,7 +919,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
                             PyrosCasted++;
 
-                        }else 
+                        }else
                         {
                             ChainPyros = false;
                             Fireball_Timer = 2500;
@@ -957,100 +954,100 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         std::list<HostilReference*>::iterator i = m_creature->getThreatManager().getThreatList().begin();
                         switch(GravityLapse_Phase)
                         {
-                        case 0:
-                            m_creature->StopMoving();
-                            m_creature->GetMotionMaster()->Clear();
-                            m_creature->GetMotionMaster()->MoveIdle();
-                            m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
-                            m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0, 0, 0);
-                            // 1) Kael'thas will portal the whole raid right into his body
-                            for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
-                            {
-                                Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
-                                {
-                                    //Use work around packet to prevent player from being dropped from combat
-                                    DoTeleportPlayer(pUnit, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation());
-                               }
-                            }
-                            GravityLapse_Timer = 500;
-                            ++GravityLapse_Phase;
-                            InGravityLapse = true;
-                            ShockBarrier_Timer = 1000;
-                            NetherBeam_Timer = 5000;
-                            break;
-
-                        case 1:
-                            switch(rand()%2)
-                            {
                             case 0:
-                                DoYell(SAY_GRAVITYLAPSE1, LANG_UNIVERSAL, NULL);
-                                DoPlaySoundToSet(m_creature, SOUND_GRAVITYLAPSE1);
+                                m_creature->StopMoving();
+                                m_creature->GetMotionMaster()->Clear();
+                                m_creature->GetMotionMaster()->MoveIdle();
+                                m_creature->Relocate(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0);
+                                m_creature->SendMonsterMove(GRAVITY_X, GRAVITY_Y, GRAVITY_Z, 0, 0, 0);
+                                // 1) Kael'thas will portal the whole raid right into his body
+                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
+                                {
+                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                                    if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+                                    {
+                                        //Use work around packet to prevent player from being dropped from combat
+                                        DoTeleportPlayer(pUnit, GRAVITY_X, GRAVITY_Y, GRAVITY_Z, pUnit->GetOrientation());
+                                    }
+                                }
+                                GravityLapse_Timer = 500;
+                                ++GravityLapse_Phase;
+                                InGravityLapse = true;
+                                ShockBarrier_Timer = 1000;
+                                NetherBeam_Timer = 5000;
                                 break;
 
                             case 1:
-                                DoYell(SAY_GRAVITYLAPSE2, LANG_UNIVERSAL, NULL);
-                                DoPlaySoundToSet(m_creature, SOUND_GRAVITYLAPSE2);
+                                switch(rand()%2)
+                                {
+                                    case 0:
+                                        DoYell(SAY_GRAVITYLAPSE1, LANG_UNIVERSAL, NULL);
+                                        DoPlaySoundToSet(m_creature, SOUND_GRAVITYLAPSE1);
+                                        break;
+
+                                    case 1:
+                                        DoYell(SAY_GRAVITYLAPSE2, LANG_UNIVERSAL, NULL);
+                                        DoPlaySoundToSet(m_creature, SOUND_GRAVITYLAPSE2);
+                                        break;
+                                }
+
+                                // 2) At that point he will put a Gravity Lapse debuff on everyone
+                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
+                                {
+                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                                    if(pUnit)
+                                    {
+                                        m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
+                                        //Gravity lapse - needs an exception in Spell system to work
+
+                                        pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true, 0, 0, m_creature->GetGUID());
+                                        pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true, 0, 0, m_creature->GetGUID());
+
+                                        //Using packet workaround
+                                        WorldPacket data(12);
+                                        data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
+                                        data.append(pUnit->GetPackGUID());
+                                        data << uint32(0);
+                                        pUnit->SendMessageToSet(&data, true);
+                                    }
+                                }
+                                GravityLapse_Timer = 10000;
+                                GravityLapse_Phase++;
                                 break;
-                            }
 
-                            // 2) At that point he will put a Gravity Lapse debuff on everyone
-                            for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
-                            {
-                                Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                if(pUnit)
+                            case 2:
+                                //Cast nether vapor aura on self
+                                m_creature->InterruptNonMeleeSpells(false);
+                                DoCast(m_creature, SPELL_NETHER_VAPOR);
+
+                                GravityLapse_Timer = 20000;
+                                GravityLapse_Phase++;
+                                break;
+
+                            case 3:
+                                //Remove flight
+                                for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
                                 {
-                                    m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
-                                    //Gravity lapse - needs an exception in Spell system to work
-
-                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE, true, 0, 0, m_creature->GetGUID());
-                                    pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_AURA, true, 0, 0, m_creature->GetGUID());
-
-                                    //Using packet workaround
-                                    WorldPacket data(12);
-                                    data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
-                                    data.append(pUnit->GetPackGUID());
-                                    data << uint32(0);
-                                    pUnit->SendMessageToSet(&data, true);
+                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
+                                    if(pUnit)
+                                    {
+                                        //Using packet workaround
+                                        WorldPacket data(12);
+                                        data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
+                                        data.append(pUnit->GetPackGUID());
+                                        data << uint32(0);
+                                        pUnit->SendMessageToSet(&data, true);
+                                    }
                                 }
-                            }
-                            GravityLapse_Timer = 10000;
-                            GravityLapse_Phase++;
-                            break;
-
-                        case 2:
-                            //Cast nether vapor aura on self
-                            m_creature->InterruptNonMeleeSpells(false);
-                            DoCast(m_creature, SPELL_NETHER_VAPOR);
-
-                            GravityLapse_Timer = 20000;
-                            GravityLapse_Phase++;
-                            break;
-
-                        case 3:
-                            //Remove flight
-                            for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
-                            {
-                                Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                if(pUnit)
-                                {
-                                    //Using packet workaround
-                                    WorldPacket data(12);
-                                    data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
-                                    data.append(pUnit->GetPackGUID());
-                                    data << uint32(0);
-                                    pUnit->SendMessageToSet(&data, true);
-                                }
-                            }
-                            m_creature->RemoveAurasDueToSpell(SPELL_NETHER_VAPOR);
-                            InGravityLapse = false;
-                            GravityLapse_Timer = 60000;
-                            GravityLapse_Phase = 0;
-                            DoStartAttackAndMovement(m_creature->getVictim());
-                            m_creature->GetMotionMaster()->Clear();
-                            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
-                            DoResetThreat();
-                            break;
+                                m_creature->RemoveAurasDueToSpell(SPELL_NETHER_VAPOR);
+                                InGravityLapse = false;
+                                GravityLapse_Timer = 60000;
+                                GravityLapse_Phase = 0;
+                                DoStartAttackAndMovement(m_creature->getVictim());
+                                m_creature->GetMotionMaster()->Clear();
+                                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+                                DoResetThreat();
+                                break;
                         }
                     }else GravityLapse_Timer -= diff;
 
@@ -1114,9 +1111,9 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-                DoYell(SAY_THALADRED_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_THALADRED_AGGRO);
-                m_creature->AddThreat(who, 5000000.0f);
+        DoYell(SAY_THALADRED_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_THALADRED_AGGRO);
+        m_creature->AddThreat(who, 5000000.0f);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1190,8 +1187,8 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-                DoYell(SAY_SANGUINAR_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SANGUINAR_AGGRO);
+        DoYell(SAY_SANGUINAR_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_SANGUINAR_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1210,8 +1207,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         if(Fear_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_BELLOWING_ROAR);
-
-            Fear_Timer = 25000+rand()%10000; //approximately every 30 seconds
+            Fear_Timer = 25000+rand()%10000;                //approximately every 30 seconds
         }else Fear_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -1242,7 +1238,6 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
     void JustDied(Unit* pKiller)
     {
-
         DoPlaySoundToSet(m_creature, SOUND_CAPERNIAN_DEATH);
         DoYell(SAY_CAPERNIAN_DEATH, LANG_UNIVERSAL, NULL);
     }
@@ -1289,12 +1284,12 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         //Yell_Timer
         if(!Yell)
             if(Yell_Timer < diff)
-            {
-                DoYell(SAY_CAPERNIAN_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_CAPERNIAN_AGGRO);
+        {
+            DoYell(SAY_CAPERNIAN_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_CAPERNIAN_AGGRO);
 
-                Yell = true;
-            }else Yell_Timer -= diff;
+            Yell = true;
+        }else Yell_Timer -= diff;
 
         //Fireball_Timer
         if(Fireball_Timer < diff)
@@ -1326,7 +1321,8 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             for (std::list<HostilReference*>::iterator i = m_threatlist.begin(); i!= m_threatlist.end();++i)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                if(pUnit && pUnit->IsWithinDistInMap(m_creature, 5)) //if in melee range
+                                                            //if in melee range
+                if(pUnit && pUnit->IsWithinDistInMap(m_creature, 5))
                 {
                     InMeleeRange = true;
                     target = pUnit;
@@ -1374,8 +1370,8 @@ struct MANGOS_DLL_DECL boss_master_engineer_telonicusAI : public advisorbase_ai
         if (!who || FakeDeath)
             return;
 
-                DoYell(SAY_TELONICUS_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_TELONICUS_AGGRO);
+        DoYell(SAY_TELONICUS_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature, SOUND_TELONICUS_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1428,7 +1424,6 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
         Casting = false;
         KillSelf = false;
 
-
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->setFaction(14);
     }
@@ -1463,7 +1458,6 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
         }else Timer -= diff;
     }
 };
-
 
 //Phoenix AI
 struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
@@ -1554,16 +1548,15 @@ struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
 
             DoMeleeAttackIfReady();
         }
-        else 
+        else
         {
             if (EggVis_Timer)
                 if (EggVis_Timer <= diff)
-                {
-                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_EGG_MODEL);
-                    m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                    EggVis_Timer = 0;
-                }else EggVis_Timer -= diff;
-
+            {
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_EGG_MODEL);
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                EggVis_Timer = 0;
+            }else EggVis_Timer -= diff;
 
             if (Hatch_Timer < diff)
             {
@@ -1577,26 +1570,32 @@ CreatureAI* GetAI_boss_kaelthas(Creature *_Creature)
 {
     return new boss_kaelthasAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_thaladred_the_darkener(Creature *_Creature)
 {
     return new boss_thaladred_the_darkenerAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_lord_sanguinar(Creature *_Creature)
 {
     return new boss_lord_sanguinarAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_grand_astromancer_capernian(Creature *_Creature)
 {
     return new boss_grand_astromancer_capernianAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_master_engineer_telonicus(Creature *_Creature)
 {
     return new boss_master_engineer_telonicusAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_kael_flamestrike(Creature *_Creature)
 {
     return new mob_kael_flamestrikeAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_phoenix(Creature *_Creature)
 {
     return new mob_phoenixAI (_Creature);

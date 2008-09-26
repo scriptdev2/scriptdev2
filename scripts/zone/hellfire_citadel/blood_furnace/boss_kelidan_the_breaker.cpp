@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Kelidan_The_Breaker
@@ -33,20 +33,20 @@ EndContentData */
 
 #define SAY_ADD_AGGRO_1             "You mustn't let him loose!"
 #define SOUND_ADD_AGGRO_1           10166
-#define SAY_ADD_AGGRO_2             "Ignorant whelps!" 
+#define SAY_ADD_AGGRO_2             "Ignorant whelps!"
 #define SOUND_ADD_AGGRO_2           10167
 #define SAY_ADD_AGGRO_3             "You fools! He'll kill us all!"
 #define SOUND_ADD_AGGRO_3           10168
 
-#define SAY_KILL_1                  "Just as you deserve!" 
+#define SAY_KILL_1                  "Just as you deserve!"
 #define SOUND_KILL_1                10169
 #define SAY_KILL_2                  "Your friends will soon be joining you."
-#define SOUND_KILL_2                10170        
+#define SOUND_KILL_2                10170
 
 #define SAY_NOVA                    "Closer... Come closer.. and burn!"
 #define SOUND_NOVA                  10165
 
-#define SAY_DIE                     "Good luck... you'll need it.." 
+#define SAY_DIE                     "Good luck... you'll need it.."
 #define SOUND_DIE                   10171
 
 #define SPELL_CORRUPTION            30938
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
     bool Firenova;
 
     void Reset()
-    {   
+    {
         ShadowVolley_Timer = 1000;
         BurningNova_Timer = 15000;
         Corruption_Timer = 5000;
@@ -99,14 +99,14 @@ struct MANGOS_DLL_DECL boss_kelidan_the_breakerAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-            break;
-        case 1:
-            DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-            break;
+            case 0:
+                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
+                break;
+            case 1:
+                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
+                break;
         }
     }
 

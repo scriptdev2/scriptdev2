@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Nagrand
@@ -86,7 +86,7 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
-    mob_lumpAI(Creature *c) : ScriptedAI(c) 
+    mob_lumpAI(Creature *c) : ScriptedAI(c)
     {
         bReset = false;
         Reset();
@@ -95,7 +95,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
     uint32 Reset_Timer;
     uint32 Spear_Throw_Timer;
     bool bReset;
-    
+
     void Reset()
     {
         Reset_Timer = 60000;
@@ -151,11 +151,11 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         //check if we waiting for a reset
         if (bReset)
         {
-            if (Reset_Timer < diff) 
+            if (Reset_Timer < diff)
             {
-                EnterEvadeMode(); 
+                EnterEvadeMode();
                 bReset = false;
-                m_creature->setFaction(1711);                       //hostile
+                m_creature->setFaction(1711);               //hostile
             }
             else Reset_Timer -= diff;
         }
@@ -168,7 +168,6 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         if (Spear_Throw_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SPEAR_THROW);
-
             Spear_Throw_Timer = 20000;
         }else Spear_Throw_Timer -= diff;
 
@@ -226,7 +225,7 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
     void Reset()
     {
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7);   // lay down
     }
 
     void Aggro(Unit *who) {}
@@ -262,7 +261,8 @@ bool GossipHello_npc_altruis_the_sufferer(Player *player, Creature *_Creature)
     if (player->GetQuestStatus(9991) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "Well...?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+20);
 
-    if (player->GetQuestStatus(10646) == QUEST_STATUS_INCOMPLETE) //www.wowwiki.com/Varedis
+    //wowwiki.com/Varedis
+    if (player->GetQuestStatus(10646) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM( 0, "[PH] Story about Illidan's Pupil", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+30);
 
     player->SEND_GOSSIP_MENU(9419, _Creature->GetGUID());
@@ -353,7 +353,7 @@ bool GossipHello_npc_greatmother_geyah(Player *player, Creature *_Creature)
     }
     else
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
+        player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
 
     return true;
 }
@@ -478,41 +478,38 @@ bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature *_Creature
     }
     return true;
 }
+
 /*######
 ## npc_creditmarker_visist_with_ancestors (Quest 10085)
 ######*/
 
-/*
-update creature_template set scriptname = 'npc_creditmarker_visit_with_ancestors' where entry in (18840,18841,18842,18843);
-*/
-
 struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
 {
-  npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
+    npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
-  void Reset() {}
+    void Reset() {}
 
-  void Aggro(Unit* who) {}
+    void Aggro(Unit* who) {}
 
-  void MoveInLineOfSight(Unit *who)
-  {
-      if(!who)
-          return;
-      
-      if(who->GetTypeId() == TYPEID_PLAYER)
-      {
-          if(((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
-          {
-              uint32 creditMarkerId = m_creature->GetEntry();
-              if((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
-              {
-                  // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
-                  if(!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
-                      ((Player*)who)->KilledMonster(creditMarkerId, m_creature->GetGUID());
-              }
-          }
-      }
-  }
+    void MoveInLineOfSight(Unit *who)
+    {
+        if(!who)
+            return;
+
+        if(who->GetTypeId() == TYPEID_PLAYER)
+        {
+            if(((Player*)who)->GetQuestStatus(10085) == QUEST_STATUS_INCOMPLETE)
+            {
+                uint32 creditMarkerId = m_creature->GetEntry();
+                if((creditMarkerId >= 18840) && (creditMarkerId <= 18843))
+                {
+                    // 18840: Sunspring, 18841: Laughing, 18842: Garadar, 18843: Bleeding
+                    if(!((Player*)who)->GetReqKillOrCastCurrentCount(10085, creditMarkerId))
+                        ((Player*)who)->KilledMonster(creditMarkerId, m_creature->GetGUID());
+                }
+            }
+        }
+    }
 };
 
 CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature *_Creature)
@@ -563,7 +560,7 @@ void AddSC_nagrand()
     newscript->pGossipHello =  &GossipHello_npc_lantresor_of_the_blade;
     newscript->pGossipSelect = &GossipSelect_npc_lantresor_of_the_blade;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name="npc_creditmarker_visit_with_ancestors";
     newscript->GetAI = GetAI_npc_creditmarker_visit_with_ancestors;

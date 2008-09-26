@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Vexallus
@@ -44,7 +44,7 @@ EndScriptData */
 
 //Vexallus spell info
 #define SPELL_CHAIN_LIGHTNING       44318
-#define SPELL_SUMMON_PURE_ENERGY    44322 //not-working, this script summon this creatures without this spell
+#define SPELL_SUMMON_PURE_ENERGY    44322                   //not-working, this script summon this creatures without this spell
 #define SPELL_OVERLOAD              44353
 #define SPELL_ARCANE_SHOCK          44319
 
@@ -53,7 +53,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 {
-    boss_vexallusAI(Creature *c) : ScriptedAI(c) 
+    boss_vexallusAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     {
         ChainLightningTimer = 10000;
         ArcaneShockTimer = 8000;
-        OverloadTimer = 2200; 
+        OverloadTimer = 2200;
         SpawnAddInterval = 15;
         AlreadySpawnedAmount = 0;
 
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         if (pInstance)
         {
             pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
-            
+
             GameObject* Door = NULL;
             Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_VEXALLUS_DOOR));
             if(Door)
@@ -105,7 +105,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     }
 
     void Aggro(Unit *who)
-    {        
+    {
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
         if (pInstance)
@@ -124,7 +124,8 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
 
         if(!Enraged)
         {
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < (100-(SpawnAddInterval*(AlreadySpawnedAmount+1)))) //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
+            //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
+            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < (100-(SpawnAddInterval*(AlreadySpawnedAmount+1))))
             {
                 DoYell(SAY_ENERGY, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_ENERGY);
@@ -135,7 +136,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 if (PureEnergyCreature && target)
                     PureEnergyCreature->AI()->AttackStart(target);
 
-                if(Heroic) // *Heroic mode only - he summons two instead of one.
+                if(Heroic)                                  // *Heroic mode only - he summons two instead of one.
                 {
                     PureEnergyCreature = DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -169,7 +170,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 DoCast(target, SPELL_OVERLOAD);
                 OverloadTimer = 2200;
-            }else OverloadTimer -= diff;          
+            }else OverloadTimer -= diff;
         }
         DoMeleeAttackIfReady();
     }
@@ -183,7 +184,7 @@ CreatureAI* GetAI_boss_vexallus(Creature *_Creature)
 struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 {
     mob_pure_energyAI(Creature *c) : ScriptedAI(c) {Reset();}
-    
+
     uint32 EnergyBoltTimer;
 
     void Reset()
@@ -207,7 +208,7 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(), SPELL_ENERGY_BOLT);
             EnergyBoltTimer = 1700;
-        }else   EnergyBoltTimer -= diff;   
+        }else   EnergyBoltTimer -= diff;
     }
 };
 

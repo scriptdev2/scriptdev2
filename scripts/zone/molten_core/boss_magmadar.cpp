@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Magmadar
@@ -25,7 +25,7 @@ EndScriptData */
 
 #define SPELL_FRENZY                19451
 #define SPELL_MAGMASPIT             19449                   //This is actually a buff he gives himself
-#define SPELL_PANIC                 19408       
+#define SPELL_PANIC                 19408
 #define SPELL_LAVABOMB              19411                   //This calls a dummy server side effect that isn't implemented yet
 #define SPELL_LAVABOMB_ALT          19428                   //This is the spell that the lava bomb casts
 
@@ -52,7 +52,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -60,7 +59,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         if (Frenzy_Timer < diff)
         {
             DoTextEmote("goes into a killing frenzy!",NULL);
-
             DoCast(m_creature,SPELL_FRENZY);
             Frenzy_Timer = 15000;
         }else Frenzy_Timer -= diff;

@@ -1,29 +1,29 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Kormok
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_SHADOWBOLTVOLLEY      20741            
+#define SPELL_SHADOWBOLTVOLLEY      20741
 #define SPELL_BONESHIELD            27688
 
 struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
     Creature* SummonedMages;
 
     void Reset()
-    {       
+    {
         ShadowVolley_Timer = 10000;
         BoneShield_Timer = 2000;
         Minion_Timer = 15000;
@@ -62,15 +62,15 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
         Rand1 = rand()%8;
         switch (rand()%2)
         {
-        case 0: Rand1X = 0 - Rand1; break;
-        case 1: Rand1X = 0 + Rand1; break;
+            case 0: Rand1X = 0 - Rand1; break;
+            case 1: Rand1X = 0 + Rand1; break;
         }
         Rand1 = 0;
         Rand1 = rand()%8;
         switch (rand()%2)
         {
-        case 0: Rand1Y = 0 - Rand1; break;
-        case 1: Rand1Y = 0 + Rand1; break;
+            case 0: Rand1Y = 0 - Rand1; break;
+            case 1: Rand1Y = 0 + Rand1; break;
         }
         Rand1 = 0;
         SummonedMinions = DoSpawnCreature(16119, Rand1X, Rand1Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
@@ -82,15 +82,15 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
         Rand2 = rand()%10;
         switch (rand()%2)
         {
-        case 0: Rand2X = 0 - Rand2; break;
-        case 1: Rand2X = 0 + Rand2; break;
+            case 0: Rand2X = 0 - Rand2; break;
+            case 1: Rand2X = 0 + Rand2; break;
         }
         Rand2 = 0;
         Rand2 = rand()%10;
         switch (rand()%2)
         {
-        case 0: Rand2Y = 0 - Rand2; break;
-        case 1: Rand2Y = 0 + Rand2; break;
+            case 0: Rand2Y = 0 - Rand2; break;
+            case 1: Rand2Y = 0 + Rand2; break;
         }
         Rand2 = 0;
         SummonedMages = DoSpawnCreature(16120, Rand2X, Rand2Y, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000);
@@ -99,30 +99,22 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //ShadowVolley_Timer
         if (ShadowVolley_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWBOLTVOLLEY);
-
-            //15 seconds
             ShadowVolley_Timer = 15000;
         }else ShadowVolley_Timer -= diff;
 
         //BoneShield_Timer
         if (BoneShield_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_BONESHIELD);
-
-            //45 seconds
             BoneShield_Timer = 45000;
         }else BoneShield_Timer -= diff;
-
 
         //Minion_Timer
         if (Minion_Timer < diff)
@@ -133,7 +125,6 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
             SummonMinion(m_creature->getVictim());
             SummonMinion(m_creature->getVictim());
 
-            //12 seconds until we should cast this agian
             Minion_Timer = 12000;
         }else Minion_Timer -= diff;
 
@@ -148,12 +139,11 @@ struct MANGOS_DLL_DECL boss_kormokAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_kormok(Creature *_Creature)
 {
     return new boss_kormokAI (_Creature);
 }
-
 
 void AddSC_boss_kormok()
 {

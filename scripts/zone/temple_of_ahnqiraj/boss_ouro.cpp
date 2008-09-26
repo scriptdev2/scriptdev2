@@ -1,21 +1,21 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
-SDName: boss_ouro
+SDName: Boss_Ouro
 SD%Complete: 85
 SDComment: No model for submerging. Currently just invisible.
 SDCategory: Temple of Ahn'Qiraj
@@ -27,7 +27,7 @@ EndScriptData */
 #define SPELL_SWEEP             26103
 #define SPELL_SANDBLAST         26102
 #define SPELL_GROUND_RUPTURE    26100
-#define SPELL_BIRTH             26262   //The Birth Animation
+#define SPELL_BIRTH             26262                       //The Birth Animation
 
 #define SPELL_DIRTMOUND_PASSIVE 26092
 
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 
     void Reset()
     {
-        Sweep_Timer = 5000 + rand()%5000; 
+        Sweep_Timer = 5000 + rand()%5000;
         SandBlast_Timer = 20000 + rand()%15000;
         Submerge_Timer = 90000 + rand()%60000;
         Back_Timer = 30000 + rand()%15000;
@@ -57,15 +57,12 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
 
         Enrage = false;
         Submerged = false;
-
     }
 
     void Aggro(Unit *who)
     {
-
         DoCast(m_creature->getVictim(), SPELL_BIRTH);
     }
-
 
     void UpdateAI(const uint32 diff)
     {
@@ -73,25 +70,17 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-
         //Sweep_Timer
         if (!Submerged && Sweep_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_SWEEP);
-
-            //30 seconds until we should cast this agian
             Sweep_Timer = 15000 + rand()%15000;
         }else Sweep_Timer -= diff;
 
         //SandBlast_Timer
         if (!Submerged && SandBlast_Timer < diff)
         {
-
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_SANDBLAST);
-
-            //35 seconds until we should cast this again
             SandBlast_Timer = 20000 + rand()%15000;
         }else SandBlast_Timer -= diff;
 
@@ -111,40 +100,35 @@ struct MANGOS_DLL_DECL boss_ouroAI : public ScriptedAI
         //ChangeTarget_Timer
         if (Submerged && ChangeTarget_Timer < diff)
         {
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
 
-             Unit* target = NULL;
-             target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
+            m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
 
-             m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);                    
-             m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-             
-            //12-24 seconds until we should cast this agian
             ChangeTarget_Timer = 10000 + rand()%10000;
         }else ChangeTarget_Timer -= diff;
 
         //Back_Timer
         if (Submerged && Back_Timer < diff)
         {
-            //Cast
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->setFaction(14);
+
             DoCast(m_creature->getVictim(), SPELL_GROUND_RUPTURE);
 
             Submerged = false;
             Submerge_Timer = 60000 + rand()%60000;
         }else Back_Timer -= diff;
 
-
         DoMeleeAttackIfReady();
     }
-
 };
 
 CreatureAI* GetAI_boss_ouro(Creature *_Creature)
 {
     return new boss_ouroAI (_Creature);
 }
-
 
 void AddSC_boss_ouro()
 {

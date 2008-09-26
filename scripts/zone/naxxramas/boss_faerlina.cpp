@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Faerlina
@@ -44,9 +44,8 @@ EndScriptData */
 #define SOUND_RANDOM_AGGRO  8955
 
 #define SPELL_POSIONBOLT_VOLLEY     28796
-#define SPELL_RAINOFFIRE            28794   //Not sure if targeted AoEs work if casted directly upon a player
+#define SPELL_RAINOFFIRE            28794                   //Not sure if targeted AoEs work if casted directly upon a player
 #define SPELL_ENRAGE                26527
-
 
 struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
 {
@@ -58,7 +57,7 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
     bool HasTaunted;
 
     void Reset()
-    {       
+    {
         PoisonBoltVolley_Timer = 8000;
         RainOfFire_Timer = 16000;
         Enrage_Timer = 60000;
@@ -67,25 +66,25 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                switch (rand()%4)
-                {
-                case 0:
-                    DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                    break;
-                case 2:
-                    DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                    break;
-                case 3:
-                    DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
-                    break;
-                }
+        switch (rand()%4)
+        {
+            case 0:
+                DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                break;
+            case 3:
+                DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
+                break;
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -107,28 +106,27 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
                 {
                     switch (rand()%4)
                     {
-                    case 0:
-                        DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-                        break;
-                    case 1:
-                        DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-                        break;
-                    case 2:
-                        DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-                        break;
-                    case 3:
-                        DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
-                        break;
+                        case 0:
+                            DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
+                            break;
+                        case 1:
+                            DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
+                            break;
+                        case 2:
+                            DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
+                            break;
+                        case 3:
+                            DoYell(SAY_AGGRO4,LANG_UNIVERSAL,NULL);
+                            DoPlaySoundToSet(m_creature,SOUND_AGGRO4);
+                            break;
                     }
                 }
             }
             else if (!HasTaunted && m_creature->IsWithinDistInMap(who, 60.0f))
             {
-
                 DoYell(SAY_GREET, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature,SOUND_GREET);
                 HasTaunted = true;
@@ -136,24 +134,20 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
         }
     }
 
-
     void KilledUnit(Unit* victim)
     {
-
         switch (rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY2);
+                break;
         }
-
     }
-
 
     void JustDied(Unit* Killer)
     {
@@ -163,52 +157,40 @@ struct MANGOS_DLL_DECL boss_faerlinaAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //PoisonBoltVolley_Timer
         if (PoisonBoltVolley_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_POSIONBOLT_VOLLEY);
-
-            //11 seconds
             PoisonBoltVolley_Timer = 11000;
         }else PoisonBoltVolley_Timer -= diff;
 
         //RainOfFire_Timer
         if (RainOfFire_Timer < diff)
         {
-
-            //Cast Immolate on a Random target
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_RAINOFFIRE);
+            if (target) DoCast(target,SPELL_RAINOFFIRE);
 
-            //16 seconds until we should cast this agian
             RainOfFire_Timer = 16000;
         }else RainOfFire_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_ENRAGE);
-
-            //61 seconds until we should cast this agian
             Enrage_Timer = 61000;
         }else Enrage_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_faerlina(Creature *_Creature)
 {
     return new boss_faerlinaAI (_Creature);
 }
-
 
 void AddSC_boss_faerlina()
 {
@@ -218,6 +200,3 @@ void AddSC_boss_faerlina()
     newscript->GetAI = GetAI_boss_faerlina;
     m_scripts[nrscripts++] = newscript;
 }
-
-
-

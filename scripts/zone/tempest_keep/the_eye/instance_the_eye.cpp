@@ -1,26 +1,26 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_The_Eye
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
- 
+
 #include "precompiled.h"
 #include "def_the_eye.h"
 
@@ -32,7 +32,7 @@ EndScriptData */
 2 - Solarian Event
 3 - Void Reaver event
 */
- 
+
 struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 {
     instance_the_eye(Map *Map) : ScriptedInstance(Map) {Initialize();};
@@ -63,7 +63,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             Encounters[i] = false;
     }
 
-    bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             if(Encounters[i]) return true;
@@ -75,29 +75,12 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 20064:
-                ThaladredTheDarkener = creature->GetGUID();
-                break;
-
-            case 20063:
-                MasterEngineerTelonicus = creature->GetGUID();
-                break;
-
-            case 20062:
-                GrandAstromancerCapernian = creature->GetGUID();
-                break;
-
-            case 20060:
-                LordSanguinar = creature->GetGUID();
-                break;
-
-            case 19622:
-                Kaelthas = creature->GetGUID();
-                break;
-
-            case 18805:
-                Astromancer = creature->GetGUID();
-                break;
+            case 20064: ThaladredTheDarkener = creature->GetGUID(); break;
+            case 20063: MasterEngineerTelonicus = creature->GetGUID(); break;
+            case 20062: GrandAstromancerCapernian = creature->GetGUID(); break;
+            case 20060: LordSanguinar = creature->GetGUID(); break;
+            case 19622: Kaelthas = creature->GetGUID(); break;
+            case 18805: Astromancer = creature->GetGUID(); break;
         }
     }
 
@@ -135,21 +118,21 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
                 Encounters[0] = (data) ? true : false;
                 break;
 
-             case DATA_SOLARIANEVENT:
+            case DATA_SOLARIANEVENT:
                 Encounters[1] = (data) ? true : false;
                 break;
 
-             case DATA_VOIDREAVEREVENT:
+            case DATA_VOIDREAVEREVENT:
                 Encounters[2] = (data) ? true : false;
                 break;
 
-            //Kael'thas
-             case DATA_KAELTHASEVENT:
+                //Kael'thas
+            case DATA_KAELTHASEVENT:
                 KaelthasEventPhase = data;
                 Encounters[3] = (data) ? true : false;
                 break;
 
-             case DATA_HIGHASTROMANCERSOLARIANEVENT:
+            case DATA_HIGHASTROMANCERSOLARIANEVENT:
                 Encounters[4] = (data) ? true : false;
                 break;
         }
@@ -171,7 +154,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
             case DATA_HIGHASTROMANCERSOLARIANEVENT:
                 return Encounters[4];
 
-            //Kael'thas
+                //Kael'thas
             case DATA_KAELTHASEVENT:
                 return KaelthasEventPhase;
         }

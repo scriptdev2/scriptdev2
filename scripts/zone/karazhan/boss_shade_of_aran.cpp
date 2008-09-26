@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Shade_of_Aran
@@ -30,7 +30,7 @@ EndScriptData */
 #define SAY_AGGRO1 "Please, no more. My son... he's gone mad!"
 #define SOUND_AGGRO1 9241
 
-#define SAY_AGGRO2 "I'll not be tortured again!" 
+#define SAY_AGGRO2 "I'll not be tortured again!"
 #define SOUND_AGGRO2 9323
 
 #define SAY_AGGRO3 "Who are you? What do you want? Stay away from me!"
@@ -43,7 +43,7 @@ EndScriptData */
 #define SOUND_FLAMEWREATH2 9326
 
 //Blizzard
-#define SAY_BLIZZARD1 "I'll freeze you all!" 
+#define SAY_BLIZZARD1 "I'll freeze you all!"
 #define SOUND_BLIZZARD1 9246
 #define SAY_BLIZZARD2 "Back to the cold dark with you!"
 #define SOUND_BLIZZARD2 9327
@@ -51,19 +51,19 @@ EndScriptData */
 //Arcane Explosion
 #define SAY_EXPLOSION1 "Yes, yes, my son is quite powerful... but I have powers of my own!"
 #define SOUND_EXPLOSION1 9242
-#define SAY_EXPLOSION2 "I am not some simple jester! I am Nielas Aran!" 
+#define SAY_EXPLOSION2 "I am not some simple jester! I am Nielas Aran!"
 #define SOUND_EXPLOSION2 9325
 
 //Low Mana / AoE Pyroblast
-#define SAY_DRINK "Surely you would not deny an old man a replenishing drink? No, no I thought not." 
+#define SAY_DRINK "Surely you would not deny an old man a replenishing drink? No, no I thought not."
 #define SOUND_DRINK 9248
 
 //Summon Water Elementals
-#define SAY_ELEMENTALS "I'm not finished yet! No, I have a few more tricks up me sleeve." 
+#define SAY_ELEMENTALS "I'm not finished yet! No, I have a few more tricks up me sleeve."
 #define SOUND_ELEMENTALS 9251
 
 //Player Death
-#define SAY_KILL1 "I want this nightmare to be over!" 
+#define SAY_KILL1 "I want this nightmare to be over!"
 #define SOUND_KILL1 9250
 
 #define SAY_KILL2 "Torment me no more!"
@@ -78,7 +78,7 @@ EndScriptData */
 #define SOUND_DEATH 9244
 
 //Atiesh is equipped by a raid member
-#define SAY_ATIESH "Where did you get that?! Did HE send you?!" 
+#define SAY_ATIESH "Where did you get that?! Did HE send you?!"
 #define SOUND_ATIESH 9249
 
 //Spells
@@ -101,7 +101,7 @@ EndScriptData */
 #define SPELL_AOE_PYROBLAST 29978
 
 //Creature Spells
-#define SPELL_CIRCULAR_BLIZZARD     29951 //29952 is the REAL circular blizzard that leaves persistant blizzards that last for 10 seconds
+#define SPELL_CIRCULAR_BLIZZARD     29951                   //29952 is the REAL circular blizzard that leaves persistant blizzards that last for 10 seconds
 #define SPELL_WATERBOLT             31012
 #define SPELL_SHADOW_PYRO           29978
 
@@ -131,11 +131,11 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     uint32 NormalCastTimer;
     uint32 SuperCastTimer;
     uint32 BerserkTimer;
-    uint32 CloseDoorTimer; // Don't close the door right on aggro in case some people are still entering.
+    uint32 CloseDoorTimer;                                  // Don't close the door right on aggro in case some people are still entering.
 
     uint8 LastSuperSpell;
 
-    uint32 FlameWreathTimer; 
+    uint32 FlameWreathTimer;
     uint32 FlameWreathCheckTime;
     uint64 FlameWreathTarget[3];
     float FWTargPosX[3];
@@ -178,7 +178,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         if(pInstance)
         {
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED); // Not in progress
+                                                            // Not in progress
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED);
 
             if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 Door->SetGoState(0);
@@ -207,14 +208,14 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         if(pInstance)
         {
-            pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE); // Completed
+            pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE);
             if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 Door->SetGoState(0);
         }
     }
 
     void Aggro(Unit *who)
-    {        
+    {
         switch(rand()%3)
         {
             case 0:
@@ -243,15 +244,18 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         if(!t_list.size())
             return;
 
-        for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr) //store the threat list in a different container
+        //store the threat list in a different container
+        for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+            //only on alive players
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
                 targets.push_back( target);
         }
-        
+
+        //cut down to size if we have more than 3 targets
         while(targets.size() > 3)
-            targets.erase(targets.begin()+rand()%targets.size()); //cut down to size if we have more than 3 targets
+            targets.erase(targets.begin()+rand()%targets.size());
 
         uint32 i = 0;
         for(std::vector<Unit*>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
@@ -265,40 +269,38 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 i++;
             }
         }
-
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
         if(CloseDoorTimer)
             if(CloseDoorTimer <= diff)
-            {
-                if(pInstance)
-                    if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
-                        Door->SetGoState(1);
-                CloseDoorTimer = 0;
-            }
-            else CloseDoorTimer -= diff;
+        {
+            if(pInstance)
+                if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                    Door->SetGoState(1);
+            CloseDoorTimer = 0;
+        }
+        else CloseDoorTimer -= diff;
 
         //Cooldowns for casts
         if (ArcaneCooldown)
             if (ArcaneCooldown >= diff)
                 ArcaneCooldown -= diff;
-            else ArcaneCooldown = 0;
+        else ArcaneCooldown = 0;
 
         if (FireCooldown)
             if (FireCooldown >= diff)
                 FireCooldown -= diff;
-            else FireCooldown = 0;
+        else FireCooldown = 0;
 
         if (FrostCooldown)
             if (FrostCooldown >= diff)
                 FrostCooldown -= diff;
-            else FrostCooldown = 0;
+        else FrostCooldown = 0;
 
         if(!Drinking && m_creature->GetMaxPower(POWER_MANA) && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
@@ -311,9 +313,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             if (!DrinkInturrupted)
             {
                 m_creature->CastSpell(m_creature, SPELL_MASS_POLY, true);
-                m_creature->CastSpell(m_creature, SPELL_CONJURE, false);  
+                m_creature->CastSpell(m_creature, SPELL_CONJURE, false);
                 m_creature->CastSpell(m_creature, SPELL_DRINK, false);
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1);  //Sitting down
+                                                            //Sitting down
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1);
                 DrinkInturruptTimer = 10000;
             }
         }
@@ -327,19 +330,19 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA)-32000);
             m_creature->CastSpell(m_creature, SPELL_POTION, false);
         }
-        
+
         //Drink Inturrupt Timer
         if (Drinking && !DrinkInturrupted)
             if (DrinkInturruptTimer >= diff)
                 DrinkInturruptTimer -= diff;
-            else 
-            {
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                m_creature->CastSpell(m_creature, SPELL_POTION, true);
-                m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
-                DrinkInturrupted = true;
-                Drinking = false;
-            }
+        else
+        {
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+            m_creature->CastSpell(m_creature, SPELL_POTION, true);
+            m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
+            DrinkInturrupted = true;
+            Drinking = false;
+        }
 
         //Don't execute any more code if we are drinking
         if (Drinking)
@@ -381,9 +384,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     CurrentNormalSpell = Spells[rand() % AvailableSpells];
                     DoCast(target, CurrentNormalSpell);
                 }
-
             }
-
             NormalCastTimer = 1000;
         }else NormalCastTimer -= diff;
 
@@ -392,107 +393,103 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             switch (rand()%2)
             {
 
-            case 0:
-                DoCast(m_creature, SPELL_AOE_CS);
-                break;
-            case 1:
-                Unit* pUnit;
-                pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (pUnit)
-                    DoCast(pUnit, SPELL_CHAINSOFICE);
-                break;
+                case 0:
+                    DoCast(m_creature, SPELL_AOE_CS);
+                    break;
+                case 1:
+                    Unit* pUnit;
+                    pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    if (pUnit)
+                        DoCast(pUnit, SPELL_CHAINSOFICE);
+                    break;
             }
-
             SecondarySpellTimer = 5000 + (rand()%15000);
         }else SecondarySpellTimer -= diff;
 
         if(SuperCastTimer < diff)
         {
-
             uint8 Available[2];
 
             switch (LastSuperSpell)
             {
-            case SUPER_AE:
-                Available[0] = SUPER_FLAME;
-                Available[1] = SUPER_BLIZZARD;
-                break;
-
-            case SUPER_FLAME:
-                Available[0] = SUPER_AE;
-                Available[1] = SUPER_BLIZZARD;
-                break;
-
-            case SUPER_BLIZZARD:
-                Available[0] = SUPER_FLAME;
-                Available[1] = SUPER_AE;
-                break;
-            };
+                case SUPER_AE:
+                    Available[0] = SUPER_FLAME;
+                    Available[1] = SUPER_BLIZZARD;
+                    break;
+                case SUPER_FLAME:
+                    Available[0] = SUPER_AE;
+                    Available[1] = SUPER_BLIZZARD;
+                    break;
+                case SUPER_BLIZZARD:
+                    Available[0] = SUPER_FLAME;
+                    Available[1] = SUPER_AE;
+                    break;
+            }
 
             LastSuperSpell = Available[rand()%2];
 
             switch (LastSuperSpell)
             {
-            case SUPER_AE:
+                case SUPER_AE:
 
-                if (rand()%2)
-                {
-                    DoYell(SAY_EXPLOSION1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_EXPLOSION1);
-                }else
-                {
-                    DoYell(SAY_EXPLOSION2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_EXPLOSION2);
-                }
+                    if (rand()%2)
+                    {
+                        DoYell(SAY_EXPLOSION1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_EXPLOSION1);
+                    }else
+                    {
+                        DoYell(SAY_EXPLOSION2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_EXPLOSION2);
+                    }
 
-                m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
-                m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
-                m_creature->CastSpell(m_creature, SPELL_MASSSLOW, true);
-                m_creature->CastSpell(m_creature, SPELL_AEXPLOSION, false);
-                break;
+                    m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
+                    m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
+                    m_creature->CastSpell(m_creature, SPELL_MASSSLOW, true);
+                    m_creature->CastSpell(m_creature, SPELL_AEXPLOSION, false);
+                    break;
 
-            case SUPER_FLAME:
-                if (rand()%2)
-                {
-                    DoYell(SAY_FLAMEWREATH1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH1);
-                }else
-                {
-                    DoYell(SAY_FLAMEWREATH2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH2);
-                }
+                case SUPER_FLAME:
+                    if (rand()%2)
+                    {
+                        DoYell(SAY_FLAMEWREATH1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH1);
+                    }else
+                    {
+                        DoYell(SAY_FLAMEWREATH2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH2);
+                    }
 
-                FlameWreathTimer = 20000; 
-                FlameWreathCheckTime = 500;
-    
-                FlameWreathTarget[0] = 0;
-                FlameWreathTarget[1] = 0;
-                FlameWreathTarget[2] = 0;
+                    FlameWreathTimer = 20000;
+                    FlameWreathCheckTime = 500;
 
-                FlameWreathEffect();
-                break;
+                    FlameWreathTarget[0] = 0;
+                    FlameWreathTarget[1] = 0;
+                    FlameWreathTarget[2] = 0;
 
-            case SUPER_BLIZZARD:
+                    FlameWreathEffect();
+                    break;
 
-                if (rand()%2)
-                {
-                    DoYell(SAY_BLIZZARD1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_BLIZZARD1);
-                }else
-                {
-                    DoYell(SAY_BLIZZARD2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_BLIZZARD2);
-                }
+                case SUPER_BLIZZARD:
 
-                Creature* Spawn = NULL;
-                Spawn = DoSpawnCreature(CREATURE_ARAN_BLIZZARD, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
-                if (Spawn)
-                {
-                    Spawn->setFaction(m_creature->getFaction());
-                    Spawn->CastSpell(Spawn, SPELL_CIRCULAR_BLIZZARD, false);
-                }
-                break;
-            };
+                    if (rand()%2)
+                    {
+                        DoYell(SAY_BLIZZARD1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_BLIZZARD1);
+                    }else
+                    {
+                        DoYell(SAY_BLIZZARD2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_BLIZZARD2);
+                    }
+
+                    Creature* Spawn = NULL;
+                    Spawn = DoSpawnCreature(CREATURE_ARAN_BLIZZARD, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
+                    if (Spawn)
+                    {
+                        Spawn->setFaction(m_creature->getFaction());
+                        Spawn->CastSpell(Spawn, SPELL_CIRCULAR_BLIZZARD, false);
+                    }
+                    break;
+            }
 
             SuperCastTimer = 35000 + (rand()%5000);
         }else SuperCastTimer -= diff;
@@ -531,7 +528,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_TIMEOVER);
 
             BerserkTimer = 60000;
-        }else BerserkTimer -= diff; 
+        }else BerserkTimer -= diff;
 
         //Flame Wreath check
         if (FlameWreathTimer)
@@ -555,9 +552,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                         FlameWreathTarget[i] = 0;
                     }
                 }
-
                 FlameWreathCheckTime = 500;
-            }else FlameWreathCheckTime -= diff; 
+            }else FlameWreathCheckTime -= diff;
         }
 
         if (ArcaneCooldown && FireCooldown && FrostCooldown)
@@ -573,7 +569,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     void SpellHit(Unit* pAttacker, const SpellEntry* Spell)
     {
         //We only care about inturrupt effects and only if they are durring a spell currently being casted
-        if ((Spell->Effect[0]!=SPELL_EFFECT_INTERRUPT_CAST && 
+        if ((Spell->Effect[0]!=SPELL_EFFECT_INTERRUPT_CAST &&
             Spell->Effect[1]!=SPELL_EFFECT_INTERRUPT_CAST &&
             Spell->Effect[2]!=SPELL_EFFECT_INTERRUPT_CAST) || !m_creature->IsNonMeleeSpellCasted(false))
             return;
@@ -586,18 +582,17 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         switch (CurrentNormalSpell)
         {
-        case SPELL_ARCMISSLE:
-            ArcaneCooldown = 5000;
-            break;
-        case SPELL_FIREBALL:
-            FireCooldown = 5000;
-            break;
-        case SPELL_FROSTBOLT:
-            FrostCooldown = 5000;
-            break;
+            case SPELL_ARCMISSLE:
+                ArcaneCooldown = 5000;
+                break;
+            case SPELL_FIREBALL:
+                FireCooldown = 5000;
+                break;
+            case SPELL_FROSTBOLT:
+                FrostCooldown = 5000;
+                break;
         }
     }
-
 };
 
 struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
@@ -615,7 +610,6 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -623,22 +617,20 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(), SPELL_WATERBOLT);
             CastTimer = 2000 + (rand()%3000);
-
-        }else CastTimer -= diff; 
+        }else CastTimer -= diff;
     }
 };
-
 
 CreatureAI* GetAI_boss_aran(Creature *_Creature)
 {
     return new boss_aranAI (_Creature);
 }
 
-
 CreatureAI* GetAI_water_elemental(Creature *_Creature)
 {
     return new water_elementalAI (_Creature);
 }
+
 // CONVERT TO ACID
 CreatureAI* GetAI_shadow_of_aran(Creature *_Creature)
 {

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Razuvious
@@ -28,7 +28,7 @@ EndScriptData */
 //8853 aggro02 Stand and fight!
 //8854 aggro03 Show me what you've got!
 //8861 slay1 - You should've stayed home!
-//8863 slay2- 
+//8863 slay2-
 //8858 cmmnd3 - You disappoint me, students!
 //8855 cmmnd1 - Do as I taught you!
 //8856 cmmnd2 - Show them no mercy!
@@ -63,9 +63,9 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
     void Reset()
     {
-        UnbalancingStrike_Timer = 30000;    //30 seconds
-        DisruptingShout_Timer = 25000;      //25 seconds
-        CommandSound_Timer = 40000;         //40 seconds
+        UnbalancingStrike_Timer = 30000;                    //30 seconds
+        DisruptingShout_Timer = 25000;                      //25 seconds
+        CommandSound_Timer = 40000;                         //40 seconds
     }
 
     void KilledUnit(Unit* Victim)
@@ -75,13 +75,12 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
         switch (rand()%2)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-
-        case 1:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
     }
 
@@ -92,76 +91,61 @@ struct MANGOS_DLL_DECL boss_razuviousAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                switch (rand()%3)
-                {
-                case 0:
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                    break;
-
-                case 1:
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                    break;
-
-                case 2:
-                    DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                    break;
-                }
+        switch (rand()%3)
+        {
+            case 0:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+            case 2:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                break;
+        }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //UnbalancingStrike_Timer
         if (UnbalancingStrike_Timer < diff)
         {
-            //Cast Unbalancing strike
             DoCast(m_creature->getVictim(),SPELL_UNBALANCINGSTRIKE);
-
-            //30 seconds until we should cast this agian
             UnbalancingStrike_Timer = 30000;
         }else UnbalancingStrike_Timer -= diff;
 
         //DisruptingShout_Timer
         if (DisruptingShout_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(), SPELL_DISRUPTINGSHOUT);
-
-            //25 seconds until we should cast this agian
             DisruptingShout_Timer = 25000;
         }else DisruptingShout_Timer -= diff;
 
         //CommandSound_Timer
         if (CommandSound_Timer < diff)
         {
-            //Play a random command sound
             switch (rand()%5)
             {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_COMMND1);
-                break;
-
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_COMMND2);
-                break;
-
-            case 2:
-                DoPlaySoundToSet(m_creature, SOUND_COMMND3);
-                break;
-
-            case 3:
-                DoPlaySoundToSet(m_creature, SOUND_COMMND4);
-                break;
-
-            case 4:
-                DoPlaySoundToSet(m_creature, SOUND_COMMND5);
-                break;
+                case 0:
+                    DoPlaySoundToSet(m_creature, SOUND_COMMND1);
+                    break;
+                case 1:
+                    DoPlaySoundToSet(m_creature, SOUND_COMMND2);
+                    break;
+                case 2:
+                    DoPlaySoundToSet(m_creature, SOUND_COMMND3);
+                    break;
+                case 3:
+                    DoPlaySoundToSet(m_creature, SOUND_COMMND4);
+                    break;
+                case 4:
+                    DoPlaySoundToSet(m_creature, SOUND_COMMND5);
+                    break;
             }
 
-            //40 seconds until we should cast this agian
             CommandSound_Timer = 40000;
         }else CommandSound_Timer -= diff;
 
@@ -172,7 +156,6 @@ CreatureAI* GetAI_boss_razuvious(Creature *_Creature)
 {
     return new boss_razuviousAI (_Creature);
 }
-
 
 void AddSC_boss_razuvious()
 {

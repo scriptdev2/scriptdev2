@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Interrogator_Vishas
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Scarlet Monastery
 EndScriptData */
 
@@ -50,13 +50,12 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -66,7 +65,6 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             //Yell_Timer
             if (Yell_Timer < diff)
             {
-
                 DoYell(SAY_HEALTH1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_HEALTH1);
                 return;
@@ -81,7 +79,6 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
             //Yell_Timer
             if (Yell_Timer < diff)
             {
-
                 DoYell(SAY_HEALTH2,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature,SOUND_HEALTH2);
                 return;
@@ -94,21 +91,17 @@ struct MANGOS_DLL_DECL boss_interrogator_vishasAI : public ScriptedAI
         //PowerWordShield_Timer
         if (PowerWordShield_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_POWERWORDSHIELD);
-
-            //60 seconds until we should cast this agian
             PowerWordShield_Timer = 60000;
         }else PowerWordShield_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_interrogator_vishas(Creature *_Creature)
 {
     return new boss_interrogator_vishasAI (_Creature);
 }
-
 
 void AddSC_boss_interrogator_vishas()
 {

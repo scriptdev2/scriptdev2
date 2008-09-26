@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
-SDName: boss_ironaya
+SDName: Boss_Ironaya
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Uldaman
 EndScriptData */
 
@@ -47,8 +47,8 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
 
         //If we are <50% hp do knockaway ONCE
         if (!hasCastedKnockaway && m_creature->GetHealth()*2 < m_creature->GetMaxHealth())
-        {        
+        {
             m_creature->CastSpell(m_creature->getVictim(),SPELL_KNOCKAWAY, true);
 
             // current aggro target is knocked away pick new target
@@ -78,16 +78,12 @@ struct MANGOS_DLL_DECL boss_ironayaAI : public ScriptedAI
         //Arcing_Timer
         if (Arcing_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_ARCINGSMASH);
-
-            //10 seconds until we should cast this agian
             Arcing_Timer = 13000;
         }else Arcing_Timer -= diff;
 
         if (!hasCastedWstomp && m_creature->GetHealth()*4 < m_creature->GetMaxHealth())
         {
-            //Cast
             DoCast(m_creature,SPELL_WSTOMP);
             hasCastedWstomp = true;
         }

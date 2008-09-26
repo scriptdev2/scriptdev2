@@ -1,30 +1,30 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Gluth
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_MORTALWOUND       25646    
-#define SPELL_DECIMATE          28374              
+#define SPELL_MORTALWOUND       25646
+#define SPELL_DECIMATE          28374
 #define SPELL_TERRIFYINGROAR    29685
 #define SPELL_FRENZY            19812
 #define SPELL_ENRAGE            28747
@@ -65,8 +65,6 @@ EndScriptData */
 #define ADD_9Y -3180.766
 #define ADD_9Z 297.423
 
-
-
 struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 {
     boss_gluthAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -79,7 +77,7 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
     uint32 Summon_Timer;
 
     void Reset()
-    {       
+    {
         MortalWound_Timer = 8000;
         Decimate_Timer = 100000;
         TerrifyingRoar_Timer = 21000;
@@ -94,64 +92,47 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //MortalWound_Timer
         if (MortalWound_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_MORTALWOUND);
-
-            //10 seconds
             MortalWound_Timer = 10000;
         }else MortalWound_Timer -= diff;
 
         //Decimate_Timer
         if (Decimate_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_DECIMATE);
-
-            //100 seconds until we should cast this agian
             Decimate_Timer = 100000;
         }else Decimate_Timer -= diff;
 
         //TerrifyingRoar_Timer
         if (TerrifyingRoar_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_TERRIFYINGROAR);
-
-            //20 seconds until we should cast this agian
             TerrifyingRoar_Timer = 20000;
         }else TerrifyingRoar_Timer -= diff;
 
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_FRENZY);
-
-            //10.5 seconds until we should cast this agian
             Frenzy_Timer = 10500;
         }else Frenzy_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_ENRAGE);
-
-            //61 seconds until we should cast this agian
             Enrage_Timer = 61000;
         }else Enrage_Timer -= diff;
 
         //Summon_Timer
         if (Summon_Timer < diff)
         {
-
             Unit* target = NULL;
             Unit* SummonedZombies = NULL;
 
@@ -162,8 +143,9 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
             SummonedZombies = m_creature->SummonCreature(16360,ADD_5X,ADD_5Y,ADD_5Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
             SummonedZombies = m_creature->SummonCreature(16360,ADD_6X,ADD_6Y,ADD_6Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
             SummonedZombies = m_creature->SummonCreature(16360,ADD_7X,ADD_7Y,ADD_7Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = m_creature->SummonCreature(16360,ADD_8X,ADD_8Y,ADD_8Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);                   
+            SummonedZombies = m_creature->SummonCreature(16360,ADD_8X,ADD_8Y,ADD_8Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
             SummonedZombies = m_creature->SummonCreature(16360,ADD_9X,ADD_9Y,ADD_9Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+
             if (SummonedZombies)
             {
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
@@ -171,18 +153,16 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
                     SummonedZombies->AddThreat(target,1.0f);
             }
 
-            //24 seconds until we should cast this agian
             Summon_Timer = 28000;
         } else Summon_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_gluth(Creature *_Creature)
 {
     return new boss_gluthAI (_Creature);
 }
-
 
 void AddSC_boss_gluth()
 {

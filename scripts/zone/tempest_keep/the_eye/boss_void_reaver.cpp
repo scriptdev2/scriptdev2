@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Void_Reaver
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
@@ -77,20 +77,18 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-
-        case 1:
-            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
-
-        case 2:
-            DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
+            case 2:
+                DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
+                break;
         }
     }
 
@@ -98,6 +96,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
+
         if(pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
@@ -106,13 +105,13 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+
         if(pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -120,6 +119,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         if(Pounding_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_POUNDING);
+
             switch(rand()%2)
             {
                 case 0:
@@ -143,7 +143,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if(target && target->GetDistance2d(m_creature) > 15)     //15 yard radius minimum
+                                                            //15 yard radius minimum
+                if(target && target->GetDistance2d(m_creature) > 15)
                     target_list.push_back(target);
                 target = NULL;
             }

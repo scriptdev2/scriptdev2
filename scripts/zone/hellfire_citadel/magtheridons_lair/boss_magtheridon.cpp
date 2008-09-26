@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Magtheridon
@@ -27,8 +27,8 @@ EndScriptData */
 
 //Phase 2 Spells
 #define SPELL_QUAKE_PROC            30571
-#define SPELL_QUAKE                 30576  //must be cast with 30561 as the proc spell
-#define SPELL_BLASTNOVA             30616        
+#define SPELL_QUAKE                 30576                   //must be cast with 30561 as the proc spell
+#define SPELL_BLASTNOVA             30616
 #define SPELL_CLEAVE                30619
 #define SPELL_BERSERK               27680
 #define SPELL_DEBRIS                30631
@@ -62,19 +62,19 @@ EndScriptData */
 #define SOUND_PLAYER_KILLED         10255
 
 #define SAY_DEATH                   "The Legion...will consume you...all...."
-#define SOUND_DEATH                 10258 
+#define SOUND_DEATH                 10258
 
 #define EMOTE_BERSERK               "becomes enraged!"
 #define EMOTE_BLASTNOVA             "begins to cast Blast Nova!"
 #define EMOTE_BEGIN                 "%s's bonds begin to weaken!"
 
 //Spawned objects
-#define SPELL_COLLAPSE              34233   //This spell casted by the "cave in" type object
+#define SPELL_COLLAPSE              34233                   //This spell casted by the "cave in" type object
 
-#define SPELL_CONFLAGERATION        35840       //Actually casted by a creature or object spawned on the ground
+#define SPELL_CONFLAGERATION        35840                   //Actually casted by a creature or object spawned on the ground
 
 //Cubes
-#define SPELL_MIND_EXHAUSTIOIN      30509   //Casted by the cubes when channeling ends
+#define SPELL_MIND_EXHAUSTIOIN      30509                   //Casted by the cubes when channeling ends
 
 //Channeler spells
 //#define MOB_HELLFIRE_CHANNELLER    17256
@@ -91,10 +91,9 @@ EndScriptData */
 // Unkown sounds
 uint32 RandomSound[] = {10247, 10248, 10249, 10250, 10251, 10252};
 
-
 struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 {
-    boss_magtheridonAI(Creature *c) : ScriptedAI(c) 
+    boss_magtheridonAI(Creature *c) : ScriptedAI(c)
     {
         pInst = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();
@@ -120,7 +119,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
         Phase1_Timer = 0;
         Cleave_Timer = 15000;
-        Berserk_Timer = 1200000;     //20 minutes
+        Berserk_Timer = 1200000;                            //20 minutes
         BlastNova_Timer = 60000;
         Quake_Timer = 40000;
         QuakePhase = 0;
@@ -156,12 +155,11 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
     {
         if (!InCombat && !Phase1_Timer)
             if (RandChat_Timer < diff)
-            {
-                DoPlaySoundToSet(m_creature, RandomSound[rand()%5]);
+        {
+            DoPlaySoundToSet(m_creature, RandomSound[rand()%5]);
 
-                RandChat_Timer = 90000;
-            }else RandChat_Timer -= diff;
-
+            RandChat_Timer = 90000;
+        }else RandChat_Timer -= diff;
 
         if (!InCombat && !Phase1_Timer && pInst && pInst->GetData64(DATA_EVENT_STARTER))
         {
@@ -174,28 +172,28 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         //Phase timer
         if (Phase1_Timer)
             if (Phase1_Timer <= diff)
+        {
+            m_creature->setFaction(14);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+            DoYell(SAY_FREED, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_FREED);
+            m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE);
+            AttackStart(Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)));
+
+            Phase1_Timer = 0;
+        }else
+        {
+            if (!Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)))
             {
-                m_creature->setFaction(14);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                DoYell(SAY_FREED, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_FREED);
-                m_creature->RemoveAurasDueToSpell(SPELL_SHADOW_CAGE);
-                AttackStart(Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)));
-
                 Phase1_Timer = 0;
-            }else 
-            {
-                if (!Unit::GetUnit(*m_creature, pInst->GetData64(DATA_EVENT_STARTER)))
-                {
-                    Phase1_Timer = 0;
-                    return;
-                }
-
-                Phase1_Timer -= diff;
                 return;
             }
+
+            Phase1_Timer -= diff;
+            return;
+        }
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -205,7 +203,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         if (m_creature->HasAura(SPELL_SHADOW_GRASP_VIS, 0) && m_creature->HasAura(SPELL_BLASTNOVA, 0) && !Banished)
         {
             DoYell(SAY_BANISH, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_BANISH);     
+            DoPlaySoundToSet(m_creature, SOUND_BANISH);
             m_creature->RemoveAurasDueToSpell(SPELL_BLASTNOVA);
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature, SPELL_SHADOW_CAGE_2);
@@ -231,7 +229,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         if (Cleave_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
             Cleave_Timer = 10000;
         }else Cleave_Timer -= diff;
 
@@ -242,7 +239,6 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
             m_creature->CastCustomSpell(m_creature, SPELL_QUAKE, &i, 0, 0, false);
 
             Quake_Timer = 40000;
-
         }else Quake_Timer -= diff;
 
         //BlastNova_Timer
@@ -269,11 +265,11 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
         //Melee
         DoMeleeAttackIfReady();
     }
-}; 
+};
 
 struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
 {
-    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c) 
+    mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c)
     {
         pInst = (ScriptedInstance*)m_creature->GetInstanceData();
         Reset();

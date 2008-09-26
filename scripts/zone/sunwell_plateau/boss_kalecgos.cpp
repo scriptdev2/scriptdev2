@@ -1,18 +1,18 @@
 /* Copyright ? 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
 /* ScriptData
 SDName: Boss_Kalecgos
@@ -57,7 +57,8 @@ EndScriptData */
 #define SOUND_KALEC_AGGRO          12428
 #define SAY_KALEC_NEAR_DEATH       "Aaahhh! Help me, before I lose my mind!"
 #define SOUND_KALEC_NEAR_DEATH     12429
-#define SAY_KALEC_NEAR_DEATH2      "Hurry! There is not much of me left!" //???
+                                                            //???
+#define SAY_KALEC_NEAR_DEATH2      "Hurry! There is not much of me left!"
 #define SOUND_KALEC_NEAR_DEATH2    12430
 #define SAY_KALEC_PLRWIN           "I am forever in your debt. Once we have triumphed over Kil'jaeden, this entire world will be in your debt as well."
 #define SOUND_KALEC_PLRWIN         12431
@@ -191,7 +192,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
                 Sath->AI()->EnterEvadeMode();
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_KALECGOS_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_KALECGOS_AGGRO);
@@ -218,7 +219,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             }
         }
     }
-    
+
     void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
@@ -236,7 +237,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
     void BeginOutro()
     {
-        outstring_log("KALEC: Beginning Outro");
+        debug_log("SD2: KALEC: Beginning Outro");
 
         if(!pInstance)
         {
@@ -316,38 +317,38 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
 
         if(ExitTimer)
             if(ExitTimer <= diff)
-            {
-                outstring_log("KALEC: Exiting the arena");
-                DoYell(SAY_KALEC_PLRWIN, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KALEC_PLRWIN);
-                m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
-                float x, y, z;
-                float iniX, iniY, iniZ;
-                m_creature->GetPosition(iniX, iniY, iniZ);
-                m_creature->GetRandomPoint(iniX, iniY, iniZ, 30, x, y, z);
-                z = 70;
-                m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
-            }else ExitTimer -= diff;
+        {
+            debug_log("SD2: KALEC: Exiting the arena");
+            DoYell(SAY_KALEC_PLRWIN, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_KALEC_PLRWIN);
+            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
+            float x, y, z;
+            float iniX, iniY, iniZ;
+            m_creature->GetPosition(iniX, iniY, iniZ);
+            m_creature->GetRandomPoint(iniX, iniY, iniZ, 30, x, y, z);
+            z = 70;
+            m_creature->GetMotionMaster()->MovePoint(1, x, y, z);
+        }else ExitTimer -= diff;
 
         if(!LockedArena)
             if(ForceFieldTimer < diff)
+        {
+            if(pInstance)
             {
-                if(pInstance)
-                {
-                    GameObject* ForceField = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_FORCEFIELD));
-                    if(ForceField)
-                        ForceField->SetUInt32Value(GAMEOBJECT_STATE, 0);
+                GameObject* ForceField = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_FORCEFIELD));
+                if(ForceField)
+                    ForceField->SetUInt32Value(GAMEOBJECT_STATE, 0);
 
-                    LockedArena = true;            
-                }else error_log(ERROR_INST_DATA);
-            }else ForceFieldTimer -= diff;
+                LockedArena = true;
+            }else error_log(ERROR_INST_DATA);
+        }else ForceFieldTimer -= diff;
 
         if(ArcaneBuffetTimer < diff)
         {
             if(rand()%3 == 0)
             {
                 DoYell(SAY_KALECGOS_SPELL1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KALECGOS_SPELL1);                                
+                DoPlaySoundToSet(m_creature, SOUND_KALECGOS_SPELL1);
             }
             DoCast(m_creature->getVictim(), SPELL_ARCANE_BUFFET);
             ArcaneBuffetTimer = 20000;
@@ -358,7 +359,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             if(rand()%2 == 0)
             {
                 DoYell(SAY_KALECGOS_SPELL2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_KALECGOS_SPELL2);                                
+                DoPlaySoundToSet(m_creature, SOUND_KALECGOS_SPELL2);
             }
             DoCast(m_creature->getVictim(), SPELL_FROST_BREATH);
             FrostBreathTimer = 25000;
@@ -434,7 +435,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
         DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
     }
 
-    void Aggro(Unit* who) 
+    void Aggro(Unit* who)
     {
         DoYell(SAY_SATH_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_SATH_AGGRO);
@@ -454,7 +455,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
             damage = 0;
             DoCast(m_creature, SPELL_BANISH, true);
             Banished = true;
-            
+
             DoYell(SAY_SATH_DEATH, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_SATH_DEATH);
 
@@ -475,7 +476,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
             else error_log(ERROR_KALECGOS_NOT_FOUND);
         }
     }
-    
+
     void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
@@ -510,7 +511,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
             if(rand()%2 == 0)
             {
                 DoYell(SAY_SATH_SPELL2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SATH_SPELL2);                                
+                DoPlaySoundToSet(m_creature, SOUND_SATH_SPELL2);
             }
             DoCast(m_creature->getVictim(), SPELL_CORRUPTING_STRIKE);
             CorruptingStrikeTimer = 13000;
@@ -528,7 +529,7 @@ struct MANGOS_DLL_DECL boss_sathrovarrAI : public ScriptedAI
             if(rand()%2 == 0)
             {
                 DoYell(SAY_SATH_SPELL1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SATH_SPELL1);                                
+                DoPlaySoundToSet(m_creature, SOUND_SATH_SPELL1);
             }
             DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
             ShadowBoltVolleyTimer = 15000;
@@ -545,42 +546,42 @@ struct MANGOS_DLL_DECL boss_kalecAI : public ScriptedAI
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
-    
+
     ScriptedInstance *pInstance;
 
     uint32 RevitalizeTimer;
     uint32 HeroicStrikeTimer;
-    
+
     bool HasYelled10Percent;
     bool HasYelled20Percent;
-    
+
     void Reset()
     {
-         //TODO: Times!
-         RevitalizeTimer = 30000;
-         HeroicStrikeTimer = 8000;
-         
-         HasYelled10Percent = false;
-         HasYelled20Percent = false;
-         
-         DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
+        //TODO: Times!
+        RevitalizeTimer = 30000;
+        HeroicStrikeTimer = 8000;
+
+        HasYelled10Percent = false;
+        HasYelled20Percent = false;
+
+        DoCast(m_creature, SPELL_SPECTRAL_REALM, true);
     }
-    
-    void Aggro(Unit* who) 
+
+    void Aggro(Unit* who)
     {
         DoYell(SAY_KALEC_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_KALEC_AGGRO);
     }
-    
+
     void JustDied(Unit* killer)
     {
         // Whatever happens when Kalec (Half-elf) dies
     }
-    
+
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
-            return;  
+            return;
 
         if(RevitalizeTimer < diff)
         {
@@ -592,13 +593,13 @@ struct MANGOS_DLL_DECL boss_kalecAI : public ScriptedAI
                 RevitalizeTimer = 30000;
             }
         }else RevitalizeTimer -= diff;
-        
+
         if(HeroicStrikeTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_HEROIC_STRIKE);
             HeroicStrikeTimer = 30000;
         }else HeroicStrikeTimer -= diff;
-        
+
         if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 20) && !HasYelled20Percent)
         {
             DoYell(SAY_KALEC_NEAR_DEATH, LANG_UNIVERSAL, NULL);

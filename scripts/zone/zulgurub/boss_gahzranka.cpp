@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Gahz'ranka
@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 
 #define SPELL_FROSTBREATH            21099
-#define SPELL_MASSIVEGEYSER          22421                //Not working. Cause its a summon...
+#define SPELL_MASSIVEGEYSER          22421                  //Not working. Cause its a summon...
 #define SPELL_SLAM                   24326
 
 struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
@@ -44,7 +44,6 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
     void Aggro(Unit *who)
     {
     }
-     
 
     void UpdateAI(const uint32 diff)
     {
@@ -55,42 +54,33 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         //Frostbreath_Timer
         if (Frostbreath_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FROSTBREATH);
-
-            //7-11 seconds until we should cast this agian
             Frostbreath_Timer = 7000 + rand()%4000;
         }else Frostbreath_Timer -= diff;
 
         //MassiveGeyser_Timer
         if (MassiveGeyser_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_MASSIVEGEYSER);
             DoResetThreat();
 
-            //22-32 seconds until we should cast this agian
             MassiveGeyser_Timer = 22000 + rand()%10000;
         }else MassiveGeyser_Timer -= diff;
 
         //Slam_Timer
         if (Slam_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SLAM);
-
-            //12-20 seconds until we should cast this agian
             Slam_Timer = 12000 + rand()%8000;
         }else Slam_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_gahzranka(Creature *_Creature)
 {
     return new boss_gahzrankaAI (_Creature);
 }
-
 
 void AddSC_boss_gahzranka()
 {

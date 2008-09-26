@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Onyxia
@@ -26,19 +26,23 @@ EndScriptData */
 #define SPELL_WINGBUFFET            18500
 #define SPELL_FLAMEBREATH           18435
 #define SPELL_CLEAVE                19983
-#define SPELL_TAILSWEEP             25653
-#define SPELL_ENGULFINGFLAMES       20019                  
-#define SPELL_DEEPBREATH            23461
-#define SPELL_BELLOWINGROAR         18431
+#define SPELL_TAILSWEEP             15847
+#define SPELL_KNOCK_AWAY            19633
 
-//These spells below arn't supported in the core yet
+#define SPELL_ENGULFINGFLAMES       20019
+#define SPELL_DEEPBREATH            23461
+#define SPELL_FIREBALL              18392
+
+#define SPELL_BELLOWINGROAR         18431
+#define SPELL_HEATED_GROUND         22191
+
 #define SPELL_SUMMONWHELP           17646
-#define SPELL_SUMMON_MULTI_WHELPS   20171
 
 #define SAY_AGGRO           "How fortuitous. Usually, I must leave my lair to feed."
 #define SAY_KILL            "Learn your place mortal!"
-#define SAY_PHASE_2_TRANS   "I'll incinerate you from above!"
+#define SAY_PHASE_2_TRANS   "This meaningless exertion bores me. I'll incinerate you from above!"
 #define SAY_PHASE_3_TRANS   "It seems you'll need another lesson!"
+#define EMOTE_BREATH        "takes a deep breath..."
 
 static float MovementLocations[7][3]=
 {
@@ -173,7 +177,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
                     m_creature->GetMotionMaster()->MovePoint(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]);
                 else
                 {
-                    DoTextEmote("takes a deep breath", NULL);
+                    DoTextEmote(EMOTE_BREATH, NULL);
                     DoCast(m_creature->getVictim(), SPELL_DEEPBREATH);
                 }
                 MovementTimer = 25000;
@@ -214,7 +218,6 @@ CreatureAI* GetAI_boss_onyxiaAI(Creature *_Creature)
 {
     return new boss_onyxiaAI (_Creature);
 }
-
 
 void AddSC_boss_onyxia()
 {

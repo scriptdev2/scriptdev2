@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Silvermoon_City
@@ -47,11 +47,8 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
     void Reset()
     {
         lifeTimer = 120000;
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //DoGoHome();
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7); // lay down
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7);   // lay down
         spellHit = false;
     }
 
@@ -70,14 +67,14 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
         {
             if(lifeTimer < diff)
                 m_creature->AI()->EnterEvadeMode();
-            else 
+            else
                 lifeTimer -= diff;
         }
     }
 
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
-        if((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit && 
+        if((Spellkind->Id == SPELL_SHIMMERING_VESSEL) && !spellHit &&
             (Hitter->GetTypeId() == TYPEID_PLAYER) && (((Player*)Hitter)->IsActiveQuest(QUEST_REDEEMING_THE_DEAD)))
         {
             ((Player*)Hitter)->AreaExploredOrEventHappens(QUEST_REDEEMING_THE_DEAD);
@@ -89,7 +86,6 @@ struct MANGOS_DLL_DECL npc_blood_knight_stillbladeAI : public ScriptedAI
             spellHit = true;
         }
     }
-
 };
 
 CreatureAI* GetAI_npc_blood_knight_stillblade(Creature *_Creature)

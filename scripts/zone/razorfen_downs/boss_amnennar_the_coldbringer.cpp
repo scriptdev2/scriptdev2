@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Amnennar_the_coldbringer
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Razorfen Downs
 EndScriptData */
 
@@ -54,8 +54,8 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_0,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_0,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void KilledUnit()
@@ -69,15 +69,15 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
         Rand = rand()%5;
         switch (rand()%2)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            case 0: RandX = 0 - Rand; break;
+            case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
         Rand = rand()%5;
         switch (rand()%2)
         {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
+            case 0: RandY = 0 - Rand; break;
+            case 1: RandY = 0 + Rand; break;
         }
         Rand = 0;
         Summoned = DoSpawnCreature(8585, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
@@ -85,32 +85,25 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
             ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
 
-
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //AmnenarsWrath_Timer
         if (AmnenarsWrath_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_AMNENNARSWRATH);
-            //12 seconds until we should cast this again
             AmnenarsWrath_Timer = 12000;
         } else AmnenarsWrath_Timer -= diff;
 
         //FrostBolt_Timer
         if (FrostBolt_Timer < diff)
         {
-            //Cast FrostBolt on a Random target
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_FROSTBOLT);
+            if (target) DoCast(target,SPELL_FROSTBOLT);
 
-            //8 seconds until we should cast this again
             FrostBolt_Timer = 8000;
         } else FrostBolt_Timer -= diff;
 
@@ -130,13 +123,12 @@ struct MANGOS_DLL_DECL boss_amnennar_the_coldbringerAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 
 CreatureAI* GetAI_boss_amnennar_the_coldbringer(Creature *_Creature)
 {
     return new boss_amnennar_the_coldbringerAI (_Creature);
 }
-
 
 void AddSC_boss_amnennar_the_coldbringer()
 {

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_Magisters_Terrace
@@ -42,7 +42,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
     uint32 Encounters[NUMBER_OF_ENCOUNTERS];
     uint32 DelrissaDeathCount;
-    
+
     std::list<uint64> FelCrystals;
     std::list<uint64>::iterator CrystalItr;
 
@@ -102,12 +102,12 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     void SetData(uint32 identifier, uint32 data)
     {
         switch(identifier)
-        {                
+        {
             case DATA_SELIN_EVENT:       Encounters[0] = data;  break;
             case DATA_VEXALLUS_EVENT:    Encounters[1] = data;  break;
             case DATA_DELRISSA_EVENT:    Encounters[2] = data;  break;
             case DATA_KAELTHAS_EVENT:    Encounters[3] = data;  break;
-                
+
             case DATA_DELRISSA_DEATH_COUNT:
                 if(data)  ++DelrissaDeathCount;
                 else      DelrissaDeathCount = 0;
@@ -144,23 +144,23 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case DATA_KAEL_STATUE_RIGHT:    return KaelStatue[1];
 
             case DATA_FEL_CRYSTAL:
+            {
+                if(FelCrystals.empty())
                 {
-                    if(FelCrystals.empty())
-                    {
-                        error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
-                        return 0;
-                    }
-
-                    if(!InitializedItr)
-                    {
-                        CrystalItr = FelCrystals.begin();
-                        InitializedItr = true;
-                    }
-
-                    uint64 guid = *CrystalItr;
-                    ++CrystalItr;
-                    return guid;
+                    error_log("SD2: Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                    return 0;
                 }
+
+                if(!InitializedItr)
+                {
+                    CrystalItr = FelCrystals.begin();
+                    InitializedItr = true;
+                }
+
+                uint64 guid = *CrystalItr;
+                ++CrystalItr;
+                return guid;
+            }
         }
         return 0;
     }

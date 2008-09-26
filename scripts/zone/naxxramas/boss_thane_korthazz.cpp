@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Thane_Korthazz
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -29,7 +29,7 @@ EndScriptData */
 
 // thane korthazz
 #define SPELL_MARK_OF_KORTHAZZ     28832
-#define SPELL_METEOR               26558 // m_creature->getVictim() auto-area spell but with a core problem
+#define SPELL_METEOR               26558                    // m_creature->getVictim() auto-area spell but with a core problem
 
 #define SAY_AGGRO                  "Come out and fight, ye wee ninny!"
 #define SAY_TAUNT1                 "To arms, ye roustabouts! We've got company!"
@@ -59,9 +59,9 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
     bool ShieldWall2;
 
     void Reset()
-    {       
-        Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
-        Meteor_Timer = 30000; // wrong
+    {
+        Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+        Meteor_Timer = 30000;                               // wrong
         ShieldWall1 = true;
         ShieldWall2 = true;
     }
@@ -89,12 +89,11 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-            InitialYell();
+        InitialYell();
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -105,7 +104,7 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
             Mark_Timer = 12000;
         }else Mark_Timer -= diff;
 
-        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
             if(ShieldWall1)
@@ -127,17 +126,16 @@ struct MANGOS_DLL_DECL boss_thane_korthazzAI : public ScriptedAI
         if(Meteor_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_METEOR);
-            Meteor_Timer = 20000; // wrong
+            Meteor_Timer = 20000;                           // wrong
         }else Meteor_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_thane_korthazz(Creature *_Creature)
 {
     return new boss_thane_korthazzAI (_Creature);
 }
-
 
 void AddSC_boss_thane_korthazz()
 {

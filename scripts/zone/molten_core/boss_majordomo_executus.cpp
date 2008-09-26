@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_MajorDomo_Executus
@@ -59,7 +59,7 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
     void Reset()
     {
-        MagicReflection_Timer =  30000;      //Damage reflection first so we alternate
+        MagicReflection_Timer =  30000;                     //Damage reflection first so we alternate
         DamageReflection_Timer = 15000;
         Blastwave_Timer = 10000;
     }
@@ -75,16 +75,14 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-
 
         //Cast Ageis if less than 50% hp
         if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
@@ -93,41 +91,37 @@ struct MANGOS_DLL_DECL boss_majordomoAI : public ScriptedAI
         }
 
         //MagicReflection_Timer
-//        if (MagicReflection_Timer < diff)
-//        {
-//            DoCast(m_creature, SPELL_MAGICREFLECTION);
+        //        if (MagicReflection_Timer < diff)
+        //        {
+        //            DoCast(m_creature, SPELL_MAGICREFLECTION);
 
-            //60 seconds until we should cast this agian
-//            MagicReflection_Timer = 30000;
-//        }else MagicReflection_Timer -= diff;
+        //60 seconds until we should cast this agian
+        //            MagicReflection_Timer = 30000;
+        //        }else MagicReflection_Timer -= diff;
 
         //DamageReflection_Timer
-//        if (DamageReflection_Timer < diff)
-//        {
-//            DoCast(m_creature, SPELL_DAMAGEREFLECTION);
+        //        if (DamageReflection_Timer < diff)
+        //        {
+        //            DoCast(m_creature, SPELL_DAMAGEREFLECTION);
 
-            //60 seconds until we should cast this agian
-//            DamageReflection_Timer = 30000;
-//        }else DamageReflection_Timer -= diff;
+        //60 seconds until we should cast this agian
+        //            DamageReflection_Timer = 30000;
+        //        }else DamageReflection_Timer -= diff;
 
         //Blastwave_Timer
         if (Blastwave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_BLASTWAVE);
-
-            //10 seconds until we should cast this agian
             Blastwave_Timer = 10000;
         }else Blastwave_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_majordomo(Creature *_Creature)
 {
     return new boss_majordomoAI (_Creature);
 }
-
 
 void AddSC_boss_majordomo()
 {

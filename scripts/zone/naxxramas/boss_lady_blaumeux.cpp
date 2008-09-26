@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Lady_Blaumeux
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Naxxramas
 EndScriptData */
 
@@ -59,9 +59,9 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
     bool ShieldWall2;
 
     void Reset()
-    {       
-        Mark_Timer = 20000; // First Horsemen Mark is applied at 20 sec.
-        VoidZone_Timer = 12000; // right
+    {
+        Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+        VoidZone_Timer = 12000;                             // right
         ShieldWall1 = true;
         ShieldWall2 = true;
     }
@@ -89,12 +89,11 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-            InitialYell();
+        InitialYell();
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -105,7 +104,7 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
             Mark_Timer = 12000;
         }else Mark_Timer -= diff;
 
-        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds 
+        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
         if(ShieldWall1 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
             if(ShieldWall1)
@@ -127,17 +126,16 @@ struct MANGOS_DLL_DECL boss_lady_blaumeuxAI : public ScriptedAI
         if(VoidZone_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_VOIDZONE);
-            VoidZone_Timer = 12000; // right
+            VoidZone_Timer = 12000;
         }else VoidZone_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_lady_blaumeux(Creature *_Creature)
 {
     return new boss_lady_blaumeuxAI (_Creature);
 }
-
 
 void AddSC_boss_lady_blaumeux()
 {
