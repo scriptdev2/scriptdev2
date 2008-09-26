@@ -470,8 +470,12 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="area"
+				Name="areatrigger"
 				>
+				<File
+					RelativePath="..\scripts\areatrigger\areatrigger_scripts.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="go"

@@ -7,6 +7,7 @@
 #include "ProgressBar.h"
 #include "Database/DBCStores.h"
 #include "Database/DatabaseMysql.h"
+#include "ObjectMgr.h"
 #include "config.h"
 #include "scripts/creature/mob_event_ai.h"
 
@@ -78,7 +79,8 @@ void FillSpellSummary();
 
 // -- Scripts to be added --
 
-// -- Area --
+// -- Areatrigger --
+extern void AddSC_areatrigger_scripts();
 
 // -- Boss --
 extern void AddSC_boss_emeriss();
@@ -1180,7 +1182,8 @@ void ScriptsInit()
 
     // -- Scripts to be added --
 
-    // -- Area --
+    // -- Areatrigger --
+    AddSC_areatrigger_scripts();
 
     // -- Boss --
     AddSC_boss_emeriss();
@@ -1892,6 +1895,9 @@ void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target)
 
 Script* GetScriptByName(std::string Name)
 {
+    if(Name.empty())
+        return NULL;
+
     for(int i=0;i<MAX_SCRIPTS;i++)
     {
         if( m_scripts[i] && m_scripts[i]->Name == Name )
@@ -2048,16 +2054,14 @@ bool GOChooseReward( Player *player, GameObject *_GO, Quest const *_Quest, uint3
 }
 
 MANGOS_DLL_EXPORT
-bool AreaTrigger( Player *player, Quest const *_Quest, uint32 triggerID )
+bool AreaTrigger( Player *player, AreaTriggerEntry * atEntry)
 {
     Script *tmpscript = NULL;
 
-    // TODO: load a script name for the areatriggers
-    //tmpscript = GetScriptByName();
+    tmpscript = GetScriptByName(GetAreaTriggerScriptNameById(atEntry->id));
     if(!tmpscript || !tmpscript->pAreaTrigger) return false;
 
-    player->PlayerTalkClass->ClearMenus();
-    return tmpscript->pAreaTrigger(player,_Quest,triggerID);
+    return tmpscript->pAreaTrigger(player, atEntry);
 }
 
 MANGOS_DLL_EXPORT

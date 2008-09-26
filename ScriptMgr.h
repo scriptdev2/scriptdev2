@@ -6,6 +6,7 @@
 #define SCRIPTMGR_H
 
 #include "Common.h"
+#include "../shared/Database/DBCStructure.h"
 
 class Player;
 class Creature;
@@ -50,7 +51,7 @@ uint32 (*pGODialogStatus    )(Player *player, GameObject * _GO );
 bool (*pChooseReward        )(Player*, Creature*, Quest const*, uint32 );
 bool (*pItemHello           )(Player*, Item*, Quest const* );
 bool (*pGOHello             )(Player*, GameObject* );
-bool (*pAreaTrigger         )(Player*, Quest const*, uint32 );
+bool (*pAreaTrigger         )(Player*, AreaTriggerEntry* );
 bool (*pItemQuestAccept     )(Player*, Item *, Quest const* );
 bool (*pGOQuestAccept       )(Player*, GameObject*, Quest const* );
 bool (*pGOChooseReward      )(Player*, GameObject*_GO, Quest const*, uint32 );
