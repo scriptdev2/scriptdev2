@@ -1,18 +1,18 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Old_Hillsbrad
@@ -148,17 +148,16 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define EROZION_ENTRY           18723
 
 #define GOSSIP_ID_START         9568
-#define GOSSIP_ID_SKARLOC1      9614 //I'm glad Taretha is alive. We now must find a way to free her...
+#define GOSSIP_ID_SKARLOC1      9614                        //I'm glad Taretha is alive. We now must find a way to free her...
 #define GOSSIP_ITEM_SKARLOC1    "Taretha cannot see you, Thrall."
-#define GOSSIP_ID_SKARLOC2      9579 //What do you mean by this? Is Taretha in danger?
+#define GOSSIP_ID_SKARLOC2      9579                        //What do you mean by this? Is Taretha in danger?
 #define GOSSIP_ITEM_SKARLOC2    "The situation is rather complicated, Thrall. It would be best for you to head into the mountains now, before more of Blackmoore's men show up. We'll make sure Taretha is safe."
 #define GOSSIP_ID_SKARLOC3      9580
 
-#define GOSSIP_ID_TARREN        9597 //tarren mill is beyond these trees
+#define GOSSIP_ID_TARREN        9597                        //tarren mill is beyond these trees
 #define GOSSIP_ITEM_TARREN      "We're ready, Thrall."
 
-#define GOSSIP_ID_COMPLETE      9578 //Thank you friends, I owe my freedom to you. Where is Taretha? I hoped to see her
-
+#define GOSSIP_ID_COMPLETE      9578                        //Thank you friends, I owe my freedom to you. Where is Taretha? I hoped to see her
 
 #define THRALL_START_EVENT_PART1    "Very well then. Let's go!"
 #define SOUND_START_EVENT           10465
@@ -442,18 +441,18 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         {
             switch(rand()%3)
             {
-            case 0:
-                DoYell(THRALL_LEAVE_COMBAT1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT1);
-                break;
-            case 1:
-                DoYell(THRALL_LEAVE_COMBAT2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT2);
-                break;
-            case 2:
-                DoYell(THRALL_LEAVE_COMBAT3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT3);
-                break;
+                case 0:
+                    DoYell(THRALL_LEAVE_COMBAT1,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT1);
+                    break;
+                case 1:
+                    DoYell(THRALL_LEAVE_COMBAT2,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT2);
+                    break;
+                case 2:
+                    DoYell(THRALL_LEAVE_COMBAT3,LANG_UNIVERSAL,NULL);
+                    DoPlaySoundToSet(m_creature,SOUND_LEAVE_COMBAT3);
+                    break;
             }
         }
     }
@@ -477,22 +476,22 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
     {
         switch(rand()%4)
         {
-        case 0:
-            DoYell(THRALL_RANDOM_AGGRO1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO1);
-            break;
-        case 1:
-            DoYell(THRALL_RANDOM_AGGRO2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO2);
-            break;
-        case 2:
-            DoYell(THRALL_RANDOM_AGGRO3,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO3);
-            break;
-        case 3:
-            DoYell(THRALL_RANDOM_AGGRO4,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO4);
-            break;
+            case 0:
+                DoYell(THRALL_RANDOM_AGGRO1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO1);
+                break;
+            case 1:
+                DoYell(THRALL_RANDOM_AGGRO2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO2);
+                break;
+            case 2:
+                DoYell(THRALL_RANDOM_AGGRO3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO3);
+                break;
+            case 3:
+                DoYell(THRALL_RANDOM_AGGRO4,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_AGGRO4);
+                break;
         }
         if( m_creature->IsMounted() )
         {
@@ -504,35 +503,35 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(THRALL_RANDOM_KILL1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL1);
-            break;
-        case 1:
-            DoYell(THRALL_RANDOM_KILL2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL2);
-            break;
-        case 2:
-            DoYell(THRALL_RANDOM_KILL3,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL3);
-            break;
+            case 0:
+                DoYell(THRALL_RANDOM_KILL1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL1);
+                break;
+            case 1:
+                DoYell(THRALL_RANDOM_KILL2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL2);
+                break;
+            case 2:
+                DoYell(THRALL_RANDOM_KILL3,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_KILL3);
+                break;
         }
-    } 
+    }
     void JustDied(Unit *slayer)
     {
-        if(slayer == m_creature) // Don't do a yell if he kills self (if player goes too far or at the end).
+        if(slayer == m_creature)                            // Don't do a yell if he kills self (if player goes too far or at the end).
             return;
 
         switch(rand()%2)
         {
-        case 0:
-            DoYell(THRALL_RANDOM_DIE1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE1);
-            break;
-        case 1:
-            DoYell(THRALL_RANDOM_DIE2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE2);
-            break;
+            case 0:
+                DoYell(THRALL_RANDOM_DIE1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE1);
+                break;
+            case 1:
+                DoYell(THRALL_RANDOM_DIE2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_RANDOM_DIE2);
+                break;
         }
         if( pInstance )
             pInstance->SetData(TYPE_THRALL_EVENT,FAIL);
@@ -549,14 +548,14 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             {
                 switch(rand()%2)
                 {
-                case 0:
-                    DoYell(THRALL_RANDOM_LOW_HP1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP1);
-                    break;
-                case 1:
-                    DoYell(THRALL_RANDOM_LOW_HP2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP2);
-                    break;
+                    case 0:
+                        DoYell(THRALL_RANDOM_LOW_HP1,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP1);
+                        break;
+                    case 1:
+                        DoYell(THRALL_RANDOM_LOW_HP2,LANG_UNIVERSAL,NULL);
+                        DoPlaySoundToSet(m_creature,SOUND_RANDOM_LOW_HP2);
+                        break;
                 }
                 LowHp = true;
             }
@@ -576,40 +575,50 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(5, 2215.23, 115.990, 89.4549);
     thrall_walkAI->AddWaypoint(6, 2210.00, 106.849, 89.4549);
     thrall_walkAI->AddWaypoint(7, 2205.66, 105.234, 89.4549);
-    thrall_walkAI->AddWaypoint(8, 2192.26, 112.618, 89.4549);//spawn armorer
+                                                            //spawn armorer
+    thrall_walkAI->AddWaypoint(8, 2192.26, 112.618, 89.4549);
 
-    thrall_walkAI->AddWaypoint(9, 2181.28, 118.612, 89.4549,8000);//get weapon
-    thrall_walkAI->AddWaypoint(10, 2181.62, 120.385, 89.4549,5000);//get armor
+                                                            //get weapon
+    thrall_walkAI->AddWaypoint(9, 2181.28, 118.612, 89.4549,8000);
+                                                            //get armor
+    thrall_walkAI->AddWaypoint(10, 2181.62, 120.385, 89.4549,5000);
 
     thrall_walkAI->AddWaypoint(11, 2189.44, 113.922, 89.4549);
     thrall_walkAI->AddWaypoint(12, 2195.63, 110.584, 89.4549);
     thrall_walkAI->AddWaypoint(13, 2201.09, 115.115, 89.4549);
     thrall_walkAI->AddWaypoint(14, 2204.34, 121.036, 89.4355);
-    thrall_walkAI->AddWaypoint(15, 2208.66, 129.127, 87.9560);//first ambush
+                                                            //first ambush
+    thrall_walkAI->AddWaypoint(15, 2208.66, 129.127, 87.9560);
     thrall_walkAI->AddWaypoint(16, 2193.09, 137.940, 88.2164);
     thrall_walkAI->AddWaypoint(17, 2173.39, 149.064, 87.9227);
     thrall_walkAI->AddWaypoint(18, 2164.25, 137.965, 85.0595);
     thrall_walkAI->AddWaypoint(19, 2149.31, 125.645, 77.0858);
     thrall_walkAI->AddWaypoint(20, 2142.78, 127.173, 75.5954);
-    thrall_walkAI->AddWaypoint(21, 2139.28, 133.952, 73.6386);//second ambush
+                                                            //second ambush
+    thrall_walkAI->AddWaypoint(21, 2139.28, 133.952, 73.6386);
     thrall_walkAI->AddWaypoint(22, 2139.54, 155.235, 67.1269);
     thrall_walkAI->AddWaypoint(23, 2145.38, 167.551, 64.8974);
     thrall_walkAI->AddWaypoint(24, 2134.28, 175.304, 67.9446);
     thrall_walkAI->AddWaypoint(25, 2118.08, 187.387, 68.8141);
-    thrall_walkAI->AddWaypoint(26, 2105.88, 195.461, 65.1854);//third ambush
+                                                            //third ambush
+    thrall_walkAI->AddWaypoint(26, 2105.88, 195.461, 65.1854);
     thrall_walkAI->AddWaypoint(27, 2096.77, 196.939, 65.2117);
     thrall_walkAI->AddWaypoint(28, 2083.90, 209.395, 64.8736);
-    thrall_walkAI->AddWaypoint(29, 2067.84, 224.376, 64.8022,30000);//in front of keeps gate, meeting scarloc
+                                                            //in front of keeps gate, meeting scarloc
+    thrall_walkAI->AddWaypoint(29, 2067.84, 224.376, 64.8022,30000);
 
-    thrall_walkAI->AddWaypoint(30, 2055.40, 242.90, 63.3418);//ref point after skarloc fight
+                                                            //ref point after skarloc fight
+    thrall_walkAI->AddWaypoint(30, 2055.40, 242.90, 63.3418);
 
-    thrall_walkAI->AddWaypoint(31, 2039.20, 266.460, 63.0182,10000);//mount up!
+                                                            //mount up!
+    thrall_walkAI->AddWaypoint(31, 2039.20, 266.460, 63.0182,10000);
     thrall_walkAI->AddWaypoint(32, 2011.77, 278.478, 65.3388);
     thrall_walkAI->AddWaypoint(33, 2005.08, 289.676, 66.1179);
     thrall_walkAI->AddWaypoint(34, 2033.11, 337.450, 66.0948);
     thrall_walkAI->AddWaypoint(35, 2070.30, 416.208, 66.0893);
     thrall_walkAI->AddWaypoint(36, 2086.76, 469.768, 65.9182);
-    thrall_walkAI->AddWaypoint(37, 2101.70, 497.955, 61.7881);//possible road ambush
+                                                            //possible road ambush
+    thrall_walkAI->AddWaypoint(37, 2101.70, 497.955, 61.7881);
 
     thrall_walkAI->AddWaypoint(38, 2133.39, 530.933, 55.3700,5000);
     thrall_walkAI->AddWaypoint(39, 2157.91, 559.635, 48.5157);
@@ -632,8 +641,10 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(56, 2478.07, 575.321, 55.4549);
     thrall_walkAI->AddWaypoint(57, 2480.00, 585.408, 56.6921);
     thrall_walkAI->AddWaypoint(58, 2482.67, 608.817, 55.6643);
-    thrall_walkAI->AddWaypoint(59, 2485.62, 626.061, 58.0132,2000);//demount
-    thrall_walkAI->AddWaypoint(60, 2486.91, 626.356, 58.0761);//scare the shit out of horse, so it'll run off
+                                                            //demount
+    thrall_walkAI->AddWaypoint(59, 2485.62, 626.061, 58.0132,2000);
+                                                            //scare the shit out of horse, so it'll run off
+    thrall_walkAI->AddWaypoint(60, 2486.91, 626.356, 58.0761);
 
     thrall_walkAI->AddWaypoint(61, 2488.58, 660.940, 57.3913);
     thrall_walkAI->AddWaypoint(62, 2502.56, 686.059, 55.6252);
@@ -643,10 +654,12 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(66, 2485.64, 702.992, 55.7917);
 
     thrall_walkAI->AddWaypoint(67, 2479.10, 695.291, 55.7901,10000);
-    thrall_walkAI->AddWaypoint(68, 2476.75, 693.689, 55.7960);//spawn mobs
+                                                            //spawn mobs
+    thrall_walkAI->AddWaypoint(68, 2476.75, 693.689, 55.7960);
     thrall_walkAI->AddWaypoint(69, 2475.39, 695.983, 55.8146);
     thrall_walkAI->AddWaypoint(70, 2477.75, 694.473, 55.7945);
-    thrall_walkAI->AddWaypoint(71, 2481.27, 697.747, 55.7910);//meet mobs in doorway
+                                                            //meet mobs in doorway
+    thrall_walkAI->AddWaypoint(71, 2481.27, 697.747, 55.7910);
 
     thrall_walkAI->AddWaypoint(72, 2486.31, 703.131, 55.7861,5000);
     thrall_walkAI->AddWaypoint(73, 2490.76, 703.511, 55.7662);
@@ -658,8 +671,10 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(79, 2634.74, 679.833, 54.6613);
     thrall_walkAI->AddWaypoint(80, 2630.41, 661.464, 54.2761);
     thrall_walkAI->AddWaypoint(81, 2629.00, 656.982, 56.0651);
-    thrall_walkAI->AddWaypoint(82, 2620.84, 633.007, 56.0300,3000);//stop in church
-    thrall_walkAI->AddWaypoint(83, 2622.99, 639.178, 56.0300);//summon
+                                                            //stop in church
+    thrall_walkAI->AddWaypoint(82, 2620.84, 633.007, 56.0300,3000);
+                                                            //summon
+    thrall_walkAI->AddWaypoint(83, 2622.99, 639.178, 56.0300);
 
     thrall_walkAI->AddWaypoint(84, 2628.73, 656.693, 56.0610,5000);
     thrall_walkAI->AddWaypoint(85, 2630.34, 661.135, 54.2738);
@@ -671,12 +686,16 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(91, 2656.23, 677.208, 57.1725);
 
     thrall_walkAI->AddWaypoint(92, 2652.28, 670.270, 61.9353);
-    thrall_walkAI->AddWaypoint(93, 2650.79, 664.290, 61.9302);//summon inn
+                                                            //summon inn
+    thrall_walkAI->AddWaypoint(93, 2650.79, 664.290, 61.9302);
     thrall_walkAI->AddWaypoint(94, 2658.19, 660.454, 61.9320,5000);
-    thrall_walkAI->AddWaypoint(95, 2660.57, 659.173, 61.9370);//speak with Taretha
+                                                            //speak with Taretha
+    thrall_walkAI->AddWaypoint(95, 2660.57, 659.173, 61.9370);
 
-    thrall_walkAI->AddWaypoint(96, 2658.19, 660.454, 61.9320,5000);//epoch calls
-    thrall_walkAI->AddWaypoint(97, 2659.84, 659.482, 61.9361,5000);//taretha "dies"
+                                                            //epoch calls
+    thrall_walkAI->AddWaypoint(96, 2658.19, 660.454, 61.9320,5000);
+                                                            //taretha "dies"
+    thrall_walkAI->AddWaypoint(97, 2659.84, 659.482, 61.9361,5000);
 
     thrall_walkAI->AddWaypoint(98, 2654.28, 662.722, 61.9313);
     thrall_walkAI->AddWaypoint(99, 2652.37, 670.561, 61.9368);
@@ -684,13 +703,17 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
     thrall_walkAI->AddWaypoint(101, 2658.49, 677.166, 57.1727);
     thrall_walkAI->AddWaypoint(102, 2659.28, 667.117, 57.1727);
     thrall_walkAI->AddWaypoint(103, 2649.71, 665.387, 57.1727);
-    thrall_walkAI->AddWaypoint(104, 2634.79, 672.964, 54.4577);//he's outside inn here
+                                                            //he's outside inn here
+    thrall_walkAI->AddWaypoint(104, 2634.79, 672.964, 54.4577);
 
-    thrall_walkAI->AddWaypoint(105, 2635.06, 673.892, 54.4713,30000);//getting ready here, must start attack before 30secs up
+                                                            //getting ready here, must start attack before 30secs up
+    thrall_walkAI->AddWaypoint(105, 2635.06, 673.892, 54.4713,30000);
 
-    thrall_walkAI->AddWaypoint(106, 2634.79, 672.964, 54.4577,60000);//ref point, will move here when all dead and meet Taretha
+                                                            //ref point, will move here when all dead and meet Taretha
+    thrall_walkAI->AddWaypoint(106, 2634.79, 672.964, 54.4577,60000);
 
-    thrall_walkAI->AddWaypoint(107, 2631.72, 665.629, 54.2923);//run off
+                                                            //run off
+    thrall_walkAI->AddWaypoint(107, 2631.72, 665.629, 54.2923);
     thrall_walkAI->AddWaypoint(108, 2647.40, 640.530, 55.7634);
 
     return (CreatureAI*)thrall_walkAI;
@@ -769,9 +792,9 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player *player, Creature *_Creature, 
 ## npc_taretha
 ######*/
 
-#define GOSSIP_ID_EPOCH1        9610 //Thank you for helping Thrall escape, friends. Now I only hope
+#define GOSSIP_ID_EPOCH1        9610                        //Thank you for helping Thrall escape, friends. Now I only hope
 #define GOSSIP_ITEM_EPOCH1      "Strange wizard?"
-#define GOSSIP_ID_EPOCH2        9613 //Yes, friends. This man was no wizard of
+#define GOSSIP_ID_EPOCH2        9613                        //Yes, friends. This man was no wizard of
 #define GOSSIP_ITEM_EPOCH2      "We'll get you out. Taretha. Don't worry. I doubt the wizard would wander too far away."
 
 #define TARETHA_FREE            "I'm free! Thank you all!"
@@ -817,6 +840,7 @@ CreatureAI* GetAI_npc_taretha(Creature *_Creature)
 
     return (CreatureAI*)taretha_walkAI;
 }
+
 bool GossipHello_npc_taretha(Player *player, Creature *_Creature)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());

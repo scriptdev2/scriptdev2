@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/ >
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Supremus
@@ -39,7 +39,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
 {
-    molten_flameAI(Creature *c) : ScriptedAI(c) 
+    molten_flameAI(Creature *c) : ScriptedAI(c)
     {
         Reset();
     }
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         if(TargetLocked)
-            return; // stop it from aggroing players who move in LOS if we have a target.
+            return;                                         // stop it from aggroing players who move in LOS if we have a target.
         if(who && (who != m_creature) && (m_creature->IsWithinDistInMap(who, 10)))
             StalkTarget(who);
     }
@@ -147,7 +147,7 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 {
-    boss_supremusAI(Creature *c) : ScriptedAI(c) 
+    boss_supremusAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -181,7 +181,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         SwitchTargetTimer = 90000;
         PhaseSwitchTimer = 60000;
         SummonVolcanoTimer = 5000;
-        BerserkTimer = 900000; // 15 minute enrage
+        BerserkTimer = 900000;                              // 15 minute enrage
 
         Phase1 = true;
     }
@@ -198,9 +198,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
     {
         if(GameObject* Doors = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
         {
-            if(close)
-                Doors->SetGoState(1); // Closed
-            else Doors->SetGoState(0); // Open
+            if(close) Doors->SetGoState(1);                 // Closed
+            else Doors->SetGoState(0);                      // Open
         }
     }
 
@@ -272,14 +271,14 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(BerserkTimer < diff)
                 DoCast(m_creature, SPELL_BERSERK);
-            else BerserkTimer -= diff;
+        else BerserkTimer -= diff;
 
         if(SummonFlameTimer < diff)
         {
             Unit* target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            
-            if(!target) // someone is trying to solo, set target as current victim.
+
+            if(!target)                                     // someone is trying to solo, set target as current victim.
                 target = m_creature->getVictim();
 
             if(target)
@@ -287,7 +286,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 Creature* MoltenFlame = SummonCreature(CREATURE_STALKER, target);
                 if(MoltenFlame)
                 {
-                    MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686); // Invisible model
+                    // Invisible model
+                    MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                     ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
                     ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
                     SummonFlameTimer = 20000;
@@ -340,9 +340,8 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                         DoCast(target, SPELL_VOLCANIC_ERUPTION);
                         ((npc_volcanoAI*)Volcano->AI())->SetSupremusGUID(m_creature->GetGUID());
                     }
-                    
+
                     DoTextEmote("roars and the ground begins to crack open!", NULL);
-                    
                     SummonVolcanoTimer = 10000;
                 }
             }else SummonVolcanoTimer -= diff;
@@ -356,7 +355,6 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 DoResetThreat();
                 PhaseSwitchTimer = 60000;
                 m_creature->SetSpeed(MOVE_RUN, 1.0f);
-                
             }
             else
             {

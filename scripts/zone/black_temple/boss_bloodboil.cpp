@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Bloodboil
@@ -28,15 +28,15 @@ EndScriptData */
 #define SPELL_ACID_GEYSER        40630
 #define SPELL_ACIDIC_WOUND       40481
 #define SPELL_ARCING_SMASH       40599
-#define SPELL_BLOODBOIL          42005 // This spell is AoE whereas it shouldn't be
+#define SPELL_BLOODBOIL          42005                      // This spell is AoE whereas it shouldn't be
 #define SPELL_FEL_ACID           40508
 #define SPELL_FEL_RAGE_SELF      40594
 #define SPELL_FEL_RAGE_TARGET    40604
 #define SPELL_FEL_RAGE_2         40616
 #define SPELL_FEL_RAGE_3         41625
 #define SPELL_BEWILDERING_STRIKE 40491
-#define SPELL_EJECT1             40486 // 1000 Physical damage + knockback + script effect (should handle threat reduction I think)
-#define SPELL_EJECT2             40597 // 1000 Physical damage + Stun (used in phase 2?)
+#define SPELL_EJECT1             40486                      // 1000 Physical damage + knockback + script effect (should handle threat reduction I think)
+#define SPELL_EJECT2             40597                      // 1000 Physical damage + Stun (used in phase 2?)
 #define SPELL_TAUNT_GURTOGG      40603
 #define SPELL_INSIGNIFIGANCE     40618
 #define SPELL_BERSERK            45078
@@ -76,7 +76,7 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 {
-    boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c) 
+    boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void Reset()
     {
         if(pInstance)
-           pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
+            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
 
         TargetGUID = 0;
 
@@ -161,15 +161,16 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         // Get the Threat List
         std::list<HostilReference *> m_threatlist = m_creature->getThreatManager().getThreatList();
-        
-        if(!m_threatlist.size()) return; // He doesn't have anyone in his threatlist, useless to continue
+
+        if(!m_threatlist.size()) return;                    // He doesn't have anyone in his threatlist, useless to continue
 
         std::list<Unit *> targets;
         std::list<HostilReference *>::iterator itr = m_threatlist.begin();
-        for( ; itr!= m_threatlist.end(); ++itr) //store the threat list in a different container
+        for( ; itr!= m_threatlist.end(); ++itr)             //store the threat list in a different container
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER ) //only on alive players
+                                                            //only on alive players
+            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
                 targets.push_back( target);
         }
 
@@ -177,9 +178,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         targets.sort(TargetDistanceOrder(m_creature));
         //Resize so we only get top 5
         targets.resize(5);
-         
+
         //Aura each player in the targets list with Bloodboil. Aura code copied+pasted from Aura command in Level3.cpp
-        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry( SPELL_BLOODBOIL );   
+        /*SpellEntry const *spellInfo = GetSpellStore()->LookupEntry( SPELL_BLOODBOIL );
         if(spellInfo)
         {
             for(std::list<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
@@ -191,14 +192,14 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     uint8 eff = spellInfo->Effect[i];
                     if (eff>=TOTAL_SPELL_EFFECTS)
                         continue;
-                    
+
                     Aura *Aur = new Aura(spellInfo, i, NULL, target);
                     target->AddAura(Aur);
                 }
             }
         }*/
     }
-     
+
     void RevertThreatOnTarget(uint64 guid)
     {
         Unit* pUnit = NULL;
@@ -206,7 +207,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         if(pUnit)
         {
             if(m_creature->getThreatManager().getThreat(pUnit))
-                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);               
+                m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
             if(TargetThreat)
                 m_creature->AddThreat(pUnit, TargetThreat);
         }
@@ -231,14 +232,14 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(EnrageTimer < diff)
-            {
-                DoCast(m_creature, SPELL_BERSERK);
-                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            }else EnrageTimer -= diff;
+        {
+            DoCast(m_creature, SPELL_BERSERK);
+            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }else EnrageTimer -= diff;
 
         if(Phase1)
-        {            
+        {
             if(BewilderingStrikeTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_BEWILDERING_STRIKE);
@@ -263,7 +264,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
             if(BloodboilTimer < diff)
             {
-                if(BloodboilCount < 5) // Only cast it five times.
+                if(BloodboilCount < 5)                      // Only cast it five times.
                 {
                     //CastBloodboil(); // Causes issues on windows, so is commented out.
                     DoCast(m_creature->getVictim(), SPELL_BLOODBOIL);
@@ -292,9 +293,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         {
             if(Phase1)
             {
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0); 
+                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if(target && target->isAlive())
-                {                          
+                {
                     Phase1 = false;
 
                     TargetThreat = m_creature->getThreatManager().getThreat(target);
@@ -302,8 +303,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
                     if(m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
-                    m_creature->AddThreat(target, 50000000.0f); 
-                    DoCast(m_creature, SPELL_INSIGNIFIGANCE, true); // If VMaps are disabled, this spell can call the whole instance
+                    m_creature->AddThreat(target, 50000000.0f);
+                                                            // If VMaps are disabled, this spell can call the whole instance
+                    DoCast(m_creature, SPELL_INSIGNIFIGANCE, true);
                     DoCast(target, SPELL_FEL_RAGE_TARGET, true);
                     DoCast(target,SPELL_FEL_RAGE_2, true);
                     /* These spells do not work, comment them out for now.
@@ -312,7 +314,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
                     //Cast this without triggered so that it appears in combat logs and shows visual.
                     DoCast(m_creature, SPELL_FEL_RAGE_SELF);
-                    
+
                     switch(rand()%2)
                     {
                         case 0:
@@ -328,7 +330,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                     AcidGeyserTimer = 1000;
                     PhaseChangeTimer = 30000;
                 }
-            }else // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
+            }else                                           // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
             {
                 if(TargetGUID)
                     RevertThreatOnTarget(TargetGUID);
@@ -343,7 +345,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 PhaseChangeTimer = 60000;
             }
         }else PhaseChangeTimer -= diff;
-           
+
         DoMeleeAttackIfReady();
     }
 };

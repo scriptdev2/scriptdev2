@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Vaelastrasz
@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 
 #define SPELL_ESSENCEOFTHERED       23513
-#define SPELL_FLAMEBREATH           23461       
+#define SPELL_FLAMEBREATH           23461
 #define SPELL_FIRENOVA              23462
 #define SPELL_TAILSWIPE             15847
 #define SPELL_BURNINGADRENALINE     23620
@@ -49,7 +49,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 {
-    boss_vaelAI(Creature *c) : ScriptedAI(c) 
+    boss_vaelAI(Creature *c) : ScriptedAI(c)
     {
         c->SetUInt32Value(UNIT_NPC_FLAGS,1);
         c->setFaction(35);
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         PlayerGUID = 0;
         SpeachTimer = 0;
         SpeachNum = 0;
-        Cleave_Timer = 8000;      //These times are probably wrong
+        Cleave_Timer = 8000;                                //These times are probably wrong
         FlameBreath_Timer = 11000;
         BurningAdrenalineCaster_Timer = 15000;
         BurningAdrenalineTank_Timer = 45000;
@@ -111,8 +111,8 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                DoCast(m_creature,SPELL_ESSENCEOFTHERED);
-                DoZoneInCombat();
+        DoCast(m_creature,SPELL_ESSENCEOFTHERED);
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
@@ -120,9 +120,9 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         //Speach
         if (DoingSpeach)
             if (SpeachTimer < diff)
+        {
+            switch (SpeachNum)
             {
-                switch (SpeachNum)
-                {
                 case 0:
                     //16 seconds till next line
                     DoYell(SAY_LINE2,LANG_UNIVERSAL,NULL);
@@ -152,9 +152,8 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
                     SpeachTimer = 0;
                     DoingSpeach = false;
                     break;
-                }
-            }else SpeachTimer -= diff;
-
+            }
+        }else SpeachTimer -= diff;
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
@@ -172,20 +171,14 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //25 seconds until we should cast this again
             Cleave_Timer = 15000;
         }else Cleave_Timer -= diff;
 
         //FlameBreath_Timer
         if (FlameBreath_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
-
-            //4-8 seconds until we should cast this again
             FlameBreath_Timer = 4000 + rand()%4000;
         }else FlameBreath_Timer -= diff;
 
@@ -194,41 +187,36 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
         {
             Unit* target = NULL;
 
-            int i = 0 ;            
-            while (i < 3) // max 3 tries to get a random target with power_mana
+            int i = 0 ;
+            while (i < 3)                                   // max 3 tries to get a random target with power_mana
             {
                 ++i;
-                target = SelectUnit(SELECT_TARGET_RANDOM,1); //not aggro leader
+                target = SelectUnit(SELECT_TARGET_RANDOM,1);//not aggro leader
                 if (target)
-                    if (target->getPowerType() == POWER_MANA) 
+                    if (target->getPowerType() == POWER_MANA)
                         i=3;
             }
-            if (target) // cast on self (see below)
+            if (target)                                     // cast on self (see below)
                 target->CastSpell(target,SPELL_BURNINGADRENALINE,1);
- 
-            //15 seconds until we should cast this agian
+
             BurningAdrenalineCaster_Timer = 15000;
         }else BurningAdrenalineCaster_Timer -= diff;
 
         //BurningAdrenalineTank_Timer
         if (BurningAdrenalineTank_Timer < diff)
         {
-            // have the victim cast the spell on himself otherwise the third effect aura will be applied 
+            // have the victim cast the spell on himself otherwise the third effect aura will be applied
             // to Vael instead of the player
-            
+
             m_creature->getVictim()->CastSpell(m_creature->getVictim(),SPELL_BURNINGADRENALINE,1);
 
-            //45 seconds until we should cast this agian
             BurningAdrenalineTank_Timer = 45000;
         }else BurningAdrenalineTank_Timer -= diff;
 
         //FireNova_Timer
         if (FireNova_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_FIRENOVA);
-
-            //5 seconds until we should cast this again
             FireNova_Timer = 5000;
         }else FireNova_Timer -= diff;
 
@@ -241,18 +229,16 @@ struct MANGOS_DLL_DECL boss_vaelAI : public ScriptedAI
             DoCast(m_creature->getVictim(),SPELL_TAILSWIPE);
             }*/
 
-            //20 seconds until we should cast this again
             TailSwipe_Timer = 20000;
         }else TailSwipe_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
 };
 
 void SendDefaultMenu_boss_vael(Player *player, Creature *_Creature, uint32 action)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)//Fight time
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         player->CLOSE_GOSSIP_MENU();
         ((boss_vaelAI*)_Creature->AI())->BeginSpeach((Unit*)player);
@@ -288,6 +274,5 @@ void AddSC_boss_vael()
     newscript->GetAI = GetAI_boss_vael;
     newscript->pGossipHello = &GossipHello_boss_vael;
     newscript->pGossipSelect = &GossipSelect_boss_vael;
-
     m_scripts[nrscripts++] = newscript;
 }

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Moira_Bronzbeard
@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
     void Reset()
     {
         Target = NULL;
-        Heal_Timer = 12000;      //These times are probably wrong
+        Heal_Timer = 12000;                                 //These times are probably wrong
         MindBlast_Timer = 16000;
         ShadowWordPain_Timer = 2000;
         Smite_Timer = 8000;
@@ -64,30 +64,21 @@ struct MANGOS_DLL_DECL boss_moira_bronzebeardAI : public ScriptedAI
         //MindBlast_Timer
         if (MindBlast_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_MINDBLAST);
-
-            //14 seconds
             MindBlast_Timer = 14000;
         }else MindBlast_Timer -= diff;
 
         //ShadowWordPain_Timer
         if (ShadowWordPain_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWWORDPAIN);
-
-            //18 seconds
             ShadowWordPain_Timer = 18000;
         }else ShadowWordPain_Timer -= diff;
 
         //Smite_Timer
         if (Smite_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SMITE);
-
-            //10 seconds
             Smite_Timer = 10000;
         }else Smite_Timer -= diff;
 
@@ -98,7 +89,6 @@ CreatureAI* GetAI_boss_moira_bronzebeard(Creature *_Creature)
     return new boss_moira_bronzebeardAI (_Creature);
 }
 
-
 void AddSC_boss_moira_bronzebeard()
 {
     Script *newscript;
@@ -107,6 +97,3 @@ void AddSC_boss_moira_bronzebeard()
     newscript->GetAI = GetAI_boss_moira_bronzebeard;
     m_scripts[nrscripts++] = newscript;
 }
-
-
-

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Warlord_Najentus
@@ -62,7 +62,7 @@ EndScriptData */
 #define SPELL_NEEDLE_SPINE             39835
 #define SPELL_NEEDLE_AOE               39968
 #define SPELL_TIDAL_BURST              39878
-#define SPELL_TIDAL_SHIELD             39872 // Not going to use this since Hurl Spine doesn't dispel it.
+#define SPELL_TIDAL_SHIELD             39872                // Not going to use this since Hurl Spine doesn't dispel it.
 #define SPELL_IMPALING_SPINE           39837
 #define SPELL_CREATE_NAJENTUS_SPINE    39956
 #define SPELL_HURL_SPINE               39948
@@ -77,7 +77,7 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
     {
         Reset();
     }
-    
+
     uint64 SpineVictimGUID;
 
     void Reset() {  SpineVictimGUID = 0; }
@@ -94,7 +94,7 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if(damage < m_creature->GetHealth()) return;
-        
+
         // Remove the Impaling Spine DoT from whoever was affected
         if(SpineVictimGUID)
         {
@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 {
-    boss_najentusAI(Creature *c) : ScriptedAI(c) 
+    boss_najentusAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -125,8 +125,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     uint32 SpecialYellTimer;
     uint32 TidalShieldTimer;
     uint32 ImpalingSpineTimer;
-    uint32 CheckTimer; // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
-    uint32 DispelShieldTimer; // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
+    uint32 CheckTimer;                                      // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
+    uint32 DispelShieldTimer;                               // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
 
     uint64 SpineTargetGUID;
     uint64 SpineGUID;
@@ -190,8 +190,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     void ToggleGate(bool close)
     {
         if(GameObject* Gate = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
-            if(close)   Gate->SetGoState(0); // Closed
-            else        Gate->SetGoState(2); // Opened           
+            if(close)   Gate->SetGoState(0);                // Closed
+        else        Gate->SetGoState(2);                    // Opened
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -290,8 +290,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                     m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
                 IsShielded = false;
             }else DispelShieldTimer -= diff;
-            
-            return; // Don't cast or do anything while Shielded
+
+            return;                                         // Don't cast or do anything while Shielded
         }
 
         // Crashing Wave
@@ -303,11 +303,11 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(EnrageTimer < diff)
-            {
-                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-                DoCast(m_creature, SPELL_BERSERK);
-            }else EnrageTimer -= diff;
+        {
+            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            DoCast(m_creature, SPELL_BERSERK);
+        }else EnrageTimer -= diff;
 
         // Needle
         if(NeedleSpineTimer < diff)
@@ -321,7 +321,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 DoCast(target, SPELL_NEEDLE_AOE, true);
                 DoCast(target, SPELL_NEEDLE_SPINE);
             }
-            
+
             NeedleSpineTimer = 60000;
         }else NeedleSpineTimer -= diff;
 
@@ -352,7 +352,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 //DoImpalingSpineWorkaround(target);
                 SpineTargetGUID = target->GetGUID();
                 ImpalingSpineTimer = 45000;
-            
+
                 switch(rand()%2)
                 {
                     case 0:
@@ -383,7 +383,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
- 
+
 bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_GO->GetInstanceData());

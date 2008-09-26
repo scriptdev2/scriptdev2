@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
- 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 /* ScriptData
 SDName: Instance_Gruuls_Lair
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Gruul's Lair
 EndScriptData */
 
@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             Encounters[i] = false;
     }
 
-    bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             if(Encounters[i]) return true;
@@ -67,21 +67,10 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 18835:
-            KigglerTheCrazed = creature->GetGUID();
-            break;
-
-            case 18836:
-            BlindeyeTheSeer = creature->GetGUID();
-            break;
-
-            case 18834:
-            OlmTheSummoner = creature->GetGUID();
-            break;
-
-            case 18832:
-            KroshFirehand = creature->GetGUID();
-            break;
+            case 18835: KigglerTheCrazed = creature->GetGUID(); break;
+            case 18836: BlindeyeTheSeer = creature->GetGUID(); break;
+            case 18834: OlmTheSummoner = creature->GetGUID(); break;
+            case 18832: KroshFirehand = creature->GetGUID(); break;
         }
     }
 
@@ -97,20 +86,15 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         {
             case DATA_MAULGAREVENT_TANK:
                 return MaulgarEvent_Tank;
-
-             case DATA_KIGGLERTHECRAZED:
+            case DATA_KIGGLERTHECRAZED:
                 return KigglerTheCrazed;
-
-             case DATA_BLINDEYETHESEER:
+            case DATA_BLINDEYETHESEER:
                 return BlindeyeTheSeer;
-
-             case DATA_OLMTHESUMMONER:
+            case DATA_OLMTHESUMMONER:
                 return OlmTheSummoner;
-
-             case DATA_KROSHFIREHAND:
+            case DATA_KROSHFIREHAND:
                 return KroshFirehand;
         }
-
         return 0;
     }
 
@@ -121,24 +105,21 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             case DATA_MAULGAREVENT:
                 Encounters[0] = (data) ? true : false;
                 break;
-
             case DATA_GRUULEVENT:
                 Encounters[1] = (data) ? true : false;
                 break;
         }
     }
 
-    uint32 GetData(uint32 type) 
-    { 
+    uint32 GetData(uint32 type)
+    {
         switch(type)
         {
             case DATA_MAULGAREVENT:
                 return Encounters[0];
-        
             case DATA_GRUULEVENT:
                 return Encounters[1];
         }
-
         return 0;
     }
 };

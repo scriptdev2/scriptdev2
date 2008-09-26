@@ -1,30 +1,30 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Shadow_Hunter_Voshgajin
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
 #define SPELL_CURSEOFBLOOD      24673
-#define SPELL_HEX               16708       
+#define SPELL_HEX               16708
 #define SPELL_CLEAVE            20691
 
 struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
@@ -36,7 +36,7 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
     uint32 Cleave_Timer;
 
     void Reset()
-    {       
+    {
         CurseOfBlood_Timer = 2000;
         Hex_Timer = 8000;
         Cleave_Timer = 14000;
@@ -57,45 +57,33 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         //CurseOfBlood_Timer
         if (CurseOfBlood_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
-
-            //45 seconds
             CurseOfBlood_Timer = 45000;
         }else CurseOfBlood_Timer -= diff;
 
         //Hex_Timer
         if (Hex_Timer < diff)
         {
-            //Cast HEX on a Random target
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_HEX);
-
-            //15 seconds until we should cast this agian
+            if (target) DoCast(target,SPELL_HEX);
             Hex_Timer = 15000;
         }else Hex_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //7 seconds until we should cast this agian
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-
-}; 
+};
 CreatureAI* GetAI_boss_shadowvosh(Creature *_Creature)
 {
     return new boss_shadowvoshAI (_Creature);
 }
-
 
 void AddSC_boss_shadowvosh()
 {

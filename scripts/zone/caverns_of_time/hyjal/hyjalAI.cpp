@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: HyjalAI
@@ -25,7 +25,7 @@ EndScriptData */
 #include "hyjalAI.h"
 #include "WorldPacket.h"
 
-float AllianceBase[4][3]= // Locations for summoning waves in Alliance base
+float AllianceBase[4][3]=                                   // Locations for summoning waves in Alliance base
 {
     {4979.010, -1709.134, 1339.674},
     {4969.123, -1705.904, 1341.363},
@@ -33,7 +33,7 @@ float AllianceBase[4][3]= // Locations for summoning waves in Alliance base
     {4975.262, -1698.239, 1341.427}
 };
 
-float HordeBase[4][3]= // Locations for summoning waves in Horde base
+float HordeBase[4][3]=                                      // Locations for summoning waves in Horde base
 {
     {5554.399, -2581.419, 1480.820},
     {5538.996, -2577.742, 1479.790},
@@ -41,10 +41,14 @@ float HordeBase[4][3]= // Locations for summoning waves in Horde base
     {5547.218, -2574.589, 1479.194}
 };
 
-float AttackArea[2][3]= // used to inform the wave where to move and attack to
+float AttackArea[2][3]=                                     // used to inform the wave where to move and attack to
 {
-    {5042.9189, -1776.2562, 1323.0621}, // Alliance
-    {5510.4815, -2676.7112, 1480.4314} // Horde
+    {                                                       // Alliance
+        5042.9189, -1776.2562, 1323.0621
+    },
+    {                                                       // Horde
+        5510.4815, -2676.7112, 1480.4314
+    }
 };
 
 hyjalAI::hyjalAI(Creature *c) : ScriptedAI(c)
@@ -71,8 +75,8 @@ void hyjalAI::Reset()
     /** Set faction properly based on creature entry**/
     switch(m_creature->GetEntry())
     {
-        case 17772: 
-            Faction = 0; 
+        case 17772:
+            Faction = 0;
             DoCast(m_creature, SPELL_BRILLIANCE_AURA, true);
             break;
 
@@ -106,7 +110,9 @@ void hyjalAI::Reset()
     m_creature->SetVisibility(VISIBILITY_ON);
 
     /** If Jaina evades, reset the visibility of all other creatures in the grid. **/
-    if(CreatureList.empty())    return; 
+    if(CreatureList.empty())
+        return;
+
     for(std::list<uint64>::iterator itr = CreatureList.begin(); itr != CreatureList.end(); ++itr)
         if(Creature* cr = ((Creature*)Unit::GetUnit(*m_creature, *itr)))
             cr->SetVisibility(VISIBILITY_ON);
@@ -148,10 +154,11 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
         SpawnLoc[i] = Base[random][i];
         AttackLoc[i] = AttackArea[Faction][i];
     }
+
     Creature* pCreature = m_creature->SummonCreature(entry, SpawnLoc[0], SpawnLoc[1], SpawnLoc[2], 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
     if(pCreature)
     {
-        ++EnemyCount; // Increment Enemy Count to be used in World States and instance script
+        ++EnemyCount;                                       // Increment Enemy Count to be used in World States and instance script
 
         pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
         pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
@@ -170,10 +177,10 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
 
 void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
 {
-    if(rand()%4 == 0) // 1 in 4 chance we give a rally yell. Not sure if the chance is Blizzlike.
+    if(rand()%4 == 0)                                       // 1 in 4 chance we give a rally yell. Not sure if the chance is Blizzlike.
         Talk(RALLY);
 
-    if(!pInstance) 
+    if(!pInstance)
     {
         error_log(ERROR_INST_DATA);
         return;
@@ -185,13 +192,13 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         if(wave[Count].Mob[i])
             SummonCreature(wave[Count].Mob[i], Base);
     }
-    
+
     if(!wave[Count].IsBoss)
     {
         uint32 stateValue = Count+1;
         if(FirstBossDead)
-            stateValue -= 9; // Subtract 9 from it to give the proper wave number if we are greater than 8
-        UpdateWorldState(WORLDSTATE_WAVES, stateValue); // Set world state to our current wave number
+            stateValue -= 9;                                // Subtract 9 from it to give the proper wave number if we are greater than 8
+        UpdateWorldState(WORLDSTATE_WAVES, stateValue);     // Set world state to our current wave number
         UpdateWorldState(WORLDSTATE_ENEMY, 1);
         //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount); // Let Instance Script handle this
         pInstance->SetData(DATA_TRASH, EnemyCount);
@@ -205,8 +212,8 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     }
     else
     {
-        UpdateWorldState(WORLDSTATE_WAVES, 0); // Set world state for waves to 0 to disable it.
-        UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 1); // Set World State for enemies invading to 1.
+        UpdateWorldState(WORLDSTATE_WAVES, 0);              // Set world state for waves to 0 to disable it.
+        UpdateWorldState(WORLDSTATE_ENEMYCOUNT, 1);         // Set World State for enemies invading to 1.
         Summon = false;
     }
     CheckTimer = 5000;
@@ -236,7 +243,7 @@ void hyjalAI::StartEvent(Player* player)
 uint32 hyjalAI::GetInstanceData(uint32 Event)
 {
     if(pInstance)
-       return pInstance->GetData(Event);
+        return pInstance->GetData(Event);
     else error_log(ERROR_INST_DATA);
 
     return 0;
@@ -247,12 +254,12 @@ void hyjalAI::Talk(uint32 id)
     std::list<uint8> index;
     for(uint8 i = 0; i < 10; i++)
     {
-        if(Faction == 0) // Alliance
+        if(Faction == 0)                                    // Alliance
         {
             if(JainaQuotes[i].id == id)
                 index.push_back(i);
         }
-        else if(Faction == 1) // Horde
+        else if(Faction == 1)                               // Horde
         {
             if(ThrallQuotes[i].id == id)
                 index.push_back(i);
@@ -260,22 +267,23 @@ void hyjalAI::Talk(uint32 id)
     }
 
     if(index.empty())
-        return; // No quotes found, no use to continue
+        return;                                             // No quotes found, no use to continue
 
     uint8 ind = *(index.begin()) + rand()%index.size();
 
     char* Yell = NULL;
     uint32 Sound = 0;
-    if(Faction == 0) // Alliance
+    if(Faction == 0)                                        // Alliance
     {
         Yell = JainaQuotes[ind].text;
         Sound = JainaQuotes[ind].sound;
     }
-    else if(Faction == 1) // Horde
+    else if(Faction == 1)                                   // Horde
     {
         Yell = ThrallQuotes[ind].text;
         Sound = ThrallQuotes[ind].sound;
     }
+
     if(Yell)
         DoYell(Yell, LANG_UNIVERSAL, NULL);
     if(Sound)
@@ -322,8 +330,10 @@ void hyjalAI::Retreat()
         <MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid>, GridTypeMapContainer> go_visit(go_search);
 
     CellLock<GridReadGuard> cell_lock(cell, pair);
-    cell_lock->Visit(cell_lock, creature_visitor, *(m_creature->GetMap())); // Get Creatures
-    cell_lock->Visit(cell_lock, go_visit, *(m_creature->GetMap())); // Get GOs
+                                                            // Get Creatures
+    cell_lock->Visit(cell_lock, creature_visitor, *(m_creature->GetMap()));
+                                                            // Get GOs
+    cell_lock->Visit(cell_lock, go_visit, *(m_creature->GetMap()));
 
     CreatureList.clear();
     if(!creatures.empty())
@@ -350,19 +360,20 @@ void hyjalAI::UpdateAI(const uint32 diff)
 {
     if(bRetreat)
         if(RetreatTimer < diff)
-        {
-            bRetreat = false;
-            if(CreatureList.empty())
-                return;
-            
-            for(std::list<uint64>::iterator itr = CreatureList.begin(); itr != CreatureList.end(); ++itr)
-                if(Unit* pUnit = Unit::GetUnit(*m_creature, *itr))
-                    pUnit->SetVisibility(VISIBILITY_OFF);
+    {
+        bRetreat = false;
+        if(CreatureList.empty())
+            return;
 
-            m_creature->SetVisibility(VISIBILITY_OFF);
-        }else RetreatTimer -= diff;
+        for(std::list<uint64>::iterator itr = CreatureList.begin(); itr != CreatureList.end(); ++itr)
+            if(Unit* pUnit = Unit::GetUnit(*m_creature, *itr))
+                pUnit->SetVisibility(VISIBILITY_OFF);
 
-    if(!EventBegun) return;
+        m_creature->SetVisibility(VISIBILITY_OFF);
+    }else RetreatTimer -= diff;
+
+    if(!EventBegun)
+        return;
 
     if(Summon)
     {
@@ -406,14 +417,15 @@ void hyjalAI::UpdateAI(const uint32 diff)
                     CheckTimer = 0;
                     m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                     BossGUID[i] = 0;
-                    UpdateWorldState(WORLDSTATE_ENEMY, 0);// Reset world state for enemies to disable it 
+                    UpdateWorldState(WORLDSTATE_ENEMY, 0);  // Reset world state for enemies to disable it
                 }
             }
         }
         CheckTimer = 5000;
     }else CheckTimer -= diff;
 
-    if(!m_creature->SelectHostilTarget() || !m_creature->getVictim()) return;
+    if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        return;
 
     for(uint8 i = 0; i < 3; ++i)
     {
@@ -425,7 +437,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
                     m_creature->InterruptNonMeleeSpells(false);
 
                 Unit* target = NULL;
-                
+
                 switch(Spell[i].TargetType)
                 {
                     case TARGETTYPE_SELF: target = m_creature; break;

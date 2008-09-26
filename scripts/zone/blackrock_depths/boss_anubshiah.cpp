@@ -1,31 +1,31 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Anubshiah
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Blackrock Depths
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_SHADOWBOLT            17228  
-#define SPELL_CURSEOFTONGUES        15470 
-#define SPELL_CURSEOFWEAKNESS       17227            
+#define SPELL_SHADOWBOLT            17228
+#define SPELL_CURSEOFTONGUES        15470
+#define SPELL_CURSEOFWEAKNESS       17227
 #define SPELL_DEMONARMOR            11735
 #define SPELL_ENVELOPINGWEB         15471
 
@@ -40,7 +40,7 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
     uint32 EnvelopingWeb_Timer;
 
     void Reset()
-    {       
+    {
         ShadowBolt_Timer = 7000;
         CurseOfTongues_Timer = 24000;
         CurseOfWeakness_Timer = 12000;
@@ -61,67 +61,49 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
         //ShadowBolt_Timer
         if (ShadowBolt_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWBOLT);
-
-            //7 seconds
             ShadowBolt_Timer = 7000;
         }else ShadowBolt_Timer -= diff;
 
         //CurseOfTongues_Timer
         if (CurseOfTongues_Timer < diff)
         {
-            //Cast Curse Of Tongues on a Random target
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_CURSEOFTONGUES);
-
-            //18 seconds
+            if (target) DoCast(target,SPELL_CURSEOFTONGUES);
             CurseOfTongues_Timer = 18000;
         }else CurseOfTongues_Timer -= diff;
 
         //CurseOfWeakness_Timer
         if (CurseOfWeakness_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CURSEOFWEAKNESS);
-
-            //45 seconds
             CurseOfWeakness_Timer = 45000;
         }else CurseOfWeakness_Timer -= diff;
 
         //DemonArmor_Timer
         if (DemonArmor_Timer < diff)
         {
-            //Cast
             DoCast(m_creature,SPELL_DEMONARMOR);
-
-            //5 minutes
             DemonArmor_Timer = 300000;
         }else DemonArmor_Timer -= diff;
 
         //EnvelopingWeb_Timer
         if (EnvelopingWeb_Timer < diff)
         {
-            //Cast EnvelopingWeb  on a Random target
             Unit* target = NULL;
-
             target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_ENVELOPINGWEB);
-
-            //12 seconds
+            if (target) DoCast(target,SPELL_ENVELOPINGWEB);
             EnvelopingWeb_Timer = 12000;
         }else EnvelopingWeb_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_anubshiah(Creature *_Creature)
 {
     return new boss_anubshiahAI (_Creature);
 }
-
 
 void AddSC_boss_anubshiah()
 {

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: The_Barrens
@@ -39,7 +39,7 @@ bool GossipHello_npc_beaten_corpse(Player *player, Creature *_Creature)
         player->ADD_GOSSIP_ITEM(0,"Examine corpse in detail...",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(3557,_Creature->GetGUID());
-    return true; 
+    return true;
 }
 
 bool GossipSelect_npc_beaten_corpse(Player *player, Creature *_Creature, uint32 sender, uint32 action )
@@ -65,7 +65,7 @@ bool GossipHello_npc_sputtervalve(Player *player, Creature *_Creature)
         player->ADD_GOSSIP_ITEM(0,"Can you tell me about this shard?",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(),_Creature->GetGUID());
-    return true; 
+    return true;
 }
 
 bool GossipSelect_npc_sputtervalve(Player *player, Creature *_Creature, uint32 sender, uint32 action )
@@ -106,7 +106,7 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
 
-    //This is a pure hack. Spellcast will make creature aggro but that is not 
+    //This is a hack. Spellcast will make creature aggro but that is not
     //supposed to happen (mangos not implemented/not found way to detect this spell kind)
     void DoUglyHack()
     {
@@ -134,10 +134,12 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if( IsFriend )
+        {
             if( Reset_Timer < diff )
             {
                 EnterEvadeMode();
             } else Reset_Timer -= diff;
+        }
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -153,11 +155,13 @@ CreatureAI* GetAI_npc_taskmaster_fizzule(Creature *_Creature)
 bool ReciveEmote_npc_taskmaster_fizzule(Player *player, Creature *_Creature, uint32 emote)
 {
     if( emote == TEXTEMOTE_SALUTE )
+    {
         if( ((npc_taskmaster_fizzuleAI*)_Creature->AI())->FlareCount >= 2 )
         {
             _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
             _Creature->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
         }
+    }
     return true;
 }
 

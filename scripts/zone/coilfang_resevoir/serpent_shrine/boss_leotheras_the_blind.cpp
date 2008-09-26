@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Leotheras_The_Blind
@@ -26,7 +26,7 @@ EndScriptData */
 
 #define SPELL_WHIRLWIND         40653
 #define SPELL_CHAOS_BLAST       37675
-// #define SPELL_INSIDIOUS_WHISPER 37676 // useless - dummy effect that can't be implemented
+//#define SPELL_INSIDIOUS_WHISPER 37676                       // useless - dummy effect that can't be implemented
 
 #define SAY_AGGRO               "Finally my banishment ends!"
 #define SAY_SWITCH_TO_DEMON     "Be gone trifling elf. I'm in control now."
@@ -91,7 +91,6 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
 
-
         if(pInstance)
             pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, 0);
     }
@@ -114,38 +113,34 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             switch(rand()%3)
             {
                 case 0:
-                DoYell(SAY_DEMON_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY1);
-                break;
-
+                    DoYell(SAY_DEMON_SLAY1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY1);
+                    break;
                 case 1:
-                DoYell(SAY_DEMON_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY2);
-                break;
-
+                    DoYell(SAY_DEMON_SLAY2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY2);
+                    break;
                 case 2:
-                DoYell(SAY_DEMON_SLAY3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY3);
-                break;
+                    DoYell(SAY_DEMON_SLAY3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY3);
+                    break;
             }
-        else
-            switch(rand()%3)
-            {
-                case 0:
-                DoYell(SAY_NIGHTELF_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY1);
-                break;
-
-                case 1:
-                DoYell(SAY_NIGHTELF_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY2);
-                break;
-
-                case 2:
-                DoYell(SAY_NIGHTELF_SLAY3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY3);
-                break;
-            }
+            else
+                switch(rand()%3)
+                {
+                    case 0:
+                        DoYell(SAY_NIGHTELF_SLAY1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY1);
+                        break;
+                    case 1:
+                        DoYell(SAY_NIGHTELF_SLAY2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY2);
+                        break;
+                    case 2:
+                        DoYell(SAY_NIGHTELF_SLAY3, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(m_creature, SOUND_NIGHTELF_SLAY3);
+                        break;
+                }
     }
 
     void JustDied(Unit *victim)
@@ -169,7 +164,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                StartEvent();
+        StartEvent();
     }
 
     void UpdateAI(const uint32 diff)
@@ -190,15 +185,15 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
             //Switch_Timer
             if(!IsFinalForm)
                 if(Switch_Timer < diff)
-                {
-                    //switch to demon form
-                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
-                    DoYell(SAY_SWITCH_TO_DEMON, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_DEMON);
-                    DemonForm = true;
+            {
+                //switch to demon form
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
+                DoYell(SAY_SWITCH_TO_DEMON, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SWITCH_TO_DEMON);
+                DemonForm = true;
 
-                    Switch_Timer = 60000;
-                }else Switch_Timer -= diff;
+                Switch_Timer = 60000;
+            }else Switch_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -274,20 +269,18 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_DEMON_SLAY1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY1);
-            break;
-
-        case 1:
-            DoYell(SAY_DEMON_SLAY2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY2);
-            break;
-
-        case 2:
-            DoYell(SAY_DEMON_SLAY3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY3);
-            break;
+            case 0:
+                DoYell(SAY_DEMON_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_DEMON_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY2);
+                break;
+            case 2:
+                DoYell(SAY_DEMON_SLAY3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_DEMON_SLAY3);
+                break;
         }
     }
 
@@ -299,7 +292,7 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                StartEvent();
+        StartEvent();
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -344,6 +337,7 @@ CreatureAI* GetAI_boss_leotheras_the_blind(Creature *_Creature)
 {
     return new boss_leotheras_the_blindAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature *_Creature)
 {
     return new boss_leotheras_the_blind_demonformAI (_Creature);
@@ -352,6 +346,7 @@ CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature *_Creature)
 void AddSC_boss_leotheras_the_blind()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_leotheras_the_blind";
     newscript->GetAI = GetAI_boss_leotheras_the_blind;

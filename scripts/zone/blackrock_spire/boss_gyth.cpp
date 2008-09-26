@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Gyth
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
@@ -71,7 +71,8 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         else
             Line2Count = 2;
 
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);  //Invisible for event start
+        //Invisible for event start
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
@@ -90,7 +91,6 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         }
     }
 
-
     void UpdateAI(const uint32 diff)
     {
         //char buf[200];
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
 
         if (!RootSelf)
         {
-            //            m_creature->m_canMove = true;
+            //m_creature->m_canMove = true;
             DoCast(m_creature, 33356);
             RootSelf = true;
         }
@@ -111,15 +111,18 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             if (Aggro_Timer < diff)
             {
                 bAggro = true;
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9723);  // Visible now!
+                // Visible now!
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9723);
                 m_creature->setFaction(14);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             } else Aggro_Timer -= diff;
         }
 
         // Summon Dragon pack. 2 Dragons and 3 Whelps
-        if (!bAggro && !SummonedRend && Line1Count > 0) {
-            if (Dragons_Timer < diff) {
+        if (!bAggro && !SummonedRend && Line1Count > 0)
+        {
+            if (Dragons_Timer < diff)
+            {
                 SummonCreatureWithRandomTarget(10372);
                 SummonCreatureWithRandomTarget(10372);
                 SummonCreatureWithRandomTarget(10442);
@@ -133,7 +136,8 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
         //Summon Orc pack. 1 Orc Handler 1 Elite Dragonkin and 3 Whelps
         if (!bAggro && !SummonedRend && Line1Count == 0 && Line2Count > 0)
         {
-            if (Orc_Timer < diff) {
+            if (Orc_Timer < diff)
+            {
                 SummonCreatureWithRandomTarget(10447);
                 SummonCreatureWithRandomTarget(10317);
                 SummonCreatureWithRandomTarget(10442);
@@ -150,50 +154,39 @@ struct MANGOS_DLL_DECL boss_gythAI : public ScriptedAI
             // CorrosiveAcid_Timer
             if (CorrosiveAcid_Timer < diff)
             {
-                // Cast
                 DoCast(m_creature->getVictim(), SPELL_CORROSIVEACID);
-
-                // 7 seconds
                 CorrosiveAcid_Timer = 7000;
             } else CorrosiveAcid_Timer -= diff;
 
             // Freeze_Timer
             if (Freeze_Timer < diff)
             {
-                // Cast
                 DoCast(m_creature->getVictim(), SPELL_FREEZE);
-
-                // 16 seconds until we should cast this again
                 Freeze_Timer = 16000;
             } else Freeze_Timer -= diff;
 
             // Flamebreath_Timer
             if (Flamebreath_Timer < diff)
             {
-                // Cast
                 DoCast(m_creature->getVictim(),SPELL_FLAMEBREATH);
-
-                // 10.5 seconds until we should cast this again
                 Flamebreath_Timer = 10500;
             } else Flamebreath_Timer -= diff;
-
 
             //Summon Rend
             if (!SummonedRend && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11
                 && m_creature->GetHealth() > 0 )
             {
-                // summon Rend and Change model to normal Gyth
+                //summon Rend and Change model to normal Gyth
                 //Inturrupt any spell casting
                 m_creature->InterruptNonMeleeSpells(false);
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9806);     //Gyth model
+                //Gyth model
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 9806);
                 m_creature->SummonCreature(10429, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 900000);
                 SummonedRend = true;
             }
 
-            //If we are within range melee the target
             DoMeleeAttackIfReady();
-
-        } // end if Aggro
+        }                                                   // end if Aggro
     }
 };
 
@@ -201,7 +194,6 @@ CreatureAI* GetAI_boss_gyth(Creature *_Creature)
 {
     return new boss_gythAI (_Creature);
 }
-
 
 void AddSC_boss_gyth()
 {

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Mekgineer_Steamrigger
@@ -77,41 +77,41 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
     void Reset()
     {
-       Shrink_Timer = 20000;
-       Saw_Blade_Timer = 15000;
-       Electrified_Net_Timer = 10000;
+        Shrink_Timer = 20000;
+        Saw_Blade_Timer = 15000;
+        Electrified_Net_Timer = 10000;
 
-       Summon75 = false;
-       Summon50 = false;
-       Summon25 = false;
-       
-       if( pInstance ) pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, NOT_STARTED);
+        Summon75 = false;
+        Summon50 = false;
+        Summon25 = false;
+
+        if( pInstance ) pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
-    { 
-       DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-       DoPlaySoundToSet(m_creature,SOUND_DEATH);
+    {
+        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(m_creature,SOUND_DEATH);
 
-       if( pInstance ) pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, DONE);
+        if( pInstance ) pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, DONE);
     }
 
     void KilledUnit(Unit* victim)
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;
-        case 2:
-            DoYell(SAY_SLAY_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_3);
-            break;
+            case 0:
+                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                break;
+            case 2:
+                DoYell(SAY_SLAY_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_3);
+                break;
         }
     }
 
@@ -119,18 +119,18 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-            break;
-        case 1:
-            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            break;
-        case 2:
-            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            break; 
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
         }
 
         if( pInstance ) pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, IN_PROGRESS);
@@ -138,13 +138,14 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
     //no known summon spells exist
     void SummonMechanichs()
-    { 
+    {
         DoYell(SAY_MECHANICS, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature,SOUND_MECHANICS);
 
         DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
         DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
         DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,-5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+
         if( rand()%2 )
             DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,-7,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
         if( rand()%2 )
@@ -157,13 +158,13 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
             return;
 
         if( Shrink_Timer < diff )
-        { 
+        {
             DoCast(m_creature->getVictim(),SPELL_SUPER_SHRINK_RAY);
             Shrink_Timer = 20000;
-       }else Shrink_Timer -= diff;
+        }else Shrink_Timer -= diff;
 
-       if( Saw_Blade_Timer < diff )
-       {
+        if( Saw_Blade_Timer < diff )
+        {
             if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) ) DoCast(target,SPELL_SAW_BLADE);
             else DoCast(m_creature->getVictim(),SPELL_SAW_BLADE);
             Saw_Blade_Timer = 15000;
@@ -178,25 +179,25 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if( !Summon75 )
             if( (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 75 )
-            {
-                SummonMechanichs();
-                Summon75 = true;
-            }
+        {
+            SummonMechanichs();
+            Summon75 = true;
+        }
         if( !Summon50 )
             if( (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50 )
-            {
-                SummonMechanichs();
-                Summon50 = true;
-            }
+        {
+            SummonMechanichs();
+            Summon50 = true;
+        }
         if( !Summon25 )
             if( (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25 )
-            {
-                SummonMechanichs();
-                Summon25 = true;
-            }
+        {
+            SummonMechanichs();
+            Summon25 = true;
+        }
 
         DoMeleeAttackIfReady();
-    } 
+    }
 };
 
 CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature *_Creature)
@@ -213,7 +214,7 @@ CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
 {
-    mob_steamrigger_mechanicAI(Creature *c) : ScriptedAI(c) 
+    mob_steamrigger_mechanicAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -238,7 +239,7 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
 
     void Aggro(Unit *who) { }
 
-    void UpdateAI(const uint32 diff) 
+    void UpdateAI(const uint32 diff)
     {
         if( Repair_Timer < diff )
         {

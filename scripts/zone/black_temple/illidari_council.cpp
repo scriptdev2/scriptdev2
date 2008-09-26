@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Illidari_Council
@@ -118,19 +118,19 @@ struct CouncilYells
 
 static CouncilYells CouncilAggro[]=
 {
-    {"I have better things to do!", 11422, 5000}, // Gathios
-    {"You wish to test me?", 11524, 5500}, // Veras
-    {"Flee, or die!", 11482, 5000}, // Malande
+    {"I have better things to do!", 11422, 5000},           // Gathios
+    {"You wish to test me?", 11524, 5500},                  // Veras
+    {"Flee, or die!", 11482, 5000},                         // Malande
     {"Common... such a crude language. Bandal!", 11440, 0}, // Zerevor
 };
 
 // Need to get proper timers for this later
 static CouncilYells CouncilEnrage[]=
 {
-    {"Enough games!", 11428, 2000}, // Gathios
-    {"You wish to kill me? Hahaha, you first!", 11530, 6000}, // Veras
-    {"For Quel'Thalas! For the Sunwell!", 11488, 5000}, // Malande
-    {"Sha'amoor sine menoor!", 11446, 0}, // Zerevor
+    {"Enough games!", 11428, 2000},                         // Gathios
+    {"You wish to kill me? Hahaha, you first!", 11530, 6000},//Veras
+    {"For Quel'Thalas! For the Sunwell!", 11488, 5000},     // Malande
+    {"Sha'amoor sine menoor!", 11446, 0},                   // Zerevor
 };
 
 struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
@@ -147,13 +147,13 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
     uint32 EnrageTimer;
     uint32 AggroYellTimer;
 
-    uint8 YellCounter; // Serves as the counter for both the aggro and enrage yells
+    uint8 YellCounter;                                      // Serves as the counter for both the aggro and enrage yells
 
     bool EventStarted;
 
     void Reset()
     {
-        EnrageTimer = 900000; // 15 minutes
+        EnrageTimer = 900000;                               // 15 minutes
         AggroYellTimer = 500;
 
         YellCounter = 0;
@@ -189,36 +189,36 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
 
         if(AggroYellTimer)
             if(AggroYellTimer <= diff)
+        {
+            if(Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
             {
-                if(Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
-                {
-                    pMember->MonsterYell(CouncilAggro[YellCounter].text, LANG_UNIVERSAL, 0);
-                    DoPlaySoundToSet(pMember, CouncilAggro[YellCounter].soundId);
-                    AggroYellTimer = CouncilAggro[YellCounter].timer;
-                }
-                ++YellCounter;
-                if(YellCounter > 3)
-                    YellCounter = 0; // Reuse for Enrage Yells
-            }else AggroYellTimer -= diff;
+                pMember->MonsterYell(CouncilAggro[YellCounter].text, LANG_UNIVERSAL, 0);
+                DoPlaySoundToSet(pMember, CouncilAggro[YellCounter].soundId);
+                AggroYellTimer = CouncilAggro[YellCounter].timer;
+            }
+            ++YellCounter;
+            if(YellCounter > 3)
+                YellCounter = 0;                            // Reuse for Enrage Yells
+        }else AggroYellTimer -= diff;
 
         if(EnrageTimer)
             if(EnrageTimer <= diff)
+        {
+            if(Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
             {
-                if(Unit* pMember = Unit::GetUnit(*m_creature, Council[YellCounter]))
-                {
-                    pMember->CastSpell(pMember, SPELL_BERSERK, true);
-                    pMember->MonsterYell(CouncilEnrage[YellCounter].text, LANG_UNIVERSAL, 0);
-                    DoPlaySoundToSet(pMember, CouncilEnrage[YellCounter].soundId);
-                    EnrageTimer = CouncilEnrage[YellCounter].timer;
-                }
-                ++YellCounter;
-            }else EnrageTimer -= diff;
+                pMember->CastSpell(pMember, SPELL_BERSERK, true);
+                pMember->MonsterYell(CouncilEnrage[YellCounter].text, LANG_UNIVERSAL, 0);
+                DoPlaySoundToSet(pMember, CouncilEnrage[YellCounter].soundId);
+                EnrageTimer = CouncilEnrage[YellCounter].timer;
+            }
+            ++YellCounter;
+        }else EnrageTimer -= diff;
     }
 };
 
 struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 {
-    mob_illidari_councilAI(Creature *c) : ScriptedAI(c) 
+    mob_illidari_councilAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         for(uint8 i = 0; i < 4; ++i)
@@ -239,7 +239,7 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
     bool EventBegun;
 
     void Reset()
-    {     
+    {
         CheckTimer    = 2000;
         EndEventTimer = 0;
 
@@ -248,15 +248,15 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
         Creature* pMember = NULL;
         for(uint8 i = 0; i < 4; ++i)
         {
-          if(pMember = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
-          {
-              if(!pMember->isAlive())
-              {
-                  pMember->RemoveCorpse();
-                  pMember->Respawn();
-              }
-              pMember->AI()->EnterEvadeMode();
-          }
+            if(pMember = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
+            {
+                if(!pMember->isAlive())
+                {
+                    pMember->RemoveCorpse();
+                    pMember->Respawn();
+                }
+                pMember->AI()->EnterEvadeMode();
+            }
         }
 
         if(pInstance)
@@ -318,54 +318,54 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
         if(EndEventTimer)
             if(EndEventTimer <= diff)
+        {
+            if(DeathCount > 3)
             {
-                if(DeathCount > 3)
+                if(pInstance)
                 {
-                    if(pInstance)
-                    {
-                        if(Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
-                            VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                        pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, DONE);
-                    }
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    return;
+                    if(Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
+                        VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, DONE);
                 }
+                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                return;
+            }
 
-                Creature* pMember = ((Creature*)Unit::GetUnit(*m_creature, Council[DeathCount]));
-                if(pMember && pMember->isAlive())
-                    pMember->DealDamage(pMember, pMember->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                ++DeathCount;
-                EndEventTimer = 1500;
-            }else EndEventTimer -= diff;
+            Creature* pMember = ((Creature*)Unit::GetUnit(*m_creature, Council[DeathCount]));
+            if(pMember && pMember->isAlive())
+                pMember->DealDamage(pMember, pMember->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            ++DeathCount;
+            EndEventTimer = 1500;
+        }else EndEventTimer -= diff;
 
         if(CheckTimer)
             if(CheckTimer <= diff)
+        {
+            uint8 EvadeCheck = 0;
+            for(uint8 i = 0; i < 4; ++i)
             {
-                uint8 EvadeCheck = 0;
-                for(uint8 i = 0; i < 4; ++i)
+                if(Council[i])
                 {
-                    if(Council[i])
+                    if(Creature* Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
                     {
-                        if(Creature* Member = ((Creature*)Unit::GetUnit((*m_creature), Council[i])))
+                        // This is the evade/death check.
+                        if(Member->isAlive() && !Member->SelectHostilTarget())
+                            ++EvadeCheck;                   //If all members evade, we reset so that players can properly reset the event
+                        else if(!Member->isAlive())         // If even one member dies, kill the rest, set instance data, and kill self.
                         {
-                            // This is the evade/death check. 
-                            if(Member->isAlive() && !Member->SelectHostilTarget())
-                                ++EvadeCheck; //If all members evade, we reset so that players can properly reset the event
-                            else if(!Member->isAlive()) // If even one member dies, kill the rest, set instance data, and kill self.
-                            {
-                                EndEventTimer = 1000;
-                                CheckTimer = 0;
-                                return;
-                            }
+                            EndEventTimer = 1000;
+                            CheckTimer = 0;
+                            return;
                         }
                     }
                 }
+            }
 
-                if(EvadeCheck > 3)
-                    Reset();
+            if(EvadeCheck > 3)
+                Reset();
 
-                CheckTimer = 2000;
-            }else CheckTimer -= diff;
+            CheckTimer = 2000;
+        }else CheckTimer -= diff;
 
     }
 };
@@ -387,12 +387,12 @@ struct MANGOS_DLL_DECL boss_illidari_councilAI : public ScriptedAI
     bool LoadedGUIDs;
 
     void Aggro(Unit* who)
-    {   
+    {
         if(pInstance)
         {
-           Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
-           if(Controller)
-               ((mob_illidari_councilAI*)Controller->AI())->StartEvent(who);
+            Creature* Controller = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_ILLIDARICOUNCIL)));
+            if(Controller)
+                ((mob_illidari_councilAI*)Controller->AI())->StartEvent(who);
         }
         else
         {
@@ -471,15 +471,15 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
     }
 
     Unit* SelectCouncilMember()
-    {       
+    {
         Unit* pUnit = m_creature;
-        uint32 member = 0; // He chooses Lady Malande most often
-        
-        if(rand()%10 == 0) // But there is a chance he picks someone else.
+        uint32 member = 0;                                  // He chooses Lady Malande most often
+
+        if(rand()%10 == 0)                                  // But there is a chance he picks someone else.
             member = urand(1, 3);
 
-        if(member != 2) // No need to create another pointer to us using Unit::GetUnit
-            pUnit = Unit::GetUnit((*m_creature), Council[member]);  
+        if(member != 2)                                     // No need to create another pointer to us using Unit::GetUnit
+            pUnit = Unit::GetUnit((*m_creature), Council[member]);
         return pUnit;
     }
 
@@ -503,7 +503,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-        
+
         if(BlessingTimer < diff)
         {
             if(Unit* pUnit = SelectCouncilMember())
@@ -516,7 +516,7 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
             }
             BlessingTimer = 60000;
         }else BlessingTimer -= diff;
-        
+
         if(ConsecrationTimer < diff)
         {
             DoCast(m_creature, SPELL_CONSECRATION);
@@ -527,7 +527,8 @@ struct MANGOS_DLL_DECL boss_gathios_the_shattererAI : public boss_illidari_counc
         {
             if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                if(m_creature->GetDistance2d(target) > 10 && m_creature->GetDistance2d(target) < 40) // is in ~10-40 yd range
+                // is in ~10-40 yd range
+                if(m_creature->GetDistance2d(target) > 10 && m_creature->GetDistance2d(target) < 40)
                 {
                     DoCast(target, SPELL_HAMMER_OF_JUSTICE);
                     HammerOfJusticeTimer = 20000;
@@ -599,7 +600,7 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
             else
             {
                 Cooldown -= diff;
-                return; // Don't cast any other spells if global cooldown is still ticking
+                return;                                     // Don't cast any other spells if global cooldown is still ticking
             }
         }
 
@@ -607,10 +608,10 @@ struct MANGOS_DLL_DECL boss_high_nethermancer_zerevorAI : public boss_illidari_c
         {
             DoCast(m_creature, SPELL_DAMPEN_MAGIC);
             Cooldown = 1000;
-            DampenMagicTimer = 110000; // almost 2 minutes
-            ArcaneBoltTimer += 1000; // Give the Mage some time to spellsteal Dampen.
+            DampenMagicTimer = 110000;                      // almost 2 minutes
+            ArcaneBoltTimer += 1000;                        // Give the Mage some time to spellsteal Dampen.
         }else DampenMagicTimer -= diff;
-        
+
         if(ArcaneExplosionTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
@@ -694,8 +695,8 @@ struct MANGOS_DLL_DECL boss_lady_malandeAI : public boss_illidari_councilAI
 
         if(CircleOfHealingTimer < diff)
         {
-            // Currently bugged and puts Malande on the threatlist of the other council members. It also heals players.
-//            DoCast(m_creature, SPELL_CIRCLE_OF_HEALING);
+            //Currently bugged and puts Malande on the threatlist of the other council members. It also heals players.
+            //DoCast(m_creature, SPELL_CIRCLE_OF_HEALING);
             CircleOfHealingTimer = 60000;
         }else CircleOfHealingTimer -= diff;
 
@@ -759,7 +760,7 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
- 
+
         if(!HasVanished)
         {
             if(DeadlyPoisonTimer < diff)
@@ -768,23 +769,24 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
                 DeadlyPoisonTimer = 15000 + rand()%31 * 1000;
             }else DeadlyPoisonTimer -= diff;
 
-            if(AppearEnvenomTimer < diff) // Cast Envenom. This is cast 4 seconds after Vanish is over
+            if(AppearEnvenomTimer < diff)                   // Cast Envenom. This is cast 4 seconds after Vanish is over
             {
                 DoCast(m_creature->getVictim(), SPELL_ENVENOM);
                 AppearEnvenomTimer = 90000;
             }else AppearEnvenomTimer -= diff;
 
-            if(VanishTimer < diff) // Disappear and stop attacking, but follow a random unit
+            if(VanishTimer < diff)                          // Disappear and stop attacking, but follow a random unit
             {
                 if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                {        
+                {
                     VanishTimer = 30000;
                     AppearEnvenomTimer= 28000;
                     HasVanished = true;
                     m_creature->SetVisibility(VISIBILITY_OFF);
                     m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     DoResetThreat();
-                    m_creature->AddThreat(target, 500000.0f); // Chase a unit. Check before DoMeleeAttackIfReady prevents from attacking
+                                                            // Chase a unit. Check before DoMeleeAttackIfReady prevents from attacking
+                    m_creature->AddThreat(target, 500000.0f);
                     m_creature->GetMotionMaster()->MoveChase(target);
                 }
             }else VanishTimer -= diff;
@@ -793,20 +795,20 @@ struct MANGOS_DLL_DECL boss_veras_darkshadowAI : public boss_illidari_councilAI
         }
         else
         {
-            if(VanishTimer < diff) // Become attackable and poison current target
+            if(VanishTimer < diff)                          // Become attackable and poison current target
             {
                 Unit* target = m_creature->getVictim();
                 DoCast(target, SPELL_DEADLY_POISON);
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 DoResetThreat();
-                m_creature->AddThreat(target, 3000.0f); // Make Veras attack his target for a while, he will cast Envenom 4 seconds after.
+                m_creature->AddThreat(target, 3000.0f);     // Make Veras attack his target for a while, he will cast Envenom 4 seconds after.
                 DeadlyPoisonTimer += 6000;
                 VanishTimer = 90000;
                 AppearEnvenomTimer = 4000;
                 HasVanished = false;
             }else VanishTimer -= diff;
 
-            if(AppearEnvenomTimer < diff) // Appear 2 seconds before becoming attackable (Shifting out of vanish)
+            if(AppearEnvenomTimer < diff)                   // Appear 2 seconds before becoming attackable (Shifting out of vanish)
             {
                 m_creature->GetMotionMaster()->Clear();
                 m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());

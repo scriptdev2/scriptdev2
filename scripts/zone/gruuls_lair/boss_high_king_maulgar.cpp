@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_High_King_Maulgar
@@ -24,22 +24,26 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_gruuls_lair.h"
 
-#define SOUND_AGGRO              11367
-#define SOUND_ENRAGE             11368
-#define SOUND_OGRE_DEATH1        11369
-#define SOUND_OGRE_DEATH2        11370
-#define SOUND_OGRE_DEATH3        11371
-#define SOUND_OGRE_DEATH4        11372
-#define SOUND_SLAY1              11373
-#define SOUND_SLAY2              11374
-#define SOUND_SLAY3              11375
-#define SOUND_DEATH              11376
+#define SOUND_AGGRO              11367                      //"Gronn are the real power in outland."
+
+#define SOUND_ENRAGE             11368                      //"You will not defeat the hand of Gruul!"
+
+#define SOUND_OGRE_DEATH1        11369                      //"You won't kill next one so easy!"
+#define SOUND_OGRE_DEATH2        11370                      //"Pah! Does not prove anything!"
+#define SOUND_OGRE_DEATH3        11371                      //"I'm not afraid of you."
+#define SOUND_OGRE_DEATH4        11372                      //"Good, now you fight me!"
+
+#define SOUND_SLAY1              11373                      //"You not so tough afterall!"
+#define SOUND_SLAY2              11374                      //"Aha ha ha ha!"
+#define SOUND_SLAY3              11375                      //"Mulgar is king!"
+
+#define SOUND_DEATH              11376                      //"Gruul ...will crush you..."
 
 // High King Maulgar
 #define SPELL_ARCING_SMASH       39144
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33238
-#define SPELL_ENRAGE             34970     
+#define SPELL_ENRAGE             34970
 
 // Council spells
 #define SPELL_DARK_DECAY        33129
@@ -56,7 +60,7 @@ EndScriptData */
 //High King Maulgar AI
 struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 {
-    boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c) 
+    boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         for(uint8 i = 0; i < 4; ++i)
@@ -76,7 +80,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     uint64 Council[4];
 
     void Reset()
-    {       
+    {
         ArcingSmash_Timer = 10000;
         MightyBlow_Timer = 40000;
         Whirlwind_Timer = 30000;
@@ -107,9 +111,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         switch(rand()%2)
         {
             case 0:  DoPlaySoundToSet(m_creature, SOUND_SLAY1);  break;
-
             case 1:  DoPlaySoundToSet(m_creature, SOUND_SLAY2);  break;
-
             case 2:  DoPlaySoundToSet(m_creature, SOUND_SLAY3);  break;
         }
     }
@@ -220,7 +222,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 //Olm The Summoner AI
 struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 {
-    boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c) 
+    boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -229,7 +231,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     uint32 DarkDecay_Timer;
     uint32 Summon_Timer;
 
-    ScriptedInstance* pInstance; 
+    ScriptedInstance* pInstance;
 
     void Reset()
     {
@@ -250,7 +252,6 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
         }
     }
 
-
     float DoCalculateRandomLocation()
     {
         float Loc;
@@ -258,13 +259,8 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0:
-            Loc = 0 + Rand;
-            break;
-
-        case 1:
-            Loc = 0 - Rand;
-            break;
+            case 0: Loc = 0 + Rand; break;
+            case 1: Loc = 0 - Rand; break;
         }
         return Loc;
     }
@@ -312,7 +308,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 //Kiggler The Crazed AI
 struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 {
-    boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c) 
+    boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -323,7 +319,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
     uint32 ArcaneShock_Timer;
     uint32 ArcaneExplosion_Timer;
 
-    ScriptedInstance* pInstance; 
+    ScriptedInstance* pInstance;
 
     void Reset()
     {
@@ -431,7 +427,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 //Blindeye The Seer AI
 struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 {
-    boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c) 
+    boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -440,7 +436,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
     uint32 GreaterPowerWordShield_Timer;
     uint32 Heal_Timer;
 
-    ScriptedInstance* pInstance; 
+    ScriptedInstance* pInstance;
 
     void Reset()
     {
@@ -454,11 +450,11 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-                    pInstance->SetData(DATA_MAULGAREVENT, 1);
-                }
+        if(pInstance)
+        {
+            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            pInstance->SetData(DATA_MAULGAREVENT, 1);
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -529,7 +525,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 //Krosh Firehand AI
 struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 {
-    boss_krosh_firehandAI(Creature *c) : ScriptedAI(c) 
+    boss_krosh_firehandAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -539,7 +535,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
     uint32 SpellShield_Timer;
     uint32 BlastWave_Timer;
 
-    ScriptedInstance* pInstance; 
+    ScriptedInstance* pInstance;
 
     void Reset()
     {
@@ -554,11 +550,11 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-                if(pInstance)
-                {
-                    pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-                    pInstance->SetData(DATA_MAULGAREVENT, 1);
-                }
+        if(pInstance)
+        {
+            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            pInstance->SetData(DATA_MAULGAREVENT, 1);
+        }
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -639,18 +635,22 @@ CreatureAI* GetAI_boss_high_king_maulgar(Creature *_Creature)
 {
     return new boss_high_king_maulgarAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_olm_the_summoner(Creature *_Creature)
 {
     return new boss_olm_the_summonerAI (_Creature);
 }
+
 CreatureAI *GetAI_boss_kiggler_the_crazed(Creature *_Creature)
 {
     return new boss_kiggler_the_crazedAI (_Creature);
 }
+
 CreatureAI *GetAI_boss_blindeye_the_seer(Creature *_Creature)
 {
     return new boss_blindeye_the_seerAI (_Creature);
 }
+
 CreatureAI *GetAI_boss_krosh_firehand(Creature *_Creature)
 {
     return new boss_krosh_firehandAI (_Creature);

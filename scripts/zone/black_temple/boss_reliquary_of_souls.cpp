@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Reliquary_of_Souls
@@ -151,7 +151,7 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 {
-    boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c) 
+    boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -164,7 +164,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     uint64 AngerGUID;
 
     uint32 SoulDeathCount;
-    uint32 Phase; // 0 = Out of Combat, 1 = Not started, 2 = Suffering, 3 = Souls, 4 = Desire, 5 = Souls, 6 = Anger
+    // 0 = Out of Combat, 1 = Not started, 2 = Suffering, 3 = Souls, 4 = Desire, 5 = Souls, 6 = Anger
+    uint32 Phase;
     uint32 SummonEssenceTimer;
     uint32 DespawnEssenceTimer;
     uint32 SoulCount;
@@ -222,7 +223,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
 
                     Phase = 1;
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);  // I R ANNNGRRRY!
+                                                            // I R ANNNGRRRY!
+                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
                     m_creature->AddThreat(who, 1.0f);
@@ -260,14 +262,14 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
             if(pUnit)
             {
-                m_creature->AddThreat(pUnit, 1.0f); // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
+                m_creature->AddThreat(pUnit, 1.0f);         // This is so that we make sure the unit is in Reliquary's threat list before we reset the unit's threat.
                 m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
                 float threat = target->getThreatManager().getThreat(pUnit);
-                m_creature->AddThreat(pUnit, threat); // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
+                m_creature->AddThreat(pUnit, threat);       // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
             }
         }
     }
-    
+
     void DespawnEssences()
     {
         // Despawn Essences
@@ -295,20 +297,23 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if(!Phase)
             return;
 
-        if(Phase && m_creature->getThreatManager().getThreatList().empty()) // Reset if event is begun and we don't have a threatlist
+        // Reset if event is begun and we don't have a threatlist
+        if(Phase && m_creature->getThreatManager().getThreatList().empty())
             EnterEvadeMode();
 
         if(Phase == 1)
         {
             if(AnimationTimer < diff)
             {
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);  // Release teh cube
+                // Release the cube
+                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
                 AnimationTimer = 8300;
             }else AnimationTimer -= diff;
 
             if(SummonEssenceTimer < diff)
             {
-                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
+                // Ribs: open
+                m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                 Creature* EssenceSuffering = NULL;
                 EssenceSuffering = m_creature->SummonCreature(23418, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
@@ -338,7 +343,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceSuffering = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
 
                 if(!EssenceSuffering || (!EssenceSuffering->isAlive()))
-                EnterEvadeMode();
+                    EnterEvadeMode();
 
                 if(!EndingPhase)
                 {
@@ -364,7 +369,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 {
                     if(AnimationTimer < diff)
                     {
-                        EssenceSuffering->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);  // Return
+                        // Return
+                        EssenceSuffering->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
                         AnimationTimer = 10000;
                     }else AnimationTimer -= diff;
 
@@ -376,8 +382,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         EssenceSuffering->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                         EssenceSuffering->setFaction(35);
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
-                        SummonEssenceTimer = 20000; //60000;
-                        AnimationTimer = 18200; //58100;
+                        SummonEssenceTimer = 20000;         //60000;
+                        AnimationTimer = 18200;             //58100;
                         SoulDeathCount = 0;
                         SoulCount = 0;
                         SummonSoulTimer = 1000;
@@ -404,20 +410,22 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 if(AnimationTimer < diff)
                 {
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);  // Release teh cube
+                    // Release the cube
+                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
                     AnimationTimer = 10000;
                 }else AnimationTimer -= diff;
 
                 if(SummonEssenceTimer < diff)
                 {
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
+                    // Ribs: open
+                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                     Creature* EssenceDesire = NULL;
                     EssenceDesire = m_creature->SummonCreature(23419, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 10000);
 
                     if(EssenceDesire)
                     {
                         EssenceDesire->Yell(DESI_SAY_FREED, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, DESI_SOUND_FREED);                
+                        DoPlaySoundToSet(m_creature, DESI_SOUND_FREED);
                         Unit* target = NULL;
                         target = SelectUnit(SELECT_TARGET_RANDOM, 0);
                         if(target)
@@ -459,7 +467,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         AnimationTimer = 2200;
                         EndingPhase = true;
                     }
-                }            
+                }
 
                 if(EndingPhase && EssenceDesire)
                 {
@@ -467,7 +475,8 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                     {
                         if(AnimationTimer < diff)
                         {
-                            EssenceDesire->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);  // Return
+                            // Return
+                            EssenceDesire->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
                             AnimationTimer = 10000;
                         }else AnimationTimer -= diff;
 
@@ -505,16 +514,18 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             }
 
             if(SoulDeathCount >= SoulCount)
-            {                
+            {
                 if(AnimationTimer < diff)
                 {
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);  // Release teh cube
+                    // Release the cube
+                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,374);
                     AnimationTimer = 10000;
                 }else AnimationTimer -= diff;
 
                 if(SummonEssenceTimer < diff)
                 {
-                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);  // Ribs: open
+                    // Ribs: open
+                    m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,373);
                     Creature* EssenceAnger = NULL;
                     EssenceAnger = m_creature->SummonCreature(23420, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 1.57, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
 
@@ -545,7 +556,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 EssenceAnger = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
 
                 if(!EssenceAnger)
-                EnterEvadeMode();
+                    EnterEvadeMode();
 
                 if(m_creature->isAlive() && EssenceAnger)
                 {
@@ -598,7 +609,8 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         if((damage >= m_creature->GetHealth()) && (done_by != m_creature))
         {
             damage = 0;
-            m_creature->SetHealth(m_creature->GetMaxHealth()/10); // 10% of total health, signalling time to return
+            // 10% of total health, signalling time to return
+            m_creature->SetHealth(m_creature->GetMaxHealth()/10);
             if(StatAuraGUID)
             {
                 Unit* pUnit = Unit::GetUnit((*m_creature), StatAuraGUID);
@@ -642,21 +654,23 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
-        return; // No point continuing if empty threatlist.
+            return;                                         // No point continuing if empty threatlist.
         std::list<Unit*> targets;
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
         for( ; itr != m_threatlist.end(); ++itr)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*itr)->getUnitGuid());
-            if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER)) // Only alive players
-            targets.push_back(pUnit);
+                                                            // Only alive players
+            if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
+                targets.push_back(pUnit);
         }
         if(targets.empty())
-        return; // No targets added for some reason. No point continuing.
-        targets.sort(TargetDistanceOrder(m_creature)); // Sort players by distance.
-        targets.resize(1); // Only need closest target.
-        Unit* target = targets.front(); // Get the first target.
-        m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim())); // Add threat equivalent to threat on victim. 
+            return;                                         // No targets added for some reason. No point continuing.
+        targets.sort(TargetDistanceOrder(m_creature));      // Sort players by distance.
+        targets.resize(1);                                  // Only need closest target.
+        Unit* target = targets.front();                     // Get the first target.
+                                                            // Add threat equivalent to threat on victim.
+        m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
         DoCast(target, SPELL_FIXATE);
     }
 
@@ -664,7 +678,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        return;
+            return;
 
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
@@ -680,18 +694,18 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
             if(m_creature->getVictim())
-            m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+                m_creature->DeleteThreatList();             // Delete our threatlist if below 10% as we should no longer attack.
             return;
         }
 
         // Prevent overlapping yells
         if(AggroYellTimer)
             if(AggroYellTimer < diff)
-            {
-                DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
-                AggroYellTimer = 0;
-            }else AggroYellTimer -= diff;
+        {
+            DoYell(SUFF_SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(m_creature, SUFF_SOUND_AGGRO);
+            AggroYellTimer = 0;
+        }else AggroYellTimer -= diff;
 
         //Supposed to be cast on nearest target
         if(FixateTimer < diff)
@@ -712,7 +726,7 @@ struct MANGOS_DLL_DECL boss_essence_of_sufferingAI : public ScriptedAI
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if(target)
-            DoCast(target, SPELL_SOUL_DRAIN);
+                DoCast(target, SPELL_SOUL_DRAIN);
             SoulDrainTimer = 60000;
         }else SoulDrainTimer -= diff;
 
@@ -741,7 +755,8 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
         if((damage >= m_creature->GetHealth()) && (done_by != m_creature))
         {
             damage = 0;
-            m_creature->SetHealth(m_creature->GetMaxHealth()/10); // 10% of total health, signalling time to return
+            // 10% of total health, signalling time to return
+            m_creature->SetHealth(m_creature->GetMaxHealth()/10);
         }
         else
         {
@@ -774,7 +789,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
-        return;
+            return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -782,7 +797,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
                 DoStartAttackAndMovement(who);
@@ -799,12 +814,12 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        return;
-        
+            return;
+
         if(m_creature->GetHealth() <= (m_creature->GetMaxHealth()*0.1))
         {
             if(m_creature->getVictim())
-                m_creature->DeleteThreatList(); // Delete our threatlist if below 10% as we should no longer attack.
+                m_creature->DeleteThreatList();             // Delete our threatlist if below 10% as we should no longer attack.
             return;
         }
 
@@ -870,7 +885,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || m_creature->getVictim())
-        return;
+            return;
 
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
@@ -878,7 +893,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
                 if(who->HasStealthAura())
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
                 DoStartAttackAndMovement(who);
@@ -901,22 +916,21 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(ANGER_SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, ANGER_SOUND_SLAY2);
+                break;
         }
     }
-
 
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        return;
+            return;
 
         if(!CheckedAggro)
         {
@@ -925,7 +939,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         }
 
         if(AggroYellTimer)
-        if(AggroYellTimer < diff)
+            if(AggroYellTimer < diff)
         {
             DoYell(ANGER_SAY_FREED2,LANG_UNIVERSAL,NULL);
             DoPlaySoundToSet(m_creature, ANGER_SOUND_FREED2);
@@ -935,7 +949,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
         if(CheckTankTimer < diff)
         {
             if(m_creature->getVictim()->GetGUID() != AggroTargetGUID)
-            {     
+            {
                 DoYell(ANGER_SAY_BEFORE,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, ANGER_SOUND_BEFORE);
                 DoCast(m_creature, SPELL_SELF_SEETHE);
@@ -959,7 +973,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                 if(target)
-                DoCast(target, SPELL_SPITE);
+                    DoCast(target, SPELL_SPITE);
 
             }
 
@@ -978,7 +992,7 @@ void npc_enslaved_soulAI::JustDied(Unit *killer)
     {
         Creature* Reliquary = ((Creature*)Unit::GetUnit((*m_creature), ReliquaryGUID));
         if(Reliquary)
-        ((boss_reliquary_of_soulsAI*)Reliquary->AI())->SoulDeathCount++;
+            ((boss_reliquary_of_soulsAI*)Reliquary->AI())->SoulDeathCount++;
     }
 }
 
@@ -1034,5 +1048,4 @@ void AddSC_boss_reliquary_of_souls()
     newscript->Name="npc_enslaved_soul";
     newscript->GetAI = GetAI_npc_enslaved_soul;
     m_scripts[nrscripts++] = newscript;
-
 }

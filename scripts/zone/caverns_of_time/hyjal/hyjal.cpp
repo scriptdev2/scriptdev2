@@ -1,23 +1,23 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Hyjal
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
@@ -47,7 +47,7 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
     ai->Spell[0].SpellId = SPELL_BLIZZARD;
     ai->Spell[0].Cooldown = 15000 + rand()%20000;
     ai->Spell[0].TargetType = TARGETTYPE_RANDOM;
-    
+
     ai->Spell[1].SpellId = SPELL_PYROBLAST;
     ai->Spell[1].Cooldown = 2000 + rand()%7000;
     ai->Spell[1].TargetType = TARGETTYPE_RANDOM;
@@ -130,7 +130,7 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
 {
     hyjalAI* ai = ((hyjalAI*)_Creature->AI());
     uint32 AnetheronEvent = ai->GetInstanceData(DATA_ANETHERONEVENT);
-    if(AnetheronEvent >= DONE && !ai->EventBegun) // Only let them start the Horde phase if Anetheron is dead.
+    if(AnetheronEvent >= DONE && !ai->EventBegun)           // Only let them start the Horde phase if Anetheron is dead.
     {
         uint32 KazrogalEvent = ai->GetInstanceData(DATA_KAZROGALEVENT);
         uint32 AzgalorEvent  = ai->GetInstanceData(DATA_AZGALOREVENT);
@@ -143,7 +143,7 @@ bool GossipHello_npc_thrall(Player *player, Creature *_Creature)
     }
 
     if(player->isGameMaster())
-    player->ADD_GOSSIP_ITEM(2, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(2, "[GM] Toggle Debug Timers", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
 
     player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
 

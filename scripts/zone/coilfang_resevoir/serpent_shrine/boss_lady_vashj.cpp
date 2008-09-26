@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA02111-1307USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA02111-1307USA
+ */
 
 /* ScriptData
 SDName: Boss_Lady_Vashj
@@ -81,7 +81,7 @@ EndScriptData */
 #define COILFANG_ELITE                22055
 #define FATHOM_SPOREBAT               22140
 
-float ElementPos[8][4] = 
+float ElementPos[8][4] =
 {
     {8.3, -835.3, 21.9, 5},
     {53.4, -835.3, 21.9, 4.5},
@@ -118,7 +118,7 @@ float ShieldGeneratorChannelPos[4][4] =
 //Lady Vashj AI
 struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 {
-    boss_lady_vashjAI (Creature *c) : ScriptedAI(c) 
+    boss_lady_vashjAI (Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -184,15 +184,15 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
 
-        case 1:
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-            break;
+            case 1:
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                break;
         }
     }
 
@@ -209,25 +209,22 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     {
         switch(rand()%4)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-            break;
-
-        case 1:
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-            break;
-
-        case 2:
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-            break;
-
-        case 3:
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO4);
-            DoYell(SAY_AGGRO4, LANG_UNIVERSAL, NULL);
-            break;
+            case 0:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                break;
+            case 1:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                break;
+            case 2:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                break;
+            case 3:
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO4);
+                DoYell(SAY_AGGRO4, LANG_UNIVERSAL, NULL);
+                break;
         }
 
         Phase = 1;
@@ -238,43 +235,41 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-            //Begin melee attack if we are within range
-            if(Phase != 2)
-                DoStartAttackAndMovement(who);
-            
-            StartEvent();
+        //Begin melee attack if we are within range
+        if(Phase != 2)
+            DoStartAttackAndMovement(who);
+
+        StartEvent();
     }
 
     void CastShootOrMultishot()
     {
         switch(rand()%2)
         {
-        case 0:
-            //Shoot
-            //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits her target for 4097-5543 Physical damage.
-            DoCast(m_creature->getVictim(), SPELL_SHOOT);
-            break;
-
-        case 1:
-            //Multishot
-            //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits 1 person and 4 people around him for 6475-7525 physical damage.
-            DoCast(m_creature->getVictim(), SPELL_MULTI_SHOT);
-            break;
+            case 0:
+                //Shoot
+                //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits her target for 4097-5543 Physical damage.
+                DoCast(m_creature->getVictim(), SPELL_SHOOT);
+                break;
+            case 1:
+                //Multishot
+                //Used in Phases 1 and 3 after Entangle or while having nobody in melee range. A shot that hits 1 person and 4 people around him for 6475-7525 physical damage.
+                DoCast(m_creature->getVictim(), SPELL_MULTI_SHOT);
+                break;
         }
 
         if(rand()%3)
         {
             switch(rand()%2)
             {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_BOWSHOT1);
-                DoYell(SAY_BOWSHOT1, LANG_UNIVERSAL, NULL);
-                break;
-
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_BOWSHOT2);
-                DoYell(SAY_BOWSHOT2, LANG_UNIVERSAL, NULL);
-                break;
+                case 0:
+                    DoPlaySoundToSet(m_creature, SOUND_BOWSHOT1);
+                    DoYell(SAY_BOWSHOT1, LANG_UNIVERSAL, NULL);
+                    break;
+                case 1:
+                    DoPlaySoundToSet(m_creature, SOUND_BOWSHOT2);
+                    DoYell(SAY_BOWSHOT2, LANG_UNIVERSAL, NULL);
+                    break;
             }
         }
     }
@@ -293,13 +288,13 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         {
             //ShockBlast_Timer
             if (ShockBlast_Timer < diff)
-            { 
+            {
                 //Shock Burst
                 //Randomly used in Phases 1 and 3 on Vashj's target, it's a Shock spell doing 8325-9675 nature damage and stunning the target for 5 seconds, during which she will not attack her target but switch to the next person on the aggro list.
                 DoCast(m_creature->getVictim(), SPELL_SHOCK_BLAST);
                 m_creature->TauntApply(m_creature->getVictim());
 
-                ShockBlast_Timer = 1000+rand()%14000; //random cooldown
+                ShockBlast_Timer = 1000+rand()%14000;       //random cooldown
             }else ShockBlast_Timer -= diff;
 
             //StaticCharge_Timer
@@ -311,9 +306,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                 if(target && !target->HasAura(SPELL_STATIC_CHARGE_TRIGGER, 0))
-                    DoCast(target, SPELL_STATIC_CHARGE_TRIGGER); //cast Static Charge every 2 seconds for 20 seconds
+                                                            //cast Static Charge every 2 seconds for 20 seconds
+                        DoCast(target, SPELL_STATIC_CHARGE_TRIGGER);
 
-                StaticCharge_Timer = 10000+rand()%20000; //blizzlike
+                StaticCharge_Timer = 10000+rand()%20000;    //blizzlike
             }else StaticCharge_Timer -= diff;
 
             //Entangle_Timer
@@ -350,8 +346,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     m_creature->SendMonsterMove(MIDDLE_X, MIDDLE_Y, MIDDLE_Z, 0, 0, 0);
 
                     m_creature->RemoveAllAuras();
-
-                    DoCast(m_creature, SPELL_MAGIC_BARRIER, true); // This needs an entry in spell_script_target
+                                                            // This needs an entry in spell_script_target
+                    DoCast(m_creature, SPELL_MAGIC_BARRIER, true);
 
                     Creature *pCreature;
                     for(uint8 i = 0; i < 4; i++)
@@ -402,7 +398,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                    if(target && target->IsWithinDistInMap(m_creature, 5)) //if in melee range
+                                                            //if in melee range
+                    if(target && target->IsWithinDistInMap(m_creature, 5))
                     {
                         InMeleeRange = true;
                         break;
@@ -432,7 +429,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
                 DoCast(target, SPELL_FORKED_LIGHTNING);
 
-                ForkedLightning_Timer = 2000+rand()%6000; //blizzlike
+                ForkedLightning_Timer = 2000+rand()%6000;   //blizzlike
             }else ForkedLightning_Timer -= diff;
 
             //EnchantedElemental_Timer
@@ -480,7 +477,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                         CoilfangElite->AI()->AttackStart(target);
                 }
 
-                CoilfangElite_Timer = 45000+rand()%5000; //wowwiki says 50 seconds, bosskillers says 45
+                CoilfangElite_Timer = 45000+rand()%5000;    //wowwiki says 50 seconds, bosskillers says 45
             }else CoilfangElite_Timer -= diff;
 
             //CoilfangStrider_Timer
@@ -702,7 +699,7 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
         if(Check_Timer < diff)
         {
             if(pInstance)
-            {    
+            {
                 //check if vashj is death
                 Unit *Vashj = NULL;
                 Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
@@ -729,7 +726,7 @@ CreatureAI* GetAI_mob_coilfang_elite(Creature *_Creature)
     SimpleAI* ai = new SimpleAI (_Creature);
 
     ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 31345;           //Cleave
+    ai->Spell[0].Spell_Id = 31345;                          //Cleave
     ai->Spell[0].Cooldown = 15000;
     ai->Spell[0].CooldownRandomAddition = 5000;
     ai->Spell[0].First_Cast = 5000;
@@ -747,7 +744,7 @@ CreatureAI* GetAI_mob_coilfang_strider(Creature *_Creature)
     SimpleAI* ai = new SimpleAI (_Creature);
 
     ai->Spell[0].Enabled = true;
-    ai->Spell[0].Spell_Id = 41374;           //Mind Blast
+    ai->Spell[0].Spell_Id = 41374;                          //Mind Blast
     ai->Spell[0].Cooldown = 30000;
     ai->Spell[0].CooldownRandomAddition = 10000;
     ai->Spell[0].First_Cast = 8000;
@@ -777,8 +774,8 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
     {
         Check_Timer = 1000;
         Channeled = false;
-
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
+                                                            //invisible
+        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
@@ -828,29 +825,25 @@ bool ItemUse_item_tainted_core(Player *player, Item* _Item, SpellCastTargets con
             uint8 channel_identifier;
             switch(targets.getGOTarget()->GetEntry())
             {
-            case 185052:
-                identifier = DATA_SHIELDGENERATOR1;
-                channel_identifier = 0;
-                break;
-
-            case 185053:
-                identifier = DATA_SHIELDGENERATOR2;
-                channel_identifier = 1;
-                break;
-
-            case 185051:
-                identifier = DATA_SHIELDGENERATOR3;
-                channel_identifier = 2;
-                break;
-
-            case 185054:
-                identifier = DATA_SHIELDGENERATOR4;
-                channel_identifier = 3;
-                break;
-
-            default:
-                return true;
-                break;
+                case 185052:
+                    identifier = DATA_SHIELDGENERATOR1;
+                    channel_identifier = 0;
+                    break;
+                case 185053:
+                    identifier = DATA_SHIELDGENERATOR2;
+                    channel_identifier = 1;
+                    break;
+                case 185051:
+                    identifier = DATA_SHIELDGENERATOR3;
+                    channel_identifier = 2;
+                    break;
+                case 185054:
+                    identifier = DATA_SHIELDGENERATOR4;
+                    channel_identifier = 3;
+                    break;
+                default:
+                    return true;
+                    break;
             }
 
             if(pInstance->GetData(identifier))
@@ -881,18 +874,22 @@ CreatureAI* GetAI_boss_lady_vashj(Creature *_Creature)
 {
     return new boss_lady_vashjAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_enchanted_elemental(Creature *_Creature)
 {
     return new mob_enchanted_elementalAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_tainted_elemental(Creature *_Creature)
 {
     return new mob_tainted_elementalAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_fathom_sporebat(Creature *_Creature)
 {
     return new mob_fathom_sporebatAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_shield_generator_channel(Creature *_Creature)
 {
     return new mob_shield_generator_channelAI (_Creature);

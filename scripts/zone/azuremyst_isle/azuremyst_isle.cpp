@@ -1,18 +1,18 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Azuremyst_Isle
@@ -71,21 +71,23 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         UnSpawn    = false;
         HealSay = false;
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
-        m_creature->CastSpell(m_creature, 29152, false, NULL); //cast red shining
-        m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3); //ley down
+        //cast red shining
+        m_creature->CastSpell(m_creature, 29152, false, NULL);
+        //set creature health
+        m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
     }
 
     void Aggro(Unit *who) {}
 
-    void MoveInLineOfSight(Unit *who) //MoveInLineOfSight is called if creature could see you, updated all 100 ms
+    void MoveInLineOfSight(Unit *who)                       //MoveInLineOfSight is called if creature could see you, updated all 100 ms
     {
         if (!who)
             return;
 
         if(who->GetTypeId() == TYPEID_PLAYER && m_creature->IsFriendlyTo(who) && m_creature->IsWithinDistInMap(who, 15) && say && !isRun)
         {
-            switch (rand()%4)//Random switch between 4 texts
+            switch (rand()%4)                               //Random switch between 4 texts
             {
                 case 0:
                     DoSay(HELP1, LANG_UNIVERSAL, NULL);
@@ -108,10 +110,14 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
                     say = false;
                     break;
             }
-        }else{ isRun = false; }
+        }
+        else
+        {
+            isRun = false;
+        }
     }
 
-    void UpdateAI(const uint32 diff)//Is also called each ms for Creature AI Updates...
+    void UpdateAI(const uint32 diff)                        //Is also called each ms for Creature AI Updates...
     {
         if (m_creature->GetHealth() > 50)
         {
@@ -119,8 +125,10 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 ResetlifeTimer = 60000;
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
-                m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,3); // ley down
+                //set creature health
+                m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
+                // ley down
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,3);
             }
             else ResetlifeTimer -= diff;
         }
@@ -148,7 +156,8 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             {
                 m_creature->StopMoving();
                 EnterEvadeMode();
-                m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1)); //set creature health
+                //set creature health
+                m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
 
             }else UnSpawnTimer -= diff;
         }
@@ -166,7 +175,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
             m_creature->SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_CONFUSED);
             m_creature->HandleEmoteCommand(ANIM_RISE);
-            switch (rand()%4)//This switch doesn't work at all, creature say nothing!
+            switch (rand()%4)                               //This switch doesn't work at all, creature say nothing!
             {
                 case 0: DoSay(HEAL1, LANG_UNIVERSAL, Hitter); break;
                 case 1: DoSay(HEAL2, LANG_UNIVERSAL, Hitter); break;
@@ -211,12 +220,14 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if( !InCombat )
+        {
             if (Emote_Timer < diff)
             {
                 DoSay(SAY_TEXT,LANG_UNIVERSAL,NULL);
                 DoTextEmote(SAY_EMOTE,NULL);
                 Emote_Timer = 120000 + rand()%30000;
             }else Emote_Timer -= diff;
+        }
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
@@ -275,12 +286,12 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
             case 1: m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3); break;
         }
     }
-    
+
     void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who)
     {
-        return; //ignore everyone around them (won't aggro anything)
+        return;                                             //ignore everyone around them (won't aggro anything)
     }
 
     void UpdateAI(const uint32 diff)
@@ -329,7 +340,7 @@ bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sende
 }
 
 /*######
-## 
+##
 ######*/
 
 void AddSC_azuremyst_isle()

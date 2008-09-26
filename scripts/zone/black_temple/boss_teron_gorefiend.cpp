@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Teron_Gorefiend
@@ -27,15 +27,15 @@ EndScriptData */
 //Spells
 #define SPELL_INCINERATE                40239
 #define SPELL_CRUSHING_SHADOWS          40243
-#define SPELL_SHADOWBOLT                40185          
+#define SPELL_SHADOWBOLT                40185
 #define SPELL_PASSIVE_SHADOWFORM        40326
 #define SPELL_SHADOW_OF_DEATH           40251
 #define SPELL_BERSERK                   45078
 
-#define SPELL_ATROPHY                   40327 // Shadowy Constructs use this when they get within melee range of a player
+#define SPELL_ATROPHY                   40327               // Shadowy Constructs use this when they get within melee range of a player
 
 //Speech'n'sound
-#define SAY_INTRO          "I was the first, you know. For me, the wheel of death has spun many times. So much time has passed. I have a lot of catching up to do..." 
+#define SAY_INTRO          "I was the first, you know. For me, the wheel of death has spun many times. So much time has passed. I have a lot of catching up to do..."
 #define SOUND_INTRO         11512
 
 #define SAY_AGGRO          "Vengeance is mine!"
@@ -128,8 +128,8 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
     TargetDistanceOrder(const Unit* Target) : MainTarget(Target) {};
     // functor for operator "<"
     bool operator()(const Unit* _Left, const Unit* _Right) const
-   {
-       return (MainTarget->GetDistance(_Left) < MainTarget->GetDistance(_Right));
+    {
+        return (MainTarget->GetDistance(_Left) < MainTarget->GetDistance(_Right));
     }
 };
 
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
     }
 
     void Aggro(Unit* who) { }
-    
+
     void MoveInLineOfSight(Unit *who)
     {
         if(!who || (!who->isAlive()) || (who->GetGUID() == GhostGUID))
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
+
                 m_creature->AddThreat(who, 1.0f);
             }
         }
@@ -179,15 +179,16 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 /* Comment it out for now. NOTE TO FUTURE DEV: UNCOMMENT THIS OUT ONLY AFTER MIND CONTROL IS IMPLEMENTED
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if(done_by->GetGUID() != GhostGUID) 
-            damage = 0; // Only the ghost can deal damage. 
+        if(done_by->GetGUID() != GhostGUID)
+        damage = 0;                                         // Only the ghost can deal damage.
     }
-*/
+ */
+
     void CheckPlayers()
     {
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         if(m_threatlist.empty())
-            return; // No threat list. Don't continue.
+            return;                                         // No threat list. Don't continue.
         std::list<HostilReference*>::iterator itr = m_threatlist.begin();
         std::list<Unit*> targets;
         for( ; itr != m_threatlist.end(); ++itr)
@@ -226,7 +227,7 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 {
-    boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c) 
+    boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -244,7 +245,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
     uint32 AggroTimer;
 
     uint64 AggroTargetGUID;
-    uint64 GhostGUID; // Player that gets killed by Shadow of Death and gets turned into a ghost
+    uint64 GhostGUID;                                       // Player that gets killed by Shadow of Death and gets turned into a ghost
 
     bool Intro;
 
@@ -261,8 +262,9 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         RandomYellTimer = 50000;
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // Start off unattackable so that the intro is done properly
-    
+        // Start off unattackable so that the intro is done properly
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
         AggroTimer = 20000;
         AggroTargetGUID = 0;
         Intro = false;
@@ -282,10 +284,10 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             {
                 if(who->HasStealthAura())
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                
+
                 m_creature->AddThreat(who, 1.0f);
             }
-            
+
             if(!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
                 if(pInstance)
@@ -378,8 +380,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
             if(control)
             {
                 ((Player*)Ghost)->Possess(control);
-                Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, 
-false);
+                Ghost->DealDamage(Ghost, Ghost->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL,
+            false);
             }*/
             for(uint8 i = 0; i < 4; ++i)
             {
@@ -390,10 +392,10 @@ false);
                 if(Construct)
                 {
                     Construct->CastSpell(Construct, SPELL_PASSIVE_SHADOWFORM, true);
-                    SetThreatList(Construct); // Use same function as Doom Blossom to set Threat List.
+                    SetThreatList(Construct);               // Use same function as Doom Blossom to set Threat List.
                     ((mob_shadowy_constructAI*)Construct->AI())->GhostGUID = GhostGUID;
                     Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                    if(!target) // someone's trying to solo.
+                    if(!target)                             // someone's trying to solo.
                         target = m_creature->getVictim();
 
                     if(target)
@@ -435,7 +437,7 @@ false);
         if(SummonShadowsTimer < diff)
         {
             //MindControlGhost();
-            
+
             for(uint8 i = 0; i < 2; ++i)
             {
                 Creature* Shadow = NULL;
@@ -478,7 +480,6 @@ false);
         if(IncinerateTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            
             if(!target)
                 target = m_creature->getVictim();
 
@@ -494,7 +495,7 @@ false);
                         DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
                         break;
-                }                         
+                }
                 DoCast(target, SPELL_INCINERATE);
                 IncinerateTimer = 20000 + rand()%31 * 1000;
             }
@@ -512,7 +513,7 @@ false);
         /*if(ShadowOfDeathTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            
+
             if(!target)
                target = m_creature->getVictim();
 
@@ -536,18 +537,18 @@ false);
                 case 1:
                     DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
                     DoPlaySoundToSet(m_creature, SOUND_SPELL2);
-                   break;
+                    break;
             }
             RandomYellTimer = 50000 + rand()%51 * 1000;
         }else RandomYellTimer -= diff;
 
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(EnrageTimer < diff)
-            {
-                DoCast(m_creature, SPELL_BERSERK);
-                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            }else EnrageTimer -= diff;
+        {
+            DoCast(m_creature, SPELL_BERSERK);
+            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }else EnrageTimer -= diff;
 
         DoMeleeAttackIfReady();
     }

@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Hungarfen
@@ -71,7 +71,7 @@ struct MANGOS_DLL_DECL boss_hungarfenAI : public ScriptedAI
             else
                 m_creature->SummonCreature(17990, m_creature->GetPositionX()+(rand()%8), m_creature->GetPositionY()+(rand()%8), m_creature->GetPositionZ(), (rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
 
-             Mushroom_Timer = 10000;
+            Mushroom_Timer = 10000;
         }else Mushroom_Timer -= diff;
 
         if( AcidGeyser_Timer < diff )
@@ -90,7 +90,6 @@ CreatureAI* GetAI_boss_hungarfen(Creature *_Creature)
 }
 
 #define SPELL_SPORE_CLOUD       34168
-
 #define SPELL_PUTRID_MUSHROOM   31690
 #define SPELL_GROW              31698
 
@@ -112,16 +111,13 @@ struct MANGOS_DLL_DECL mob_underbog_mushroomAI : public ScriptedAI
         DoCast(m_creature,SPELL_SPORE_CLOUD,true);
     }
 
-    void MoveInLineOfSight(Unit *who)
-    { return; }
+    void MoveInLineOfSight(Unit *who) { return; }
 
-    void AttackStart(Unit* who)
-    { return; }
+    void AttackStart(Unit* who) { return; }
 
-    void Aggro(Unit* who)
-    { }
+    void Aggro(Unit* who) { }
 
-    void UpdateAI(const uint32 diff) 
+    void UpdateAI(const uint32 diff)
     {
         if( Stop )
             return;

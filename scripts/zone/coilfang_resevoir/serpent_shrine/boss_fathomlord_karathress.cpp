@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Fathomlord_Karathress
@@ -86,24 +86,24 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     void Reset()
     {
         CataclysmicBolt_Timer = 10000;
-        Enrage_Timer = 600000; //10 minutes
+        Enrage_Timer = 600000;                              //10 minutes
 
         Creature* Advisor;
         for(uint8 i = 0; i < 3; ++i)
             if(Advisors[i])
+        {
+            Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
+            if(Advisor)
             {
-                Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
-                if(Advisor)
+                if(Advisor->isAlive())
                 {
-                    if(Advisor->isAlive())
-                    {
-                        Advisor->DealDamage(Advisor, Advisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                        Advisor->RemoveCorpse();
-                        Advisor->Respawn();
-                    }
-                    Advisor->AI()->EnterEvadeMode();
+                    Advisor->DealDamage(Advisor, Advisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    Advisor->RemoveCorpse();
+                    Advisor->Respawn();
                 }
+                Advisor->AI()->EnterEvadeMode();
             }
+        }
 
         if( pInstance )
             pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
@@ -162,11 +162,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                 DoPlaySoundToSet(m_creature, SOUND_SLAY1);
                 DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
                 break;
-
             case 1:
                 DoPlaySoundToSet(m_creature, SOUND_SLAY2);
                 break;
-
             case 2:
                 DoPlaySoundToSet(m_creature, SOUND_SLAY3);
                 break;
@@ -492,20 +490,17 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
                 switch(rand()%4)
                 {
                     case 0:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS));
-                    break;
-                    
+                        pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS));
+                        break;
                     case 1:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_SHARKKIS));
-                    break;
-
+                        pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_SHARKKIS));
+                        break;
                     case 2:
-                    pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_TIDALVESS));
-                    break;
-
+                        pUnit = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_TIDALVESS));
+                        break;
                     case 3:
-                    pUnit = m_creature;
-                    break;
+                        pUnit = m_creature;
+                        break;
                 }
             }else pUnit = m_creature;
 
@@ -523,14 +518,17 @@ CreatureAI* GetAI_boss_fathomlord_karathress(Creature *_Creature)
 {
     return new boss_fathomlord_karathressAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_fathomguard_sharkkis(Creature *_Creature)
 {
     return new boss_fathomguard_sharkkisAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_fathomguard_tidalvess(Creature *_Creature)
 {
     return new boss_fathomguard_tidalvessAI (_Creature);
 }
+
 CreatureAI* GetAI_boss_fathomguard_caribdis(Creature *_Creature)
 {
     return new boss_fathomguard_caribdisAI (_Creature);

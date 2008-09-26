@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Ghazan
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Coilfang Resevoir, Underbog
 EndScriptData */
 
@@ -25,7 +25,7 @@ EndScriptData */
 
 /*
 --== Ghaz'an ==--
-*Acid Spit - 34290; timer: 8sec 
+*Acid Spit - 34290; timer: 8sec
 *Enrage - 20% hp; 40683
 *Tail Sweep - 34267; timer: ~10sec
 *Acid Breath - 34268; timer: 5sec
@@ -35,7 +35,7 @@ CreatureAI* GetAI_boss_ghazan(Creature *_Creature)
 {
     SimpleAI* ai = new SimpleAI (_Creature);
 
-    // Acid Spit - 34290; timer: 8sec 
+    // Acid Spit - 34290; timer: 8sec
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 34290;
     ai->Spell[0].Cooldown = 8000;

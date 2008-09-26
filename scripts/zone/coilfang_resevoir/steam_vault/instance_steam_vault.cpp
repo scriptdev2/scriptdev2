@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_Steam_Vault
@@ -26,7 +26,7 @@ EndScriptData */
 
 #define ENCOUNTERS 4
 
-#define MAIN_CHAMBERS_DOOR      183049 //door opened when hydromancer and mekgineer are died
+#define MAIN_CHAMBERS_DOOR      183049                      //door opened when hydromancer and mekgineer are died
 #define ACCESS_PANEL_HYDRO      184125
 #define ACCESS_PANEL_MEK        184126
 
@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
             Encounter[i] = false;
     }
 
-    bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             if( Encounter[i] ) return true;
@@ -77,15 +77,9 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 17797:
-                ThespiaGUID = creature->GetGUID();
-                break;
-            case 17796:
-                MekgineerGUID = creature->GetGUID();
-                break;
-            case 17798:
-                KalithreshGUID = creature->GetGUID();
-                break;
+            case 17797: ThespiaGUID = creature->GetGUID(); break;
+            case 17796: MekgineerGUID = creature->GetGUID(); break;
+            case 17798: KalithreshGUID = creature->GetGUID(); break;
         }
     }
 
@@ -93,15 +87,9 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case MAIN_CHAMBERS_DOOR:
-                MainChambersDoor = go;
-                break;
-            case ACCESS_PANEL_HYDRO:
-                AccessPanelHydro = go;
-                break;
-            case ACCESS_PANEL_MEK:
-                AccessPanelMek = go;
-                break;
+            case MAIN_CHAMBERS_DOOR: MainChambersDoor = go; break;
+            case ACCESS_PANEL_HYDRO: AccessPanelHydro = go; break;
+            case ACCESS_PANEL_MEK:   AccessPanelMek = go; break;
         }
     }
 

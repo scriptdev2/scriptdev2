@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Mother_Shahraz
@@ -39,12 +39,12 @@ EndScriptData */
 
 uint32 PrismaticAuras[]=
 {
-    40880, // Shadow
-    40882, // Fire
-    40883, // Nature
-    40891, // Arcane
-    40896, // Frost
-    40897, // Holy
+    40880,                                                  // Shadow
+    40882,                                                  // Fire
+    40883,                                                  // Nature
+    40891,                                                  // Arcane
+    40896,                                                  // Frost
+    40897,                                                  // Holy
 };
 
 //Speech'n'Sounds
@@ -99,7 +99,7 @@ static Locations TeleportPoint[]=
 
 struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 {
-    boss_shahrazAI(Creature *c) : ScriptedAI(c) 
+    boss_shahrazAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -129,9 +129,9 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         for(uint8 i = 0; i<3; i++)
             TargetGUID[i] = 0;
 
-        BeamTimer = 60000; // Timers may be incorrect
+        BeamTimer = 60000;                                  // Timers may be incorrect
         BeamCount = 0;
-        CurrentBeam = 0; // 0 - Sinister, 1 - Vile, 2 - Wicked, 3 - Sinful
+        CurrentBeam = 0;                                    // 0 - Sinister, 1 - Vile, 2 - Wicked, 3 - Sinful
         PrismaticShieldTimer = 0;
         FatalAttractionTimer = 60000;
         FatalAttractionExplodeTimer = 70000;
@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-           case 0:
+            case 0:
                 DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_SLAY1);
                 break;
@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
         }else BeamTimer -= diff;
 
-        // Random Prismatic Shield every 15 seconds. 
+        // Random Prismatic Shield every 15 seconds.
         if(PrismaticShieldTimer < diff)
         {
             uint32 random = rand()%6;
@@ -307,11 +307,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         //Enrage
         if(!m_creature->HasAura(SPELL_BERSERK, 0))
             if(EnrageTimer < diff)
-            {
-                DoCast(m_creature, SPELL_BERSERK);
-                DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-            }else EnrageTimer -= diff;
+        {
+            DoCast(m_creature, SPELL_BERSERK);
+            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
+            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+        }else EnrageTimer -= diff;
 
         //Random taunts
         if(RandomYellTimer < diff)
@@ -342,7 +342,6 @@ CreatureAI* GetAI_boss_shahraz(Creature *_Creature)
 {
     return new boss_shahrazAI (_Creature);
 }
-
 
 void AddSC_boss_mother_shahraz()
 {

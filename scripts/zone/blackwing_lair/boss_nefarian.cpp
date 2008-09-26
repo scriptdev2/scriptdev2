@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Nefarian
@@ -47,17 +47,17 @@ EndScriptData */
 #define SPELL_VEILOFSHADOW          7068
 #define SPELL_CLEAVE                20691
 #define SPELL_TAILLASH              23364
-#define SPELL_BONECONTRUST          23363       //23362, 23361
+#define SPELL_BONECONTRUST          23363                   //23362, 23361
 
-#define SPELL_MAGE                  23410       //wild magic
-#define SPELL_WARRIOR               23397       //beserk
-#define SPELL_DRUID                 23398       // cat form
-#define SPELL_PRIEST                23401       // corrupted healing
-#define SPELL_PALADIN               23418       //syphon blessing
-#define SPELL_SHAMAN                23425       //totems
-#define SPELL_WARLOCK               23427       //infernals
-#define SPELL_HUNTER                23436       //bow broke
-#define SPELL_ROGUE                 23414       //Paralise
+#define SPELL_MAGE                  23410                   //wild magic
+#define SPELL_WARRIOR               23397                   //beserk
+#define SPELL_DRUID                 23398                   // cat form
+#define SPELL_PRIEST                23401                   // corrupted healing
+#define SPELL_PALADIN               23418                   //syphon blessing
+#define SPELL_SHAMAN                23425                   //totems
+#define SPELL_WARLOCK               23427                   //infernals
+#define SPELL_HUNTER                23436                   //bow broke
+#define SPELL_ROGUE                 23414                   //Paralise
 
 #define SAY_MAGE        "Mages too? You should be more careful when you play with magic..."
 #define SAY_WARRIOR     "Warriors, I know you can hit harder than that! Let's see it!"
@@ -68,7 +68,6 @@ EndScriptData */
 #define SAY_WARLOCK     "Warlocks, you shouldn't be playing with magic you don't understand. See what happens?"
 #define SAY_HUNTER      "Hunters and your annoying pea-shooters!"
 #define SAY_ROGUE       "Rogues? Stop hiding and face me!"
-
 
 struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 {
@@ -84,12 +83,12 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
     void Reset()
     {
-        ShadowFlame_Timer = 12000;       //These times are probably wrong
+        ShadowFlame_Timer = 12000;                          //These times are probably wrong
         BellowingRoar_Timer = 30000;
         VeilOfShadow_Timer = 15000;
         Cleave_Timer = 7000;
         TailLash_Timer = 10000;
-        ClassCall_Timer = 35000;        //35-40 seconds
+        ClassCall_Timer = 35000;                            //35-40 seconds
         Phase3 = false;
 
         m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
@@ -113,72 +112,56 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        switch (rand()%3)
+        {
+            case 0:
+                DoYell(SAY_XHEALTH,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_XHEALTH);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+                break;
+            case 2:
+                DoYell(SAY_SHADOWFLAME,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SHADOWFLAME);
+                break;
+        }
 
-                switch (rand()%3)
-                {
-                case 0:
-                    DoYell(SAY_XHEALTH,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_XHEALTH);
-                    break;
-
-                case 1:
-                    DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                    break;
-
-                case 2:
-                    DoYell(SAY_SHADOWFLAME,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_SHADOWFLAME);
-                    break;
-                }
-
-                DoCast(who,SPELL_SHADOWFLAME_INITIAL);
-                DoZoneInCombat();
+        DoCast(who,SPELL_SHADOWFLAME_INITIAL);
+        DoZoneInCombat();
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
         //ShadowFlame_Timer
         if (ShadowFlame_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SHADOWFLAME);
-
-            //12 seconds till recast
             ShadowFlame_Timer = 12000;
         }else ShadowFlame_Timer -= diff;
 
         //BellowingRoar_Timer
         if (BellowingRoar_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_BELLOWINGROAR);
-
-            //30 seconds till recast
             BellowingRoar_Timer = 30000;
         }else BellowingRoar_Timer -= diff;
 
         //VeilOfShadow_Timer
         if (VeilOfShadow_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_VEILOFSHADOW);
-
-            //15 seconds till recast
             VeilOfShadow_Timer = 15000;
         }else VeilOfShadow_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //5 seconds till recast
             Cleave_Timer = 7000;
         }else Cleave_Timer -= diff;
 
@@ -188,7 +171,6 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
             //Cast NYI since we need a better check for behind target
             //DoCast(m_creature->getVictim(),SPELL_TAILLASH);
 
-            //10 seconds till recast
             TailLash_Timer = 10000;
         }else TailLash_Timer -= diff;
 
@@ -201,53 +183,44 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
             switch (rand()%9)
             {
-            case 0:
-                DoYell(SAY_MAGE,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_MAGE);
-                break;
-
-            case 1:
-                DoYell(SAY_WARRIOR,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_WARRIOR);
-                break;
-
-            case 2:
-                DoYell(SAY_DRUID,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_DRUID);
-                break;
-
-            case 3:
-                DoYell(SAY_PRIEST,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_PRIEST);
-                break;
-
-            case 4:
-                DoYell(SAY_PALADIN,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_PALADIN);
-                break;
-
-            case 5:
-                DoYell(SAY_SHAMAN,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_SHAMAN);
-                break;
-
-            case 6:
-                DoYell(SAY_WARLOCK,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_WARLOCK);
-                break;
-
-            case 7:
-                DoYell(SAY_HUNTER,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_HUNTER);
-                break;
-
-            case 8:
-                DoYell(SAY_ROGUE,LANG_UNIVERSAL,NULL);
-                DoCast(m_creature,SPELL_ROGUE);
-                break;
+                case 0:
+                    DoYell(SAY_MAGE,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_MAGE);
+                    break;
+                case 1:
+                    DoYell(SAY_WARRIOR,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_WARRIOR);
+                    break;
+                case 2:
+                    DoYell(SAY_DRUID,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_DRUID);
+                    break;
+                case 3:
+                    DoYell(SAY_PRIEST,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_PRIEST);
+                    break;
+                case 4:
+                    DoYell(SAY_PALADIN,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_PALADIN);
+                    break;
+                case 5:
+                    DoYell(SAY_SHAMAN,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_SHAMAN);
+                    break;
+                case 6:
+                    DoYell(SAY_WARLOCK,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_WARLOCK);
+                    break;
+                case 7:
+                    DoYell(SAY_HUNTER,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_HUNTER);
+                    break;
+                case 8:
+                    DoYell(SAY_ROGUE,LANG_UNIVERSAL,NULL);
+                    DoCast(m_creature,SPELL_ROGUE);
+                    break;
             }
 
-            //35-40 seconds till recast
             ClassCall_Timer = 35000 + (rand() % 5000);
         }else ClassCall_Timer -= diff;
 
@@ -261,13 +234,11 @@ struct MANGOS_DLL_DECL boss_nefarianAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-
 };
 CreatureAI* GetAI_boss_nefarian(Creature *_Creature)
 {
     return new boss_nefarianAI (_Creature);
 }
-
 
 void AddSC_boss_nefarian()
 {

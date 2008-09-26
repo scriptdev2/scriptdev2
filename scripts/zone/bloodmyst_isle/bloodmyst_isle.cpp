@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Bloodmyst_Isle
@@ -53,15 +53,15 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
 
         switch(rand()%3)
         {
-        case 0:
-            spawnCreatureID = 17681;
-            if (Killer->GetTypeId() == TYPEID_PLAYER)
-                ((Player*)Killer)->KilledMonster(spawnCreatureID, m_creature->GetGUID());
-            break;
-        case 1:
-        case 2:
-            spawnCreatureID = possibleSpawns[rand()%31];
-            break;
+            case 0:
+                spawnCreatureID = 17681;
+                if (Killer->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)Killer)->KilledMonster(spawnCreatureID, m_creature->GetGUID());
+                break;
+            case 1:
+            case 2:
+                spawnCreatureID = possibleSpawns[rand()%31];
+                break;
         }
 
         if(spawnCreatureID)
@@ -85,7 +85,8 @@ bool GossipHello_npc_captured_sunhawk_agent(Player *player, Creature *_Creature)
     {
         player->ADD_GOSSIP_ITEM( 0, "[PH] ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         player->SEND_GOSSIP_MENU(9136, _Creature->GetGUID());
-    }else
+    }
+    else
         player->SEND_GOSSIP_MENU(9134, _Creature->GetGUID());
 
     return true;

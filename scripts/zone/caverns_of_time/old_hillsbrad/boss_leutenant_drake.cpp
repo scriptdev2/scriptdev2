@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Luetenant_Drake
@@ -64,10 +64,10 @@ bool GOHello_go_barrel_old_hillsbrad(Player *player, GameObject* _GO)
 #define SAY_ENTER1        "You there, fetch water quickly!"
 #define SAY_ENTER2        "Get these flames out before they spread to the rest of the keep!"
 #define SAY_ENTER3        "Hurry, damn you!"
-#define  SAY_AGGRO        "I know what you're up to, and I mean to put an end to it, permanently!" 
-#define  SAY_SLAY1        "No more middling for you." 
+#define  SAY_AGGRO        "I know what you're up to, and I mean to put an end to it, permanently!"
+#define  SAY_SLAY1        "No more middling for you."
 #define  SAY_SLAY2        "You will not interfere!"
-#define  SAY_MORTAL       "Time to bleed!" 
+#define  SAY_MORTAL       "Time to bleed!"
 #define  SAY_SHOUT        "Run, you blasted cowards!"
 #define  SAY_DEATH        "Thrall... must not... go free."
 
@@ -130,29 +130,29 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         Whirlwind_Timer = 20000;
         Fear_Timer = 30000;
         MortalStrike_Timer = 45000;
-        ExplodingShout_Timer = 25000;        
+        ExplodingShout_Timer = 25000;
     }
 
     void Aggro(Unit *who)
     {
         DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
         DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-    }    
+    }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
-    } 
+    }
 
     void JustDied(Unit *victim)
     {
@@ -217,7 +217,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         DoPlaySoundToSet(m_creature, SOUND_SHOUT);
         DoCast(target,EXPLODING_SHOUT);
         ExplodingShout_Timer = 25000+rand()%5000;
-        }else ExplodingShout_Timer -= diff;    
+        }else ExplodingShout_Timer -= diff;
         }
         */
 

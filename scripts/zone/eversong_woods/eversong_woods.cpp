@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Eversong_Woods
@@ -48,7 +48,7 @@ struct MANGOS_DLL_DECL mobs_mana_tappedAI : public ScriptedAI
                 ((Player*)caster)->CastedCreatureOrGO(15468, m_creature->GetGUID(), spell->Id);
         return;
     }
-}; 
+};
 CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
 {
     return new mobs_mana_tappedAI (_Creature);
@@ -63,22 +63,22 @@ CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
 struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
     // CreatureAI functions
-    npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {Reset();}    
+    npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {Reset();}
 
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
     {
         switch (i)
         {
-        case 0:
-            m_creature->Say("Very well. Let's see what you have to show me, $N.", LANG_UNIVERSAL, PlayerGUID);
-            break;
-        case 5:
-            m_creature->Say("What manner of trick is this, $R? If you seek to ambush me, I warn you I will not go down quietly!", LANG_UNIVERSAL, PlayerGUID);
-            break;
-        case 6:
-            m_creature->setFaction(24);
-            break;
+            case 0:
+                m_creature->Say("Very well. Let's see what you have to show me, $N.", LANG_UNIVERSAL, PlayerGUID);
+                break;
+            case 5:
+                m_creature->Say("What manner of trick is this, $R? If you seek to ambush me, I warn you I will not go down quietly!", LANG_UNIVERSAL, PlayerGUID);
+                break;
+            case 6:
+                m_creature->setFaction(24);
+                break;
         }
     }
 
@@ -132,15 +132,15 @@ bool GossipSelect_npc_prospector_anvilward(Player *player, Creature *_Creature, 
 {
     switch(action)
     {
-    case GOSSIP_ACTION_INFO_DEF+1:
-        player->ADD_GOSSIP_ITEM( 0, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
-        player->SEND_GOSSIP_MENU(8240, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        player->CLOSE_GOSSIP_MENU();
-        //attack,defend,walk
-        ((npc_escortAI*)(_Creature->AI()))->Start(true, true, false, player->GetGUID());
-        break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM( 0, "Why... yes, of course. I've something to show you right inside this building, Mr. Anvilward.",GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(8240, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->CLOSE_GOSSIP_MENU();
+            //attack,defend,walk
+            ((npc_escortAI*)(_Creature->AI()))->Start(true, true, false, player->GetGUID());
+            break;
     }
     return true;
 }

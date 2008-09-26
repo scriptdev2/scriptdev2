@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Hydromancer_Thespia
@@ -89,14 +89,14 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                break;
         }
     }
 
@@ -104,18 +104,18 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-            break;
-        case 1:
-            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            break;
-        case 2:
-            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            break;
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
         }
 
         if( pInstance ) pInstance->SetData(TYPE_HYDROMANCER_THESPIA, IN_PROGRESS);
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL boss_thespiaAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
 {
-    mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {Reset();} 
+    mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     bool HeroicMode;
     uint32 WaterBoltVolley_Timer;
@@ -201,6 +201,7 @@ CreatureAI* GetAI_boss_thespiaAI(Creature *_Creature)
 {
     return new boss_thespiaAI (_Creature);
 }
+
 CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature *_Creature)
 {
     return new mob_coilfang_waterelementalAI (_Creature);
@@ -209,6 +210,7 @@ CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature *_Creature)
 void AddSC_boss_hydromancer_thespia()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_hydromancer_thespia";
     newscript->GetAI = GetAI_boss_thespiaAI;

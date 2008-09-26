@@ -1,18 +1,18 @@
 /* Copyright (C) 2006,2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_Mount_Hyjal
@@ -34,7 +34,7 @@ EndScriptData */
 3 - Azgalor event
 4 - Archimonde event
 */
- 
+
 struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 {
     instance_mount_hyjal(Map *Map) : ScriptedInstance(Map) {Initialize();};
@@ -61,13 +61,13 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         JainaProudmoore = 0;
         Thrall = 0;
         TyrandeWhisperwind = 0;
-        
+
         Trash = 0;
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
     }
 
-    bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             if(Encounters[i] == IN_PROGRESS) return true;
@@ -134,11 +134,11 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         switch(type)
         {
             case DATA_RAGEWINTERCHILLEVENT: return Encounters[0];
-             case DATA_ANETHERONEVENT:      return Encounters[1];
-             case DATA_KAZROGALEVENT:       return Encounters[2];
-             case DATA_AZGALOREVENT:        return Encounters[3];
-             case DATA_ARCHIMONDEEVENT:     return Encounters[4];
-             case DATA_TRASH:               return Trash;
+            case DATA_ANETHERONEVENT:      return Encounters[1];
+            case DATA_KAZROGALEVENT:       return Encounters[2];
+            case DATA_AZGALOREVENT:        return Encounters[3];
+            case DATA_ARCHIMONDEEVENT:     return Encounters[4];
+            case DATA_TRASH:               return Trash;
         }
         return 0;
     }
@@ -157,8 +157,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         OUT_SAVE_INST_DATA;
         std::ostringstream stream;
         stream << Encounters[0] << " " << Encounters[1] << " "
-               << Encounters[2] << " " << Encounters[3] << " "
-               << Encounters[4];
+            << Encounters[2] << " " << Encounters[3] << " "
+            << Encounters[4];
         char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
         if(out)
@@ -177,12 +177,12 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             OUT_LOAD_INST_DATA_FAIL;
             return;
         }
-        
+
         OUT_LOAD_INST_DATA(load);
         std::istringstream stream;
         stream >> Encounters[1] >> Encounters[2] >> Encounters[3] >> Encounters[4];
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS) // Do not load an encounter as IN_PROGRESS - reset it instead.
+            if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
                 Encounters[i] = NOT_STARTED;
         OUT_LOAD_INST_DATA_COMPLETE;
     }

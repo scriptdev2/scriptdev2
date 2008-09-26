@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Archimonde
@@ -37,7 +37,7 @@ EndScriptData */
 #define SPELL_AIR_BURST             32014
 #define SPELL_GRIP_OF_THE_LEGION    31972
 #define SPELL_DOOMFIRE_SPAWN        32074
-#define SPELL_DOOMFIRE_VISUAL       42344 // This is actually a Zul'Aman spell, but the proper Doomfire spell sometimes freezes the server if a player stands in it for too long
+#define SPELL_DOOMFIRE_VISUAL       42344                   // This is actually a Zul'Aman spell, but the proper Doomfire spell sometimes freezes the server if a player stands in it for too long
 #define SPELL_DOOMFIRE_DAMAGE       31944
 #define SPELL_SOUL_CHARGE_YELLOW    32045
 #define SPELL_SOUL_CHARGE_GREEN     32051
@@ -249,7 +249,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
     }
 
     uint32 ChangeTargetTimer;
-    uint32 SummonTimer; // This timer will serve as both a summon timer for the doomfire that does damage as well as to check on Archionde
+    uint32 SummonTimer;                                     // This timer will serve as both a summon timer for the doomfire that does damage as well as to check on Archionde
 
     uint64 ArchimondeGUID;
 
@@ -308,7 +308,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
             Unit* target = NULL;
             switch(rand()%2)
             {
-                case 0: // stalk player
+                case 0:                                     // stalk player
                     target = SelectUnit(SELECT_TARGET_RANDOM, 1);
                     if(target && target->isAlive())
                     {
@@ -317,7 +317,7 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
                     }
                     break;
 
-                case 1: // random location
+                case 1:                                     // random location
                     float x = 0;
                     float y = 0;
                     float z = 0;
@@ -353,14 +353,14 @@ struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit,
 
 struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 {
-    boss_archimondeAI(Creature *c) : ScriptedAI(c) 
+    boss_archimondeAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
     ScriptedInstance* pInstance;
-    
+
     uint32 DrainNordrassilTimer;
     uint32 FearTimer;
     uint32 AirBurstTimer;
@@ -394,9 +394,9 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         SoulChargeCount = 0;
         MeleeRangeCheckTimer = 15000;
         HandOfDeathTimer = 2000;
-        WispCount = 0; // When ~30 wisps are summoned, Archimonde dies
-        EnrageTimer = 600000; // 10 minutes
-        CheckDistanceTimer = 30000; // This checks if he's too close to the World Tree (75 yards from a point on the tree), if true then he will enrage
+        WispCount = 0;                                      // When ~30 wisps are summoned, Archimonde dies
+        EnrageTimer = 600000;                               // 10 minutes
+        CheckDistanceTimer = 30000;                         // This checks if he's too close to the World Tree (75 yards from a point on the tree), if true then he will enrage
 
         Enraged = false;
         BelowTenPercent = false;
@@ -419,7 +419,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-           case 0:
+            case 0:
                 DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
                 DoPlaySoundToSet(m_creature, SOUND_SLAY1);
                 break;
@@ -436,7 +436,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(victim && (victim->GetTypeId() == TYPEID_PLAYER))
             GainSoulCharge(((Player*)victim));
     }
-    
+
     void GainSoulCharge(Player* victim)
     {
         switch(victim->getClass())
@@ -499,8 +499,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         if(target)
         {
             if(!m_creature->IsWithinDistInMap(target, m_creature->GetAttackDistance(target)))
-                return true; // Cast Finger of Death
-            else // This target is closest, he is our new tank
+                return true;                                // Cast Finger of Death
+            else                                            // This target is closest, he is our new tank
                 m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
         }
 
@@ -508,7 +508,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     }
 
     void SummonDoomfire(Unit* target)
-    {    
+    {
         Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE_TARGETING, rand()%30, rand()%30, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
         if(Doomfire)
         {
@@ -613,10 +613,10 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-    
+
         if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !BelowTenPercent && !Enraged)
             BelowTenPercent = true;
-    
+
         if(!Enraged)
         {
             if(EnrageTimer < diff)
@@ -632,7 +632,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             }else EnrageTimer -= diff;
 
             if(CheckDistanceTimer < diff)
-            { // To simplify the check, we simply summon a creature in the location and then check how far we are from the creature
+            {                                               // To simplify the check, we simply summon a creature in the location and then check how far we are from the creature
                 Creature* Check = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 2000);
                 if(Check)
                 {
@@ -684,7 +684,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                 DoCast(m_creature->getVictim(), SPELL_HAND_OF_DEATH);
                 HandOfDeathTimer = 2000;
             }else HandOfDeathTimer -= diff;
-            return; // Don't do anything after this point.
+            return;                                         // Don't do anything after this point.
         }
 
         if(SoulChargeCount)
@@ -770,7 +770,7 @@ void AddSC_boss_archimonde()
     newscript->Name="boss_archimonde";
     newscript->GetAI = GetAI_boss_archimonde;
     m_scripts[nrscripts++] = newscript;
-    
+
     newscript = new Script;
     newscript->Name = "mob_doomfire";
     newscript->GetAI = GetAI_mob_doomfire;

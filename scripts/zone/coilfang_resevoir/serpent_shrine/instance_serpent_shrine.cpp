@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Instance_Serpent_Shrine
@@ -68,10 +68,10 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             Encounters[i] = false;
     }
 
-    bool IsEncounterInProgress() const 
+    bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i]) return true; 
+            if(Encounters[i]) return true;
 
         return false;
     }
@@ -80,25 +80,11 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 21212:
-                LadyVashj = creature->GetGUID();
-                break;
-
-            case 21214:
-                Karathress = creature->GetGUID();
-                break;
-
-            case 21966:
-                Sharkkis = creature->GetGUID();
-                break;
-
-            case 21965:
-                Tidalvess = creature->GetGUID();
-                break;
-
-            case 21964:
-                Caribdis = creature->GetGUID();
-                break;
+            case 21212: LadyVashj = creature->GetGUID(); break;
+            case 21214: Karathress = creature->GetGUID(); break;
+            case 21966: Sharkkis = creature->GetGUID(); break;
+            case 21965: Tidalvess = creature->GetGUID(); break;
+            case 21964: Caribdis = creature->GetGUID(); break;
         }
     }
 
@@ -114,20 +100,15 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
         {
             case DATA_SHARKKIS:
                 return Sharkkis;
-
-             case DATA_TIDALVESS:
+            case DATA_TIDALVESS:
                 return Tidalvess;
-
-             case DATA_CARIBDIS:
+            case DATA_CARIBDIS:
                 return Caribdis;
-
-             case DATA_LADYVASHJ:
+            case DATA_LADYVASHJ:
                 return LadyVashj;
-
-             case DATA_KARATHRESS:
+            case DATA_KARATHRESS:
                 return Karathress;
-
-             case DATA_KARATHRESSEVENT_STARTER:
+            case DATA_KARATHRESSEVENT_STARTER:
                 return KarathressEvent_Starter;
         }
         return 0;
@@ -156,8 +137,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             case DATA_MOROGRIMTIDEWALKEREVENT:
                 Encounters[4] = (data) ? true : false;
                 break;
-
-            //Lady Vashj
+                //Lady Vashj
             case DATA_LADYVASHJEVENT:
                 if(data == 0)
                 {
@@ -194,35 +174,35 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
             case DATA_HYDROSSTHEUNSTABLEEVENT:
                 return Encounters[0];
 
-             case DATA_LEOTHERASTHEBLINDEVENT:
+            case DATA_LEOTHERASTHEBLINDEVENT:
                 return Encounters[1];
 
-             case DATA_THELURKERBELOWEVENT:
+            case DATA_THELURKERBELOWEVENT:
                 return Encounters[2];
 
-             case DATA_KARATHRESSEVENT:
+            case DATA_KARATHRESSEVENT:
                 return Encounters[3];
 
-             case DATA_MOROGRIMTIDEWALKEREVENT:
+            case DATA_MOROGRIMTIDEWALKEREVENT:
                 return Encounters[4];
 
-            //Lady Vashj
-             case DATA_LADYVASHJEVENT:
+                //Lady Vashj
+            case DATA_LADYVASHJEVENT:
                 return Encounters[5];
 
-             case DATA_SHIELDGENERATOR1:
+            case DATA_SHIELDGENERATOR1:
                 return ShieldGeneratorDeactivated[0];
 
-             case DATA_SHIELDGENERATOR2:
+            case DATA_SHIELDGENERATOR2:
                 return ShieldGeneratorDeactivated[1];
 
-             case DATA_SHIELDGENERATOR3:
+            case DATA_SHIELDGENERATOR3:
                 return ShieldGeneratorDeactivated[2];
 
-             case DATA_SHIELDGENERATOR4:
+            case DATA_SHIELDGENERATOR4:
                 return ShieldGeneratorDeactivated[3];
 
-             case DATA_CANSTARTPHASE3:
+            case DATA_CANSTARTPHASE3:
                 if(ShieldGeneratorDeactivated[0] && ShieldGeneratorDeactivated[1] && ShieldGeneratorDeactivated[2] && ShieldGeneratorDeactivated[3])
                     return 1;
                 break;

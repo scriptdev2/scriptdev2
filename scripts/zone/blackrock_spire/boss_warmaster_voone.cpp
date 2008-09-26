@@ -1,35 +1,34 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Warmaster_Voone
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Blackrock Spire
 EndScriptData */
 
 #include "precompiled.h"
 
 #define SPELL_SNAPKICK          15618
-#define SPELL_CLEAVE            15579  
+#define SPELL_CLEAVE            15579
 #define SPELL_UPPERCUT          10966
 #define SPELL_MORTALSTRIKE      16856
-#define SPELL_PUMMEL            15615       
+#define SPELL_PUMMEL            15615
 #define SPELL_THROWAXE          16075
-#define SPELL_DAZED             1604
 
 struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
 {
@@ -41,17 +40,15 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
     uint32 MortalStrike_Timer;
     uint32 Pummel_Timer;
     uint32 ThrowAxe_Timer;
-    uint32 Dazed_Timer;
 
     void Reset()
-    {       
+    {
         Snapkick_Timer = 8000;
         Cleave_Timer = 14000;
         Uppercut_Timer = 20000;
         MortalStrike_Timer = 12000;
         Pummel_Timer = 32000;
         ThrowAxe_Timer = 1000;
-        Dazed_Timer = 25000;
     }
 
     void Aggro(Unit *who)
@@ -67,83 +64,52 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         //Snapkick_Timer
         if (Snapkick_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_SNAPKICK);
-
-
-            //6 seconds
             Snapkick_Timer = 6000;
         }else Snapkick_Timer -= diff;
 
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //12 seconds until we should cast this agian
             Cleave_Timer = 12000;
         }else Cleave_Timer -= diff;
 
         //Uppercut_Timer
         if (Uppercut_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_UPPERCUT);
-
-            //20 seconds until we should cast this agian
             Uppercut_Timer = 14000;
         }else Uppercut_Timer -= diff;
 
         //MortalStrike_Timer
         if (MortalStrike_Timer < diff)
         {
-
             DoCast(m_creature->getVictim(),SPELL_MORTALSTRIKE);
-
-            //8 seconds until we should cast this agian
             MortalStrike_Timer = 10000;
         }else MortalStrike_Timer -= diff;
 
         //Pummel_Timer
         if (Pummel_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_PUMMEL);
-
-            //30 seconds until we should cast this agian
             Pummel_Timer = 16000;
         }else Pummel_Timer -= diff;
 
         //ThrowAxe_Timer
         if (ThrowAxe_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_THROWAXE);
-
-            //30 seconds until we should cast this agian
             ThrowAxe_Timer = 8000;
         }else ThrowAxe_Timer -= diff;
 
-        //Dazed_Timer
-        if (Dazed_Timer < diff)
-        {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_DAZED);
-
-            //24 seconds until we should cast this agian
-            Dazed_Timer = 24000;
-        }else Dazed_Timer -= diff;
-
         DoMeleeAttackIfReady();
     }
-
-}; 
+};
 CreatureAI* GetAI_boss_warmastervoone(Creature *_Creature)
 {
     return new boss_warmastervooneAI (_Creature);
 }
-
 
 void AddSC_boss_warmastervoone()
 {

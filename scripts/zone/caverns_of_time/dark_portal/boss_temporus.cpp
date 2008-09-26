@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Temporus
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
@@ -50,31 +50,31 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     uint32 SpellReflection_Timer;
 
     void Reset()
-    { 
+    {
         Haste_Timer = 20000;
-        SpellReflection_Timer = 40000;     
+        SpellReflection_Timer = 40000;
     }
 
     void Aggro(Unit *who)
-    { 
-                DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+    {
+        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
-    } 
+    }
 
     void JustDied(Unit *victim)
     {
@@ -83,7 +83,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who)
-    { 
+    {
         if (!who || m_creature->getVictim())
             return;
 
@@ -114,8 +114,8 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
                     DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
                     DoPlaySoundToSet(m_creature, SOUND_AGGRO);
                 }
-            }    
-        }        
+            }
+        }
     }
 
     void UpdateAI(const uint32 diff)

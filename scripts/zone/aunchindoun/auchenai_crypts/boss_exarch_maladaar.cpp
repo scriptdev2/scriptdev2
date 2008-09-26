@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Exarch_Maladaar
@@ -50,9 +50,9 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
     {
         Class_Timer = 1000;
     }
-    
+
     void Aggro(Unit *who)
-    { }
+        { }
 
     void SetMyClass(uint8 myclass)
     {
@@ -68,44 +68,44 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
         {
             switch( myClass )
             {
-            case CLASS_WARRIOR:
-                DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
-                Class_Timer = 6000;
-                break;
-            case CLASS_PALADIN:
-                DoCast(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
-                Class_Timer = 6000;
-                break;
-            case CLASS_HUNTER:
-                DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
-                Class_Timer = 20000;
-                break;
-            case CLASS_ROGUE:
-                DoCast(m_creature->getVictim(), SPELL_HEMORRHAGE);
-                Class_Timer = 10000;
-                break;
-            case CLASS_PRIEST:
-                DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
-                Class_Timer = 5000;
-                break;
-            case CLASS_SHAMAN:
-                DoCast(m_creature->getVictim(), SPELL_FROSTSHOCK);
-                Class_Timer = 8000;
-                break;
-            case CLASS_MAGE:
-                DoCast(m_creature->getVictim(), SPELL_FIREBALL);
-                Class_Timer = 5000;
-                break;
-            case CLASS_WARLOCK:
-                DoCast(m_creature->getVictim(), SPELL_CURSE_OF_AGONY);
-                Class_Timer = 20000;
-                break;
-            case CLASS_DRUID:
-                DoCast(m_creature->getVictim(), SPELL_MOONFIRE);
-                Class_Timer = 10000;
-                break;
-            default:
-                break;
+                case CLASS_WARRIOR:
+                    DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
+                    Class_Timer = 6000;
+                    break;
+                case CLASS_PALADIN:
+                    DoCast(m_creature->getVictim(), SPELL_HAMMER_OF_JUSTICE);
+                    Class_Timer = 6000;
+                    break;
+                case CLASS_HUNTER:
+                    DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
+                    Class_Timer = 20000;
+                    break;
+                case CLASS_ROGUE:
+                    DoCast(m_creature->getVictim(), SPELL_HEMORRHAGE);
+                    Class_Timer = 10000;
+                    break;
+                case CLASS_PRIEST:
+                    DoCast(m_creature->getVictim(), SPELL_MIND_FLAY);
+                    Class_Timer = 5000;
+                    break;
+                case CLASS_SHAMAN:
+                    DoCast(m_creature->getVictim(), SPELL_FROSTSHOCK);
+                    Class_Timer = 8000;
+                    break;
+                case CLASS_MAGE:
+                    DoCast(m_creature->getVictim(), SPELL_FIREBALL);
+                    Class_Timer = 5000;
+                    break;
+                case CLASS_WARLOCK:
+                    DoCast(m_creature->getVictim(), SPELL_CURSE_OF_AGONY);
+                    Class_Timer = 20000;
+                    break;
+                case CLASS_DRUID:
+                    DoCast(m_creature->getVictim(), SPELL_MOONFIRE);
+                    Class_Timer = 10000;
+                    break;
+                default:
+                    break;
             }
         }else Class_Timer -= diff;
 
@@ -164,10 +164,10 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     uint32 Fear_timer;
     uint32 Ribbon_of_Souls_timer;
     uint32 StolenSoul_Timer;
-   
+
     bool HasTaunted;
     bool Avatar_summoned;
-    
+
     void Reset()
     {
         soulmodel = 0;
@@ -215,18 +215,18 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
-            break;
-        case 1:
-            DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
-            break;
-        case 2:
-            DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
-            break;
+            case 0:
+                DoYell(SAY_AGGRO_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO_3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_AGGRO_3);
+                break;
         }
     }
 
@@ -252,14 +252,14 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature,SOUND_SLAY_2);
+                break;
         }
     }
 
@@ -359,7 +359,7 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
     {
         Mortal_Strike_timer = 10000;
     }
-    
+
     void Aggro(Unit *who)
     {
     }

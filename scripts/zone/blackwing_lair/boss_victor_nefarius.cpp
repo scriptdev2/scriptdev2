@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Victor_Nefarius
@@ -73,93 +73,93 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 {
-    boss_victor_nefariusAI(Creature *c) : ScriptedAI(c) 
+    boss_victor_nefariusAI(Creature *c) : ScriptedAI(c)
     {
         NefarianGUID = 0;
         Reset();
         srand(time(NULL));
         switch (rand()%20)
         {
-        case 0:
-            DrakType1 = CREATURE_BRONZE_DRAKANOID;
-            DrakType2 = CREATURE_BLUE_DRAKANOID;
-            break;
-        case 1:
-            DrakType1 = CREATURE_BRONZE_DRAKANOID;
-            DrakType2 = CREATURE_RED_DRAKANOID;
-            break;
-        case 2:
-            DrakType1 = CREATURE_BRONZE_DRAKANOID;
-            DrakType2 = CREATURE_GREEN_DRAKANOID;
-            break;
-        case 3:
-            DrakType1 = CREATURE_BRONZE_DRAKANOID;
-            DrakType2 = CREATURE_BLACK_DRAKANOID;
-            break;
-        case 4:
-            DrakType1 = CREATURE_BLUE_DRAKANOID;
-            DrakType2 = CREATURE_BRONZE_DRAKANOID;
-            break;
-        case 5:
-            DrakType1 = CREATURE_BLUE_DRAKANOID;
-            DrakType2 = CREATURE_RED_DRAKANOID;
-            break;
-        case 6:
-            DrakType1 = CREATURE_BLUE_DRAKANOID;
-            DrakType2 = CREATURE_GREEN_DRAKANOID;
-            break;
-        case 7:
-            DrakType1 = CREATURE_BLUE_DRAKANOID;
-            DrakType2 = CREATURE_BLACK_DRAKANOID;
-            break;
-        case 8:
-            DrakType1 = CREATURE_RED_DRAKANOID;
-            DrakType2 = CREATURE_BRONZE_DRAKANOID;
-            break;
-        case 9:
-            DrakType1 = CREATURE_RED_DRAKANOID;
-            DrakType2 = CREATURE_BLUE_DRAKANOID;
-            break;
-        case 10:
-            DrakType1 = CREATURE_RED_DRAKANOID;
-            DrakType2 = CREATURE_GREEN_DRAKANOID;
-            break;
-        case 11:
-            DrakType1 = CREATURE_RED_DRAKANOID;
-            DrakType2 = CREATURE_BLACK_DRAKANOID;
-            break;
-        case 12:
-            DrakType1 = CREATURE_GREEN_DRAKANOID;
-            DrakType2 = CREATURE_BRONZE_DRAKANOID;
-            break;
-        case 13:
-            DrakType1 = CREATURE_GREEN_DRAKANOID;
-            DrakType2 = CREATURE_BLUE_DRAKANOID;
-            break;
-        case 14:
-            DrakType1 = CREATURE_GREEN_DRAKANOID;
-            DrakType2 = CREATURE_RED_DRAKANOID;
-            break;
-        case 15:
-            DrakType1 = CREATURE_GREEN_DRAKANOID;
-            DrakType2 = CREATURE_BLACK_DRAKANOID;
-            break;
-        case 16:
-            DrakType1 = CREATURE_BLACK_DRAKANOID;
-            DrakType2 = CREATURE_BRONZE_DRAKANOID;
-            break;
-        case 17:
-            DrakType1 = CREATURE_BLACK_DRAKANOID;
-            DrakType2 = CREATURE_BLUE_DRAKANOID;
-            break;
-        case 18:
-            DrakType1 = CREATURE_BLACK_DRAKANOID;
-            DrakType2 = CREATURE_GREEN_DRAKANOID;
-            break;
-        case 19:
-            DrakType1 = CREATURE_BLACK_DRAKANOID;
-            DrakType2 = CREATURE_RED_DRAKANOID;
-            break;
+            case 0:
+                DrakType1 = CREATURE_BRONZE_DRAKANOID;
+                DrakType2 = CREATURE_BLUE_DRAKANOID;
+                break;
+            case 1:
+                DrakType1 = CREATURE_BRONZE_DRAKANOID;
+                DrakType2 = CREATURE_RED_DRAKANOID;
+                break;
+            case 2:
+                DrakType1 = CREATURE_BRONZE_DRAKANOID;
+                DrakType2 = CREATURE_GREEN_DRAKANOID;
+                break;
+            case 3:
+                DrakType1 = CREATURE_BRONZE_DRAKANOID;
+                DrakType2 = CREATURE_BLACK_DRAKANOID;
+                break;
+            case 4:
+                DrakType1 = CREATURE_BLUE_DRAKANOID;
+                DrakType2 = CREATURE_BRONZE_DRAKANOID;
+                break;
+            case 5:
+                DrakType1 = CREATURE_BLUE_DRAKANOID;
+                DrakType2 = CREATURE_RED_DRAKANOID;
+                break;
+            case 6:
+                DrakType1 = CREATURE_BLUE_DRAKANOID;
+                DrakType2 = CREATURE_GREEN_DRAKANOID;
+                break;
+            case 7:
+                DrakType1 = CREATURE_BLUE_DRAKANOID;
+                DrakType2 = CREATURE_BLACK_DRAKANOID;
+                break;
+            case 8:
+                DrakType1 = CREATURE_RED_DRAKANOID;
+                DrakType2 = CREATURE_BRONZE_DRAKANOID;
+                break;
+            case 9:
+                DrakType1 = CREATURE_RED_DRAKANOID;
+                DrakType2 = CREATURE_BLUE_DRAKANOID;
+                break;
+            case 10:
+                DrakType1 = CREATURE_RED_DRAKANOID;
+                DrakType2 = CREATURE_GREEN_DRAKANOID;
+                break;
+            case 11:
+                DrakType1 = CREATURE_RED_DRAKANOID;
+                DrakType2 = CREATURE_BLACK_DRAKANOID;
+                break;
+            case 12:
+                DrakType1 = CREATURE_GREEN_DRAKANOID;
+                DrakType2 = CREATURE_BRONZE_DRAKANOID;
+                break;
+            case 13:
+                DrakType1 = CREATURE_GREEN_DRAKANOID;
+                DrakType2 = CREATURE_BLUE_DRAKANOID;
+                break;
+            case 14:
+                DrakType1 = CREATURE_GREEN_DRAKANOID;
+                DrakType2 = CREATURE_RED_DRAKANOID;
+                break;
+            case 15:
+                DrakType1 = CREATURE_GREEN_DRAKANOID;
+                DrakType2 = CREATURE_BLACK_DRAKANOID;
+                break;
+            case 16:
+                DrakType1 = CREATURE_BLACK_DRAKANOID;
+                DrakType2 = CREATURE_BRONZE_DRAKANOID;
+                break;
+            case 17:
+                DrakType1 = CREATURE_BLACK_DRAKANOID;
+                DrakType2 = CREATURE_BLUE_DRAKANOID;
+                break;
+            case 18:
+                DrakType1 = CREATURE_BLACK_DRAKANOID;
+                DrakType2 = CREATURE_GREEN_DRAKANOID;
+                break;
+            case 19:
+                DrakType1 = CREATURE_BLACK_DRAKANOID;
+                DrakType2 = CREATURE_RED_DRAKANOID;
+                break;
         }
     }
 
@@ -180,7 +180,7 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         AddSpawnTimer = 10000;
         ShadowBoltTimer = 5000;
         FearTimer = 8000;
-        ResetTimer = 900000;        //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
+        ResetTimer = 900000;                                //On official it takes him 15 minutes(900 seconds) to reset. We are only doing 1 minute to make testing easier
         NefarianGUID = 0;
         NefCheckTime = 2000;
 
@@ -200,14 +200,13 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
         for (i = MapManager::Instance().GetMap(m_creature->GetMapId(), m_creature)->GetPlayers().begin(); i != MapManager::Instance().GetMap(m_creature->GetMapId(), m_creature)->GetPlayers().end(); ++i)
         {
-        AttackStart((*i));            
+        AttackStart((*i));
         }
         */
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
         m_creature->setFaction(103);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         AttackStart(target);
-
     }
 
     void Aggro(Unit *who)
@@ -227,7 +226,6 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
@@ -237,26 +235,22 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
             //ShadowBoltTimer
             if (ShadowBoltTimer < diff)
             {
-                //Cast
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
                     DoCast(target,SPELL_SHADOWBOLT);
 
-                //Random time till recast between 3 and 10 seconds
                 ShadowBoltTimer = 3000 + (rand()%7000);
             }else ShadowBoltTimer -= diff;
 
             //FearTimer
             if (FearTimer < diff)
             {
-                //Cast
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (target)
                     DoCast(target,SPELL_FEAR);
 
-                //Random time till recast between 10 and 20 seconds
                 FearTimer = 10000 + (rand()%10000);
             }else FearTimer -= diff;
 
@@ -355,7 +349,6 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
 
                 NefCheckTime = 2000;
             }else NefCheckTime -= diff;
-
         }
     }
 };

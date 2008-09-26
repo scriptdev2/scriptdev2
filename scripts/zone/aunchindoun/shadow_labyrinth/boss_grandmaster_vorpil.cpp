@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Grandmaster_Vorpil
@@ -101,7 +101,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
         {
-            if(!Intro && m_creature->IsWithinDistInMap(who, 50))//not sure about right radius
+            //not sure about right radius
+            if(!Intro && m_creature->IsWithinDistInMap(who, 50))
             {
                 DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
                 DoPlaySoundToSet(m_creature, SOUND_INTRO);
@@ -135,18 +136,18 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-        case 0:
-            DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-            break;
-        case 1:
-            DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-            break;
-        case 2:
-            DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-            break;
+            case 0:
+                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
+                break;
+            case 1:
+                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
+                break;
+            case 2:
+                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
+                break;
         }
 
         if( pInstance )
@@ -157,14 +158,14 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-        case 0:
-            DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-            break;
-        case 1:
-            DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-            break;
+            case 0:
+                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
+                break;
+            case 1:
+                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
+                break;
         }
     }
 
@@ -245,21 +246,21 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
             switch(rand()%5)
             {
-            case 0:
-                DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_A,true);
-                break;
-            case 1:
-                DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_B,true);
-                break;
-            case 2:
-                DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_C,true);
-                break;
-            case 3:
-                DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_D,true);
-                break;
-            case 4:
-                DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_E,true);
-                break;
+                case 0:
+                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_A,true);
+                    break;
+                case 1:
+                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_B,true);
+                    break;
+                case 2:
+                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_C,true);
+                    break;
+                case 3:
+                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_D,true);
+                    break;
+                case 4:
+                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_E,true);
+                    break;
             }
             //faster rate when below (X) health?
             VoidTraveler_Timer = 35000;
@@ -277,7 +278,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_grandmaster_vorpil(Creature *_Creature)
 {
     return new boss_grandmaster_vorpilAI (_Creature);
