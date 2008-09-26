@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Guards
@@ -237,7 +237,7 @@ void SendProfTrainerMenu_guard_azuremyst(Player *player, Creature *_Creature, ui
             player->SEND_POI(-3781.55, -11541.8, 6, 6, 0, "Farii");
             player->SEND_GOSSIP_MENU(10097,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 10:                    //Leatherworking
+        case GOSSIP_ACTION_INFO_DEF + 10:                   //Leatherworking
             player->SEND_POI(-3442.68, -12322.2, 6, 6, 0, "Moordo");
             player->SEND_GOSSIP_MENU(10098,_Creature->GetGUID());
             break;
@@ -455,7 +455,7 @@ void SendProfTrainerMenu_guard_bluffwatcher(Player *player, Creature *_Creature,
             player->SEND_POI(-1249.17, 155, 6, 6, 0, "Stonehoof Geology");
             player->SEND_GOSSIP_MENU(1340,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 10:                    //Skinning
+        case GOSSIP_ACTION_INFO_DEF + 10:                   //Skinning
             player->SEND_POI(-1148.56, 51.18, 6, 6, 0, "Mooranta");
             player->SEND_GOSSIP_MENU(1343,_Creature->GetGUID());
             break;
@@ -507,7 +507,7 @@ struct MANGOS_DLL_DECL guard_contested : public guardAI
 
                 if(!m_creature->isInCombat())
                 {
-                    if (m_creature->GetEntry() == 15184)//Cenarion Hold Infantry
+                    if (m_creature->GetEntry() == 15184)    //Cenarion Hold Infantry
                     {
                         srand (time(NULL));
                         if (rand()%100 <= 30)
@@ -523,7 +523,7 @@ struct MANGOS_DLL_DECL guard_contested : public guardAI
                             DoSay("As if we don`t have enough problems, you go and create more!", LANG_UNIVERSAL,NULL);
                         }
                     }
-                    else 
+                    else
                     {
                         SpellEntry const *spell = m_creature->reachWithSpellAttack(who);
                         DoCastSpell(who, spell);
@@ -1448,23 +1448,23 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Auction house
-            player->SEND_POI(-4023.6, -11739.3, 6, 6, 0, "Exodar Auction House");//18349
+            player->SEND_POI(-4023.6, -11739.3, 6, 6, 0, "Exodar Auction House");
             player->SEND_GOSSIP_MENU(9528, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Bank
-            player->SEND_POI(-3923.89, -11544.5, 6, 6, 0, "Exodar Bank");//17773
+            player->SEND_POI(-3923.89, -11544.5, 6, 6, 0, "Exodar Bank");
             player->SEND_GOSSIP_MENU(9529, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Guild master
-            player->SEND_POI(-4092.57, -11626.5, 6, 6, 0, "Exodar Guild Master");//16734
+            player->SEND_POI(-4092.57, -11626.5, 6, 6, 0, "Exodar Guild Master");
             player->SEND_GOSSIP_MENU(9539, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Hippogryph master
-            player->SEND_POI(-4060.46, -11787.1, 6, 6, 0, "Exodar Hippogryph Master");//17555
+            player->SEND_POI(-4060.46, -11787.1, 6, 6, 0, "Exodar Hippogryph Master");
             player->SEND_GOSSIP_MENU(9530, _Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 5:                     //Inn
-            player->SEND_POI(-3741.87, -11695.1, 6, 6, 0, "Exodar Inn");//16739
+        case GOSSIP_ACTION_INFO_DEF + 5:                    //Inn
+            player->SEND_POI(-3741.87, -11695.1, 6, 6, 0, "Exodar Inn");
             player->SEND_GOSSIP_MENU(9545, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Mailbox
@@ -1472,11 +1472,11 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature *_Creature, uint32 ac
             player->SEND_GOSSIP_MENU(10254, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Stable master
-            player->SEND_POI(-3786.5, -11702.5, 6, 6, 0, "Stable Master Arthaid");//16764
+            player->SEND_POI(-3786.5, -11702.5, 6, 6, 0, "Stable Master Arthaid");
             player->SEND_GOSSIP_MENU(9558, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Weapon trainer
-            player->SEND_POI(-4215.68, -11628.9, 6, 6, 0, "Weapon Master Handiir");//16773
+            player->SEND_POI(-4215.68, -11628.9, 6, 6, 0, "Weapon Master Handiir");
             player->SEND_GOSSIP_MENU(9565, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Battlemaster
@@ -1548,31 +1548,31 @@ void SendClassTrainerMenu_guard_exodar(Player *player, Creature *_Creature, uint
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Druid
-            player->SEND_POI(-4276.0, -11495, 6, 6, 0, "Exodar Druid Trainer");//16721
+            player->SEND_POI(-4276.0, -11495, 6, 6, 0, "Exodar Druid Trainer");
             player->SEND_GOSSIP_MENU(9534, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Hunter
-            player->SEND_POI(-4210.6, -11575.2, 6, 6, 0, "Exodar Hunter Trainer");//17122
+            player->SEND_POI(-4210.6, -11575.2, 6, 6, 0, "Exodar Hunter Trainer");
             player->SEND_GOSSIP_MENU(9544, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Mage
-            player->SEND_POI(-4057.32, -11556.5, 6, 6, 0, "Exodar Mage Trainer");//17513
+            player->SEND_POI(-4057.32, -11556.5, 6, 6, 0, "Exodar Mage Trainer");
             player->SEND_GOSSIP_MENU(9550, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Paladin
-            player->SEND_POI(-4191.2, -11470.4, 6, 6, 0, "Exodar Paladin Trainer");//17509
+            player->SEND_POI(-4191.2, -11470.4, 6, 6, 0, "Exodar Paladin Trainer");
             player->SEND_GOSSIP_MENU(9553, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Priest
-            player->SEND_POI(-3969.63, -11482.8, 6, 6, 0, "Exodar Priest Trainer");//17510
+            player->SEND_POI(-3969.63, -11482.8, 6, 6, 0, "Exodar Priest Trainer");
             player->SEND_GOSSIP_MENU(9554, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Shaman
-            player->SEND_POI(-3805.5, -11380.7, 6, 6, 0, "Exodar Shaman Trainer");//17520
+            player->SEND_POI(-3805.5, -11380.7, 6, 6, 0, "Exodar Shaman Trainer");
             player->SEND_GOSSIP_MENU(9556, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Warrior
-            player->SEND_POI(-4189.43, -11653.7, 6, 6, 0, "Exodar Warrior Trainer");//17120
+            player->SEND_POI(-4189.43, -11653.7, 6, 6, 0, "Exodar Warrior Trainer");
             player->SEND_GOSSIP_MENU(9562, _Creature->GetGUID());
             break;
     }
@@ -1583,55 +1583,55 @@ void SendProfTrainerMenu_guard_exodar(Player *player, Creature *_Creature, uint3
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Alchemy
-            player->SEND_POI(-4040.6, -11364.5, 6, 6, 0, "Exodar Alchemy Trainer");//16723
+            player->SEND_POI(-4040.6, -11364.5, 6, 6, 0, "Exodar Alchemy Trainer");
             player->SEND_GOSSIP_MENU(9527, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Blacksmithing
-            player->SEND_POI(-4229.5, -11706, 6, 6, 0, "Exodar Blacksmithing Trainer");//16724
+            player->SEND_POI(-4229.5, -11706, 6, 6, 0, "Exodar Blacksmithing Trainer");
             player->SEND_GOSSIP_MENU(9532, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Cooking
-            player->SEND_POI(-3798.3, -11651.7, 6, 6, 0, "Exodar Cooking Trainer");//16719
+            player->SEND_POI(-3798.3, -11651.7, 6, 6, 0, "Exodar Cooking Trainer");
             player->SEND_GOSSIP_MENU(9551, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Enchanting
-            player->SEND_POI(-3889.3, -11495, 6, 6, 0, "Exodar Enchanting Trainer");//16742
+            player->SEND_POI(-3889.3, -11495, 6, 6, 0, "Exodar Enchanting Trainer");
             player->SEND_GOSSIP_MENU(9535, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Engineering
-            player->SEND_POI(-4257.68, -11640.3, 6, 6, 0, "Exodar Engineering Trainer");//16743
+            player->SEND_POI(-4257.68, -11640.3, 6, 6, 0, "Exodar Engineering Trainer");
             player->SEND_GOSSIP_MENU(9536, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //First Aid
-            player->SEND_POI(-3769.5, -11479.6, 6, 6, 0, "Exodar First Aid Trainer");//16731
+            player->SEND_POI(-3769.5, -11479.6, 6, 6, 0, "Exodar First Aid Trainer");
             player->SEND_GOSSIP_MENU(9537, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Fishing
-            player->SEND_POI(-3725.5, -11385.2, 6, 6, 0, "Exodar Fishing Trainer");//16774
+            player->SEND_POI(-3725.5, -11385.2, 6, 6, 0, "Exodar Fishing Trainer");
             player->SEND_GOSSIP_MENU(9538, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Jewelcrafting
-            player->SEND_POI(-3783, -11546, 6, 6, 0, "Exodar Jewelcrafting Trainer");//16727,16744,19777,19778
+            player->SEND_POI(-3783, -11546, 6, 6, 0, "Exodar Jewelcrafting Trainer");
             player->SEND_GOSSIP_MENU(9547, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Herbalism
-            player->SEND_POI(-4040.6, -11364.5, 6, 6, 0, "Exodar Herbalist Trainer");//16736
+            player->SEND_POI(-4040.6, -11364.5, 6, 6, 0, "Exodar Herbalist Trainer");
             player->SEND_GOSSIP_MENU(9543, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 10:                   //Leatherworking
-            player->SEND_POI(-4140.6, -11776.7, 6, 6, 0, "Exodar Leatherworking Trainer");//16745
+            player->SEND_POI(-4140.6, -11776.7, 6, 6, 0, "Exodar Leatherworking Trainer");
             player->SEND_GOSSIP_MENU(9549, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 11:                   //Mining
-            player->SEND_POI(-4228, -11697, 6, 6, 0, "Exodar Mining Trainer");//16752
+            player->SEND_POI(-4228, -11697, 6, 6, 0, "Exodar Mining Trainer");
             player->SEND_GOSSIP_MENU(9552, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 12:                   //Skinning
-            player->SEND_POI(-4134.97, -11760.5, 6, 6, 0, "Exodar Skinning Trainer");//16763
+            player->SEND_POI(-4134.97, -11760.5, 6, 6, 0, "Exodar Skinning Trainer");
             player->SEND_GOSSIP_MENU(9557, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 13:                   //Tailoring
-            player->SEND_POI(-4092.5, -11744.5, 6, 6, 0, "Exodar Tailor Trainer");//16746, 16729
+            player->SEND_POI(-4092.5, -11744.5, 6, 6, 0, "Exodar Tailor Trainer");
             player->SEND_GOSSIP_MENU(9559, _Creature->GetGUID());
             break;
     }
@@ -1808,7 +1808,8 @@ void SendClassTrainerMenu_guard_ironforge(Player *player, Creature *_Creature, u
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Shaman
             player->SEND_POI(-4732, -1147, 6, 6, 0, "Ironforge Shaman Trainer");
-            player->SEND_GOSSIP_MENU(2766, _Creature->GetGUID());//incorrect id
+                                                            //incorrect id
+            player->SEND_GOSSIP_MENU(2766, _Creature->GetGUID());
             break;
     }
 }
@@ -2005,11 +2006,11 @@ void SendProfTrainerMenu_guard_mulgore(Player *player, Creature *_Creature, uint
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Mining
             player->SEND_GOSSIP_MENU(4066,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 10:                    //Skinning
+        case GOSSIP_ACTION_INFO_DEF + 10:                   //Skinning
             player->SEND_POI(-2252.94, -291.32, 6, 6, 0, "Yonn Deepcut");
             player->SEND_GOSSIP_MENU(4067,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 11:                    //Tailoring
+        case GOSSIP_ACTION_INFO_DEF + 11:                   //Tailoring
             player->SEND_GOSSIP_MENU(4068,_Creature->GetGUID());
             break;
     }
@@ -2103,7 +2104,7 @@ void SendDefaultMenu_guard_orgrimmar(Player *player, Creature *_Creature, uint32
             player->SEND_POI(1633.56, -4249.37, 6, 6, 0, "Hall of Legends");
             player->SEND_GOSSIP_MENU(7046,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 11:                    //battlemaster
+        case GOSSIP_ACTION_INFO_DEF + 11:                   //battlemaster
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ALTERACVALLEY       , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ARATHIBASIN         , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_WARSONGULCH         , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
@@ -2244,7 +2245,7 @@ void SendProfTrainerMenu_guard_orgrimmar(Player *player, Creature *_Creature, ui
             player->SEND_POI(1852.82, -4562.31, 6, 6, 0, "Kodohide Leatherworkers");
             player->SEND_GOSSIP_MENU(2516,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 12:                    //Tailoring
+        case GOSSIP_ACTION_INFO_DEF + 12:                   //Tailoring
             player->SEND_POI(1802.66, -4560.66, 6, 6, 0, "Magar's Cloth Goods");
             player->SEND_GOSSIP_MENU(2518,_Creature->GetGUID());
             break;
@@ -2263,7 +2264,7 @@ bool GossipSelect_guard_orgrimmar(Player *player, Creature *_Creature, uint32 se
     return true;
 }
 
-bool ReceiveEmote_guard_orgrimmar(Player *player, Creature *_Creature, uint32 emote) 
+bool ReceiveEmote_guard_orgrimmar(Player *player, Creature *_Creature, uint32 emote)
 {
     if( player->GetTeam() == HORDE )
         DoReplyToTextEmote(_Creature,emote);
@@ -2311,7 +2312,7 @@ void SendDefaultMenu_guard_shattrath(Player *player, Creature *_Creature, uint32
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Bank
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BANKALDOR            , GOSSIP_SENDER_SEC_BANK, GOSSIP_ACTION_INFO_DEF + 1);
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BANKSCYERS           , GOSSIP_SENDER_SEC_BANK, GOSSIP_ACTION_INFO_DEF + 2); 
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BANKSCYERS           , GOSSIP_SENDER_SEC_BANK, GOSSIP_ACTION_INFO_DEF + 2);
             player->SEND_GOSSIP_MENU(10379, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Inn
@@ -2320,7 +2321,7 @@ void SendDefaultMenu_guard_shattrath(Player *player, Creature *_Creature, uint32
             player->SEND_GOSSIP_MENU(10382, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Flight master
-            player->SEND_POI(-1832, 5299, 6, 6, 0, "Flight Master");//18940
+            player->SEND_POI(-1832, 5299, 6, 6, 0, "Flight Master");
             player->SEND_GOSSIP_MENU(10385, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Mailbox
@@ -2353,11 +2354,11 @@ void SendDefaultMenu_guard_shattrath(Player *player, Creature *_Creature, uint32
             player->SEND_GOSSIP_MENU(10391, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Mana Loom
-            player->SEND_POI(-2070, 5265.5, 6, 6, 0, "Mana Loom");//GO in the Lower City
+            player->SEND_POI(-2070, 5265.5, 6, 6, 0, "Mana Loom");
             player->SEND_GOSSIP_MENU(10503, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 10:                   //Alchemy Lab
-            player->SEND_POI(-1648.5, 5540, 6, 6, 0, "Alchemy Lab");//GO in the Lower City, arokkar tower
+            player->SEND_POI(-1648.5, 5540, 6, 6, 0, "Alchemy Lab");
             player->SEND_GOSSIP_MENU(10321, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 11:                   //Gem Merchant
@@ -2372,13 +2373,13 @@ void SendBankMenu_guard_shattrath(Player *player, Creature *_Creature, uint32 ac
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-            player->SEND_POI(-1730.5, 5496, 6, 6, 0, "Aldor Bank");      //19318, 19034
-            player->SEND_GOSSIP_MENU(10380,  _Creature->GetGUID());
+        player->SEND_POI(-1730.5, 5496, 6, 6, 0, "Aldor Bank");
+        player->SEND_GOSSIP_MENU(10380,  _Creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-            player->SEND_POI(-1997.7, 5363, 6, 6, 0, "Scyers Bank");     //19246, 19338
-            player->SEND_GOSSIP_MENU(10381, _Creature->GetGUID());
+        player->SEND_POI(-1997.7, 5363, 6, 6, 0, "Scyers Bank");
+        player->SEND_GOSSIP_MENU(10381, _Creature->GetGUID());
     }
 }
 
@@ -2386,13 +2387,13 @@ void SendInnMenu_guard_shattrath(Player *player, Creature *_Creature, uint32 act
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-            player->SEND_POI(-1895, 5767, 6, 6, 0, "Aldor Inn");         //19046
-            player->SEND_GOSSIP_MENU(10383,  _Creature->GetGUID());
+        player->SEND_POI(-1895, 5767, 6, 6, 0, "Aldor Inn");
+        player->SEND_GOSSIP_MENU(10383,  _Creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-            player->SEND_POI(-2178, 5405, 6, 6, 0, "Scyers Inn");        //19232
-            player->SEND_GOSSIP_MENU(10384, _Creature->GetGUID());
+        player->SEND_POI(-2178, 5405, 6, 6, 0, "Scyers Inn");
+        player->SEND_GOSSIP_MENU(10384, _Creature->GetGUID());
     }
 }
 
@@ -2423,13 +2424,13 @@ void SendStableMasterMenu_guard_shattrath(Player *player, Creature *_Creature, u
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-            player->SEND_POI(-1888.5, 5761, 6, 6, 0, "Aldor Stable");//21518
-            player->SEND_GOSSIP_MENU(10321,  _Creature->GetGUID());
+        player->SEND_POI(-1888.5, 5761, 6, 6, 0, "Aldor Stable");
+        player->SEND_GOSSIP_MENU(10321,  _Creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-            player->SEND_POI(-2170, 5404, 6, 6, 0, "Scyers Stable");//21517
-            player->SEND_GOSSIP_MENU(10321, _Creature->GetGUID());
+        player->SEND_POI(-2170, 5404, 6, 6, 0, "Scyers Stable");
+        player->SEND_GOSSIP_MENU(10321, _Creature->GetGUID());
     }
 }
 
@@ -2457,35 +2458,35 @@ void SendProfTrainerMenu_guard_shattrath(Player *player, Creature *_Creature, ui
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Alchemy
-            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");//19052
+            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");
             player->SEND_GOSSIP_MENU(10392, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Blacksmithing
-            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");//20125,20124
+            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");
             player->SEND_GOSSIP_MENU(10400, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Cooking
-            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");//19185
+            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");
             player->SEND_GOSSIP_MENU(10393, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Enchanting
-            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");//19252,19250,19249,19248
+            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");
             player->SEND_GOSSIP_MENU(10395, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //First Aid
-            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");//19184
+            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");
             player->SEND_GOSSIP_MENU(10396, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Jewelcrafting
-            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");//19063
+            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");
             player->SEND_GOSSIP_MENU(10397, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Leatherworking
-            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");//19187
+            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");
             player->SEND_GOSSIP_MENU(10399, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Skinning
-            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");//19180
+            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");
             player->SEND_GOSSIP_MENU(10398, _Creature->GetGUID());
             break;
     }
@@ -2495,13 +2496,13 @@ void SendGemMerchantMenu_guard_shattrath(Player *player, Creature *_Creature, ui
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
-            player->SEND_POI(-1645, 5669.5, 6, 6, 0, "Aldor Gem Merchant");//19065
-            player->SEND_GOSSIP_MENU(10698,  _Creature->GetGUID());
+        player->SEND_POI(-1645, 5669.5, 6, 6, 0, "Aldor Gem Merchant");
+        player->SEND_GOSSIP_MENU(10698,  _Creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
-            player->SEND_POI(-2193, 5424.5, 6, 6, 0, "Scyers Gem Merchant");//19330
-            player->SEND_GOSSIP_MENU(10699, _Creature->GetGUID());
+        player->SEND_POI(-2193, 5424.5, 6, 6, 0, "Scyers Gem Merchant");
+        player->SEND_GOSSIP_MENU(10699, _Creature->GetGUID());
     }
 }
 
@@ -2633,14 +2634,15 @@ void SendDefaultMenu_guard_shattrath_aldor(Player *player, Creature *_Creature, 
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Mailbox
             player->SEND_POI(0, 0, 6, 6, 0, "Aldor Mailbox");
-            player->SEND_GOSSIP_MENU(10524, _Creature->GetGUID());//unknown
+                                                            //unknown
+            player->SEND_GOSSIP_MENU(10524, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Stable master
             player->SEND_POI(-1888.5, 5761, 6, 6, 0, "Aldor Stable Master");
             player->SEND_GOSSIP_MENU(10527, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Battlemaster
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERALLIANCE , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);        
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERALLIANCE , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERHORDE    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERARENA    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
             player->SEND_GOSSIP_MENU(10388, _Creature->GetGUID());
@@ -2676,35 +2678,35 @@ void SendProfTrainerMenu_guard_shattrath_aldor(Player *player, Creature *_Creatu
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Alchemy
-            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");//19052
+            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");
             player->SEND_GOSSIP_MENU(10392, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Blacksmithing
-            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");//20125,20124
+            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");
             player->SEND_GOSSIP_MENU(10400, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Cooking
-            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");//19185
+            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");
             player->SEND_GOSSIP_MENU(10393, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Enchanting
-            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");//19252,19250,19249,19248
+            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");
             player->SEND_GOSSIP_MENU(10528, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //First Aid
-            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");//19184
+            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");
             player->SEND_GOSSIP_MENU(10396, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Jewelcrafting
-            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");//19063
+            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");
             player->SEND_GOSSIP_MENU(10529, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Leatherworking
-            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");//19187
+            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");
             player->SEND_GOSSIP_MENU(10399, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Skinning
-            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");//19180
+            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");
             player->SEND_GOSSIP_MENU(10419, _Creature->GetGUID());
             break;
     }
@@ -2720,6 +2722,7 @@ bool GossipSelect_guard_shattrath_aldor(Player *player, Creature *_Creature, uin
     }
     return true;
 }
+
 /*******************************************************
  * guard_shattrath_aldor end
  *******************************************************/
@@ -2834,7 +2837,7 @@ void SendDefaultMenu_guard_shattrath_scryer(Player *player, Creature *_Creature,
             player->SEND_GOSSIP_MENU(10437, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Battlemaster
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERALLIANCE , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);        
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERALLIANCE , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERHORDE    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_BATTLEMASTERARENA    , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
             player->SEND_GOSSIP_MENU(10438, _Creature->GetGUID());
@@ -2870,35 +2873,35 @@ void SendProfTrainerMenu_guard_shattrath_scryer(Player *player, Creature *_Creat
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Alchemy
-            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");//19052
+            player->SEND_POI(-1648.5, 5534, 6, 6, 0, "Lorokeem");
             player->SEND_GOSSIP_MENU(10516, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Blacksmithing
-            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");//20125,20124
+            player->SEND_POI(-1847, 5222, 6, 6, 0, "Kradu Grimblade and Zula Slagfury");
             player->SEND_GOSSIP_MENU(10517, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Cooking
-            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");//19185
+            player->SEND_POI(-2067.4, 5316.5, 6, 6, 0, "Jack Trapper");
             player->SEND_GOSSIP_MENU(10518, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Enchanting
-            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");//19252,19250,19249,19248
+            player->SEND_POI(-2263.5, 5563.5, 6, 6, 0, "High Enchanter Bardolan");
             player->SEND_GOSSIP_MENU(10519, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //First Aid
-            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");//19184
+            player->SEND_POI(-1591, 5265.5, 6, 6, 0, "Mildred Fletcher");
             player->SEND_GOSSIP_MENU(10520, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Jewelcrafting
-            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");//19063
+            player->SEND_POI(-1654, 5667.5, 6, 6, 0, "Hamanar");
             player->SEND_GOSSIP_MENU(10521, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Leatherworking
-            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");//19187
+            player->SEND_POI(-2060.5, 5256.5, 6, 6, 0, "Darmari");
             player->SEND_GOSSIP_MENU(10523, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Skinning
-            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");//19180
+            player->SEND_POI(-2048, 5300, 6, 6, 0, "Seymour");
             player->SEND_GOSSIP_MENU(10523, _Creature->GetGUID());
             break;
     }
@@ -2914,6 +2917,7 @@ bool GossipSelect_guard_shattrath_scryer(Player *player, Creature *_Creature, ui
     }
     return true;
 }
+
 /*******************************************************
  * guard_shattrath_scryer end
  *******************************************************/
@@ -2949,44 +2953,44 @@ void SendDefaultMenu_guard_silvermoon(Player *player, Creature *_Creature, uint3
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Auction house
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_AH_SILVERMOON_1 , GOSSIP_SENDER_SEC_AUCTIONHOUSE, GOSSIP_ACTION_INFO_DEF + 1);        
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_AH_SILVERMOON_1 , GOSSIP_SENDER_SEC_AUCTIONHOUSE, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_AH_SILVERMOON_2 , GOSSIP_SENDER_SEC_AUCTIONHOUSE, GOSSIP_ACTION_INFO_DEF + 2);
             player->SEND_GOSSIP_MENU(9317, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Bank
-            player->SEND_POI(9808.4, -7488.16, 6, 6, 0, "Silvermoon Bank");//16616
+            player->SEND_POI(9808.4, -7488.16, 6, 6, 0, "Silvermoon Bank");
             player->SEND_GOSSIP_MENU(9322, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Guild master
-            player->SEND_POI(9474.97, -7345.21, 6, 6, 0, "Tandrine");//16568
+            player->SEND_POI(9474.97, -7345.21, 6, 6, 0, "Tandrine");
             player->SEND_GOSSIP_MENU(9324, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Inn
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_INN_SILVERMOON_1 , GOSSIP_SENDER_SEC_INN, GOSSIP_ACTION_INFO_DEF + 1);        
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_INN_SILVERMOON_1 , GOSSIP_SENDER_SEC_INN, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_INN_SILVERMOON_2 , GOSSIP_SENDER_SEC_INN, GOSSIP_ACTION_INFO_DEF + 2);
             player->SEND_GOSSIP_MENU(9602, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Mailbox
-            player->SEND_POI(9658.33, -7492.17, 6, 6, 0, "Silvermoon Mailbox");//go 181980
+            player->SEND_POI(9658.33, -7492.17, 6, 6, 0, "Silvermoon Mailbox");
             player->SEND_GOSSIP_MENU(9326, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Stable master
-            player->SEND_POI(9904.95, -7404.31, 6, 6, 0, "Shalenn");//16656
+            player->SEND_POI(9904.95, -7404.31, 6, 6, 0, "Shalenn");
             player->SEND_GOSSIP_MENU(9327, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Weapon trainer
-            player->SEND_POI(9841.17, -7505.13, 6, 6, 0, "Ileda");//16621
+            player->SEND_POI(9841.17, -7505.13, 6, 6, 0, "Ileda");
             player->SEND_GOSSIP_MENU(9328, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Wind master
-            player->SEND_POI(9378.45, -7163.94, 6, 6, 0, "Silvermoon Wind Master");//16192
+            player->SEND_POI(9378.45, -7163.94, 6, 6, 0, "Silvermoon Wind Master");
             player->SEND_GOSSIP_MENU(10181, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Battlemaster
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ALTERACVALLEY   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 1);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ARATHIBASIN     , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 2);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_ARENA           , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 3);
-            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_EYEOFTHESTORM   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 4);        
+            player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_EYEOFTHESTORM   , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 4);
             player->ADD_GOSSIP_ITEM( 0, GOSSIP_TEXT_WARSONGULCH     , GOSSIP_SENDER_SEC_BATTLEINFO, GOSSIP_ACTION_INFO_DEF + 5);
             player->SEND_GOSSIP_MENU(9329, _Creature->GetGUID());
             break;
@@ -3052,23 +3056,23 @@ void SendBattleMasterMenu_guard_silvermoon(Player *player, Creature *_Creature, 
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //AV
-            player->SEND_POI(9850.49, -7572.26, 6, 6, 0, "Gurak");//16695
+            player->SEND_POI(9850.49, -7572.26, 6, 6, 0, "Gurak");
             player->SEND_GOSSIP_MENU(9329, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //AB
-            player->SEND_POI(9857.18, -7564.36, 6, 6, 0, "Karen Wentworth");//16694
+            player->SEND_POI(9857.18, -7564.36, 6, 6, 0, "Karen Wentworth");
             player->SEND_GOSSIP_MENU(9329,  _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //A
-            player->SEND_POI(9850.6, -7559.25, 6, 6, 0, "Bipp Glizzitor");//19923
+            player->SEND_POI(9850.6, -7559.25, 6, 6, 0, "Bipp Glizzitor");
             player->SEND_GOSSIP_MENU(9329, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //EOS
-            player->SEND_POI(9857.18, -7564.36, 6, 6, 0, "Karen Wentworth");//16694
+            player->SEND_POI(9857.18, -7564.36, 6, 6, 0, "Karen Wentworth");
             player->SEND_GOSSIP_MENU(9329, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //WSG
-            player->SEND_POI(9845.45, -7562.58, 6, 6, 0, "Krukk");//16696
+            player->SEND_POI(9845.45, -7562.58, 6, 6, 0, "Krukk");
             player->SEND_GOSSIP_MENU(9329, _Creature->GetGUID());
             break;
     }
@@ -3079,31 +3083,31 @@ void SendClassTrainerMenu_guard_silvermoon(Player *player, Creature *_Creature, 
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Druid
-            player->SEND_POI(9700.55, -7262.57, 6, 6, 0, "Harene Plainwalker");//16655
+            player->SEND_POI(9700.55, -7262.57, 6, 6, 0, "Harene Plainwalker");
             player->SEND_GOSSIP_MENU(9330, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Hunter
-            player->SEND_POI(9927.48, -7426.14, 6, 6, 0, "Zandine");//16674
+            player->SEND_POI(9927.48, -7426.14, 6, 6, 0, "Zandine");
             player->SEND_GOSSIP_MENU(9332, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Mage
-            player->SEND_POI(9995.07, -7118.17, 6, 6, 0, "Quithas");//16653
+            player->SEND_POI(9995.07, -7118.17, 6, 6, 0, "Quithas");
             player->SEND_GOSSIP_MENU(9333, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Paladin
-            player->SEND_POI(9850.22, -7516.93, 6, 6, 0, "Champion Bachi");//16681
+            player->SEND_POI(9850.22, -7516.93, 6, 6, 0, "Champion Bachi");
             player->SEND_GOSSIP_MENU(9334, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Priest
-            player->SEND_POI(9926.79, -7066.66, 6, 6, 0, "Belestra");//16660
+            player->SEND_POI(9926.79, -7066.66, 6, 6, 0, "Belestra");
             player->SEND_GOSSIP_MENU(9335, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //Rogue
-            player->SEND_POI(9739.88, -7374.33, 6, 6, 0, "Zelanis");//16684
+            player->SEND_POI(9739.88, -7374.33, 6, 6, 0, "Zelanis");
             player->SEND_GOSSIP_MENU(9336, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Warlock
-            player->SEND_POI(9787.57, -7284.63, 6, 6, 0, "Alamma");//16646
+            player->SEND_POI(9787.57, -7284.63, 6, 6, 0, "Alamma");
             player->SEND_GOSSIP_MENU(9337, _Creature->GetGUID());
             break;
     }
@@ -3114,55 +3118,55 @@ void SendProfTrainerMenu_guard_silvermoon(Player *player, Creature *_Creature, u
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:                    //Alchemy
-            player->SEND_POI(9998.09, -7214.36, 6, 6, 0, "Silvermoon Alchemy Trainer");//16641
+            player->SEND_POI(9998.09, -7214.36, 6, 6, 0, "Silvermoon Alchemy Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:                    //Blacksmithing
-            player->SEND_POI(9841.43, -7361.53, 6, 6, 0, "Silvermoon Blacksmithing Trainer");//16669
+            player->SEND_POI(9841.43, -7361.53, 6, 6, 0, "Silvermoon Blacksmithing Trainer");
             player->SEND_GOSSIP_MENU(9340, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:                    //Cooking
-            player->SEND_POI(9577.26, -7243.6, 6, 6, 0, "Silvermoon Cooking Trainer");//16676
+            player->SEND_POI(9577.26, -7243.6, 6, 6, 0, "Silvermoon Cooking Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:                    //Enchanting
-            player->SEND_POI(9962.57, -7246.18, 6, 6, 0, "Silvermoon Enchanting Trainer");//16633
+            player->SEND_POI(9962.57, -7246.18, 6, 6, 0, "Silvermoon Enchanting Trainer");
             player->SEND_GOSSIP_MENU(9341, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:                    //Engineering
-            player->SEND_POI(9820.18, -7329.56, 6, 6, 0, "Silvermoon Engineering Trainer");//16667
+            player->SEND_POI(9820.18, -7329.56, 6, 6, 0, "Silvermoon Engineering Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:                    //First Aid
-            player->SEND_POI(9579.8, -7343.71, 6, 6, 0, "Silvermoon First Aid Trainer");//16662
+            player->SEND_POI(9579.8, -7343.71, 6, 6, 0, "Silvermoon First Aid Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:                    //Fishing
-            player->SEND_POI(9602.73, -7328.3, 6, 6, 0, "Silvermoon Fishing Trainer");//16780
+            player->SEND_POI(9602.73, -7328.3, 6, 6, 0, "Silvermoon Fishing Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 8:                    //Jewelcrafting
-            player->SEND_POI(9553.54, -7506.43, 6, 6, 0, "Silvermoon Jewelcrafting Trainer");//16702
+            player->SEND_POI(9553.54, -7506.43, 6, 6, 0, "Silvermoon Jewelcrafting Trainer");
             player->SEND_GOSSIP_MENU(9346, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Herbalism
-            player->SEND_POI(10004.4, -7216.86, 6, 6, 0, "Silvermoon Herbalism Trainer");//16644 and 22023 :)
+            player->SEND_POI(10004.4, -7216.86, 6, 6, 0, "Silvermoon Herbalism Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 10:                   //Leatherworking
-            player->SEND_POI(9503.72, -7430.16, 6, 6, 0, "Silvermoon Leatherworking Trainer");//16688
+            player->SEND_POI(9503.72, -7430.16, 6, 6, 0, "Silvermoon Leatherworking Trainer");
             player->SEND_GOSSIP_MENU(9347, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 11:                   //Mining
-            player->SEND_POI(9805.1, -7355.56, 6, 6, 0, "Silvermoon Mining Trainer");//16663
+            player->SEND_POI(9805.1, -7355.56, 6, 6, 0, "Silvermoon Mining Trainer");
             player->SEND_GOSSIP_MENU(9348, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 12:                   //Skinning
-            player->SEND_POI(9513.37, -7429.4, 6, 6, 0, "Silvermoon Skinning Trainer");//16692
+            player->SEND_POI(9513.37, -7429.4, 6, 6, 0, "Silvermoon Skinning Trainer");
             player->SEND_GOSSIP_MENU(9316, _Creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 13:                   //Tailoring
-            player->SEND_POI(9750.55, -7095.28, 6, 6, 0, "Silvermoon Tailor");//16640
+            player->SEND_POI(9750.55, -7095.28, 6, 6, 0, "Silvermoon Tailor");
             player->SEND_GOSSIP_MENU(9350, _Creature->GetGUID());
             break;
     }
@@ -3293,6 +3297,7 @@ void SendDefaultMenu_guard_stormwind(Player *player, Creature *_Creature, uint32
             break;
     }
 }
+
 void SendBattleMasterMenu_guard_stormwind(Player *player, Creature *_Creature, uint32 action)
 {
     switch (action)
@@ -3311,6 +3316,7 @@ void SendBattleMasterMenu_guard_stormwind(Player *player, Creature *_Creature, u
             break;
     }
 }
+
 void SendClassTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, uint32 action)
 {
     switch (action)
@@ -3349,7 +3355,8 @@ void SendClassTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, u
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:                    //Shaman
             player->SEND_POI(-9033, 550, 6, 6, 0, "Valley Of Heroes");
-            player->SEND_GOSSIP_MENU(2593,_Creature->GetGUID());//incorrect id
+                                                            //incorrect id
+            player->SEND_GOSSIP_MENU(2593,_Creature->GetGUID());
             break;
     }
 }
@@ -3394,15 +3401,15 @@ void SendProfTrainerMenu_guard_stormwind(Player *player, Creature *_Creature, ui
             player->SEND_POI(-8726.0, 477.4, 6, 6, 0, "The Protective Hide");
             player->SEND_GOSSIP_MENU(925,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 10:                    //Mining
+        case GOSSIP_ACTION_INFO_DEF + 10:                   //Mining
             player->SEND_POI(-8434.0, 692.8, 6, 6, 0, "Gelman Stonehand");
             player->SEND_GOSSIP_MENU(927,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 11:                    //Skinning
+        case GOSSIP_ACTION_INFO_DEF + 11:                   //Skinning
             player->SEND_POI(-8716.0, 469.4, 6, 6, 0, "The Protective Hide");
             player->SEND_GOSSIP_MENU(928,_Creature->GetGUID());
             break;
-        case GOSSIP_ACTION_INFO_DEF + 12:                    //Tailoring
+        case GOSSIP_ACTION_INFO_DEF + 12:                   //Tailoring
             player->SEND_POI(-8938.0, 800.7, 6, 6, 0, "Duncan`s Textiles");
             player->SEND_GOSSIP_MENU(929,_Creature->GetGUID());
             break;
@@ -3421,7 +3428,7 @@ bool GossipSelect_guard_stormwind(Player *player, Creature *_Creature, uint32 se
     return true;
 }
 
-bool ReceiveEmote_guard_stormwind(Player *player, Creature *_Creature, uint32 emote) 
+bool ReceiveEmote_guard_stormwind(Player *player, Creature *_Creature, uint32 emote)
 {
     if( player->GetTeam() == ALLIANCE )
         DoReplyToTextEmote(_Creature,emote);

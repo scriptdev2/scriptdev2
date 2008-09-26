@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Item_Scripts
@@ -70,7 +70,7 @@ bool ItemUse_item_area_52_special(Player *player, Item* _Item, SpellCastTargets 
 
 bool ItemUse_item_attuned_crystal_cores(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 24972 && targets.getUnitTarget()->isDead() )
         return false;
 
@@ -84,7 +84,7 @@ bool ItemUse_item_attuned_crystal_cores(Player *player, Item* _Item, SpellCastTa
 
 bool ItemUse_item_blackwhelp_net(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 21387 )
         return false;
 
@@ -101,29 +101,29 @@ bool ItemUse_item_blackwhelp_net(Player *player, Item* _Item, SpellCastTargets c
 bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     //if( targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT &&
-        //targets.getGOTarget()->GetGOInfo()->type == GAMEOBJECT_TYPE_SPELL_FOCUS && targets.getGOTarget()->GetEntry() == 181616 )
+    //targets.getGOTarget()->GetGOInfo()->type == GAMEOBJECT_TYPE_SPELL_FOCUS && targets.getGOTarget()->GetEntry() == 181616 )
     //{
-        if( player->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE )
+    if( player->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE )
+    {
+        if( rand()%100 < 35 )
         {
-            if( rand()%100 < 35 )
-            {
-                Creature *Murloc = player->SummonCreature(17102,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
-                if( Murloc )
-                    Murloc->AI()->AttackStart(player);
-            }
-            else
-            {
-                ItemPosCountVec dest;
-                uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
-                if( msg == EQUIP_ERR_OK )
-                {
-                    Item* item = player->StoreNewItem(dest,23614,true);
-                    if( item )
-                        player->SendNewItem(item,1,false,true);
-                }else
-                    player->SendEquipError(msg,NULL,NULL);
-            }
+            Creature *Murloc = player->SummonCreature(17102,player->GetPositionX() ,player->GetPositionY()+20, player->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
+            if( Murloc )
+                Murloc->AI()->AttackStart(player);
         }
+        else
+        {
+            ItemPosCountVec dest;
+            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
+            if( msg == EQUIP_ERR_OK )
+            {
+                Item* item = player->StoreNewItem(dest,23614,true);
+                if( item )
+                    player->SendNewItem(item,1,false,true);
+            }else
+            player->SendEquipError(msg,NULL,NULL);
+        }
+    }
     //}
     return false;
 }
@@ -134,7 +134,7 @@ bool ItemUse_item_draenei_fishing_net(Player *player, Item* _Item, SpellCastTarg
 
 bool ItemUse_item_disciplinary_rod(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         (targets.getUnitTarget()->GetEntry() == 15941 || targets.getUnitTarget()->GetEntry() == 15945) )
         return false;
 
@@ -185,7 +185,7 @@ bool ItemUse_item_flying_machine(Player *player, Item* _Item, SpellCastTargets c
 
 bool ItemUse_item_gor_dreks_ointment(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 20748 && !targets.getUnitTarget()->HasAura(32578,0) )
         return false;
 
@@ -210,21 +210,31 @@ bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets c
     {
         switch(itemSpell)
         {
-            case 11885: cEntry =  7584; break;              //Wandering Forest Walker
-            case 11886: cEntry =  2927;                     //Owlbeasts
-                        cEntry2 = 2928;
-                        cEntry3 = 2929;
-                        cEntry4 = 7808; break;
-            case 11887: cEntry =  5300;                     //Freyfeather Hippogryphs
-                        cEntry2 = 5304;
-                        cEntry3 = 5305;
-                        cEntry4 = 5306; break;
-            case 11888: cEntry =  5276;                     //Sprite Dragon Sprite Darters
-                        cEntry2 = 5278; break;
-            case 11889: cEntry =  5357;                     //Zapped Land Walker Land Walker Zapped Cliff Giant Cliff Giant
-                        cEntry2 = 5358;
-                        cEntry3 = 14640;
-                        cEntry4 = 14604; break;
+            case 11885:                                     //Wandering Forest Walker
+                cEntry =  7584;
+                break;
+            case 11886:                                     //Owlbeasts
+                cEntry =  2927;
+                cEntry2 = 2928;
+                cEntry3 = 2929;
+                cEntry4 = 7808;
+                break;
+            case 11887:                                     //Freyfeather Hippogryphs
+                cEntry =  5300;
+                cEntry2 = 5304;
+                cEntry3 = 5305;
+                cEntry4 = 5306;
+                break;
+            case 11888:                                     //Sprite Dragon Sprite Darters
+                cEntry =  5276;
+                cEntry2 = 5278;
+                break;
+            case 11889:                                     //Zapped Land Walker Land Walker Zapped Cliff Giant Cliff Giant
+                cEntry =  5357;
+                cEntry2 = 5358;
+                cEntry3 = 14640;
+                cEntry4 = 14604;
+                break;
         }
         if( uTarget && uTarget->GetTypeId()==TYPEID_UNIT && uTarget->isDead() &&
             (uTarget->GetEntry()==cEntry || uTarget->GetEntry()==cEntry2 || uTarget->GetEntry()==cEntry3 || uTarget->GetEntry()==cEntry4) )
@@ -249,7 +259,7 @@ bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets c
 
 bool ItemUse_item_razorthorn_flayer_gland(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 24922 )
         return false;
 
@@ -289,7 +299,7 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
             case 30102: cEntry = 15652; break;              //Elder Springpaw
             case 30105: cEntry = 16353; break;              //Mistbat
         }
-        if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+        if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
             targets.getUnitTarget()->GetEntry() == cEntry )
             return false;
     }
@@ -309,7 +319,7 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
 
 bool ItemUse_item_protovoltaic_magneto_collector(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 21729 )
         return false;
 
@@ -324,7 +334,7 @@ bool ItemUse_item_protovoltaic_magneto_collector(Player *player, Item* _Item, Sp
 bool ItemUse_item_soul_cannon(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     // allow use
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 22357 )
         return false;
 
@@ -339,7 +349,7 @@ bool ItemUse_item_soul_cannon(Player *player, Item* _Item, SpellCastTargets cons
 
 bool ItemUse_item_sparrowhawk_net(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 22979 )
         return false;
 
@@ -373,7 +383,7 @@ bool ItemUse_item_voodoo_charm(Player *player, Item* _Item, SpellCastTargets con
 bool ItemUse_item_vorenthals_presence(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     // allow use
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 20132 )
         return false;
 
@@ -391,10 +401,11 @@ bool ItemUse_item_yehkinyas_bramble(Player *player, Item* _Item, SpellCastTarget
     if (player->GetQuestStatus(3520) == QUEST_STATUS_INCOMPLETE)
     {
         Unit * unit_target = targets.getUnitTarget();
-        if( unit_target && 
+        if( unit_target &&
             unit_target->GetTypeId()==TYPEID_UNIT &&
             unit_target->isDead() &&
-            (unit_target->GetEntry()==5307 || unit_target->GetEntry()==5308) )// cast only on corpse 5307 or 5308
+                                                            // cast only on corpse 5307 or 5308
+            (unit_target->GetEntry()==5307 || unit_target->GetEntry()==5308) )
         {
             ((Creature*)unit_target)->RemoveCorpse();       // remove corpse for cancelling second use
             return false;                                   // all ok
@@ -414,7 +425,7 @@ bool ItemUse_item_yehkinyas_bramble(Player *player, Item* _Item, SpellCastTarget
 
 bool ItemUse_item_zezzak_shard(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
-    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT && 
+    if( targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId()==TYPEID_UNIT &&
         targets.getUnitTarget()->GetEntry() == 19440 )
         return false;
 

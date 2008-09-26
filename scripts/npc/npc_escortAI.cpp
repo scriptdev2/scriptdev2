@@ -1,11 +1,11 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 /* ScriptData
 SDName: Npc_EscortAI
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Npc
 EndScriptData */
 
@@ -120,7 +120,7 @@ void npc_escortAI::EnterEvadeMode()
         m_creature->GetMotionMaster()->MovementExpired();
         m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z);
 
-    }else 
+    }else
     {
         m_creature->GetMotionMaster()->MovementExpired();
         m_creature->GetMotionMaster()->MoveTargetedHome();
@@ -134,79 +134,79 @@ void npc_escortAI::UpdateAI(const uint32 diff)
     //Waypoint Updating
     if (IsBeingEscorted && !InCombat && WaitTimer && !Returning)
         if (WaitTimer <= diff)
+    {
+        if (ReconnectWP)
         {
-            if (ReconnectWP)
-            {
-                //Correct movement speed
-                if (Run)
-                    m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            //Correct movement speed
+            if (Run)
+                m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
-                //Continue with waypoints
-                if( !IsOnHold )
-                {
-                    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
-                    debug_log("SD2: EscortAI Reconnect WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-                    WaitTimer = 0;
-                    ReconnectWP = false;
-                    return;
-                }
-            }
-
-            //End of the line, Despawn self then immediatly respawn
-            if (CurrentWP == WaypointList.end())
-            {
-                debug_log("SD2: EscortAI reached end of waypoints");
-
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->SetHealth(0);
-                m_creature->CombatStop();
-                m_creature->DeleteThreatList();
-                m_creature->Respawn();
-                m_creature->GetMotionMaster()->Clear(true);
-
-                //Re-Enable gossip
-                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-
-                IsBeingEscorted = false;
-                WaitTimer = 0;
-                return;
-            }
-
+            //Continue with waypoints
             if( !IsOnHold )
             {
                 m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
-                debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+                debug_log("SD2: EscortAI Reconnect WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
                 WaitTimer = 0;
+                ReconnectWP = false;
+                return;
             }
-        }else WaitTimer -= diff;
+        }
+
+        //End of the line, Despawn self then immediatly respawn
+        if (CurrentWP == WaypointList.end())
+        {
+            debug_log("SD2: EscortAI reached end of waypoints");
+
+            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetHealth(0);
+            m_creature->CombatStop();
+            m_creature->DeleteThreatList();
+            m_creature->Respawn();
+            m_creature->GetMotionMaster()->Clear(true);
+
+            //Re-Enable gossip
+            m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+            IsBeingEscorted = false;
+            WaitTimer = 0;
+            return;
+        }
+
+        if( !IsOnHold )
+        {
+            m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+            debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+            WaitTimer = 0;
+        }
+    }else WaitTimer -= diff;
 
     //Check if player is within range
     if (IsBeingEscorted && !InCombat && PlayerGUID)
         if (PlayerTimer < diff)
+    {
+        Unit* p = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!p || m_creature->GetDistance(p) > MAX_PLAYER_DISTANCE)
         {
-            Unit* p = Unit::GetUnit(*m_creature, PlayerGUID);
-            
-            if (!p || m_creature->GetDistance(p) > MAX_PLAYER_DISTANCE)
-            {
-                JustDied(m_creature);
-                IsBeingEscorted = false;
-                
-                debug_log("SD2: EscortAI Evaded back to spawn point because player was to far away or not found");
+            JustDied(m_creature);
+            IsBeingEscorted = false;
 
-                m_creature->setDeathState(JUST_DIED);
-                m_creature->SetHealth(0);
-                m_creature->CombatStop();
-                m_creature->DeleteThreatList();
-                m_creature->Respawn();
-                m_creature->GetMotionMaster()->Clear(true);
+            debug_log("SD2: EscortAI Evaded back to spawn point because player was to far away or not found");
 
-                //Re-Enable gossip
-                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-            }
+            m_creature->setDeathState(JUST_DIED);
+            m_creature->SetHealth(0);
+            m_creature->CombatStop();
+            m_creature->DeleteThreatList();
+            m_creature->Respawn();
+            m_creature->GetMotionMaster()->Clear(true);
 
-            PlayerTimer = 1000;
-        }else PlayerTimer -= diff;
+            //Re-Enable gossip
+            m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        }
+
+        PlayerTimer = 1000;
+    }else PlayerTimer -= diff;
 
     //Check if we have a current target
     if( m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
@@ -290,7 +290,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     if (Run)
         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
     else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-    
+
     //Start WP
     m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
     debug_log("SD2: EscortAI Next WP is: %d, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);

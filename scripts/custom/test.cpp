@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Test
@@ -26,93 +26,93 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL npc_testAI : public npc_escortAI
 {
-public:
+    public:
 
-    // CreatureAI functions
-    npc_testAI(Creature *c) : npc_escortAI(c) {Reset();}
+        // CreatureAI functions
+        npc_testAI(Creature *c) : npc_escortAI(c) {Reset();}
 
-    uint32 DeathCoilTimer;
-    uint32 ChatTimer;
+        uint32 DeathCoilTimer;
+        uint32 ChatTimer;
 
-    // Pure Virtual Functions
-    void WaypointReached(uint32 i)
-    {
-        switch (i)
+        // Pure Virtual Functions
+        void WaypointReached(uint32 i)
         {
-        case 1:
-            m_creature->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, 0);
-            break;
-
-        case 3:
+            switch (i)
             {
-                m_creature->Say("Wild Felboar attack!", LANG_UNIVERSAL, 0);
-                Creature* temp = m_creature->SummonCreature(21878, m_creature->GetPositionX()+5, m_creature->GetPositionY()+7, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
+                case 1:
+                    m_creature->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, 0);
+                    break;
 
-                temp->AI()->AttackStart(m_creature);
-            }
-            break;
-
-        case 4:
-            {
-                m_creature->Say("Time for me to go! See ya around $N!", LANG_UNIVERSAL, PlayerGUID);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
-
-                Unit* temp = Unit::GetUnit(*m_creature, PlayerGUID);
-                if (temp)
+                case 3:
                 {
-                    temp->MonsterSay("Bye Bye!", LANG_UNIVERSAL, 0);
-                    temp->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                    m_creature->Say("Wild Felboar attack!", LANG_UNIVERSAL, 0);
+                    Creature* temp = m_creature->SummonCreature(21878, m_creature->GetPositionX()+5, m_creature->GetPositionY()+7, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
+
+                    temp->AI()->AttackStart(m_creature);
                 }
+                break;
+
+                case 4:
+                {
+                    m_creature->Say("Time for me to go! See ya around $N!", LANG_UNIVERSAL, PlayerGUID);
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+
+                    Unit* temp = Unit::GetUnit(*m_creature, PlayerGUID);
+                    if (temp)
+                    {
+                        temp->MonsterSay("Bye Bye!", LANG_UNIVERSAL, 0);
+                        temp->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                    }
+                }
+                break;
             }
-            break;
         }
-    }
 
-    void Aggro(Unit*)
-    {
-        if (IsBeingEscorted)
-            m_creature->Say("Help $N! I'm under attack!", LANG_UNIVERSAL, PlayerGUID);
-        else m_creature->Say("Die scum!", LANG_UNIVERSAL, 0);
-    }
-
-    void Reset()
-    {
-        DeathCoilTimer = 4000;
-        ChatTimer = 4000;
-    }
-
-    void JustDied(Unit* killer)
-    {
-        if (IsBeingEscorted)
+        void Aggro(Unit*)
         {
-            //killer = m_creature when player got to far from creature
-            if (killer == m_creature)
-                m_creature->Whisper(PlayerGUID, "How dare you leave me like that! I hate you! =*(");
-            else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
-        }
-        else m_creature->Say("ugh...", LANG_UNIVERSAL, 0);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Must update npc_escortAI
-        npc_escortAI::UpdateAI(diff);
-
-        //Combat check
-        if (InCombat && m_creature->getVictim())
-        {
-            if (DeathCoilTimer < diff)
-            {
-                m_creature->Say("Taste death!", LANG_UNIVERSAL, 0);
-                m_creature->CastSpell(m_creature->getVictim(), 33130, false);
-
-                DeathCoilTimer = 4000;
-            }else DeathCoilTimer -= diff;
-        }else
-        {
-            //Out of combat but being escorted
             if (IsBeingEscorted)
-                if (ChatTimer < diff)
+                m_creature->Say("Help $N! I'm under attack!", LANG_UNIVERSAL, PlayerGUID);
+            else m_creature->Say("Die scum!", LANG_UNIVERSAL, 0);
+        }
+
+        void Reset()
+        {
+            DeathCoilTimer = 4000;
+            ChatTimer = 4000;
+        }
+
+        void JustDied(Unit* killer)
+        {
+            if (IsBeingEscorted)
+            {
+                //killer = m_creature when player got to far from creature
+                if (killer == m_creature)
+                    m_creature->Whisper(PlayerGUID, "How dare you leave me like that! I hate you! =*(");
+                else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
+            }
+            else m_creature->Say("ugh...", LANG_UNIVERSAL, 0);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Must update npc_escortAI
+            npc_escortAI::UpdateAI(diff);
+
+            //Combat check
+            if (InCombat && m_creature->getVictim())
+            {
+                if (DeathCoilTimer < diff)
+                {
+                    m_creature->Say("Taste death!", LANG_UNIVERSAL, 0);
+                    m_creature->CastSpell(m_creature->getVictim(), 33130, false);
+
+                    DeathCoilTimer = 4000;
+                }else DeathCoilTimer -= diff;
+            }else
+            {
+                //Out of combat but being escorted
+                if (IsBeingEscorted)
+                    if (ChatTimer < diff)
                 {
                     if (m_creature->HasAura(3593, 0))
                     {
@@ -126,8 +126,8 @@ public:
 
                     ChatTimer = 12000;
                 }else ChatTimer -= diff;
+            }
         }
-    }
 };
 
 CreatureAI* GetAI_test(Creature *_Creature)
@@ -142,6 +142,7 @@ CreatureAI* GetAI_test(Creature *_Creature)
 
     return (CreatureAI*)testAI;
 }
+
 bool GossipHello_npc_test(Player *player, Creature *_Creature)
 {
     player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
@@ -153,11 +154,10 @@ bool GossipHello_npc_test(Player *player, Creature *_Creature)
 
     player->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, "Click to Test Escort(NoAttack, Defend, Walk)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3,"",0);
 
-
     _Creature->sendPreparedGossip( player );
     return true;
 }
- 
+
 bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
@@ -165,7 +165,7 @@ bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, u
         player->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(_Creature->AI()))->Start(true, true, true, player->GetGUID());
 
-        return true;    // prevent mangos core handling
+        return true;                                        // prevent mangos core handling
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF+2)
@@ -173,7 +173,7 @@ bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, u
         player->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(_Creature->AI()))->Start(false, false, false, player->GetGUID());
 
-        return true;    // prevent mangos core handling
+        return true;                                        // prevent mangos core handling
     }
 
     if (action == GOSSIP_ACTION_INFO_DEF+3)
@@ -181,7 +181,7 @@ bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, u
         player->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(_Creature->AI()))->Start(false, true, false, player->GetGUID());
 
-        return true;    // prevent mangos core handling
+        return true;                                        // prevent mangos core handling
     }
     return false;
 }

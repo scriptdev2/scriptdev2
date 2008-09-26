@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 #ifndef SC_GUARDAI_H
 #define SC_GUARDAI_H
@@ -11,8 +11,8 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 {
     guardAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 GlobalCooldown;      //This variable acts like the global cooldown that players have (1.5 seconds)
-    uint32 BuffTimer;           //This variable keeps track of buffs
+    uint32 GlobalCooldown;                                  //This variable acts like the global cooldown that players have (1.5 seconds)
+    uint32 BuffTimer;                                       //This variable keeps track of buffs
 
     void Reset();
 
@@ -22,5 +22,4 @@ struct MANGOS_DLL_DECL guardAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff);
 };
-
 #endif

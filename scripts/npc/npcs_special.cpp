@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Npcs_Special
@@ -51,15 +51,15 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
     npc_chicken_cluckAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 ResetFlagTimer;
-    
-    void Reset() 
+
+    void Reset()
     {
         ResetFlagTimer = 120000;
 
         m_creature->setFaction(FACTION_CHICKEN);
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
-    
+
     void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
@@ -75,7 +75,7 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         if(m_creature->SelectHostilTarget() && m_creature->getVictim())
             DoMeleeAttackIfReady();
     }
-}; 
+};
 
 CreatureAI* GetAI_npc_chicken_cluck(Creature *_Creature)
 {
@@ -98,15 +98,15 @@ bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32
                 }
             }
         } else
-            _Creature->MonsterTextEmote(EMOTE_H_HELLO,0);
+        _Creature->MonsterTextEmote(EMOTE_H_HELLO,0);
     }
     if( emote == TEXTEMOTE_CHEER && player->GetTeam() == ALLIANCE )
         if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE )
-        {
-            _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-            _Creature->setFaction(FACTION_FRIENDLY);
-            _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
-        }
+    {
+        _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+        _Creature->setFaction(FACTION_FRIENDLY);
+        _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
+    }
 
     return true;
 }
@@ -135,6 +135,7 @@ bool ReceiveEmote_npc_dancing_flames( Player *player, Creature *_Creature, uint3
 {
     if( emote == TEXTEMOTE_DANCE )
         _Creature->CastSpell(player,47057,false);
+
     return true;
 }
 
@@ -155,13 +156,27 @@ struct Location
 
 static Location AllianceCoords[]=
 {
-    {-3757.38, -4533.05, 14.16, 3.62}, // Top-far-right bunk as seen from entrance
-    {-3754.36, -4539.13, 14.16, 5.13}, // Top-far-left bunk
-    {-3749.54, -4540.25, 14.28, 3.34}, // Far-right bunk
-    {-3742.10, -4536.85, 14.28, 3.64}, // Right bunk near entrance
-    {-3755.89, -4529.07, 14.05, 0.57}, // Far-left bunk
-    {-3749.51, -4527.08, 14.07, 5.26}, // Mid-left bunk
-    {-3746.37, -4525.35, 14.16, 5.22}, // Left bunk near entrance
+    {                                                       // Top-far-right bunk as seen from entrance
+        -3757.38, -4533.05, 14.16, 3.62
+    },
+    {                                                       // Top-far-left bunk
+        -3754.36, -4539.13, 14.16, 5.13
+    },
+    {                                                       // Far-right bunk
+        -3749.54, -4540.25, 14.28, 3.34
+    },
+    {                                                       // Right bunk near entrance
+        -3742.10, -4536.85, 14.28, 3.64
+    },
+    {                                                       // Far-left bunk
+        -3755.89, -4529.07, 14.05, 0.57
+    },
+    {                                                       // Mid-left bunk
+        -3749.51, -4527.08, 14.07, 5.26
+    },
+    {                                                       // Left bunk near entrance
+        -3746.37, -4525.35, 14.16, 5.22
+    },
 };
 
 #define ALLIANCE_COORDS     7
@@ -175,12 +190,24 @@ static Location AllianceCoords[]=
 
 static Location HordeCoords[]=
 {
-    {-1013.75, -3492.59, 62.62, 4.34}, // Left, Behind
-    {-1017.72, -3490.92, 62.62, 4.34}, // Right, Behind
-    {-1015.77, -3497.15, 62.82, 4.34}, // Left, Mid
-    {-1019.51, -3495.49, 62.82, 4.34}, // Right, Mid
-    {-1017.25, -3500.85, 62.98, 4.34}, // Left, front
-    {-1020.95, -3499.21, 62.98, 4.34}  // Right, Front
+    {                                                       // Left, Behind
+        -1013.75, -3492.59, 62.62, 4.34
+    },
+    {                                                       // Right, Behind
+        -1017.72, -3490.92, 62.62, 4.34
+    },
+    {                                                       // Left, Mid
+        -1015.77, -3497.15, 62.82, 4.34
+    },
+    {                                                       // Right, Mid
+        -1019.51, -3495.49, 62.82, 4.34
+    },
+    {                                                       // Left, front
+        -1017.25, -3500.85, 62.98, 4.34
+    },
+    {                                                       // Right, Front
+        -1020.95, -3499.21, 62.98, 4.34
+    }
 };
 
 #define HORDE_COORDS        6
@@ -190,18 +217,18 @@ static Location HordeCoords[]=
 #define H_RUNTOY -3508.48
 #define H_RUNTOZ 62.96
 
-const uint32 AllianceSoldierId[3] = 
+const uint32 AllianceSoldierId[3] =
 {
-    12938, // 12938 Injured Alliance Soldier
-    12936, // 12936 Badly injured Alliance Soldier
-    12937  // 12937 Critically injured Alliance Soldier
+    12938,                                                  // 12938 Injured Alliance Soldier
+    12936,                                                  // 12936 Badly injured Alliance Soldier
+    12937                                                   // 12937 Critically injured Alliance Soldier
 };
 
-const uint32 HordeSoldierId[3] = 
+const uint32 HordeSoldierId[3] =
 {
-    12923, //12923 Injured Soldier
-    12924, //12924 Badly injured Soldier
-    12925  //12925 Critically injured Soldier
+    12923,                                                  //12923 Injured Soldier
+    12924,                                                  //12924 Badly injured Soldier
+    12925                                                   //12925 Critically injured Soldier
 };
 
 /*######
@@ -251,26 +278,28 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
         Doctorguid = 0;
 
         Coord = NULL;
-
-        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);     //no select
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);             //no regen health
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_DEAD);      //to make them lay with face down
+                                                            //no select
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                                                            //no regen health
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+                                                            //to make them lay with face down
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_DEAD);
 
         uint32 mobId = m_creature->GetEntry();
 
         switch (mobId)
-        {
+        {                                                   //lower max health
             case 12923:
-            case 12938:                                                        //Injured Soldier
-                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.75)); //lower max health
+            case 12938:                                     //Injured Soldier
+                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.75));
                 break;
             case 12924:
-            case 12936:                                                         //Badly injured Soldier
-                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.50));  //lower max health
+            case 12936:                                     //Badly injured Soldier
+                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.50));
                 break;
             case 12925:
-            case 12937:                                                         //Critically injured Soldier
-                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.25));  //lower max health
+            case 12937:                                     //Critically injured Soldier
+                m_creature->SetHealth(uint32(m_creature->GetMaxHealth()*.25));
                 break;
         }
     }
@@ -290,10 +319,12 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
                         ((npc_doctorAI*)Doctor->AI())->PatientSaved(m_creature, ((Player*)caster), Coord);
                 }
             }
-
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);    //make not selectable
-            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);      //regen health
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);  //stand up
+                                                            //make not selectable
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                                                            //regen health
+            m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+                                                            //stand up
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
             DoSay(SAY_DOC1,LANG_UNIVERSAL,NULL);
 
             uint32 mobId = m_creature->GetEntry();
@@ -318,8 +349,8 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         if (m_creature->isAlive() && m_creature->GetHealth() > 6)
-        {
-            m_creature->SetHealth(uint32(m_creature->GetHealth()-5) );          //lower HP on every world tick makes it a useful counter, not officlone though
+        {                                                   //lower HP on every world tick makes it a useful counter, not officlone though
+            m_creature->SetHealth(uint32(m_creature->GetHealth()-5) );
         }
 
         if (m_creature->isAlive() && m_creature->GetHealth() <= 6)
@@ -411,8 +442,8 @@ void npc_doctorAI::PatientSaved(Creature* soldier, Player* player, Location* Poi
                     for(itr = Patients.begin(); itr != Patients.end(); ++itr)
                     {
                         Creature* Patient = ((Creature*)Unit::GetUnit((*m_creature), *itr));
-                        if(Patient)
-                            Patient->setDeathState(JUST_DIED); // Unsummon
+                        if( Patient )
+                            Patient->setDeathState(JUST_DIED);
                     }
                 }
 
@@ -440,40 +471,40 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
 
     if(Event)
         if(SummonPatient_Timer < diff)
+    {
+        Creature* Patient = NULL;
+        Location* Point = NULL;
+
+        if(Coordinates.empty())
+            return;
+
+        std::vector<Location*>::iterator itr = Coordinates.begin()+rand()%Coordinates.size();
+        uint32 patientEntry = 0;
+
+        switch(m_creature->GetEntry())
         {
-            Creature* Patient = NULL;
-            Location* Point = NULL;
-
-            if(Coordinates.empty())
+            case DOCTOR_ALLIANCE: patientEntry = AllianceSoldierId[rand()%3]; break;
+            case DOCTOR_HORDE:    patientEntry = HordeSoldierId[rand()%3]; break;
+            default:
+                error_log("SD2: Invalid entry for Triage doctor. Please check your database");
                 return;
+        }
 
-            std::vector<Location*>::iterator itr = Coordinates.begin()+rand()%Coordinates.size();
-            uint32 patientEntry = 0;
+        Point = *itr;
 
-            switch(m_creature->GetEntry())
-            {
-                case DOCTOR_ALLIANCE: patientEntry = AllianceSoldierId[rand()%3]; break;
-                case DOCTOR_HORDE:    patientEntry = HordeSoldierId[rand()%3]; break;
-                default: 
-                    error_log("SD2: Invalid entry for Triage doctor. Please check your database");
-                    return;
-            }
+        Patient = m_creature->SummonCreature(patientEntry, Point->x, Point->y, Point->z, Point->o, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
-            Point = *itr;
-
-            Patient = m_creature->SummonCreature(patientEntry, Point->x, Point->y, Point->z, Point->o, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-            
-            if(Patient)
-            {
-                Patients.push_back(Patient->GetGUID());
-                ((npc_injured_patientAI*)Patient->AI())->Doctorguid = m_creature->GetGUID();
-                if(Point)
-                    ((npc_injured_patientAI*)Patient->AI())->Coord = Point;
-                Coordinates.erase(itr);
-            }
-            SummonPatient_Timer = 10000;
-            SummonPatientCount++;
-        }else SummonPatient_Timer -= diff;
+        if(Patient)
+        {
+            Patients.push_back(Patient->GetGUID());
+            ((npc_injured_patientAI*)Patient->AI())->Doctorguid = m_creature->GetGUID();
+            if(Point)
+                ((npc_injured_patientAI*)Patient->AI())->Coord = Point;
+            Coordinates.erase(itr);
+        }
+        SummonPatient_Timer = 10000;
+        SummonPatientCount++;
+    }else SummonPatient_Timer -= diff;
 }
 
 bool QuestAccept_npc_doctor(Player *player, Creature *creature, Quest const *quest )
@@ -483,6 +514,7 @@ bool QuestAccept_npc_doctor(Player *player, Creature *creature, Quest const *que
 
     return true;
 }
+
 CreatureAI* GetAI_npc_doctor(Creature *_Creature)
 {
     return new npc_doctorAI (_Creature);
@@ -611,6 +643,7 @@ bool GossipSelect_npc_mount_vendor(Player *player, Creature *_Creature, uint32 s
 {
     if (action == GOSSIP_ACTION_TRADE)
         player->SEND_VENDORLIST( _Creature->GetGUID() );
+
     return true;
 }
 
@@ -677,13 +710,13 @@ bool GossipHello_npc_sayge(Player *player, Creature *_Creature)
     if(_Creature->isQuestGiver())
         player->PrepareQuestMenu( _Creature->GetGUID() );
 
-    if( player->HasSpellCooldown(SPELL_INT) || 
-        player->HasSpellCooldown(SPELL_ARM) || 
-        player->HasSpellCooldown(SPELL_DMG) || 
-        player->HasSpellCooldown(SPELL_RES) || 
-        player->HasSpellCooldown(SPELL_STR) || 
-        player->HasSpellCooldown(SPELL_AGI) || 
-        player->HasSpellCooldown(SPELL_STM) || 
+    if( player->HasSpellCooldown(SPELL_INT) ||
+        player->HasSpellCooldown(SPELL_ARM) ||
+        player->HasSpellCooldown(SPELL_DMG) ||
+        player->HasSpellCooldown(SPELL_RES) ||
+        player->HasSpellCooldown(SPELL_STR) ||
+        player->HasSpellCooldown(SPELL_AGI) ||
+        player->HasSpellCooldown(SPELL_STM) ||
         player->HasSpellCooldown(SPELL_SPI) )
         player->SEND_GOSSIP_MENU(7393, _Creature->GetGUID());
     else
@@ -699,51 +732,51 @@ void SendAction_npc_sayge(Player *player, Creature *_Creature, uint32 action)
 {
     switch(action)
     {
-    case GOSSIP_ACTION_INFO_DEF+1:
-        player->ADD_GOSSIP_ITEM(0, "Slay the Man",                      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        player->ADD_GOSSIP_ITEM(0, "Turn him over to liege",            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-        player->ADD_GOSSIP_ITEM(0, "Confiscate the corn",               GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-        player->ADD_GOSSIP_ITEM(0, "Let him go and have the corn",      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(7340, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        player->ADD_GOSSIP_ITEM(0, "Execute your friend painfully",     GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Execute your friend painlessly",    GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Let your friend go",                GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
-        player->SEND_GOSSIP_MENU(7341, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+3:
-        player->ADD_GOSSIP_ITEM(0, "Confront the diplomat",             GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Show not so quiet defiance",        GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Remain quiet",                      GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
-        player->SEND_GOSSIP_MENU(7361, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+4:
-        player->ADD_GOSSIP_ITEM(0, "Speak against your brother openly", GOSSIP_SENDER_MAIN+6, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Help your brother in",              GOSSIP_SENDER_MAIN+7, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Keep your brother out without letting him know", GOSSIP_SENDER_MAIN+8, GOSSIP_ACTION_INFO_DEF);
-        player->SEND_GOSSIP_MENU(7362, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+5:
-        player->ADD_GOSSIP_ITEM(0, "Take credit, keep gold",            GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Take credit, share the gold",       GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
-        player->ADD_GOSSIP_ITEM(0, "Let the knight take credit",        GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
-        player->SEND_GOSSIP_MENU(7363, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF:
-        player->ADD_GOSSIP_ITEM(0, "Thanks",                            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-        player->SEND_GOSSIP_MENU(7364, _Creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+6:
-        _Creature->CastSpell(player, SPELL_FORTUNE, false);
-        player->SEND_GOSSIP_MENU(7365, _Creature->GetGUID());
-        break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM(0, "Slay the Man",                      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->ADD_GOSSIP_ITEM(0, "Turn him over to liege",            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->ADD_GOSSIP_ITEM(0, "Confiscate the corn",               GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->ADD_GOSSIP_ITEM(0, "Let him go and have the corn",      GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(7340, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM(0, "Execute your friend painfully",     GOSSIP_SENDER_MAIN+1, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Execute your friend painlessly",    GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Let your friend go",                GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
+            player->SEND_GOSSIP_MENU(7341, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM(0, "Confront the diplomat",             GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Show not so quiet defiance",        GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Remain quiet",                      GOSSIP_SENDER_MAIN+2, GOSSIP_ACTION_INFO_DEF);
+            player->SEND_GOSSIP_MENU(7361, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM(0, "Speak against your brother openly", GOSSIP_SENDER_MAIN+6, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Help your brother in",              GOSSIP_SENDER_MAIN+7, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Keep your brother out without letting him know", GOSSIP_SENDER_MAIN+8, GOSSIP_ACTION_INFO_DEF);
+            player->SEND_GOSSIP_MENU(7362, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->ADD_GOSSIP_ITEM(0, "Take credit, keep gold",            GOSSIP_SENDER_MAIN+5, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Take credit, share the gold",       GOSSIP_SENDER_MAIN+4, GOSSIP_ACTION_INFO_DEF);
+            player->ADD_GOSSIP_ITEM(0, "Let the knight take credit",        GOSSIP_SENDER_MAIN+3, GOSSIP_ACTION_INFO_DEF);
+            player->SEND_GOSSIP_MENU(7363, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM(0, "Thanks",                            GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            player->SEND_GOSSIP_MENU(7364, _Creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+6:
+            _Creature->CastSpell(player, SPELL_FORTUNE, false);
+            player->SEND_GOSSIP_MENU(7365, _Creature->GetGUID());
+            break;
     }
 }
 
 bool GossipSelect_npc_sayge(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
-    switch(sender) 
+    switch(sender)
     {
         case GOSSIP_SENDER_MAIN:
             SendAction_npc_sayge(player, _Creature, action);

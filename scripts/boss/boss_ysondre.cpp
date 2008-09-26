@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Ysondre
@@ -52,7 +52,7 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
     Creature* Summoned;
 
     void Reset()
-    {       
+    {
         Sleep_Timer = 15000 + rand()%5000;
         NoxiousBreath_Timer = 8000;
         TailSweep_Timer = 4000;
@@ -72,84 +72,66 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         Rand = rand()%10;
         switch (rand()%2)
         {
-        case 0: RandX = 0 - Rand; break;
-        case 1: RandX = 0 + Rand; break;
+            case 0: RandX = 0 - Rand; break;
+            case 1: RandX = 0 + Rand; break;
         }
         Rand = 0;
         Rand = rand()%10;
         switch (rand()%2)
         {
-        case 0: RandY = 0 - Rand; break;
-        case 1: RandY = 0 + Rand; break;
+            case 0: RandY = 0 - Rand; break;
+            case 1: RandY = 0 + Rand; break;
         }
         Rand = 0;
         Summoned = DoSpawnCreature(15260, RandX, RandY, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 300000);
         if(Summoned)
-        ((CreatureAI*)Summoned->AI())->AttackStart(victim);
+            ((CreatureAI*)Summoned->AI())->AttackStart(victim);
     }
-
-
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        return;
+            return;
 
         //Sleep_Timer
         if (Sleep_Timer < diff)
         {
-            //Cast
-            Unit* target = NULL;
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_SLEEP);
 
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_SLEEP);
-
-            //14 seconds
             Sleep_Timer = 8000 + rand()%7000;
         }else Sleep_Timer -= diff;
 
         //NoxiousBreath_Timer
         if (NoxiousBreath_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_NOXIOUSBREATH);
-
-            //20 seconds until we should cast this agian
             NoxiousBreath_Timer = 14000 + rand()%6000;
         }else NoxiousBreath_Timer -= diff;
 
         //Tailsweep every 2 seconds
         if (TailSweep_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);                    
-
-            DoCast(target,SPELL_TAILSWEEP);
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_TAILSWEEP);
 
             TailSweep_Timer = 2000;
         }else TailSweep_Timer -= diff;
 
-        //             //MarkOfNature_Timer
-        //            if (MarkOfNature_Timer < diff)
-        //             {
-        //                 //Cast
-        //                 DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
-        // 
-        //                 //45 seconds until we should cast this agian
-        //                 MarkOfNature_Timer = 45000;
-        //             }else MarkOfNature_Timer -= diff;
+        //MarkOfNature_Timer
+        //if (MarkOfNature_Timer < diff)
+        //{
+        //    DoCast(m_creature->getVictim(),SPELL_MARKOFNATURE);
+        //    MarkOfNature_Timer = 45000;
+        //}else MarkOfNature_Timer -= diff;
 
         //LightningWave_Timer
         if (LightningWave_Timer < diff)
         {
             //Cast LIGHTNINGWAVE on a Random target
-            Unit* target = NULL;
+            if( Unit *target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+                DoCast(target,SPELL_LIGHTNINGWAVE);
 
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target)DoCast(target,SPELL_LIGHTNINGWAVE);
-
-            //11 seconds until we should cast this agian
             LightningWave_Timer = 7000 + rand()%5000;
         }else LightningWave_Timer -= diff;
 
@@ -158,14 +140,14 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         {
             if (SummonDruids1_Timer < diff)
             {
-                // summon 10 druids 
+                // summon 10 druids
                 Unit* target = NULL;
                 for(int i = 0; i < 10;i++)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
                 }
-                //60 seconds until we should cast this agian
+
                 SummonDruids1_Timer = 60000;
             } else SummonDruids1_Timer -= diff;
         }
@@ -175,14 +157,14 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         {
             if (SummonDruids2_Timer < diff)
             {
-                // summon 10 druids 
+                // summon 10 druids
                 Unit* target = NULL;
                 for(int i = 0; i < 10;i++)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
                 }
-                //60 seconds until we should cast this agian
+
                 SummonDruids2_Timer = 60000;
             } else SummonDruids2_Timer -= diff;
         }
@@ -192,20 +174,20 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         {
             if (SummonDruids3_Timer < diff)
             {
-                // summon 10 druids 
+                // summon 10 druids
                 Unit* target = NULL;
                 for(int i = 0; i < 10;i++)
                 {
                     target = SelectUnit(SELECT_TARGET_RANDOM,0);
                     SummonDruids(target);
                 }
-                //60 seconds until we should cast this agian
+
                 SummonDruids3_Timer = 60000;
             } else SummonDruids3_Timer -= diff;
         }
         DoMeleeAttackIfReady();
     }
-}; 
+};
 // Summoned druid script
 struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
 {
@@ -224,25 +206,19 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-        return;
-
+            return;
 
         //MoonFire_Timer
         if (MoonFire_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_MOONFIRE);
-
-            //5 seconds
             MoonFire_Timer = 5000;
         }else MoonFire_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
-
 
 CreatureAI* GetAI_boss_ysondre(Creature *_Creature)
 {
@@ -254,10 +230,10 @@ CreatureAI* GetAI_mob_dementeddruids(Creature *_Creature)
     return new mob_dementeddruidsAI (_Creature);
 }
 
-
 void AddSC_boss_ysondre()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name="boss_ysondre";
     newscript->GetAI = GetAI_boss_ysondre;
