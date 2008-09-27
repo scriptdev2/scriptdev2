@@ -90,7 +90,7 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Despawn Time Keeper
         if (who->GetTypeId() == TYPEID_UNIT)
         {
-            if(((Creature*)who)->GetCreatureInfo()->Entry == 17918 && m_creature->IsWithinDistInMap(who,20))
+            if(((Creature*)who)->GetEntry() == 17918 && m_creature->IsWithinDistInMap(who,20))
             {
                 //This is the wrong yell & sound for despawning time keepers!
                 DoYell(SAY_ENTER, LANG_UNIVERSAL,NULL);
