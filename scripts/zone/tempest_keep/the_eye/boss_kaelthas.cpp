@@ -836,9 +836,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                         if (m_creature->getThreatManager().getThreatList().size() >= 2)
                             for (uint32 i = 0; i < 3; i++)
                         {
-                            error_log("SD2: Kael'Thas mind control not supported.");
-                            Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                            m_creature->Whisper(pUnit->GetGUID(), TEMP_MC_WHISPER);
+                            debug_log("SD2: Kael'Thas mind control not supported.");
                             //DoCast(pUnit, SPELL_MIND_CONTROL);
                         }
 

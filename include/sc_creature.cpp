@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 #include "precompiled.h"
 #include "Item.h"
@@ -10,7 +10,7 @@
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {
     uint8 Targets;    // set of enum SelectTarget
-    uint8 Effects;    // set of enum SelectEffect 
+    uint8 Effects;    // set of enum SelectEffect
 } *SpellSummary;
 
 bool ScriptedAI::IsVisible(Unit* who) const
@@ -183,12 +183,12 @@ void ScriptedAI::DoTextEmote(const char* text, Unit* target, bool IsBossEmote)
     else m_creature->TextEmote(text, 0, IsBossEmote);
 }
 
-void ScriptedAI::DoWhisper(Unit* reciever, const char* text, bool IsBossWhisper)
+void ScriptedAI::DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper)
 {
     if (!reciever || reciever->GetTypeId() != TYPEID_PLAYER)
         return;
 
-    m_creature->Whisper(reciever->GetGUID(), text, IsBossWhisper);
+    m_creature->Whisper(text, reciever->GetGUID(), IsBossWhisper);
 }
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)

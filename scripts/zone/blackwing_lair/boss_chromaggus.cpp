@@ -277,7 +277,7 @@ struct MANGOS_DLL_DECL boss_chromaggusAI : public ScriptedAI
                         //WORKAROUND
                         if (pUnit->GetTypeId() == TYPEID_PLAYER)
                         {
-                            m_creature->MonsterWhisper(pUnit->GetGUID(), TEMP_MUTATE_WHISPER);
+                            DoWhisper(TEMP_MUTATE_WHISPER, pUnit);
                             pUnit->CastSpell(pUnit, 5, false);
                         }
                     }

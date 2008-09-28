@@ -151,34 +151,34 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
+        Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
+        if( !pTemp )
+            return;
+
         switch( i )
         {
-            case 0: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_1); break;
-            case 1: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_2); break;
-            case 2: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_3); break;
-            case 3: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-            case 5: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_5); break;
-            case 6: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_6); break;
-            case 7: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_7); break;
-            case 8: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_8); break;
-            case 9: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_9); break;
-            case 10: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-            case 13: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_10); break;
-            case 14: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-            case 16: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_11); break;
-            case 17: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_12); break;
-            case 18: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
-            case 22: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_13); break;
-            case 23: m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_4); break;
+            case 0: DoWhisper(WHISPER_CUSTODIAN_1, pTemp); break;
+            case 1: DoWhisper(WHISPER_CUSTODIAN_2, pTemp); break;
+            case 2: DoWhisper(WHISPER_CUSTODIAN_3, pTemp); break;
+            case 3: DoWhisper(WHISPER_CUSTODIAN_4, pTemp); break;
+            case 5: DoWhisper(WHISPER_CUSTODIAN_5, pTemp); break;
+            case 6: DoWhisper(WHISPER_CUSTODIAN_6, pTemp); break;
+            case 7: DoWhisper(WHISPER_CUSTODIAN_7, pTemp); break;
+            case 8: DoWhisper(WHISPER_CUSTODIAN_8, pTemp); break;
+            case 9: DoWhisper(WHISPER_CUSTODIAN_9, pTemp); break;
+            case 10: DoWhisper(WHISPER_CUSTODIAN_4, pTemp); break;
+            case 13: DoWhisper(WHISPER_CUSTODIAN_10, pTemp); break;
+            case 14: DoWhisper(WHISPER_CUSTODIAN_4, pTemp); break;
+            case 16: DoWhisper(WHISPER_CUSTODIAN_11, pTemp); break;
+            case 17: DoWhisper(WHISPER_CUSTODIAN_12, pTemp); break;
+            case 18: DoWhisper(WHISPER_CUSTODIAN_4, pTemp); break;
+            case 22: DoWhisper(WHISPER_CUSTODIAN_13, pTemp); break;
+            case 23: DoWhisper(WHISPER_CUSTODIAN_4, pTemp); break;
             case 24:
-                m_creature->Whisper(PlayerGUID, WHISPER_CUSTODIAN_14);
-                if( Unit *temp = Unit::GetUnit(*m_creature,PlayerGUID) )
-                {
-                    m_creature->CastSpell(temp,34883,true);
-                    //below here is temporary workaround, to be removed when spell works properly
-                    if( temp->GetTypeId() == TYPEID_PLAYER )
-                        ((Player*)temp)->AreaExploredOrEventHappens(10277);
-                }
+                DoWhisper(WHISPER_CUSTODIAN_14, pTemp);
+                DoCast(pTemp,34883);
+                //below here is temporary workaround, to be removed when spell works properly
+                ((Player*)pTemp)->AreaExploredOrEventHappens(10277);
                 break;
         }
     }
@@ -207,7 +207,6 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
     void UpdateAI(const uint32 diff)
     {
         npc_escortAI::UpdateAI(diff);
-
     }
 };
 

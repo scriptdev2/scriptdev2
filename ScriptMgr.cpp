@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 #include "precompiled.h"
 #include "../../shared/Config/Config.h"
@@ -40,7 +40,7 @@ enum ChatType
 
 HM_NAMESPACE::hash_map<uint32, ScriptText> Script_TextMap;
 
-// Localized Text structure for storing locales (for EAI and SD2 scripts). 
+// Localized Text structure for storing locales (for EAI and SD2 scripts).
 struct Localized_Text
 {
     std::string locale_1;
@@ -52,7 +52,7 @@ struct Localized_Text
     std::string locale_7;
     std::string locale_8;
 };
-HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap; 
+HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap;
 HM_NAMESPACE::hash_map<uint32, Localized_Text> Script_LocalizedTextMap;
 
 //*** End Global data ***
@@ -65,7 +65,7 @@ std::list<EventAI_Event> EventAI_Event_List;
 HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
 
 //Event AI error prevention structure. Used at runtime to prevent error log spam of same creature id.
-//HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList; 
+//HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList;
 
 uint32 EAI_ErrorLevel;
 
@@ -672,7 +672,7 @@ void LoadDatabase()
             {
                 Localized_Text temp;
                 bar.step();
-                
+
                 Field *fields = result->Fetch();
 
                 uint32 i = fields[0].GetInt32();
@@ -1094,7 +1094,6 @@ struct TSpellSummary {
     uint8 Effects;    // set of enum SelectEffect 
 }extern *SpellSummary;
 
-
 MANGOS_DLL_EXPORT
 void ScriptsFree()
 {   
@@ -1402,7 +1401,7 @@ void ScriptsInit()
     AddSC_boss_gruul();
     AddSC_boss_high_king_maulgar();
     AddSC_instance_gruuls_lair();
-    
+
     //Hellfire Citadel
     //--Blood Furnace
     AddSC_boss_broggok();
@@ -1451,7 +1450,7 @@ void ScriptsInit()
     AddSC_loch_modan();
 
     //Lower Blackrock Spire
-    
+
     // Magister's Terrace
     AddSC_boss_felblood_kaelthas();
     AddSC_boss_selin_fireheart();
@@ -1464,7 +1463,7 @@ void ScriptsInit()
     AddSC_boss_landslide();
     AddSC_boss_noxxion();
     AddSC_boss_ptheradras();
-    
+
     //Molten core
     AddSC_boss_lucifron();
     AddSC_boss_magmadar();
@@ -1530,7 +1529,7 @@ void ScriptsInit()
     AddSC_boss_interrogator_vishas();
     AddSC_boss_scarlet_commander_mograine();
     AddSC_boss_scorn();
-    
+
     //Scholomance
     AddSC_boss_darkmaster_gandling();
     AddSC_boss_death_knight_darkreaver();
@@ -1793,7 +1792,7 @@ const char* GetScriptLocalizedText(uint32 entry)
         case 7:
             temp =  (*i).second.locale_7.c_str();
             break;
-            
+
         case 8:
             temp =  (*i).second.locale_8.c_str();
             break;
@@ -1880,14 +1879,14 @@ void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target)
         case CHAT_TYPE_WHISPER:
             {
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str());
+                    pSource->MonsterWhisper((*i).second.Text.c_str(), target->GetGUID());
                 else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
             }break;
 
         case CHAT_TYPE_BOSS_WHISPER:
             {
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    pSource->MonsterWhisper(target->GetGUID(), (*i).second.Text.c_str(), true);
+                    pSource->MonsterWhisper((*i).second.Text.c_str(), target->GetGUID(), true);
                 else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
             }break;
     }

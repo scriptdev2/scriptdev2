@@ -87,7 +87,11 @@ struct MANGOS_DLL_DECL npc_testAI : public npc_escortAI
             {
                 //killer = m_creature when player got to far from creature
                 if (killer == m_creature)
-                    m_creature->Whisper(PlayerGUID, "How dare you leave me like that! I hate you! =*(");
+                {
+                    Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
+                    if( pTemp )
+                        DoWhisper("How dare you leave me like that! I hate you! =*(", pTemp);
+                }
                 else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
             }
             else m_creature->Say("ugh...", LANG_UNIVERSAL, 0);

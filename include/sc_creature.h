@@ -1,6 +1,6 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software licensed under GPL version 2
-* Please see the included DOCS/LICENSE.TXT for more information */
+ * This program is free software licensed under GPL version 2
+ * Please see the included DOCS/LICENSE.TXT for more information */
 
 #ifndef SC_CREATURE_H
 #define SC_CREATURE_H
@@ -11,35 +11,34 @@
 //Spell targets used by SelectSpell
 enum SelectTarget
 {
-    SELECT_TARGET_DONTCARE = 0,         //All target types allowed
+    SELECT_TARGET_DONTCARE = 0,                             //All target types allowed
 
-    SELECT_TARGET_SELF,                 //Only Self casting
+    SELECT_TARGET_SELF,                                     //Only Self casting
 
-    SELECT_TARGET_SINGLE_ENEMY,         //Only Single Enemy
-    SELECT_TARGET_AOE_ENEMY,            //Only AoE Enemy
-    SELECT_TARGET_ANY_ENEMY,            //AoE or Single Enemy
+    SELECT_TARGET_SINGLE_ENEMY,                             //Only Single Enemy
+    SELECT_TARGET_AOE_ENEMY,                                //Only AoE Enemy
+    SELECT_TARGET_ANY_ENEMY,                                //AoE or Single Enemy
 
-    SELECT_TARGET_SINGLE_FRIEND,        //Only Single Friend
-    SELECT_TARGET_AOE_FRIEND,           //Only AoE Friend
-    SELECT_TARGET_ANY_FRIEND,           //AoE or Single Friend
+    SELECT_TARGET_SINGLE_FRIEND,                            //Only Single Friend
+    SELECT_TARGET_AOE_FRIEND,                               //Only AoE Friend
+    SELECT_TARGET_ANY_FRIEND,                               //AoE or Single Friend
 };
 
 //Spell Effects used by SelectSpell
 enum SelectEffect
 {
-    SELECT_EFFECT_DONTCARE = 0,         //All spell effects allowed
-    SELECT_EFFECT_DAMAGE,               //Spell does damage
-    SELECT_EFFECT_HEALING,              //Spell does healing
-    SELECT_EFFECT_AURA,                 //Spell applies an aura
+    SELECT_EFFECT_DONTCARE = 0,                             //All spell effects allowed
+    SELECT_EFFECT_DAMAGE,                                   //Spell does damage
+    SELECT_EFFECT_HEALING,                                  //Spell does healing
+    SELECT_EFFECT_AURA,                                     //Spell applies an aura
 };
-
 
 //Selection method used by SelectTarget
 enum SelectAggroTarget
 {
-    SELECT_TARGET_RANDOM = 0,           //Just selects a random target
-    SELECT_TARGET_TOPAGGRO,             //Selects targes from top aggro to bottom
-    SELECT_TARGET_BOTTOMAGGRO,          //Selects targets from bottom aggro to top
+    SELECT_TARGET_RANDOM = 0,                               //Just selects a random target
+    SELECT_TARGET_TOPAGGRO,                                 //Selects targes from top aggro to bottom
+    SELECT_TARGET_BOTTOMAGGRO,                              //Selects targets from bottom aggro to top
 };
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
@@ -148,7 +147,7 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoTextEmote(const char* text, Unit* target, bool IsBossEmote = false);
 
     //Creature whisper, optional bool for boss whisper
-    void DoWhisper(Unit* reciever, const char* text, bool IsBossWhisper = false);
+    void DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper = false);
 
     //Plays a sound to all nearby players
     void DoPlaySoundToSet(Unit* unit, uint32 sound);
@@ -184,7 +183,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     bool CanCast(Unit* Target, SpellEntry const *Spell, bool Triggered = false);
 };
 
-
 struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
 {
     Scripted_NoMovementAI(Creature* creature) : ScriptedAI(creature) {}
@@ -195,5 +193,4 @@ struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI
     //Called at each attack of m_creature by any victim
     void AttackStart(Unit *);
 };
-
 #endif
