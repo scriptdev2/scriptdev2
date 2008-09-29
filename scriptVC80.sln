@@ -1,11 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptDev2", "VC80\80ScriptDev2.vcproj", "{4295C8A9-79B7-4354-8064-F05FB9CA0C96}"
-	ProjectSection(ProjectDependencies) = postProject
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2} = {803F488E-4C5A-4866-8D5C-1E6C03C007C2}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gensvnrevision", "VC80\gensvnrevision.vcproj", "{803F488E-4C5A-4866-8D5C-1E6C03C007C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +18,6 @@ Global
 		{4295C8A9-79B7-4354-8064-F05FB9CA0C96}.Release|Win32.Build.0 = Release|Win32
 		{4295C8A9-79B7-4354-8064-F05FB9CA0C96}.Release|x64.ActiveCfg = Release|x64
 		{4295C8A9-79B7-4354-8064-F05FB9CA0C96}.Release|x64.Build.0 = Release|x64
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Debug|Win32.Build.0 = Debug|Win32
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Debug|x64.ActiveCfg = Debug|x64
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Debug|x64.Build.0 = Debug|x64
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Release|Win32.ActiveCfg = Release|Win32
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Release|Win32.Build.0 = Release|Win32
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Release|x64.ActiveCfg = Release|x64
-		{803F488E-4C5A-4866-8D5C-1E6C03C007C2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
