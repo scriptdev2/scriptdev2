@@ -994,8 +994,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     }
                     break;
                 default:
-                    //TODO: enable below code line / verify this is correct to enable events previously disabled (ex. aggro yell)
+                    //TODO: enable below code line / verify this is correct to enable events previously disabled (ex. aggro yell), instead of enable this in void Aggro()
                     //(*i).Enabled = true;
+                    //(*i).Time = 0;
                     break;
             }
         }
@@ -1023,6 +1024,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Evade
                 case EVENT_T_EVADE:
                     ProcessEvent(*i);
+                    break;
+                default:
                     break;
             }
         }
@@ -1094,32 +1097,28 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             switch ((*i).Event.event_type)
             {
-            case EVENT_T_AGGRO:
-                ProcessEvent(*i, who);
-                break;
-
+                case EVENT_T_AGGRO:
+                    (*i).Enabled = true;
+                    ProcessEvent(*i, who);
+                    break;
                 //Reset all in combat timers
-            case EVENT_T_TIMER:
-
-                if ((*i).Event.event_param2 == (*i).Event.event_param1)
-                {
-                    (*i).Time = (*i).Event.event_param1;
-                    (*i).Enabled = true;
-
-                }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
-                {
-                    (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
-                    (*i).Enabled = true;
-                }else if (EAI_ErrorLevel > 0)
-                    error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
-
-                break;
-
+                case EVENT_T_TIMER:
+                    if ((*i).Event.event_param2 == (*i).Event.event_param1)
+                    {
+                        (*i).Time = (*i).Event.event_param1;
+                        (*i).Enabled = true;
+                    }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                    {
+                        (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
+                        (*i).Enabled = true;
+                    }else if (EAI_ErrorLevel > 0)
+                        error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
+                    break;
                 //All normal events need to be re-enabled and their time set to 0
-            default:
-                (*i).Enabled = true;
-                (*i).Time = 0;
-                break;
+                default:
+                    (*i).Enabled = true;
+                    (*i).Time = 0;
+                    break;
             }
         }
 
