@@ -52,9 +52,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             switch ((*i).Event.event_type)
             {
-            case EVENT_T_SPAWNED:
-                ProcessEvent(*i);
-                break;
+                case EVENT_T_SPAWNED:
+                    ProcessEvent(*i);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -977,22 +979,24 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Reset all out of combat timers
-            case EVENT_T_TIMER_OOC:
-                {
-                    if ((*i).Event.event_param2 == (*i).Event.event_param1)
+                case EVENT_T_TIMER_OOC:
                     {
-                        (*i).Time = (*i).Event.event_param1;
-                        (*i).Enabled = true;
-
-                    }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
-                    {
-                        (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2);
-                        (*i).Enabled = true;
-                    }else if (EAI_ErrorLevel > 0)
-                        error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
-
-                }
-                break;
+                        if ((*i).Event.event_param2 == (*i).Event.event_param1)
+                        {
+                            (*i).Time = (*i).Event.event_param1;
+                            (*i).Enabled = true;
+                        }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                        {
+                            (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2);
+                            (*i).Enabled = true;
+                        }else if (EAI_ErrorLevel > 0)
+                            error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
+                    }
+                    break;
+                default:
+                    //TODO: enable below code line / verify this is correct to enable events previously disabled (ex. aggro yell)
+                    //(*i).Enabled = true;
+                    break;
             }
         }
     }
@@ -1038,6 +1042,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 case EVENT_T_DEATH:
                     ProcessEvent(*i, killer);
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -1052,9 +1058,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Kill
-            case EVENT_T_KILL:
-                ProcessEvent(*i, victim);
-                break;
+                case EVENT_T_KILL:
+                    ProcessEvent(*i, victim);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -1070,9 +1078,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Summoned
-            case EVENT_T_SUMMONED_UNIT:
-                ProcessEvent(*i, pUnit);
-                break;
+                case EVENT_T_SUMMONED_UNIT:
+                    ProcessEvent(*i, pUnit);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -1189,15 +1199,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             switch ((*i).Event.event_type)
             {
-            //Spell hit
-            case EVENT_T_SPELLHIT:
-                {
-                    //If spell id matches (or no spell id) & if spell school matches (or no spell school)
-                    if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
-                        if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
-                            ProcessEvent(*i, pUnit);
-                }
-                break;
+                //Spell hit
+                case EVENT_T_SPELLHIT:
+                    {
+                        //If spell id matches (or no spell id) & if spell school matches (or no spell school)
+                        if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
+                            if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
+                                ProcessEvent(*i, pUnit);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -1302,12 +1314,17 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
                     {
                         EventList.push_back(EventHolder(*i));
                         continue;
-                    }
+                    }else if( (*i).event_flags & EFLAG_NORMAL )
+                        continue;
                 }
-                else if( (*i).event_flags & EFLAG_NORMAL )
+                else
                 {
-                    EventList.push_back(EventHolder(*i));
-                    continue;
+                    if( (*i).event_flags & EFLAG_NORMAL )
+                    {
+                        EventList.push_back(EventHolder(*i));
+                        continue;
+                    }else if( (*i).event_flags & EFLAG_HEROIC )
+                        continue;
                 }
 
                 if (EAI_ErrorLevel > 1)
