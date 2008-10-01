@@ -390,7 +390,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case EVENT_T_FRIENDLY_IS_CC:
             {
                 if (!InCombat)
@@ -420,7 +419,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case EVENT_T_FRIENDLY_MISSING_BUFF:
             {
                 std::list<Creature*> pList = DoFindFriendlyMissingBuff(param2, param1);
@@ -447,7 +445,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case EVENT_T_SUMMONED_UNIT:
             {
                 //Prevent event from occuring on no unit or non creatures
@@ -497,11 +494,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case 0:
             return param1;
             break;
-
         case 1:
             return param2;
             break;
-
         case 2:
             return param3;
             break;
@@ -547,23 +542,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case ACTION_T_SAY:
             DoSay(GetEventAIText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
-
         case ACTION_T_YELL:
             DoYell(GetEventAIText(param1), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
-
         case ACTION_T_TEXTEMOTE:
             DoTextEmote(GetEventAIText(param1), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             break;
-
         case ACTION_T_SOUND:
             DoPlaySoundToSet(m_creature, param1);
             break;
-
         case ACTION_T_EMOTE:
             m_creature->HandleEmoteCommand(param1);
             break;
-
         case ACTION_T_RANDOM_SAY:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -572,7 +562,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     DoSay(GetEventAIText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
-
         case ACTION_T_RANDOM_YELL:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -581,7 +570,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     DoYell(GetEventAIText(temp), LANG_UNIVERSAL, pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
-
         case ACTION_T_RANDOM_TEXTEMOTE:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -590,7 +578,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     DoTextEmote(GetEventAIText(temp), pActionInvoker ? pActionInvoker : m_creature->getVictim());
             }
             break;
-
         case ACTION_T_RANDOM_SOUND:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -599,7 +586,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     DoPlaySoundToSet(m_creature, temp);
             }
             break;
-
         case ACTION_T_RANDOM_EMOTE:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -608,7 +594,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     m_creature->HandleEmoteCommand(temp);
             }
             break;
-
         case ACTION_T_CAST:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -657,7 +642,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case ACTION_T_SUMMON:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -677,7 +661,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     pCreature->AI()->AttackStart(target);
             }
             break;
-
         case ACTION_T_THREAT_SINGLE_PCT:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -686,7 +669,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     m_creature->getThreatManager().modifyThreatPercent(target, param1);
             }
             break;
-
         case ACTION_T_THREAT_ALL_PCT:
             {
                 Unit* Temp = NULL;
@@ -700,7 +682,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case ACTION_T_QUEST_EVENT:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -709,7 +690,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     ((Player*)target)->AreaExploredOrEventHappens(param1);
             }
             break;
-
         case ACTION_T_CASTCREATUREGO:
             {
                 Unit* target = GetTargetByType(param3, pActionInvoker);
@@ -718,7 +698,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     ((Player*)target)->CastedCreatureOrGO(param1, m_creature->GetGUID(), param2);
             }
             break;
-
         case ACTION_T_SET_UNIT_FIELD:
             {
                 Unit* target = GetTargetByType(param3, pActionInvoker);
@@ -727,7 +706,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->SetUInt32Value(param1, param2);
             }
             break;
-
         case ACTION_T_SET_UNIT_FLAG:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -736,7 +714,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->SetFlag(UNIT_FIELD_FLAGS, param1);
             }
             break;
-
         case ACTION_T_REMOVE_UNIT_FLAG:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -745,7 +722,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->RemoveFlag(UNIT_FIELD_FLAGS, param1);
             }
             break;
-
         case ACTION_T_AUTO_ATTACK:
             {
                 if (param1)
@@ -753,7 +729,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 else MeleeEnabled = false;
             }
             break;
-
         case ACTION_T_COMBAT_MOVEMENT:
             {
                 CombatMovementEnabled = param1;
@@ -790,7 +765,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         error_db_log( "SD2: Event %d incremented Phase above 31. Phase mask cannot be used with phases past 31. CreatureEntry = %d", EventId, m_creature->GetEntry());
             }
             break;
-
         case ACTION_T_EVADE:
             {
                 EnterEvadeMode();
@@ -813,7 +787,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case ACTION_T_CASTCREATUREGO_ALL:
             {
                 Unit* Temp = NULL;
@@ -827,7 +800,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case ACTION_T_REMOVEAURASFROMSPELL:
             {
                 Unit* target = GetTargetByType(param1, pActionInvoker);
@@ -836,7 +808,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     target->RemoveAurasDueToSpell(param2);
             }
             break;
-
         case ACTION_T_RANGED_MOVEMENT:
             {
                 AttackDistance = param1;
@@ -850,7 +821,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
-
         case ACTION_T_RANDOM_PHASE:
             {
                 uint32 temp = GetRandActionParam(rnd, param1, param2, param3);
@@ -858,7 +828,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 Phase = temp;
             }
             break;
-
         case ACTION_T_RANDOM_PHASE_RANGE:
             {
                 if (param2 > param1)
@@ -898,7 +867,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pCreature->AI()->AttackStart(target);
             }
             break;
-
         case ACTION_T_KILLED_MONSTER:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -907,7 +875,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     ((Player*)target)->KilledMonster(param1, m_creature->GetGUID());
             }
             break;
-
         case ACTION_T_SET_INST_DATA:
             {
                 ScriptedInstance* pInst = (ScriptedInstance*)m_creature->GetInstanceData();
@@ -921,7 +888,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pInst->SetData(param1, param2);
             }
             break;
-
         case ACTION_T_SET_INST_DATA64:
             {
                 Unit* target = GetTargetByType(param2, pActionInvoker);
@@ -945,7 +911,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 pInst->SetData64(param1, target->GetGUID());
             }
             break;
-
         case ACTION_T_UPDATE_TEMPLATE:
             {
                 if (m_creature->GetEntry() == param1)
@@ -958,7 +923,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 m_creature->UpdateEntry(param1, param2 ? HORDE : ALLIANCE);
             }
             break;
-
         case ACTION_T_DIE:
             {
                 if (m_creature->isDead())
@@ -970,7 +934,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); 
             }
             break;
-
         case ACTION_T_ZONE_COMBAT_PULSE:
             {
                 if (!m_creature->isInCombat() || !m_creature->GetMap()->IsDungeon())
@@ -983,7 +946,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 DoZoneInCombat();
             }
             break;
-        };
+        }
     }
 
     void JustRespawned()
@@ -1028,7 +991,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     }else if (EAI_ErrorLevel > 0)
                         error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
 
-                }break;
+                }
+                break;
             }
         }
     }
@@ -1053,9 +1017,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Evade
-            case EVENT_T_EVADE:
-                ProcessEvent(*i);
-                break;
+                case EVENT_T_EVADE:
+                    ProcessEvent(*i);
+                    break;
             }
         }
     }
@@ -1071,9 +1035,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             switch ((*i).Event.event_type)
             {
                 //Evade
-            case EVENT_T_DEATH:
-                ProcessEvent(*i, killer);
-                break;
+                case EVENT_T_DEATH:
+                    ProcessEvent(*i, killer);
+                    break;
             }
         }
     }
@@ -1325,44 +1289,33 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
     {
         if ((*i).creature_id == ID)
         {
-            //Debug check
+//Debug check
 #ifndef _DEBUG
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
                 continue;
 #endif
-
-            //Heroic Instance Difficulty check
-            if ((*i).event_flags & EFLAG_HEROIC)
+            if( _Creature->GetMap()->IsDungeon() )
             {
-                //Creature isn't even in a dungeon
-                if (!_Creature->GetMap() || !_Creature->GetMap()->IsDungeon())
+                if( _Creature->GetMap()->IsHeroic() )
                 {
-                    if (EAI_ErrorLevel > 1)
-                        error_db_log("SD2: Creature %u, Event %u using EFLAG_HEROIC but creature is not inside of an instance. Event skipped.", _Creature->GetEntry(), (*i).event_id);
+                    if( (*i).event_flags & EFLAG_HEROIC )
+                    {
+                        EventList.push_back(EventHolder(*i));
+                        continue;
+                    }
+                }
+                else if( (*i).event_flags & EFLAG_NORMAL )
+                {
+                    EventList.push_back(EventHolder(*i));
                     continue;
                 }
 
-                if (!_Creature->GetMap()->IsHeroic())
-                    continue;
-            } else
+                if (EAI_ErrorLevel > 1)
+                    error_db_log("SD2: Creature %u Event %u. Creature are in instance but neither EFLAG_NORMAL or EFLAG_HEROIC are set. Event Disabled.", _Creature->GetEntry(), (*i).event_id);
 
-                //Normal Instance Difficulty check
-                if ((*i).event_flags & EFLAG_NORMAL)
-                {
-                    //Creature isn't even in a dungeon
-                    if (!_Creature->GetMap() || !_Creature->GetMap()->IsDungeon())
-                    {
-                        if (EAI_ErrorLevel > 1)
-                            error_db_log("SD2: Creature %u, Event %u using EFLAG_NORMAL but creature is not inside of an instance. Event skipped.", _Creature->GetEntry(), (*i).event_id);
-                        continue;
-                    }
+                continue;
+            }
 
-                    if (_Creature->GetMap()->IsHeroic())
-                        continue;
-                } else if (_Creature->GetMap() && _Creature->GetMap()->IsDungeon() && EAI_ErrorLevel > 1)
-                        error_db_log("SD2: Creature %u, Event %u. Creature is in instance but neither EFLAG_NORMAL or EFLAG_HEROIC are set.", _Creature->GetEntry(), (*i).event_id);
-
-            //Push back event
             EventList.push_back(EventHolder(*i));
         }
     }
