@@ -258,6 +258,8 @@ struct MANGOS_DLL_DECL boss_omor_the_unscarredAI : public ScriptedAI
                 Shadowbolt_Timer = 4000+rand()%2500;
             }
         }else Shadowbolt_Timer -= diff;
+
+        DoMeleeAttackIfReady();
     }
 };
 
