@@ -215,8 +215,8 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
                 if (!InCombat)
                 {
-                    Aggro(who);
                     InCombat = true;
+                    Aggro(who);
                 }
             }
         }
@@ -234,8 +234,8 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 
             if (!InCombat)
             {
-                Aggro(who);
                 InCombat = true;
+                Aggro(who);
             }
         }
     }
@@ -1252,8 +1252,8 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
 
             if (!InCombat)
             {
-                Aggro(who);
                 InCombat = true;
+                Aggro(who);
             }
         }
     }

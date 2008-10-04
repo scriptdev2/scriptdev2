@@ -138,8 +138,8 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
                 if (!InCombat)
                 {
-                    Aggro(who);
                     InCombat = true;
+                    Aggro(who);
                 }
             }
         }
@@ -153,8 +153,8 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
             if (!InCombat)
             {
-                Aggro(who);
                 InCombat = true;
+                Aggro(who);
             }
         }
     }

@@ -204,8 +204,8 @@ struct MANGOS_DLL_DECL boss_exarch_maladaarAI : public ScriptedAI
 
                 if (!InCombat)
                 {
-                    Aggro(who);
                     InCombat = true;
+                    Aggro(who);
                 }
             }
         }

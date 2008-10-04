@@ -1140,8 +1140,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
             if (!InCombat)
             {
-                Aggro(who);
                 InCombat = true;
+                Aggro(who);
             }
         }
     }
@@ -1188,8 +1188,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (!InCombat)
                 {
-                    Aggro(who);
                     InCombat = true;
+                    Aggro(who);
                 }
             }
         }
