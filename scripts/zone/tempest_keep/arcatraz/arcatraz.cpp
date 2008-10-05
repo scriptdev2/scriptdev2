@@ -444,8 +444,6 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                 case 7:
                     pInstance->SetData(TYPE_WARDEN_5,IN_PROGRESS);
                     break;
-                default:
-                    break;
             }
             CanSpawn = true;
         }
@@ -505,8 +503,6 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                         DoYell(YELL_WELCOME,LANG_UNIVERSAL,NULL);
                         DoPlaySoundToSet(m_creature,SOUND_WELCOME);
                         break;
-                    default:
-                        break;
                 }
                 CanSpawn = false;
                 ++Phase;
@@ -552,8 +548,6 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                     case 7:
                         DoPrepareForPhase();
                         EventProgress_Timer = 15000;
-                        break;
-                    default:
                         break;
                 }
             }

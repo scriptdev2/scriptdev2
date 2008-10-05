@@ -236,8 +236,6 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                     case 3:
                         Intro = true;
                         break;
-                    default:
-                        break;
                 }
             }else Intro_Timer -=diff;
         }

@@ -863,13 +863,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             DoYell(SAY_SUMMON_PHOENIX1, LANG_UNIVERSAL, NULL);
                             DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX1);
                             break;
-
                         case 1:
                             DoYell(SAY_SUMMON_PHOENIX2, LANG_UNIVERSAL, NULL);
                             DoPlaySoundToSet(m_creature, SOUND_SUMMON_PHOENIX2);
-                            break;
-
-                        default:
                             break;
                     }
 

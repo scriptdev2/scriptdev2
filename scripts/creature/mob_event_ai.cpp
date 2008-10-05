@@ -55,8 +55,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 case EVENT_T_SPAWNED:
                     ProcessEvent(*i);
                     break;
-                default:
-                    break;
             }
         }
 
@@ -993,11 +991,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                             error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
                     }
                     break;
-                default:
+                //default:
                     //TODO: enable below code line / verify this is correct to enable events previously disabled (ex. aggro yell), instead of enable this in void Aggro()
                     //(*i).Enabled = true;
                     //(*i).Time = 0;
-                    break;
+                    //break;
             }
         }
     }
@@ -1025,8 +1023,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 case EVENT_T_EVADE:
                     ProcessEvent(*i);
                     break;
-                default:
-                    break;
             }
         }
     }
@@ -1045,8 +1041,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 case EVENT_T_DEATH:
                     ProcessEvent(*i, killer);
                     break;
-                default:
-                    break;
             }
         }
     }
@@ -1063,8 +1057,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Kill
                 case EVENT_T_KILL:
                     ProcessEvent(*i, victim);
-                    break;
-                default:
                     break;
             }
         }
@@ -1083,8 +1075,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 //Summoned
                 case EVENT_T_SUMMONED_UNIT:
                     ProcessEvent(*i, pUnit);
-                    break;
-                default:
                     break;
             }
         }
@@ -1209,8 +1199,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                             if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
                                 ProcessEvent(*i, pUnit);
                     }
-                    break;
-                default:
                     break;
             }
         }
