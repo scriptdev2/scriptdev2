@@ -609,12 +609,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     caster = target;
                 }
 
-                //Interrupt any previous spell
-                if (caster->IsNonMeleeSpellCasted(false) && param3 & CAST_INTURRUPT_PREVIOUS)
-                    caster->InterruptNonMeleeSpells(false);
+                //Allowed to cast only if not casting (unless we interrupt ourself) or if spell is triggered
+                bool canCast = !(caster->IsNonMeleeSpellCasted(false) && (param3 & CAST_TRIGGERED | CAST_INTURRUPT_PREVIOUS));
 
-                //Cast only if not casting or if spell is triggered
-                if (param3 & CAST_TRIGGERED || !caster->IsNonMeleeSpellCasted(false))
+                // If cast flag CAST_AURA_NOT_PRESENT is active, check if target already has aura on them
+                if(param3 & CAST_AURA_NOT_PRESENT)
+                {
+                    for(uint8 i = 0; i < 3; ++i)
+                        if(target->HasAura(param1, i))
+                            return;
+                }
+
+                if (canCast)
                 {
                     const SpellEntry* tSpell = GetSpellStore()->LookupEntry(param1);
 
@@ -635,7 +641,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                                 m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
                             }
 
-                        }else caster->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+                        }else
+                        {
+                            //Interrupt any previous spell
+                            if (caster->IsNonMeleeSpellCasted(false) && param3 & CAST_INTURRUPT_PREVIOUS)
+                                caster->InterruptNonMeleeSpells(false);
+
+                            caster->CastSpell(target, param1, (param3 & CAST_TRIGGERED));
+                        }
 
                     }else if (EAI_ErrorLevel > 0)
                         error_db_log("SD2: EventAI event %d creature %d attempt to cast spell that doesn't exist %d", EventId, m_creature->GetEntry(), param1);
