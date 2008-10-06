@@ -4,30 +4,30 @@
 
 #include "precompiled.h"
 #include "../../shared/Config/Config.h"
-#include "ProgressBar.h"
-#include "Database/DBCStores.h"
-#include "Database/DatabaseMysql.h"
-#include "ObjectMgr.h"
 #include "config.h"
+#include "Database/DatabaseEnv.h"
+#include "Database/DBCStores.h"
+#include "ObjectMgr.h"
+#include "ProgressBar.h"
 #include "scripts/creature/mob_event_ai.h"
 
-//*** Global data ***
+// Global data
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
-// Text Map for Event AI
-HM_NAMESPACE::hash_map<uint32, std::string> EventAI_Text_Map;
+DatabaseType SD2Database;
+Config SD2Config;
+uint32 Locale;
 
-// Script Text used as says / yells / text emotes / whispers in scripts.
-struct ScriptText
+// String text additional data, used in TextMap
+struct StringTextData
 {
     uint32 SoundId;
     uint8  Type;
     uint32 Language;
-    std::string Text;
 };
 
-// Enums used by ScriptText::Type
+// Enums used by StringTextData::Type
 enum ChatType
 {
     CHAT_TYPE_SAY               = 0,
@@ -38,7 +38,11 @@ enum ChatType
     CHAT_TYPE_BOSS_WHISPER      = 5,
 };
 
-HM_NAMESPACE::hash_map<uint32, ScriptText> Script_TextMap;
+#define TEXT_SOURCE_RANGE   -100000                         //the amount of entries each text source has available
+
+// Text Maps
+HM_NAMESPACE::hash_map<uint32, std::string> EventAI_Text_Map;
+HM_NAMESPACE::hash_map<int32, StringTextData> TextMap;
 
 // Localized Text structure for storing locales (for EAI and SD2 scripts).
 struct Localized_Text
@@ -52,12 +56,11 @@ struct Localized_Text
     std::string locale_7;
     std::string locale_8;
 };
-HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap;
-HM_NAMESPACE::hash_map<uint32, Localized_Text> Script_LocalizedTextMap;
-
 //*** End Global data ***
 
 //*** EventAI data ***
+HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap;
+
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
 std::list<EventAI_Event> EventAI_Event_List;
 
@@ -68,12 +71,7 @@ HM_NAMESPACE::hash_map<uint32, EventAI_Summon> EventAI_Summon_Map;
 //HM_NAMESPACE::hash_map<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList;
 
 uint32 EAI_ErrorLevel;
-
 //*** End EventAI data ***
-
-DatabaseMysql ScriptDev2DB;
-Config SD2Config;
-uint32 Locale;
 
 void FillSpellSummary();
 
@@ -587,240 +585,361 @@ extern void AddSC_zulaman();
 void LoadDatabase()
 {
     //Get db string from file
-    char const* dbstring = NULL;
-    if (!SD2Config.GetString("ScriptDev2DatabaseInfo", &dbstring))
-        error_log("SD2: Missing ScriptDev2 Database Info from configuration file");
+    std::string sd2dbstring;
 
-    //Initilize connection to DB
-    if (!dbstring || !ScriptDev2DB.Initialize(dbstring))
-        error_db_log("SD2: Unable to connect to Database");
+    if( !SD2Config.GetString("ScriptDev2DatabaseInfo", &sd2dbstring) )
+    {
+        error_log("SD2: Missing Scriptdev2 database info from configuration file. Load database aborted.");
+        return;
+    }
+
+    //Initialize connection to DB
+    if( SD2Database.Initialize(sd2dbstring.c_str()) )
+        outstring_log("SD2: ScriptDev2 database: %s",sd2dbstring.c_str());
     else
     {
-        //***Preform all DB queries here***
-        QueryResult *result;
+        error_log("SD2: Unable to connect to Database. Load database aborted.");
+        return;
+    }
 
-        //Get Version information
-        result = ScriptDev2DB.PQuery("SELECT `version`"
-            "FROM `sd2_db_version`");
+    //***Preform all DB queries here***
+    QueryResult *result;
 
-        if (result)
+    //Get Version information
+    result = SD2Database.PQuery("SELECT version FROM sd2_db_version");
+
+    if (result)
+    {
+        Field *fields = result->Fetch();
+        outstring_log("SD2: Database version is: %s", fields[0].GetString());
+        outstring_log("");
+        delete result;
+
+    }else
+    {
+        error_log("SD2: Missing `sd2_db_version` information.");
+        outstring_log("");
+    }
+
+    // Drop Existing Text Map, only done once and we are ready to add data from multiple sources.
+    TextMap.clear();
+
+    //TODO: Add load from eventai_texts here
+
+    // Load Script Text 
+    outstring_log("SD2: Loading Script Texts...");
+    LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,(TEXT_SOURCE_RANGE*2)+1);
+
+    // Gather Additional data from Script Texts
+    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM script_texts;");
+
+    outstring_log("SD2: Loading Script Texts additional data...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 count = 0;
+
+        do
         {
+            bar.step();
+            Field* fields = result->Fetch();
+            StringTextData temp;
+
+            int32 i             = fields[0].GetInt32();
+            temp.SoundId        = fields[1].GetInt32();
+            temp.Type           = fields[2].GetInt32();
+            temp.Language       = fields[3].GetInt32();
+
+            if (i >= 0)
+            {
+                error_db_log("SD2: Entry %i in table `script_texts` is not a negative value.",i);
+                continue;
+            }
+
+            if (i > TEXT_SOURCE_RANGE || i <= TEXT_SOURCE_RANGE*2)
+            {
+                error_db_log("SD2: Entry %i in table `script_texts` is out of accepted entry range for table.",i);
+                continue;
+            }
+
+            if (temp.SoundId)
+            {
+                if (!GetSoundEntriesStore()->LookupEntry(temp.SoundId))
+                    error_db_log("SD2: Entry %i in table `script_texts` has soundId %u but sound does not exist.",i,temp.SoundId);
+            }
+
+            if (!GetLanguageDescByID(temp.Language))
+                error_db_log("SD2: Entry %i in table `script_texts` using Language %u but Language does not exist.",i,temp.Language);
+
+            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+                error_db_log("SD2: Entry %i in table `script_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
+
+            TextMap[i] = temp;
+            ++count;
+        } while (result->NextRow());
+
+        delete result;
+
+        outstring_log("");
+        outstring_log(">> SD2: Loaded %u additional Script Texts data.", count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 additional Script Texts data. DB table `script_texts` is empty.");
+    }
+
+    // Load Custom Text 
+    outstring_log("SD2: Loading Custom Texts...");
+    LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,(TEXT_SOURCE_RANGE*3)+1);
+
+    // Gather Additional data from Custom Texts
+    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM custom_texts;");
+
+    outstring_log("SD2: Loading Custom Texts additional data...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 count = 0;
+
+        do
+        {
+            bar.step();
+            Field* fields = result->Fetch();
+            StringTextData temp;
+
+            int32 i             = fields[0].GetInt32();
+            temp.SoundId        = fields[1].GetInt32();
+            temp.Type           = fields[2].GetInt32();
+            temp.Language       = fields[3].GetInt32();
+
+            if (i >= 0)
+            {
+                error_db_log("SD2: Entry %i in table `custom_texts` is not a negative value.",i);
+                continue;
+            }
+
+            if (i > TEXT_SOURCE_RANGE*2 || i <= TEXT_SOURCE_RANGE*3)
+            {
+                error_db_log("SD2: Entry %i in table `custom_texts` is out of accepted entry range for table.",i);
+                continue;
+            }
+
+            if (temp.SoundId)
+            {
+                if (!GetSoundEntriesStore()->LookupEntry(temp.SoundId))
+                    error_db_log("SD2: Entry %i in table `custom_texts` has soundId %u but sound does not exist.",i,temp.SoundId);
+            }
+
+            if (!GetLanguageDescByID(temp.Language))
+                error_db_log("SD2: Entry %i in table `custom_texts` using Language %u but Language does not exist.",i,temp.Language);
+
+            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+                error_db_log("SD2: Entry %i in table `custom_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
+
+            TextMap[i] = temp;
+            ++count;
+        } while (result->NextRow());
+
+        delete result;
+
+        outstring_log("");
+        outstring_log(">> Loaded %u additional Custom Texts data.", count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 additional Custom Texts data. DB table `custom_texts` is empty.");
+    }
+
+    // Drop existing Event AI Localized Text hash map
+    EventAI_LocalizedTextMap.clear();
+
+    // Gather EventAI Localized Texts
+    result = SD2Database.PQuery("SELECT id, locale_1, locale_2, locale_3, locale_4, locale_5, locale_6, locale_7, locale_8 "
+        "FROM eventai_localized_texts");
+
+    outstring_log("SD2: Loading EventAI Localized Texts...");
+    if(result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 count = 0;
+
+        do
+        {
+            Localized_Text temp;
+            bar.step();
+
             Field *fields = result->Fetch();
-            outstring_log(" ");
-            outstring_log("SD2: Database version is: %s", fields[0].GetString());
-            outstring_log(" ");
-            delete result;
 
-        }else error_db_log("SD2: Missing sd2_db_version information.");
+            uint32 i = fields[0].GetInt32();
 
-        // Drop existing Event AI Localized Text hash map
-        EventAI_LocalizedTextMap.clear();
+            temp.locale_1 = fields[1].GetString();
+            temp.locale_2 = fields[2].GetString();
+            temp.locale_3 = fields[3].GetString();
+            temp.locale_4 = fields[4].GetString();
+            temp.locale_5 = fields[5].GetString();
+            temp.locale_6 = fields[6].GetString();
+            temp.locale_7 = fields[7].GetString();
+            temp.locale_8 = fields[8].GetString();
 
-        // Gather EventAI Localized Texts
-        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
-            "FROM `eventai_localized_texts`");
+            EventAI_LocalizedTextMap[i] = temp;
+            ++count;
 
-        if(result)
+        }while(result->NextRow());
+
+        delete result;
+
+        outstring_log("");
+        outstring_log(">> Loaded %u EventAI Localized Texts", count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 EventAI Localized Texts. DB table `eventai_localized_texts` is empty");
+    }
+
+    //Drop existing EventAI Text hash map
+    EventAI_Text_Map.clear();
+
+    //Gather EventAI Text Entries
+    result = SD2Database.PQuery("SELECT id, text FROM eventai_texts");
+
+    outstring_log("SD2: Loading EventAI_Texts...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 Count = 0;
+
+        do
         {
-            outstring_log("Loading EAI Localized Texts....");
-            barGoLink bar(result->GetRowCount());
-            uint32 count = 0;
+            bar.step();
+            Field *fields = result->Fetch();
 
-            do
-            {
-                Localized_Text temp;
-                bar.step();
-                
-                Field *fields = result->Fetch();
+            uint32 i = fields[0].GetInt32();
 
-                uint32 i = fields[0].GetInt32();
+            std::string text = fields[1].GetString();
 
-                temp.locale_1 = fields[1].GetString();
-                temp.locale_2 = fields[2].GetString();
-                temp.locale_3 = fields[3].GetString();
-                temp.locale_4 = fields[4].GetString();
-                temp.locale_5 = fields[5].GetString();
-                temp.locale_6 = fields[6].GetString();
-                temp.locale_7 = fields[7].GetString();
-                temp.locale_8 = fields[8].GetString();
+            if (!strlen(text.c_str()))
+                error_db_log("SD2: EventAI text %u is empty", i);
 
-                EventAI_LocalizedTextMap[i] = temp;
-                ++count;
+            EventAI_Text_Map[i] = text;
+            ++Count;
 
-            }while(result->NextRow());
+        }while (result->NextRow());
 
-            delete result;
+        delete result;
 
-            outstring_log("");
-            outstring_log("SD2: Loaded %u EventAI Localized Texts", count);
-        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI Localized Texts. Database table `eventai_localized_texts` is empty");
+        outstring_log("");
+        outstring_log(">> Loaded %u EventAI texts", Count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 EventAI texts. DB table `eventai_texts` is empty.");
+    }
 
-        // Drop Existing Script Localized Text Hash Map
-        Script_LocalizedTextMap.clear();
+    //Gather event data
+    result = SD2Database.PQuery("SELECT id, position_x, position_y, position_z, orientation, spawntimesecs FROM eventai_summons");
 
-        // Gather Script Localized Texts
-        result = ScriptDev2DB.PQuery("SELECT `id`,`locale_1`,`locale_2`,`locale_3`,`locale_4`,`locale_5`,`locale_6`,`locale_7`,`locale_8`"
-            "FROM `script_localized_texts`");
+    //Drop Existing EventSummon Map
+    EventAI_Summon_Map.clear();
 
-        if(result)
+    outstring_log("SD2: Loading EventAI_Summons...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 Count = 0;
+
+        do
         {
-            outstring_log("Loading Script Localized Texts....");
-            barGoLink bar(result->GetRowCount());
-            uint32 count = 0;
+            bar.step();
+            Field *fields = result->Fetch();
 
-            do
-            {
-                Localized_Text temp;
-                bar.step();
+            EventAI_Summon temp;
 
-                Field *fields = result->Fetch();
+            uint32 i = fields[0].GetUInt32();
+            temp.position_x = fields[1].GetFloat();
+            temp.position_y = fields[2].GetFloat();
+            temp.position_z = fields[3].GetFloat();
+            temp.orientation = fields[4].GetFloat();
+            temp.SpawnTimeSecs = fields[5].GetUInt32();
 
-                uint32 i = fields[0].GetInt32();
+            //Add to map
+            EventAI_Summon_Map[i] = temp;
+            ++Count;
+        }while (result->NextRow());
 
-                temp.locale_1 = fields[1].GetString();
-                temp.locale_2 = fields[2].GetString();
-                temp.locale_3 = fields[3].GetString();
-                temp.locale_4 = fields[4].GetString();
-                temp.locale_5 = fields[5].GetString();
-                temp.locale_6 = fields[6].GetString();
-                temp.locale_7 = fields[7].GetString();
-                temp.locale_8 = fields[8].GetString();
+        delete result;
 
-                Script_LocalizedTextMap[i] = temp;
-                ++count;
+        outstring_log("");
+        outstring_log(">> Loaded %u EventAI summon definitions", Count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 EventAI Summon definitions. DB table `eventai_summons` is empty.");
+    }
 
-            }while(result->NextRow());
+    //Gather event data
+    result = SD2Database.PQuery("SELECT id, creature_id, event_type, event_inverse_phase_mask, event_chance, event_flags, "
+        "event_param1, event_param2, event_param3, event_param4, "
+        "action1_type, action1_param1, action1_param2, action1_param3, "
+        "action2_type, action2_param1, action2_param2, action2_param3, "
+        "action3_type, action3_param1, action3_param2, action3_param3 "
+        "FROM eventai_scripts");
 
-            delete result;
+    //Drop Existing EventAI List
+    EventAI_Event_List.clear();
 
-            outstring_log("");
-            outstring_log("SD2: Loaded %u Script Localized Texts", count);
-        }else outstring_log("SD2: WARNING >> Loaded 0 Script Localized Texts. Database table `script_localized_texts` is empty");
+    outstring_log("SD2: Loading EventAI_Scripts...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 Count = 0;
 
-        //Drop existing EventAI Text hash map
-        EventAI_Text_Map.clear();
-
-        //Gather EventAI Text Entries
-        result = ScriptDev2DB.PQuery("SELECT `id`,`text` FROM `eventai_texts`");
-
-        if (result)
+        do
         {
-            outstring_log( "SD2: Loading EventAI_Texts...");
-            barGoLink bar(result->GetRowCount());
-            uint32 Count = 0;
+            bar.step();
+            Field *fields = result->Fetch();
 
-            do
+            EventAI_Event temp;
+
+            temp.event_id = fields[0].GetUInt32();
+            uint32 i = temp.event_id;
+            temp.creature_id = fields[1].GetUInt32();
+            temp.event_type = fields[2].GetUInt16();
+            temp.event_inverse_phase_mask = fields[3].GetUInt32();
+            temp.event_chance = fields[4].GetUInt8();
+            temp.event_flags = fields[5].GetUInt8();
+            temp.event_param1 = fields[6].GetUInt32();
+            temp.event_param2 = fields[7].GetUInt32();
+            temp.event_param3 = fields[8].GetUInt32();
+            temp.event_param4 = fields[9].GetUInt32();
+
+            //Report any errors in event
+            if (temp.event_type >= EVENT_T_END)
+                error_db_log("SD2: Event %u has incorrect event type. Maybe DB requires updated version of SD2.", i);
+
+            //No chance of this event occuring
+            if (temp.event_chance == 0)
+                error_db_log("SD2: Event %u has 0 percent chance. Event will never trigger!", i);
+
+            //Chance above 100, force it to be 100
+            if (temp.event_chance > 100)
             {
-                bar.step();
-                Field *fields = result->Fetch();
+                error_db_log("SD2: Creature %u are using event %u with more than 100 percent chance. Adjusting to 100 percent.", temp.creature_id, i);
+                temp.event_chance = 100;
+            }
 
-                uint32 i = fields[0].GetInt32();
-
-                std::string text = fields[1].GetString();
-
-                if (!strlen(text.c_str()))
-                    error_db_log("SD2: EventAI text %u is empty", i);
-
-                EventAI_Text_Map[i] = text;
-                ++Count;
-
-            }while (result->NextRow());
-
-            delete result;
-
-            outstring_log("");
-            outstring_log("SD2: >> Loaded %u EventAI_Texts", Count);
-
-        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Texts. DB table `EventAI_Texts` is empty.");
-
-        //Gather event data
-        result = ScriptDev2DB.PQuery("SELECT `id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`"
-            "FROM `eventai_summons`");
-
-        //Drop Existing EventSummon Map
-        EventAI_Summon_Map.clear();
-
-        if (result)
-        {
-            outstring_log( "SD2: Loading EventAI_Summons...");
-            barGoLink bar(result->GetRowCount());
-            uint32 Count = 0;
-
-            do
+            //Individual event checks
+            switch (temp.event_type)
             {
-                bar.step();
-                Field *fields = result->Fetch();
-
-                EventAI_Summon temp;
-
-                uint32 i = fields[0].GetUInt32();
-                temp.position_x = fields[1].GetFloat();
-                temp.position_y = fields[2].GetFloat();
-                temp.position_z = fields[3].GetFloat();
-                temp.orientation = fields[4].GetFloat();
-                temp.SpawnTimeSecs = fields[5].GetUInt32();
-
-                //Add to map
-                EventAI_Summon_Map[i] = temp;
-                ++Count;
-
-            }while (result->NextRow());
-
-            delete result;
-            outstring_log("");
-            outstring_log("SD2: >> Loaded %u EventAI_Summons", Count);
-
-        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Summons. DB table `EventAI_Summons` is empty.");
-
-        //Gather event data
-        result = ScriptDev2DB.PQuery("SELECT `id`,`creature_id`,`event_type`,`event_inverse_phase_mask`,`event_chance`,`event_flags`,`event_param1`,`event_param2`,`event_param3`,`event_param4`,`action1_type`,`action1_param1`,`action1_param2`,`action1_param3`,`action2_type`,`action2_param1`,`action2_param2`,`action2_param3`,`action3_type`,`action3_param1`,`action3_param2`,`action3_param3`"
-            "FROM `eventai_scripts`");
-
-        //Drop Existing EventAI List
-        EventAI_Event_List.clear();
-
-        if (result)
-        {
-            outstring_log( "SD2: Loading EventAI_Scripts...");
-            barGoLink bar(result->GetRowCount());
-            uint32 Count = 0;
-
-            do
-            {
-                bar.step();
-                Field *fields = result->Fetch();
-
-                EventAI_Event temp;
-
-                temp.event_id = fields[0].GetUInt32();
-                uint32 i = temp.event_id;
-                temp.creature_id = fields[1].GetUInt32();
-                temp.event_type = fields[2].GetUInt16();
-                temp.event_inverse_phase_mask = fields[3].GetUInt32();
-                temp.event_chance = fields[4].GetUInt8();
-                temp.event_flags = fields[5].GetUInt8();
-                temp.event_param1 = fields[6].GetUInt32();
-                temp.event_param2 = fields[7].GetUInt32();
-                temp.event_param3 = fields[8].GetUInt32();
-                temp.event_param4 = fields[9].GetUInt32();
-
-                //Report any errors in event
-                if (temp.event_type >= EVENT_T_END)
-                    error_db_log("SD2: Event %u has incorrect event type. Maybe DB requires updated version of SD2.", i);
-
-                //No chance of this event occuring
-                if (temp.event_chance == 0)
-                    error_db_log("SD2: Event %u has 0 percent chance. Event will never trigger!", i);
-                //Chance above 100, force it to be 100
-                if (temp.event_chance > 100)
-                {
-                    error_db_log("SD2: Creature %u are using event %u with more than 100 percent chance. Adjusting to 100 percent.", temp.creature_id, i);
-                    temp.event_chance = 100;
-                }
-
-                //Individual event checks
-                switch (temp.event_type)
-                {
                 case EVENT_T_HP:
                 case EVENT_T_MANA:
                 case EVENT_T_TARGET_HP:
@@ -906,18 +1025,18 @@ void LoadDatabase()
                         }
                     }
                     break;
-                };
+            }
 
-                for (uint32 j = 0; j < MAX_ACTIONS; j++)
+            for (uint32 j = 0; j < MAX_ACTIONS; j++)
+            {
+                temp.action[j].type = fields[10+(j*4)].GetUInt16();
+                temp.action[j].param1 = fields[11+(j*4)].GetUInt32();
+                temp.action[j].param2 = fields[12+(j*4)].GetUInt32();
+                temp.action[j].param3 = fields[13+(j*4)].GetUInt32();
+
+                //Report any errors in actions
+                switch (temp.action[j].type)
                 {
-                    temp.action[j].type = fields[10+(j*4)].GetUInt16();
-                    temp.action[j].param1 = fields[11+(j*4)].GetUInt32();
-                    temp.action[j].param2 = fields[12+(j*4)].GetUInt32();
-                    temp.action[j].param3 = fields[13+(j*4)].GetUInt32();
-
-                    //Report any errors in actions
-                    switch (temp.action[j].type)
-                    {
                     case ACTION_T_SAY:
                     case ACTION_T_YELL:
                     case ACTION_T_TEXTEMOTE:
@@ -1017,81 +1136,37 @@ void LoadDatabase()
                         break;
 
                     default:
+                        if (temp.action[j].type >= ACTION_T_END)
+                            error_db_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j+1);
                         break;
-                    }
-
-                    if (temp.action[j].type >= ACTION_T_END)
-                        error_db_log("SD2: Event %u Action %u has incorrect action type. Maybe DB requires updated version of SD2.", i, j+1);
                 }
+            }
 
-                //Add to list
-                EventAI_Event_List.push_back(temp);
-                ++Count;
+            //Add to list
+            EventAI_Event_List.push_back(temp);
+            ++Count;
+        } while (result->NextRow());
 
-            }while (result->NextRow());
+        delete result;
 
-            delete result;
-            outstring_log("");
-            outstring_log("SD2: >> Loaded %u EventAI_Events", Count);
-
-        }else outstring_log("SD2: WARNING >> Loaded 0 EventAI_Scripts. DB table `EventAI_Scripts` is empty.");
-
-        // Gather Script Text 
-        result = ScriptDev2DB.PQuery("SELECT `id`, `sound`, `type`, `language`, `text`"
-            "FROM `script_texts`;");
-
-        // Drop Existing Script Text Map
-        Script_TextMap.clear();
-
-        if(result)
-        {
-            outstring_log("SD2: Loading Script Text...");
-            barGoLink bar(result->GetRowCount());
-            uint32 count = 0;
-
-            do
-            {
-                bar.step();
-                Field* fields = result->Fetch();
-                ScriptText temp;
-
-                uint32 i            = fields[0].GetInt32();
-                temp.SoundId        = fields[1].GetInt32();
-                temp.Type           = fields[2].GetInt32();
-                temp.Language       = fields[3].GetInt32();
-                temp.Text           = fields[4].GetString();
-
-                if (temp.SoundId)
-                {
-                    if (!GetSoundEntriesStore()->LookupEntry(temp.SoundId))
-                        error_db_log("SD2: Id %u in table script_texts has soundid %u but sound does not exist.",i,temp.SoundId);
-                }
-
-                if(!strlen(temp.Text.c_str()))
-                    error_db_log("SD2: Id %u in table script_texts has no text.", i);
-
-                Script_TextMap[i] = temp;
-                ++count;
-
-            }while(result->NextRow());
-
-            delete result;
-
-            outstring_log("");
-            outstring_log("SD2: Loaded %u Script Texts", count);
-
-        }else outstring_log("SD2 WARNING >> Loaded 0 Script Texts. Database table `script_texts` is empty.");
-
-        //Free database thread and resources
-        ScriptDev2DB.HaltDelayThread();
-
-        //***End DB queries***
+        outstring_log("");
+        outstring_log(">> Loaded %u EventAI scripts", Count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 EventAI scripts. DB table `eventai_scripts` is empty.");
     }
+
+    //Free database thread and resources
+    SD2Database.HaltDelayThread();
+
 }
 
 struct TSpellSummary {
-    uint8 Targets;    // set of enum SelectTarget
-    uint8 Effects;    // set of enum SelectEffect 
+    uint8 Targets;                                          // set of enum SelectTarget
+    uint8 Effects;                                          // set of enum SelectEffect 
 }extern *SpellSummary;
 
 MANGOS_DLL_EXPORT
@@ -1110,6 +1185,8 @@ void ScriptsFree()
 MANGOS_DLL_EXPORT
 void ScriptsInit()
 {
+    bool CanLoadDB = true;
+
     //ScriptDev2 startup
     outstring_log("");
     outstring_log(" MMM  MMM    MM");
@@ -1122,14 +1199,15 @@ void ScriptsInit()
     outstring_log("");
 
     outstring_log("ScriptDev2 initializing %s", _FULLVERSION);
-
     outstring_log("");
 
     //Get configuration file
     if (!SD2Config.SetSource(_SCRIPTDEV2_CONFIG))
-        error_log("SD2: Unable to open configuration file, Database will be unaccessible");
-    else outstring_log("SD2: Using configuration file ScriptDev2.conf");
-
+    {
+        CanLoadDB = false;
+        error_log("SD2: Unable to open configuration file. Database will be unaccessible. Configuration values will use default.");
+    }
+    else outstring_log("SD2: Using configuration file %s",_SCRIPTDEV2_CONFIG);
 
     //Check config file version
     if (SD2Config.GetIntDefault("ConfVersion", 0) != SD2_CONF_VERSION)
@@ -1145,7 +1223,6 @@ void ScriptsInit()
     }
 
     outstring_log("SD2: Using locale %u", Locale);
-    outstring_log("");
 
     EAI_ErrorLevel = SD2Config.GetIntDefault("EAIErrorLevel", 1);
 
@@ -1154,24 +1231,28 @@ void ScriptsInit()
     case 0:
         outstring_log("SD2: EventAI Error Reporting level set to 0 (Startup Errors only)");
         break;
-
     case 1:
         outstring_log("SD2: EventAI Error Reporting level set to 1 (Startup errors and Runtime event errors)");
         break;
-
     case 2:
         outstring_log("SD2: EventAI Error Reporting level set to 2 (Startup errors, Runtime event errors, and Creation errors)");
         break;
-
     default:
         outstring_log("SD2: Unknown EventAI Error Reporting level. Defaulting to 1 (Startup errors and Runtime event errors)");
         EAI_ErrorLevel = 1;
         break;
     }
+
     outstring_log("");
 
-    //Load database (must be called after SD2Config.SetSource)
-    LoadDatabase();
+    //Load database (must be called after SD2Config.SetSource). In case it failed, no need to even try load.
+    if (CanLoadDB)
+        LoadDatabase();
+
+    outstring_log("SD2: Loading C++ scripts");
+    barGoLink bar(1);
+    bar.step();
+    outstring_log("");
 
     nrscripts = 0;
     for(int i=0;i<MAX_SCRIPTS;i++)
@@ -1688,8 +1769,7 @@ void ScriptsInit()
 
     // -------------------
 
-    outstring_log("SD2: Loaded %u C++ Scripts", nrscripts);
-    outstring_log("");
+    outstring_log(">> Loaded %u C++ Scripts", nrscripts);
 }
 
 //*********************************
@@ -1707,59 +1787,6 @@ const char* GetEventAILocalizedText(uint32 entry)
     if (i == EventAI_LocalizedTextMap.end())
     {
         error_log("SD2: EventAI Localized Text %u not found", entry);
-        return DEFAULT_TEXT;
-    }
-
-    switch (Locale)
-    {
-        case 1:
-            temp =  (*i).second.locale_1.c_str();
-            break;
-
-        case 2:
-            temp =  (*i).second.locale_2.c_str();
-            break;
-
-        case 3:
-            temp =  (*i).second.locale_3.c_str();
-            break;
-
-        case 4:
-            temp =  (*i).second.locale_4.c_str();
-            break;
-
-        case 5:
-            temp =  (*i).second.locale_5.c_str();
-            break;
-
-        case 6:
-            temp =  (*i).second.locale_6.c_str();
-            break;
-
-        case 7:
-            temp =  (*i).second.locale_7.c_str();
-            break;
-
-        case 8:
-            temp =  (*i).second.locale_8.c_str();
-            break;
-    };
-
-    if (strlen(temp))
-        return temp;
-
-    return DEFAULT_TEXT;
-}
-
-const char* GetScriptLocalizedText(uint32 entry)
-{   
-    const char* temp = NULL;
-
-    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = Script_LocalizedTextMap.find(entry);
-
-    if (i == Script_LocalizedTextMap.end())
-    {
-        error_log("SD2: Script Localized Text %u not found", entry);
         return DEFAULT_TEXT;
     }
 
@@ -1829,25 +1856,31 @@ const char* GetEventAIText(uint32 entry)
     return DEFAULT_TEXT;
 }
 
-void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target)
+void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 {
     if (!pSource)
     {
-        error_log("SD2: ProcessScriptText invalid Source pointer.");
+        error_log("SD2: DoScriptText entry %i, invalid Source pointer.",textEntry);
         return;
     }
 
-    HM_NAMESPACE::hash_map<uint32, ScriptText>::iterator i = Script_TextMap.find(id);
-
-    if (i == Script_TextMap.end())
+    if (textEntry >= 0)
     {
-        error_log("SD2: ProcessScriptText could not find id %u.",id);
+        error_log("SD2: DoScriptText attempts to process entry %i, but entry must be negative.",textEntry);
+        return;
+    }
+
+    HM_NAMESPACE::hash_map<int32, StringTextData>::iterator i = TextMap.find(textEntry);
+
+    if (i == TextMap.end())
+    {
+        error_log("SD2: DoScriptText could not find text entry %i.",textEntry);
         return;
     }
 
     if((*i).second.SoundId)
     {
-        if(GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
+        if( GetSoundEntriesStore()->LookupEntry((*i).second.SoundId) )
         {
             WorldPacket data(4);
             data.SetOpcode(SMSG_PLAY_SOUND);
@@ -1855,39 +1888,34 @@ void ProcessScriptText(uint32 id, WorldObject* pSource, Unit* target)
             pSource->SendMessageToSet(&data,false);
         }
         else
-            error_log("SD2: ProcessScriptText id %u tried to process invalid soundid %u.",id,(*i).second.SoundId);
+            error_log("SD2: DoScriptText entry %i tried to process invalid sound id %u.",textEntry,(*i).second.SoundId);
     }
 
     switch((*i).second.Type)
     {
         case CHAT_TYPE_SAY:
-            pSource->MonsterSay((*i).second.Text.c_str(), (*i).second.Language, target ? target->GetGUID() : 0);
+            pSource->MonsterSay(textEntry, (*i).second.Language, target ? target->GetGUID() : 0);
             break;
-
         case CHAT_TYPE_YELL:
-            pSource->MonsterYell((*i).second.Text.c_str(), (*i).second.Language, target ? target->GetGUID() : 0);
+            pSource->MonsterYell(textEntry, (*i).second.Language, target ? target->GetGUID() : 0);
             break;
-
         case CHAT_TYPE_TEXT_EMOTE:
-            pSource->MonsterTextEmote((*i).second.Text.c_str(), target ? target->GetGUID() : 0);
+            pSource->MonsterTextEmote(textEntry, target ? target->GetGUID() : 0);
             break;
-
         case CHAT_TYPE_BOSS_EMOTE:
-            pSource->MonsterTextEmote((*i).second.Text.c_str(), target ? target->GetGUID() : 0, true);
+            pSource->MonsterTextEmote(textEntry, target ? target->GetGUID() : 0, true);
             break;
-
         case CHAT_TYPE_WHISPER:
             {
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    pSource->MonsterWhisper((*i).second.Text.c_str(), target->GetGUID());
-                else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
+                    pSource->MonsterWhisper(textEntry, target->GetGUID());
+                else error_log("SD2: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", textEntry);
             }break;
-
         case CHAT_TYPE_BOSS_WHISPER:
             {
                 if (target && target->GetTypeId() == TYPEID_PLAYER)
-                    pSource->MonsterWhisper((*i).second.Text.c_str(), target->GetGUID(), true);
-                else error_log("SD2: ProcessScriptText id %u cannot whisper without target unit (TYPEID_PLAYER).", id);
+                    pSource->MonsterWhisper(textEntry, target->GetGUID(), true);
+                else error_log("SD2: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", textEntry);
             }break;
     }
 }
