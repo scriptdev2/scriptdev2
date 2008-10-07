@@ -585,7 +585,7 @@ extern void AddSC_zulaman();
 void LoadDatabase()
 {
     //Get db string from file
-    std::string sd2dbstring;
+    char const* sd2dbstring = NULL;
 
     if( !SD2Config.GetString("ScriptDev2DatabaseInfo", &sd2dbstring) )
     {
@@ -594,8 +594,8 @@ void LoadDatabase()
     }
 
     //Initialize connection to DB
-    if( SD2Database.Initialize(sd2dbstring.c_str()) )
-        outstring_log("SD2: ScriptDev2 database: %s",sd2dbstring.c_str());
+    if( sd2dbstring && SD2Database.Initialize(sd2dbstring) )
+        outstring_log("SD2: ScriptDev2 database: %s",sd2dbstring);
     else
     {
         error_log("SD2: Unable to connect to Database. Load database aborted.");
@@ -631,7 +631,7 @@ void LoadDatabase()
     LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,(TEXT_SOURCE_RANGE*2)+1);
 
     // Gather Additional data from Script Texts
-    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM script_texts;");
+    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM script_texts");
 
     outstring_log("SD2: Loading Script Texts additional data...");
     if (result)
@@ -695,7 +695,7 @@ void LoadDatabase()
     LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,(TEXT_SOURCE_RANGE*3)+1);
 
     // Gather Additional data from Custom Texts
-    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM custom_texts;");
+    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM custom_texts");
 
     outstring_log("SD2: Loading Custom Texts additional data...");
     if (result)
