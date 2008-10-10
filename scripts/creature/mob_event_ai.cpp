@@ -78,23 +78,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     uint32 AttackDistance;                                  //Distance to attack from
     float AttackAngle;                                      //Angle of attack
 
-    void AttackTarget(Unit* pTarget, bool Follow)
-    {
-        if (!pTarget)
-            return;
-
-        if ( m_creature->Attack(pTarget, true) )
-        {
-            if (Follow)
-            {
-                m_creature->GetMotionMaster()->Clear(false);
-                m_creature->GetMotionMaster()->MoveChase(pTarget, AttackDistance, AttackAngle);
-            }
-            
-            m_creature->AddThreat(pTarget, 0.0f);
-        }
-    }
-
     bool ProcessEvent(EventHolder& pHolder, Unit* pActionInvoker = NULL)
     {  
         if (!pHolder.Enabled || pHolder.Time)
@@ -1134,17 +1117,26 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if (!who)
             return;
 
-        if (who->isTargetableForAttack())
+        if (m_creature->Attack(who, MeleeEnabled))
         {
-            //Begin melee attack if we are within range
-            if (CombatMovementEnabled)
-                AttackTarget(who, true);
-            else AttackTarget(who, false);
+            m_creature->AddThreat(who, 0.0f);
+            m_creature->SetInCombatWith(who);
+            who->SetInCombatWith(m_creature);
 
             if (!InCombat)
             {
                 InCombat = true;
                 Aggro(who);
+            }
+
+            if (CombatMovementEnabled)
+            {
+                m_creature->GetMotionMaster()->MoveChase(who, AttackDistance, AttackAngle);
+            }
+            else
+            {
+                m_creature->GetMotionMaster()->MoveIdle();
+                m_creature->StopMoving();
             }
         }
     }
@@ -1173,6 +1165,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
         }
 
+        if (m_creature->isCivilian() && m_creature->IsNeutralToAll())
+            return;
+
         if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
         {
             if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
@@ -1185,15 +1180,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
                 //Begin melee attack if we are within range
-                if (CombatMovementEnabled)
-                    AttackTarget(who, true);
-                else AttackTarget(who, false);
-
-                if (!InCombat)
-                {
-                    InCombat = true;
-                    Aggro(who);
-                }
+                AttackStart(who);
             }
         }
     }
@@ -1234,51 +1221,58 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             //Check for range based events
             //if (m_creature->GetDistance(m_creature->getVictim()) > 
             if (Combat)
+            {
                 for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
                 {
                     switch ((*i).Event.event_type)
                     {
-                    case EVENT_T_RANGE:
-                        float dist = m_creature->GetDistance(m_creature->getVictim());
-                        if (dist > (*i).Event.event_param1 && dist < (*i).Event.event_param2)
-                            ProcessEvent(*i);
-                        break;
+                        case EVENT_T_RANGE:
+                            float dist = m_creature->GetDistance(m_creature->getVictim());
+                            if (dist > (*i).Event.event_param1 && dist < (*i).Event.event_param2)
+                                ProcessEvent(*i);
+                            break;
                     }
                 }
+            }
 
-                //Check for time based events
-                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            //Check for time based events
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            {
+                //Decrement Timers
+                if ((*i).Time)
                 {
-                    //Decrement Timers
-                    if ((*i).Time)
-                        if ((*i).Time > EventDiff)
-                        {
-                            //Do not decrement timers if event cannot trigger in this phase
-                            if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
-                                (*i).Time -= EventDiff;
+                    if ((*i).Time > EventDiff)
+                    {
+                         //Do not decrement timers if event cannot trigger in this phase
+                        if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
+                            (*i).Time -= EventDiff;
 
-                            //Skip processing of events that have time remaining
-                            continue;
-                        }
-                        else (*i).Time = 0; 
-
-                        switch ((*i).Event.event_type)
-                        {
-                            //Events that are updated every EVENT_UPDATE_TIME
-                        case EVENT_T_TIMER:
-                        case EVENT_T_TIMER_OOC:
-                        case EVENT_T_MANA:
-                        case EVENT_T_HP:
-                        case EVENT_T_TARGET_HP:
-                        case EVENT_T_TARGET_CASTING:
-                        case EVENT_T_FRIENDLY_HP:
-                            ProcessEvent(*i);
-                            break;
-                        }
+                        //Skip processing of events that have time remaining
+                        continue;
+                    }
+                    else (*i).Time = 0;
                 }
 
-                EventDiff = 0;
-                EventUpdateTime = EVENT_UPDATE_TIME;
+                switch ((*i).Event.event_type)
+                {
+                    //Events that are updated every EVENT_UPDATE_TIME
+                    case EVENT_T_TIMER_OOC:
+                        ProcessEvent(*i);
+                        break;
+                    case EVENT_T_TIMER:
+                    case EVENT_T_MANA:
+                    case EVENT_T_HP:
+                    case EVENT_T_TARGET_HP:
+                    case EVENT_T_TARGET_CASTING:
+                    case EVENT_T_FRIENDLY_HP:
+                        if( Combat )
+                            ProcessEvent(*i);
+                        break;
+                }
+            }
+
+            EventDiff = 0;
+            EventUpdateTime = EVENT_UPDATE_TIME;
         }else 
         {
             EventDiff += diff;
