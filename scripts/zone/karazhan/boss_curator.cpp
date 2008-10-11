@@ -48,7 +48,7 @@ EndScriptData */
 #define SOUND_DEATH         9184
 
 //Flare spell info
-#define SPELL_ASTRAL_FLARE_PASSIVE      30234
+#define SPELL_ASTRAL_FLARE_PASSIVE      30234               //Visual effect + Flare damage
 #define SPELL_ASTRAL_FLARE_NE           30236
 #define SPELL_ASTRAL_FLARE_NW           30239
 #define SPELL_ASTRAL_FLARE_SE           30240
@@ -57,7 +57,7 @@ EndScriptData */
 //Curator spell info
 #define SPELL_HATEFUL_BOLT              30383
 #define SPELL_EVOCATION                 30254
-#define SPELL_ENRAGE                    28131
+#define SPELL_ENRAGE                    30403               //Arcane Infusion: Transforms Curator and adds damage.
 #define SPELL_BERSERK                   26662
 
 struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     void Reset()
     {
         AddTimer = 10000;
-        HatefulBoltTimer = 15000;                           // This time is probably wrong
+        HatefulBoltTimer = 15000;                           //This time may be wrong
         BerserkTimer = 720000;                              //12 minutes
         Enraged = false;
         Evocating = false;
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(NULL, SOUND_DEATH);
+        DoPlaySoundToSet(m_creature, SOUND_DEATH);
     }
 
     void Aggro(Unit *who)
@@ -115,7 +115,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (Evocating && !m_creature->HasAura(SPELL_EVOCATION, 0))
             Evocating = false;
 
-        if(m_creature->GetPower(POWER_MANA) <= 1000 && !Evocating)
+        if (m_creature->GetPower(POWER_MANA) <= 1000 && !Evocating)
         {
             DoYell(SAY_EVOCATE, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(m_creature, SOUND_EVOCATE);
@@ -124,12 +124,12 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             Evocating = true;
         }
 
-        if(!Enraged && !Evocating)
+        if (!Enraged && !Evocating)
         {
-            if(AddTimer < diff)
+            if (AddTimer < diff)
             {
                 //Summon Astral Flare
-                Creature* AstralFlare = DoSpawnCreature(17096, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                Creature* AstralFlare = DoSpawnCreature(17096, rand()%37, rand()%37, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 AddTimer = 10000;
             }else AddTimer -= diff;
 
-            if(HatefulBoltTimer < diff)
+            if (HatefulBoltTimer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
@@ -165,7 +165,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
                 HatefulBoltTimer = 15000;
             }else HatefulBoltTimer -= diff;
 
-            if(m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 15)
             {
                 Enraged = true;
                 DoCast(m_creature, SPELL_ENRAGE);
@@ -174,7 +174,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             }
         }
 
-        if(BerserkTimer < diff)
+        if (BerserkTimer < diff)
         {
             DoCast(m_creature, SPELL_BERSERK);
             DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
