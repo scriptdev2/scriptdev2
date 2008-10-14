@@ -1570,9 +1570,6 @@
 			<File
 				RelativePath="..\include\sc_instance.h">
 			</File>
-			<File
-				RelativePath="..\include\sc_item.h">
-			</File>
 		</Filter>
 		<File
 			RelativePath="..\config.h">
