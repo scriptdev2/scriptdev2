@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Moroes
-SD%Complete: 100
+SD%Complete: 95
 SDComment:
 SDCategory: Karazhan
 EndScriptData */
@@ -45,11 +45,11 @@ EndScriptData */
 #define SAY_DEATH           "How terribly clumsy of me..."
 #define SOUND_DEATH         9213
 
-#define SPELL_VANISH        24699
+#define SPELL_VANISH        29448
 #define SPELL_GARROTE       37066
-#define SPELL_BLIND         34654
-#define SPELL_GOUGE         28456
-#define SPELL_ENRAGE        37023
+#define SPELL_BLIND         34694
+#define SPELL_GOUGE         29425
+#define SPELL_FRENZY        37023
 
 #define ORIENT              4.5784
 #define POS_Z               81.73
@@ -278,100 +278,103 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
         if(!Enrage && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 30)
         {
-            DoCast(m_creature, SPELL_ENRAGE);
+            DoCast(m_creature, SPELL_FRENZY);
             Enrage = true;
         }
 
-        if(CheckAdds_Timer < diff)
+        if (CheckAdds_Timer < diff)
         {
-            for(uint8 i = 0; i < 4; ++i)
+            for (uint8 i = 0; i < 4; ++i)
             {
                 Unit* Temp = NULL;
-                if(AddGUID[i])
+                if (AddGUID[i])
                 {
                     Temp = Unit::GetUnit((*m_creature),AddGUID[i]);
-                    if(Temp && Temp->isAlive())
-                        if(!Temp->SelectHostilTarget() || !Temp->getVictim() )
+                    if (Temp && Temp->isAlive())
+                        if (!Temp->SelectHostilTarget() || !Temp->getVictim() )
                             ((Creature*)Temp)->AI()->AttackStart(m_creature->getVictim());
                 }
             }
             CheckAdds_Timer = 5000;
         }else CheckAdds_Timer -= diff;
 
-        //Cast Vanish, then Garrote random victim
-        if(Vanish_Timer < diff)
+        if (!Enrage)
         {
-            m_creature->setFaction(35);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            DoCast(m_creature, SPELL_VANISH);
-            InVanish = true;
-            Vanish_Timer = 30000;
-            Wait_Timer = 5000;
-        }else Vanish_Timer -= diff;
-
-        if(InVanish)
-        {
-            if(Wait_Timer < diff)
+            //Cast Vanish, then Garrote random victim
+            if (Vanish_Timer < diff)
             {
-                switch(rand()%2)
+                m_creature->setFaction(35);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                DoCast(m_creature, SPELL_VANISH);
+                InVanish = true;
+                Vanish_Timer = 30000;
+                Wait_Timer = 5000;
+            }else Vanish_Timer -= diff;
+
+            if (InVanish)
+            {
+                if (Wait_Timer < diff)
                 {
-                    case 0:
-                        DoYell(SAY_SPECIAL_1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SPECIAL_1);
-                        break;
-                    case 1:
-                        DoYell(SAY_SPECIAL_2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SPECIAL_2);
-                        break;
+                    switch(rand()%2)
+                    {
+                        case 0:
+                            DoYell(SAY_SPECIAL_1, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_SPECIAL_1);
+                            break;
+                        case 1:
+                            DoYell(SAY_SPECIAL_2, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(m_creature, SOUND_SPECIAL_2);
+                            break;
+                    }
+
+                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    if (target)
+                        target->CastSpell(target, SPELL_GARROTE,true);
+
+                    m_creature->setFaction(16);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    m_creature->AI()->AttackStart(m_creature->getVictim());
+                    InVanish = false;
+                }else Wait_Timer -= diff;
+            }
+
+            //Blind highest aggro, and attack second highest
+            if (Gouge_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_GOUGE);
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+                Gouge_Timer = 40000;
+            }else Gouge_Timer -= diff;
+
+            if (Blind_Timer < diff)
+            {
+                Unit* target = NULL;
+                std::list<HostilReference*> t_list = m_creature->getThreatManager().getThreatList();
+
+                if (t_list.empty())
+                    return;
+
+                std::vector<Unit*> target_list;
+                for (std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+                {
+                    target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+                    if (target && target->GetDistance2d(m_creature) < 5)
+                        target_list.push_back(target);
                 }
+                if (target_list.size())
+                    target = *(target_list.begin()+rand()%target_list.size());
 
-                Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if(target)
-                    target->CastSpell(target, SPELL_GARROTE,true);
+                if (target)
+                    DoCast(target, SPELL_BLIND);
 
-                m_creature->setFaction(16);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                m_creature->AI()->AttackStart(m_creature->getVictim());
-                InVanish = false;
-            }else Wait_Timer -= diff;
+                Blind_Timer = 40000;
+            }else Blind_Timer -= diff;
         }
 
-        //Blind highest aggro, and attack second highest
-        if(Gouge_Timer < diff)
-        {
-            DoCast(m_creature->getVictim(), SPELL_GOUGE);
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
-            Gouge_Timer = 40000;
-        }else Gouge_Timer -= diff;
-
-        if(Blind_Timer < diff)
-        {
-            Unit* target = NULL;
-            std::list<HostilReference*> t_list = m_creature->getThreatManager().getThreatList();
-
-            if(t_list.empty())
-                return;
-
-            std::vector<Unit*> target_list;
-            for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
-            {
-                target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                if(target && target->GetDistance2d(m_creature) < 5)
-                    target_list.push_back(target);
-            }
-            if(target_list.size())
-                target = *(target_list.begin()+rand()%target_list.size());
-
-            if(target)
-                DoCast(target, SPELL_BLIND);
-
-            Blind_Timer = 40000;
-        }else Blind_Timer -= diff;
-
-        if(!InVanish)
+        if (!InVanish)
             DoMeleeAttackIfReady();
     }
 };
