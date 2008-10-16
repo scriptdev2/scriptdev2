@@ -51,15 +51,14 @@ EndScriptData */
 #define SPELL_GOUGE         29425
 #define SPELL_FRENZY        37023
 
-#define ORIENT              4.5784
 #define POS_Z               81.73
 
-float Locations[4][2]=
+float Locations[4][3]=
 {
-    {-10976.2793, -1878.1736},
-    {-10979.7587, -1877.8706},
-    {-10985.6650, -1877.2458},
-    {-10989.1367, -1876.8309},
+    {-10991.0, -1884.33, 0.614315},
+    {-10989.4, -1885.88, 0.904913},
+    {-10978.1, -1887.07, 2.035550},
+    {-10975.9, -1885.81, 2.253890},
 };
 
 const uint32 Adds[6]=
@@ -159,7 +158,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(m_creature, SOUND_DEATH);
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_MOROES_EVENT, DONE);
 
         DeSpawnAdds();
@@ -168,14 +167,13 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     uint8 CheckAdd(uint64 guid)
     {
         Unit* pUnit = Unit::GetUnit((*m_creature), guid);
-        if(pUnit)
+        if (pUnit)
         {
-            if(!pUnit->isAlive())
+            if (!pUnit->isAlive())
                 return 1;                                   // Exists but is dead
             else
                 return 2;                                   // Exists and is alive
         }
-
         return 0;                                           // Does not exist
     }
 
@@ -183,7 +181,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
     {
         Creature *pCreature = NULL;
 
-        if(FirstTime)
+        if (FirstTime)
         {
             std::vector<uint32> AddList;
 
@@ -198,8 +196,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             {
                 uint32 entry = *itr;
 
-                pCreature = m_creature->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, ORIENT, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                if(pCreature)
+                pCreature = m_creature->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                if (pCreature)
                 {
                     AddGUID[i] = pCreature->GetGUID();
                     AddId[i] = entry;
@@ -216,13 +214,13 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 switch(CheckAdd(AddGUID[i]))
                 {
                     case 0:
-                        pCreature = m_creature->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, ORIENT, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                        if(pCreature)
+                        pCreature = m_creature->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                        if (pCreature)
                             AddGUID[i] = pCreature->GetGUID();
                         break;
                     case 1:
                         pCreature = ((Creature*)Unit::GetUnit((*m_creature), AddGUID[i]));
-                        if(pCreature)
+                        if (pCreature)
                         {
                             pCreature->Respawn();
                             pCreature->AI()->EnterEvadeMode();
@@ -230,7 +228,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                         break;
                     case 2:
                         pCreature = ((Creature*)Unit::GetUnit((*m_creature), AddGUID[i]));
-                        if(!pCreature->IsInEvadeMode())
+                        if (!pCreature->IsInEvadeMode())
                             pCreature->AI()->EnterEvadeMode();
                         break;
                 }
@@ -243,10 +241,10 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         for(uint8 i = 0; i < 4 ; ++i)
         {
             Unit* Temp = NULL;
-            if(AddGUID[i])
+            if (AddGUID[i])
             {
                 Temp = Unit::GetUnit((*m_creature),AddGUID[i]);
-                if(Temp && Temp->isAlive())
+                if (Temp && Temp->isAlive())
                     Temp->DealDamage(Temp, Temp->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
         }
@@ -257,10 +255,10 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         for(uint8 i = 0; i < 4; ++i)
         {
             Unit* Temp = NULL;
-            if(AddGUID[i])
+            if (AddGUID[i])
             {
                 Temp = Unit::GetUnit((*m_creature),AddGUID[i]);
-                if(Temp && Temp->isAlive())
+                if (Temp && Temp->isAlive())
                     ((Creature*)Temp)->AI()->AttackStart(m_creature->getVictim());
                 else
                     EnterEvadeMode();
