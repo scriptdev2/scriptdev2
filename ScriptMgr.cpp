@@ -11,7 +11,7 @@
 #include "ProgressBar.h"
 #include "scripts/creature/mob_event_ai.h"
 
-// Global data
+//*** Global data ***
 int nrscripts;
 Script *m_scripts[MAX_SCRIPTS];
 
@@ -41,26 +41,11 @@ enum ChatType
 #define TEXT_SOURCE_RANGE   -100000                         //the amount of entries each text source has available
 
 // Text Maps
-HM_NAMESPACE::hash_map<uint32, std::string> EventAI_Text_Map;
 HM_NAMESPACE::hash_map<int32, StringTextData> TextMap;
 
-// Localized Text structure for storing locales (for EAI and SD2 scripts).
-struct Localized_Text
-{
-    std::string locale_1;
-    std::string locale_2;
-    std::string locale_3;
-    std::string locale_4;
-    std::string locale_5;
-    std::string locale_6;
-    std::string locale_7;
-    std::string locale_8;
-};
 //*** End Global data ***
 
 //*** EventAI data ***
-HM_NAMESPACE::hash_map<uint32, Localized_Text> EventAI_LocalizedTextMap;
-
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
 std::list<EventAI_Event> EventAI_Event_List;
 
@@ -624,11 +609,73 @@ void LoadDatabase()
     // Drop Existing Text Map, only done once and we are ready to add data from multiple sources.
     TextMap.clear();
 
-    //TODO: Add load from eventai_texts here
+    // Load EventAI Text 
+    outstring_log("SD2: Loading EventAI Texts...");
+    LoadMangosStrings(SD2Database,"eventai_texts",-1,1+(TEXT_SOURCE_RANGE));
+
+    // Gather Additional data from EventAI Texts
+    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM eventai_texts");
+
+    outstring_log("SD2: Loading EventAI Texts additional data...");
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 count = 0;
+
+        do
+        {
+            bar.step();
+            Field* fields = result->Fetch();
+            StringTextData temp;
+
+            int32 i             = fields[0].GetInt32();
+            temp.SoundId        = fields[1].GetInt32();
+            temp.Type           = fields[2].GetInt32();
+            temp.Language       = fields[3].GetInt32();
+
+            if (i >= 0)
+            {
+                error_db_log("SD2: Entry %i in table `eventai_texts` is not a negative value.",i);
+                continue;
+            }
+
+            if (i <= TEXT_SOURCE_RANGE)
+            {
+                error_db_log("SD2: Entry %i in table `eventai_texts` is out of accepted entry range for table.",i);
+                continue;
+            }
+
+            if (temp.SoundId)
+            {
+                if (!GetSoundEntriesStore()->LookupEntry(temp.SoundId))
+                    error_db_log("SD2: Entry %i in table `eventai_texts` has soundId %u but sound does not exist.",i,temp.SoundId);
+            }
+
+            if (!GetLanguageDescByID(temp.Language))
+                error_db_log("SD2: Entry %i in table `eventai_texts` using Language %u but Language does not exist.",i,temp.Language);
+
+            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+                error_db_log("SD2: Entry %i in table `eventai_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
+
+            TextMap[i] = temp;
+            ++count;
+        } while (result->NextRow());
+
+        delete result;
+
+        outstring_log("");
+        outstring_log(">> SD2: Loaded %u additional EventAI Texts data.", count);
+    }else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 additional EventAI Texts data. DB table `eventai_texts` is empty.");
+    }
 
     // Load Script Text 
     outstring_log("SD2: Loading Script Texts...");
-    LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,(TEXT_SOURCE_RANGE*2)+1);
+    LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,1+(TEXT_SOURCE_RANGE*2));
 
     // Gather Additional data from Script Texts
     result = SD2Database.PQuery("SELECT entry, sound, type, language FROM script_texts");
@@ -692,7 +739,7 @@ void LoadDatabase()
 
     // Load Custom Text 
     outstring_log("SD2: Loading Custom Texts...");
-    LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,(TEXT_SOURCE_RANGE*3)+1);
+    LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,1+(TEXT_SOURCE_RANGE*3));
 
     // Gather Additional data from Custom Texts
     result = SD2Database.PQuery("SELECT entry, sound, type, language FROM custom_texts");
@@ -754,102 +801,13 @@ void LoadDatabase()
         outstring_log(">> Loaded 0 additional Custom Texts data. DB table `custom_texts` is empty.");
     }
 
-    // Drop existing Event AI Localized Text hash map
-    EventAI_LocalizedTextMap.clear();
-
-    // Gather EventAI Localized Texts
-    result = SD2Database.PQuery("SELECT id, locale_1, locale_2, locale_3, locale_4, locale_5, locale_6, locale_7, locale_8 "
-        "FROM eventai_localized_texts");
-
-    outstring_log("SD2: Loading EventAI Localized Texts...");
-    if(result)
-    {
-        barGoLink bar(result->GetRowCount());
-        uint32 count = 0;
-
-        do
-        {
-            Localized_Text temp;
-            bar.step();
-
-            Field *fields = result->Fetch();
-
-            uint32 i = fields[0].GetInt32();
-
-            temp.locale_1 = fields[1].GetString();
-            temp.locale_2 = fields[2].GetString();
-            temp.locale_3 = fields[3].GetString();
-            temp.locale_4 = fields[4].GetString();
-            temp.locale_5 = fields[5].GetString();
-            temp.locale_6 = fields[6].GetString();
-            temp.locale_7 = fields[7].GetString();
-            temp.locale_8 = fields[8].GetString();
-
-            EventAI_LocalizedTextMap[i] = temp;
-            ++count;
-
-        }while(result->NextRow());
-
-        delete result;
-
-        outstring_log("");
-        outstring_log(">> Loaded %u EventAI Localized Texts", count);
-    }else
-    {
-        barGoLink bar(1);
-        bar.step();
-        outstring_log("");
-        outstring_log(">> Loaded 0 EventAI Localized Texts. DB table `eventai_localized_texts` is empty");
-    }
-
-    //Drop existing EventAI Text hash map
-    EventAI_Text_Map.clear();
-
-    //Gather EventAI Text Entries
-    result = SD2Database.PQuery("SELECT id, text FROM eventai_texts");
-
-    outstring_log("SD2: Loading EventAI_Texts...");
-    if (result)
-    {
-        barGoLink bar(result->GetRowCount());
-        uint32 Count = 0;
-
-        do
-        {
-            bar.step();
-            Field *fields = result->Fetch();
-
-            uint32 i = fields[0].GetInt32();
-
-            std::string text = fields[1].GetString();
-
-            if (!strlen(text.c_str()))
-                error_db_log("SD2: EventAI text %u is empty", i);
-
-            EventAI_Text_Map[i] = text;
-            ++Count;
-
-        }while (result->NextRow());
-
-        delete result;
-
-        outstring_log("");
-        outstring_log(">> Loaded %u EventAI texts", Count);
-    }else
-    {
-        barGoLink bar(1);
-        bar.step();
-        outstring_log("");
-        outstring_log(">> Loaded 0 EventAI texts. DB table `eventai_texts` is empty.");
-    }
-
-    //Gather event data
+    //Gather additional data for EventAI
     result = SD2Database.PQuery("SELECT id, position_x, position_y, position_z, orientation, spawntimesecs FROM eventai_summons");
 
     //Drop Existing EventSummon Map
     EventAI_Summon_Map.clear();
 
-    outstring_log("SD2: Loading EventAI_Summons...");
+    outstring_log("SD2: Loading EventAI Summons...");
     if (result)
     {
         barGoLink bar(result->GetRowCount());
@@ -1037,11 +995,30 @@ void LoadDatabase()
                 //Report any errors in actions
                 switch (temp.action[j].type)
                 {
-                    case ACTION_T_SAY:
-                    case ACTION_T_YELL:
-                    case ACTION_T_TEXTEMOTE:
-                        if (GetEventAIText(temp.action[j].param1) == DEFAULT_TEXT)
-                            error_db_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
+                    case ACTION_T_TEXT:
+                        {
+                            if (temp.action[j].param1_s < 0)
+                            {
+                                if (TextMap.find(temp.action[j].param1_s) == TextMap.end())
+                                    error_db_log("SD2: Event %u Action %u param1 refrences non-existing entry in texts table.", i, j+1);
+                            }
+                            if (temp.action[j].param2_s < 0)
+                            {
+                                if (TextMap.find(temp.action[j].param2_s) == TextMap.end())
+                                    error_db_log("SD2: Event %u Action %u param2 refrences non-existing entry in texts table.", i, j+1);
+
+                                if (!temp.action[j].param1_s)
+                                    error_db_log("SD2: Event %u Action %u has param2, but param1 is not set. Required for randomized text.", i, j+1);
+                            }
+                            if (temp.action[j].param3_s < 0)
+                            {
+                                if (TextMap.find(temp.action[j].param3_s) == TextMap.end())
+                                    error_db_log("SD2: Event %u Action %u param3 refrences non-existing entry in texts table.", i, j+1);
+
+                                if (!temp.action[j].param1_s || !temp.action[j].param2_s)
+                                    error_db_log("SD2: Event %u Action %u has param3, but param1 and/or param2 is not set. Required for randomized text.", i, j+1);
+                            }
+                        }
                         break;
 
                     case ACTION_T_SOUND:
@@ -1049,14 +1026,16 @@ void LoadDatabase()
                             error_db_log("SD2: Event %u Action %u uses non-existant SoundID %u.", i, j+1, temp.action[j].param1);
                         break;
 
-                    case ACTION_T_RANDOM_SAY:
-                    case ACTION_T_RANDOM_YELL:
-                    case ACTION_T_RANDOM_TEXTEMOTE:
-                        if ((temp.action[j].param1 != 0xffffffff && GetEventAIText(temp.action[j].param1) == DEFAULT_TEXT) ||
-                            (temp.action[j].param2 != 0xffffffff && GetEventAIText(temp.action[j].param2) == DEFAULT_TEXT) ||
-                            (temp.action[j].param3 != 0xffffffff && GetEventAIText(temp.action[j].param3) == DEFAULT_TEXT))
-                            error_db_log("SD2: Event %u Action %u refrences missing Localized_Text entry", i, j+1);
-                        break;
+                    /*case ACTION_T_RANDOM_SOUND:
+                        {
+                            if(!GetSoundEntriesStore()->LookupEntry(temp.action[j].param1))
+                                error_db_log("SD2: Event %u Action %u param1 uses non-existant SoundID %u.", i, j+1, temp.action[j].param1);
+                            if(!GetSoundEntriesStore()->LookupEntry(temp.action[j].param2))
+                                error_db_log("SD2: Event %u Action %u param2 uses non-existant SoundID %u.", i, j+1, temp.action[j].param2);
+                            if(!GetSoundEntriesStore()->LookupEntry(temp.action[j].param3))
+                                error_db_log("SD2: Event %u Action %u param3 uses non-existant SoundID %u.", i, j+1, temp.action[j].param3);
+                        }
+                        break;*/
 
                     case ACTION_T_CAST:
                         {
@@ -1133,6 +1112,14 @@ void LoadDatabase()
                     case ACTION_T_SET_INST_DATA:
                         if (temp.action[j].param2 > 3)
                             error_db_log("SD2: Event %u Action %u attempts to set instance data above encounter state 3. Custom case?", i, j+1);
+                        break;
+
+                    case ACTION_T_YELL:
+                    case ACTION_T_TEXTEMOTE:
+                    case ACTION_T_RANDOM_SAY:
+                    case ACTION_T_RANDOM_YELL:
+                    case ACTION_T_RANDOM_TEXTEMOTE:
+                        error_db_log("SD2: Event %u Action %u currently unused ACTION type. Did you forget to update database?", i, j+1);
                         break;
 
                     default:
@@ -1773,88 +1760,7 @@ void ScriptsInit()
 }
 
 //*********************************
-//*** Functions used internally ***
-
-const char* GetEventAILocalizedText(uint32 entry)
-{
-    if (entry == 0xffffffff)
-        error_log("SD2: Entry = -1, GetEventAILocalizedText should not be called in this case.");
-
-    const char* temp = NULL;
-
-    HM_NAMESPACE::hash_map<uint32, Localized_Text>::iterator i = EventAI_LocalizedTextMap.find(entry);
-
-    if (i == EventAI_LocalizedTextMap.end())
-    {
-        error_log("SD2: EventAI Localized Text %u not found", entry);
-        return DEFAULT_TEXT;
-    }
-
-    switch (Locale)
-    {
-        case 1:
-            temp =  (*i).second.locale_1.c_str();
-            break;
-
-        case 2:
-            temp =  (*i).second.locale_2.c_str();
-            break;
-
-        case 3:
-            temp =  (*i).second.locale_3.c_str();
-            break;
-
-        case 4:
-            temp =  (*i).second.locale_4.c_str();
-            break;
-
-        case 5:
-            temp =  (*i).second.locale_5.c_str();
-            break;
-
-        case 6:
-            temp =  (*i).second.locale_6.c_str();
-            break;
-
-        case 7:
-            temp =  (*i).second.locale_7.c_str();
-            break;
-
-        case 8:
-            temp =  (*i).second.locale_8.c_str();
-            break;
-    };
-
-    if (strlen(temp))
-        return temp;
-
-    return DEFAULT_TEXT;
-}
-
-const char* GetEventAIText(uint32 entry)
-{
-    if(entry == 0xffffffff)
-        error_log("SD2: Entry = -1, GetEventAIText should not be called in this case.");
-
-    const char* str = NULL;
-
-    HM_NAMESPACE::hash_map<uint32, std::string>::iterator itr = EventAI_Text_Map.find(entry);
-    if(itr == EventAI_Text_Map.end())
-    {
-        error_log("SD2 ERROR: Unable to find EventAI Text %u", entry);
-        return DEFAULT_TEXT;
-    }
-
-    str = (*itr).second.c_str();
-
-    if(strlen(str))
-        return str;
-
-    if(strlen((*itr).second.c_str()))
-        return (*itr).second.c_str();
-
-    return DEFAULT_TEXT;
-}
+//*** Functions used globally ***
 
 void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 {
@@ -1866,7 +1772,7 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 
     if (textEntry >= 0)
     {
-        error_log("SD2: DoScriptText attempts to process entry %i, but entry must be negative.",textEntry);
+        error_log("SD2: DoScriptText with source entry %u (TypeId=%u, guid=%u) attempts to process text entry %i, but text entry must be negative.",pSource->GetEntry(),pSource->GetTypeId(),pSource->GetGUIDLow(),textEntry);
         return;
     }
 
@@ -1874,9 +1780,11 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 
     if (i == TextMap.end())
     {
-        error_log("SD2: DoScriptText could not find text entry %i.",textEntry);
+        error_log("SD2: DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.",pSource->GetEntry(),pSource->GetTypeId(),pSource->GetGUIDLow(),textEntry);
         return;
     }
+
+    debug_log("SD2: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u",textEntry,(*i).second.SoundId,(*i).second.Type,(*i).second.Language);
 
     if((*i).second.SoundId)
     {
@@ -1919,6 +1827,9 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
             }break;
     }
 }
+
+//*********************************
+//*** Functions used internally ***
 
 Script* GetScriptByName(std::string Name)
 {
