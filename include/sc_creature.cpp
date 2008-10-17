@@ -9,8 +9,8 @@
 
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {
-    uint8 Targets;    // set of enum SelectTarget
-    uint8 Effects;    // set of enum SelectEffect
+    uint8 Targets;                                          // set of enum SelectTarget
+    uint8 Effects;                                          // set of enum SelectEffect
 } *SpellSummary;
 
 bool ScriptedAI::IsVisible(Unit* who) const
@@ -23,22 +23,16 @@ bool ScriptedAI::IsVisible(Unit* who) const
 
 void ScriptedAI::MoveInLineOfSight(Unit *who)
 {
-    if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+    if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature))
     {
         if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
             return;
 
         float attackRadius = m_creature->GetAttackDistance(who);
-        if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+        if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
         {
-            DoStartAttackAndMovement(who);
             who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-                Aggro(who);
-            }
+            AttackStart(who);
         }
     }
 }
@@ -48,28 +42,31 @@ void ScriptedAI::AttackStart(Unit* who)
     if (!who)
         return;
 
-    if (who->isTargetableForAttack())
+    if (m_creature->Attack(who, true))
     {
-        //Begin attack
-        DoStartAttackAndMovement(who);
+        m_creature->AddThreat(who, 0.0f);
+        m_creature->SetInCombatWith(who);
+        who->SetInCombatWith(m_creature);
 
         if (!InCombat)
         {
             InCombat = true;
             Aggro(who);
         }
+
+        DoStartMovement(who);
     }
 }
 
 void ScriptedAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a current target
-    if( m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
+    if (m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
     {
-        if( m_creature->isAttackReady() )
+        if (m_creature->isAttackReady() )
         {
             //If we are within range melee the target
-            if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
             {
                 m_creature->AttackerStateUpdate(m_creature->getVictim());
                 m_creature->resetAttackTimer();
@@ -86,7 +83,7 @@ void ScriptedAI::EnterEvadeMode()
     m_creature->CombatStop();
     m_creature->LoadCreaturesAddon();
 
-    if( m_creature->isAlive() )
+    if (m_creature->isAlive())
         m_creature->GetMotionMaster()->MoveTargetedHome();
 
     m_creature->SetLootRecipient(NULL);
@@ -101,37 +98,31 @@ void ScriptedAI::JustRespawned()
     Reset();
 }
 
-void ScriptedAI::DoStartAttackAndMovement(Unit* victim, float distance, float angle)
+void ScriptedAI::DoStartMovement(Unit* victim, float distance, float angle)
 {
     if (!victim)
         return;
 
-    if ( m_creature->Attack(victim, true) )
-    {
-        m_creature->GetMotionMaster()->MoveChase(victim, distance, angle);
-        m_creature->AddThreat(victim, 0.0f);
-    }
+    m_creature->GetMotionMaster()->MoveChase(victim, distance, angle);
 }
 
-void ScriptedAI::DoStartAttackNoMovement(Unit* victim)
+void ScriptedAI::DoStartNoMovement(Unit* victim)
 {
     if (!victim)
         return;
 
-    if ( m_creature->Attack(victim, true) )
-    {
-        m_creature->AddThreat(victim, 0.0f);
-    }
+    m_creature->GetMotionMaster()->MoveIdle();
+    m_creature->StopMoving();
 }
 
 
 void ScriptedAI::DoMeleeAttackIfReady()
 {
     //Make sure our attack is ready and we aren't currently casting before checking distance
-    if( m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+    if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
     {
         //If we are within range melee the target
-        if( m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             m_creature->AttackerStateUpdate(m_creature->getVictim());
             m_creature->resetAttackTimer();
@@ -141,7 +132,7 @@ void ScriptedAI::DoMeleeAttackIfReady()
 
 void ScriptedAI::DoStopAttack()
 {
-    if( m_creature->getVictim() != NULL )
+    if (m_creature->getVictim() != NULL)
     {
         m_creature->AttackStop();
     }
@@ -167,19 +158,19 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool trigger
 
 void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)
 {
-    if (target)m_creature->Say(text, language, target->GetGUID());
+    if (target) m_creature->Say(text, language, target->GetGUID());
     else m_creature->Say(text, language, 0);
 }
 
 void ScriptedAI::DoYell(const char* text, uint32 language, Unit* target)
 {
-    if (target)m_creature->Yell(text, language, target->GetGUID());
+    if (target) m_creature->Yell(text, language, target->GetGUID());
     else m_creature->Yell(text, language, 0);
 }
 
 void ScriptedAI::DoTextEmote(const char* text, Unit* target, bool IsBossEmote)
 {
-    if (target)m_creature->TextEmote(text, target->GetGUID(), IsBossEmote);
+    if (target) m_creature->TextEmote(text, target->GetGUID(), IsBossEmote);
     else m_creature->TextEmote(text, 0, IsBossEmote);
 }
 
@@ -581,14 +572,8 @@ void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
         float attackRadius = m_creature->GetAttackDistance(who);
         if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
         {
-            DoStartAttackNoMovement(who);
             who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-                Aggro(who);
-            }
+            AttackStart(who);
         }
     }
 }
@@ -598,15 +583,18 @@ void Scripted_NoMovementAI::AttackStart(Unit* who)
     if (!who)
         return;
 
-    if (who->isTargetableForAttack())
+    if (m_creature->Attack(who, true))
     {
-        //Begin attack
-        DoStartAttackNoMovement(who);
+        m_creature->AddThreat(who, 0.0f);
+        m_creature->SetInCombatWith(who);
+        who->SetInCombatWith(m_creature);
 
         if (!InCombat)
         {
             InCombat = true;
             Aggro(who);
         }
+
+        DoStartNoMovement(who);
     }
 }

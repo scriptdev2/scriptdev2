@@ -796,16 +796,13 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartAttackAndMovement(who);
-
                 if (!InCombat)
                 {
                     DoCast(who, AURA_OF_DESIRE);
                 }
+
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                AttackStart(who);
             }
         }
     }
@@ -892,16 +889,13 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                DoStartAttackAndMovement(who);
-
                 if (!InCombat)
                 {
                     DoCast(who, AURA_OF_ANGER);
                 }
+
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                AttackStart(who);
             }
         }
     }

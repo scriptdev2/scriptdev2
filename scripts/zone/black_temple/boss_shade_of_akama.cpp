@@ -258,15 +258,29 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
 
     void AttackStart(Unit* who)
     {
-        if(!who || IsBanished) return;
+        if(!who || IsBanished || who == m_creature)
+            return;
 
-        if(who->isTargetableForAttack() && who != m_creature)
-            DoStartAttackAndMovement(who);
+        if (m_creature->Attack(who, true))
+        {
+            m_creature->AddThreat(who, 0.0f);
+            m_creature->SetInCombatWith(who);
+            who->SetInCombatWith(m_creature);
+
+            if (!InCombat)
+            {
+                InCombat = true;
+                Aggro(who);
+            }
+
+            DoStartMovement(who);
+        }
     }
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(IsBanished) return;
+        if (IsBanished)
+            return;
 
         ScriptedAI::MoveInLineOfSight(who);
     }

@@ -124,7 +124,10 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void Aggro(Unit *who) { StartEvent(who); }
+    void Aggro(Unit *who)
+    {
+        StartEvent(who);
+    }
 
     void GetCouncil()
     {
@@ -157,11 +160,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
             if(target)
             {
-                DoStartAttackAndMovement(target);
-
+                AttackStart(target);
                 GetCouncil();
-
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
             }
         }
 
@@ -208,8 +208,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if(target)
-                    DoStartAttackAndMovement(target);
+                if (target)
+                    AttackStart(target);
 
                 Charging_Timer = 20000;
             }else Charging_Timer -= diff;
@@ -274,7 +274,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
             if(target)
             {
-                DoStartAttackAndMovement(target);
+                AttackStart(target);
             }
         }
 
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartAttackAndMovement(who);
+                    AttackStart(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -377,7 +377,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
             if(target)
             {
-                DoStartAttackAndMovement(target);
+                AttackStart(target);
             }
         }
 
@@ -472,7 +472,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartAttackAndMovement(who);
+                    AttackStart(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -492,7 +492,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
             if(target)
             {
-                DoStartAttackAndMovement(target);
+                AttackStart(target);
             }
         }
 
@@ -572,7 +572,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    DoStartAttackAndMovement(who);
+                    AttackStart(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -592,7 +592,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
             if(target)
             {
-                DoStartAttackAndMovement(target);
+                AttackStart(target);
             }
         }
 

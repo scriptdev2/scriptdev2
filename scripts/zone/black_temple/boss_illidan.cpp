@@ -978,13 +978,25 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
     void AttackStart(Unit *who)
     {
-        if(!who || IsTalking || Phase == 2 || Phase == 4 || Phase == 6 || m_creature->HasAura(SPELL_KNEEL, 0))
+        if (!who || IsTalking || Phase == 2 || Phase == 4 || Phase == 6 || m_creature->HasAura(SPELL_KNEEL, 0))
             return;
 
-        if (who->isTargetableForAttack() && who!= m_creature)
+        if (who == m_creature)
+            return;
+
+        if (m_creature->Attack(who, true))
         {
-            //Begin melee attack if we are within range
-            DoStartAttackAndMovement(who);
+            m_creature->AddThreat(who, 0.0f);
+            m_creature->SetInCombatWith(who);
+            who->SetInCombatWith(m_creature);
+
+            if (!InCombat)
+            {
+                InCombat = true;
+                Aggro(who);
+            }
+
+            DoStartMovement(who);
         }
     }
 
@@ -1001,10 +1013,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
-                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                DoStartAttackAndMovement(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                AttackStart(who);
             }
         }
     }
