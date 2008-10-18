@@ -37,7 +37,7 @@ enum ChatType
     CHAT_TYPE_BOSS_WHISPER      = 5,
 };
 
-#define TEXT_SOURCE_RANGE   -100000                         //the amount of entries each text source has available
+#define TEXT_SOURCE_RANGE   -1000000                        //the amount of entries each text source has available
 
 // Text Maps
 HM_NAMESPACE::hash_map<int32, StringTextData> TextMap;
