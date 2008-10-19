@@ -24,6 +24,15 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_shadow_labyrinth.h"
 
+#define SAY_INTRO                       -1555028
+#define SAY_AGGRO1                      -1555029
+#define SAY_AGGRO2                      -1555030
+#define SAY_AGGRO3                      -1555031
+#define SAY_HELP                        -1555032
+#define SAY_SLAY1                       -1555033
+#define SAY_SLAY2                       -1555034
+#define SAY_DEATH                       -1555035
+
 #define SPELL_DRAW_SHADOWS              33563
 #define SPELL_VOID_PORTAL_A             33566               //spell only summon one unit, but we use it for the visual effect and summon the 4 other portals manual way(only one spell exist)
 #define SPELL_VOID_PORTAL_VISUAL        33569
@@ -37,30 +46,12 @@ EndScriptData */
 #define H_SPELL_RAIN_OF_FIRE            39363
 #define H_SPELL_BANISH                  38791
 
-#define SAY_INTRO               "Keep your minds focused for the days of reckoning are close at hand. Soon, the destroyer of worlds will return to make good on his promise. Soon the destruction of all that is will begin!"
-#define SAY_AGGRO1              "I'll make an offering of your blood!"
-#define SAY_AGGRO2              "You'll be a fine example, for the others."
-#define SAY_AGGRO3              "Good, a worthy sacrifice."
-#define SAY_HELP                "Come to my aid, heed your master now!"
-#define SAY_SLAY1               "I serve with pride."
-#define SAY_SLAY2               "Your death is for the greater cause!"
-#define SAY_DEATH               "I give my life... Gladly."
+#define ENTRY_VOID_PORTAL               19224
+#define ENTRY_VOID_TRAVELER             19226
 
-#define SOUND_INTRO             10522
-#define SOUND_AGGRO1            10524
-#define SOUND_AGGRO2            10525
-#define SOUND_AGGRO3            10526
-#define SOUND_HELP              10523
-#define SOUND_SLAY1             10527
-#define SOUND_SLAY2             10528
-#define SOUND_DEATH             10529
-
-#define ENTRY_VOID_PORTAL       19224
-#define ENTRY_VOID_TRAVELER     19226
-
-#define LOCX                    -253.06f
-#define LOCY                    -264.02f
-#define LOCZ                    17.08
+#define LOCX                            -253.06f
+#define LOCY                            -264.02f
+#define LOCZ                            17.08
 
 struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 {
@@ -93,20 +84,20 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         Intro = false;
         Teleport = false;
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, NOT_STARTED);
     }
 
     void MoveInLineOfSight(Unit *who)
     {
-        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature))
         {
             //not sure about right radius
             if(!Intro && m_creature->IsWithinDistInMap(who, 50))
             {
-                DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_INTRO);
+                DoScriptText(SAY_INTRO, m_creature);
                 DoCast(m_creature, SPELL_VOID_PORTAL_A,true);
+
                 m_creature->SummonCreature(ENTRY_VOID_PORTAL,-262.40,-229.57,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
                 m_creature->SummonCreature(ENTRY_VOID_PORTAL,-260.35,-297.56,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
                 m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
@@ -118,7 +109,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 return;
 
             float attackRadius = m_creature->GetAttackDistance(who);
-            if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 AttackStart(who);
@@ -130,21 +121,12 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                break;
-            case 1:
-                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                break;
-            case 2:
-                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                break;
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
     }
 
@@ -152,14 +134,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
@@ -177,10 +153,9 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, DONE);
     }
 
@@ -190,9 +165,9 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if( Teleport )
+        if (Teleport)
         {
-            if( Teleport_Timer <= diff )
+            if (Teleport_Timer <= diff)
             {
                 m_creature->Relocate(LOCX,LOCY,LOCZ);
                 m_creature->SendMonsterMove(LOCX,LOCY,LOCZ,0,true,0);
@@ -205,7 +180,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
                 {
                     Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                    if( target && target->GetTypeId() == TYPEID_PLAYER )
+                    if (target && target->GetTypeId() == TYPEID_PLAYER)
                     {
                         target->GetRandomPoint(LOCX,LOCY,LOCZ,3.0,ranX,ranY,ranZ);
                         DoTeleportPlayer(target,ranX,ranY,ranZ,m_creature->GetAngle(m_creature->GetPositionX(),m_creature->GetPositionY()));
@@ -213,20 +188,20 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                if( HeroicMode ) DoCast(m_creature->getVictim(), H_SPELL_RAIN_OF_FIRE);
+                if (HeroicMode) DoCast(m_creature->getVictim(), H_SPELL_RAIN_OF_FIRE);
                 else DoCast(m_creature->getVictim(), SPELL_RAIN_OF_FIRE);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
         }
 
-        if( ShadowBoltVolley_Timer < diff )
+        if (ShadowBoltVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOW_BOLT_VOLLEY);
             ShadowBoltVolley_Timer = 30000;
         }else ShadowBoltVolley_Timer -= diff;
 
-        if( DrawShadows_Timer < diff )
+        if (DrawShadows_Timer < diff)
         {
             DoCast(m_creature,SPELL_DRAW_SHADOWS);
             DrawShadows_Timer = 35000;
@@ -235,8 +210,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
         if( VoidTraveler_Timer < diff )
         {
-            DoYell(SAY_HELP, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_HELP);
+            DoScriptText(SAY_HELP, m_creature);
 
             switch(rand()%5)
             {
@@ -260,11 +234,11 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             VoidTraveler_Timer = 35000;
         }else VoidTraveler_Timer -= diff;
 
-        if( HeroicMode )
+        if (HeroicMode)
         {
-            if( Banish_Timer < diff )
+            if (Banish_Timer < diff)
             {
-                if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1) )
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     DoCast(target,H_SPELL_BANISH);
                 Banish_Timer = 35000;
             }else Banish_Timer -= diff;
