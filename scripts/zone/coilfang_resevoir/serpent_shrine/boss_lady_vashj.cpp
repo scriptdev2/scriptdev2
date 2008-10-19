@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Lady_Vashj
-SD%Complete: 99
+SD%Complete: 95
 SDComment: Missing blizzlike Shield Generators coords
 SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
@@ -27,59 +27,46 @@ EndScriptData */
 #include "Item.h"
 #include "Spell.h"
 
-#define SPELL_MULTI_SHOT              38310
-#define SPELL_SHOCK_BLAST             38509
-#define SPELL_ENTANGLE                38316
-#define SPELL_STATIC_CHARGE_TRIGGER   38280
-#define SPELL_FORKED_LIGHTNING        40088
-#define SPELL_SHOOT                   40873
-#define SPELL_POISON_BOLT             40095
-#define SPELL_TOXIC_SPORES            38575
-#define SPELL_MAGIC_BARRIER           38112
+#define SAY_INTRO                   -1548042
+#define SAY_AGGRO1                  -1548043
+#define SAY_AGGRO2                  -1548044
+#define SAY_AGGRO3                  -1548045
+#define SAY_AGGRO4                  -1548046
+#define SAY_PHASE1                  -1548047
+#define SAY_PHASE2                  -1548048
+#define SAY_PHASE3                  -1548049
+#define SAY_BOWSHOT1                -1548050
+#define SAY_BOWSHOT2                -1548051
+#define SAY_SLAY1                   -1548052
+#define SAY_SLAY2                   -1548053
+#define SAY_SLAY3                   -1548054
+#define SAY_DEATH                   -1548055
 
-#define SAY_INTRO                     "Water is life. It has become a rare commodity here in Outland. A commodity that we alone shall control. We are the Highborne, and the time has come at last for us to retake our rightful place in the world!"
-#define SAY_AGGRO1                    "I'll split you from stem to stern! "
-#define SAY_AGGRO2                    "Victory to Lord Illidan!"
-#define SAY_AGGRO3                    "I spit on you, surface filth!"
-#define SAY_AGGRO4                    "Death to the outsiders!"
-#define SAY_PHASE1                    "I did not wish to lower myself by engaging your kind, but you leave me little choice!"
-#define SAY_PHASE2                    "The time is now! Leave none standing!"
-#define SAY_PHASE3                    "You may want to take cover."
-#define SAY_BOWSHOT1                  "Straight to the heart!"
-#define SAY_BOWSHOT2                  "Seek your mark!"
-#define SAY_SLAY1                     "Your time ends now!"
-#define SAY_SLAY2                     "You have failed!"
-#define SAY_DEATH                     "Lord Illidan, I... I am... sorry."
+#define SPELL_MULTI_SHOT            38310
+#define SPELL_SHOCK_BLAST           38509
+#define SPELL_ENTANGLE              38316
+#define SPELL_STATIC_CHARGE_TRIGGER 38280
+#define SPELL_FORKED_LIGHTNING      40088
+#define SPELL_SHOOT                 40873
+#define SPELL_POISON_BOLT           40095
+#define SPELL_TOXIC_SPORES          38575
+#define SPELL_MAGIC_BARRIER         38112
 
-#define SOUND_INTRO                   11531
-#define SOUND_AGGRO1                  11532
-#define SOUND_AGGRO2                  11533
-#define SOUND_AGGRO3                  11534
-#define SOUND_AGGRO4                  11535
-#define SOUND_PHASE1                  11538
-#define SOUND_PHASE2                  11539
-#define SOUND_PHASE3                  11540
-#define SOUND_BOWSHOT1                11536
-#define SOUND_BOWSHOT2                11537
-#define SOUND_SLAY1                   11541
-#define SOUND_SLAY2                   11542
-#define SOUND_DEATH                   11544
+#define MIDDLE_X                    30.134
+#define MIDDLE_Y                    -923.65
+#define MIDDLE_Z                    42.9
 
-#define MIDDLE_X                      30.134
-#define MIDDLE_Y                      -923.65
-#define MIDDLE_Z                      42.9
+#define SPOREBAT_X                  30.977156
+#define SPOREBAT_Y                  -925.297761
+#define SPOREBAT_Z                  77.176567
+#define SPOREBAT_O                  5.223932
 
-#define SPOREBAT_X                    30.977156
-#define SPOREBAT_Y                    -925.297761
-#define SPOREBAT_Z                    77.176567
-#define SPOREBAT_O                    5.223932
-
-#define SHIED_GENERATOR_CHANNEL       19870
-#define ENCHANTED_ELEMENTAL           21958
-#define TAINTED_ELEMENTAL             22009
-#define COILFANG_STRIDER              22056
-#define COILFANG_ELITE                22055
-#define FATHOM_SPOREBAT               22140
+#define SHIED_GENERATOR_CHANNEL     19870
+#define ENCHANTED_ELEMENTAL         21958
+#define TAINTED_ELEMENTAL           22009
+#define COILFANG_STRIDER            22056
+#define COILFANG_ELITE              22055
+#define FATHOM_SPOREBAT             22140
 
 float ElementPos[8][4] =
 {
@@ -162,8 +149,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
         Entangle = false;
 
-        if(pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, 0);
+        if (pInstance)
+            pInstance->SetData(DATA_LADYVASHJEVENT, NOT_STARTED);
 
         ShieldGeneratorChannel[0] = 0;
         ShieldGeneratorChannel[1] = 0;
@@ -176,67 +163,48 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     void EventTaintedElementalDeath()
     {
         //the next will spawn 50 seconds after the previous one's death
-        if(TaintedElemental_Timer > 50000)
+        if (TaintedElemental_Timer > 50000)
             TaintedElemental_Timer = 50000;
     }
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch(rand()%3)
         {
-            case 0:
-                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
+            case 2: DoScriptText(SAY_SLAY3, m_creature); break;
         }
     }
 
     void JustDied(Unit *victim)
     {
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, 0);
+        if (pInstance)
+            pInstance->SetData(DATA_LADYVASHJEVENT, DONE);
     }
 
     void StartEvent()
     {
         switch(rand()%4)
         {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                break;
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                break;
-            case 2:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                break;
-            case 3:
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO4);
-                DoYell(SAY_AGGRO4, LANG_UNIVERSAL, NULL);
-                break;
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
+            case 3: DoScriptText(SAY_AGGRO4, m_creature); break;
         }
 
         Phase = 1;
 
-        if(pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, 1);
+        if (pInstance)
+            pInstance->SetData(DATA_LADYVASHJEVENT, IN_PROGRESS);
     }
 
     void Aggro(Unit *who)
     {
         //Begin melee attack if we are within range
-        if(Phase != 2)
+        if (Phase != 2)
             DoStartMovement(who);
 
         StartEvent();
@@ -262,14 +230,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         {
             switch(rand()%2)
             {
-                case 0:
-                    DoPlaySoundToSet(m_creature, SOUND_BOWSHOT1);
-                    DoYell(SAY_BOWSHOT1, LANG_UNIVERSAL, NULL);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(m_creature, SOUND_BOWSHOT2);
-                    DoYell(SAY_BOWSHOT2, LANG_UNIVERSAL, NULL);
-                    break;
+                case 0: DoScriptText(SAY_BOWSHOT1, m_creature); break;
+                case 1: DoScriptText(SAY_BOWSHOT2, m_creature); break;
             }
         }
     }
@@ -277,14 +239,14 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //to prevent abuses during phase 2
-        if(Phase == 2 && !m_creature->getVictim() && InCombat)
+        if (Phase == 2 && !m_creature->getVictim() && InCombat)
             EnterEvadeMode();
 
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(Phase == 1 || Phase == 3)
+        if (Phase == 1 || Phase == 3)
         {
             //ShockBlast_Timer
             if (ShockBlast_Timer < diff)
@@ -298,16 +260,16 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else ShockBlast_Timer -= diff;
 
             //StaticCharge_Timer
-            if(StaticCharge_Timer < diff)
+            if (StaticCharge_Timer < diff)
             {
                 //Static Charge
                 //Used on random people (only 1 person at any given time) in Phases 1 and 3, it's a debuff doing 2775 to 3225 Nature damage to the target and everybody in about 5 yards around it, every 1 seconds for 30 seconds. It can be removed by Cloak of Shadows, Iceblock, Divine Shield, etc, but not by Cleanse or Dispel Magic.
                 Unit *target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-                if(target && !target->HasAura(SPELL_STATIC_CHARGE_TRIGGER, 0))
-                                                            //cast Static Charge every 2 seconds for 20 seconds
-                        DoCast(target, SPELL_STATIC_CHARGE_TRIGGER);
+                if (target && !target->HasAura(SPELL_STATIC_CHARGE_TRIGGER, 0))
+                    //cast Static Charge every 2 seconds for 20 seconds
+                    DoCast(target, SPELL_STATIC_CHARGE_TRIGGER);
 
                 StaticCharge_Timer = 10000+rand()%20000;    //blizzlike
             }else StaticCharge_Timer -= diff;
@@ -315,7 +277,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             //Entangle_Timer
             if (Entangle_Timer < diff)
             {
-                if(!Entangle)
+                if (!Entangle)
                 {
                     //Entangle
                     //Used in Phases 1 and 3, it casts Entangling Roots on everybody in a 15 yard radius of Vashj, immobilzing them for 10 seconds and dealing 500 damage every 2 seconds. It's not a magic effect so it cannot be dispelled, but is removed by various buffs such as Cloak of Shadows or Blessing of Freedom.
@@ -332,7 +294,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else Entangle_Timer -= diff;
 
             //Phase 1
-            if(Phase == 1)
+            if (Phase == 1)
             {
                 //Start phase 2
                 if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 70)
@@ -357,29 +319,28 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                             ShieldGeneratorChannel[i] = pCreature->GetGUID();
                     }
 
-                    DoPlaySoundToSet(m_creature, SOUND_PHASE2);
-                    DoYell(SAY_PHASE2, LANG_UNIVERSAL, NULL);
+                    DoScriptText(SAY_PHASE2, m_creature);
                 }
             }
             //Phase 3
             else
             {
                 //SummonSporebat_Timer
-                if(SummonSporebat_Timer < diff)
+                if (SummonSporebat_Timer < diff)
                 {
                     Creature *Sporebat = NULL;
                     Sporebat = m_creature->SummonCreature(FATHOM_SPOREBAT, SPOREBAT_X, SPOREBAT_Y, SPOREBAT_Z, SPOREBAT_O, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
 
-                    if(Sporebat)
+                    if (Sporebat)
                     {
                         Unit *target = NULL;
                         target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                        if(target)
+                        if (target)
                             Sporebat->AI()->AttackStart(target);
                     }
 
                     //summon sporebats faster and faster
-                    if(SummonSporebat_StaticTimer > 1000)
+                    if (SummonSporebat_StaticTimer > 1000)
                         SummonSporebat_StaticTimer -= 1000;
 
                     SummonSporebat_Timer = SummonSporebat_StaticTimer;
@@ -390,7 +351,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             DoMeleeAttackIfReady();
 
             //Check_Timer - used to check if somebody is in melee range
-            if(Check_Timer < diff)
+            if (Check_Timer < diff)
             {
                 bool InMeleeRange = false;
                 Unit *target;
@@ -399,7 +360,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 {
                     target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
                                                             //if in melee range
-                    if(target && target->IsWithinDistInMap(m_creature, 5))
+                    if (target && target->IsWithinDistInMap(m_creature, 5))
                     {
                         InMeleeRange = true;
                         break;
@@ -407,7 +368,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 }
 
                 //if nobody is in melee range
-                if(!InMeleeRange)
+                if (!InMeleeRange)
                     CastShootOrMultishot();
 
                 Check_Timer = 1000;
@@ -417,14 +378,14 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         else
         {
             //ForkedLightning_Timer
-            if(ForkedLightning_Timer < diff)
+            if (ForkedLightning_Timer < diff)
             {
                 //Forked Lightning
                 //Used constantly in Phase 2, it shoots out completely randomly targeted bolts of lightning which hit everybody in a roughtly 60 degree cone in front of Vashj for 2313-2687 nature damage.
                 Unit *target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-                if(!target)
+                if (!target)
                     target = m_creature->getVictim();
 
                 DoCast(target, SPELL_FORKED_LIGHTNING);
@@ -437,10 +398,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             {
                 Creature *Elemental;
                 Elemental = m_creature->SummonCreature(ENCHANTED_ELEMENTAL, ElementPos[EnchantedElemental_Pos][0], ElementPos[EnchantedElemental_Pos][1], ElementPos[EnchantedElemental_Pos][2], ElementPos[EnchantedElemental_Pos][3], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-                if(Elemental)
+                if (Elemental)
                     Elemental->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
 
-                if(EnchantedElemental_Pos == 7)
+                if (EnchantedElemental_Pos == 7)
                     EnchantedElemental_Pos = 0;
                 else
                     EnchantedElemental_Pos++;
@@ -449,12 +410,12 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else EnchantedElemental_Timer -= diff;
 
             //TaintedElemental_Timer
-            if(TaintedElemental_Timer < diff)
+            if (TaintedElemental_Timer < diff)
             {
                 Creature *Tain_Elemental;
                 uint32 pos = rand()%8;
                 Tain_Elemental = m_creature->SummonCreature(TAINTED_ELEMENTAL, ElementPos[pos][0], ElementPos[pos][1], ElementPos[pos][2], ElementPos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
-                if(Tain_Elemental)
+                if (Tain_Elemental)
                 {
                     Tain_Elemental->GetMotionMaster()->Clear();
                     Tain_Elemental->GetMotionMaster()->MoveIdle();
@@ -464,16 +425,16 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else TaintedElemental_Timer -= diff;
 
             //CoilfangElite_Timer
-            if(CoilfangElite_Timer < diff)
+            if (CoilfangElite_Timer < diff)
             {
                 Creature *CoilfangElite;
                 uint32 pos = rand()%3;
                 CoilfangElite = m_creature->SummonCreature(COILFANG_ELITE, CoilfangElitePos[pos][0], CoilfangElitePos[pos][1], CoilfangElitePos[pos][2], CoilfangElitePos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
-                if(CoilfangElite)
+                if (CoilfangElite)
                 {
                     Unit *target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if(target)
+                    if (target)
                         CoilfangElite->AI()->AttackStart(target);
                 }
 
@@ -481,16 +442,16 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else CoilfangElite_Timer -= diff;
 
             //CoilfangStrider_Timer
-            if(CoilfangStrider_Timer < diff)
+            if (CoilfangStrider_Timer < diff)
             {
                 Creature *CoilfangStrider;
                 uint32 pos = rand()%3;
                 CoilfangStrider = m_creature->SummonCreature(COILFANG_STRIDER, CoilfangStriderPos[pos][0], CoilfangStriderPos[pos][1], CoilfangStriderPos[pos][2], CoilfangStriderPos[pos][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                if(CoilfangStrider)
+                if (CoilfangStrider)
                 {
                     Unit *target = NULL;
                     target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if(target)
+                    if (target)
                         CoilfangStrider->AI()->AttackStart(target);
                 }
 
@@ -498,10 +459,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else CoilfangStrider_Timer -= diff;
 
             //Check_Timer
-            if(Check_Timer < diff)
+            if (Check_Timer < diff)
             {
                 //Start Phase 3
-                if(pInstance && pInstance->GetData(DATA_CANSTARTPHASE3))
+                if (pInstance && pInstance->GetData(DATA_CANSTARTPHASE3))
                 {
                     //set life 50%
                     m_creature->SetHealth(m_creature->GetMaxHealth()/2);
@@ -509,8 +470,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     m_creature->RemoveAurasDueToSpell(SPELL_MAGIC_BARRIER);
 
-                    DoPlaySoundToSet(m_creature, SOUND_PHASE3);
-                    DoYell(SAY_PHASE3, LANG_UNIVERSAL, NULL);
+                    DoScriptText(SAY_PHASE3, m_creature);
 
                     Phase = 3;
 
@@ -551,15 +511,15 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Check_Timer
-        if(Check_Timer < diff)
+        if (Check_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 Unit *Vashj = NULL;
                 Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
-                if(Vashj)
+                if (Vashj)
                 {
-                    if(Vashj->IsWithinDistInMap(m_creature, 5))
+                    if (Vashj->IsWithinDistInMap(m_creature, 5))
                     {
                         //increase lady vashj damage (+5%)
                         const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
@@ -577,7 +537,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
                     }
                 }
             }
-            else error_log("ERROR: Instance Data for Serpentshrine Caverns not set");
+            else error_log("SD2: Instance Data for Serpentshrine Caverns not set");
             Check_Timer = 1000;
         }else Check_Timer -= diff;
     }
@@ -604,12 +564,12 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if(pInstance)
+        if (pInstance)
         {
             Creature *Vashj = NULL;
             Vashj = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ)));
 
-            if(Vashj)
+            if (Vashj)
                 ((boss_lady_vashjAI*)Vashj->AI())->EventTaintedElementalDeath();
         }
     }
@@ -621,12 +581,12 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //PoisonBolt_Timer
-        if(PoisonBolt_Timer < diff)
+        if (PoisonBolt_Timer < diff)
         {
             Unit *target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
-            if(target && target->IsWithinDistInMap(m_creature, 30))
+            if (target && target->IsWithinDistInMap(m_creature, 30))
                 DoCast(target, SPELL_POISON_BOLT);
 
             PoisonBolt_Timer = 5000+rand()%5000;
@@ -665,27 +625,27 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
             return;
 
         //ToxicSpore_Timer
-        if(ToxicSpore_Timer < diff)
+        if (ToxicSpore_Timer < diff)
         {
             Unit *target = NULL;
             target = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             //The Spores will hit you anywhere in the instance: underwater, at the elevator, at the entrance, wherever.
-            if(target)
+            if (target)
                 DoCast(target, SPELL_TOXIC_SPORES);
 
             ToxicSpore_Timer = 20000+rand()%5000;
         }else ToxicSpore_Timer -= diff;
 
         //Check_Timer
-        if(Check_Timer < diff)
+        if (Check_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 //check if vashj is death
                 Unit *Vashj = NULL;
                 Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
-                if(!Vashj || (Vashj && !Vashj->isAlive()))
+                if (!Vashj || (Vashj && !Vashj->isAlive()))
                 {
                     //remove
                     m_creature->setDeathState(DEAD);
@@ -767,15 +727,15 @@ struct MANGOS_DLL_DECL mob_shield_generator_channelAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if(!pInstance)
+        if (!pInstance)
             return;
 
-        if(!Channeled)
+        if (!Channeled)
         {
             Unit *Vashj = NULL;
             Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
 
-            if(Vashj && Vashj->isAlive())
+            if (Vashj && Vashj->isAlive())
             {
                 //start visual channel
                 m_creature->SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, Vashj->GetGUID());

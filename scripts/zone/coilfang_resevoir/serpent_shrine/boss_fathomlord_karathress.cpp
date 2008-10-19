@@ -24,45 +24,39 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_serpent_shrine.h"
 
+#define SAY_AGGRO                   -1548021
+#define SAY_GAIN_BLESSING           -1548022
+#define SAY_GAIN_ABILITY1           -1548023
+#define SAY_GAIN_ABILITY2           -1548024
+#define SAY_GAIN_ABILITY3           -1548025
+#define SAY_SLAY1                   -1548026
+#define SAY_SLAY2                   -1548027
+#define SAY_SLAY3                   -1548028
+#define SAY_DEATH                   -1548029
+
 //Karathress spells
-#define SPELL_CATACLYSMIC_BOLT     38441
-#define SPELL_POWER_OF_SHARKKIS    38455
-#define SPELL_POWER_OF_TIDALVESS   38452
-#define SPELL_POWER_OF_CARIBDIS    38451
-#define SPELL_ENRAGE               24318
+#define SPELL_CATACLYSMIC_BOLT      38441
+#define SPELL_POWER_OF_SHARKKIS     38455
+#define SPELL_POWER_OF_TIDALVESS    38452
+#define SPELL_POWER_OF_CARIBDIS     38451
+#define SPELL_ENRAGE                24318
+#define SPELL_SEAR_NOVA             38445
 //Sharkkis spells
-#define SPELL_LEECHING_THROW       29436
-#define SPELL_THE_BEAST_WITHIN     38373
+#define SPELL_LEECHING_THROW        29436
+#define SPELL_THE_BEAST_WITHIN      38373
 //Tidalvess spells
-#define SPELL_FROST_SHOCK          38234
+#define SPELL_FROST_SHOCK           38234
 //Caribdis Spells
-#define SPELL_WATER_BOLT_VOLLEY    38335
-#define SPELL_TIDAL_SURGE          38353
-#define SPELL_HEAL                 41386
-
-#define SAY_AGGRO                  "Guards, attention! We have visitors..."
-#define SAY_SLAY1                  "I am rid of you."
-#define SAY_GAIN_ABILITY1          "I am more powerful than ever!"
-#define SAY_GAIN_ABILITY2          "Go on, kill them! I'll be the better for it!"
-#define SAY_GAIN_ABILITY3          "More knowledge, more power!"
-#define SAY_DEATH                  "Her ... excellency ... awaits!"
-
-#define SOUND_AGGRO                11277
-#define SOUND_PLYR_ATTACK          11278
-#define SOUND_GAIN_ABILITY1        11279
-#define SOUND_GAIN_ABILITY2        11280
-#define SOUND_GAIN_ABILITY3        11281
-#define SOUND_SLAY1                11282
-#define SOUND_SLAY2                11283
-#define SOUND_SLAY3                11284
-#define SOUND_DEATH                11285
+#define SPELL_WATER_BOLT_VOLLEY     38335
+#define SPELL_TIDAL_SURGE           38353
+#define SPELL_HEAL                  41386
 
 //entry and position for Seer Olum
-#define SEER_OLUM                  22820
-#define OLUM_X                     446.78f
-#define OLUM_Y                     -542.76f
-#define OLUM_Z                     -7.54773f
-#define OLUM_O                     0.401581f
+#define SEER_OLUM                   22820
+#define OLUM_X                      446.78f
+#define OLUM_Y                      -542.76f
+#define OLUM_Z                      -7.54773f
+#define OLUM_O                      0.401581f
 
 //Fathom-Lord Karathress AI
 struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
@@ -90,49 +84,48 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         Creature* Advisor;
         for(uint8 i = 0; i < 3; ++i)
-            if(Advisors[i])
         {
-            Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
-            if(Advisor)
+            if (Advisors[i])
             {
-                if(Advisor->isAlive())
+                Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
+                if (Advisor)
                 {
-                    Advisor->DealDamage(Advisor, Advisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    Advisor->RemoveCorpse();
-                    Advisor->Respawn();
+                    if (Advisor->isAlive())
+                    {
+                        Advisor->DealDamage(Advisor, Advisor->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                        Advisor->RemoveCorpse();
+                        Advisor->Respawn();
+                    }
+                    Advisor->AI()->EnterEvadeMode();
                 }
-                Advisor->AI()->EnterEvadeMode();
             }
         }
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void EventSharkkisDeath()
     {
-        DoPlaySoundToSet(m_creature, SOUND_GAIN_ABILITY1);
-        DoYell(SAY_GAIN_ABILITY1, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_GAIN_ABILITY1, m_creature);
         DoCast(m_creature, SPELL_POWER_OF_SHARKKIS);
     }
 
     void EventTidalvessDeath()
     {
-        DoPlaySoundToSet(m_creature, SOUND_GAIN_ABILITY2);
-        DoYell(SAY_GAIN_ABILITY2, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_GAIN_ABILITY2, m_creature);
         DoCast(m_creature, SPELL_POWER_OF_TIDALVESS);
     }
 
     void EventCaribdisDeath()
     {
-        DoPlaySoundToSet(m_creature, SOUND_GAIN_ABILITY3);
-        DoYell(SAY_GAIN_ABILITY3, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_GAIN_ABILITY3, m_creature);
         DoCast(m_creature, SPELL_POWER_OF_CARIBDIS);
     }
 
     void GetAdvisors()
     {
-        if(!pInstance)
+        if (!pInstance)
             return;
 
         Advisors[0] = pInstance->GetData64(DATA_SHARKKIS);
@@ -142,13 +135,12 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     void StartEvent(Unit *who)
     {
-        if(!pInstance)
+        if (!pInstance)
             return;
 
         GetAdvisors();
 
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_AGGRO, m_creature);
 
         pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
         pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
@@ -158,25 +150,17 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                break;
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
-            case 2:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
+            case 2: DoScriptText(SAY_SLAY3, m_creature); break;
         }
     }
 
     void JustDied(Unit *killer)
     {
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, NOT_STARTED);
 
         //support for quest 10944
@@ -191,11 +175,11 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
-            if(target)
+            if (target)
             {
                 AttackStart(target);
                 GetAdvisors();
@@ -207,17 +191,17 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //CataclysmicBolt_Timer
-        if(CataclysmicBolt_Timer < diff)
+        if (CataclysmicBolt_Timer < diff)
         {
             //select a random unit other than the main tank
             Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
             //if there aren't other units, cast on the tank
-            if(!target)
+            if (!target)
                 target = m_creature->getVictim();
 
             int32 dmg = target->GetMaxHealth() / 2;
@@ -227,7 +211,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         }else CataclysmicBolt_Timer -= diff;
 
         //Enrage_Timer
-        if(Enrage_Timer < diff)
+        if (Enrage_Timer < diff)
         {
             DoCast(m_creature, SPELL_ENRAGE);
             Enrage_Timer = 90000;
@@ -256,25 +240,25 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         LeechingThrow_Timer = 20000;
         TheBeastWithin_Timer = 30000;
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
     {
-        if(pInstance)
+        if (pInstance)
         {
             Creature *Karathress = NULL;
             Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
-            if(Karathress)
+            if (Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventSharkkisDeath();
         }
     }
 
     void Aggro(Unit *who)
     {
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
             pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
@@ -284,11 +268,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
-            if(target)
+            if (target)
             {
                 AttackStart(target);
             }
@@ -299,18 +283,18 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //LeechingThrow_Timer
-        if(LeechingThrow_Timer < diff)
+        if (LeechingThrow_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_LEECHING_THROW);
             LeechingThrow_Timer = 20000;
         }else LeechingThrow_Timer -= diff;
 
         //TheBeastWithin_Timer
-        if(TheBeastWithin_Timer < diff)
+        if (TheBeastWithin_Timer < diff)
         {
             DoCast(m_creature, SPELL_THE_BEAST_WITHIN);
             TheBeastWithin_Timer = 30000;
@@ -337,25 +321,25 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
     {
         FrostShock_Timer = 25000;
 
-        if( pInstance )
+        if (pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
     {
-        if(pInstance)
+        if (pInstance)
         {
             Creature *Karathress = NULL;
             Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
-            if(Karathress)
+            if (Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventTidalvessDeath();
         }
     }
 
     void Aggro(Unit *who)
     {
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
             pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
@@ -365,11 +349,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
-            if(target)
+            if (target)
             {
                 AttackStart(target);
             }
@@ -380,11 +364,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //FrostShock_Timer
-        if(FrostShock_Timer < diff)
+        if (FrostShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_FROST_SHOCK);
             FrostShock_Timer = 25000+rand()%5000;
@@ -415,25 +399,25 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         TidalSurge_Timer = 15000+rand()%5000;
         Heal_Timer = 55000;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *victim)
     {
-        if(pInstance)
+        if (pInstance)
         {
             Creature *Karathress = NULL;
             Karathress = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESS)));
 
-            if(Karathress)
+            if (Karathress)
                 ((boss_fathomlord_karathressAI*)Karathress->AI())->EventCaribdisDeath();
         }
     }
 
     void Aggro(Unit *who)
     {
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
             pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
@@ -443,11 +427,11 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if(!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!InCombat && pInstance && pInstance->GetData(DATA_KARATHRESSEVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER));
 
-            if(target)
+            if (target)
             {
                 AttackStart(target);
             }
@@ -458,30 +442,30 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if(pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
             EnterEvadeMode();
 
         //WaterBoltVolley_Timer
-        if(WaterBoltVolley_Timer < diff)
+        if (WaterBoltVolley_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_WATER_BOLT_VOLLEY);
             WaterBoltVolley_Timer = 30000;
         }else WaterBoltVolley_Timer -= diff;
 
         //TidalSurge_Timer
-        if(TidalSurge_Timer < diff)
+        if (TidalSurge_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_TIDAL_SURGE);
             TidalSurge_Timer = 15000+rand()%5000;
         }else TidalSurge_Timer -= diff;
 
         //Heal_Timer
-        if(Heal_Timer < diff)
+        if (Heal_Timer < diff)
         {
             // It can be cast on any of the mobs
             Unit *pUnit = NULL;
 
-            if(pInstance)
+            if (pInstance)
             {
                 switch(rand()%4)
                 {
@@ -500,7 +484,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
                 }
             }else pUnit = m_creature;
 
-            if(pUnit && pUnit->isAlive())
+            if (pUnit && pUnit->isAlive())
                 DoCast(pUnit, SPELL_HEAL);
 
             Heal_Timer = 60000;
