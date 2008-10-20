@@ -43,10 +43,13 @@ EndScriptData */
 #define SPELL_ARCING_SMASH       39144
 #define SPELL_MIGHTY_BLOW        33230
 #define SPELL_WHIRLWIND          33238
-#define SPELL_ENRAGE             34970
+#define SPELL_FLURRY             33232
+#define SPELL_CHARGE             26561
+#define SPELL_FEAR               16508
 
 // Council spells
 #define SPELL_DARK_DECAY        33129
+#define SPELL_DEATH_COIL        33130
 #define SPELL_GREATER_POLYMORPH 33173
 #define SPELL_LIGHTNING_BOLT    36152
 #define SPELL_ARCANE_SHOCK      33175
@@ -73,7 +76,9 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     uint32 ArcingSmash_Timer;
     uint32 MightyBlow_Timer;
     uint32 Whirlwind_Timer;
-    uint32 Charging_Timer;
+    uint32 Charge_Timer;
+    uint32 Fear_Timer;
+
 
     bool Phase2;
 
@@ -81,10 +86,11 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
     void Reset()
     {
-        ArcingSmash_Timer = 10000;
-        MightyBlow_Timer = 40000;
+        ArcingSmash_Timer = 8000+rand()%6000;
+        MightyBlow_Timer = 15000+rand()%10000;
         Whirlwind_Timer = 30000;
-        Charging_Timer = 0;
+        Charge_Timer = 2000;
+        Fear_Timer = 10000+rand()%15000;
         Phase2 = false;
 
         Creature *pCreature = NULL;
@@ -124,10 +130,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
             pInstance->SetData(DATA_MAULGAREVENT, 0);
     }
 
-    void Aggro(Unit *who)
-    {
-        StartEvent(who);
-    }
+    void Aggro(Unit *who) { StartEvent(who); }
 
     void GetCouncil()
     {
@@ -160,8 +163,11 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
             if(target)
             {
-                AttackStart(target);
+                DoStartAttackAndMovement(target);
+
                 GetCouncil();
+
+                DoPlaySoundToSet(m_creature, SOUND_AGGRO);
             }
         }
 
@@ -177,42 +183,51 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         if (ArcingSmash_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCING_SMASH);
-            ArcingSmash_Timer = 10000;
+            ArcingSmash_Timer = 8000+rand()%4000;
         }else ArcingSmash_Timer -= diff;
 
         //Whirlwind_Timer
         if (Whirlwind_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_WHIRLWIND);
-            Whirlwind_Timer = 55000;
+            Whirlwind_Timer = 30000+rand()%10000;
         }else Whirlwind_Timer -= diff;
 
         //MightyBlow_Timer
         if (MightyBlow_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_MIGHTY_BLOW);
-            MightyBlow_Timer = 30000+rand()%10000;
+            MightyBlow_Timer = 20000+rand()%15000;
         }else MightyBlow_Timer -= diff;
 
         //Entering Phase 2
         if(!Phase2 && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 50)
         {
             Phase2 = true;
+            DoCast(m_creature, SPELL_FLURRY);
             DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
         }
 
         if(Phase2)
         {
-            //Charging_Timer
-            if(Charging_Timer < diff)
+            //Charge_Timer
+            if(Charge_Timer < diff)
             {
                 Unit* target = NULL;
                 target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (target)
-                    AttackStart(target);
+                if(target)
+                    DoCast(target, SPELL_CHARGE);
 
-                Charging_Timer = 20000;
-            }else Charging_Timer -= diff;
+                Charge_Timer = 14000 + rand()%6000;  
+            }else Charge_Timer -= diff;
+
+            //MightyBlow_Timer
+            if (Fear_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_FEAR);
+                Fear_Timer = 20000+rand()%15000;
+            }else Fear_Timer -= diff;
+
         }
 
         DoMeleeAttackIfReady();
@@ -229,14 +244,16 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     }
 
     uint32 DarkDecay_Timer;
+    uint32 DeathCoil_Timer;
     uint32 Summon_Timer;
 
     ScriptedInstance* pInstance;
 
     void Reset()
     {
-        DarkDecay_Timer = 10000;
-        Summon_Timer = 15000;
+        DarkDecay_Timer = 18000;
+        DeathCoil_Timer = 14000;
+        Summon_Timer = 10000;
 
         //reset encounter
         if (pInstance)
@@ -274,7 +291,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
 
             if(target)
             {
-                AttackStart(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -292,13 +309,20 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_DARK_DECAY);
             DarkDecay_Timer = 20000;
         }else DarkDecay_Timer -= diff;
+        
+        //DeathCoil_Timer
+        if(DeathCoil_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(), SPELL_DEATH_COIL);
+            DeathCoil_Timer = 8000 + rand()%5000;  
+        }else DeathCoil_Timer -= diff;
 
         //Summon_Timer
         if(Summon_Timer < diff)
         {
             Creature *Add = NULL;
             Add = DoSpawnCreature(18847, DoCalculateRandomLocation(), DoCalculateRandomLocation(), 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-            Summon_Timer = 30000;
+            Summon_Timer = 25000+rand()%10000;
         }else Summon_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -357,7 +381,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    AttackStart(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -377,7 +401,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
 
             if(target)
             {
-                AttackStart(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -403,20 +427,22 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         if(LightningBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
-            LightningBolt_Timer = 15000;
+            LightningBolt_Timer = 10000 + rand()%5000;  
         }else LightningBolt_Timer -= diff;
 
         //ArcaneShock_Timer
         if(ArcaneShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_SHOCK);
-            ArcaneShock_Timer = 20000;
+            ArcaneShock_Timer = 15000 + rand()%5000;  
         }else ArcaneShock_Timer -= diff;
 
         //ArcaneExplosion_Timer
         if(ArcaneExplosion_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
+            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-25);
             ArcaneExplosion_Timer = 30000;
         }else ArcaneExplosion_Timer -= diff;
 
@@ -472,7 +498,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    AttackStart(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -492,7 +518,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
             if(target)
             {
-                AttackStart(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -508,14 +534,14 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         if(GreaterPowerWordShield_Timer < diff)
         {
             DoCast(m_creature, SPELL_GREATER_PW_SHIELD);
-            GreaterPowerWordShield_Timer = 40000;
+            GreaterPowerWordShield_Timer = 30000 + rand()%10000;  
         }else GreaterPowerWordShield_Timer -= diff;
 
         //Heal_Timer
         if(Heal_Timer < diff)
         {
             DoCast(m_creature, SPELL_HEAL);
-            Heal_Timer = 60000;
+            Heal_Timer = 25000 + rand()%15000;  
         }else Heal_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -572,7 +598,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
                 if(!InCombat)
                 {
-                    AttackStart(who);
+                    DoStartAttackAndMovement(who);
                     if(pInstance)
                     {
                         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
@@ -592,7 +618,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
 
             if(target)
             {
-                AttackStart(target);
+                DoStartAttackAndMovement(target);
             }
         }
 
@@ -608,7 +634,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         if(GreaterFireball_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_GREATER_FIREBALL);
-            GreaterFireball_Timer = 2000;
+            GreaterFireball_Timer = 3200;
         }else GreaterFireball_Timer -= diff;
 
         //SpellShield_Timer
@@ -624,7 +650,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_BLAST_WAVE);
-            BlastWave_Timer = 60000;
+            BlastWave_Timer = 30000 + rand()%15000;  
         }else BlastWave_Timer -= diff;
 
         DoMeleeAttackIfReady();

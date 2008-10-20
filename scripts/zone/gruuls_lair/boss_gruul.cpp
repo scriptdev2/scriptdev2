@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
     uint32 Growth_Timer;
     uint32 CaveIn_Timer;
+    uint32 CaveIn_StaticTimer;
     uint32 GroundSlamTimer;
     uint32 GroundSlamStage;
     uint32 PerformingGroundSlam;
@@ -58,7 +59,8 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
         pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
 
         Growth_Timer= 30000;
-        CaveIn_Timer= 40000;
+        CaveIn_Timer= 27000;
+        CaveIn_StaticTimer = 30000;
         GroundSlamTimer= 35000;
         GroundSlamStage= 0;
         PerformingGroundSlam= false;
@@ -233,7 +235,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
             {
                 m_creature->CastSpell(m_creature->getVictim(), SPELL_REVERBERATION, true);
 
-                Reverberation_Timer = 30000;
+                Reverberation_Timer = 15000 + rand()%10000;
             }else Reverberation_Timer -= diff;
 
             // Cave In
@@ -245,7 +247,11 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 if(target)
                     DoCast(target,SPELL_CAVE_IN);
 
-                CaveIn_Timer = 20000;
+                if(CaveIn_StaticTimer > 4000)
+                    CaveIn_StaticTimer -= 2000;
+
+                    CaveIn_Timer = CaveIn_StaticTimer;
+
             }else CaveIn_Timer -= diff;
 
             // Ground Slam, Gronn Lord's Grasp, Stoned, Shatter
