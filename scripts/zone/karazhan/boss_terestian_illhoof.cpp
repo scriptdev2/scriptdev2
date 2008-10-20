@@ -24,6 +24,15 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_karazhan.h"
 
+#define SAY_SLAY1                   -1532065
+#define SAY_SLAY2                   -1532066
+#define SAY_DEATH                   -1532067
+#define SAY_AGGRO                   -1532068
+#define SAY_SACRIFICE1              -1532069
+#define SAY_SACRIFICE2              -1532070
+#define SAY_SUMMON1                 -1532071
+#define SAY_SUMMON2                 -1532072
+
 #define SPELL_SUMMON_DEMONCHAINS    30120                   // Summons demonic chains that maintain the ritual of sacrifice.
 #define SPELL_DEMON_CHAINS          30206                   // Instant - Visual Effect
 #define SPELL_ENRAGE                23537                   // Increases the caster's attack speed by 50% and the Physical damage it deals by 219 to 281 for 10 min.
@@ -42,32 +51,11 @@ EndScriptData */
 #define SPELL_AMPLIFY_FLAMES        30053                   // Increases the Fire damage taken by an enemy by 500 for 25 sec.
 #define SPELL_FIREBOLT              18086                   // Blasts a target for 150 Fire damage.
 
-#define SAY_SLAY1           "Your blood will anoint my circle."
-#define SOUND_SLAY1         9264
-#define SAY_SLAY2           "The great one will be pleased."
-#define SOUND_SLAY2         9329
+#define CREATURE_DEMONCHAINS        17248
+#define CREATURE_FIENDISHIMP        17267
+#define CREATURE_PORTAL             17265
 
-#define SAY_DEATH           "My life, is yours. Oh great one."
-#define SOUND_DEATH         9262
-
-#define SAY_AGGRO           "Ah, you're just in time. The rituals are about to begin."
-#define SOUND_AGGRO         9260
-
-#define SAY_SACRIFICE1      "Please, accept this humble offering, oh great one."
-#define SOUND_SACRIFICE1    9263
-#define SAY_SACRIFICE2      "Let the sacrifice serve his testament to my fealty."
-#define SOUND_SACRIFICE2    9330
-
-#define SAY_SUMMON1         "Come, you dwellers in the dark. Rally to my call!"
-#define SOUND_SUMMON1       9265
-#define SAY_SUMMON2         "Gather, my pets. There is plenty for all."
-#define SOUND_SUMMON2       9331
-
-#define CREATURE_DEMONCHAINS    17248
-#define CREATURE_FIENDISHIMP    17267
-#define CREATURE_PORTAL         17265
-
-#define PORTAL_Z        179.434
+#define PORTAL_Z                    179.434
 
 float PortalLocations[2][2]=
 {
@@ -86,41 +74,39 @@ struct MANGOS_DLL_DECL mob_kilrekAI : public ScriptedAI
     ScriptedInstance* pInstance;
 
     uint64 TerestianGUID;
-
     uint32 AmplifyTimer;
 
     void Reset()
     {
         TerestianGUID = 0;
-
         AmplifyTimer = 0;
     }
 
     void Aggro(Unit *who)
     {
-        if(!pInstance)
+        if (!pInstance)
         {
             ERROR_INST_DATA(m_creature);
             return;
         }
 
         Creature* Terestian = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_TERESTIAN)));
-        if(Terestian && (!Terestian->SelectHostilTarget() && !Terestian->getVictim()))
+        if (Terestian && (!Terestian->SelectHostilTarget() && !Terestian->getVictim()))
             Terestian->AddThreat(who, 1.0f);
     }
 
     void JustDied(Unit* Killer)
     {
-        if(pInstance)
+        if (pInstance)
         {
             uint64 TerestianGUID = pInstance->GetData64(DATA_TERESTIAN);
-            if(TerestianGUID)
+            if (TerestianGUID)
             {
                 Unit* Terestian = Unit::GetUnit((*m_creature), TerestianGUID);
-                if(Terestian && Terestian->isAlive())
+                if (Terestian && Terestian->isAlive())
                     DoCast(Terestian, SPELL_BROKEN_PACT, true);
             }
-        }else ERROR_INST_DATA(m_creature);
+        } else ERROR_INST_DATA(m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -164,10 +150,10 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if(SacrificeGUID)
+        if (SacrificeGUID)
         {
             Unit* Sacrifice = Unit::GetUnit((*m_creature),SacrificeGUID);
-            if(Sacrifice)
+            if (Sacrifice)
                 Sacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
         }
     }
@@ -200,10 +186,10 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
     {
         for(uint8 i = 0; i < 2; ++i)
         {
-            if(PortalGUID[i])
+            if (PortalGUID[i])
             {
                 Unit* Portal = Unit::GetUnit((*m_creature), PortalGUID[i]);
-                if(Portal)
+                if (Portal)
                     Portal->DealDamage(Portal, Portal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                 PortalGUID[i] = 0;
@@ -219,38 +205,31 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
         SummonedPortals     = false;
         Berserk             = false;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_TERESTIAN_EVENT, NOT_STARTED);
     }
 
     void Aggro(Unit* who)
     {
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
 
-        if(pInstance)
+        if (pInstance)
         {
             // Put Kil'rek in combat against our target so players don't skip him
             Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KILREK)));
-            if(Kilrek && (!Kilrek->SelectHostilTarget() && !Kilrek->getVictim()))
+            if (Kilrek && (!Kilrek->SelectHostilTarget() && !Kilrek->getVictim()))
                 Kilrek->AddThreat(who, 1.0f);
 
             pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS);
-        }else ERROR_INST_DATA(m_creature);
+        } else ERROR_INST_DATA(m_creature);
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
@@ -258,38 +237,37 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
     {
         for(uint8 i = 0; i < 2; ++i)
         {
-            if(PortalGUID[i])
+            if (PortalGUID[i])
             {
                 Unit* Portal = Unit::GetUnit((*m_creature), PortalGUID[i]);
-                if(Portal)
+                if (Portal)
                     Portal->DealDamage(Portal, Portal->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                 PortalGUID[i] = 0;
             }
         }
 
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_TERESTIAN_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->getVictim() && !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
-        if(CheckKilrekTimer < diff)
+        if (CheckKilrekTimer < diff)
         {
             CheckKilrekTimer = 5000;
 
-            if(pInstance)
+            if (pInstance)
                 uint64 KilrekGUID = pInstance->GetData64(DATA_KILREK);
             else ERROR_INST_DATA(m_creature);
 
             Creature* Kilrek = ((Creature*)Unit::GetUnit((*m_creature), KilrekGUID));
-            if(SummonKilrek && Kilrek)
+            if (SummonKilrek && Kilrek)
             {
                 Kilrek->Respawn();
                 Kilrek->AI()->AttackStart(m_creature->getVictim());
@@ -297,72 +275,64 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
                 SummonKilrek = false;
             }
 
-            if(!Kilrek || !Kilrek->isAlive())
+            if (!Kilrek || !Kilrek->isAlive())
             {
                 SummonKilrek = true;
                 CheckKilrekTimer = 45000;
             }
         }else CheckKilrekTimer -= diff;
 
-        if(SacrificeTimer < diff)
+        if (SacrificeTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
             {
                 DoCast(target, SPELL_SACRIFICE, true);
+
                 Creature* Chains = m_creature->SummonCreature(CREATURE_DEMONCHAINS, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 21000);
-                if(Chains)
+                if (Chains)
                 {
                     ((mob_demon_chainAI*)Chains->AI())->SacrificeGUID = target->GetGUID();
                     Chains->CastSpell(Chains, SPELL_DEMON_CHAINS, true);
+
                     switch(rand()%2)
                     {
-                        case 0:
-                            DoYell(SAY_SACRIFICE1, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_SACRIFICE1);
-                            break;
-                        case 1:
-                            DoYell(SAY_SACRIFICE2, LANG_UNIVERSAL, NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_SACRIFICE2);
-                            break;
+                        case 0: DoScriptText(SAY_SACRIFICE1, m_creature); break;
+                        case 1: DoScriptText(SAY_SACRIFICE2, m_creature); break;
                     }
+
                     SacrificeTimer = 30000;
                 }
             }
         }else SacrificeTimer -= diff;
 
-        if(ShadowboltTimer < diff)
+        if (ShadowboltTimer < diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_TOPAGGRO, 0), SPELL_SHADOW_BOLT);
             ShadowboltTimer = 10000;
-        }else ShadowboltTimer -= diff;
+        } else ShadowboltTimer -= diff;
 
-        if(SummonTimer < diff)
+        if (SummonTimer < diff)
         {
-            if(!SummonedPortals)
+            if (!SummonedPortals)
             {
                 for(uint8 i = 0; i < 2; ++i)
                 {
                     Creature* Portal = m_creature->SummonCreature(CREATURE_PORTAL, PortalLocations[i][0], PortalLocations[i][1], PORTAL_Z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                    if(Portal)
+                    if (Portal)
                         PortalGUID[i] = Portal->GetGUID();
                 }
                 SummonedPortals = true;
+
                 switch(rand()%2)
                 {
-                    case 0:
-                        DoYell(SAY_SUMMON1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON1);
-                        break;
-                    case 1:
-                        DoYell(SAY_SUMMON2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_SUMMON2);
-                        break;
+                    case 0: DoScriptText(SAY_SUMMON1, m_creature); break;
+                    case 1: DoScriptText(SAY_SUMMON2, m_creature); break;
                 }
             }
             uint32 random = rand()%2;
             Creature* Imp = m_creature->SummonCreature(CREATURE_FIENDISHIMP, PortalLocations[random][0], PortalLocations[random][1], PORTAL_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 15000);
-            if(Imp)
+            if (Imp)
             {
                 Imp->AddThreat(m_creature->getVictim(), 1.0f);
                 Imp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 1));
@@ -370,12 +340,14 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             SummonTimer = 5000;
         }else SummonTimer -= diff;
 
-        if(!Berserk)
-            if(BerserkTimer < diff)
+        if (!Berserk)
         {
-            DoCast(m_creature, SPELL_BERSERK);
-            Berserk = true;
-        }else BerserkTimer -= diff;
+            if (BerserkTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+                Berserk = true;
+            } else BerserkTimer -= diff;
+        }
 
         DoMeleeAttackIfReady();
     }
@@ -400,7 +372,7 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(FireboltTimer < diff)
+        if (FireboltTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_FIREBOLT);
             FireboltTimer = 1500;

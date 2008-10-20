@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Shade_of_Aran
 SD%Complete: 95
-SDComment: Flame wreath missing cast animation, mods won't triggere. Drinking may cause client crash (core related)
+SDComment: Flame wreath missing cast animation, mods won't triggere.
 SDCategory: Karazhan
 EndScriptData */
 
@@ -26,79 +26,41 @@ EndScriptData */
 #include "def_karazhan.h"
 #include "GameObject.h"
 
-//Aggro
-#define SAY_AGGRO1 "Please, no more. My son... he's gone mad!"
-#define SOUND_AGGRO1 9241
-
-#define SAY_AGGRO2 "I'll not be tortured again!"
-#define SOUND_AGGRO2 9323
-
-#define SAY_AGGRO3 "Who are you? What do you want? Stay away from me!"
-#define SOUND_AGGRO3 9324
-
-//Flame Wreath
-#define SAY_FLAMEWREATH1 "I'll show you this beaten dog still has some teeth!"
-#define SOUND_FLAMEWREATH1 9245
-#define SAY_FLAMEWREATH2 "Burn you hellish fiends!"
-#define SOUND_FLAMEWREATH2 9326
-
-//Blizzard
-#define SAY_BLIZZARD1 "I'll freeze you all!"
-#define SOUND_BLIZZARD1 9246
-#define SAY_BLIZZARD2 "Back to the cold dark with you!"
-#define SOUND_BLIZZARD2 9327
-
-//Arcane Explosion
-#define SAY_EXPLOSION1 "Yes, yes, my son is quite powerful... but I have powers of my own!"
-#define SOUND_EXPLOSION1 9242
-#define SAY_EXPLOSION2 "I am not some simple jester! I am Nielas Aran!"
-#define SOUND_EXPLOSION2 9325
-
-//Low Mana / AoE Pyroblast
-#define SAY_DRINK "Surely you would not deny an old man a replenishing drink? No, no I thought not."
-#define SOUND_DRINK 9248
-
-//Summon Water Elementals
-#define SAY_ELEMENTALS "I'm not finished yet! No, I have a few more tricks up me sleeve."
-#define SOUND_ELEMENTALS 9251
-
-//Player Death
-#define SAY_KILL1 "I want this nightmare to be over!"
-#define SOUND_KILL1 9250
-
-#define SAY_KILL2 "Torment me no more!"
-#define SOUND_KILL2 9328
-
-//Time over
-#define SAY_TIMEOVER "You've wasted enough of my time. Let these games be finished!"
-#define SOUND_TIMEOVER 9247
-
-//Aran's death
-#define SAY_DEATH "At last... The nightmare is.. over..."
-#define SOUND_DEATH 9244
-
-//Atiesh is equipped by a raid member
-#define SAY_ATIESH "Where did you get that?! Did HE send you?!"
-#define SOUND_ATIESH 9249
+#define SAY_AGGRO1                  -1532073
+#define SAY_AGGRO2                  -1532074
+#define SAY_AGGRO3                  -1532075
+#define SAY_FLAMEWREATH1            -1532076
+#define SAY_FLAMEWREATH2            -1532077
+#define SAY_BLIZZARD1               -1532078
+#define SAY_BLIZZARD2               -1532079
+#define SAY_EXPLOSION1              -1532080
+#define SAY_EXPLOSION2              -1532081
+#define SAY_DRINK                   -1532082                //Low Mana / AoE Pyroblast
+#define SAY_ELEMENTALS              -1532083
+#define SAY_KILL1                   -1532084
+#define SAY_KILL2                   -1532085
+#define SAY_TIMEOVER                -1532086
+#define SAY_DEATH                   -1532087
+#define SAY_ATIESH                  -1532088                //Atiesh is equipped by a raid member
 
 //Spells
-#define SPELL_FROSTBOLT     29954
-#define SPELL_FIREBALL      29953
-#define SPELL_ARCMISSLE     29955
-#define SPELL_CHAINSOFICE   29991
-#define SPELL_DRAGONSBREATH 29964
-#define SPELL_MASSSLOW      30035
-#define SPELL_FLAME_WREATH  29946
-#define SPELL_AOE_CS        29961
-#define SPELL_PLAYERPULL    32265
-#define SPELL_AEXPLOSION    29973
-#define SPELL_MASS_POLY     29963
-#define SPELL_BLINK_CENTER  29967
-#define SPELL_ELEMENTALS    29962
-#define SPELL_CONJURE       29975
-#define SPELL_DRINK         30024
-#define SPELL_POTION        32453
-#define SPELL_AOE_PYROBLAST 29978
+#define SPELL_FROSTBOLT             29954
+#define SPELL_FIREBALL              29953
+#define SPELL_ARCMISSLE             29955
+#define SPELL_CHAINSOFICE           29991
+#define SPELL_DRAGONSBREATH         29964
+#define SPELL_MASSSLOW              30035
+#define SPELL_FLAME_WREATH          29946
+#define SPELL_AOE_CS                29961
+#define SPELL_PLAYERPULL            32265
+#define SPELL_AEXPLOSION            29973
+#define SPELL_MASS_POLY             29963
+#define SPELL_BLINK_CENTER          29967
+#define SPELL_ELEMENTALS            29962
+#define SPELL_CONJURE               29975
+#define SPELL_DRINK                 30024
+#define SPELL_POTION                32453
+#define SPELL_AOE_PYROBLAST         29978
 
 //Creature Spells
 #define SPELL_CIRCULAR_BLIZZARD     29951                   //29952 is the REAL circular blizzard that leaves persistant blizzards that last for 10 seconds
@@ -176,12 +138,12 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         Drinking = false;
         DrinkInturrupted = false;
 
-        if(pInstance)
+        if (pInstance)
         {
                                                             // Not in progress
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED);
 
-            if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+            if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 Door->SetGoState(0);
         }
     }
@@ -190,26 +152,19 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_KILL1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(victim, SOUND_KILL1);
-                break;
-            case 1:
-                DoYell(SAY_KILL2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(victim, SOUND_KILL2);
-                break;
+            case 0: DoScriptText(SAY_KILL1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL2, m_creature); break;
         }
     }
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(NULL, SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE);
-            if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+            if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
                 Door->SetGoState(0);
         }
     }
@@ -218,21 +173,12 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO1);
-                break;
-            case 1:
-                DoYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO2);
-                break;
-            case 2:
-                DoYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_AGGRO3);
-                break;
+            case 0: DoScriptText(SAY_AGGRO1, m_creature); break;
+            case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
+            case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, IN_PROGRESS);
     }
 
@@ -241,7 +187,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         std::vector<Unit*> targets;
         std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
 
-        if(!t_list.size())
+        if (!t_list.size())
             return;
 
         //store the threat list in a different container
@@ -249,7 +195,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
             //only on alive players
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
                 targets.push_back( target);
         }
 
@@ -260,7 +206,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         uint32 i = 0;
         for(std::vector<Unit*>::iterator itr = targets.begin(); itr!= targets.end(); ++itr)
         {
-            if(*itr)
+            if (*itr)
             {
                 FlameWreathTarget[i] = (*itr)->GetGUID();
                 FWTargPosX[i] = (*itr)->GetPositionX();
@@ -276,39 +222,48 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(CloseDoorTimer)
-            if(CloseDoorTimer <= diff)
+        if (CloseDoorTimer)
         {
-            if(pInstance)
-                if(GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
-                    Door->SetGoState(1);
-            CloseDoorTimer = 0;
+            if (CloseDoorTimer <= diff)
+            {
+                if (pInstance)
+                {
+                    if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                        Door->SetGoState(1);
+
+                    CloseDoorTimer = 0;
+                }
+            } else CloseDoorTimer -= diff;
         }
-        else CloseDoorTimer -= diff;
 
         //Cooldowns for casts
         if (ArcaneCooldown)
+        {
             if (ArcaneCooldown >= diff)
                 ArcaneCooldown -= diff;
-        else ArcaneCooldown = 0;
+            else ArcaneCooldown = 0;
+        }
 
         if (FireCooldown)
+        {
             if (FireCooldown >= diff)
                 FireCooldown -= diff;
-        else FireCooldown = 0;
+            else FireCooldown = 0;
+        }
 
         if (FrostCooldown)
+        {
             if (FrostCooldown >= diff)
                 FrostCooldown -= diff;
-        else FrostCooldown = 0;
+            else FrostCooldown = 0;
+        }
 
-        if(!Drinking && m_creature->GetMaxPower(POWER_MANA) && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
+        if (!Drinking && m_creature->GetMaxPower(POWER_MANA) && (m_creature->GetPower(POWER_MANA)*100 / m_creature->GetMaxPower(POWER_MANA)) < 20)
         {
             Drinking = true;
             m_creature->InterruptNonMeleeSpells(false);
 
-            DoYell(SAY_DRINK, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_DRINK);
+            DoScriptText(SAY_DRINK, m_creature);
 
             if (!DrinkInturrupted)
             {
@@ -333,8 +288,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         //Drink Inturrupt Timer
         if (Drinking && !DrinkInturrupted)
+        {
             if (DrinkInturruptTimer >= diff)
                 DrinkInturruptTimer -= diff;
+        }
         else
         {
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -349,7 +306,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             return;
 
         //Normal casts
-        if(NormalCastTimer < diff)
+        if (NormalCastTimer < diff)
         {
             if (!m_creature->IsNonMeleeSpellCasted(false))
             {
@@ -388,25 +345,22 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             NormalCastTimer = 1000;
         }else NormalCastTimer -= diff;
 
-        if(SecondarySpellTimer < diff)
+        if (SecondarySpellTimer < diff)
         {
             switch (rand()%2)
             {
-
                 case 0:
                     DoCast(m_creature, SPELL_AOE_CS);
                     break;
                 case 1:
-                    Unit* pUnit;
-                    pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if (pUnit)
+                    if (Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         DoCast(pUnit, SPELL_CHAINSOFICE);
                     break;
             }
             SecondarySpellTimer = 5000 + (rand()%15000);
         }else SecondarySpellTimer -= diff;
 
-        if(SuperCastTimer < diff)
+        if (SuperCastTimer < diff)
         {
             uint8 Available[2];
 
@@ -431,16 +385,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             switch (LastSuperSpell)
             {
                 case SUPER_AE:
-
                     if (rand()%2)
-                    {
-                        DoYell(SAY_EXPLOSION1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_EXPLOSION1);
-                    }else
-                    {
-                        DoYell(SAY_EXPLOSION2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_EXPLOSION2);
-                    }
+                        DoScriptText(SAY_EXPLOSION1, m_creature);
+                    else
+                        DoScriptText(SAY_EXPLOSION2, m_creature);
 
                     m_creature->CastSpell(m_creature, SPELL_BLINK_CENTER, true);
                     m_creature->CastSpell(m_creature, SPELL_PLAYERPULL, true);
@@ -450,14 +398,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
                 case SUPER_FLAME:
                     if (rand()%2)
-                    {
-                        DoYell(SAY_FLAMEWREATH1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH1);
-                    }else
-                    {
-                        DoYell(SAY_FLAMEWREATH2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_FLAMEWREATH2);
-                    }
+                        DoScriptText(SAY_FLAMEWREATH1, m_creature);
+                    else
+                        DoScriptText(SAY_FLAMEWREATH2, m_creature);
 
                     FlameWreathTimer = 20000;
                     FlameWreathCheckTime = 500;
@@ -470,16 +413,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                     break;
 
                 case SUPER_BLIZZARD:
-
                     if (rand()%2)
-                    {
-                        DoYell(SAY_BLIZZARD1, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_BLIZZARD1);
-                    }else
-                    {
-                        DoYell(SAY_BLIZZARD2, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_BLIZZARD2);
-                    }
+                        DoScriptText(SAY_BLIZZARD1, m_creature);
+                    else
+                        DoScriptText(SAY_BLIZZARD2, m_creature);
 
                     Creature* Spawn = NULL;
                     Spawn = DoSpawnCreature(CREATURE_ARAN_BLIZZARD, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 25000);
@@ -492,9 +429,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             }
 
             SuperCastTimer = 35000 + (rand()%5000);
-        }else SuperCastTimer -= diff;
+        } else SuperCastTimer -= diff;
 
-        if(!ElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
+        if (!ElementalsSpawned && m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 40)
         {
             ElementalsSpawned = true;
 
@@ -508,11 +445,10 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 }
             }
 
-            DoYell(SAY_ELEMENTALS, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ELEMENTALS);
+            DoScriptText(SAY_ELEMENTALS, m_creature);
         }
 
-        if(BerserkTimer < diff)
+        if (BerserkTimer < diff)
         {
             for (uint32 i = 0; i < 5; i++)
             {
@@ -524,8 +460,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 }
             }
 
-            DoYell(SAY_TIMEOVER, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_TIMEOVER);
+            DoScriptText(SAY_TIMEOVER, m_creature);
 
             BerserkTimer = 60000;
         }else BerserkTimer -= diff;
@@ -582,15 +517,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
 
         switch (CurrentNormalSpell)
         {
-            case SPELL_ARCMISSLE:
-                ArcaneCooldown = 5000;
-                break;
-            case SPELL_FIREBALL:
-                FireCooldown = 5000;
-                break;
-            case SPELL_FROSTBOLT:
-                FrostCooldown = 5000;
-                break;
+            case SPELL_ARCMISSLE: ArcaneCooldown = 5000; break;
+            case SPELL_FIREBALL:  FireCooldown = 5000; break;
+            case SPELL_FROSTBOLT: FrostCooldown = 5000; break;
         }
     }
 };
@@ -613,7 +542,7 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;
 
-        if(CastTimer < diff)
+        if (CastTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_WATERBOLT);
             CastTimer = 2000 + (rand()%3000);
