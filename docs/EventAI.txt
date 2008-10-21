@@ -321,6 +321,8 @@ Parameter 1: The entry of the text that the NPC should use from eventai_texts ta
 Parameter 2: Optional. TextId can be defined in addition. The same apply to this as explained above, however eventAI will randomize between the two.
 Parameter 3: Optional, if Parameter 2 exist. In this case, eventAI will randomize between three.
 
+See Text-tables.txt for documentation of eventai_texts-table.
+
 ------------------
 2 = ACTION_T_YELL:
 ------------------
