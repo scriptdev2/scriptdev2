@@ -23,21 +23,12 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_AGGRO                   "What are you doing? These specimens are very delicate!"
-#define SOUND_AGGRO                 11144
-
-#define SAY_KILL_1                  "Your life cycle is now concluded!"
-#define SOUND_KILL_1                11145
-#define SAY_KILL_2                  "You will feed the worms."
-#define SOUND_KILL_2                11146
-
-#define SAY_TREE_1                  "Endorel aluminor!"
-#define SOUND_TREE_1                11147
-#define SAY_TREE_2                  "Nature bends to my will!"
-#define SOUND_TREE_2                11148
-
-#define SAY_DEATH                   "The specimens...must be preserved."
-#define SOUND_DEATH                 11149
+#define SAY_AGGRO                   -1553000
+#define SAY_KILL_1                  -1553001
+#define SAY_KILL_2                  -1553002
+#define SAY_TREE_1                  -1553003
+#define SAY_TREE_2                  -1553004
+#define SAY_DEATH                   -1553005
 
 #define SPELL_TRANQUILITY           34550
 #define SPELL_TREE_FORM             34551
@@ -75,13 +66,12 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void JustSummoned(Creature *summoned)
     {
-        if( summoned->GetEntry() == ENTRY_FRAYER )
+        if (summoned->GetEntry() == ENTRY_FRAYER)
             Adds_List.push_back(summoned->GetGUID());
     }
 
@@ -100,37 +90,30 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-                break;
-            case 1:
-                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-                break;
+            case 0: DoScriptText(SAY_KILL_1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL_2, m_creature); break;
         }
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if( !m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( TreeForm_Timer < diff )
+        if (TreeForm_Timer < diff)
         {
             switch(rand()%2)
             {
-                case 0:
-                    DoYell(SAY_TREE_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_TREE_1);
-                    break;
-                case 1:
-                    DoYell(SAY_TREE_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_TREE_2);
-                    break;
+                case 0: DoScriptText(SAY_TREE_1, m_creature); break;
+                case 1: DoScriptText(SAY_TREE_2, m_creature); break;
             }
 
-            if( m_creature->IsNonMeleeSpellCasted(false) )
+            if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(true);
 
             m_creature->RemoveAllAuras();
@@ -145,17 +128,17 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
             TreeForm_Timer = 75000;
         }else TreeForm_Timer -= diff;
 
-        if( !MoveFree )
+        if (!MoveFree)
         {
-            if( MoveCheck_Timer < diff )
+            if (MoveCheck_Timer < diff)
             {
-                if( !Adds_List.empty() )
+                if (!Adds_List.empty())
                 {
                     for(std::list<uint64>::iterator itr = Adds_List.begin(); itr != Adds_List.end(); ++itr)
                     {
-                        if( Unit *temp = Unit::GetUnit(*m_creature,*itr) )
+                        if (Unit *temp = Unit::GetUnit(*m_creature,*itr))
                         {
-                            if( !temp->isAlive() )
+                            if (!temp->isAlive())
                             {
                                 Adds_List.erase(itr);
                                 ++DeadAddsCount;
@@ -165,10 +148,10 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
                     }
                 }
 
-                if( DeadAddsCount < 3 && TreeForm_Timer-30000 < diff )
+                if (DeadAddsCount < 3 && TreeForm_Timer-30000 < diff)
                     DeadAddsCount = 3;
 
-                if( DeadAddsCount >= 3 )
+                if (DeadAddsCount >= 3)
                 {
                     Adds_List.clear();
                     DeadAddsCount = 0;
@@ -189,7 +172,7 @@ struct MANGOS_DLL_DECL boss_high_botanist_freywinnAI : public ScriptedAI
             return;*/
 
         //one random seedling every 5 secs, but not in tree form
-        if( SummonSeedling_Timer < diff )
+        if (SummonSeedling_Timer < diff)
         {
             DoSummonSeedling();
             SummonSeedling_Timer = 6000;

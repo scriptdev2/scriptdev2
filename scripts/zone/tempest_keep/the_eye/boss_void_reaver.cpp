@@ -24,28 +24,20 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_the_eye.h"
 
+#define SAY_AGGRO                   -1550000
+#define SAY_SLAY1                   -1550001
+#define SAY_SLAY2                   -1550002
+#define SAY_SLAY3                   -1550003
+#define SAY_DEATH                   -1550004
+#define SAY_POUNDING1               -1550005
+#define SAY_POUNDING2               -1550006
+
 #define SPELL_POUNDING              34162
 #define SPELL_ARCANE_ORB_TRIGGER    34172
 #define SPELL_KNOCK_AWAY            25778
 #define SPELL_BERSERK               27680
 
-#define SAY_AGGRO               "Alert, you are marked for extermination!"
-#define SAY_SLAY1               "Extermination, successful."
-#define SAY_SLAY2               "Imbecile life form, no longer functional."
-#define SAY_SLAY3               "Threat neutralized."
-#define SAY_DEATH               "Systems... shutting... down..."
-#define SAY_POUNDING1           "Alternative measure commencing..."
-#define SAY_POUNDING2           "Calculating force parameters..."
-
-#define SOUND_AGGRO             11213
-#define SOUND_SLAY1             11215
-#define SOUND_SLAY2             11216
-#define SOUND_SLAY3             11217
-#define SOUND_DEATH             11214
-#define SOUND_POUNDING1         11218
-#define SOUND_POUNDING2         11219
-
-#define CREATURE_ORB_TARGET     19577
+#define CREATURE_ORB_TARGET         19577
 
 struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 {
@@ -69,7 +61,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         KnockAway_Timer = 30000;
         Berserk_Timer = 600000;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
@@ -77,36 +69,25 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
     {
         switch(rand()%3)
         {
-            case 0:
-                DoYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
-            case 2:
-                DoYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY3);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
+            case 2: DoScriptText(SAY_SLAY3, m_creature); break;
         }
     }
 
     void JustDied(Unit *victim)
     {
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
     }
 
@@ -116,39 +97,37 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             return;
 
         // Pounding
-        if(Pounding_Timer < diff)
+        if (Pounding_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_POUNDING);
 
             switch(rand()%2)
             {
-                case 0:
-                    DoPlaySoundToSet(m_creature, SOUND_POUNDING1);
-                    DoYell(SAY_POUNDING1, LANG_UNIVERSAL, NULL);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(m_creature, SOUND_POUNDING2);
-                    DoYell(SAY_POUNDING2, LANG_UNIVERSAL, NULL);
-                    break;
+                case 0: DoScriptText(SAY_POUNDING1, m_creature); break;
+                case 1: DoScriptText(SAY_POUNDING2, m_creature); break;
             }
+
             Pounding_Timer = 12000;
         }else Pounding_Timer -= diff;
 
         // Arcane Orb
-        if(ArcaneOrb_Timer < diff)
+        if (ArcaneOrb_Timer < diff)
         {
-            Unit *target;
+            Unit *target = NULL;
             std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
             std::vector<Unit *> target_list;
             for(std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                                                            //15 yard radius minimum
-                if(target && target->GetDistance2d(m_creature) > 15)
+
+                //15 yard radius minimum
+                if (target && target->GetDistance2d(m_creature) > 15)
                     target_list.push_back(target);
+
                 target = NULL;
             }
-            if(target_list.size())
+
+            if (target_list.size())
                 target = *(target_list.begin()+rand()%target_list.size());
 
             if (target)
@@ -163,19 +142,19 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
         }else ArcaneOrb_Timer -= diff;
 
         // Single Target knock back, reduces aggro
-        if(KnockAway_Timer < diff)
+        if (KnockAway_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KNOCK_AWAY);
 
             //Drop 25% aggro
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-25);
 
             KnockAway_Timer = 30000;
         }else KnockAway_Timer -= diff;
 
         //Berserk
-        if(Berserk_Timer < diff)
+        if (Berserk_Timer < diff)
         {
             if (m_creature->IsNonMeleeSpellCasted(false))
                 m_creature->InterruptNonMeleeSpells(false);
