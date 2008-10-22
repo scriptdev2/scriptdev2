@@ -700,6 +700,9 @@ UPDATE `creature_template` SET `ScriptName`='mob_freed_soul' WHERE `entry`=11136
 /* SUNKEN TEMPLE */
 
 
+/* SUNWELL PLATEAU */
+
+
 /* SWAMP OF SORROWS */
 
 
