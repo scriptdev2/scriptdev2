@@ -12,13 +12,17 @@
 - Apply MaNGOS-rXXXX-ScriptDev2.patch, where XXXX is the highest version to that of your MaNGOS revision, to Mangos Source
 - Compile MaNGOS (ScriptDev2 will automatically be built when compiling Mangos from here on)
 
-5) Create the default ScriptDev2 database using "sql\created_database.sql", then execute "sql\scriptdev2_structure.sql" on that database.
+5) Create the default ScriptDev2 database using "sql\create_database.sql", then execute "sql\scriptdev2_structure.sql" on that database.
 
-6) Execute the included "sql\mangos_full_scripts.sql" on your MaNGOS database.
+6) Execute the included "sql\scriptdev2_script_texts.sql" on your ScriptDev2 database.
 
-7) Place the included "scriptdev2.conf" file within the directory containing your "mangosd.conf" and "realmd.conf" files. You may need to change this file to match the database you created and any custom settings you wish to use (such as a different locale).
+7) Optionally, apply scripts from ACID now.
 
-8) Run mangosd from your output directory
+8) Execute the included "sql\mangos_full_scripts.sql" on your MaNGOS database.
+
+9) Place the included "scriptdev2.conf" file within the directory containing your "mangosd.conf" and "realmd.conf" files. You may need to change this file to match the database you created and any custom settings you wish to use. Note this file will be different created for Unix based systems.
+
+10) Run mangosd from your output directory
 
 
 To update ScriptDev2: 
