@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: boss_felblood_kaelthas
+SDName: Boss_Felblood_Kaelthas
 SD%Complete: 80
 SDComment: Normal and Heroic Support. Issues: Arcane Spheres do not initially follow targets. TODO: Convert Phoenix to ACID.
 SDCategory: Magisters' Terrace
@@ -25,10 +25,17 @@ EndScriptData */
 #include "def_magisters_terrace.h"
 #include "WorldPacket.h"
 
+#define SAY_AGGRO                   -1585023                //This yell should be done when the room is cleared. For now, set it as aggro yell.
+#define SAY_PHOENIX                 -1585024
+#define SAY_FLAMESTRIKE             -1585025
+#define SAY_GRAVITY_LAPSE           -1585026
+#define SAY_TIRED                   -1585027
+#define SAY_RECAST_GRAVITY          -1585028
+#define SAY_DEATH                   -1585029
+
 /*** Spells ***/
 
 // Phase 1 spells
-
 #define SPELL_FIREBALL_NORMAL         44189                 // Deals 2700-3300 damage at current target
 #define SPELL_FIREBALL_HEROIC         46164                 //       4950-6050
 
@@ -44,7 +51,6 @@ EndScriptData */
 #define SPELL_PYROBLAST               36819                 // Heroic only; 45-55k fire damage
 
 // Phase 2 spells
-
 #define SPELL_GRAVITY_LAPSE_INITIAL   44224                 // Cast at the beginning of every Gravity Lapse
 #define SPELL_GRAVITY_LAPSE_CHANNEL   44251                 // Channeled; blue beam animation to every enemy in range
 #define SPELL_TELEPORT_CENTER         44218                 // Should teleport people to the center. Requires DB entry in spell_target_position.
@@ -58,28 +64,6 @@ EndScriptData */
 #define CREATURE_PHOENIX_EGG          24675
 #define CREATURE_ARCANE_SPHERE        24708
 
-/*** Dialogues ***/
-#define SAY_AGGRO                     "Don't look so smug! I know what you're thinking, but Tempest Keep was merely a set back. Did you honestly believe I would trust the future to some blind, half-night elf mongrel? Oh no, he was merely an instrument, a stepping stone to a much larger plan! It has all led to this, and this time, you will not interfere!"
-#define SOUND_AGGRO                   12413                 // This yell should be done when the room is cleared. For now, set it as aggro yell.
-
-#define SAY_PHOENIX                   "Vengeance burns!"
-#define SOUND_PHOENIX                 12415
-
-#define SAY_FLAMESTRIKE               "Felomin ashal!"
-#define SOUND_FLAMESTRIKE             12417
-
-#define SAY_GRAVITY_LAPSE             "I'll turn your world... upside... down..."
-#define SOUND_GRAVITY_LAPSE           12418
-
-#define SAY_TIRED                     "Master... grant me strength."
-#define SOUND_TIRED                   12419
-
-#define SAY_RECAST_GRAVITY            "Do not... get too comfortable."
-#define SOUND_RECAST_GRAVITY          12420
-
-#define SAY_DEATH                     "My demise accomplishes nothing! The Master will have you! You will drown in your own blood! This world shall burn! Aaaghh!"
-#define SOUND_DEATH                   12421
-
 /** Locations **/
 float KaelLocations[3][2]=
 {
@@ -87,7 +71,8 @@ float KaelLocations[3][2]=
     {140.823883, 195.403046},
     {156.574188, 195.650482},
 };
-#define LOCATION_Z      -16.727455
+
+#define LOCATION_Z                  -16.727455
 
 struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 {
@@ -95,7 +80,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
-        Heroic = c->GetMap()->IsHeroic() ? true : false;
+        Heroic = c->GetMap()->IsHeroic();
     }
 
     ScriptedInstance* pInstance;
@@ -141,38 +126,37 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
         Phase = 0;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_KAELTHAS_EVENT, 0);
     }
 
     void JustDied(Unit *killer)
     {
-        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)
     {
-        if(damage > m_creature->GetHealth())
+        if (damage > m_creature->GetHealth())
             RemoveGravityLapse();                           // Remove Gravity Lapse so that players fall to ground if they kill him when in air.
     }
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void SetThreatList(Creature* SummonedUnit)
     {
-        if(!SummonedUnit) return;
+        if (!SummonedUnit)
+            return;
 
         std::list<HostilReference*>& m_threatlist = m_creature->getThreatManager().getThreatList();
         std::list<HostilReference*>::iterator i = m_threatlist.begin();
         for(i = m_threatlist.begin(); i != m_threatlist.end(); i++)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit && pUnit->isAlive())
+            if (pUnit && pUnit->isAlive())
             {
                 float threat = m_creature->getThreatManager().getThreat(pUnit);
                 SummonedUnit->AddThreat(pUnit, threat);
@@ -190,7 +174,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_CENTER, true);
         }
         DoCast(m_creature, SPELL_TELEPORT_CENTER, true);
@@ -202,7 +186,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
                 // Knockback into the air
                 pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_DOT, true, 0, 0, m_creature->GetGUID());
         }
@@ -214,7 +198,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
             {
                 // Also needs an exception in spell system.
                 pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_FLY, true, 0, 0, m_creature->GetGUID());
@@ -234,10 +218,11 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();++i)
         {
             Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-            if(pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER))
             {
                 pUnit->RemoveAurasDueToSpell(SPELL_GRAVITY_LAPSE_FLY);
                 pUnit->RemoveAurasDueToSpell(SPELL_GRAVITY_LAPSE_DOT);
+
                 WorldPacket data(12);
                 data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
                 data.append(pUnit->GetPackGUID());
@@ -249,7 +234,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->getVictim() && !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
         switch(Phase)
@@ -257,55 +242,52 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
             case 0:
             {
                 // *Heroic mode only:
-                if(Heroic)
-                    if(PyroblastTimer < diff)
+                if (Heroic)
                 {
-                    DoCast(m_creature, SPELL_SHOCK_BARRIER, true);
-                    DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
-                    PyroblastTimer = 60000;
-                }else PyroblastTimer -= diff;
+                    if (PyroblastTimer < diff)
+                    {
+                        DoCast(m_creature, SPELL_SHOCK_BARRIER, true);
+                        DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
+                        PyroblastTimer = 60000;
+                    }else PyroblastTimer -= diff;
+                }
 
-                if(FireballTimer < diff)
+                if (FireballTimer < diff)
                 {
-                    // *Normal/Heroic mode support
-                    if(Heroic) DoCast(m_creature->getVictim(), SPELL_FIREBALL_HEROIC);
-                    else       DoCast(m_creature->getVictim(), SPELL_FIREBALL_NORMAL);
+                    DoCast(m_creature->getVictim(), Heroic ? SPELL_FIREBALL_HEROIC : SPELL_FIREBALL_NORMAL);
                     FireballTimer = 2000 + rand()%4000;
                 }else FireballTimer -= diff;
 
-                if(PhoenixTimer < diff)
+                if (PhoenixTimer < diff)
                 {
                     uint32 random = rand()%2 + 1;
                     float x = KaelLocations[random][0];
                     float y = KaelLocations[random][1];
+
                     Creature* Phoenix = m_creature->SummonCreature(CREATURE_PHOENIX, x, y, LOCATION_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-                    if(Phoenix)
+                    if (Phoenix)
                     {
                         Phoenix->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
                         SetThreatList(Phoenix);
                     }
 
-                    DoYell(SAY_PHOENIX, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_PHOENIX);
+                    DoScriptText(SAY_PHOENIX, m_creature);
 
                     PhoenixTimer = 40000;
                 }else PhoenixTimer -= diff;
 
-                if(FlameStrikeTimer < diff)
+                if (FlameStrikeTimer < diff)
                 {
-                    Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if(target)
+                    if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
                         DoCast(target, SPELL_FLAMESTRIKE3, true);
-                        FlameStrikeTimer = 20000 + rand()%5000;
-
-                        DoYell(SAY_FLAMESTRIKE, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_FLAMESTRIKE);
+                        DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
+                    FlameStrikeTimer = 20000 + rand()%5000;
                 }else FlameStrikeTimer -= diff;
 
                 // Below 50%
-                if(m_creature->GetMaxHealth() * 0.5 > m_creature->GetHealth())
+                if (m_creature->GetMaxHealth() * 0.5 > m_creature->GetHealth())
                 {
                     m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
                     m_creature->StopMoving();
@@ -315,34 +297,35 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                     GravityLapsePhase = 0;
                     Phase = 1;
                 }
+
                 DoMeleeAttackIfReady();
             }
             break;
 
             case 1:
             {
-                if(GravityLapseTimer < diff)
+                if (GravityLapseTimer < diff)
                 {
                     switch(GravityLapsePhase)
                     {
                         case 0:
-                            if(FirstGravityLapse)           // Different yells at 50%, and at every following Gravity Lapse
+                            if (FirstGravityLapse)          // Different yells at 50%, and at every following Gravity Lapse
                             {
-                                DoYell(SAY_GRAVITY_LAPSE,LANG_UNIVERSAL,NULL);
-                                DoPlaySoundToSet(m_creature,SOUND_GRAVITY_LAPSE);
+                                DoScriptText(SAY_GRAVITY_LAPSE, m_creature);
                                 FirstGravityLapse = false;
-                                if(pInstance)
+
+                                if (pInstance)
                                 {
                                     GameObject* KaelLeft = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_KAEL_STATUE_LEFT));
-                                    if(KaelLeft) KaelLeft->SetGoState(0);
+                                    if (KaelLeft) KaelLeft->SetGoState(0);
                                     GameObject* KaelRight = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_KAEL_STATUE_RIGHT));
-                                    if(KaelRight) KaelRight->SetGoState(0);
+                                    if (KaelRight) KaelRight->SetGoState(0);
                                 }
                             }else
                             {
-                                DoYell(SAY_RECAST_GRAVITY,LANG_UNIVERSAL,NULL);
-                                DoPlaySoundToSet(m_creature,SOUND_RECAST_GRAVITY);
+                                DoScriptText(SAY_RECAST_GRAVITY, m_creature);
                             }
+
                             DoCast(m_creature, SPELL_GRAVITY_LAPSE_INITIAL);
                             GravityLapseTimer = 2000 + diff;// Don't interrupt the visual spell
                             GravityLapsePhase = 1;
@@ -364,18 +347,19 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                             CastGravityLapseFly();
                             GravityLapseTimer = 30000;
                             GravityLapsePhase = 4;
+
                             for(uint8 i = 0; i < 3; ++i)
                             {
                                 Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                                if(Orb) SetThreatList(Orb);
+                                if (Orb) SetThreatList(Orb);
                             }
+
                             DoCast(m_creature, SPELL_GRAVITY_LAPSE_CHANNEL);
                             break;
 
                         case 4:
                             m_creature->InterruptNonMeleeSpells(false);
-                            DoYell(SAY_TIRED,LANG_UNIVERSAL,NULL);
-                            DoPlaySoundToSet(m_creature,SOUND_TIRED);
+                            DoScriptText(SAY_TIRED, m_creature);
                             DoCast(m_creature, SPELL_POWER_FEEDBACK);
                             RemoveGravityLapse();
                             GravityLapseTimer = 10000;
@@ -394,7 +378,7 @@ struct MANGOS_DLL_DECL mob_felkael_flamestrikeAI : public ScriptedAI
     mob_felkael_flamestrikeAI(Creature *c) : ScriptedAI(c)
     {
         Reset();
-        Heroic = c->GetMap()->IsHeroic() ? true : false;
+        Heroic = c->GetMap()->IsHeroic();
     }
 
     uint32 FlameStrikeTimer;
@@ -414,11 +398,9 @@ struct MANGOS_DLL_DECL mob_felkael_flamestrikeAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who) {}
     void UpdateAI(const uint32 diff)
     {
-        if(FlameStrikeTimer < diff)
+        if (FlameStrikeTimer < diff)
         {
-            // *Normal/Heroic mode support
-            if(Heroic) DoCast(m_creature, SPELL_FLAMESTRIKE1_HEROIC, true);
-            else       DoCast(m_creature, SPELL_FLAMESTRIKE1_NORMAL, true);
+            DoCast(m_creature, Heroic ? SPELL_FLAMESTRIKE1_HEROIC : SPELL_FLAMESTRIKE1_NORMAL, true);
             m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else FlameStrikeTimer -= diff;
     }
@@ -464,14 +446,14 @@ struct MANGOS_DLL_DECL mob_felkael_phoenix_eggAI : public ScriptedAI
 
     uint32 HatchTimer;
 
-    void Reset() {   HatchTimer = 15000;   }
+    void Reset() { HatchTimer = 15000; }
 
     void Aggro(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {
-        if(HatchTimer < diff)
+        if (HatchTimer < diff)
         {
             DoSpawnCreature(CREATURE_PHOENIX, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
             m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -501,9 +483,10 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit* who)
     {
-        if(TargetLocked)
+        if (TargetLocked)
             return;
-        if(who && who->IsHostileTo(m_creature) && (m_creature->IsWithinDistInMap(who, 25)))
+
+        if (who && who->IsHostileTo(m_creature) && (m_creature->IsWithinDistInMap(who, 25)))
             StalkTarget(who);
     }
 
@@ -511,7 +494,7 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
 
     void StalkTarget(Unit* target)
     {
-        if(!target)
+        if (!target)
             return;
 
         m_creature->GetMotionMaster()->MoveChase(target);
@@ -520,14 +503,14 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(DespawnTimer < diff)
+        if (DespawnTimer < diff)
             m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         else DespawnTimer -= diff;
 
-        if(!m_creature->getVictim() || !m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget())
             return;
 
-        if(ChangeTargetTimer < diff)
+        if (ChangeTargetTimer < diff)
         {
             TargetLocked = false;
             ChangeTargetTimer = 10000;
