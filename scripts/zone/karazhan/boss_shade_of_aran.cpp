@@ -291,14 +291,14 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             if (DrinkInturruptTimer >= diff)
                 DrinkInturruptTimer -= diff;
-        }
-        else
-        {
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-            m_creature->CastSpell(m_creature, SPELL_POTION, true);
-            m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
-            DrinkInturrupted = true;
-            Drinking = false;
+            else
+            {
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                m_creature->CastSpell(m_creature, SPELL_POTION, true);
+                m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
+                DrinkInturrupted = true;
+                Drinking = false;
+            }
         }
 
         //Don't execute any more code if we are drinking

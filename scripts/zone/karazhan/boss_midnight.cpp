@@ -122,8 +122,8 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
                         }
                         pAttumen->SetFloatValue(OBJECT_FIELD_SCALE_X,1);
                     }
-                }
-            } else Mount_Timer -= diff;
+                } else Mount_Timer -= diff;
+            }
         }
 
         if (Phase != 3)
