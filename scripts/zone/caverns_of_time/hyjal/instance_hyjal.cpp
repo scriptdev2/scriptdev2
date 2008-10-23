@@ -70,7 +70,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS) return true;
+            if (Encounters[i] == IN_PROGRESS) return true;
 
         return false;
     }
@@ -119,13 +119,15 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             case DATA_RESET_TRASH_COUNT:    Trash = 0;            break;
 
             case DATA_TRASH:
-                if(data) Trash = data;
-                else     Trash--;
+                if (data) Trash = data;
+                else      Trash--;
                 UpdateWorldState(2453, data);
                 break;
         }
 
-        if(data == DONE)
+        debug_log("SD2: Instance Hyjal: Instance data updated for event %u (Data=%u)",type,data);
+
+        if (data == DONE)
             SaveToDB();
     }
 
@@ -161,7 +163,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             << Encounters[4];
         char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
-        if(out)
+        if (out)
         {
             OUT_SAVE_INST_DATA_COMPLETE;
             return out;
@@ -172,7 +174,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 
     void Load(const char* load)
     {
-        if(!load)
+        if (!load)
         {
             OUT_LOAD_INST_DATA_FAIL;
             return;
@@ -182,7 +184,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         std::istringstream stream;
         stream >> Encounters[1] >> Encounters[2] >> Encounters[3] >> Encounters[4];
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
+            if (Encounters[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
                 Encounters[i] = NOT_STARTED;
         OUT_LOAD_INST_DATA_COMPLETE;
     }
