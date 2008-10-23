@@ -1597,8 +1597,7 @@
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
 					CommandLine="cd &quot;$(SolutionDir)&quot;
-&quot;$(SolutionDir)\..\..\..\win\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;
-"
+&quot;..\..\..\win\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"/>
 			</FileConfiguration>
@@ -1608,8 +1607,7 @@
 					Name="VCCustomBuildTool"
 					Description="Extracting SVN Revision"
 					CommandLine="cd &quot;$(SolutionDir)&quot;
-&quot;$(SolutionDir)\..\..\..\win\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;
-"
+&quot;..\..\..\win\VC71\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="svn_revision.h"/>
 			</FileConfiguration>
