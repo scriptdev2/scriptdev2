@@ -90,10 +90,10 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         switch(type)
         {
             case TYPE_FREE_NPC:
-                if(data == DONE)
+                if (data == DONE)
                 {
-                    if(DoorCourtyard)
-                        DoorCourtyard->UseDoorOrButton();
+                    if (DoorCourtyard)
+                        DoorCourtyard->SetGoState(0);
                 }
                 Encounter[0] = data;
                 break;
@@ -101,18 +101,18 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
                 Encounter[1] = data;
                 break;
             case TYPE_FENRUS:
-                if(data == DONE)
+                if (data == DONE)
                 {
-                    if(DoorSorcerer)
-                        DoorSorcerer->UseDoorOrButton();
+                    if (DoorSorcerer)
+                        DoorSorcerer->SetGoState(0);
                 }
                 Encounter[2] = data;
                 break;
             case TYPE_NANDOS:
-                if(data == DONE)
+                if (data == DONE)
                 {
-                    if(DoorArugal)
-                        DoorArugal->UseDoorOrButton();
+                    if (DoorArugal)
+                        DoorArugal->SetGoState(0);
                 }
                 Encounter[3] = data;
                 break;
