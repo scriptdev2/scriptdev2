@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: boss_sartura
 SD%Complete: 99
-SDComment: 
+SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
@@ -30,7 +30,6 @@ EndScriptData */
 //Guard Spell
 #define SPELL_WHIRLWINDADD                           26038
 #define SPELL_KNOCKBACK                              26027
-
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
@@ -59,7 +58,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 
         WhirlWind = false;
         AggroReset = false;
-        Enraged = false; 
+        Enraged = false;
         EnragedHard = false;
 
     }
@@ -129,7 +128,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
                     DoCast(m_creature, SPELL_ENRAGE);
                     Enraged = true;
                 }
-            } 
+            }
 
             //After 10 minutes hard enrage
             if (!EnragedHard)
@@ -144,8 +143,7 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
     }
-}; 
-
+};
 
 struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 {
@@ -157,7 +155,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
     uint32 AggroReset_Timer;
     uint32 AggroResetEnd_Timer;
     uint32 KnockBack_Timer;
-    
+
     bool WhirlWind;
     bool AggroReset;
 
@@ -169,7 +167,7 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
         AggroReset_Timer = 45000 + rand()%10000;
         AggroResetEnd_Timer = 5000;
         KnockBack_Timer = 10000;
-        
+
         WhirlWind = false;
         AggroReset = false;
 

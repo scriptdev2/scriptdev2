@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     float AttackAngle;                                      //Angle of attack
 
     bool ProcessEvent(EventHolder& pHolder, Unit* pActionInvoker = NULL)
-    {  
+    {
         if (!pHolder.Enabled || pHolder.Time)
             return false;
 
@@ -94,25 +94,25 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         if (pHolder.Event.event_chance <= rnd % 100)
             return false;
 
-        union 
+        union
         {
             uint32 param1;
             int32 param1_s;
         };
 
-        union 
+        union
         {
             uint32 param2;
             int32 param2_s;
         };
 
-        union 
+        union
         {
             uint32 param3;
             int32 param3_s;
         };
 
-        union 
+        union
         {
             uint32 param4;
             int32 param4_s;
@@ -247,7 +247,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_SPELLHIT:
             {
                 //Spell hit is special case, param1 and param2 handled within EventAI::SpellHit
-                
+
                 //Repeat Timers
                 if (param3 == param4)
                 {
@@ -379,7 +379,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     return false;
 
                 std::list<Creature*> pList = DoFindFriendlyCC(param2);
-                
+
                 //List is empty
                 if (pList.empty())
                     return false;
@@ -405,7 +405,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         case EVENT_T_FRIENDLY_MISSING_BUFF:
             {
                 std::list<Creature*> pList = DoFindFriendlyMissingBuff(param2, param1);
-                
+
                 //List is empty
                 if (pList.empty())
                     return false;
@@ -632,7 +632,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     if (tSpell)
                     {
                         //Check if cannot cast spell
-                        if (!(param3 & (CAST_FORCE_TARGET_SELF | CAST_FORCE_CAST)) && 
+                        if (!(param3 & (CAST_FORCE_TARGET_SELF | CAST_FORCE_CAST)) &&
                             !CanCast(target, tSpell, (param3 & CAST_TRIGGERED)))
                         {
                             //Melee current victim if flag not set
@@ -948,7 +948,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         error_db_log("SD2: Event %d ACTION_T_DIE on dead creature. Creature %d", EventId, m_creature->GetEntry());
                     return;
                 }
-                m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false); 
+                m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
             break;
         case ACTION_T_ZONE_COMBAT_PULSE:
@@ -1116,7 +1116,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         (*i).Enabled = true;
                     }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
                     {
-                        (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2); 
+                        (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2);
                         (*i).Enabled = true;
                     }else if (EAI_ErrorLevel > 0)
                         error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
@@ -1240,7 +1240,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             EventDiff += diff;
 
             //Check for range based events
-            //if (m_creature->GetDistance(m_creature->getVictim()) > 
+            //if (m_creature->GetDistance(m_creature->getVictim()) >
             if (Combat)
             {
                 for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
@@ -1294,7 +1294,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
             EventDiff = 0;
             EventUpdateTime = EVENT_UPDATE_TIME;
-        }else 
+        }else
         {
             EventDiff += diff;
             EventUpdateTime -= diff;
@@ -1360,7 +1360,7 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
     {
         if (EAI_ErrorLevel > 1)
             error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI. Preventing EventAI on this creature.", _Creature->GetEntry());
-        
+
         return NULL;
     }
 

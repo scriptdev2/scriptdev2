@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: boss_darhrohan_balnazzar
@@ -26,7 +26,7 @@ EndScriptData */
 //Dathrohan spells
 #define SPELL_CRUSADERSHAMMER    17286 //AOE stun
 #define SPELL_CRUSADERSTRIKE    17281
-#define SPELL_MINDBLAST    17287 
+#define SPELL_MINDBLAST    17287
 #define SPELL_HOLYSTRIKE    17284 //weapon dmg +3
 #define SPELL_DAZED    1604
 
@@ -114,7 +114,6 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
 
         m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,10545);
         m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.00f);
-        
     }
 
     void JustDied(Unit* Victim)
@@ -215,7 +214,6 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             //START ELSE TRANSFORMED
         } else {
 
-
             //MindBlast
             if (MindBlast_Timer < diff && !m_creature->IsNonMeleeSpellCasted(false))
             {
@@ -295,12 +293,12 @@ struct MANGOS_DLL_DECL boss_dathrohan_balnazzarAI : public ScriptedAI
             //                MindControl_Timer = 15000;
             //            }else MindControl_Timer -= diff;
 
-            //END ELSE TRANSFORMED            
+            //END ELSE TRANSFORMED
         }
 
         DoMeleeAttackIfReady();
     }
-}; 
+};
 CreatureAI* GetAI_boss_dathrohan_balnazzar(Creature *_Creature)
 {
     return new boss_dathrohan_balnazzarAI (_Creature);

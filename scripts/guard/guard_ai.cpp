@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Guard_AI
 SD%Complete: 90
-SDComment: 
+SDComment:
 SDCategory: Guards
 EndScriptData */
 

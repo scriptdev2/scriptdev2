@@ -1,23 +1,23 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Boss_Doomwalker
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Shadowmoon Valley
 EndScriptData */
 
@@ -67,9 +67,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
 
     uint32 Chain_Timer;
-    uint32 Enrage_Timer; 
+    uint32 Enrage_Timer;
     uint32 Overrun_Timer;
-    uint32 Quake_Timer; 
+    uint32 Quake_Timer;
     uint32 Armor_Timer;
 
     bool InEnrage;
@@ -82,7 +82,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
         Quake_Timer     = 25000 + rand()%10000;
         Overrun_Timer   = 30000 + rand()%15000;
 
-        InEnrage = false;        
+        InEnrage = false;
     }
 
     void KilledUnit(Unit* Victim)
@@ -127,9 +127,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
         if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-            //Spell Enrage   
+            //Spell Enrage
             if (((m_creature->GetHealth()*100)/ m_creature->GetMaxHealth()) <= 20)//when hp <= 20% gain enrage
-            {   
+            {
                 if(Enrage_Timer < diff)
                 {
                     DoCast(m_creature,SPELL_ENRAGE);
@@ -140,7 +140,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
 
             //Spell Overrun
             if (Overrun_Timer < diff)
-            {   
+            {
                 switch(rand()%2)
                 {
                 case 0:
@@ -189,7 +189,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
                 Chain_Timer = 15000 + rand()%25000;
             }else Chain_Timer -= diff;
 
-            //Spell Sunder Armor        
+            //Spell Sunder Armor
             if (Armor_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
@@ -199,7 +199,7 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
     }
-}; 
+};
 
 CreatureAI* GetAI_boss_doomwalker(Creature *_Creature)
 {

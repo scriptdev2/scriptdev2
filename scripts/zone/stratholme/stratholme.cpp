@@ -1,18 +1,18 @@
 /* Copyright (C) 2006 - 2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /* ScriptData
 SDName: Stratholme
@@ -270,7 +270,7 @@ CreatureAI* GetAI_mob_mindless_skeleton(Creature *_Creature)
     //dazed
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 13496;
-    ai->Spell[0].Cooldown = 15000; 
+    ai->Spell[0].Cooldown = 15000;
     ai->Spell[0].First_Cast = 3000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
@@ -290,7 +290,7 @@ CreatureAI* GetAI_mob_thuzadin_acolyte(Creature *_Creature)
     //dazed
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 13496;
-    ai->Spell[0].Cooldown = 15000; 
+    ai->Spell[0].Cooldown = 15000;
     ai->Spell[0].First_Cast = 1000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
@@ -298,10 +298,6 @@ CreatureAI* GetAI_mob_thuzadin_acolyte(Creature *_Creature)
 
     return ai;
 }
-
-/*######
-## 
-######*/
 
 void AddSC_stratholme()
 {

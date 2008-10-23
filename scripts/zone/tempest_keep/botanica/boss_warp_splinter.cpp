@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
 #define CREATURE_TREANT     19949
 #define TREANT_SPAWN_DIST   50                              //50 yards from Warp Splinter's spawn point
 
-float treant_pos[6][3] = 
+float treant_pos[6][3] =
 {
     {24.301233, 427.221100, -27.060635},
     {16.795492, 359.678802, -27.355425},
@@ -210,7 +210,7 @@ struct MANGOS_DLL_DECL boss_warp_splinterAI : public ScriptedAI
         if (Arcane_Volley_Timer < diff)
         {
             DoCast(m_creature->getVictim(),ARCANE_VOLLEY);
-            Arcane_Volley_Timer = 20000 + rand()%15000; 
+            Arcane_Volley_Timer = 20000 + rand()%15000;
         } else Arcane_Volley_Timer -= diff;
 
         //Check for Summon Treants

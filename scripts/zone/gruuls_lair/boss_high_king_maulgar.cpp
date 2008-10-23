@@ -209,7 +209,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(target, SPELL_CHARGE);
 
-                Charge_Timer = 14000 + rand()%6000;  
+                Charge_Timer = 14000 + rand()%6000;
             }else Charge_Timer -= diff;
 
             //MightyBlow_Timer
@@ -297,12 +297,12 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
             DoCast(m_creature->getVictim(), SPELL_DARK_DECAY);
             DarkDecay_Timer = 20000;
         }else DarkDecay_Timer -= diff;
-        
+
         //DeathCoil_Timer
         if(DeathCoil_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_DEATH_COIL);
-            DeathCoil_Timer = 8000 + rand()%5000;  
+            DeathCoil_Timer = 8000 + rand()%5000;
         }else DeathCoil_Timer -= diff;
 
         //Summon_Timer
@@ -412,14 +412,14 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         if (LightningBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_LIGHTNING_BOLT);
-            LightningBolt_Timer = 10000 + rand()%5000;  
+            LightningBolt_Timer = 10000 + rand()%5000;
         }else LightningBolt_Timer -= diff;
 
         //ArcaneShock_Timer
         if (ArcaneShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_SHOCK);
-            ArcaneShock_Timer = 15000 + rand()%5000;  
+            ArcaneShock_Timer = 15000 + rand()%5000;
         }else ArcaneShock_Timer -= diff;
 
         //ArcaneExplosion_Timer
@@ -516,14 +516,14 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         if (GreaterPowerWordShield_Timer < diff)
         {
             DoCast(m_creature, SPELL_GREATER_PW_SHIELD);
-            GreaterPowerWordShield_Timer = 30000 + rand()%10000;  
+            GreaterPowerWordShield_Timer = 30000 + rand()%10000;
         }else GreaterPowerWordShield_Timer -= diff;
 
         //Heal_Timer
         if (Heal_Timer < diff)
         {
             DoCast(m_creature, SPELL_HEAL);
-            Heal_Timer = 25000 + rand()%15000;  
+            Heal_Timer = 25000 + rand()%15000;
         }else Heal_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -629,7 +629,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
         {
             m_creature->InterruptNonMeleeSpells(false);
             DoCast(m_creature->getVictim(), SPELL_BLAST_WAVE);
-            BlastWave_Timer = 30000 + rand()%15000;  
+            BlastWave_Timer = 30000 + rand()%15000;
         }else BlastWave_Timer -= diff;
 
         DoMeleeAttackIfReady();

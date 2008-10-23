@@ -35,7 +35,7 @@
 #endif
 
 #ifndef _VERSION
-  #define _VERSION "(Revision [" SVN_REVISION "] " SVN_DATE ")" 
+  #define _VERSION "(Revision [" SVN_REVISION "] " SVN_DATE ")"
 #endif
 
 #if PLATFORM == PLATFORM_WINDOWS

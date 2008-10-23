@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_jandicebarov
 SD%Complete: 100
-SDComment: 
+SDComment:
 SDCategory: Scholomance
 EndScriptData */
 
@@ -80,7 +80,7 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
     {
         if (Invisible && Invisible_Timer < diff)
         {
-            //Become visible again 
+            //Become visible again
             m_creature->setFaction(14);
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11073);     //Jandice Model
@@ -99,17 +99,13 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //CurseOfBlood_Timer
         if (CurseOfBlood_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CURSEOFBLOOD);
-
-            //45 seconds
             CurseOfBlood_Timer = 30000;
         }else CurseOfBlood_Timer -= diff;
 
         //Illusion_Timer
         if (!Invisible && Illusion_Timer < diff)
         {
-
             //Inturrupt any spell casting
             m_creature->InterruptNonMeleeSpells(false);
             m_creature->setFaction(35);
@@ -131,13 +127,11 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
             Illusion_Timer = 25000;
         }else Illusion_Timer -= diff;
 
-
         //            //Illusion_Timer
         //            if (Illusion_Timer < diff)
         //            {
         //                  //Cast
         //                DoCast(m_creature->getVictim(),SPELL_ILLUSION);
-        //                                
         //                  //3 Illusion will be summoned
         //                  if (Illusioncounter < 3)
         //                  {
@@ -149,7 +143,6 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         //                      Illusion_Timer = 15000;
         //                      Illusioncounter=0;
         //                  }
-        //                  
         //            }else Illusion_Timer -= diff;
 
         DoMeleeAttackIfReady();
@@ -166,7 +159,7 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
 
     void Reset()
     {
-        Cleave_Timer = 2000 + rand()%6000;       
+        Cleave_Timer = 2000 + rand()%6000;
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
     }
 
@@ -183,17 +176,13 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
         //Cleave_Timer
         if (Cleave_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_CLEAVE);
-
-            //5-8 seconds
             Cleave_Timer = 5000 + rand()%3000;
         }else Cleave_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
-}; 
-
+};
 
 CreatureAI* GetAI_boss_jandicebarov(Creature *_Creature)
 {
@@ -204,7 +193,6 @@ CreatureAI* GetAI_mob_illusionofjandicebarov(Creature *_Creature)
 {
     return new mob_illusionofjandicebarovAI (_Creature);
 }
-
 
 void AddSC_boss_jandicebarov()
 {

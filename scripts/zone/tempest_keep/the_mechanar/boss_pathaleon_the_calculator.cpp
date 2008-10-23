@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
             case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
         }
-    }   
+    }
 
     void JustDied(Unit* Killer)
     {
@@ -116,10 +116,10 @@ struct MANGOS_DLL_DECL boss_pathaleon_the_calculatorAI : public ScriptedAI
             }
 
             DoScriptText(SAY_SUMMON, m_creature);
- 
+
             Summon_Timer = 30000 + rand()%15000;
         }else Summon_Timer -= diff;
-       
+
         if (ManaTap_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_MANA_TAP);

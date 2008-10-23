@@ -610,7 +610,7 @@ void LoadDatabase()
     // Drop Existing Text Map, only done once and we are ready to add data from multiple sources.
     TextMap.clear();
 
-    // Load EventAI Text 
+    // Load EventAI Text
     outstring_log("SD2: Loading EventAI Texts...");
     LoadMangosStrings(SD2Database,"eventai_texts",-1,1+(TEXT_SOURCE_RANGE));
 
@@ -674,7 +674,7 @@ void LoadDatabase()
         outstring_log(">> Loaded 0 additional EventAI Texts data. DB table `eventai_texts` is empty.");
     }
 
-    // Load Script Text 
+    // Load Script Text
     outstring_log("SD2: Loading Script Texts...");
     LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,1+(TEXT_SOURCE_RANGE*2));
 
@@ -738,7 +738,7 @@ void LoadDatabase()
         outstring_log(">> Loaded 0 additional Script Texts data. DB table `script_texts` is empty.");
     }
 
-    // Load Custom Text 
+    // Load Custom Text
     outstring_log("SD2: Loading Custom Texts...");
     LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,1+(TEXT_SOURCE_RANGE*3));
 
@@ -1154,12 +1154,12 @@ void LoadDatabase()
 
 struct TSpellSummary {
     uint8 Targets;                                          // set of enum SelectTarget
-    uint8 Effects;                                          // set of enum SelectEffect 
+    uint8 Effects;                                          // set of enum SelectEffect
 }extern *SpellSummary;
 
 MANGOS_DLL_EXPORT
 void ScriptsFree()
-{   
+{
     // Free Spell Summary
     delete []SpellSummary;
 

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Gatewatcher_Ironhand
 SD%Complete: 75
-SDComment: 
+SDComment:
 SDCategory: Tempest Keep, The Mechanar
 EndScriptData */
 
@@ -134,7 +134,7 @@ struct MANGOS_DLL_DECL boss_gatewatcher_iron_handAI : public ScriptedAI
 CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature *_Creature)
 {
     return new boss_gatewatcher_iron_handAI (_Creature);
-} 
+}
 
 void AddSC_boss_gatewatcher_iron_hand()
 {
