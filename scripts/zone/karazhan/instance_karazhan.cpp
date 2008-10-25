@@ -153,7 +153,11 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         switch (identifier)
         {
             case DATA_ATTUMEN_EVENT:           Encounters[0]  = data; break;
-            case DATA_MOROES_EVENT:            Encounters[1]  = data; break;
+            case DATA_MOROES_EVENT:
+                if (Encounters[1] == DONE)
+                    break;
+                Encounters[1] = data;
+                break;
             case DATA_MAIDENOFVIRTUE_EVENT:    Encounters[2]  = data; break;
             case DATA_OPTIONAL_BOSS_EVENT:     Encounters[3]  = data; break;
             case DATA_OPERA_EVENT:             Encounters[4]  = data; break;
