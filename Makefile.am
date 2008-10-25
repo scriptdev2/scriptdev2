@@ -19,8 +19,8 @@
 ## Sub-directories to parse
 SUBDIRS = sql
 
-BUILT_SOURCES = svn_revision.h
-CLEANFILES = svn_revision.h
+BUILT_SOURCES = revision.h
+CLEANFILES = revision.h
 ## CPP flags for includes, defines, etc.
 AM_CPPFLAGS = $(MANGOS_INCLUDES) -I$(srcdir) -I$(srcdir)/../../../dep/include -I$(srcdir)/../../shared/ -I$(srcdir)/../../framework/ -I$(srcdir)/../../game/ -I$(srcdir)/include/
 
@@ -384,13 +384,13 @@ scripts/zone/zulgurub/boss_venoxis.cpp \
 scripts/zone/zulgurub/boss_wushoolay.cpp \
 scripts/zone/zulgurub/def_zulgurub.h \
 scripts/zone/zulgurub/instance_zulgurub.cpp \
-svn_revision.h \
+revision.h \
 system.cpp
 
 
-## magic to include SVN revision number in SD2 version string
-svn_revision.h: FORCE
-	$(top_builddir)/src/tools/gensvnrevision/gensvnrevision $(srcdir)
+## magic to include revision data in SD2 version string
+revision.h: FORCE
+	$(top_builddir)/src/tools/genrevision/genrevision $(srcdir)
 
 FORCE:
 

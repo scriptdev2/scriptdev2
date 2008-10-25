@@ -20,7 +20,7 @@
 #define SC_CONFIG_H
 
 #include "../../framework/Platform/CompilerDefs.h"
-#include "svn_revision.h"
+#include "revision.h"
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
@@ -35,7 +35,7 @@
 #endif
 
 #ifndef _VERSION
-  #define _VERSION "(Revision [" SVN_REVISION "] " SVN_DATE ")"
+  #define _VERSION "(Revision [" REVISION_ID "] " REVISION_DATE ")"
 #endif
 
 #if PLATFORM == PLATFORM_WINDOWS

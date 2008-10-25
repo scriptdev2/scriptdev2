@@ -2334,17 +2334,17 @@
 			>
 		</File>
 		<File
-			RelativePath="..\svn_revision.h"
+			RelativePath="..\revision.h"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					Description="Extracting Revision"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
-					Outputs="svn_revision.h"
+					Outputs="revision.h"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -2352,10 +2352,10 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					Description="Extracting Revision"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
-					Outputs="svn_revision.h"
+					Outputs="revision.h"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -2363,10 +2363,10 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					Description="Extracting Revision"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
-					Outputs="svn_revision.h"
+					Outputs="revision.h"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -2374,10 +2374,10 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					Description="Extracting SVN Revision"
-					CommandLine="cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\gensvnrevision__$(PlatformName)_$(ConfigurationName)\gensvnrevision.exe&quot;"
+					Description="Extracting Revision"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
-					Outputs="svn_revision.h"
+					Outputs="revision.h"
 				/>
 			</FileConfiguration>
 		</File>
