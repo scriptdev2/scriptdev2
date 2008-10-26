@@ -24,24 +24,29 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
-#define SPELL_CHARGE              22911
-#define SPELL_ASPECT_OF_MARLI     24686                     // A stun spell
-#define SPELL_ENVOLWINGWEB        24110
-#define SPELL_POISONVOLLEY        24099
-#define SPELL_SPIDER_FORM         24084
+#define SAY_AGGRO               -1309005
+#define SAY_TRANSFORM           -1309006
+#define SAY_SPIDER_SPAWN        -1309007
+#define SAY_DEATH               -1309008
+
+#define SPELL_CHARGE            22911
+#define SPELL_ASPECT_OF_MARLI   24686                       // A stun spell
+#define SPELL_ENVOLWINGWEB      24110
+#define SPELL_POISONVOLLEY      24099
+#define SPELL_SPIDER_FORM       24084
 
 //The Spider Spells
-#define SPELL_LEVELUP             24312                     //Not right Spell.
-
-#define SAY_AGGRO         "Draw me to your web mistress Shadra. Unleash your venom!"
-#define SOUND_AGGRO       8418
-
-#define SAY_DEATH         "ShadraDeath - Bless you mortal for this release. Hakkar controls me no longer..."
-#define SOUND_DEATH       8423
+#define SPELL_LEVELUP           24312                       //Not right Spell.
 
 struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 {
-    boss_marliAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_marliAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 SpawnStartSpiders_Timer;
     uint32 PoisonVolley_Timer;
@@ -74,123 +79,123 @@ struct MANGOS_DLL_DECL boss_marliAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (pInstance)
             pInstance->SetData(DATA_MARLI_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        if (PoisonVolley_Timer < diff)
         {
-            if (PoisonVolley_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_POISONVOLLEY);
-                PoisonVolley_Timer = 10000 + rand()%10000;
-            }else PoisonVolley_Timer -= diff;
+            DoCast(m_creature->getVictim(),SPELL_POISONVOLLEY);
+            PoisonVolley_Timer = 10000 + rand()%10000;
+        }else PoisonVolley_Timer -= diff;
 
-            if (!PhaseTwo && Aspect_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_MARLI);
-                Aspect_Timer = 13000 + rand()%5000;
-            }else Aspect_Timer -= diff;
+        if (!PhaseTwo && Aspect_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_ASPECT_OF_MARLI);
+            Aspect_Timer = 13000 + rand()%5000;
+        }else Aspect_Timer -= diff;
 
-            if (!Spawned && SpawnStartSpiders_Timer < diff)
+        if (!Spawned && SpawnStartSpiders_Timer < diff)
+        {
+            DoScriptText(SAY_SPIDER_SPAWN, m_creature);
+
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            if (target && Spider ) Spider ->AI()->AttackStart(target);
+
+            Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            if (target && Spider ) Spider ->AI()->AttackStart(target);
+
+            Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            if (target && Spider ) Spider ->AI()->AttackStart(target);
+
+            Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            if (target && Spider ) Spider ->AI()->AttackStart(target);
+
+            Spawned = true;
+        }else SpawnStartSpiders_Timer -= diff;
+
+        if (SpawnSpider_Timer < diff)
+        {
+            Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
+            Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            if (target && Spider )
+                Spider ->AI()->AttackStart(target);
+
+            SpawnSpider_Timer = 12000 + rand()%5000;
+        }else SpawnSpider_Timer -= diff;
+
+        if (!PhaseTwo && Transform_Timer < diff)
+        {
+            DoScriptText(SAY_TRANSFORM, m_creature);
+
+            DoCast(m_creature,SPELL_SPIDER_FORM);
+            const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
+            m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
+            m_creature->UpdateDamagePhysical(BASE_ATTACK);
+            DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB);
+
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
+
+            PhaseTwo = true;
+            Transform_Timer = 35000 + rand()%25000;
+        }else Transform_Timer -= diff;
+
+        if (PhaseTwo)
+        {
+            if (Charge_Timer < diff)
             {
                 Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(target && Spider ) { Spider ->AI()->AttackStart(target); }
-                Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(target && Spider ) { Spider ->AI()->AttackStart(target); }
-                Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(target && Spider ) { Spider ->AI()->AttackStart(target); }
-                Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(target && Spider ) { Spider ->AI()->AttackStart(target); }
-
-                Spawned = true;
-            }else SpawnStartSpiders_Timer -= diff;
-
-            if (SpawnSpider_Timer < diff)
-            {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                Spider = m_creature->SummonCreature(15041,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-                if(target && Spider ) { Spider ->AI()->AttackStart(target); }
-
-                SpawnSpider_Timer = 12000 + rand()%5000;
-            }else SpawnSpider_Timer -= diff;
-
-            if(!PhaseTwo && Transform_Timer < diff)
-            {
-                DoCast(m_creature,SPELL_SPIDER_FORM);
-                const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 35)));
-                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 35)));
-                m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                DoCast(m_creature->getVictim(),SPELL_ENVOLWINGWEB);
-
-                if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
-
-                PhaseTwo = true;
-                Transform_Timer = 35000 + rand()%25000;
-            }else Transform_Timer -= diff;
-
-            if (PhaseTwo)
-            {
-                if (Charge_Timer < diff)
+                int i = 0 ;
+                while (i < 3)                               // max 3 tries to get a random target with power_mana
                 {
-                    Unit* target = NULL;
-                    int i = 0 ;
-                    while (i < 3)                           // max 3 tries to get a random target with power_mana
-                    {
-                        ++i;                                //not aggro leader
-                        target = SelectUnit(SELECT_TARGET_RANDOM,1);
-                        if (target)
-                            if (target->getPowerType() == POWER_MANA)
-                                i=3;
-                    }
+                    ++i;                                    //not aggro leader
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
                     if (target)
-                    {
-                        DoCast(target, SPELL_CHARGE);
-                        //m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
-                        //m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
-                        AttackStart(target);
-                    }
-
-                    Charge_Timer = 8000;
-                }else Charge_Timer -= diff;
-
-                if (TransformBack_Timer < diff)
+                        if (target->getPowerType() == POWER_MANA)
+                            i=3;
+                }
+                if (target)
                 {
-                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15220);
-                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 1)));
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 1)));
-                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                    DoCast(target, SPELL_CHARGE);
+                    //m_creature->Relocate(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
+                    //m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                    AttackStart(target);
+                }
 
-                    PhaseTwo = false;
-                    TransformBack_Timer = 25000 + rand()%15000;
-                }else TransformBack_Timer -= diff;
+                Charge_Timer = 8000;
+            }else Charge_Timer -= diff;
 
-            }
+            if (TransformBack_Timer < diff)
+            {
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15220);
+                const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 1)));
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 1)));
+                m_creature->UpdateDamagePhysical(BASE_ATTACK);
 
-            DoMeleeAttackIfReady();
+                PhaseTwo = false;
+                TransformBack_Timer = 25000 + rand()%15000;
+            }else TransformBack_Timer -= diff;
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -217,7 +222,7 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
             return;
 
         //LevelUp_Timer
-        if(LevelUp_Timer < diff)
+        if (LevelUp_Timer < diff)
         {
             DoCast(m_creature,SPELL_LEVELUP);
             LevelUp_Timer = 3000;

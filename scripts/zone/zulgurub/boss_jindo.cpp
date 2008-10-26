@@ -24,6 +24,8 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
+#define SAY_AGGRO                       -1309014
+
 #define SPELL_BRAINWASHTOTEM            24262
 #define SPELL_POWERFULLHEALINGWARD      24309               //We will not use this spell. We will summon a totem by script cause the spell totems will not cast.
 #define SPELL_HEX                       24053
@@ -37,10 +39,6 @@ EndScriptData */
 #define SPELL_SHADOWSHOCK               19460
 #define SPELL_INVISIBLE                 24699
 
-#define SAY_AGGRO         "Welcome to da great show friends! Step right up to die!"
-
-#define SOUND_AGGRO       8425
-
 struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 {
     boss_jindoAI(Creature *c) : ScriptedAI(c)
@@ -48,6 +46,8 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
         Reset();
     }
+
+    ScriptedInstance *pInstance;
 
     uint32 BrainWashTotem_Timer;
     uint32 HealingWard_Timer;
@@ -58,8 +58,6 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
     Creature *Shade;
     Creature *Skeletons;
     Creature *HealingWard;
-
-    ScriptedInstance *pInstance;
 
     void Reset()
     {
@@ -72,8 +70,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -101,7 +98,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(), SPELL_HEX);
 
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-80);
 
             Hex_Timer = 12000 + rand()%8000;
@@ -110,13 +107,13 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
         //Casting the delusion curse with a shade. So shade will attack the same target with the curse.
         if (Delusions_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+            {
+                DoCast(target, SPELL_DELUSIONSOFJINDO);
 
-            DoCast(target, SPELL_DELUSIONSOFJINDO);
-
-            Shade = m_creature->SummonCreature(14986, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            Shade->AI()->AttackStart(target);
+                Shade = m_creature->SummonCreature(14986, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+                Shade->AI()->AttackStart(target);
+            }
 
             Delusions_Timer = 4000 + rand()%8000;
         }else Delusions_Timer -= diff;
@@ -130,7 +127,7 @@ struct MANGOS_DLL_DECL boss_jindoAI : public ScriptedAI
             {
                 DoTeleportPlayer(target, -11583.7783,-1249.4278,77.5471,4.745);
 
-                if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                     m_creature->getThreatManager().modifyThreatPercent(target,-100);
 
                 Skeletons = m_creature->SummonCreature(14826, target->GetPositionX()+2, target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
@@ -165,13 +162,13 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
 {
     mob_healing_wardAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
-    uint32 Heal_Timer;
-
     ScriptedInstance *pInstance;
+
+    uint32 Heal_Timer;
 
     void Reset()
     {
@@ -185,9 +182,9 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
     void UpdateAI (const uint32 diff)
     {
         //Heal_Timer
-        if(Heal_Timer < diff)
+        if (Heal_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 Unit *pJindo = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_JINDO));
                 DoCast(pJindo, SPELL_HEAL);
@@ -204,13 +201,13 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
 {
     mob_shade_of_jindoAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
-    uint32 ShadowShock_Timer;
-
     ScriptedInstance *pInstance;
+
+    uint32 ShadowShock_Timer;
 
     void Reset()
     {
@@ -226,7 +223,7 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
     {
 
         //ShadowShock_Timer
-        if(ShadowShock_Timer < diff)
+        if (ShadowShock_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SHADOWSHOCK);
             ShadowShock_Timer = 2000;

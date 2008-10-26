@@ -24,6 +24,11 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
+#define SAY_AGGRO                   -1309020
+#define SAY_FLEEING                 -1309021
+#define SAY_MINION_DESTROY          -1309022                //where does it belong?
+#define SAY_PROTECT_ALTAR           -1309023                //where does it belong?
+
 #define SPELL_BLOODSIPHON            24322
 #define SPELL_CORRUPTEDBLOOD         24328
 #define SPELL_CAUSEINSANITY          24327                  //Not working disabled.
@@ -37,11 +42,6 @@ EndScriptData */
 #define SPELL_ASPECT_OF_THEKAL       24689
 #define SPELL_ASPECT_OF_ARLOKK       24690
 
-#define SAY_AGGRO         "PRIDE HERALDS THE END OF YOUR WORLD. COME, MORTALS! FACE THE WRATH OF THE SOULFLAYER!"
-#define SOUND_AGGRO       8414
-
-#define SAY_SLAY          "Fleeing will do you no good, mortals!"
-
 struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 {
     boss_hakkarAI(Creature *c) : ScriptedAI(c)
@@ -49,6 +49,8 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
+
+    ScriptedInstance *pInstance;
 
     uint32 BloodSiphon_Timer;
     uint32 CorruptedBlood_Timer;
@@ -67,8 +69,6 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
     uint32 AspectOfMarli_Timer;
     uint32 AspectOfThekal_Timer;
     uint32 AspectOfArlokk_Timer;
-
-    ScriptedInstance *pInstance;
 
     bool Enraged;
 
@@ -97,13 +97,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -122,25 +120,21 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else CorruptedBlood_Timer -= diff;
 
         //CauseInsanity_Timer
-        //        if (CauseInsanity_Timer < diff)
-        //        {
-        //
-        //            Unit* target = NULL;
-        //            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+        /*if (CauseInsanity_Timer < diff)
+        {
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(target,SPELL_CAUSEINSANITY);
 
-        //            DoCast(target,SPELL_CAUSEINSANITY);
-
-        //            CauseInsanity_Timer = 35000 + rand()%8000;
-        //        }else CauseInsanity_Timer -= diff;
+            CauseInsanity_Timer = 35000 + rand()%8000;
+        }else CauseInsanity_Timer -= diff;*/
 
         //WillOfHakkar_Timer
         if (WillOfHakkar_Timer < diff)
         {
 
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(target,SPELL_WILLOFHAKKAR);
 
-            DoCast(target,SPELL_WILLOFHAKKAR);
             WillOfHakkar_Timer = 25000 + rand()%10000;
         }else WillOfHakkar_Timer -= diff;
 
@@ -151,11 +145,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else Enrage_Timer -= diff;
 
         //Checking if Jeklik is dead. If not we cast her Aspect
-        if(CheckJeklik_Timer < diff)
+        if (CheckJeklik_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(!pInstance->GetData(DATA_JEKLIKISDEAD))
+                if (!pInstance->GetData(DATA_JEKLIKISDEAD))
                 {
                     if (AspectOfJeklik_Timer < diff)
                     {
@@ -168,11 +162,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else CheckJeklik_Timer -= diff;
 
         //Checking if Venoxis is dead. If not we cast his Aspect
-        if(CheckVenoxis_Timer < diff)
+        if (CheckVenoxis_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(!pInstance->GetData(DATA_VENOXISISDEAD))
+                if (!pInstance->GetData(DATA_VENOXISISDEAD))
                 {
                     if (AspectOfVenoxis_Timer < diff)
                     {
@@ -185,11 +179,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else CheckVenoxis_Timer -= diff;
 
         //Checking if Marli is dead. If not we cast her Aspect
-        if(CheckMarli_Timer < diff)
+        if (CheckMarli_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(!pInstance->GetData(DATA_MARLIISDEAD))
+                if (!pInstance->GetData(DATA_MARLIISDEAD))
                 {
                     if (AspectOfMarli_Timer < diff)
                     {
@@ -203,11 +197,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else CheckMarli_Timer -= diff;
 
         //Checking if Thekal is dead. If not we cast his Aspect
-        if(CheckThekal_Timer < diff)
+        if (CheckThekal_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(!pInstance->GetData(DATA_THEKALISDEAD))
+                if (!pInstance->GetData(DATA_THEKALISDEAD))
                 {
                     if (AspectOfThekal_Timer < diff)
                     {
@@ -220,11 +214,11 @@ struct MANGOS_DLL_DECL boss_hakkarAI : public ScriptedAI
         }else CheckThekal_Timer -= diff;
 
         //Checking if Arlokk is dead. If yes we cast her Aspect
-        if(CheckArlokk_Timer < diff)
+        if (CheckArlokk_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(!pInstance->GetData(DATA_ARLOKKISDEAD))
+                if (!pInstance->GetData(DATA_ARLOKKISDEAD))
                 {
                     if (AspectOfArlokk_Timer < diff)
                     {

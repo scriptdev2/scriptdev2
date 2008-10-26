@@ -24,6 +24,9 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
+#define SAY_AGGRO               -1309009
+#define SAY_DEATH               -1309010
+
 #define SPELL_MORTALCLEAVE        22859
 #define SPELL_SILENCE             23207
 #define SPELL_FRENZY              23342
@@ -47,19 +50,15 @@ EndScriptData */
 #define SPELL_KICK                15614
 #define SPELL_BLIND               21060
 
-#define SAY_AGGRO         "Shirvallah fill me with your rage!"
-#define SOUND_AGGRO       8419
-
-#define SAY_DEATH         "Hakkar binds me no more. Peace at last."
-#define SOUND_DEATH       8424
-
 struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
 {
     boss_thekalAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
+
+    ScriptedInstance *pInstance;
 
     uint32 MortalCleave_Timer;
     uint32 Silence_Timer;
@@ -71,7 +70,6 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
     uint32 Check_Timer;
     uint32 Resurrect_Timer;
 
-    ScriptedInstance *pInstance;
     bool Enraged;
     bool PhaseTwo;
     bool WasDead;
@@ -92,152 +90,144 @@ struct MANGOS_DLL_DECL boss_thekalAI : public ScriptedAI
         PhaseTwo = false;
         WasDead = false;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_THEKAL_ALIVE, 0);
     }
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (pInstance)
             pInstance->SetData(DATA_THEKAL_DEATH, 0);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget())
+        if (!m_creature->getVictim() && !m_creature->SelectHostilTarget())
             return;
 
-        if( m_creature->getVictim() && m_creature->isAlive())
+        //Check_Timer for the death of LorKhan and Zath.
+        if (!WasDead && Check_Timer < diff)
         {
-
-            //Check_Timer for the death of LorKhan and Zath.
-            if(!WasDead && Check_Timer < diff)
+            if (pInstance)
             {
-                if(pInstance)
+                if (pInstance->GetData(DATA_LORKHANISDEAD))
                 {
-                    if(pInstance->GetData(DATA_LORKHANISDEAD))
-                    {
-                        //Resurrect LorKhan
-                        Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
-                        pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                        pLorKhan->setFaction(14);
-                        pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
-                    }
-
-                    if(pInstance->GetData(DATA_ZATHISDEAD))
-                    {
-                        //Resurrect Zath
-                        Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
-                        pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                        pZath->setFaction(14);
-                        pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
-                    }
+                    //Resurrect LorKhan
+                    Unit *pLorKhan = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LORKHAN));
+                    pLorKhan->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                    pLorKhan->setFaction(14);
+                    pLorKhan->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                 }
 
-                Check_Timer = 5000;
-            }else Check_Timer -= diff;
-
-            if (!PhaseTwo && MortalCleave_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_MORTALCLEAVE);
-                MortalCleave_Timer = 15000 + rand()%5000;
-            }else MortalCleave_Timer -= diff;
-
-            if (!PhaseTwo && Silence_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(),SPELL_SILENCE);
-                Silence_Timer = 20000 + rand()%5000;
-            }else Silence_Timer -= diff;
-
-            if (!PhaseTwo && !WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
-            {
-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
-                m_creature->AttackStop();
-
-                if(pInstance)
-                    pInstance->SetData(DATA_THEKALFAKE_DEATH, 0);
-
-                WasDead=true;
-            }
-
-            //Thekal will transform to Tiger if he died and was not resurrected after 10 seconds.
-            if(!PhaseTwo && WasDead)
-            {
-                if (Resurrect_Timer < diff)
+                if (pInstance->GetData(DATA_ZATHISDEAD))
                 {
-                    DoCast(m_creature,SPELL_TIGER_FORM);
-                    m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
-                    m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    m_creature->SetHealth(int(m_creature->GetMaxHealth()*1.0));
-                    const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 40)));
-                    m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
-                    m_creature->UpdateDamagePhysical(BASE_ATTACK);
-                    DoResetThreat();
-                    PhaseTwo = true;
-                }else Resurrect_Timer -= diff;
+                    //Resurrect Zath
+                    Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
+                    pZath->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                    pZath->setFaction(14);
+                    pZath->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    pZath->SetHealth(int(pZath->GetMaxHealth()*1.0));
+                }
             }
+            Check_Timer = 5000;
+        }else Check_Timer -= diff;
 
-            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() == 100) && WasDead)
-            {
-                WasDead = false;
-            }
+        if (!PhaseTwo && MortalCleave_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_MORTALCLEAVE);
+            MortalCleave_Timer = 15000 + rand()%5000;
+        }else MortalCleave_Timer -= diff;
 
-            if (PhaseTwo)
+        if (!PhaseTwo && Silence_Timer < diff)
+        {
+            DoCast(m_creature->getVictim(),SPELL_SILENCE);
+            Silence_Timer = 20000 + rand()%5000;
+        }else Silence_Timer -= diff;
+
+        if (!PhaseTwo && !WasDead && m_creature->GetHealth() <= m_creature->GetMaxHealth() * 0.05)
+        {
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
+            m_creature->AttackStop();
+
+            if (pInstance)
+                pInstance->SetData(DATA_THEKALFAKE_DEATH, 0);
+
+            WasDead = true;
+        }
+
+        //Thekal will transform to Tiger if he died and was not resurrected after 10 seconds.
+        if (!PhaseTwo && WasDead)
+        {
+            if (Resurrect_Timer < diff)
             {
-                if (Charge_Timer < diff)
+                DoCast(m_creature,SPELL_TIGER_FORM);
+                m_creature->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_creature->SetHealth(int(m_creature->GetMaxHealth()*1.0));
+                const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 40)));
+                m_creature->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 40)));
+                m_creature->UpdateDamagePhysical(BASE_ATTACK);
+                DoResetThreat();
+                PhaseTwo = true;
+            }else Resurrect_Timer -= diff;
+        }
+
+        if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() == 100) && WasDead)
+        {
+            WasDead = false;
+        }
+
+        if (PhaseTwo)
+        {
+            if (Charge_Timer < diff)
+            {
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
                     DoCast(target,SPELL_CHARGE);
                     m_creature->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
                     DoResetThreat();
                     AttackStart(target);
-
-                    Charge_Timer = 15000 + rand()%7000;
-                }else Charge_Timer -= diff;
-
-                if (Frenzy_Timer < diff)
-                {
-                    DoCast(m_creature,SPELL_FRENZY);
-                    Frenzy_Timer = 30000;
-                }else Frenzy_Timer -= diff;
-
-                if (ForcePunch_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_SILENCE);
-                    ForcePunch_Timer = 16000 + rand()%5000;
-                }else ForcePunch_Timer -= diff;
-
-                if (SummonTigers_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_SUMMONTIGERS);
-                    SummonTigers_Timer = 10000 + rand()%4000;
-                }else SummonTigers_Timer -= diff;
-
-                if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
-                {
-                    DoCast(m_creature, SPELL_ENRAGE);
-                    Enraged = true;
                 }
-            }
+                Charge_Timer = 15000 + rand()%7000;
+            }else Charge_Timer -= diff;
 
-            DoMeleeAttackIfReady();
+            if (Frenzy_Timer < diff)
+            {
+                DoCast(m_creature,SPELL_FRENZY);
+                Frenzy_Timer = 30000;
+            }else Frenzy_Timer -= diff;
+
+            if (ForcePunch_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_SILENCE);
+                ForcePunch_Timer = 16000 + rand()%5000;
+            }else ForcePunch_Timer -= diff;
+
+            if (SummonTigers_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(),SPELL_SUMMONTIGERS);
+                SummonTigers_Timer = 10000 + rand()%4000;
+            }else SummonTigers_Timer -= diff;
+
+            if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11) && !Enraged)
+            {
+                DoCast(m_creature, SPELL_ENRAGE);
+                Enraged = true;
+            }
         }
+
+        DoMeleeAttackIfReady();
     }
 };
 
@@ -270,7 +260,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
 
         FakeDeath = false;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_LORKHAN_ALIVE, 0);
 
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -287,23 +277,23 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             return;
 
         //Shield_Timer
-        if(Shield_Timer < diff)
+        if (Shield_Timer < diff)
         {
             DoCast(m_creature,SPELL_SHIELD);
             Shield_Timer = 61000;
         }else Shield_Timer -= diff;
 
         //BloodLust_Timer
-        if(BloodLust_Timer < diff)
+        if (BloodLust_Timer < diff)
         {
             DoCast(m_creature,SPELL_BLOODLUST);
             BloodLust_Timer = 20000+rand()%8000;
         }else BloodLust_Timer -= diff;
 
         //Casting Greaterheal to Thekal or Zath if they are in meele range.
-        if(GreaterHeal_Timer < diff)
+        if (GreaterHeal_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
                 Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
@@ -311,11 +301,11 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                 switch(rand()%2)
                 {
                     case 0:
-                        if(m_creature->IsWithinDistInMap(pThekal, ATTACK_DISTANCE))
+                        if (m_creature->IsWithinDistInMap(pThekal, ATTACK_DISTANCE))
                             DoCast(pThekal, SPELL_GREATERHEAL);
                         break;
                     case 1:
-                        if(m_creature->IsWithinDistInMap(pZath, ATTACK_DISTANCE))
+                        if (m_creature->IsWithinDistInMap(pZath, ATTACK_DISTANCE))
                             DoCast(pZath, SPELL_GREATERHEAL);
                         break;
                 }
@@ -325,18 +315,18 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         }else GreaterHeal_Timer -= diff;
 
         //Disarm_Timer
-        if(Disarm_Timer < diff)
+        if (Disarm_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_DISARM);
             Disarm_Timer = 15000+rand()%10000;
         }else Disarm_Timer -= diff;
 
         //Check_Timer for the death of LorKhan and Zath.
-        if(!FakeDeath && Check_Timer < diff)
+        if (!FakeDeath && Check_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
-                if(pInstance->GetData(DATA_THEKALISFAKEDEAD))
+                if (pInstance->GetData(DATA_THEKALISFAKEDEAD))
                 {
                     //Resurrect Thekal
                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
@@ -346,7 +336,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
                     pThekal->SetHealth(int(pThekal->GetMaxHealth()*1.0));
                 }
 
-                if(pInstance->GetData(DATA_ZATHISDEAD))
+                if (pInstance->GetData(DATA_ZATHISDEAD))
                 {
                     //Resurrect Zath
                     Unit *pZath = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_ZATH));
@@ -367,7 +357,7 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
             m_creature->setFaction(35);
             m_creature->AttackStop();
 
-            if(pInstance)
+            if (pInstance)
                 pInstance->SetData(DATA_LORKHAN_DEATH, 0);
 
             FakeDeath = true;
@@ -408,7 +398,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
 
         FakeDeath = false;
 
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_ZATH_ALIVE, 0);
 
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -425,48 +415,48 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             return;
 
         //SweepingStrikes_Timer
-        if(SweepingStrikes_Timer < diff)
+        if (SweepingStrikes_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SWEEPINGSTRIKES);
             SweepingStrikes_Timer = 22000+rand()%4000;
         }else SweepingStrikes_Timer -= diff;
 
         //SinisterStrike_Timer
-        if(SinisterStrike_Timer < diff)
+        if (SinisterStrike_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SINISTERSTRIKE);
             SinisterStrike_Timer = 8000+rand()%8000;
         }else SinisterStrike_Timer -= diff;
 
         //Gouge_Timer
-        if(Gouge_Timer < diff)
+        if (Gouge_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_GOUGE);
 
-            if(m_creature->getThreatManager().getThreat(m_creature->getVictim()))
+            if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
 
             Gouge_Timer = 17000+rand()%10000;
         }else Gouge_Timer -= diff;
 
         //Kick_Timer
-        if(Kick_Timer < diff)
+        if (Kick_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_KICK);
             Kick_Timer = 15000+rand()%10000;
         }else Kick_Timer -= diff;
 
         //Blind_Timer
-        if(Blind_Timer < diff)
+        if (Blind_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_BLIND);
             Blind_Timer = 10000+rand()%10000;
         }else Blind_Timer -= diff;
 
         //Check_Timer for the death of LorKhan and Zath.
-        if(!FakeDeath && Check_Timer < diff)
+        if (!FakeDeath && Check_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 if(pInstance->GetData(DATA_LORKHANISDEAD))
                 {
@@ -478,7 +468,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
                     pLorKhan->SetHealth(int(pLorKhan->GetMaxHealth()*1.0));
                 }
 
-                if(pInstance->GetData(DATA_THEKALISFAKEDEAD))
+                if (pInstance->GetData(DATA_THEKALISFAKEDEAD))
                 {
                     //Resurrect Thekal
                     Unit *pThekal = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_THEKAL));
@@ -499,7 +489,7 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
             m_creature->setFaction(35);
             m_creature->AttackStop();
 
-            if(pInstance)
+            if (pInstance)
                 pInstance->SetData(DATA_ZATH_DEATH, 0);
 
             FakeDeath = true;
