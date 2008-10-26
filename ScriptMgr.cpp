@@ -1186,7 +1186,7 @@ void ScriptsInit()
     outstring_log(" MMM  MMM  http://www.scriptdev2.com");
     outstring_log("");
 
-    outstring_log("ScriptDev2 initializing %s", _FULLVERSION);
+    outstring_log("ScriptDev2 initializing: %s", _FULLVERSION);
     outstring_log("");
 
     //Get configuration file
@@ -1822,6 +1822,13 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 
 //*********************************
 //*** Functions used internally ***
+
+MANGOS_DLL_EXPORT
+char const* ScriptsVersion()
+{
+    //TODO: add version text from sd2_db_version
+    return _FULLVERSION;
+}
 
 Script* GetScriptByName(std::string Name)
 {

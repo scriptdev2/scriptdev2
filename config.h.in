@@ -35,7 +35,7 @@
 #endif
 
 #ifndef _VERSION
-  #define _VERSION "(Revision [" REVISION_ID "] " REVISION_DATE ")"
+  #define _VERSION "Revision [" REVISION_ID "] " REVISION_DATE " " REVISION_TIME
 #endif
 
 #if PLATFORM == PLATFORM_WINDOWS
