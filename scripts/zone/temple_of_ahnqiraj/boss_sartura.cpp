@@ -15,21 +15,25 @@
  */
 
 /* ScriptData
-SDName: boss_sartura
-SD%Complete: 99
+SDName: Boss_Sartura
+SD%Complete: 95
 SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_WHIRLWIND                              26083
-#define SPELL_ENRAGE                                 28747            //Not sure if right ID.
-#define SPELL_ENRAGEHARD                             28798
+#define SAY_AGGRO                   -1531008
+#define SAY_SLAY                    -1531009
+#define SAY_DEATH                   -1531010
+
+#define SPELL_WHIRLWIND             26083
+#define SPELL_ENRAGE                28747                   //Not sure if right ID.
+#define SPELL_ENRAGEHARD            28798
 
 //Guard Spell
-#define SPELL_WHIRLWINDADD                           26038
-#define SPELL_KNOCKBACK                              26027
+#define SPELL_WHIRLWINDADD          26038
+#define SPELL_KNOCKBACK             26027
 
 struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 {
@@ -65,11 +69,22 @@ struct MANGOS_DLL_DECL boss_sarturaAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
+        DoScriptText(SAY_AGGRO, m_creature);
     }
+
+    void KilledUnit(Unit* victim)
+    {
+        DoScriptText(SAY_SLAY, m_creature);
+    }
+
+    void JustDied(Unit* Killer)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+    }
+
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
@@ -179,7 +194,6 @@ struct MANGOS_DLL_DECL mob_sartura_royal_guardAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
