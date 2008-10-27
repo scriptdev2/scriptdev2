@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Zulaman
-SD%Complete: 80
+SD%Complete: 60
 SDComment:
 SDCategory: Zul'Aman
 EndScriptData */
@@ -24,14 +24,21 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulaman.h"
 
-#define ENCOUNTERS     1
+#define ENCOUNTERS     5
 #define RAND_VENDOR    2
 
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
     instance_zulaman(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-    uint64 janalai;
+    uint64 akilzonGUID;
+    uint64 nalorakkGUID;
+    uint64 janalaiGUID;
+    uint64 halazziGUID;
+
+    uint64 StrangeGongGUID;
+    uint64 HexlordEntranceGUID;
+
     uint32 janalai_eggs_l;
     uint32 janalai_eggs_r;
 
@@ -40,7 +47,14 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 
     void Initialize()
     {
-        janalai = 0;
+        akilzonGUID = 0;
+        nalorakkGUID = 0;
+        janalaiGUID = 0;
+        halazziGUID = 0;
+
+        StrangeGongGUID = 0;
+        HexlordEntranceGUID = 0;
+
         janalai_eggs_l = 20;
         janalai_eggs_r = 20;
 
@@ -62,17 +76,39 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(creature_entry)
         {
-            case 23578:
-                janalai = creature->GetGUID();
-                break;
+            case 23574: akilzonGUID  = creature->GetGUID(); break;
+            case 23576: nalorakkGUID = creature->GetGUID(); break;
+            case 23578: janalaiGUID  = creature->GetGUID(); break;
+            case 23577: halazziGUID  = creature->GetGUID(); break;
         }
     }
 
-    uint64 GetData64(uint32 identifier)
+    void OnObjectCreate(GameObject *go)
     {
-        if(identifier  == DATA_JANALAI && janalai)
-            return janalai;
+        switch(go->GetEntry())
+        {
+            case 187359: StrangeGongGUID        = go->GetGUID(); break;
+            case 186305: HexlordEntranceGUID    = go->GetGUID(); break;
+        }
+    }
 
+    uint64 GetData64(uint32 data)
+    {
+        switch(data)
+        {
+            case DATA_AKILZON:
+                return akilzonGUID;
+            case DATA_NALORAKK:
+                return nalorakkGUID;
+            case DATA_JANALAI:
+                return janalaiGUID;
+            case DATA_HALAZZI:
+                return halazziGUID;
+            case DATA_GONG:
+                return StrangeGongGUID;
+            case DATA_HEXLORD_GATE:
+                return HexlordEntranceGUID;
+        }
         return 0;
     }
 
@@ -80,13 +116,13 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_JANALAIEVENT:
-                if(data == 0)
+            case TYPE_JANALAIEVENT:
+                if(data == NOT_STARTED)
                 {
                     janalai_eggs_l = 20;
                     janalai_eggs_r = 20;
                 }
-                Encounters[0] = data;
+                Encounters[4] = data;
                 break;
             case DATA_J_HATCHLEFT:
                 janalai_eggs_l -= data;
@@ -100,6 +136,9 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
             case TYPE_RAND_VENDOR_2:
                 RandVendor[1] = data;
                 break;
+            default:
+                error_log("SD2: Zul'Aman: ERROR SetData = %u for type %u does not exist/not implemented.",data,type);
+                break;
         }
     }
 
@@ -107,12 +146,22 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(type)
         {
-            case DATA_JANALAIEVENT:
+            case TYPE_EVENT_RUN:
                 return Encounters[0];
+            case TYPE_AKILZONEVENT:
+                return Encounters[1];
+            case TYPE_NALORAKKEVENT:
+                return Encounters[2];
+            case TYPE_JANALAIEVENT:
+                return Encounters[3];
+            case TYPE_HALAZZIEVENT:
+                return Encounters[4];
+
             case DATA_J_EGGSLEFT:
                 return janalai_eggs_l;
             case DATA_J_EGGSRIGHT:
                 return janalai_eggs_r;
+
             case TYPE_RAND_VENDOR_1:
                 return RandVendor[0];
             case TYPE_RAND_VENDOR_2:

@@ -16,13 +16,24 @@
 
 /* ScriptData
 SDName: Boss_Janalai
-SD%Complete: 100
+SD%Complete: 75
 SDComment:
 SDCategory: Zul'Aman
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_zulaman.h"
+
+#define SAY_AGGRO                   -1568000
+#define SAY_FIRE_BOMBS              -1568001
+#define SAY_SUMMON_HATCHER          -1568002
+#define SAY_ALL_EGGS                -1568003
+#define SAY_BERSERK                 -1568004
+#define SAY_SLAY_1                  -1568005
+#define SAY_SLAY_2                  -1568006
+#define SAY_DEATH                   -1568007
+#define SAY_EVENT_STRANGERS         -1568008
+#define SAY_EVENT_FRIENDS           -1568009
 
 // Jan'alai
 // --Spell
@@ -38,33 +49,6 @@ EndScriptData */
 #define SPELL_FIRE_BOMB_THROW       42628
 #define SPELL_FIRE_BOMB_DUMMY       42629
 #define SPELL_FIRE_BOMB_DAMAGE      42630
-
-// -- SAYs
-#define SOUND_AGGRO                 12031
-#define SAY_AGGRO                   "Spirits of da wind be your doom!"
-#define SOUND_FIRE_BOMBS            12032
-#define SAY_FIRE_BOMBS              "I burn ya now!"
-#define SOUND_SUMMON_HATCHER        12033
-#define SAY_SUMMON_HATCHER          "Where ma hatcha? Get to work on dem eggs!"
-#define SOUND_ALL_EGGS              12034
-#define SAY_ALL_EGGS                "I show you strength... in numbers."
-#define SOUND_BERSERK               12035
-#define SAY_BERSERK                 "You done run outta time!"
-
-#define SOUND_SLAY_1                12036
-#define SAY_SLAY_1                  "It all be over now, mon!"
-#define SOUND_SLAY_2                12037
-#define SAY_SLAY_2                  "Tazaga-choo!"
-
-#define SOUND_DEATH                 12038
-#define SAY_DEATH                   "Zul'jin... got a surprise for you..."
-
-#define SOUND_AGGRO_1               12039                   //NOT USED need more information
-                                                            //NOT USED need more information (random say before aggro?)
-#define SAY_AGGRO_1                 "Come, strangers. The spirit of the dragonhawk hot be hungry for worthy souls."
-#define SOUND_AGGRO_2               12040                   //NOT USED need more information
-                                                            //NOT USED need more information (random say before aggro?)
-#define SAY_AGGRO_2                 "Come, friends. Your bodies gonna feed ma hatchlings, and your souls are going to feed me with power!"
 
 // --Summons
 #define MOB_AMANI_HATCHER           23818
@@ -141,8 +125,8 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void Reset()
     {
-        if(pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, NOT_STARTED);
+        if (pInstance)
+            pInstance->SetData(TYPE_JANALAIEVENT, NOT_STARTED);
 
         fire_breath_timer = 8000;
         bomb_timer = 30000;
@@ -166,78 +150,70 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
 
-        if(pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, DONE);
+        if (pInstance)
+            pInstance->SetData(TYPE_JANALAIEVENT, DONE);
     }
 
     void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_SLAY_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_SLAY_1);
-                break;
+            case 0: DoScriptText(SAY_SLAY_1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY_2, m_creature); break;
         }
     }
 
     void Aggro(Unit *who)
     {
-        if(pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, IN_PROGRESS);
+        DoScriptText(SAY_AGGRO, m_creature);
 
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        if (pInstance)
+            pInstance->SetData(TYPE_JANALAIEVENT, IN_PROGRESS);
     }
 
     void FireWall()                                         // Create Firewall
     {
         Creature* wall = NULL;
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1],FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]+5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[0][0],FireWallCoords[0][1]-5,FireWallCoords[0][2],FireWallCoords[0][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[1][0]-2,FireWallCoords[1][1]-2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[1][0]+2,FireWallCoords[1][1]+2,FireWallCoords[1][2],FireWallCoords[1][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1],FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]-5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[2][0],FireWallCoords[2][1]+5,FireWallCoords[2][2],FireWallCoords[2][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[3][0]-2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
 
         wall = m_creature->SummonCreature(MOB_FIRE_BOMB,FireWallCoords[3][0]+2,FireWallCoords[3][1],FireWallCoords[3][2],FireWallCoords[3][3],TEMPSUMMON_TIMED_DESPAWN,11500);
-        if(wall)
+        if (wall)
             wall->CastSpell(wall,SPELL_FIRE_WALL,false);
     }
 
@@ -251,12 +227,12 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             dy = (rand()%(area_dy))-(area_dy/2);
 
             Creature* bomb = DoSpawnCreature(MOB_FIRE_BOMB, dx, dy, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 13000);
-            if(bomb)
+            if (bomb)
                 FireBombGUIDs[i] = bomb->GetGUID();
         }
 
         Creature* ThrowController = DoSpawnCreature(MOB_FIRE_BOMB,0,0,1,0,TEMPSUMMON_TIMED_DESPAWN,10000);
-        if(ThrowController)
+        if (ThrowController)
             ThrowControllerGUID = ThrowController->GetGUID();
 
         bombcounter = 0;
@@ -268,13 +244,13 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         {
             Unit* ThrowController = NULL;
             Unit* FireBomb = NULL;
-            if(ThrowControllerGUID)
+            if (ThrowControllerGUID)
                 ThrowController = Unit::GetUnit((*m_creature), ThrowControllerGUID);
 
-            if(FireBombGUIDs[bombcounter])
+            if (FireBombGUIDs[bombcounter])
                 FireBomb = Unit::GetUnit((*m_creature), FireBombGUIDs[bombcounter]);
 
-            if(ThrowController && FireBomb)
+            if (ThrowController && FireBomb)
             {
                 ThrowController->CastSpell(FireBomb,SPELL_FIRE_BOMB_THROW,true);
                 FireBomb->CastSpell(FireBomb,SPELL_FIRE_BOMB_DUMMY,false);
@@ -288,26 +264,25 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(!bombing)                                        // every Spell if NOT Bombing
+        if (!bombing)                                        // every Spell if NOT Bombing
         {
             //FIRE BREATH  several videos says every 8Secounds
-            if(fire_breath_timer < diff)
+            if (fire_breath_timer < diff)
             {
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM,0);
-                if(target)
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_FLAME_BREATH);
                 fire_breath_timer = 8000;
             }else fire_breath_timer -=diff;
 
-            if(bomb_timer < diff)
+            if (bomb_timer < diff)
             {
+                DoScriptText(SAY_FIRE_BOMBS, m_creature);
+
                 FireWall();
                 bomb_timer = 20000+rand()%20000;
                 m_creature->Relocate(JanalainPos[0][0],JanalainPos[0][1],JanalainPos[0][2],0);
                 m_creature->SendMonsterMove(JanalainPos[0][0], JanalainPos[0][1],JanalainPos[0][2],0,0,100);
-                DoYell(SAY_FIRE_BOMBS, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_FIRE_BOMBS);
+
                 throwBombs();
                 bombing = true;
 
@@ -320,6 +295,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                     if (Temp && m_creature->GetDistance(Temp) > 30.0)
                         DoTeleportPlayer(Temp, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0);
                 }
+
                 DoCast(m_creature,SPELL_TELETOCENTER,true); // only Effect Spell
                 DoCast(m_creature,SPELL_FIRE_BOMB_CHANNEL,false);
                 finishedbomb_timer = 11000;
@@ -333,10 +309,10 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
             }
 
             //Enrage but only if not bombing
-            if(enragetime && !enraged)
+            if (enragetime && !enraged)
             {
-                DoYell(SAY_BERSERK, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_BERSERK);
+                DoScriptText(SAY_BERSERK, m_creature);
+
                 m_creature->InterruptNonMeleeSpells(false);
                 DoCast(m_creature,SPELL_ENRAGE);
                 enraged = true;
@@ -344,24 +320,24 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
 
         //Enrage after 5 minutes
-        if(enrage_timer < diff)
+        if (enrage_timer < diff)
         {
             enragetime = true;
             enrage_timer = 600000;
         }else enrage_timer -=diff;
 
-        if(bombing)                                         // every Spell if Bombing
+        if (bombing)                                        // every Spell if Bombing
         {
-            if(bombcounter < 40)
+            if (bombcounter < 40)
             {
-                if(throw_timer < diff)
+                if (throw_timer < diff)
                 {
                     throw5Bombs();
                     throw_timer = 1000;
                 }else throw_timer -=diff;
             }
 
-            if(finishedbomb_timer < diff)
+            if (finishedbomb_timer < diff)
             {
                 bombing = false;
                 finishedbomb_timer = 6000;
@@ -371,21 +347,21 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
 
         //Call Hatcher
-        if(!noeggs)
+        if (!noeggs)
         {
-            if(hatchertime < diff)
+            if (hatchertime < diff)
             {
-                if(pInstance->GetData(DATA_J_EGGSLEFT)>0 || pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
+                if (pInstance->GetData(DATA_J_EGGSLEFT)>0 || pInstance->GetData(DATA_J_EGGSRIGHT) > 0)
                 {
+                    DoScriptText(SAY_SUMMON_HATCHER, m_creature);
+
                     Unit* hatcher = NULL;
-                    DoYell(SAY_SUMMON_HATCHER, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_SUMMON_HATCHER);
                     hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_l[0][0],hatcherway_l[0][1],hatcherway_l[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-                    if(hatcher)
+                    if (hatcher)
                         hatcher->GetMotionMaster()->MovePoint(0, hatcherway_l[0][0], hatcherway_l[0][1], hatcherway_l[0][2]);
 
                     hatcher = m_creature->SummonCreature(MOB_AMANI_HATCHER,hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-                    if(hatcher)
+                    if (hatcher)
                         hatcher->GetMotionMaster()->MovePoint(0, hatcherway_r[0][0],hatcherway_r[0][1],hatcherway_r[0][2]);
                     hatchertime = 45000;
                 }
@@ -397,22 +373,19 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
 
         //WIPE after 10 minutes
-        if(wipetimer < diff)
+        if (wipetimer < diff)
         {
-            DoYell(SAY_BERSERK, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_BERSERK);
+            DoScriptText(SAY_BERSERK, m_creature);
             DoCast(m_creature,SPELL_ENRAGE);
-
             wipetimer = 30000;
         }else wipetimer -=diff;
 
         //Hatch All
-        if(!noeggs && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
+        if (!noeggs && (m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 35)
         {
-            DoYell(SAY_ALL_EGGS , LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature,SOUND_BERSERK);
+            DoScriptText(SAY_ALL_EGGS, m_creature);
 
-            if(pInstance)
+            if (pInstance)
                 eggs = pInstance->GetData(DATA_J_EGGSLEFT);
 
             int i;
@@ -422,11 +395,11 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 int s = (rand()%20 - 10);
                 m_creature->SummonCreature(MOB_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
 
-                if(pInstance)
+                if (pInstance)
                     pInstance->SetData(DATA_J_HATCHLEFT,1);
             }
 
-            if(pInstance)
+            if (pInstance)
                 eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
 
             for(i=1;i<=eggs;i=i+1)
@@ -434,7 +407,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
                 int r = (rand()%20 - 10);
                 int s = (rand()%20 - 10);
                 m_creature->SummonCreature(MOB_HATCHLING,JanalainPos[0][0]+s,JanalainPos[0][1]+r,JanalainPos[0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,15000);
-                if(pInstance)
+                if (pInstance)
                     pInstance->SetData(DATA_J_HATCHRIGHT,1);
             }
 
@@ -442,9 +415,9 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         }
 
         //check for reset ... exploit preventing ... pulled from his podest
-        if(reset_timer < diff)
+        if (reset_timer < diff)
         {
-            if(m_creature->GetPositionX() < -70 || m_creature->GetPositionX() > 0)
+            if (m_creature->GetPositionX() < -70 || m_creature->GetPositionX() > 0)
             {
                 EnterEvadeMode();
                 reset_timer = 5000;                         //every 5 Seca
@@ -479,7 +452,7 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(bomb_timer < diff)                               //Boom
+        if (bomb_timer < diff)                               //Boom
         {
             m_creature->CastSpell(m_creature,SPELL_FIRE_BOMB_DAMAGE,false);
             bomb_timer = 1800000;
@@ -523,11 +496,6 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         hatchlings = 0;
         eggs = 0;
         delete_timer = 10000;
-
-        //m_creature->RemoveAllAuras();
-        //m_creature->DeleteThreatList();
-        //m_creature->CombatStop();
-        //DoGoHome();
     }
 
     void Aggro(Unit* who)
@@ -536,20 +504,20 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(pInstance && (pInstance->GetData(DATA_JANALAIEVENT) == 1))
+        if (pInstance && (pInstance->GetData(TYPE_JANALAIEVENT) == IN_PROGRESS))
         {
-            if(!start && !hatch)
+            if (!start && !hatch)
             {
                 waytype = ( m_creature->GetPositionY() > 1150);
                 waypoint = 1;
                 start = true;
             }
 
-            if(start && !hatch)
+            if (start && !hatch)
             {
-                if(wait)
+                if (wait)
                 {
-                    if(waittimer < diff)
+                    if (waittimer < diff)
                     {
                         wait = false;
                         waittimer = 4000;
@@ -570,7 +538,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
                 else
                 {
                     m_creature->GetMotionMaster()->Clear();
-                    if(waytype)
+                    if (waytype)
                         m_creature->GetMotionMaster()->MovePoint(0,hatcherway_l[waypoint][0],hatcherway_l[waypoint][1],hatcherway_l[waypoint][2]);
                     else
                         m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[waypoint][0],hatcherway_r[waypoint][1],hatcherway_r[waypoint][2]);
@@ -578,28 +546,28 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
                 }
             }
 
-            if(start && hatch)
+            if (start && hatch)
             {
-                if(waittimer < diff)
+                if (waittimer < diff)
                 {
-                    if(!pInstance)
+                    if (!pInstance)
                         return;
 
                     waittimer = 4000;
                     Unit* hatchling;
 
-                    if(waytype)
+                    if (waytype)
                     {
                         eggs = pInstance->GetData(DATA_J_EGGSLEFT);
 
-                        if(eggs > 0)
+                        if (eggs > 0)
                             DoCast(m_creature,SPELL_HATCH_EGG);
 
                         int i;
                         for(i=1;i<=hatchlings;i=i+1)
                         {
                             eggs = pInstance->GetData(DATA_J_EGGSLEFT);
-                            if(eggs <= 0)
+                            if (eggs <= 0)
                             {
                                 if (waytype) waytype = false; else waytype = true;
                                 waittimer = 15000;
@@ -617,21 +585,21 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 
                         DoCast(m_creature,SPELL_HATCH_EGG);
 
-                        if(hatchlings < 5)
+                        if (hatchlings < 5)
                             hatchlings++;
                     }
                     else
                     {
                         eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
 
-                        if(eggs > 0)
+                        if (eggs > 0)
                             DoCast(m_creature,SPELL_HATCH_EGG);
 
                         int i;
                         for(i=1;i<=hatchlings;i=i+1)
                         {
                             eggs = pInstance->GetData(DATA_J_EGGSRIGHT);
-                            if(eggs <= 0)
+                            if (eggs <= 0)
                             {
                                 if (waytype) waytype = false; else waytype = true;
                                 waittimer = 15000;
@@ -655,7 +623,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         }
         else
         {
-            if(delete_timer < diff)
+            if (delete_timer < diff)
             {
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 delete_timer = 10000;
@@ -696,18 +664,18 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!start)
+        if (!start)
         {
-            if(m_creature->GetPositionY() > 1150)
+            if (m_creature->GetPositionY() > 1150)
                 m_creature->GetMotionMaster()->MovePoint(0, hatcherway_l[3][0]+rand()%4-2,hatcherway_l[3][1]+rand()%4-2,hatcherway_l[3][2]);
             else
                 m_creature->GetMotionMaster()->MovePoint(0,hatcherway_r[3][0]+rand()%4-2,hatcherway_r[3][1]+rand()%4-2,hatcherway_r[3][2]);
             start = true;
         }
 
-        if(delete_timer < diff && (pInstance && !(pInstance->GetData(DATA_JANALAIEVENT) == 1)))
+        if (delete_timer < diff && (pInstance && !(pInstance->GetData(TYPE_JANALAIEVENT) == IN_PROGRESS)))
         {
-            if(!(m_creature->getVictim()))
+            if (!(m_creature->getVictim()))
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             delete_timer = 10000;
         }else delete_timer -=diff;
@@ -717,9 +685,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
 
         if (buffer_timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if(target)
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_FLAMEBUFFED);
 
             buffer_timer = 7000;

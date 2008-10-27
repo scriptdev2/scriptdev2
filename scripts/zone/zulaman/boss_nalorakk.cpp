@@ -23,31 +23,22 @@ EndScriptData */
 
 #include "precompiled.h"
 
-//TODO: Trash Waves
+#define SAY_WAVE1_AGGRO         -1568010
+#define SAY_WAVE2_STAIR1        -1568011
+#define SAY_WAVE3_STAIR2        -1568012
+#define SAY_WAVE4_PLATFORM      -1568013
 
-//Unimplemented SoundIDs
-/*
-#define SOUND_NALORAKK_WAVE1    12066
-#define SOUND_NALORAKK_WAVE2    12067
-#define SOUND_NALORAKK_WAVE3    12068
-#define SOUND_NALORAKK_WAVE4    12069
+#define SAY_EVENT1_SACRIFICE    -1568014
+#define SAY_EVENT2_SACRIFICE    -1568015
 
-#define SOUND_NALORAKK_EVENT1   12078
-#define SOUND_NALORAKK_EVENT2   12079
-*/
-
-//General defines
-#define YELL_AGGRO              "You be dead soon enough!"
-#define SOUND_YELL_AGGRO        12070
-#define YELL_KILL_ONE           "Mua-ha-ha! Now whatchoo got to say?"
-#define SOUND_YELL_KILL_ONE     12075
-#define YELL_KILL_TWO           "Da Amani gonna rule again!"
-#define SOUND_YELL_KILL_TWO     12076
-#define YELL_DEATH              "I... be waitin' on da udda side...."
-#define SOUND_YELL_DEATH        12077
-                                                            //Never seen this being used, so just guessing from what I hear.
-#define YELL_BERSERK            "You had your chance, now it be too late!"
-#define SOUND_YELL_BERSERK      12074
+#define SAY_AGGRO               -1568016
+#define SAY_SURGE               -1568017
+#define SAY_TOBEAR              -1568018
+#define SAY_TOTROLL             -1568019
+#define SAY_BERSERK             -1568020
+#define SAY_SLAY1               -1568021
+#define SAY_SLAY2               -1568022
+#define SAY_DEATH               -1568023
 
 #define SPELL_BERSERK           45078                       //unsure, this increases damage, size and speed
 
@@ -58,23 +49,20 @@ EndScriptData */
 #define SPELL_SURGE             42402
 #define SPELL_BEARFORM          42377
 
-#define YELL_SURGE              "I bring da pain!"
-#define SOUND_YELL_SURGE        12071
-
-#define YELL_SHIFTEDTOTROLL     "Make way for Nalorakk!"
-#define SOUND_YELL_TOTROLL      12073
-
 //Defines for Bear form
 #define SPELL_LACERATINGSLASH   42395
 #define SPELL_RENDFLESH         42397
 #define SPELL_DEAFENINGROAR     42398
 
-#define YELL_SHIFTEDTOBEAR      "You call on da beast, you gonna get more dan you bargain for!"
-#define SOUND_YELL_TOBEAR       12072
-
 struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 {
-    boss_nalorakkAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_nalorakkAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
 
     uint32 ChangeForm_Timer;
     uint32 BrutalSwipe_Timer;
@@ -109,29 +97,21 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_YELL_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void KilledUnit(Unit* victim)
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_ONE);
-                break;
-            case 1:
-                DoYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_KILL_TWO);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        DoYell(YELL_DEATH,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_YELL_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -143,9 +123,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
         //Berserking
         if ((Berserk_Timer < diff) && (!Berserking))
         {
+            DoScriptText(SAY_BERSERK, m_creature);
             DoCast(m_creature, SPELL_BERSERK);
-            DoYell(YELL_BERSERK, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_YELL_BERSERK);
             Berserking = true;
         }else Berserk_Timer -= diff;
 
@@ -163,8 +142,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //We just changed to troll form!
             if (!ChangedToTroll)
             {
-                DoYell(YELL_SHIFTEDTOTROLL, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_TOTROLL);
+                DoScriptText(SAY_TOTROLL, m_creature);
+
                 ChangedToTroll = true;
                 ChangedToBear = false;
                 //Reset spell timers
@@ -195,13 +174,11 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
                 Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
                 //if there aren't other units, cast on the tank
-                if(!target)
+                if (!target)
                     target = m_creature->getVictim();
 
                 DoCast(target, SPELL_SURGE);
-
-                DoYell(YELL_SURGE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_SURGE);
+                DoScriptText(SAY_SURGE, m_creature);
 
                 Surge_Timer = 15000 + rand()%17500;
             }else Surge_Timer -= diff;
@@ -220,8 +197,8 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
             //We just changed to bear form!
             if (!ChangedToBear)
             {
-                DoYell(YELL_SHIFTEDTOBEAR, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_YELL_TOBEAR);
+                DoScriptText(SAY_TOBEAR, m_creature);
+
                 ChangedToBear = true;
                 ChangedToTroll = false;
                 //Reset spell timers
