@@ -24,6 +24,16 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_black_temple.h"
 
+//Speech'n'Sound
+#define SAY_AGGRO               -1564029
+#define SAY_SLAY1               -1564030
+#define SAY_SLAY2               -1564031
+#define SAY_SPECIAL1            -1564032
+#define SAY_SPECIAL2            -1564033
+#define SAY_ENRAGE1             -1564034
+#define SAY_ENRAGE2             -1564035
+#define SAY_DEATH               -1564036
+
 //Spells
 #define SPELL_ACID_GEYSER        40630
 #define SPELL_ACIDIC_WOUND       40481
@@ -40,27 +50,6 @@ EndScriptData */
 #define SPELL_TAUNT_GURTOGG      40603
 #define SPELL_INSIGNIFIGANCE     40618
 #define SPELL_BERSERK            45078
-
-//Speech'n'Sound
-#define SAY_AGGRO            "Horde will crush you!"
-#define SOUND_AGGRO          11432
-
-#define SAY_SLAY1            "Time to feast!"
-#define SOUND_SLAY1          11433
-
-#define SAY_SLAY2            "More! I want more!"
-#define SOUND_SLAY2          11434
-
-#define SAY_SPECIAL1         "Drink your blood! Eat your flesh!"
-#define SOUND_SPECIAL1       11435
-
-#define SAY_SPECIAL2         "I hunger!"
-#define SOUND_SPECIAL2       11436
-
-#define SAY_ENRAGE           "I'll rip the meat from your bones!"
-#define SOUND_ENRAGE         11437
-
-#define SOUND_DEATH          11439
 
 //This is used to sort the players by distance in preparation for the Bloodboil cast.
 struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
@@ -103,9 +92,6 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Reset()
     {
-        if(pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
-
         TargetGUID = 0;
 
         TargetThreat = 0;
@@ -122,14 +108,28 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         PhaseChangeTimer = 60000;
 
         Phase1 = true;
+
+        if (pInstance)
+        {
+            if (m_creature->isAlive())
+            {
+                pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
+            }else OpenMotherDoor();
+        }
+    }
+
+    void OpenMotherDoor()
+    {
+        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+            Door->SetGoState(0);
     }
 
     void Aggro(Unit *who)
     {
         DoZoneInCombat();
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
-        if(pInstance)
+        DoScriptText(SAY_AGGRO, m_creature);
+
+        if (pInstance)
             pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
     }
 
@@ -137,23 +137,20 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
     void JustDied(Unit *victim)
     {
-        if(pInstance)
+        if (pInstance)
+        {
             pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
+            OpenMotherDoor();
+        }
 
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     // Note: This seems like a very complicated fix. The fix needs to be handled by the core, as implementation of limited-target AoE spells are still not limited.
@@ -162,15 +159,19 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
         // Get the Threat List
         std::list<HostilReference *> m_threatlist = m_creature->getThreatManager().getThreatList();
 
-        if(!m_threatlist.size()) return;                    // He doesn't have anyone in his threatlist, useless to continue
+        // He doesn't have anyone in his threatlist, useless to continue
+        if (!m_threatlist.size())
+            return;
 
         std::list<Unit *> targets;
         std::list<HostilReference *>::iterator itr = m_threatlist.begin();
-        for( ; itr!= m_threatlist.end(); ++itr)             //store the threat list in a different container
+
+        //store the threat list in a different container
+        for( ; itr!= m_threatlist.end(); ++itr)
         {
             Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                                                            //only on alive players
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
+            //only on alive players
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
                 targets.push_back( target);
         }
 
@@ -204,67 +205,77 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         Unit* pUnit = NULL;
         pUnit = Unit::GetUnit((*m_creature), guid);
-        if(pUnit)
+
+        if (pUnit)
         {
-            if(m_creature->getThreatManager().getThreat(pUnit))
+            if (m_creature->getThreatManager().getThreat(pUnit))
                 m_creature->getThreatManager().modifyThreatPercent(pUnit, -100);
-            if(TargetThreat)
+
+            if (TargetThreat)
                 m_creature->AddThreat(pUnit, TargetThreat);
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(ArcingSmashTimer < diff)
+        if (ArcingSmashTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_ARCING_SMASH);
             ArcingSmashTimer = 10000;
         }else ArcingSmashTimer -= diff;
 
-        if(FelAcidTimer < diff)
+        if (FelAcidTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_FEL_ACID);
             FelAcidTimer = 25000;
         }else FelAcidTimer -= diff;
 
-        if(!m_creature->HasAura(SPELL_BERSERK, 0))
-            if(EnrageTimer < diff)
+        if (!m_creature->HasAura(SPELL_BERSERK, 0))
         {
-            DoCast(m_creature, SPELL_BERSERK);
-            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-        }else EnrageTimer -= diff;
+            if (EnrageTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
 
-        if(Phase1)
+                switch(rand()%2)
+                {
+                    case 0: DoScriptText(SAY_ENRAGE1, m_creature); break;
+                    case 1: DoScriptText(SAY_ENRAGE2, m_creature); break;
+                }
+            }else EnrageTimer -= diff;
+        }
+
+        if (Phase1)
         {
-            if(BewilderingStrikeTimer < diff)
+            if (BewilderingStrikeTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_BEWILDERING_STRIKE);
                 float mt_threat = m_creature->getThreatManager().getThreat(m_creature->getVictim());
-                Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
-                m_creature->AddThreat(target, mt_threat);
+
+                if (Unit* target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
+                    m_creature->AddThreat(target, mt_threat);
+
                 BewilderingStrikeTimer = 20000;
             }else BewilderingStrikeTimer -= diff;
 
-            if(EjectTimer < diff)
+            if (EjectTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_EJECT1);
                 m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(), -40);
                 EjectTimer = 15000;
             }else EjectTimer -= diff;
 
-            if(AcidicWoundTimer < diff)
+            if (AcidicWoundTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_ACIDIC_WOUND);
                 AcidicWoundTimer = 10000;
             }else AcidicWoundTimer -= diff;
 
-            if(BloodboilTimer < diff)
+            if (BloodboilTimer < diff)
             {
-                if(BloodboilCount < 5)                      // Only cast it five times.
+                if (BloodboilCount < 5)                     // Only cast it five times.
                 {
                     //CastBloodboil(); // Causes issues on windows, so is commented out.
                     DoCast(m_creature->getVictim(), SPELL_BLOODBOIL);
@@ -274,40 +285,44 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
             }else BloodboilTimer -= diff;
         }
 
-        if(!Phase1)
+        if (!Phase1)
         {
-            if(AcidGeyserTimer < diff)
+            if (AcidGeyserTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_ACID_GEYSER);
                 AcidGeyserTimer = 30000;
             }else AcidGeyserTimer -= diff;
 
-            if(EjectTimer < diff)
+            if (EjectTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_EJECT2);
                 EjectTimer = 15000;
             }else EjectTimer -= diff;
         }
 
-        if(PhaseChangeTimer < diff)
+        if (PhaseChangeTimer < diff)
         {
-            if(Phase1)
+            if (Phase1)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if(target && target->isAlive())
+                if (target && target->isAlive())
                 {
                     Phase1 = false;
 
                     TargetThreat = m_creature->getThreatManager().getThreat(target);
                     TargetGUID = target->GetGUID();
                     target->CastSpell(m_creature, SPELL_TAUNT_GURTOGG, true);
-                    if(m_creature->getThreatManager().getThreat(target))
+
+                    if (m_creature->getThreatManager().getThreat(target))
                         m_creature->getThreatManager().modifyThreatPercent(target, -100);
+
                     m_creature->AddThreat(target, 50000000.0f);
-                                                            // If VMaps are disabled, this spell can call the whole instance
+
+                    // If VMaps are disabled, this spell can call the whole instance
                     DoCast(m_creature, SPELL_INSIGNIFIGANCE, true);
                     DoCast(target, SPELL_FEL_RAGE_TARGET, true);
-                    DoCast(target,SPELL_FEL_RAGE_2, true);
+                    DoCast(target, SPELL_FEL_RAGE_2, true);
+
                     /* These spells do not work, comment them out for now.
                     DoCast(target, SPELL_FEL_RAGE_2, true);
                     DoCast(target, SPELL_FEL_RAGE_3, true);*/
@@ -317,14 +332,8 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
 
                     switch(rand()%2)
                     {
-                        case 0:
-                            DoYell(SAY_SPECIAL1,LANG_UNIVERSAL,NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_SPECIAL1);
-                            break;
-                        case 1:
-                            DoYell(SAY_SPECIAL2,LANG_UNIVERSAL,NULL);
-                            DoPlaySoundToSet(m_creature, SOUND_SPECIAL2);
-                            break;
+                        case 0: DoScriptText(SAY_SPECIAL1, m_creature); break;
+                        case 1: DoScriptText(SAY_SPECIAL2, m_creature); break;
                     }
 
                     AcidGeyserTimer = 1000;
@@ -332,8 +341,9 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
                 }
             }else                                           // Encounter is a loop pretty much. Phase 1 -> Phase 2 -> Phase 1 -> Phase 2 till death or enrage
             {
-                if(TargetGUID)
+                if (TargetGUID)
                     RevertThreatOnTarget(TargetGUID);
+
                 TargetGUID = 0;
                 Phase1 = true;
                 BloodboilTimer = 10000;

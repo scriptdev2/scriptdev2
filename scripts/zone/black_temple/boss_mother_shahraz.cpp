@@ -24,6 +24,19 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_black_temple.h"
 
+//Speech'n'Sounds
+#define SAY_TAUNT1              -1564018
+#define SAY_TAUNT2              -1564019
+#define SAY_TAUNT3              -1564020
+#define SAY_AGGRO               -1564021
+#define SAY_SPELL1              -1564022
+#define SAY_SPELL2              -1564023
+#define SAY_SPELL3              -1564024
+#define SAY_SLAY1               -1564025
+#define SAY_SLAY2               -1564026
+#define SAY_ENRAGE              -1564027
+#define SAY_DEATH               -1564028
+
 //Spells
 #define SPELL_BEAM_SINISTER     40859
 #define SPELL_BEAM_VILE         40860
@@ -46,40 +59,6 @@ uint32 PrismaticAuras[]=
     40896,                                                  // Frost
     40897,                                                  // Holy
 };
-
-//Speech'n'Sounds
-#define SAY_TAUNT1          "You play, you pay."
-#define SOUND_TAUNT1        11501
-
-#define SAY_TAUNT2          "I'm not impressed."
-#define SOUND_TAUNT2        11502
-
-#define SAY_TAUNT3          "Enjoying yourselves?"
-#define SOUND_TAUNT3        11503
-
-#define SAY_AGGRO           "So, business... Or pleasure?"
-#define SOUND_AGGRO         11504
-
-#define SAY_SPELL1          "You seem a little tense."
-#define SOUND_SPELL1        11505
-
-#define SAY_SPELL2          "Don't be shy."
-#define SOUND_SPELL2        11506
-
-#define SAY_SPELL3          "I'm all... yours."
-#define SOUND_SPELL3        11507
-
-#define SAY_SLAY1           "Easy come, easy go."
-#define SOUND_SLAY1         11508
-
-#define SAY_SLAY2           "So much for a happy ending."
-#define SOUND_SLAY2         11509
-
-#define SAY_ENRAGE          "Stop toying with my emotions!"
-#define SOUND_ENRAGE        11510
-
-#define SAY_DEATH           "I wasn't... finished."
-#define SOUND_DEATH         11511
 
 struct Locations
 {
@@ -123,9 +102,6 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void Reset()
     {
-        if(pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
-
         for(uint8 i = 0; i<3; i++)
             TargetGUID[i] = 0;
 
@@ -141,40 +117,51 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         ExplosionCount = 0;
 
         Enraged = false;
+
+        if (pInstance)
+        {
+            if (m_creature->isAlive())
+            {
+                pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
+            }else OpenDoors();
+        }
+    }
+
+    void OpenDoors()
+    {
+        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_POST_SHAHRAZ_DOOR)))
+            Door->SetGoState(0);
+        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_COUNCIL_DOOR)))
+            Door->SetGoState(0);
     }
 
     void Aggro(Unit *who)
     {
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
         DoZoneInCombat();
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature, SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                break;
-            case 1:
-                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                break;
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
         }
     }
 
     void JustDied(Unit *victim)
     {
-        if(pInstance)
+        if (pInstance)
+        {
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
+            OpenDoors();
+        }
 
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
+        DoScriptText(SAY_DEATH, m_creature);
     }
 
     void TeleportPlayers()
@@ -183,10 +170,11 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
         float X = TeleportPoint[random].x;
         float Y = TeleportPoint[random].y;
         float Z = TeleportPoint[random].z;
+
         for(uint8 i = 0; i < 3; i++)
         {
             Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if(pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
+            if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER))
             {
                 TargetGUID[i] = pUnit->GetGUID();
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
@@ -197,22 +185,21 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
+        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 10) && !Enraged)
         {
             Enraged = true;
             DoCast(m_creature, SPELL_ENRAGE, true);
-            DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+            DoScriptText(SAY_ENRAGE, m_creature);
         }
 
         //Randomly cast one beam.
-        if(BeamTimer < diff)
+        if (BeamTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if(!target || !target->isAlive())
+            if (!target || !target->isAlive())
                 return;
 
             BeamTimer = 9000;
@@ -234,23 +221,24 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             }
             BeamCount++;
             uint32 Beam = CurrentBeam;
-            if(BeamCount > 3)
+
+            if (BeamCount > 3)
                 while(CurrentBeam == Beam)
                     CurrentBeam = rand()%3;
 
         }else BeamTimer -= diff;
 
         // Random Prismatic Shield every 15 seconds.
-        if(PrismaticShieldTimer < diff)
+        if (PrismaticShieldTimer < diff)
         {
             uint32 random = rand()%6;
-            if(PrismaticAuras[random])
+            if (PrismaticAuras[random])
                 DoCast(m_creature, PrismaticAuras[random]);
             PrismaticShieldTimer = 15000;
         }else PrismaticShieldTimer -= diff;
 
         // Select 3 random targets (can select same target more than once), teleport to a random location then make them cast explosions until they get away from each other.
-        if(FatalAttractionTimer < diff)
+        if (FatalAttractionTimer < diff)
         {
             ExplosionCount = 0;
 
@@ -258,31 +246,26 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
             switch(rand()%2)
             {
-                case 0:
-                    DoYell(SAY_SPELL2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPELL2);
-                    break;
-                case 1:
-                    DoYell(SAY_SPELL3,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_SPELL3);
-                    break;
+                case 0: DoScriptText(SAY_SPELL2, m_creature); break;
+                case 1: DoScriptText(SAY_SPELL3, m_creature); break;
             }
+
             FatalAttractionExplodeTimer = 2000;
             FatalAttractionTimer = 40000 + rand()%31 * 1000;
         }else FatalAttractionTimer -= diff;
 
-        if(FatalAttractionExplodeTimer < diff)
+        if (FatalAttractionExplodeTimer < diff)
         {
             // Just make them explode three times... they're supposed to keep exploding while they are in range, but it'll take too much code. I'll try to think of an efficient way for it later.
-            if(ExplosionCount < 3)
+            if (ExplosionCount < 3)
             {
                 for(uint8 i = 0; i < 4; i++)
                 {
                     Unit* pUnit = NULL;
-                    if(TargetGUID[i])
+                    if (TargetGUID[i])
                     {
                         pUnit = Unit::GetUnit((*m_creature), TargetGUID[i]);
-                        if(pUnit)
+                        if (pUnit)
                             pUnit->CastSpell(pUnit, SPELL_ATTRACTION, true);
                         TargetGUID[i] = 0;
                     }
@@ -298,39 +281,32 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
             }
         }else FatalAttractionExplodeTimer -= diff;
 
-        if(ShriekTimer < diff)
+        if (ShriekTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_SILENCING_SHRIEK);
             ShriekTimer = 30000;
         }else ShriekTimer -= diff;
 
         //Enrage
-        if(!m_creature->HasAura(SPELL_BERSERK, 0))
-            if(EnrageTimer < diff)
+        if (!m_creature->HasAura(SPELL_BERSERK, 0))
         {
-            DoCast(m_creature, SPELL_BERSERK);
-            DoYell(SAY_ENRAGE,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
-        }else EnrageTimer -= diff;
+            if (EnrageTimer < diff)
+            {
+                DoCast(m_creature, SPELL_BERSERK);
+                DoScriptText(SAY_ENRAGE, m_creature);
+            }else EnrageTimer -= diff;
+        }
 
         //Random taunts
-        if(RandomYellTimer < diff)
+        if (RandomYellTimer < diff)
         {
             switch(rand()%3)
             {
-                case 0:
-                    DoYell(SAY_TAUNT1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_TAUNT1);
-                    break;
-                case 1:
-                    DoYell(SAY_TAUNT2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_TAUNT2);
-                    break;
-                case 2:
-                    DoYell(SAY_TAUNT3,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(m_creature, SOUND_TAUNT3);
-                    break;
+                case 0: DoScriptText(SAY_TAUNT1, m_creature); break;
+                case 1: DoScriptText(SAY_TAUNT2, m_creature); break;
+                case 2: DoScriptText(SAY_TAUNT3, m_creature); break;
             }
+
             RandomYellTimer = 60000 + rand()%91 * 1000;
         }else RandomYellTimer -= diff;
 

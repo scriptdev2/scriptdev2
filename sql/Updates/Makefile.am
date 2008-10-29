@@ -231,4 +231,5 @@ pkgdata_DATA = \
 	r725_scriptdev2_script_texts.sql \
 	r726_scriptdev2_script_texts.sql \
 	r727_scriptdev2_script_texts.sql \
-	r728_scriptdev2_script_texts.sql
+	r728_scriptdev2_script_texts.sql \
+	r729_scriptdev2_script_texts.sql

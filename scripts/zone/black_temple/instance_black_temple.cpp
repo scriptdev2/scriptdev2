@@ -59,6 +59,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 MainTempleDoors;
     uint64 IllidanGate;
     uint64 IllidanDoor[2];
+    uint64 ShahrazPreDoor;
+    uint64 ShahrazPostDoor;
+    uint64 CouncilDoor;
 
     uint32 Encounters[ENCOUNTERS];
 
@@ -82,6 +85,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         IllidanGate     = 0;
         IllidanDoor[0]  = 0;
         IllidanDoor[1]  = 0;
+        ShahrazPreDoor  = 0;
+        ShahrazPostDoor = 0;
+        CouncilDoor     = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
@@ -90,7 +96,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS) return true;
+            if (Encounters[i] == IN_PROGRESS) return true;
 
         return false;
     }
@@ -124,6 +130,15 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case 185882:                                    // Main Temple Doors - right past Supermoose (Supremus)
                 MainTempleDoors = go->GetGUID();
                 break;
+            case 185479:                                    // Door leading to Mother Sharaz
+                ShahrazPreDoor = go->GetGUID();
+                break;
+            case 185481:                                    // Door leading to the Council (grand promenade)
+                CouncilDoor = go->GetGUID();
+                break;
+            case 185482:                                    // Door after shahraz
+                ShahrazPostDoor = go->GetGUID();
+                break;
             case 185905:                                    // Gate leading to Temple Summit
                 IllidanGate = go->GetGUID();
                 break;
@@ -140,23 +155,33 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     {
         switch(identifier)
         {
-            case DATA_HIGHWARLORDNAJENTUS:         return Najentus;
-            case DATA_AKAMA:                       return Akama;
-            case DATA_AKAMA_SHADE:                 return Akama_Shade;
-            case DATA_SHADEOFAKAMA:                return ShadeOfAkama;
-            case DATA_SUPREMUS:                    return Supremus;
-            case DATA_ILLIDANSTORMRAGE:            return IllidanStormrage;
-            case DATA_GATHIOSTHESHATTERER:         return GathiosTheShatterer;
-            case DATA_HIGHNETHERMANCERZEREVOR:     return HighNethermancerZerevor;
-            case DATA_LADYMALANDE:                 return LadyMalande;
-            case DATA_VERASDARKSHADOW:             return VerasDarkshadow;
-            case DATA_ILLIDARICOUNCIL:             return IllidariCouncil;
-            case DATA_GAMEOBJECT_NAJENTUS_GATE:    return NajentusGate;
-            case DATA_GAMEOBJECT_ILLIDAN_GATE:     return IllidanGate;
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:   return IllidanDoor[0];
-            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:   return IllidanDoor[1];
-            case DATA_GAMEOBJECT_SUPREMUS_DOORS:   return MainTempleDoors;
-            case DATA_BLOOD_ELF_COUNCIL_VOICE:     return BloodElfCouncilVoice;
+            case DATA_HIGHWARLORDNAJENTUS:          return Najentus;
+            case DATA_AKAMA:                        return Akama;
+            case DATA_AKAMA_SHADE:                  return Akama_Shade;
+            case DATA_SHADEOFAKAMA:                 return ShadeOfAkama;
+            case DATA_SUPREMUS:                     return Supremus;
+            case DATA_ILLIDANSTORMRAGE:             return IllidanStormrage;
+            case DATA_GATHIOSTHESHATTERER:          return GathiosTheShatterer;
+            case DATA_HIGHNETHERMANCERZEREVOR:      return HighNethermancerZerevor;
+            case DATA_LADYMALANDE:                  return LadyMalande;
+            case DATA_VERASDARKSHADOW:              return VerasDarkshadow;
+            case DATA_ILLIDARICOUNCIL:              return IllidariCouncil;
+            case DATA_GAMEOBJECT_NAJENTUS_GATE:     return NajentusGate;
+            case DATA_GAMEOBJECT_ILLIDAN_GATE:      return IllidanGate;
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_R:    return IllidanDoor[0];
+            case DATA_GAMEOBJECT_ILLIDAN_DOOR_L:    return IllidanDoor[1];
+            case DATA_GAMEOBJECT_SUPREMUS_DOORS:    return MainTempleDoors;
+            case DATA_BLOOD_ELF_COUNCIL_VOICE:      return BloodElfCouncilVoice;
+            case DATA_GO_PRE_SHAHRAZ_DOOR:
+                if (Encounters[2] == DONE && Encounters[3] == DONE && Encounters[4] == DONE && Encounters[5] == DONE)
+                {
+                    debug_log("SD2: Black Temple: Opening door to Mother Shahraz.");
+                    return ShahrazPreDoor;
+                }
+                debug_log("SD2: Black Temple: Door data to Mother Shahraz requested, cannot open yet (Encounter data: %u %u %u %u)",Encounters[2],Encounters[3],Encounters[4],Encounters[5]);
+                return 0;
+            case DATA_GO_POST_SHAHRAZ_DOOR:         return ShahrazPostDoor;
+            case DATA_GO_COUNCIL_DOOR:              return CouncilDoor;
         }
 
         return 0;
@@ -177,7 +202,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             case DATA_ILLIDANSTORMRAGEEVENT:      Encounters[8] = data;         break;
         }
 
-        if(data == DONE)
+        if (data == DONE)
             SaveToDB();
     }
 
@@ -208,7 +233,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             << Encounters[6] << " " << Encounters[7] << " " << Encounters[8];
         char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
-        if(out)
+        if (out)
         {
             OUT_SAVE_INST_DATA_COMPLETE;
             return out;
@@ -219,7 +244,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     void Load(const char* in)
     {
-        if(!in)
+        if (!in)
         {
             OUT_LOAD_INST_DATA_FAIL;
             return;
@@ -231,7 +256,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7]
             >> Encounters[8];
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
+            if (Encounters[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
                 Encounters[i] = NOT_STARTED;
         OUT_LOAD_INST_DATA_COMPLETE;
     }
