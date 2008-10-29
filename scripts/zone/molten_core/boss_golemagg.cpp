@@ -24,6 +24,8 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_molten_core.h"
 
+#define EMOTE_AEGIS                     -1409002
+
 #define SPELL_MAGMASPLASH               13879
 #define SPELL_PYROBLAST                 20228
 #define SPELL_EARTHQUAKE                19798
@@ -34,21 +36,20 @@ EndScriptData */
 #define SPELL_MANGLE                    19820
 #define SPELL_AEGIS                     20620               //This is self casted whenever we are below 50%
 
-#define EMOTE_AEGIS                     "refuses to die while its master is in trouble"
-
 struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 {
     boss_golemaggAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = (c->GetInstanceData()) ? ((ScriptedInstance*)c->GetInstanceData()) : NULL;
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
+
+    ScriptedInstance *pInstance;
 
     uint32 Pyroblast_Timer;
     uint32 EarthQuake_Timer;
     uint32 Enrage_Timer;
     uint32 Buff_Timer;
-    ScriptedInstance *pInstance;
 
     void Reset()
     {
@@ -66,10 +67,10 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        ScriptedInstance *pInstance = (m_creature->GetInstanceData()) ? ((ScriptedInstance*)m_creature->GetInstanceData()) : NULL;
-        if(pInstance)
+        if (pInstance)
             pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
     }
+
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -78,15 +79,14 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         //Pyroblast_Timer
         if (Pyroblast_Timer < diff)
         {
-            Unit* target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM,0);
-            if (target) DoCast(target,SPELL_PYROBLAST);
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(target,SPELL_PYROBLAST);
 
             Pyroblast_Timer = 7000;
         }else Pyroblast_Timer -= diff;
 
         //Enrage_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11)
         {
             if (Enrage_Timer < diff)
             {
@@ -96,7 +96,7 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         }
 
         //EarthQuake_Timer
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11)
         {
             if (EarthQuake_Timer < diff)
             {
@@ -106,11 +106,11 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         }
 
         //Casting Buff for Coreragers. Spell is not working right. Players get the buff...
-        //        if(Buff_Timer < diff)
-        //        {
-        //            DoCast(m_creature, SPELL_BUFF);
-        //            Buff_Timer = 2500;
-        //        }else Buff_Timer -= diff;
+        //if(Buff_Timer < diff)
+        //{
+        //    DoCast(m_creature, SPELL_BUFF);
+        //    Buff_Timer = 2500;
+        //}else Buff_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
@@ -151,19 +151,19 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
         }else Mangle_Timer -= diff;
 
         //Cast AEGIS
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 50)
         {
             DoCast(m_creature,SPELL_AEGIS);
-            DoTextEmote(EMOTE_AEGIS, NULL);
+            DoScriptText(EMOTE_AEGIS, m_creature);
         }
 
         //Check_Timer
-        if(Check_Timer < diff)
+        if (Check_Timer < diff)
         {
-            if(pInstance)
+            if (pInstance)
             {
                 Unit *pGolemagg = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_GOLEMAGG));
-                if(!pGolemagg || !pGolemagg->isAlive())
+                if (!pGolemagg || !pGolemagg->isAlive())
                 {
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, true);
                 }

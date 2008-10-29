@@ -24,6 +24,8 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_molten_core.h"
 
+#define ENCOUNTERS      9
+
 #define ID_LUCIFRON     12118
 #define ID_MAGMADAR     11982
 #define ID_GEHENNAS     12259
@@ -36,210 +38,189 @@ EndScriptData */
 #define ID_RAGNAROS     11502
 #define ID_FLAMEWAKERPRIEST     11662
 
-class MANGOS_DLL_SPEC instance_molten_core : public ScriptedInstance
+struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 {
-    public:
+    instance_molten_core(Map *Map) : ScriptedInstance(Map) {Initialize();};
 
-        instance_molten_core(Map *map) : ScriptedInstance(map) {}
+    uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
+    uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn;
+    bool IsBossDied[9];
 
-        uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
-        uint64 RuneGUID[8];
+    uint32 Encounter[ENCOUNTERS];
 
-        //If all Bosses are dead.
-        bool IsBossDied[9];
+    void Initialize()
+    {
+        Lucifron = 0;
+        Magmadar = 0;
+        Gehennas = 0;
+        Garr = 0;
+        Geddon = 0;
+        Shazzrah = 0;
+        Sulfuron = 0;
+        Golemagg = 0;
+        Domo = 0;
+        Ragnaros = 0;
+        FlamewakerPriest = 0;
 
-        uint32 CheckTimer;
+        RuneKoro = 0;
+        RuneZeth = 0;
+        RuneMazj = 0;
+        RuneTheri = 0;
+        RuneBlaz = 0;
+        RuneKress = 0;
+        RuneMohn = 0;
 
-        //On creation, NOT load.
-        void Initialize()
+        IsBossDied[0] = false;
+        IsBossDied[1] = false;
+        IsBossDied[2] = false;
+        IsBossDied[3] = false;
+        IsBossDied[4] = false;
+        IsBossDied[5] = false;
+        IsBossDied[6] = false;
+        IsBossDied[7] = false;
+        IsBossDied[8] = false;
+
+        for(uint8 i = 0; i < ENCOUNTERS; i++)
+            Encounter[i] = NOT_STARTED;
+    }
+
+    bool IsEncounterInProgress() const
+    {
+        return false;
+    }
+
+    void OnObjectCreate(GameObject *go)
+    {
+        switch(go->GetEntry())
         {
-            //Clear all GUIDs
-            Lucifron = 0;
-            Magmadar = 0;
-            Gehennas = 0;
-            Garr = 0;
-            Geddon = 0;
-            Shazzrah = 0;
-            Sulfuron = 0;
-            Golemagg = 0;
-            Domo = 0;
-            Ragnaros = 0;
-            FlamewakerPriest = 0;
-
-            RuneGUID[0] = 0;
-            RuneGUID[1] = 0;
-            RuneGUID[2] = 0;
-            RuneGUID[3] = 0;
-            RuneGUID[4] = 0;
-            RuneGUID[5] = 0;
-            RuneGUID[6] = 0;
-            RuneGUID[7] = 0;
-
-            IsBossDied[0] = false;
-            IsBossDied[1] = false;
-            IsBossDied[2] = false;
-            IsBossDied[3] = false;
-            IsBossDied[4] = false;
-            IsBossDied[5] = false;
-            IsBossDied[6] = false;
-
-            IsBossDied[7] = false;
-            IsBossDied[8] = false;
-
-            CheckTimer = 10000;
+            case 176951:                                    //Sulfuron
+                RuneKoro = go->GetGUID();
+                break;
+            case 176952:                                    //Geddon
+                RuneZeth = go->GetGUID();
+                break;
+            case 176953:                                    //Shazzrah
+                RuneMazj = go->GetGUID();
+                break;
+            case 176954:                                    //Golemagg
+                RuneTheri = go->GetGUID();
+                break;
+            case 176955:                                    //Garr
+                RuneBlaz = go->GetGUID();
+                break;
+            case 176956:                                    //Magmadar
+                RuneKress = go->GetGUID();
+                break;
+            case 176957:                                    //Gehennas
+                RuneMohn = go->GetGUID();
+                break;
         }
-        //Called every map update
-        void Update(uint32 diff)
+    }
+
+    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
+    {
+        switch (creature_entry)
         {
-
-            if (CheckTimer < diff)
-            {
-                //Check if all bosses are dead and activate Major Domo
-
-            }else CheckTimer -= diff;
-
+            case ID_LUCIFRON:
+                Lucifron = creature->GetGUID();
+                break;
+            case ID_MAGMADAR:
+                Magmadar = creature->GetGUID();
+                break;
+            case ID_GEHENNAS:
+                Gehennas = creature->GetGUID();
+                break;
+            case ID_GARR:
+                Garr = creature->GetGUID();
+                break;
+            case ID_GEDDON:
+                Geddon = creature->GetGUID();
+                break;
+            case ID_SHAZZRAH:
+                Shazzrah = creature->GetGUID();
+                break;
+            case ID_SULFURON:
+                Sulfuron = creature->GetGUID();
+                break;
+            case ID_GOLEMAGG:
+                Golemagg = creature->GetGUID();
+                break;
+            case ID_DOMO:
+                Domo = creature->GetGUID();
+                break;
+            case ID_RAGNAROS:
+                Ragnaros = creature->GetGUID();
+                break;
+            case ID_FLAMEWAKERPRIEST:
+                FlamewakerPriest = creature->GetGUID();
+                break;
         }
+    }
 
-        //Used by the map's CanEnter function.
-        //This is to prevent players from entering during boss encounters.
-        bool IsEncounterInProgress() const
+    void SetData(uint32 type, uint32 data)
+    {
+        if (type == DATA_GOLEMAGG_DEATH)
+            IsBossDied[7] = true;
+    }
+
+    uint64 GetData64(uint32 data)
+    {
+        switch(data)
         {
-            return false;
-        };
-
-        //Called when a gameobject is created
-        void OnObjectCreate(GameObject *obj)
-        {
-            //Still searching for the individual rune ids.
-            //Currently they don't exist within most databases and are hard to find on websites
-        }
-
-        //called on creature creation
-        void OnCreatureCreate(Creature *creature, uint32 creature_entry)
-        {
-            //Store specific creatures based on entry id
-            switch (creature_entry)
-            {
-                case ID_LUCIFRON:
-                    Lucifron = creature->GetGUID();
-                    break;
-
-                case ID_MAGMADAR:
-                    Magmadar = creature->GetGUID();
-                    break;
-
-                case ID_GEHENNAS:
-                    Gehennas = creature->GetGUID();
-                    break;
-
-                case ID_GARR:
-                    Garr = creature->GetGUID();
-                    break;
-
-                case ID_GEDDON:
-                    Geddon = creature->GetGUID();
-                    break;
-
-                case ID_SHAZZRAH:
-                    Shazzrah = creature->GetGUID();
-                    break;
-
-                case ID_SULFURON:
-                    Sulfuron = creature->GetGUID();
-                    break;
-
-                case ID_GOLEMAGG:
-                    Golemagg = creature->GetGUID();
-                    break;
-
-                case ID_DOMO:
-                    Domo = creature->GetGUID();
-                    break;
-
-                case ID_RAGNAROS:
-                    Ragnaros = creature->GetGUID();
-                    break;
-
-                case ID_FLAMEWAKERPRIEST:
-                    FlamewakerPriest = creature->GetGUID();
-                    break;
-            }
-        }
-
-        uint64 GetData64 (uint32 identifier)
-        {
-            switch(identifier)
-            {
-                case DATA_SULFURON:
-                    return Sulfuron;
-                case DATA_GOLEMAGG:
-                    return Sulfuron;
-
-                case DATA_FLAMEWAKERPRIEST:
-                    return FlamewakerPriest;
-            }
-
-            return 0;
-        }                                                   // end GetData64
-
-        uint32 GetData(uint32 type)
-        {
-            switch(type)
-            {
-                case DATA_LUCIFRONISDEAD:
-                    if(IsBossDied[0])
-                        return 1;
-                    break;
-
-                case DATA_MAGMADARISDEAD:
-                    if(IsBossDied[1])
-                        return 1;
-                    break;
-
-                case DATA_GEHENNASISDEAD:
-                    if(IsBossDied[2])
-                        return 1;
-                    break;
-
-                case DATA_GARRISDEAD:
-                    if(IsBossDied[3])
-                        return 1;
-                    break;
-
-                case DATA_GEDDONISDEAD:
-                    if(IsBossDied[4])
-                        return 1;
-                    break;
-
-                case DATA_SHAZZRAHISDEAD:
-                    if(IsBossDied[5])
-                        return 1;
-                    break;
-
-                case DATA_SULFURONISDEAD:
-                    if(IsBossDied[6])
-                        return 1;
-                    break;
-
-                case DATA_GOLEMAGGISDEAD:
-                    if(IsBossDied[7])
-                        return 1;
-                    break;
-
-                case DATA_MAJORDOMOISDEAD:
-                    if(IsBossDied[8])
-                        return 1;
-                    break;
-            }
-
-            return 0;
+            case DATA_SULFURON:
+                return Sulfuron;
+            case DATA_GOLEMAGG:
+                return Sulfuron;
+            case DATA_FLAMEWAKERPRIEST:
+                return FlamewakerPriest;
         }
 
-        void SetData(uint32 type, uint32 data)
+        return 0;
+    }
+
+    uint32 GetData(uint32 type)
+    {
+        switch(type)
         {
-            if(type == DATA_GOLEMAGG_DEATH)
-                IsBossDied[7] = true;
+            case DATA_LUCIFRONISDEAD:
+                if (IsBossDied[0])
+                    return 1;
+                break;
+            case DATA_MAGMADARISDEAD:
+                if (IsBossDied[1])
+                    return 1;
+                break;
+            case DATA_GEHENNASISDEAD:
+                if (IsBossDied[2])
+                    return 1;
+                break;
+            case DATA_GARRISDEAD:
+                if (IsBossDied[3])
+                    return 1;
+                break;
+            case DATA_GEDDONISDEAD:
+                if (IsBossDied[4])
+                    return 1;
+                break;
+            case DATA_SHAZZRAHISDEAD:
+                if (IsBossDied[5])
+                    return 1;
+                break;
+            case DATA_SULFURONISDEAD:
+                if (IsBossDied[6])
+                    return 1;
+                break;
+            case DATA_GOLEMAGGISDEAD:
+                if (IsBossDied[7])
+                    return 1;
+                break;
+            case DATA_MAJORDOMOISDEAD:
+                if (IsBossDied[8])
+                    return 1;
+                break;
         }
+        return 0;
+    }
 };
 
 InstanceData* GetInstance_instance_molten_core(Map *_Map)

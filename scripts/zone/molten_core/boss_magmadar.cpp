@@ -23,6 +23,8 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define EMOTE_FRENZY                -1409001
+
 #define SPELL_FRENZY                19451
 #define SPELL_MAGMASPIT             19449                   //This is actually a buff he gives himself
 #define SPELL_PANIC                 19408
@@ -58,7 +60,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer < diff)
         {
-            DoTextEmote("goes into a killing frenzy!",NULL);
+            DoScriptText(EMOTE_FRENZY, m_creature);
             DoCast(m_creature,SPELL_FRENZY);
             Frenzy_Timer = 15000;
         }else Frenzy_Timer -= diff;
@@ -73,7 +75,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         //Lavabomb_Timer
         if (Lavabomb_Timer < diff)
         {
-            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0) )
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                 DoCast(target,SPELL_LAVABOMB_ALT);
 
             Lavabomb_Timer = 12000;
@@ -82,6 +84,7 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_magmadar(Creature *_Creature)
 {
     return new boss_magmadarAI (_Creature);
