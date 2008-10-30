@@ -29,32 +29,16 @@ EndContentData */
 #include "precompiled.h"
 #include "def_arcatraz.h"
 
-#define SAY_INTRO       "It is a small matter to control the mind of the weak... for I bear allegiance to powers untouched by time, unmoved by fate. No force on this world or beyond harbors the strength to bend our knee... not even the mighty Legion!"
-#define SOUND_INTRO     11122
-
-#define SAY_AGGRO       "Bear witness to the agent of your demise!"
-#define SOUND_AGGRO     11123
-
-#define SAY_KILL_1      "Your fate is written!"
-#define SOUND_KILL_1    11124
-#define SAY_KILL_2      "The chaos I have sown here is but a taste...."
-#define SOUND_KILL_2    11125
-
-#define SAY_MIND_1      "You will do my bidding, weakling."
-#define SOUND_MIND_1    11127
-#define SAY_MIND_2      "Your will is no longer your own."
-#define SOUND_MIND_2    11128
-
-#define SAY_FEAR_1      "Flee in terror!"
-#define SOUND_FEAR_1    11129
-#define SAY_FEAR_2      "I will show you horrors undreamed of!"
-#define SOUND_FEAR_2    11130
-
-#define SAY_IMAGE       "We span the universe, as countless as the stars!"
-#define SOUND_IMAGE     11131
-
-#define SAY_DEATH       "I am merely one of... infinite multitudes."
-#define SOUND_DEATH     11126
+#define SAY_INTRO               -1552000
+#define SAY_AGGRO               -1552001
+#define SAY_KILL_1              -1552002
+#define SAY_KILL_2              -1552003
+#define SAY_MIND_1              -1552004
+#define SAY_MIND_2              -1552005
+#define SAY_FEAR_1              -1552006
+#define SAY_FEAR_2              -1552007
+#define SAY_IMAGE               -1552008
+#define SAY_DEATH               -1552009
 
 #define SPELL_FEAR              39415
 
@@ -96,7 +80,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNKNOWN2);
 
-        if( Intro )
+        if (Intro)
             Intro = true;
         else
             Intro = false;
@@ -114,16 +98,16 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if( !Intro )
+        if (!Intro)
             return;
 
-        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
         {
             if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;
 
             float attackRadius = m_creature->GetAttackDistance(who);
-            if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
                 AttackStart(who);
@@ -133,7 +117,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void AttackStart(Unit* who)
     {
-        if( !Intro )
+        if (!Intro)
             return;
 
         if (m_creature->Attack(who, true))
@@ -159,9 +143,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        DoYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_DEATH);
-        if( pInstance )
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (pInstance)
             pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
     }
 
@@ -172,14 +156,8 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_KILL_1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_KILL_1);
-                break;
-            case 1:
-                DoYell(SAY_KILL_2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature,SOUND_KILL_2);
-                break;
+            case 0: DoScriptText(SAY_KILL_1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL_2, m_creature); break;
         }
     }
 
@@ -190,13 +168,12 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void DoSplit(uint32 val)
     {
-        if( m_creature->IsNonMeleeSpellCasted(false) )
+        if (m_creature->IsNonMeleeSpellCasted(false))
             m_creature->InterruptNonMeleeSpells(false);
 
-        DoYell(SAY_IMAGE, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature,SOUND_IMAGE);
+        DoScriptText(SAY_IMAGE, m_creature);
 
-        if( val == 66 )
+        if (val == 66)
             DoCast(m_creature, SPELL_66_ILLUSION);
         else
             DoCast(m_creature, SPELL_33_ILLUSION);
@@ -204,25 +181,23 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( !Intro && !InCombat )
+        if (!Intro && !InCombat)
         {
-            if( !pInstance )
+            if (!pInstance)
                 return;
 
-            if( Intro_Timer < diff )
+            if (Intro_Timer < diff)
             {
-                switch( Intro_Phase )
+                switch(Intro_Phase)
                 {
                     case 1:
-                        DoYell(SAY_INTRO, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_INTRO);
+                        DoScriptText(SAY_INTRO, m_creature);
                         ++Intro_Phase;
                         Intro_Timer = 25000;
                         break;
                     case 2:
-                        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-                        if( Unit *mellic = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MELLICHAR)) )
+                        DoScriptText(SAY_AGGRO, m_creature);
+                        if (Unit *mellic = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
                             mellic->setDeathState(JUST_DIED);
@@ -238,23 +213,24 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             }else Intro_Timer -=diff;
         }
 
-        if( !m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( !IsImage66 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 66) )
+        if (!IsImage66 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 66))
         {
             DoSplit(66);
             IsImage66 = true;
         }
-        if( !IsImage33 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 33) )
+
+        if (!IsImage33 && ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 33))
         {
             DoSplit(33);
             IsImage33 = true;
         }
 
-        if( MindRend_Timer < diff )
+        if (MindRend_Timer < diff)
         {
-            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
                 DoCast(target,HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
             else
                 DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
@@ -262,24 +238,18 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             MindRend_Timer = 8000;
         }else MindRend_Timer -=diff;
 
-        if( Fear_Timer < diff )
+        if (Fear_Timer < diff)
         {
-            if( m_creature->IsNonMeleeSpellCasted(false) )
+            if (m_creature->IsNonMeleeSpellCasted(false))
                 return;
 
             switch(rand()%2)
             {
-                case 0:
-                    DoYell(SAY_FEAR_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_FEAR_1);
-                    break;
-                case 1:
-                    DoYell(SAY_FEAR_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_FEAR_2);
-                    break;
+                case 0: DoScriptText(SAY_FEAR_1, m_creature); break;
+                case 1: DoScriptText(SAY_FEAR_2, m_creature); break;
             }
 
-            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
                 DoCast(target,SPELL_FEAR);
             else
                 DoCast(m_creature->getVictim(),SPELL_FEAR);
@@ -287,24 +257,18 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             Fear_Timer = 25000;
         }else Fear_Timer -=diff;
 
-        if( Domination_Timer < diff )
+        if (Domination_Timer < diff)
         {
-            if( m_creature->IsNonMeleeSpellCasted(false) )
+            if (m_creature->IsNonMeleeSpellCasted(false))
                 return;
 
             switch(rand()%2)
             {
-                case 0:
-                    DoYell(SAY_MIND_1, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_MIND_1);
-                    break;
-                case 1:
-                    DoYell(SAY_MIND_2, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(m_creature,SOUND_MIND_2);
-                    break;
+                case 0: DoScriptText(SAY_MIND_1, m_creature); break;
+                case 1: DoScriptText(SAY_MIND_2, m_creature); break;
             }
 
-            if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
+            if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
                 DoCast(target,HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
             else
                 DoCast(m_creature->getVictim(),HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
@@ -312,14 +276,14 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
             Domination_Timer = 16000+rand()%16000;
         }else Domination_Timer -=diff;
 
-        if( HeroicMode )
+        if (HeroicMode)
         {
-            if( ManaBurn_Timer < diff )
+            if (ManaBurn_Timer < diff)
             {
-                if( m_creature->IsNonMeleeSpellCasted(false) )
+                if (m_creature->IsNonMeleeSpellCasted(false))
                     return;
 
-                if( Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1) )
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,1))
                     DoCast(target,H_SPELL_MANA_BURN);
 
                 ManaBurn_Timer = 16000+rand()%16000;

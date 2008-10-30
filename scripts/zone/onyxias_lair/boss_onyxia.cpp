@@ -23,6 +23,12 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define SAY_AGGRO                   -1249000
+#define SAY_KILL                    -1249001
+#define SAY_PHASE_2_TRANS           -1249002
+#define SAY_PHASE_3_TRANS           -1249003
+#define EMOTE_BREATH                -1249004
+
 #define SPELL_WINGBUFFET            18500
 #define SPELL_FLAMEBREATH           18435
 #define SPELL_CLEAVE                19983
@@ -37,12 +43,6 @@ EndScriptData */
 #define SPELL_HEATED_GROUND         22191
 
 #define SPELL_SUMMONWHELP           17646
-
-#define SAY_AGGRO           "How fortuitous. Usually, I must leave my lair to feed."
-#define SAY_KILL            "Learn your place mortal!"
-#define SAY_PHASE_2_TRANS   "This meaningless exertion bores me. I'll incinerate you from above!"
-#define SAY_PHASE_3_TRANS   "It seems you'll need another lesson!"
-#define EMOTE_BREATH        "takes a deep breath..."
 
 static float MovementLocations[7][3]=
 {
@@ -63,7 +63,7 @@ static float SpawnLocations[4][3]=
     {17.372, -190.840, -85.2810},
 };
 
-#define CREATURE_WHELP      11262
+#define CREATURE_WHELP              11262
 
 struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 {
@@ -99,62 +99,62 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
 
     void Aggro(Unit* who)
     {
-        DoYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_AGGRO, m_creature);
         DoZoneInCombat();
     }
 
     void KilledUnit(Unit *victim)
     {
-        DoYell(SAY_KILL, LANG_UNIVERSAL, NULL);
+        DoScriptText(SAY_KILL, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (Phase == 1))
+        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (Phase == 1))
         {
             Phase = 2;
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
-            DoYell(SAY_PHASE_2_TRANS, LANG_UNIVERSAL, NULL);
+            DoScriptText(SAY_PHASE_2_TRANS, m_creature);
         }
 
-        if(((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40) && (Phase == 2))
+        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 40) && (Phase == 2))
         {
             Phase = 3;
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-            DoYell(SAY_PHASE_3_TRANS, LANG_UNIVERSAL, NULL);
+            DoScriptText(SAY_PHASE_3_TRANS, m_creature);
         }
 
-        if(Phase == 1 || Phase == 3)
+        if (Phase == 1 || Phase == 3)
         {
-            if(FlameBreathTimer < diff)
+            if (FlameBreathTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_FLAMEBREATH);
                 FlameBreathTimer = 15000;
             }else FlameBreathTimer -= diff;
 
-            if(TailSweepTimer < diff)
+            if (TailSweepTimer < diff)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                if(target && !m_creature->HasInArc(M_PI, target))
+                if (target && !m_creature->HasInArc(M_PI, target))
                     DoCast(target, SPELL_TAILSWEEP);
 
                 TailSweepTimer = 10000;
             }else TailSweepTimer -= diff;
 
-            if(CleaveTimer < diff)
+            if (CleaveTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_CLEAVE);
                 CleaveTimer = 7000;
             }else CleaveTimer -= diff;
 
-            if(WingBuffetTimer < diff)
+            if (WingBuffetTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_WINGBUFFET);
                 WingBuffetTimer = 7000 + ((rand()%8)*1000);
@@ -163,53 +163,53 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
 
-        if(Phase == 2)
+        if (Phase == 2)
         {
-            if(!m_creature->isHover())
+            if (!m_creature->isHover())
             {
                 m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
                 m_creature->SetHover(true);
             }
 
-            if(!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE))
+            if (!m_creature->GetMotionMaster()->empty() && (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE))
                 m_creature->GetMotionMaster()->Clear(false);
 
-            if(MovementTimer < diff)
+            if (MovementTimer < diff)
             {
                 uint32 random = rand()%8;
-                if(random < 7)
+                if (random < 7)
                     m_creature->GetMotionMaster()->MovePoint(0, MovementLocations[random][0], MovementLocations[random][1], MovementLocations[random][2]);
                 else
                 {
-                    DoTextEmote(EMOTE_BREATH, NULL);
+                    DoScriptText(EMOTE_BREATH, m_creature);
                     DoCast(m_creature->getVictim(), SPELL_DEEPBREATH);
                 }
                 MovementTimer = 25000;
             }else MovementTimer -= diff;
 
-            if(EngulfingFlamesTimer < diff)
+            if (EngulfingFlamesTimer < diff)
             {
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_ENGULFINGFLAMES);
                 EngulfingFlamesTimer = 8000;
             }else EngulfingFlamesTimer -= diff;
 
-            if(SummonWhelpsTimer < diff)
+            if (SummonWhelpsTimer < diff)
             {
                 uint32 max = rand()%20;
                 for(uint8 i = 0; i < max; ++i)
                 {
                     uint8 random = rand()%4;
                     Creature* Whelp = m_creature->SummonCreature(CREATURE_WHELP, SpawnLocations[random][0], SpawnLocations[random][1], SpawnLocations[random][2], 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                    if(Whelp)
+                    if (Whelp)
                         Whelp->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
                 }
                 SummonWhelpsTimer = 30000;
             }else SummonWhelpsTimer -= diff;
         }
 
-        if(Phase == 3)
+        if (Phase == 3)
         {
-            if(BellowingRoarTimer < diff)
+            if (BellowingRoarTimer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_BELLOWINGROAR);
                 BellowingRoarTimer = 30000;
