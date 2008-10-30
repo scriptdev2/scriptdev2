@@ -25,17 +25,13 @@ EndScriptData */
 #include "def_sethekk_halls.h"
 
 #define SAY_INTRO                   -1556007
-
 #define SAY_AGGRO_1                 -1556008
 #define SAY_AGGRO_2                 -1556009
 #define SAY_AGGRO_3                 -1556010
-
 #define SAY_SLAY_1                  -1556011
 #define SAY_SLAY_2                  -1556012
-
-#define SAY_DEATH                   -15560013
-
-#define EMOTE_ARCANE_EXP            -15560014
+#define SAY_DEATH                   -1556013
+#define EMOTE_ARCANE_EXP            -1556015
 
 #define SPELL_BLINK                 38194
 #define SPELL_BLINK_TELEPORT        38203
