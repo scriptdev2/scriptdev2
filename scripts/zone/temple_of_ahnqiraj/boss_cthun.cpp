@@ -468,7 +468,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
     uint64 StomachEnterTarget;
 
     //Stomach map, bool = true then in stomach
-    HM_NAMESPACE::hash_map<uint64, bool> Stomach_Map;
+    UNORDERED_MAP<uint64, bool> Stomach_Map;
 
     void Reset()
     {
@@ -527,7 +527,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
         if (Stomach_Map.empty())
             return NULL;
 
-        HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+        UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
 
         std::list<Unit*> temp;
         std::list<Unit*>::iterator j;
@@ -665,7 +665,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
 
                     DoCast(m_creature, SPELL_RED_COLORATION, true);
 
-                    HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+                    UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
 
                     //Kick all players out of stomach
                     while (i != Stomach_Map.end())
@@ -697,7 +697,7 @@ struct MANGOS_DLL_DECL cthunAI : public Scripted_NoMovementAI
                 if (StomachAcidTimer < diff)
                 {
                     //Apply aura to all players in stomach
-                    HM_NAMESPACE::hash_map<uint64, bool>::iterator i = Stomach_Map.begin();
+                    UNORDERED_MAP<uint64, bool>::iterator i = Stomach_Map.begin();
 
                     while (i != Stomach_Map.end())
                     {
