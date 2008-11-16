@@ -699,50 +699,50 @@ void AddSC_shadowmoon_valley()
     newscript = new Script;
     newscript->Name = "mob_mature_netherwing_drake";
     newscript->GetAI = &GetAI_mob_mature_netherwing_drake;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_enslaved_netherwing_drake";
     newscript->GetAI = &GetAI_mob_enslaved_netherwing_drake;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_drake_dealer_hurlunk";
     newscript->pGossipHello =  &GossipHello_npc_drake_dealer_hurlunk;
     newscript->pGossipSelect = &GossipSelect_npc_drake_dealer_hurlunk;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_invis_legion_teleporter";
     newscript->GetAI = &GetAI_npc_invis_legion_teleporter;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npcs_flanis_swiftwing_and_kagrosh";
     newscript->pGossipHello =  &GossipHello_npcs_flanis_swiftwing_and_kagrosh;
     newscript->pGossipSelect = &GossipSelect_npcs_flanis_swiftwing_and_kagrosh;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_murkblood_overseer";
     newscript->pGossipHello =  &GossipHello_npc_murkblood_overseer;
     newscript->pGossipSelect = &GossipSelect_npc_murkblood_overseer;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_neltharaku";
     newscript->pGossipHello =  &GossipHello_npc_neltharaku;
     newscript->pGossipSelect = &GossipSelect_npc_neltharaku;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_karynaku";
     newscript->pQuestAccept = &QuestAccept_npc_karynaku;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_oronok_tornheart";
     newscript->pGossipHello =  &GossipHello_npc_oronok_tornheart;
     newscript->pGossipSelect = &GossipSelect_npc_oronok_tornheart;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

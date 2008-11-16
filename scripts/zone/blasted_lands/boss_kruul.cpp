@@ -178,5 +178,5 @@ void AddSC_boss_kruul()
     newscript = new Script;
     newscript->Name = "boss_kruul";
     newscript->GetAI = &GetAI_boss_kruul;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

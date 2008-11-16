@@ -178,5 +178,5 @@ void AddSC_boss_void_reaver()
     newscript = new Script;
     newscript->Name = "boss_void_reaver";
     newscript->GetAI = &GetAI_boss_void_reaver;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

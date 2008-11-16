@@ -615,7 +615,7 @@ void AddSC_netherspite_infernal()
     newscript = new Script;
     newscript->Name = "netherspite_infernal";
     newscript->GetAI = &GetAI_netherspite_infernal;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }
 
 void AddSC_boss_malchezaar()
@@ -624,5 +624,5 @@ void AddSC_boss_malchezaar()
     newscript = new Script;
     newscript->Name = "boss_malchezaar";
     newscript->GetAI = &GetAI_boss_malchezaar;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

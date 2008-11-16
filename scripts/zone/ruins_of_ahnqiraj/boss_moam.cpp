@@ -115,5 +115,5 @@ void AddSC_boss_moam()
     newscript = new Script;
     newscript->Name = "boss_moam";
     newscript->GetAI = &GetAI_boss_moam;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

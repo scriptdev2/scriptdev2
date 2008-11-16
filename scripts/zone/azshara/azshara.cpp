@@ -154,11 +154,11 @@ void AddSC_azshara()
     newscript = new Script;
     newscript->Name = "mobs_spitelashes";
     newscript->GetAI = &GetAI_mobs_spitelashes;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_loramus_thalipedes";
     newscript->pGossipHello =  &GossipHello_npc_loramus_thalipedes;
     newscript->pGossipSelect = &GossipSelect_npc_loramus_thalipedes;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

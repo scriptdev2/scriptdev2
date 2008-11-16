@@ -112,5 +112,5 @@ void AddSC_shadowfang_keep()
     newscript->pGossipHello =  &GossipHello_npc_shadowfang_prisoner;
     newscript->pGossipSelect = &GossipSelect_npc_shadowfang_prisoner;
     newscript->GetAI = &GetAI_npc_shadowfang_prisoner;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

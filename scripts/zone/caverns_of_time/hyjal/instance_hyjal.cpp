@@ -201,5 +201,5 @@ void AddSC_instance_mount_hyjal()
     newscript = new Script;
     newscript->Name = "instance_hyjal";
     newscript->GetInstanceData = &GetInstanceData_instance_mount_hyjal;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

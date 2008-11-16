@@ -99,5 +99,5 @@ void AddSC_boss_ebonroc()
     newscript = new Script;
     newscript->Name = "boss_ebonroc";
     newscript->GetAI = &GetAI_boss_ebonroc;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -87,5 +87,5 @@ void AddSC_boss_angerrel()
     newscript = new Script;
     newscript->Name = "boss_angerrel";
     newscript->GetAI = &GetAI_boss_angerrel;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

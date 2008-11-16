@@ -123,10 +123,10 @@ void AddSC_boss_broggok()
     newscript = new Script;
     newscript->Name = "boss_broggok";
     newscript->GetAI = &GetAI_boss_broggokAI;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_broggok_poisoncloud";
     newscript->GetAI = &GetAI_mob_broggok_poisoncloudAI;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -291,5 +291,5 @@ void AddSC_boss_ragnaros()
     newscript = new Script;
     newscript->Name = "boss_ragnaros";
     newscript->GetAI = &GetAI_boss_ragnaros;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

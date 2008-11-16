@@ -201,17 +201,17 @@ void AddSC_moonglade()
     newscript->Name = "npc_bunthen_plainswind";
     newscript->pGossipHello =  &GossipHello_npc_bunthen_plainswind;
     newscript->pGossipSelect = &GossipSelect_npc_bunthen_plainswind;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_great_bear_spirit";
     newscript->pGossipHello =  &GossipHello_npc_great_bear_spirit;
     newscript->pGossipSelect = &GossipSelect_npc_great_bear_spirit;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_silva_filnaveth";
     newscript->pGossipHello =  &GossipHello_npc_silva_filnaveth;
     newscript->pGossipSelect = &GossipSelect_npc_silva_filnaveth;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -60,10 +60,6 @@ struct Script
     void RegisterSelf();
 };
 
-extern int num_db_scripts;
-extern int num_sc_scripts;
-extern Script *m_scripts[MAX_SCRIPTS];
-
 //Generic scripting text function
 void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target = NULL);
 

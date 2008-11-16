@@ -90,5 +90,5 @@ void AddSC_boss_landslide()
     newscript = new Script;
     newscript->Name = "boss_landslide";
     newscript->GetAI = &GetAI_boss_landslide;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

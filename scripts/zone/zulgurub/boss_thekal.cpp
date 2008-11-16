@@ -521,15 +521,15 @@ void AddSC_boss_thekal()
     newscript = new Script;
     newscript->Name = "boss_thekal";
     newscript->GetAI = &GetAI_boss_thekal;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_zealot_lorkhan";
     newscript->GetAI = &GetAI_mob_zealot_lorkhan;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_zealot_zath";
     newscript->GetAI = &GetAI_mob_zealot_zath;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

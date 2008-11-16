@@ -187,5 +187,5 @@ void AddSC_instance_magisters_terrace()
     newscript = new Script;
     newscript->Name = "instance_magisters_terrace";
     newscript->GetInstanceData = &GetInstanceData_instance_magisters_terrace;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

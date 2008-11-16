@@ -89,5 +89,5 @@ void AddSC_boss_kurinnaxx()
     newscript = new Script;
     newscript->Name = "boss_kurinnaxx";
     newscript->GetAI = &GetAI_boss_kurinnaxx;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

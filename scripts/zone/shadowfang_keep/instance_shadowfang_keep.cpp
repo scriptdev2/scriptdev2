@@ -123,5 +123,5 @@ void AddSC_instance_shadowfang_keep()
     newscript = new Script;
     newscript->Name = "instance_shadowfang_keep";
     newscript->GetInstanceData = &GetInstanceData_instance_shadowfang_keep;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -513,15 +513,15 @@ void AddSC_arcatraz()
     newscript = new Script;
     newscript->Name = "npc_millhouse_manastorm";
     newscript->GetAI = &GetAI_npc_millhouse_manastorm;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_warden_mellichar";
     newscript->GetAI = &GetAI_npc_warden_mellichar;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_zerekethvoidzone";
     newscript->GetAI = &GetAI_mob_zerekethvoidzoneAI;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

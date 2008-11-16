@@ -174,5 +174,5 @@ void AddSC_instance_the_eye()
     newscript = new Script;
     newscript->Name = "instance_the_eye";
     newscript->GetInstanceData = &GetInstanceData_instance_the_eye;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -520,20 +520,20 @@ void AddSC_boss_fathomlord_karathress()
     newscript = new Script;
     newscript->Name = "boss_fathomlord_karathress";
     newscript->GetAI = &GetAI_boss_fathomlord_karathress;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "boss_fathomguard_sharkkis";
     newscript->GetAI = &GetAI_boss_fathomguard_sharkkis;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "boss_fathomguard_tidalvess";
     newscript->GetAI = &GetAI_boss_fathomguard_tidalvess;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "boss_fathomguard_caribdis";
     newscript->GetAI = &GetAI_boss_fathomguard_caribdis;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

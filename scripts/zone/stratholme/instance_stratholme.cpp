@@ -73,5 +73,5 @@ void AddSC_instance_stratholme()
     newscript = new Script;
     newscript->Name = "instance_stratholme";
     newscript->GetInstanceData = &GetInstanceData_instance_stratholme;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

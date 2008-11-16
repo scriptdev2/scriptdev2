@@ -133,10 +133,10 @@ void AddSC_boss_garr()
     newscript = new Script;
     newscript->Name = "boss_garr";
     newscript->GetAI = &GetAI_boss_garr;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_firesworn";
     newscript->GetAI = &GetAI_mob_firesworn;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

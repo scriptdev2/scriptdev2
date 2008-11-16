@@ -134,5 +134,5 @@ void AddSC_boss_majordomo()
     newscript = new Script;
     newscript->Name = "boss_majordomo";
     newscript->GetAI = &GetAI_boss_majordomo;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -103,5 +103,5 @@ void AddSC_boss_ironaya()
     newscript = new Script;
     newscript->Name = "boss_ironaya";
     newscript->GetAI = &GetAI_boss_ironaya;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

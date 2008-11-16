@@ -104,5 +104,5 @@ void AddSC_zulaman()
     newscript = new Script;
     newscript->Name = "npc_forest_frog";
     newscript->GetAI = &GetAI_npc_forest_frog;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

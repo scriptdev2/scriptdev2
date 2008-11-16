@@ -371,5 +371,5 @@ void AddSC_boss_gurtogg_bloodboil()
     newscript = new Script;
     newscript->Name = "boss_gurtogg_bloodboil";
     newscript->GetAI = &GetAI_boss_gurtogg_bloodboil;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

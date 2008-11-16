@@ -205,5 +205,5 @@ void AddSC_boss_arlokk()
     newscript = new Script;
     newscript->Name = "boss_arlokk";
     newscript->GetAI = &GetAI_boss_arlokk;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

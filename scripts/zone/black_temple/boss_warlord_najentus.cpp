@@ -383,15 +383,15 @@ void AddSC_boss_najentus()
     newscript = new Script;
     newscript->Name = "boss_najentus";
     newscript->GetAI = &GetAI_boss_najentus;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_najentus_spine";
     newscript->GetAI = &GetAI_mob_najentus_spine;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_najentus_spine";
     newscript->pGOHello = &GOHello_go_najentus_spine;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

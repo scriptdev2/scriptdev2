@@ -258,5 +258,5 @@ void AddSC_boss_grandmaster_vorpil()
     newscript = new Script;
     newscript->Name = "boss_grandmaster_vorpil";
     newscript->GetAI = &GetAI_boss_grandmaster_vorpil;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

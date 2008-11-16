@@ -417,15 +417,15 @@ void AddSC_boss_supremus()
     newscript = new Script;
     newscript->Name = "boss_supremus";
     newscript->GetAI = &GetAI_boss_supremus;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "molten_flame";
     newscript->GetAI = &GetAI_molten_flame;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_volcano";
     newscript->GetAI = &GetAI_npc_volcano;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

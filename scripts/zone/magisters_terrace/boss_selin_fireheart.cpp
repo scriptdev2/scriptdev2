@@ -375,10 +375,10 @@ void AddSC_boss_selin_fireheart()
     newscript = new Script;
     newscript->Name = "boss_selin_fireheart";
     newscript->GetAI = &GetAI_boss_selin_fireheart;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_fel_crystal";
     newscript->GetAI = &GetAI_mob_fel_crystal;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

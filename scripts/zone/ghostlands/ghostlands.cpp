@@ -118,17 +118,17 @@ void AddSC_ghostlands()
     newscript->Name = "npc_blood_knight_dawnstar";
     newscript->pGossipHello = &GossipHello_npc_blood_knight_dawnstar;
     newscript->pGossipSelect = &GossipSelect_npc_blood_knight_dawnstar;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_budd_nedreck";
     newscript->pGossipHello = &GossipHello_npc_budd_nedreck;
     newscript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_rathis_tomber";
     newscript->pGossipHello = &GossipHello_npc_rathis_tomber;
     newscript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -273,5 +273,5 @@ void AddSC_instance_black_temple()
     newscript = new Script;
     newscript->Name = "instance_black_temple";
     newscript->GetInstanceData = &GetInstanceData_instance_black_temple;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }

@@ -251,10 +251,10 @@ void AddSC_boss_nethermancer_sepethrea()
     newscript = new Script;
     newscript->Name = "boss_nethermancer_sepethrea";
     newscript->GetAI = &GetAI_boss_nethermancer_sepethrea;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "mob_ragin_flames";
     newscript->GetAI = &GetAI_mob_ragin_flames;
-    m_scripts[num_sc_scripts++] = newscript;
+    newscript->RegisterSelf();
 }
