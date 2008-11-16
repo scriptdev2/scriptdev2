@@ -256,7 +256,7 @@ void AddSC_boss_grandmaster_vorpil()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_grandmaster_vorpil";
-    newscript->GetAI = GetAI_boss_grandmaster_vorpil;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_grandmaster_vorpil";
+    newscript->GetAI = &GetAI_boss_grandmaster_vorpil;
+    m_scripts[num_sc_scripts++] = newscript;
 }

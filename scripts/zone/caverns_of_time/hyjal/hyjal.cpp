@@ -204,21 +204,21 @@ void AddSC_hyjal()
 
     newscript = new Script;
     newscript->Name = "npc_jaina_proudmoore";
-    newscript->GetAI = GetAI_npc_jaina_proudmoore;
+    newscript->GetAI = &GetAI_npc_jaina_proudmoore;
     newscript->pGossipHello = &GossipHello_npc_jaina_proudmoore;
     newscript->pGossipSelect = &GossipSelect_npc_jaina_proudmoore;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "npc_thrall";
-    newscript->GetAI = GetAI_npc_thrall;
+    newscript->GetAI = &GetAI_npc_thrall;
     newscript->pGossipHello = &GossipHello_npc_thrall;
     newscript->pGossipSelect = &GossipSelect_npc_thrall;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "npc_tyrande_whisperwind";
     newscript->pGossipHello = &GossipHello_npc_tyrande_whisperwind;
     newscript->pGossipSelect = &GossipSelect_npc_tyrande_whisperwind;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

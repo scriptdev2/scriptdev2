@@ -289,7 +289,7 @@ void AddSC_boss_ragnaros()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_ragnaros";
-    newscript->GetAI = GetAI_boss_ragnaros;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_ragnaros";
+    newscript->GetAI = &GetAI_boss_ragnaros;
+    m_scripts[num_sc_scripts++] = newscript;
 }

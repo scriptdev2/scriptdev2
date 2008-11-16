@@ -581,22 +581,22 @@ void AddSC_boss_shade_of_aran()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_shade_of_aran";
-    newscript->GetAI = GetAI_boss_aran;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_shade_of_aran";
+    newscript->GetAI = &GetAI_boss_aran;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_shadow_of_aran";
-    newscript->GetAI = GetAI_shadow_of_aran;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_shadow_of_aran";
+    newscript->GetAI = &GetAI_shadow_of_aran;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_aran_elemental";
-    newscript->GetAI = GetAI_water_elemental;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_aran_elemental";
+    newscript->GetAI = &GetAI_water_elemental;
+    m_scripts[num_sc_scripts++] = newscript;
 
     //newscript = new Script;
-    //newscript->Name="mob_aran_blizzard";
-    //newscript->GetAI = GetAI_boss_aran;
-    //m_scripts[nrscripts++] = newscript;
+    //newscript->Name = "mob_aran_blizzard";
+    //newscript->GetAI = &GetAI_boss_aran;
+    //m_scripts[num_sc_scripts++] = newscript;
 }

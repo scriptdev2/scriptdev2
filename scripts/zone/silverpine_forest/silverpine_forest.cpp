@@ -92,9 +92,9 @@ void AddSC_silverpine_forest()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_astor_hadren";
+    newscript->Name = "npc_astor_hadren";
     newscript->pGossipHello =  &GossipHello_npc_astor_hadren;
     newscript->pGossipSelect = &GossipSelect_npc_astor_hadren;
-    newscript->GetAI = GetAI_npc_astor_hadren;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_npc_astor_hadren;
+    m_scripts[num_sc_scripts++] = newscript;
 }

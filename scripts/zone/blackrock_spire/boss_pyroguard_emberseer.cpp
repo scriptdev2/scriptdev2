@@ -87,7 +87,7 @@ void AddSC_boss_pyroguard_emberseer()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_pyroguard_emberseer";
-    newscript->GetAI = GetAI_boss_pyroguard_emberseer;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_pyroguard_emberseer";
+    newscript->GetAI = &GetAI_boss_pyroguard_emberseer;
+    m_scripts[num_sc_scripts++] = newscript;
 }

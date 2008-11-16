@@ -613,16 +613,16 @@ void AddSC_netherspite_infernal()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="netherspite_infernal";
-    newscript->GetAI = GetAI_netherspite_infernal;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "netherspite_infernal";
+    newscript->GetAI = &GetAI_netherspite_infernal;
+    m_scripts[num_sc_scripts++] = newscript;
 }
 
 void AddSC_boss_malchezaar()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_malchezaar";
-    newscript->GetAI = GetAI_boss_malchezaar;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_malchezaar";
+    newscript->GetAI = &GetAI_boss_malchezaar;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -1308,37 +1308,37 @@ void AddSC_boss_cthun()
 
     //Eye
     newscript = new Script;
-    newscript->Name="boss_eye_of_cthun";
-    newscript->GetAI = GetAI_eye_of_cthun;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_eye_of_cthun";
+    newscript->GetAI = &GetAI_eye_of_cthun;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_cthun";
-    newscript->GetAI = GetAI_cthun;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_cthun";
+    newscript->GetAI = &GetAI_cthun;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_eye_tentacle";
-    newscript->GetAI = GetAI_eye_tentacle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_eye_tentacle";
+    newscript->GetAI = &GetAI_eye_tentacle;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_claw_tentacle";
-    newscript->GetAI = GetAI_claw_tentacle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_claw_tentacle";
+    newscript->GetAI = &GetAI_claw_tentacle;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_giant_claw_tentacle";
-    newscript->GetAI = GetAI_giant_claw_tentacle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_giant_claw_tentacle";
+    newscript->GetAI = &GetAI_giant_claw_tentacle;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_giant_eye_tentacle";
-    newscript->GetAI = GetAI_giant_eye_tentacle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_giant_eye_tentacle";
+    newscript->GetAI = &GetAI_giant_eye_tentacle;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_giant_flesh_tentacle";
-    newscript->GetAI = GetAI_flesh_tentacle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_giant_flesh_tentacle";
+    newscript->GetAI = &GetAI_flesh_tentacle;
+    m_scripts[num_sc_scripts++] = newscript;
 }

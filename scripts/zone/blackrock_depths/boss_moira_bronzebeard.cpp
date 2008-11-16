@@ -93,7 +93,7 @@ void AddSC_boss_moira_bronzebeard()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_moira_bronzebeard";
-    newscript->GetAI = GetAI_boss_moira_bronzebeard;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_moira_bronzebeard";
+    newscript->GetAI = &GetAI_boss_moira_bronzebeard;
+    m_scripts[num_sc_scripts++] = newscript;
 }

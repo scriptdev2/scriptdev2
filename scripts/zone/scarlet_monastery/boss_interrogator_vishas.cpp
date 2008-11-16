@@ -107,7 +107,7 @@ void AddSC_boss_interrogator_vishas()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_interrogator_vishas";
-    newscript->GetAI = GetAI_boss_interrogator_vishas;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_interrogator_vishas";
+    newscript->GetAI = &GetAI_boss_interrogator_vishas;
+    m_scripts[num_sc_scripts++] = newscript;
 }

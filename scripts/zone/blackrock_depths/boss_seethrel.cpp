@@ -109,7 +109,7 @@ void AddSC_boss_seethrel()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_seethrel";
-    newscript->GetAI = GetAI_boss_seethrel;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_seethrel";
+    newscript->GetAI = &GetAI_boss_seethrel;
+    m_scripts[num_sc_scripts++] = newscript;
 }

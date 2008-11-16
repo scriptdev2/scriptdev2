@@ -173,6 +173,6 @@ void AddSC_instance_old_hillsbrad()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_old_hillsbrad";
-    newscript->GetInstanceData = GetInstanceData_instance_old_hillsbrad;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_old_hillsbrad;
+    m_scripts[num_sc_scripts++] = newscript;
 }

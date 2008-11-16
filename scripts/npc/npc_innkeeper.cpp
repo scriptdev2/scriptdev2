@@ -137,8 +137,8 @@ void AddSC_npc_innkeeper()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="npc_innkeeper";
+    newscript->Name = "npc_innkeeper";
     newscript->pGossipHello = &GossipHello_npc_innkeeper;
     newscript->pGossipSelect = &GossipSelect_npc_innkeeper;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

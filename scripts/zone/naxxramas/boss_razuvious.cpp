@@ -161,7 +161,7 @@ void AddSC_boss_razuvious()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_razuvious";
-    newscript->GetAI = GetAI_boss_razuvious;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_razuvious";
+    newscript->GetAI = &GetAI_boss_razuvious;
+    m_scripts[num_sc_scripts++] = newscript;
 }

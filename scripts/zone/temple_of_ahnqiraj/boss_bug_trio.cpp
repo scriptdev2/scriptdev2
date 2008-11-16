@@ -332,17 +332,17 @@ void AddSC_bug_trio()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_kri";
-    newscript->GetAI = GetAI_boss_kri;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_kri";
+    newscript->GetAI = &GetAI_boss_kri;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_vem";
-    newscript->GetAI = GetAI_boss_vem;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_vem";
+    newscript->GetAI = &GetAI_boss_vem;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_yauj";
-    newscript->GetAI = GetAI_boss_yauj;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_yauj";
+    newscript->GetAI = &GetAI_boss_yauj;
+    m_scripts[num_sc_scripts++] = newscript;
 }

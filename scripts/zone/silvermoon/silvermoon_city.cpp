@@ -97,7 +97,7 @@ void AddSC_silvermoon_city()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="npc_blood_knight_stillblade";
-    newscript->GetAI = GetAI_npc_blood_knight_stillblade;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_blood_knight_stillblade";
+    newscript->GetAI = &GetAI_npc_blood_knight_stillblade;
+    m_scripts[num_sc_scripts++] = newscript;
 }

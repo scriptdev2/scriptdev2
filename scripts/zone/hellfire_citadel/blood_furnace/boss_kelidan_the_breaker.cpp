@@ -223,12 +223,12 @@ void AddSC_boss_kelidan_the_breaker()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_kelidan_the_breaker";
-    newscript->GetAI = GetAI_boss_kelidan_the_breaker;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_kelidan_the_breaker";
+    newscript->GetAI = &GetAI_boss_kelidan_the_breaker;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_shadowmoon_channeler";
-    newscript->GetAI = GetAI_mob_shadowmoon_channeler;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_shadowmoon_channeler";
+    newscript->GetAI = &GetAI_mob_shadowmoon_channeler;
+    m_scripts[num_sc_scripts++] = newscript;
 }

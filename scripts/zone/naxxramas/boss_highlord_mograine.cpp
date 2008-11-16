@@ -172,7 +172,7 @@ void AddSC_boss_highlord_mograine()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_highlord_mograine";
-    newscript->GetAI = GetAI_boss_highlord_mograine;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_highlord_mograine";
+    newscript->GetAI = &GetAI_boss_highlord_mograine;
+    m_scripts[num_sc_scripts++] = newscript;
 }

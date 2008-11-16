@@ -95,7 +95,7 @@ void AddSC_boss_drakkisath()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_drakkisath";
-    newscript->GetAI = GetAI_boss_drakkisath;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_drakkisath";
+    newscript->GetAI = &GetAI_boss_drakkisath;
+    m_scripts[num_sc_scripts++] = newscript;
 }

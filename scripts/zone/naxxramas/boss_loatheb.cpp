@@ -210,7 +210,7 @@ void AddSC_boss_loatheb()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_loatheb";
-    newscript->GetAI = GetAI_boss_loatheb;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_loatheb";
+    newscript->GetAI = &GetAI_boss_loatheb;
+    m_scripts[num_sc_scripts++] = newscript;
 }

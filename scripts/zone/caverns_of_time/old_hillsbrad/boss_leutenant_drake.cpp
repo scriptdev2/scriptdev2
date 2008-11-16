@@ -192,12 +192,12 @@ void AddSC_boss_lieutenant_drake()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="go_barrel_old_hillsbrad";
-    newscript->pGOHello = GOHello_go_barrel_old_hillsbrad;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "go_barrel_old_hillsbrad";
+    newscript->pGOHello = &GOHello_go_barrel_old_hillsbrad;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_lieutenant_drake";
-    newscript->GetAI = GetAI_boss_lieutenant_drake;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_lieutenant_drake";
+    newscript->GetAI = &GetAI_boss_lieutenant_drake;
+    m_scripts[num_sc_scripts++] = newscript;
 }

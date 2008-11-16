@@ -233,6 +233,6 @@ void AddSC_instance_zulgurub()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_zulgurub";
-    newscript->GetInstanceData = GetInstanceData_instance_zulgurub;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_zulgurub;
+    m_scripts[num_sc_scripts++] = newscript;
 }

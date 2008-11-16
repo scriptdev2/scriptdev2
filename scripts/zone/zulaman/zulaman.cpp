@@ -102,7 +102,7 @@ void AddSC_zulaman()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_forest_frog";
-    newscript->GetAI = GetAI_npc_forest_frog;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_forest_frog";
+    newscript->GetAI = &GetAI_npc_forest_frog;
+    m_scripts[num_sc_scripts++] = newscript;
 }

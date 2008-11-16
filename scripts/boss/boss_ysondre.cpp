@@ -235,12 +235,12 @@ void AddSC_boss_ysondre()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_ysondre";
-    newscript->GetAI = GetAI_boss_ysondre;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_ysondre";
+    newscript->GetAI = &GetAI_boss_ysondre;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_dementeddruids";
-    newscript->GetAI = GetAI_mob_dementeddruids;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_dementeddruids";
+    newscript->GetAI = &GetAI_mob_dementeddruids;
+    m_scripts[num_sc_scripts++] = newscript;
 }

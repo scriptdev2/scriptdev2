@@ -143,7 +143,7 @@ void AddSC_boss_noxxion()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_noxxion";
-    newscript->GetAI = GetAI_boss_noxxion;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_noxxion";
+    newscript->GetAI = &GetAI_boss_noxxion;
+    m_scripts[num_sc_scripts++] = newscript;
 }

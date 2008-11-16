@@ -192,7 +192,7 @@ void AddSC_boss_high_botanist_freywinn()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_high_botanist_freywinn";
-    newscript->GetAI = GetAI_boss_high_botanist_freywinn;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_high_botanist_freywinn";
+    newscript->GetAI = &GetAI_boss_high_botanist_freywinn;
+    m_scripts[num_sc_scripts++] = newscript;
 }

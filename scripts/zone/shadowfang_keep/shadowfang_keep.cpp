@@ -108,9 +108,9 @@ void AddSC_shadowfang_keep()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_shadowfang_prisoner";
+    newscript->Name = "npc_shadowfang_prisoner";
     newscript->pGossipHello =  &GossipHello_npc_shadowfang_prisoner;
     newscript->pGossipSelect = &GossipSelect_npc_shadowfang_prisoner;
-    newscript->GetAI = GetAI_npc_shadowfang_prisoner;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_npc_shadowfang_prisoner;
+    m_scripts[num_sc_scripts++] = newscript;
 }

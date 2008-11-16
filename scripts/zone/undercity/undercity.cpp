@@ -242,19 +242,19 @@ void AddSC_undercity()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_lady_sylvanas_windrunner";
-    newscript->GetAI = GetAI_npc_lady_sylvanas_windrunner;
+    newscript->Name = "npc_lady_sylvanas_windrunner";
+    newscript->GetAI = &GetAI_npc_lady_sylvanas_windrunner;
     newscript->pChooseReward = &ChooseReward_npc_lady_sylvanas_windrunner;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_highborne_lamenter";
-    newscript->GetAI = GetAI_npc_highborne_lamenter;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_highborne_lamenter";
+    newscript->GetAI = &GetAI_npc_highborne_lamenter;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_parqual_fintallas";
+    newscript->Name = "npc_parqual_fintallas";
     newscript->pGossipHello = &GossipHello_npc_parqual_fintallas;
     newscript->pGossipSelect = &GossipSelect_npc_parqual_fintallas;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

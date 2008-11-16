@@ -125,7 +125,7 @@ void AddSC_boss_highlordomokk()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_highlord_omokk";
-    newscript->GetAI = GetAI_boss_highlordomokk;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_highlord_omokk";
+    newscript->GetAI = &GetAI_boss_highlordomokk;
+    m_scripts[num_sc_scripts++] = newscript;
 }

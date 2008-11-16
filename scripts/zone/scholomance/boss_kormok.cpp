@@ -149,7 +149,7 @@ void AddSC_boss_kormok()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_kormok";
-    newscript->GetAI = GetAI_boss_kormok;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_kormok";
+    newscript->GetAI = &GetAI_boss_kormok;
+    m_scripts[num_sc_scripts++] = newscript;
 }

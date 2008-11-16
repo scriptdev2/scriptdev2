@@ -390,27 +390,27 @@ void AddSC_boss_darkweaver_syth()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_darkweaver_syth";
-    newscript->GetAI = GetAI_boss_darkweaver_syth;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_darkweaver_syth";
+    newscript->GetAI = &GetAI_boss_darkweaver_syth;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_syth_fire";
-    newscript->GetAI = GetAI_mob_syth_arcane;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_syth_fire";
+    newscript->GetAI = &GetAI_mob_syth_arcane;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_syth_arcane";
-    newscript->GetAI = GetAI_mob_syth_arcane;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_syth_arcane";
+    newscript->GetAI = &GetAI_mob_syth_arcane;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_syth_frost";
-    newscript->GetAI = GetAI_mob_syth_frost;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_syth_frost";
+    newscript->GetAI = &GetAI_mob_syth_frost;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_syth_shadow";
-    newscript->GetAI = GetAI_mob_syth_shadow;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_syth_shadow";
+    newscript->GetAI = &GetAI_mob_syth_shadow;
+    m_scripts[num_sc_scripts++] = newscript;
 }

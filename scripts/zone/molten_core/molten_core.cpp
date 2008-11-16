@@ -82,7 +82,7 @@ void AddSC_molten_core()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="mob_ancient_core_hound";
-    newscript->GetAI = GetAI_mob_ancient_core_hound;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_ancient_core_hound";
+    newscript->GetAI = &GetAI_mob_ancient_core_hound;
+    m_scripts[num_sc_scripts++] = newscript;
 }

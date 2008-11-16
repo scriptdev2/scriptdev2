@@ -705,22 +705,22 @@ void AddSC_boss_janalai()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_janalai";
-    newscript->GetAI = GetAI_boss_janalaiAI;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_janalai";
+    newscript->GetAI = &GetAI_boss_janalaiAI;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_jandalai_firebomb";
-    newscript->GetAI = GetAI_mob_jandalai_firebombAI;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_jandalai_firebomb";
+    newscript->GetAI = &GetAI_mob_jandalai_firebombAI;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_amanishi_hatcher";
-    newscript->GetAI = GetAI_mob_amanishi_hatcherAI;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_amanishi_hatcher";
+    newscript->GetAI = &GetAI_mob_amanishi_hatcherAI;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_hatchling";
-    newscript->GetAI = GetAI_mob_hatchlingAI;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_hatchling";
+    newscript->GetAI = &GetAI_mob_hatchlingAI;
+    m_scripts[num_sc_scripts++] = newscript;
 }

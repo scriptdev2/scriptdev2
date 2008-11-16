@@ -73,9 +73,9 @@ void AddSC_custom_gossip_codebox()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="custom_gossip_codebox";
+    newscript->Name = "custom_gossip_codebox";
     newscript->pGossipHello =           &GossipHello_custom_gossip_codebox;
     newscript->pGossipSelect =          &GossipSelect_custom_gossip_codebox;
     newscript->pGossipSelectWithCode =  &GossipSelectWithCode_custom_gossip_codebox;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

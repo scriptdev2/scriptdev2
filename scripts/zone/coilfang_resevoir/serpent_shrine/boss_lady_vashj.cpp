@@ -841,42 +841,42 @@ void AddSC_boss_lady_vashj()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_lady_vashj";
-    newscript->GetAI = GetAI_boss_lady_vashj;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_lady_vashj";
+    newscript->GetAI = &GetAI_boss_lady_vashj;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_enchanted_elemental";
-    newscript->GetAI = GetAI_mob_enchanted_elemental;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_enchanted_elemental";
+    newscript->GetAI = &GetAI_mob_enchanted_elemental;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_tainted_elemental";
-    newscript->GetAI = GetAI_mob_tainted_elemental;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_tainted_elemental";
+    newscript->GetAI = &GetAI_mob_tainted_elemental;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_fathom_sporebat";
-    newscript->GetAI = GetAI_mob_fathom_sporebat;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_fathom_sporebat";
+    newscript->GetAI = &GetAI_mob_fathom_sporebat;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_coilfang_elite";
-    newscript->GetAI = GetAI_mob_coilfang_elite;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_coilfang_elite";
+    newscript->GetAI = &GetAI_mob_coilfang_elite;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_coilfang_strider";
-    newscript->GetAI = GetAI_mob_coilfang_strider;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_coilfang_strider";
+    newscript->GetAI = &GetAI_mob_coilfang_strider;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_shield_generator_channel";
-    newscript->GetAI = GetAI_mob_shield_generator_channel;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_shield_generator_channel";
+    newscript->GetAI = &GetAI_mob_shield_generator_channel;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="item_tainted_core";
-    newscript->pItemUse = ItemUse_item_tainted_core;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "item_tainted_core";
+    newscript->pItemUse = &ItemUse_item_tainted_core;
+    m_scripts[num_sc_scripts++] = newscript;
 }

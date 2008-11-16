@@ -101,7 +101,7 @@ void AddSC_boss_ironaya()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_ironaya";
-    newscript->GetAI = GetAI_boss_ironaya;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_ironaya";
+    newscript->GetAI = &GetAI_boss_ironaya;
+    m_scripts[num_sc_scripts++] = newscript;
 }

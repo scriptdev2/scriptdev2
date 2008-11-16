@@ -26,10 +26,6 @@ EndScriptData */
 
 #define ENCOUNTERS              4
 
-//#define ENTRY_BOSS_RETHILGORE   3914
-//#define ENTRY_BOSS_FENRUS       4274
-//#define ENTRY_BOSS_NANDOS       3927
-
 #define ENTRY_COURTYARD_DOOR    18895                       //door to open when talking to NPC's
 #define ENTRY_SORCERER_DOOR     18972                       //door to open when Fenrus the Devourer
 #define ENTRY_ARUGAL_DOOR       18971                       //door to open when Wolf Master Nandos
@@ -40,23 +36,18 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
 
     uint32 Encounter[ENCOUNTERS];
 
-    /*uint64 RethilgoreGUID;
-    uint64 FenrusGUID;
-    uint64 NandosGUID;*/
-
     GameObject *DoorCourtyard;
     GameObject *DoorSorcerer;
     GameObject *DoorArugal;
 
     void Initialize()
     {
-        /*RethilgoreGUID = 0;
-        FenrusGUID     = 0;
-        NandosGUID     = 0;*/
-
         DoorCourtyard  = NULL;
         DoorSorcerer   = NULL;
         DoorArugal     = NULL;
+
+        for(uint8 i=0; i < ENCOUNTERS; ++i)
+            Encounter[i] = NOT_STARTED;
     }
 
     void OnObjectCreate(GameObject *go)
@@ -68,22 +59,6 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
             case ENTRY_ARUGAL_DOOR: DoorArugal = go; break;
         }
     }
-
-    /*void OnCreatureCreate(Creature *creature, uint32 creature_entry)
-    {
-        switch(creature_entry)
-        {
-            case ENTRY_BOSS_RETHILGORE:
-                RethilgoreGUID = creature->GetGUID();
-                break;
-            case ENTRY_BOSS_FENRUS:
-                FenrusGUID = creature->GetGUID();
-                break;
-            case ENTRY_BOSS_NANDOS:
-                NandosGUID = creature->GetGUID();
-                break;
-        }
-    }*/
 
     void SetData(uint32 type, uint32 data)
     {
@@ -147,6 +122,6 @@ void AddSC_instance_shadowfang_keep()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_shadowfang_keep";
-    newscript->GetInstanceData = GetInstanceData_instance_shadowfang_keep;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_shadowfang_keep;
+    m_scripts[num_sc_scripts++] = newscript;
 }

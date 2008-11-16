@@ -381,17 +381,17 @@ void AddSC_boss_najentus()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_najentus";
-    newscript->GetAI = GetAI_boss_najentus;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_najentus";
+    newscript->GetAI = &GetAI_boss_najentus;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_najentus_spine";
-    newscript->GetAI = GetAI_mob_najentus_spine;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_najentus_spine;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "go_najentus_spine";
     newscript->pGOHello = &GOHello_go_najentus_spine;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -192,7 +192,7 @@ void AddSC_boss_laj()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_laj";
-    newscript->GetAI = GetAI_boss_laj;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_laj";
+    newscript->GetAI = &GetAI_boss_laj;
+    m_scripts[num_sc_scripts++] = newscript;
 }

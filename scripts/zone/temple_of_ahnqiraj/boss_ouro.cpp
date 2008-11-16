@@ -134,7 +134,7 @@ void AddSC_boss_ouro()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_ouro";
-    newscript->GetAI = GetAI_boss_ouro;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_ouro";
+    newscript->GetAI = &GetAI_boss_ouro;
+    m_scripts[num_sc_scripts++] = newscript;
 }

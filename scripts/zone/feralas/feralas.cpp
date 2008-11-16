@@ -73,13 +73,13 @@ void AddSC_feralas()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_gregan_brewspewer";
+    newscript->Name = "npc_gregan_brewspewer";
     newscript->pGossipHello = &GossipHello_npc_gregan_brewspewer;
     newscript->pGossipSelect = &GossipSelect_npc_gregan_brewspewer;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_screecher_spirit";
+    newscript->Name = "npc_screecher_spirit";
     newscript->pGossipHello = &GossipHello_npc_screecher_spirit;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

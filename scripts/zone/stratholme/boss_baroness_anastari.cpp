@@ -118,7 +118,7 @@ void AddSC_boss_baroness_anastari()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_baroness_anastari";
-    newscript->GetAI = GetAI_boss_baroness_anastari;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_baroness_anastari";
+    newscript->GetAI = &GetAI_boss_baroness_anastari;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -102,7 +102,7 @@ void AddSC_boss_theolenkrastinov()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_doctor_theolen_krastinov";
-    newscript->GetAI = GetAI_boss_theolenkrastinov;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_doctor_theolen_krastinov";
+    newscript->GetAI = &GetAI_boss_theolenkrastinov;
+    m_scripts[num_sc_scripts++] = newscript;
 }

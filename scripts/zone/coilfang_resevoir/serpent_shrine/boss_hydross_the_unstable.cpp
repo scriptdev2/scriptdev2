@@ -322,7 +322,7 @@ void AddSC_boss_hydross_the_unstable()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_hydross_the_unstable";
-    newscript->GetAI = GetAI_boss_hydross_the_unstable;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_hydross_the_unstable";
+    newscript->GetAI = &GetAI_boss_hydross_the_unstable;
+    m_scripts[num_sc_scripts++] = newscript;
 }

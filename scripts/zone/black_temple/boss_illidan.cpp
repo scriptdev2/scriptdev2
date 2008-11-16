@@ -2416,63 +2416,63 @@ void AddSC_boss_illidan()
 
     newscript = new Script;
     newscript->Name = "boss_illidan_stormrage";
-    newscript->GetAI = GetAI_boss_illidan_stormrage;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_boss_illidan_stormrage;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "npc_akama_illidan";
-    newscript->GetAI = GetAI_npc_akama_at_illidan;
-    newscript->pGossipHello = GossipHello_npc_akama_at_illidan;
-    newscript->pGossipSelect = GossipSelect_npc_akama_at_illidan;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_npc_akama_at_illidan;
+    newscript->pGossipHello = &GossipHello_npc_akama_at_illidan;
+    newscript->pGossipSelect = &GossipSelect_npc_akama_at_illidan;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "boss_maiev_shadowsong";
-    newscript->GetAI = GetAI_boss_maiev;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_boss_maiev;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_flame_of_azzinoth";
-    newscript->GetAI = GetAI_mob_flame_of_azzinoth;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_flame_of_azzinoth;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_blade_of_azzinoth";
-    newscript->GetAI = GetAI_blade_of_azzinoth;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_blade_of_azzinoth;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "gameobject_cage_trap";
-    newscript->pGOHello = GOHello_cage_trap;
-    m_scripts[nrscripts++] = newscript;
+    newscript->pGOHello = &GOHello_cage_trap;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_cage_trap_trigger";
-    newscript->GetAI = GetAI_cage_trap_trigger;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_cage_trap_trigger";
+    newscript->GetAI = &GetAI_cage_trap_trigger;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_shadow_demon";
-    newscript->GetAI = GetAI_shadow_demon;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_shadow_demon;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_flame_crash";
-    newscript->GetAI = GetAI_flamecrash;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_flame_crash";
+    newscript->GetAI = &GetAI_flamecrash;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_demon_fire";
-    newscript->GetAI = GetAI_demonfire;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_demon_fire";
+    newscript->GetAI = &GetAI_demonfire;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_blaze";
-    newscript->GetAI = GetAI_blaze;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_blaze";
+    newscript->GetAI = &GetAI_blaze;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_parasitic_shadowfiend";
-    newscript->GetAI = GetAI_parasitic_shadowfiend;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_parasitic_shadowfiend;
+    m_scripts[num_sc_scripts++] = newscript;
 }

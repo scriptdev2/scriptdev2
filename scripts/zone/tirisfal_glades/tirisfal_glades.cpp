@@ -81,8 +81,8 @@ void AddSC_tirisfal_glades()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_calvin_montague";
-    newscript->GetAI = GetAI_npc_calvin_montague;
+    newscript->Name = "npc_calvin_montague";
+    newscript->GetAI = &GetAI_npc_calvin_montague;
     newscript->pQuestAccept = &QuestAccept_npc_calvin_montague;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

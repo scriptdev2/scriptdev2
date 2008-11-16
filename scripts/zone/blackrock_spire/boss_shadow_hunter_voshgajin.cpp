@@ -89,7 +89,7 @@ void AddSC_boss_shadowvosh()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_shadow_hunter_voshgajin";
-    newscript->GetAI = GetAI_boss_shadowvosh;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_shadow_hunter_voshgajin";
+    newscript->GetAI = &GetAI_boss_shadowvosh;
+    m_scripts[num_sc_scripts++] = newscript;
 }

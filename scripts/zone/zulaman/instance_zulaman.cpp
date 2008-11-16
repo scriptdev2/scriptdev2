@@ -181,6 +181,6 @@ void AddSC_instance_zulaman()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_zulaman";
-    newscript->GetInstanceData = GetInstanceData_instance_zulaman;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_zulaman;
+    m_scripts[num_sc_scripts++] = newscript;
 }

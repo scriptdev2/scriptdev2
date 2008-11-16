@@ -598,22 +598,22 @@ void AddSC_boss_kalecgos()
     Script* newscript;
 
     newscript = new Script;
-    newscript->GetAI = GetAI_boss_kalecgos;
+    newscript->GetAI = &GetAI_boss_kalecgos;
     newscript->Name = "boss_kalecgos";
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->GetAI = GetAI_boss_sathrovarr;
+    newscript->GetAI = &GetAI_boss_sathrovarr;
     newscript->Name = "boss_sathrovarr";
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->GetAI = GetAI_boss_kalecgos_humanoid;
+    newscript->GetAI = &GetAI_boss_kalecgos_humanoid;
     newscript->Name = "boss_kalecgos_humanoid";
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->pGOHello = GOHello_go_spectral_rift;
+    newscript->pGOHello = &GOHello_go_spectral_rift;
     newscript->Name = "go_spectral_rift";
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

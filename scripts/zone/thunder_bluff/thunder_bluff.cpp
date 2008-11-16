@@ -128,9 +128,9 @@ void AddSC_thunder_bluff()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_cairne_bloodhoof";
-    newscript->GetAI = GetAI_npc_cairne_bloodhoof;
+    newscript->Name = "npc_cairne_bloodhoof";
+    newscript->GetAI = &GetAI_npc_cairne_bloodhoof;
     newscript->pGossipHello = &GossipHello_npc_cairne_bloodhoof;
     newscript->pGossipSelect = &GossipSelect_npc_cairne_bloodhoof;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

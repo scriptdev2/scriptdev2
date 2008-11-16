@@ -209,7 +209,7 @@ void AddSC_boss_baron_rivendare()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_baron_rivendare";
-    newscript->GetAI = GetAI_boss_baron_rivendare;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_baron_rivendare";
+    newscript->GetAI = &GetAI_boss_baron_rivendare;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -698,51 +698,51 @@ void AddSC_shadowmoon_valley()
 
     newscript = new Script;
     newscript->Name = "mob_mature_netherwing_drake";
-    newscript->GetAI = GetAI_mob_mature_netherwing_drake;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_mature_netherwing_drake;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_enslaved_netherwing_drake";
-    newscript->GetAI = GetAI_mob_enslaved_netherwing_drake;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_enslaved_netherwing_drake;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_drake_dealer_hurlunk";
+    newscript->Name = "npc_drake_dealer_hurlunk";
     newscript->pGossipHello =  &GossipHello_npc_drake_dealer_hurlunk;
     newscript->pGossipSelect = &GossipSelect_npc_drake_dealer_hurlunk;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_invis_legion_teleporter";
-    newscript->GetAI = GetAI_npc_invis_legion_teleporter;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_invis_legion_teleporter";
+    newscript->GetAI = &GetAI_npc_invis_legion_teleporter;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npcs_flanis_swiftwing_and_kagrosh";
+    newscript->Name = "npcs_flanis_swiftwing_and_kagrosh";
     newscript->pGossipHello =  &GossipHello_npcs_flanis_swiftwing_and_kagrosh;
     newscript->pGossipSelect = &GossipSelect_npcs_flanis_swiftwing_and_kagrosh;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_murkblood_overseer";
+    newscript->Name = "npc_murkblood_overseer";
     newscript->pGossipHello =  &GossipHello_npc_murkblood_overseer;
     newscript->pGossipSelect = &GossipSelect_npc_murkblood_overseer;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_neltharaku";
+    newscript->Name = "npc_neltharaku";
     newscript->pGossipHello =  &GossipHello_npc_neltharaku;
     newscript->pGossipSelect = &GossipSelect_npc_neltharaku;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "npc_karynaku";
     newscript->pQuestAccept = &QuestAccept_npc_karynaku;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_oronok_tornheart";
+    newscript->Name = "npc_oronok_tornheart";
     newscript->pGossipHello =  &GossipHello_npc_oronok_tornheart;
     newscript->pGossipSelect = &GossipSelect_npc_oronok_tornheart;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

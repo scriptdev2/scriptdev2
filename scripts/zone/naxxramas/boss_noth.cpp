@@ -174,7 +174,7 @@ void AddSC_boss_noth()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_noth";
-    newscript->GetAI = GetAI_boss_noth;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_noth";
+    newscript->GetAI = &GetAI_boss_noth;
+    m_scripts[num_sc_scripts++] = newscript;
 }

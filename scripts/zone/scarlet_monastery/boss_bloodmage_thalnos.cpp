@@ -130,7 +130,7 @@ void AddSC_boss_bloodmage_thalnos()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_bloodmage_thalnos";
-    newscript->GetAI = GetAI_boss_bloodmage_thalnos;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_bloodmage_thalnos";
+    newscript->GetAI = &GetAI_boss_bloodmage_thalnos;
+    m_scripts[num_sc_scripts++] = newscript;
 }

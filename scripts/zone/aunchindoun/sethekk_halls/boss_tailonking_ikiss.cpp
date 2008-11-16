@@ -213,7 +213,7 @@ void AddSC_boss_talon_king_ikiss()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_talon_king_ikiss";
-    newscript->GetAI = GetAI_boss_talon_king_ikiss;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_talon_king_ikiss";
+    newscript->GetAI = &GetAI_boss_talon_king_ikiss;
+    m_scripts[num_sc_scripts++] = newscript;
 }

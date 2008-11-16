@@ -204,12 +204,12 @@ void AddSC_boss_sulfuron()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_sulfuron";
-    newscript->GetAI = GetAI_boss_sulfuron;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_sulfuron";
+    newscript->GetAI = &GetAI_boss_sulfuron;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_flamewaker_priest";
-    newscript->GetAI = GetAI_mob_flamewaker_priest;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_flamewaker_priest";
+    newscript->GetAI = &GetAI_mob_flamewaker_priest;
+    m_scripts[num_sc_scripts++] = newscript;
 }

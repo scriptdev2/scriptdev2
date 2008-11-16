@@ -246,12 +246,12 @@ void AddSC_boss_warp_splinter()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_warp_splinter";
-    newscript->GetAI = GetAI_boss_warp_splinter;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_warp_splinter";
+    newscript->GetAI = &GetAI_boss_warp_splinter;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_warp_splinter_treant";
-    newscript->GetAI = GetAI_mob_treant;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_warp_splinter_treant";
+    newscript->GetAI = &GetAI_mob_treant;
+    m_scripts[num_sc_scripts++] = newscript;
 }

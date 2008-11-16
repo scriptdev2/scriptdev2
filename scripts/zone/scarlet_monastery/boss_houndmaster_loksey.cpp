@@ -72,7 +72,7 @@ void AddSC_boss_houndmaster_loksey()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_houndmaster_loksey";
-    newscript->GetAI = GetAI_boss_houndmaster_loksey;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_houndmaster_loksey";
+    newscript->GetAI = &GetAI_boss_houndmaster_loksey;
+    m_scripts[num_sc_scripts++] = newscript;
 }

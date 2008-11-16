@@ -221,7 +221,7 @@ void AddSC_boss_nefarian()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_nefarian";
-    newscript->GetAI = GetAI_boss_nefarian;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_nefarian";
+    newscript->GetAI = &GetAI_boss_nefarian;
+    m_scripts[num_sc_scripts++] = newscript;
 }

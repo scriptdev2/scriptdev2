@@ -286,12 +286,12 @@ void AddSC_boss_leotheras_the_blind()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_leotheras_the_blind";
-    newscript->GetAI = GetAI_boss_leotheras_the_blind;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_leotheras_the_blind";
+    newscript->GetAI = &GetAI_boss_leotheras_the_blind;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_leotheras_the_blind_demonform";
-    newscript->GetAI = GetAI_boss_leotheras_the_blind_demonform;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_leotheras_the_blind_demonform";
+    newscript->GetAI = &GetAI_boss_leotheras_the_blind_demonform;
+    m_scripts[num_sc_scripts++] = newscript;
 }

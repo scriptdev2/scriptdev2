@@ -97,6 +97,6 @@ void AddSC_instance_scholomance()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_scholomance";
-    newscript->GetInstanceData = GetInstanceData_instance_scholomance;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_scholomance;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -210,7 +210,7 @@ void AddSC_boss_doomwalker()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_doomwalker";
-    newscript->GetAI = GetAI_boss_doomwalker;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_doomwalker";
+    newscript->GetAI = &GetAI_boss_doomwalker;
+    m_scripts[num_sc_scripts++] = newscript;
 }

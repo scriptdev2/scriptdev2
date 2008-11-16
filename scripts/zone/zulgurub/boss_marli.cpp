@@ -247,12 +247,12 @@ void AddSC_boss_marli()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_marli";
-    newscript->GetAI = GetAI_boss_marli;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_marli";
+    newscript->GetAI = &GetAI_boss_marli;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_spawn_of_marli";
-    newscript->GetAI = GetAI_mob_spawn_of_marli;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_spawn_of_marli";
+    newscript->GetAI = &GetAI_mob_spawn_of_marli;
+    m_scripts[num_sc_scripts++] = newscript;
 }

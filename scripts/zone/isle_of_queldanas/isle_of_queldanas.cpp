@@ -137,19 +137,19 @@ void AddSC_isle_of_queldanas()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_ayren_cloudbreaker";
+    newscript->Name = "npc_ayren_cloudbreaker";
     newscript->pGossipHello = &GossipHello_npc_ayren_cloudbreaker;
     newscript->pGossipSelect = &GossipSelect_npc_ayren_cloudbreaker;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_converted_sentry";
-    newscript->GetAI = GetAI_npc_converted_sentry;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_converted_sentry";
+    newscript->GetAI = &GetAI_npc_converted_sentry;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_unrestrained_dragonhawk";
+    newscript->Name = "npc_unrestrained_dragonhawk";
     newscript->pGossipHello = &GossipHello_npc_unrestrained_dragonhawk;
     newscript->pGossipSelect = &GossipSelect_npc_unrestrained_dragonhawk;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

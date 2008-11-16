@@ -126,7 +126,7 @@ void AddSC_boss_high_inquisitor_fairbanks()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_high_inquisitor_fairbanks";
-    newscript->GetAI = GetAI_boss_high_inquisitor_fairbanks;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_high_inquisitor_fairbanks";
+    newscript->GetAI = &GetAI_boss_high_inquisitor_fairbanks;
+    m_scripts[num_sc_scripts++] = newscript;
 }

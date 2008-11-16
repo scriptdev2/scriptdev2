@@ -549,26 +549,26 @@ void AddSC_boss_felblood_kaelthas()
 
     newscript = new Script;
     newscript->Name = "boss_felblood_kaelthas";
-    newscript->GetAI = GetAI_boss_felblood_kaelthas;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_boss_felblood_kaelthas;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
     newscript->Name = "mob_arcane_sphere";
-    newscript->GetAI = GetAI_mob_arcane_sphere;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_arcane_sphere;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_felkael_phoenix";
-    newscript->GetAI = GetAI_mob_felkael_phoenix;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_felkael_phoenix";
+    newscript->GetAI = &GetAI_mob_felkael_phoenix;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_felkael_phoenix_egg";
-    newscript->GetAI = GetAI_mob_felkael_phoenix_egg;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_felkael_phoenix_egg";
+    newscript->GetAI = &GetAI_mob_felkael_phoenix_egg;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mob_felkael_flamestrike";
-    newscript->GetAI = GetAI_mob_felkael_flamestrike;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_felkael_flamestrike";
+    newscript->GetAI = &GetAI_mob_felkael_flamestrike;
+    m_scripts[num_sc_scripts++] = newscript;
 }

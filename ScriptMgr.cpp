@@ -12,7 +12,8 @@
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***
-int nrscripts;
+int num_db_scripts;
+int num_sc_scripts;
 Script *m_scripts[MAX_SCRIPTS];
 
 DatabaseType SD2Database;
@@ -1166,10 +1167,10 @@ void ScriptsFree()
     delete []SpellSummary;
 
     // Free resources before library unload
-    for(int i=0;i<nrscripts;i++)
+    for(int i=0;i<num_sc_scripts;i++)
         delete m_scripts[i];
 
-    nrscripts = 0;
+    num_sc_scripts = 0;
 }
 
 MANGOS_DLL_EXPORT
@@ -1233,7 +1234,7 @@ void ScriptsInit()
     bar.step();
     outstring_log("");
 
-    nrscripts = 0;
+    num_sc_scripts = 0;
     for(int i=0;i<MAX_SCRIPTS;i++)
         m_scripts[i]=NULL;
 
@@ -1752,7 +1753,7 @@ void ScriptsInit()
 
     // -------------------
 
-    outstring_log(">> Loaded %u C++ Scripts", nrscripts);
+    outstring_log(">> Loaded %i C++ Scripts", num_sc_scripts);
 }
 
 //*********************************
@@ -1827,11 +1828,9 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
 //*********************************
 //*** Functions used internally ***
 
-MANGOS_DLL_EXPORT
-char const* ScriptsVersion()
+void Script::RegisterSelf()
 {
-    //TODO: add version text from sd2_db_version
-    return _FULLVERSION;
+    //placeholder
 }
 
 Script* GetScriptByName(std::string Name)
@@ -1849,6 +1848,13 @@ Script* GetScriptByName(std::string Name)
 
 //********************************
 //*** Functions to be Exported ***
+
+MANGOS_DLL_EXPORT
+char const* ScriptsVersion()
+{
+    //TODO: add version text from sd2_db_version
+    return _FULLVERSION;
+}
 
 MANGOS_DLL_EXPORT
 bool GossipHello ( Player * player, Creature *_Creature )

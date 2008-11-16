@@ -202,30 +202,30 @@ void AddSC_dustwallow_marsh()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="mobs_risen_husk_spirit";
-    newscript->GetAI = GetAI_mobs_risen_husk_spirit;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mobs_risen_husk_spirit";
+    newscript->GetAI = &GetAI_mobs_risen_husk_spirit;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_restless_apparition";
+    newscript->Name = "npc_restless_apparition";
     newscript->pGossipHello =   &GossipHello_npc_restless_apparition;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_deserter_agitator";
-    newscript->GetAI = GetAI_npc_deserter_agitator;
+    newscript->Name = "npc_deserter_agitator";
+    newscript->GetAI = &GetAI_npc_deserter_agitator;
     newscript->pGossipHello = &GossipHello_npc_deserter_agitator;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_lady_jaina_proudmoore";
+    newscript->Name = "npc_lady_jaina_proudmoore";
     newscript->pGossipHello = &GossipHello_npc_lady_jaina_proudmoore;
     newscript->pGossipSelect = &GossipSelect_npc_lady_jaina_proudmoore;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_nat_pagle";
+    newscript->Name = "npc_nat_pagle";
     newscript->pGossipHello = &GossipHello_npc_nat_pagle;
     newscript->pGossipSelect = &GossipSelect_npc_nat_pagle;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

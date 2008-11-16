@@ -219,19 +219,19 @@ void AddSC_blackrock_depths()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="phalanx";
-    newscript->GetAI = GetAI_mob_phalanx;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "phalanx";
+    newscript->GetAI = &GetAI_mob_phalanx;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_kharan_mighthammer";
+    newscript->Name = "npc_kharan_mighthammer";
     newscript->pGossipHello =  &GossipHello_npc_kharan_mighthammer;
     newscript->pGossipSelect = &GossipSelect_npc_kharan_mighthammer;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_lokhtos_darkbargainer";
+    newscript->Name = "npc_lokhtos_darkbargainer";
     newscript->pGossipHello =  &GossipHello_npc_lokhtos_darkbargainer;
     newscript->pGossipSelect = &GossipSelect_npc_lokhtos_darkbargainer;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

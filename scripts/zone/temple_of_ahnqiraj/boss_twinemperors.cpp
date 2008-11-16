@@ -687,12 +687,12 @@ void AddSC_boss_twinemperors()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_veknilash";
-    newscript->GetAI = GetAI_boss_veknilash;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_veknilash";
+    newscript->GetAI = &GetAI_boss_veknilash;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_veklor";
-    newscript->GetAI = GetAI_boss_veklor;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_veklor";
+    newscript->GetAI = &GetAI_boss_veklor;
+    m_scripts[num_sc_scripts++] = newscript;
 }

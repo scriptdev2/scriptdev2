@@ -141,7 +141,7 @@ void AddSC_boss_thane_korthazz()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_thane_korthazz";
-    newscript->GetAI = GetAI_boss_thane_korthazz;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_thane_korthazz";
+    newscript->GetAI = &GetAI_boss_thane_korthazz;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -398,24 +398,24 @@ void AddSC_netherstorm()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="go_manaforge_control_console";
+    newscript->Name = "go_manaforge_control_console";
     newscript->pGOHello = &GOHello_go_manaforge_control_console;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_manaforge_control_console";
-    newscript->GetAI = GetAI_npc_manaforge_control_console;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_manaforge_control_console";
+    newscript->GetAI = &GetAI_npc_manaforge_control_console;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_protectorate_nether_drake";
+    newscript->Name = "npc_protectorate_nether_drake";
     newscript->pGossipHello =   &GossipHello_npc_protectorate_nether_drake;
     newscript->pGossipSelect =  &GossipSelect_npc_protectorate_nether_drake;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_veronia";
+    newscript->Name = "npc_veronia";
     newscript->pGossipHello =   &GossipHello_npc_veronia;
     newscript->pGossipSelect =  &GossipSelect_npc_veronia;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -323,7 +323,7 @@ void AddSC_boss_mother_shahraz()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_mother_shahraz";
-    newscript->GetAI = GetAI_boss_shahraz;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_mother_shahraz";
+    newscript->GetAI = &GetAI_boss_shahraz;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -75,7 +75,7 @@ void AddSC_boss_gorosh_the_dervish()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_gorosh_the_dervish";
-    newscript->GetAI = GetAI_boss_gorosh_the_dervish;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_gorosh_the_dervish";
+    newscript->GetAI = &GetAI_boss_gorosh_the_dervish;
+    m_scripts[num_sc_scripts++] = newscript;
 }

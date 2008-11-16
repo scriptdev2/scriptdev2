@@ -38,7 +38,7 @@ void AddSC_areatrigger_scripts()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="at_test";
-    newscript->pAreaTrigger = ATtest;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "at_test";
+    newscript->pAreaTrigger = &ATtest;
+    m_scripts[num_sc_scripts++] = newscript;
 }

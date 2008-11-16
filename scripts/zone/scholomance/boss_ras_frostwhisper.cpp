@@ -119,7 +119,7 @@ void AddSC_boss_rasfrost()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_boss_ras_frostwhisper";
-    newscript->GetAI = GetAI_boss_rasfrost;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_boss_ras_frostwhisper";
+    newscript->GetAI = &GetAI_boss_rasfrost;
+    m_scripts[num_sc_scripts++] = newscript;
 }

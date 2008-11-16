@@ -165,6 +165,6 @@ void AddSC_instance_steam_vault()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_steam_vault";
-    newscript->GetInstanceData = GetInstanceData_instance_steam_vault;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_steam_vault;
+    m_scripts[num_sc_scripts++] = newscript;
 }

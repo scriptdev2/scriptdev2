@@ -535,8 +535,8 @@ void AddSC_boss_kelthuzad()
     /*
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_kelthuzad";
-    newscript->GetAI = GetAI_boss_kelthuzadAI;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_kelthuzad";
+    newscript->GetAI = &GetAI_boss_kelthuzadAI;
+    m_scripts[num_sc_scripts++] = newscript;
     */
 }

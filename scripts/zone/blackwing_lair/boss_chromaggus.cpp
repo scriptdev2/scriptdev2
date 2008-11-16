@@ -308,7 +308,7 @@ void AddSC_boss_chromaggus()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_chromaggus";
-    newscript->GetAI = GetAI_boss_chromaggus;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_chromaggus";
+    newscript->GetAI = &GetAI_boss_chromaggus;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -348,25 +348,25 @@ void AddSC_azuremyst_isle()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_draenei_survivor";
-    newscript->GetAI = GetAI_npc_draenei_survivor;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_draenei_survivor";
+    newscript->GetAI = &GetAI_npc_draenei_survivor;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_engineer_spark_overgrind";
-    newscript->GetAI = GetAI_npc_engineer_spark_overgrind;
+    newscript->Name = "npc_engineer_spark_overgrind";
+    newscript->GetAI = &GetAI_npc_engineer_spark_overgrind;
     newscript->pGossipHello =  &GossipHello_npc_engineer_spark_overgrind;
     newscript->pGossipSelect = &GossipSelect_npc_engineer_spark_overgrind;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_injured_draenei";
-    newscript->GetAI = GetAI_npc_injured_draenei;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_injured_draenei";
+    newscript->GetAI = &GetAI_npc_injured_draenei;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_susurrus";
+    newscript->Name = "npc_susurrus";
     newscript->pGossipHello =  &GossipHello_npc_susurrus;
     newscript->pGossipSelect = &GossipSelect_npc_susurrus;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

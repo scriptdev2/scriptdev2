@@ -184,7 +184,7 @@ void AddSC_boss_fankriss()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_fankriss";
-    newscript->GetAI = GetAI_boss_fankriss;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_fankriss";
+    newscript->GetAI = &GetAI_boss_fankriss;
+    m_scripts[num_sc_scripts++] = newscript;
 }

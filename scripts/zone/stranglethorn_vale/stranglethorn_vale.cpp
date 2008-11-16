@@ -102,6 +102,6 @@ void AddSC_stranglethorn_vale()
 
     newscript = new Script;
     newscript->Name = "mob_yenniku";
-    newscript->GetAI = GetAI_mob_yenniku;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetAI = &GetAI_mob_yenniku;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -80,7 +80,7 @@ void AddSC_boss_grizzle()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_grizzle";
-    newscript->GetAI = GetAI_boss_grizzle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_grizzle";
+    newscript->GetAI = &GetAI_boss_grizzle;
+    m_scripts[num_sc_scripts++] = newscript;
 }

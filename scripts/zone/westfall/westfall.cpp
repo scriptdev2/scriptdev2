@@ -172,8 +172,8 @@ void AddSC_westfall()
     Script *newscript;
     
     newscript = new Script;
-    newscript->Name="npc_defias_traitor";
+    newscript->Name = "npc_defias_traitor";
     newscript->GetAI = &GetAI_npc_defias_traitor;
     newscript->pQuestAccept = &QuestAccept_npc_defias_traitor;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -295,12 +295,12 @@ void AddSC_boss_taerar()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_taerar";
-    newscript->GetAI = GetAI_boss_taerar;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_taerar";
+    newscript->GetAI = &GetAI_boss_taerar;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="boss_shade_of_taerar";
-    newscript->GetAI = GetAI_boss_shadeoftaerar;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_shade_of_taerar";
+    newscript->GetAI = &GetAI_boss_shadeoftaerar;
+    m_scripts[num_sc_scripts++] = newscript;
 }

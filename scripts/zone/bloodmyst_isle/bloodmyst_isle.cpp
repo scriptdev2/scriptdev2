@@ -129,13 +129,13 @@ void AddSC_bloodmyst_isle()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="mob_webbed_creature";
-    newscript->GetAI = GetAI_mob_webbed_creature;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mob_webbed_creature";
+    newscript->GetAI = &GetAI_mob_webbed_creature;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_captured_sunhawk_agent";
+    newscript->Name = "npc_captured_sunhawk_agent";
     newscript->pGossipHello =  &GossipHello_npc_captured_sunhawk_agent;
     newscript->pGossipSelect = &GossipSelect_npc_captured_sunhawk_agent;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -170,20 +170,20 @@ void AddSC_the_barrens()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="npc_beaten_corpse";
+    newscript->Name = "npc_beaten_corpse";
     newscript->pGossipHello = &GossipHello_npc_beaten_corpse;
     newscript->pGossipSelect = &GossipSelect_npc_beaten_corpse;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_sputtervalve";
+    newscript->Name = "npc_sputtervalve";
     newscript->pGossipHello = &GossipHello_npc_sputtervalve;
     newscript->pGossipSelect = &GossipSelect_npc_sputtervalve;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_taskmaster_fizzule";
-    newscript->GetAI = GetAI_npc_taskmaster_fizzule;
+    newscript->Name = "npc_taskmaster_fizzule";
+    newscript->GetAI = &GetAI_npc_taskmaster_fizzule;
     newscript->pReceiveEmote = &ReciveEmote_npc_taskmaster_fizzule;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

@@ -121,7 +121,7 @@ void AddSC_boss_overlordwyrmthalak()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_overlord_wyrmthalak";
-    newscript->GetAI = GetAI_boss_overlordwyrmthalak;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_overlord_wyrmthalak";
+    newscript->GetAI = &GetAI_boss_overlordwyrmthalak;
+    m_scripts[num_sc_scripts++] = newscript;
 }

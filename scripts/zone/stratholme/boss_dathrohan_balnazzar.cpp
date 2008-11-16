@@ -308,7 +308,7 @@ void AddSC_boss_dathrohan_balnazzar()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_dathrohan_balnazzar";
-    newscript->GetAI = GetAI_boss_dathrohan_balnazzar;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_dathrohan_balnazzar";
+    newscript->GetAI = &GetAI_boss_dathrohan_balnazzar;
+    m_scripts[num_sc_scripts++] = newscript;
 }

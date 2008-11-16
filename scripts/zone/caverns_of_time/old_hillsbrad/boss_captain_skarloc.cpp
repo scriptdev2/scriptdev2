@@ -150,7 +150,7 @@ void AddSC_boss_captain_skarloc()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_captain_skarloc";
-    newscript->GetAI = GetAI_boss_captain_skarloc;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_captain_skarloc";
+    newscript->GetAI = &GetAI_boss_captain_skarloc;
+    m_scripts[num_sc_scripts++] = newscript;
 }

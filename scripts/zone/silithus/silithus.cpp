@@ -142,8 +142,8 @@ void AddSC_silithus()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="npcs_rutgar_and_frankal";
+    newscript->Name = "npcs_rutgar_and_frankal";
     newscript->pGossipHello =   &GossipHello_npcs_rutgar_and_frankal;
     newscript->pGossipSelect =  &GossipSelect_npcs_rutgar_and_frankal;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

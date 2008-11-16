@@ -404,35 +404,35 @@ void AddSC_blades_edge_mountains()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="mobs_bladespire_ogre";
-    newscript->GetAI = GetAI_mobs_bladespire_ogre;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mobs_bladespire_ogre";
+    newscript->GetAI = &GetAI_mobs_bladespire_ogre;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="mobs_nether_drake";
-    newscript->GetAI = GetAI_mobs_nether_drake;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "mobs_nether_drake";
+    newscript->GetAI = &GetAI_mobs_nether_drake;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_daranelle";
-    newscript->GetAI = GetAI_npc_daranelle;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "npc_daranelle";
+    newscript->GetAI = &GetAI_npc_daranelle;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_overseer_nuaar";
+    newscript->Name = "npc_overseer_nuaar";
     newscript->pGossipHello = &GossipHello_npc_overseer_nuaar;
     newscript->pGossipSelect = &GossipSelect_npc_overseer_nuaar;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_saikkal_the_elder";
+    newscript->Name = "npc_saikkal_the_elder";
     newscript->pGossipHello = &GossipHello_npc_saikkal_the_elder;
     newscript->pGossipSelect = &GossipSelect_npc_saikkal_the_elder;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 
     newscript = new Script;
-    newscript->Name="npc_skyguard_handler_irena";
+    newscript->Name = "npc_skyguard_handler_irena";
     newscript->pGossipHello =  &GossipHello_npc_skyguard_handler_irena;
     newscript->pGossipSelect = &GossipSelect_npc_skyguard_handler_irena;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

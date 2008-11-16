@@ -125,7 +125,7 @@ void AddSC_boss_razorgore()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_razorgore";
-    newscript->GetAI = GetAI_boss_razorgore;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_razorgore";
+    newscript->GetAI = &GetAI_boss_razorgore;
+    m_scripts[num_sc_scripts++] = newscript;
 }

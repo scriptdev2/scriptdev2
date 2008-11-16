@@ -192,9 +192,9 @@ void AddSC_test()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="test";
-    newscript->GetAI = GetAI_test;
+    newscript->Name = "test";
+    newscript->GetAI = &GetAI_test;
     newscript->pGossipHello          = &GossipHello_npc_test;
     newscript->pGossipSelect         = &GossipSelect_npc_test;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

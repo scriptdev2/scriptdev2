@@ -35,30 +35,33 @@ struct Script
 
     std::string Name;
 
-    // Quest/gossip Methods to be scripted
+    //Methods to be scripted
     bool (*pGossipHello         )(Player*, Creature*);
     bool (*pQuestAccept         )(Player*, Creature*, Quest const* );
-    bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32  );
+    bool (*pGossipSelect        )(Player*, Creature*, uint32 , uint32 );
     bool (*pGossipSelectWithCode)(Player*, Creature*, uint32 , uint32 , const char* );
     bool (*pQuestSelect         )(Player*, Creature*, Quest const* );
     bool (*pQuestComplete       )(Player*, Creature*, Quest const* );
     uint32 (*pNPCDialogStatus   )(Player*, Creature* );
-    uint32 (*pGODialogStatus    )(Player *player, GameObject * _GO );
+    uint32 (*pGODialogStatus    )(Player*, GameObject * _GO );
     bool (*pChooseReward        )(Player*, Creature*, Quest const*, uint32 );
     bool (*pItemHello           )(Player*, Item*, Quest const* );
     bool (*pGOHello             )(Player*, GameObject* );
     bool (*pAreaTrigger         )(Player*, AreaTriggerEntry* );
     bool (*pItemQuestAccept     )(Player*, Item *, Quest const* );
     bool (*pGOQuestAccept       )(Player*, GameObject*, Quest const* );
-    bool (*pGOChooseReward      )(Player*, GameObject*_GO, Quest const*, uint32 );
+    bool (*pGOChooseReward      )(Player*, GameObject*, Quest const*, uint32 );
     bool (*pReceiveEmote        )(Player*, Creature*, uint32 );
     bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
 
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);
+
+    void RegisterSelf();
 };
 
-extern int nrscripts;
+extern int num_db_scripts;
+extern int num_sc_scripts;
 extern Script *m_scripts[MAX_SCRIPTS];
 
 //Generic scripting text function

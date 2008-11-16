@@ -386,9 +386,9 @@ void AddSC_boss_victor_nefarius()
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name="boss_victor_nefarius";
-    newscript->GetAI = GetAI_boss_victor_nefarius;
+    newscript->Name = "boss_victor_nefarius";
+    newscript->GetAI = &GetAI_boss_victor_nefarius;
     newscript->pGossipHello = &GossipHello_boss_victor_nefarius;
     newscript->pGossipSelect = &GossipSelect_boss_victor_nefarius;
-    m_scripts[nrscripts++] = newscript;
+    m_scripts[num_sc_scripts++] = newscript;
 }

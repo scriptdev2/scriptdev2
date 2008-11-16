@@ -191,7 +191,7 @@ void AddSC_boss_herod()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name="boss_herod";
-    newscript->GetAI = GetAI_boss_herod;
-    m_scripts[nrscripts++] = newscript;
+    newscript->Name = "boss_herod";
+    newscript->GetAI = &GetAI_boss_herod;
+    m_scripts[num_sc_scripts++] = newscript;
 }

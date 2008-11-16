@@ -222,6 +222,6 @@ void AddSC_instance_serpentshrine_cavern()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_serpent_shrine";
-    newscript->GetInstanceData = GetInstanceData_instance_serpentshrine_cavern;
-    m_scripts[nrscripts++] = newscript;
+    newscript->GetInstanceData = &GetInstanceData_instance_serpentshrine_cavern;
+    m_scripts[num_sc_scripts++] = newscript;
 }
