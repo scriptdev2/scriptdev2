@@ -24,7 +24,13 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1000102,'The entrance is hidden here in Moonbrook. Keep your eyes peeled for thieves. They want me dead.',0,0,7,'defias traitor SAY_PROGRESS'),
 (-1000103,'You can go tell Stoutmantle this is where the Defias Gang is holed up, $N.',0,0,7,'defias traitor SAY_END'),
 (-1000104,'%s coming in fast! Prepare to fight!',0,0,7,'defias traitor SAY_AGGRO_1'),
-(-1000105,'Help!',0,0,7,'defias traitor SAY_AGGRO_2');
+(-1000105,'Help!',0,0,7,'defias traitor SAY_AGGRO_2'),
+
+(-1000106,'Everyone ready?',0,0,1,'torek SAY_READY'),
+(-1000107,'Ok, Lets move out!',0,0,1,'torek SAY_MOVE'),
+(-1000108,'Prepare yourselves. Silverwing is just around the bend.',0,0,1,'torek SAY_PREPARE'),
+(-1000109,'Silverwing is ours!',0,0,1,'torek SAY_WIN'),
+(-1000110,'Go report that the outpost is taken. We will remain here.',0,0,1,'torek SAY_END');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES

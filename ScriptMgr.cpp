@@ -105,6 +105,8 @@ extern void AddSC_alterac_mountains();
 
 //Arathi Highlands
 //Ashenvale Forest
+extern void AddSC_ashenvale();
+
 //Aunchindoun
 //--Auchenai Crypts
 extern void AddSC_boss_exarch_maladaar();
@@ -1287,6 +1289,8 @@ void ScriptsInit()
 
     //Arathi Highlands
     //Ashenvale Forest
+    AddSC_ashenvale();
+
     //Aunchindoun
     //--Auchenai Crypts
     AddSC_boss_exarch_maladaar();

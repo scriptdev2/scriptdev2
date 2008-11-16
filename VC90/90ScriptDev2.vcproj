@@ -510,6 +510,10 @@
 				<Filter
 					Name="Ashenvale Forest"
 					>
+					<File
+						RelativePath="..\scripts\zone\ashenvale_forest\ashenvale.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Azshara"
