@@ -201,29 +201,15 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
         }
     }
 
-    // Dirty Hack as we can't use Unit::GetUnit in instance scripts due to lack of a WorldObject.
-    Player* DirtyHackToGetPlayerFromSpectralList(uint64 guid)
-    {
-        Player* first = ((InstanceMap*)instance)->GetPlayers().front();
-        if(!first)
-            return NULL;
-
-        Player* plr = ((Player*)Unit::GetUnit(*first, guid));
-        if(plr)
-            return plr;
-
-        return NULL;
-    }
-
     void EjectPlayer(Player* plr)
     {
         debug_log("SD2: INST: Ejecting Player %s from Spectral Realm", plr->GetName());
         // Remove player from Sathrovarr's threat list
         Creature* Sath = ((Creature*)Unit::GetUnit(*plr, Sathrovarr));
-        if(Sath && Sath->isAlive())
+        if (Sath && Sath->isAlive())
         {
             HostilReference* ref = Sath->getThreatManager().getOnlineContainer().getReferenceByTarget(plr);
-            if(ref)
+            if (ref)
             {
                 ref->removeReference();
                 debug_log("SD2: INST: Deleting %s from Sathrovarr's threatlist", plr->GetName());
@@ -232,7 +218,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
         // Put player back in Kalecgos(Dragon)'s threat list
         Creature* Kalecgos = ((Creature*)Unit::GetUnit(*plr, Kalecgos_Dragon));
-        if(Kalecgos && Kalecgos->isAlive())
+        if (Kalecgos && Kalecgos->isAlive())
         {
             debug_log("SD2: INST: Putting %s in Kalecgos' threatlist", plr->GetName());
             Kalecgos->AddThreat(plr, 1.0f);
@@ -244,13 +230,20 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
     void EjectPlayers()
     {
-        for(uint8 i = 0; i < SpectralRealmList.size(); ++i)
+        if (SpectralRealmList.empty())
+            return;
+
+        Map::PlayerList const& players = instance->GetPlayers();
+        for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
         {
-            Player* plr = DirtyHackToGetPlayerFromSpectralList(SpectralRealmList[i]);
-            if(plr && !plr->HasAura(SPELL_SPECTRAL_REALM, 0))
+            Player* plr = itr->getSource();
+            if (!plr)
+                continue;
+
+            if (std::find(SpectralRealmList.begin(),SpectralRealmList.end(),plr->GetGUID())!=SpectralRealmList.end() &&
+                !plr->HasAura(SPELL_SPECTRAL_REALM, 0))
             {
                 EjectPlayer(plr);
-                SpectralRealmList.erase(SpectralRealmList.begin() + i);
             }
         }
 

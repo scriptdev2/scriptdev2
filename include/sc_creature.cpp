@@ -457,13 +457,11 @@ void ScriptedAI::DoZoneInCombat(Unit* pUnit)
         return;
     }
 
-    InstanceMap::PlayerList const &PlayerList = ((InstanceMap*)map)->GetPlayers();
-    InstanceMap::PlayerList::const_iterator i;
-    for (i = PlayerList.begin(); i != PlayerList.end(); ++i)
-    {
-        if(!(*i)->isGameMaster())
-            pUnit->AddThreat(*i, 0.0f);
-    }
+    Map::PlayerList const &PlayerList = map->GetPlayers();
+    for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+        if (Player* i_pl = i->getSource())
+            if (!i_pl->isGameMaster())
+                pUnit->AddThreat(i_pl, 0.0f);
 }
 
 void ScriptedAI::DoResetThreat()
