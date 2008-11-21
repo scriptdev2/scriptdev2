@@ -137,6 +137,22 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
             pInstance->SetData(DATA_MOROES_EVENT, DONE);
 
         DeSpawnAdds();
+
+        //remove aura from spell Garrote when Moroes dies
+        Map *map = m_creature->GetMap();
+        if (map->IsDungeon())
+        {
+            Map::PlayerList const &PlayerList = map->GetPlayers();
+
+            if (PlayerList.isEmpty())
+                return;
+
+            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+            {
+                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE,0))
+                    i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
+            }
+        }
     }
 
     uint8 CheckAdd(uint64 guid)

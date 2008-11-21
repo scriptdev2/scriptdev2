@@ -38,7 +38,7 @@ EndScriptData */
 8  - Netherspite (optional)
 9  - Chess Event
 10 - Prince Malchezzar
-11 - Netherbane
+11 - Nightbane
 */
 struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 {
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_NETHERSPITE_EVENT:      return Encounters[8];
             case DATA_CHESS_EVENT:            return Encounters[9];
             case DATA_MALCHEZZAR_EVENT:       return Encounters[10];
-            case DATA_NETHERBANE_EVENT:       return Encounters[11];
+            case DATA_NIGHTBANE_EVENT:        return Encounters[11];
             case DATA_OPERA_PERFORMANCE:      return OperaEvent;
             case DATA_OPERA_OZ_DEATHCOUNT:    return OzDeathCount;
         }
@@ -167,7 +167,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_NETHERSPITE_EVENT:       Encounters[8]  = data; break;
             case DATA_CHESS_EVENT:             Encounters[9]  = data; break;
             case DATA_MALCHEZZAR_EVENT:        Encounters[10] = data; break;
-            case DATA_NETHERBANE_EVENT:        Encounters[11] = data; break;
+            case DATA_NIGHTBANE_EVENT:         Encounters[11] = data; break;
 
             case DATA_OPERA_OZ_DEATHCOUNT:     ++OzDeathCount;        break;
         }
