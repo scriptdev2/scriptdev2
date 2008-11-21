@@ -30,7 +30,14 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1000107,'Ok, Lets move out!',0,0,1,'torek SAY_MOVE'),
 (-1000108,'Prepare yourselves. Silverwing is just around the bend.',0,0,1,'torek SAY_PREPARE'),
 (-1000109,'Silverwing is ours!',0,0,1,'torek SAY_WIN'),
-(-1000110,'Go report that the outpost is taken. We will remain here.',0,0,1,'torek SAY_END');
+(-1000110,'Go report that the outpost is taken. We will remain here.',0,0,1,'torek SAY_END'),
+
+(-1000111, 'Our house is this way, through the thicket.', 0, 0, 7, 'magwin SAY_START'),
+(-1000112, 'Help me!', 0, 0, 7, 'magwin SAY_AGGRO'),
+(-1000113, 'My poor family. Everything has been destroyed.', 0, 0, 7, 'magwin SAY_PROGRESS'),
+(-1000114, 'Father! Father! You\'re alive!', 0, 0, 7, 'magwin SAY_END1'),
+(-1000115, 'You can thank $N for getting me back here safely, father.', 0, 0, 7, 'magwin SAY_END2'),
+(-1000116, 'hugs her father.', 0, 2, 7, 'magwin EMOTE_HUG');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
