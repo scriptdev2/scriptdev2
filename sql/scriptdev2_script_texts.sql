@@ -1,22 +1,33 @@
--- 
+--
 -- scriptdev2_script_texts.sql Contains data for table `script_texts` mainly used in C++ parts.
 -- valid entries for table are between -1000000 and -1999999
--- 
+--
 
 TRUNCATE `script_texts`;
 
--- 
+--
 -- -1 000 000 First 100 entries are reserved for special use, do not add regular text here.
--- 
+--
 
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
 (-1000000,'<ScriptDev2 Text Entry Missing!>',0,0,0,'DEFAULT_TEXT');
 
--- 
--- Normal text entries. Say/Yell/Whisper/Emote for any regular world object.
--- 
+--
+-- Normal text entries below. Say/Yell/Whisper/Emote for any regular world object.
+-- Text entries for text used by creatures in instances are using map id as part of entry.
+-- Example: for map 430, the database text entry for all creatures normally on this map start with -1430
+-- Values decrement as they are made.
+-- For creatures outside instance, use -1 000 100 and below. Decrement value as they are made.
+--
+-- Comment should contain a unique name that can be easily identified later by using sql queries like for example
+-- SELECT * FROM script_texts WHERE comment LIKE '%defias%';
+-- Place the define used in script itself at the end of the comment.
+--
+-- Do not change entry without a very good reason. Localization projects depends on using entries that does not change!
+-- Example: UPDATE script_texts SET content_loc1 = 'the translated text' WHERE entry = -1000100;
+--
 
--- -1 000 100 GENERAL MAPS (not typical instance maps)
+-- -1 000 100 GENERAL MAPS (not instance maps)
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
 (-1000100,'Come, little ones. Face me!',0,1,0,'azuregos SAY_TELEPORT'),
 
@@ -1096,8 +1107,8 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1585028,'Do not... get too comfortable.',12420,1,0,'kaelthas MT SAY_RECAST_GRAVITY'),
 (-1585029,'My demise accomplishes nothing! The Master will have you! You will drown in your own blood! This world shall burn! Aaaghh!',12421,1,0,'kaelthas MT SAY_DEATH');
 
--- 
+--
 -- Below just for beautiful view in table, run at own desire
--- 
+--
 
 -- ALTER TABLE `script_texts` ORDER BY `entry` desc;
