@@ -889,7 +889,8 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1560046,'Thank you, strangers. You have given me hope.',10456,1,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT2'),
 (-1560047,'I will not waste this chance. I will seek out my destiny.',10457,1,0,'thrall hillsbrad SAY_TH_LEAVE_COMBAT3'),
 
-(-1560048,'I\'m free! Thank you all!',0,0,0,'taretha SAY_TA_FREE');
+(-1560048,'I\'m free! Thank you all!',0,0,0,'taretha SAY_TA_FREE'),
+(-1560049,'Thrall, you escaped!',0,0,0,'taretha SAY_TA_ESCAPED');
 
 -- -1 564 000 BLACK TEMPLE
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES

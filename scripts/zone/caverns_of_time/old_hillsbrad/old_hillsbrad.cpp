@@ -80,6 +80,7 @@ bool GossipHello_npc_erozion(Player *player, Creature *_Creature)
         player->PrepareQuestMenu(_Creature->GetGUID());
 
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+
     if (pInstance && pInstance->GetData(TYPE_BARREL_DIVERSION) != DONE && !player->HasItemCount(ITEM_ENTRY_BOMBS,1))
         player->ADD_GOSSIP_ITEM(0, "I need a pack of Incendiary Bombs.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
@@ -96,10 +97,10 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         ItemPosCountVec dest;
-        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_ENTRY_BOMBS, 1, false);
+        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_ENTRY_BOMBS, 1);
         if (msg == EQUIP_ERR_OK)
         {
-            player->StoreNewItem(dest, ITEM_ENTRY_BOMBS, 1, true);
+            player->StoreNewItem(dest, ITEM_ENTRY_BOMBS, true);
         }
         player->SEND_GOSSIP_MENU(9515, _Creature->GetGUID());
     }
@@ -114,6 +115,7 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 ## npc_thrall_old_hillsbrad
 ######*/
 
+//Thrall texts
 #define SAY_TH_START_EVENT_PART1    -1560023
 #define SAY_TH_ARMORY               -1560024
 #define SAY_TH_SKARLOC_MEET         -1560025
@@ -145,8 +147,14 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define SAY_TH_LEAVE_COMBAT2        -1560046
 #define SAY_TH_LEAVE_COMBAT3        -1560047
 
+//Taretha texts
+#define SAY_TA_FREE                 -1560048
+#define SAY_TA_ESCAPED              -1560049
+
+//Misc for Thrall
 #define SPELL_STRIKE                14516
 #define SPELL_SHIELD_BLOCK          12169
+#define SPELL_SUMMON_EROZION_IMAGE  33954                   //if thrall dies during escort?
 
 #define SPEED_WALK                  (0.5f)
 #define SPEED_RUN                   (1.0f)
@@ -159,6 +167,7 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define THRALL_MODEL_UNEQUIPPED     17292
 #define THRALL_MODEL_EQUIPPED       18165
 
+//misc creature entries
 #define ENTRY_ARMORER               18764
 #define ENTRY_SCARLOC               17862
 
@@ -183,7 +192,9 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define SKARLOC_MOUNT               18798
 #define SKARLOC_MOUNT_MODEL         18223
 #define EROZION_ENTRY               18723
+#define ENTRY_EPOCH                 18096
 
+//gossip items
 #define GOSSIP_ID_START             9568
 #define GOSSIP_ID_SKARLOC1          9614                    //I'm glad Taretha is alive. We now must find a way to free her...
 #define GOSSIP_ITEM_SKARLOC1        "Taretha cannot see you, Thrall."
@@ -212,6 +223,9 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
+        if (!pInstance)
+            return;
+
         switch(i)
         {
             case 8:
@@ -219,8 +233,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 m_creature->SummonCreature(ENTRY_ARMORER,2181.87,112.46,89.45,0.26,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
                 break;
             case 9:
-                m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 DoScriptText(SAY_TH_ARMORY, m_creature);
+                m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, THRALL_WEAPON_MODEL);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
                 m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
@@ -282,8 +296,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 //make horsie run off
                 IsOnHold = true;
                 m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                if (pInstance)
-                    pInstance->SetData(TYPE_THRALL_PART2, DONE);
+                pInstance->SetData(TYPE_THRALL_PART2, DONE);
                 break;
             case 64:
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
@@ -311,6 +324,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 91:
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                break;
             case 93:
                 m_creature->SummonCreature(MOB_ENTRY_INN_PROTECTOR,2652.71,660.31,61.93,1.67,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
                 m_creature->SummonCreature(MOB_ENTRY_INN_LOOKOUT,2648.96,662.59,61.93,0.79,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
@@ -319,49 +333,49 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 94:
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                //trigger taretha Say("Thrall, you escaped!")
+                if (uint64 TarethaGUID = pInstance->GetData64(DATA_TARETHA))
+                {
+                    if (Unit* Taretha = Unit::GetUnit((*m_creature), TarethaGUID))
+                        DoScriptText(SAY_TA_ESCAPED, Taretha, m_creature);
+                }
                 break;
             case 95:
                 DoScriptText(SAY_TH_MEET_TARETHA, m_creature);
-                if (pInstance)
-                    pInstance->SetData(TYPE_THRALL_PART3,DONE);
+                pInstance->SetData(TYPE_THRALL_PART3,DONE);
                 IsOnHold = true;
                 break;
             case 96:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                 DoScriptText(SAY_TH_EPOCH_WONDER, m_creature);
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                 break;
             case 97:
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
                 DoScriptText(SAY_TH_EPOCH_KILL_TARETHA, m_creature);
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
                 m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 break;
             case 98:
                 //trigger epoch Yell("Thrall! Come outside and face your fate! ....")
+                //from here, thrall should not never be allowed to move to point 106 which he currently does.
                 break;
             case 106:
-            {
-                //trigger taretha to run down outside
-                /*if (pInstance)
-                    uint64 TarethaGUID = pInstance->GetData64(DATA_TARETHA);
-                if (TarethaGUID)
-                {
-                    Creature* Taretha = ((Creature*)Unit::GetUnit((*m_creature), TarethaGUID));
-                    if (Taretha)
-                        ((npc_escortAI*)(Taretha->AI()))->Start(false, false, true, 0);
-                }*/
+                if (!PlayerGUID)
+                    break;
 
-                if (PlayerGUID)
+                //trigger taretha to run down outside
+                if (uint64 TarethaGUID = pInstance->GetData64(DATA_TARETHA))
                 {
-                    Unit* player = ((Creature*)Unit::GetUnit((*m_creature), PlayerGUID));
-                    if (player && player->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)player)->KilledMonster(20156,m_creature->GetGUID());
+                    if (Creature* Taretha = ((Creature*)Unit::GetUnit(*m_creature, TarethaGUID)))
+                        ((npc_escortAI*)(Taretha->AI()))->Start(false, false, true, PlayerGUID);
                 }
+
+                //kill credit creature for quest
+                Unit* player = Unit::GetUnit(*m_creature, PlayerGUID);
+                if (player && player->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)player)->KilledMonster(20156,m_creature->GetGUID());
 
                 //alot will happen here, thrall and taretha talk, erozion appear at spot to explain
                 m_creature->SummonCreature(EROZION_ENTRY,2646.47,680.416,55.38,4.16,TEMPSUMMON_TIMED_DESPAWN,120000);
-            }
-            break;
+                break;
         }
     }
 
@@ -434,16 +448,19 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustSummoned(Creature* summoned)
     {
-        //All summoned that initiate attack once spawned. Mobs in barn does not start attack.
-        if (summoned->GetEntry() == ENTRY_ARMORER ||
-            MOB_ENTRY_RIFLE || MOB_ENTRY_WARDEN || MOB_ENTRY_VETERAN || MOB_ENTRY_WATCHMAN || MOB_ENTRY_SENTRY ||
-            MOB_ENTRY_CHURCH_GUARDSMAN || MOB_ENTRY_CHURCH_PROTECTOR || MOB_ENTRY_CHURCH_LOOKOUT || 
-            MOB_ENTRY_INN_GUARDSMAN || MOB_ENTRY_INN_PROTECTOR || MOB_ENTRY_INN_LOOKOUT)
-            summoned->AI()->AttackStart(m_creature);
-
-        //TODO: make Scarloc start into event instead, and not start attack directly
-        if (summoned->GetEntry() == ENTRY_SCARLOC)
-            summoned->AI()->AttackStart(m_creature);
+        switch(summoned->GetEntry())
+        {
+            //TODO: make Scarloc start into event instead, and not start attack directly
+            case MOB_ENTRY_BARN_GUARDSMAN:
+            case MOB_ENTRY_BARN_PROTECTOR:
+            case MOB_ENTRY_BARN_LOOKOUT:
+            case SKARLOC_MOUNT:
+            case EROZION_ENTRY:
+                break;
+            default:
+                summoned->AI()->AttackStart(m_creature);
+                break;
+        }
     }
 
     void KilledUnit(Unit *victim)
@@ -458,7 +475,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustDied(Unit *slayer)
     {
-        if (slayer == m_creature)                           // Don't do a yell if he kills self (if player goes too far or at the end).
+        // Don't do a yell if he kills self (if player goes too far or at the end).
+        if (slayer == m_creature)
             return;
 
         switch(rand()%2)
@@ -724,8 +742,6 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player *player, Creature *_Creature, 
 ## npc_taretha
 ######*/
 
-#define SAY_TA_FREE             -1560048
-
 #define GOSSIP_ID_EPOCH1        9610                        //Thank you for helping Thrall escape, friends. Now I only hope
 #define GOSSIP_ITEM_EPOCH1      "Strange wizard?"
 #define GOSSIP_ID_EPOCH2        9613                        //Yes, friends. This man was no wizard of
@@ -756,6 +772,10 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
     void Reset() {}
     void Aggro(Unit* who) {}
 
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
 };
 CreatureAI* GetAI_npc_taretha(Creature *_Creature)
 {
@@ -801,10 +821,9 @@ bool GossipSelect_npc_taretha(Player *player, Creature *_Creature, uint32 sender
         if (pInstance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
         {
             pInstance->SetData(TYPE_THRALL_PART4,IN_PROGRESS);
-            _Creature->SummonCreature(18096,2639.13,698.55,65.43,4.59,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
+            _Creature->SummonCreature(ENTRY_EPOCH,2639.13,698.55,65.43,4.59,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
 
-            uint64 ThrallGUID = pInstance->GetData64(DATA_THRALL);
-            if (ThrallGUID)
+            if (uint64 ThrallGUID = pInstance->GetData64(DATA_THRALL))
             {
                 Creature* Thrall = ((Creature*)Unit::GetUnit((*_Creature), ThrallGUID));
                 if (Thrall)
@@ -846,5 +865,6 @@ void AddSC_old_hillsbrad()
     newscript->Name = "npc_taretha";
     newscript->pGossipHello =   &GossipHello_npc_taretha;
     newscript->pGossipSelect =  &GossipSelect_npc_taretha;
+    newscript->GetAI = &GetAI_npc_taretha;
     newscript->RegisterSelf();
 }
