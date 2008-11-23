@@ -97,7 +97,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     }
 
     ScriptedInstance* pInstance;
-    uint32 CrashingWaveTimer;
+
     uint32 NeedleSpineTimer;
     uint32 EnrageTimer;
     uint32 SpecialYellTimer;
@@ -115,7 +115,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     {
         IsShielded = false;
 
-        CrashingWaveTimer = 28000;
         NeedleSpineTimer = 10000;
         EnrageTimer = 480000;
         SpecialYellTimer = 45000 + (rand()%76)*1000;
@@ -267,13 +266,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             return;                                         // Don't cast or do anything while Shielded
         }
 
-        // Crashing Wave
-        if (CrashingWaveTimer < diff)
-        {
-            DoCast(m_creature->getVictim(), SPELL_CRASHINGWAVE);
-            CrashingWaveTimer = 28500;
-        }else CrashingWaveTimer -= diff;
-
         if (!m_creature->HasAura(SPELL_BERSERK, 0))
         {
             if (EnrageTimer < diff)
@@ -292,8 +284,8 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
                 if (!target)
                     target = m_creature->getVictim();
 
-                DoCast(target, SPELL_NEEDLE_AOE, true);
                 DoCast(target, SPELL_NEEDLE_SPINE);
+                target->CastSpell(target, SPELL_NEEDLE_AOE, false);
             }
 
             NeedleSpineTimer = 60000;
