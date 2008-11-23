@@ -200,7 +200,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         }
         else
         {
-            for(uint8 i = 0; i < 5; ++i)
+            for(uint8 i = 0; i < 4; ++i)
             {
                 switch(CheckAdd(AddGUID[i]))
                 {
