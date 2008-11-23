@@ -78,7 +78,9 @@ void hyjalAI::Reset()
             Faction = 0;
             DoCast(m_creature, SPELL_BRILLIANCE_AURA, true);
             break;
-        case 17852: Faction = 1; break;
+        case 17852:
+            Faction = 1;
+            break;
     }
 
     // Bools
@@ -87,6 +89,7 @@ void hyjalAI::Reset()
     SecondBossDead = false;
     Summon = false;
     bRetreat = false;
+    Debug = false;
 
     // Flags
     m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -163,11 +166,11 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
 
         pCreature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
         pCreature->GetMotionMaster()->MovePoint(0, AttackLoc[0],AttackLoc[1],AttackLoc[2]);
-        pCreature->AddThreat(m_creature, 1.0f);
+        pCreature->AddThreat(m_creature, 0.0f);
         DoZoneInCombat(pCreature);
 
         // Check if creature is a boss.
-        if (pCreature->GetCreatureInfo()->rank == 3)
+        if (pCreature->isWorldBoss())
         {
             if (!FirstBossDead) BossGUID[0] = pCreature->GetGUID();
             else                BossGUID[1] = pCreature->GetGUID();
@@ -207,6 +210,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         //UpdateWorldState(WORLDSTATE_ENEMYCOUNT, EnemyCount); // Let Instance Script handle this
 
         pInstance->SetData(DATA_TRASH, EnemyCount);
+
         if (!Debug)
             NextWaveTimer = wave[Count].WaveTimer;
         else
@@ -303,10 +307,8 @@ void hyjalAI::UpdateWorldState(uint32 field, uint32 value)
         return;
 
     WorldPacket data(SMSG_UPDATE_WORLD_STATE, 8);
-
     data << field;
     data << value;
-
     ((InstanceMap*)map)->SendToPlayers(&data);
 
     // TODO: Uncomment and remove everything above this line only when the core patch for this is accepted
@@ -342,7 +344,7 @@ void hyjalAI::Retreat()
     cell_lock->Visit(cell_lock, go_visit, *(m_creature->GetMap()));
 
     CreatureList.clear();
-    if(!creatures.empty())
+    if (!creatures.empty())
     {
         for(std::list<Creature*>::iterator itr = creatures.begin(); itr != creatures.end(); ++itr)
         {
@@ -448,7 +450,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
 
                 switch(Spell[i].TargetType)
                 {
-                    case TARGETTYPE_SELF: target = m_creature; break;
+                    case TARGETTYPE_SELF:   target = m_creature; break;
                     case TARGETTYPE_RANDOM: target = SelectUnit(SELECT_TARGET_RANDOM, 0); break;
                     case TARGETTYPE_VICTIM: target = m_creature->getVictim(); break;
                 }
