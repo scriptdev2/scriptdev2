@@ -30,13 +30,12 @@ EndContentData */
 #include "precompiled.h"
 #include "hyjalAI.h"
 
-#define GOSSIP_ITEM_BEGIN_ALLY      "We are ready to defend the Alliance base."
-#define GOSSIP_ITEM_ANETHERON       "The defenses are holding up; we can continue."
+#define GOSSIP_ITEM_BEGIN_ALLY      "My companions and I are with you, Lady Proudmoore."
+#define GOSSIP_ITEM_ANETHERON       "We are ready for whatever Archimonde might send our way, Lady Proudmoore."
+#define GOSSIP_ITEM_BEGIN_HORDE     "I am with you, Thrall."
+#define GOSSIP_ITEM_AZGALOR         "We have nothing to fear."
+
 #define GOSSIP_ITEM_RETREAT         "We can't keep this up. Let's retreat!"
-
-#define GOSSIP_ITEM_BEGIN_HORDE     "We're here to help! The Alliance are overrun."
-#define GOSSIP_ITEM_AZGALOR         "We're okay so far. Let's do this!"
-
 #define GOSSIP_ITEM_TYRANDE_VENDOR  "Aid us in defending Nordrassil"
 
 CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)

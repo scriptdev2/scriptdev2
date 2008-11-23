@@ -110,8 +110,7 @@ enum TargetType                                             // Used in the spell
 struct Yells
 {
     uint32 id;                                              // Used to determine the type of yell (attack, rally, etc)
-    char* text;                                             // The text to be yelled
-    uint32 sound;                                           // Sound that corresponds to the text
+    int32 textid;                                           // The text id to be yelled
 };
 
 enum YellId
@@ -127,29 +126,28 @@ enum YellId
 
 static Yells JainaQuotes[]=
 {
-    {ATTACKED, "I'm in jeopardy, help me if you can!", 11007},
-    {ATTACKED, "They've broken through!", 11049},
-    {INCOMING, "Stay alert! Another wave approaches.", 11008},
-    {BEGIN, "Hold them back as long as possible", 11050},
-    {RALLY, "Don't give up! We must prevail!", 11006},
-    {RALLY, "We must hold strong!", 11051},
-    {FAILURE, "We are lost. Fall back!", 11009},
-    {SUCCESS, "We have won valuable time. Now we must pull back!", 11011},
-    {DEATH, "I did... my best.", 11010},
+    {ATTACKED, -1534000},
+    {ATTACKED, -1534001},
+    {INCOMING, -1534002},
+    {BEGIN, -1534003},
+    {RALLY, -1534004},
+    {RALLY, -1534005},
+    {FAILURE, -1534006},
+    {SUCCESS, -1534007},
+    {DEATH, -1534008},
 };
 
 static Yells ThrallQuotes[]=
 {
-    {ATTACKED, "I will lie down for no one!", 11031},
-    {ATTACKED, "Bring the fight to me and pay with your lives!", 11061},
-    {INCOMING, "Make ready for another wave! LOK-TAR OGAR!", 11032},
-    {BEGIN, "Do not give an inch of ground!", 11060},
-    {RALLY, "Hold them back! Do not falter!", 11030},
-    {RALLY, "Victory or death!", 11059},
-    {RALLY, "Do not give an inch of ground!", 11060},
-    {FAILURE, "It is over. Withdraw! We have failed.", 11033},
-    {SUCCESS, "We have played our part and done well. It is up to the others now.", 11035},
-    {DEATH, "Uraaa...", 11034},
+    {ATTACKED, -1534009},
+    {ATTACKED, -1534010},
+    {INCOMING, -1534011},
+    {BEGIN, -1534012},
+    {RALLY, -1534013},
+    {RALLY, -1534014},
+    {FAILURE, -1534015},
+    {SUCCESS, -1534016},
+    {DEATH, -1534017},
 };
 
 struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
@@ -188,7 +186,9 @@ struct MANGOS_DLL_DECL hyjalAI : public ScriptedAI
     void Talk(uint32 id);                                   // Searches for the appropriate yell and sound and uses it to inform the raid of various things
 
     void UpdateWorldState(uint32 field, uint32 value);      // NYI: Requires core support. Updates the world state counter at the top of the UI.
+
     public:
+
         ScriptedInstance* pInstance;
 
         uint64 PlayerGUID;

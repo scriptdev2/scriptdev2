@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: HyjalAI
-SD%Complete: 99
+SD%Complete: 90
 SDComment: World Packet workaround for World States
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
@@ -261,6 +261,7 @@ uint32 hyjalAI::GetInstanceData(uint32 Event)
 void hyjalAI::Talk(uint32 id)
 {
     std::list<uint8> index;
+
     for(uint8 i = 0; i < 10; i++)
     {
         if (Faction == 0)                                   // Alliance
@@ -280,23 +281,15 @@ void hyjalAI::Talk(uint32 id)
 
     uint8 ind = *(index.begin()) + rand()%index.size();
 
-    char* Yell = NULL;
-    uint32 Sound = 0;
-    if (Faction == 0)                                       // Alliance
-    {
-        Yell = JainaQuotes[ind].text;
-        Sound = JainaQuotes[ind].sound;
-    }
-    else if (Faction == 1)                                  // Horde
-    {
-        Yell = ThrallQuotes[ind].text;
-        Sound = ThrallQuotes[ind].sound;
-    }
+    int32 YellId = 0;
 
-    if (Yell)
-        DoYell(Yell, LANG_UNIVERSAL, NULL);
-    if (Sound)
-        DoPlaySoundToSet(m_creature, Sound);
+    if (Faction == 0)                                       // Alliance
+        YellId = JainaQuotes[ind].textid;
+    else if (Faction == 1)                                  // Horde
+        YellId = ThrallQuotes[ind].textid;
+
+    if (YellId)
+        DoScriptText(YellId, m_creature);
 }
 
 // Slight workaround for now
