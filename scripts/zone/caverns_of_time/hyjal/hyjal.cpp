@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Hyjal
-SD%Complete: 100
-SDComment:
+SD%Complete: 80
+SDComment: gossip text id's unknown
 SDCategory: Caverns of Time, Mount Hyjal
 EndScriptData */
 
@@ -36,7 +36,9 @@ EndContentData */
 #define GOSSIP_ITEM_AZGALOR         "We have nothing to fear."
 
 #define GOSSIP_ITEM_RETREAT         "We can't keep this up. Let's retreat!"
-#define GOSSIP_ITEM_TYRANDE_VENDOR  "Aid us in defending Nordrassil"
+
+#define GOSSIP_ITEM_TYRANDE         "Aid us in defending Nordrassil"
+#define ITEM_TEAR_OF_GODDESS        24494
 
 CreatureAI* GetAI_npc_jaina_proudmoore(Creature *_Creature)
 {
@@ -183,10 +185,25 @@ bool GossipSelect_npc_thrall(Player *player, Creature *_Creature, uint32 sender,
     return true;
 }
 
+CreatureAI* GetAI_npc_tyrande_whisperwind(Creature *_Creature)
+{
+    hyjalAI* ai = new hyjalAI(_Creature);
+
+    ai->Reset();
+    ai->EnterEvadeMode();
+
+    return ai;
+}
+
 bool GossipHello_npc_tyrande_whisperwind(Player* player, Creature* _Creature)
 {
-    if (_Creature->isVendor())
-        player->ADD_GOSSIP_ITEM(1, GOSSIP_ITEM_TYRANDE_VENDOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+    hyjalAI* ai = ((hyjalAI*)_Creature->AI());
+
+    uint32 AzgalorEvent = ai->GetInstanceData(DATA_AZGALOREVENT);
+
+    // Only let them get item if Azgalor is dead.
+    if (AzgalorEvent == DONE && !player->HasItemCount(ITEM_TEAR_OF_GODDESS,1))
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TYRANDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
     player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
     return true;
@@ -194,8 +211,16 @@ bool GossipHello_npc_tyrande_whisperwind(Player* player, Creature* _Creature)
 
 bool GossipSelect_npc_tyrande_whisperwind(Player *player, Creature *_Creature, uint32 sender, uint32 action)
 {
-    if (action == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST( _Creature->GetGUID() );
+    if (action == GOSSIP_ACTION_INFO_DEF)
+    {
+        ItemPosCountVec dest;
+        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_TEAR_OF_GODDESS, 1);
+        if (msg == EQUIP_ERR_OK)
+        {
+            player->StoreNewItem(dest, ITEM_TEAR_OF_GODDESS, true);
+        }
+        player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
+    }
 
     return true;
 }
@@ -220,6 +245,7 @@ void AddSC_hyjal()
 
     newscript = new Script;
     newscript->Name = "npc_tyrande_whisperwind";
+    newscript->GetAI = &GetAI_npc_tyrande_whisperwind;
     newscript->pGossipHello = &GossipHello_npc_tyrande_whisperwind;
     newscript->pGossipSelect = &GossipSelect_npc_tyrande_whisperwind;
     newscript->RegisterSelf();
