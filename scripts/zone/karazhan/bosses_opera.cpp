@@ -91,13 +91,11 @@ void SummonCroneIfReady(ScriptedInstance* pInstance, Creature *_Creature)
     pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, 0);        // Increment DeathCount
     if (pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
-        Creature* Crone = _Creature->SummonCreature(CREATURE_CRONE,  -10891.96, -1755.95, _Creature->GetPositionZ(), 4.64, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+        Creature* Crone = _Creature->SummonCreature(CREATURE_CRONE, -10891.96, -1755.95, _Creature->GetPositionZ(), 4.64, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
         if (Crone)
         {
             if (_Creature->getVictim())
                 Crone->AI()->AttackStart(_Creature->getVictim());
-
-            Crone->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         }
     }
 };
@@ -572,6 +570,7 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
         }
 
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNKNOWN2);
     }
 
     void JustDied(Unit* killer)
