@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Boss_Void_Reaver
-SD%Complete: 100
-SDComment:
+SD%Complete: 90
+SDComment: Should reset if raid are out of room.
 SDCategory: Tempest Keep, The Eye
 EndScriptData */
 
@@ -33,9 +33,9 @@ EndScriptData */
 #define SAY_POUNDING2               -1550006
 
 #define SPELL_POUNDING              34162
-#define SPELL_ARCANE_ORB_TRIGGER    34172
+#define SPELL_ARCANE_ORB_MISSILE    34172
 #define SPELL_KNOCK_AWAY            25778
-#define SPELL_BERSERK               27680
+#define SPELL_BERSERK               26662
 
 #define CREATURE_ORB_TARGET         19577
 
@@ -56,17 +56,23 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
     void Reset()
     {
-        Pounding_Timer = 12000;
+        Pounding_Timer = 15000;
         ArcaneOrb_Timer = 3000;
         KnockAway_Timer = 30000;
         Berserk_Timer = 600000;
 
-        if (pInstance)
+        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+        m_creature->ApplySpellImmune(1, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+
+        if (pInstance && m_creature->isAlive())
             pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
     {
+        if (victim->GetEntry() == CREATURE_ORB_TARGET)
+            return;
+
         switch(rand()%3)
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
@@ -107,7 +113,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 case 1: DoScriptText(SAY_POUNDING2, m_creature); break;
             }
 
-            Pounding_Timer = 12000;
+            Pounding_Timer = 15000;                         //cast time(3000) + cooldown time(12000)
         }else Pounding_Timer -= diff;
 
         // Arcane Orb
@@ -120,8 +126,8 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
             {
                 target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
 
-                //15 yard radius minimum
-                if (target && target->GetDistance2d(m_creature) > 15)
+                //18 yard radius minimum
+                if (target && target->GetDistance2d(m_creature) > 18)
                     target_list.push_back(target);
 
                 target = NULL;
@@ -135,7 +141,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 Unit* Spawn = NULL;
                 Spawn = m_creature->SummonCreature(CREATURE_ORB_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
                 if (Spawn)
-                    m_creature->CastSpell(Spawn, SPELL_ARCANE_ORB_TRIGGER, true);
+                    DoCast(Spawn, SPELL_ARCANE_ORB_MISSILE);
             }
 
             ArcaneOrb_Timer = 3000;
