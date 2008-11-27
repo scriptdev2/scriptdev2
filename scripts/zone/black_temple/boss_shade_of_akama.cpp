@@ -275,20 +275,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         if (!who || IsBanished || who == m_creature)
             return;
 
-        if (m_creature->Attack(who, true))
-        {
-            m_creature->AddThreat(who, 0.0f);
-            m_creature->SetInCombatWith(who);
-            who->SetInCombatWith(m_creature);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-                Aggro(who);
-            }
-
-            DoStartMovement(who);
-        }
+        ScriptedAI::AttackStart(who);
     }
 
     void MoveInLineOfSight(Unit* who)
@@ -411,7 +398,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         {
             // Akama is set in the threatlist so when we reset, we make sure that he is not included in our check
             if (m_creature->getThreatManager().getThreatList().size() < 2)
-                EnterEvadeMode();
+                ScriptedAI::EnterEvadeMode();
 
             if (DefenderTimer < diff)
             {
@@ -427,7 +414,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
                         {
                             float x, y, z;
                             Akama->GetPosition(x,y,z);
-                                                            // They move towards AKama
+                            // They move towards AKama
                             Defender->GetMotionMaster()->MovePoint(0, x, y, z);
                         }else move = false;
                     }else move = false;
@@ -574,7 +561,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         EventBegun = false;
         HasYelledOnce = false;
 
-        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, 0);      // Database sometimes has very very strange values
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
     }
 
@@ -594,8 +580,8 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
         {
             // Prevent players from trying to restart event
             pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
-
             m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
             ((boss_shade_of_akamaAI*)Shade->AI())->SetAkamaGUID(m_creature->GetGUID());
             ((boss_shade_of_akamaAI*)Shade->AI())->SetSelectableChannelers();
             ((boss_shade_of_akamaAI*)Shade->AI())->InCombat = true;
@@ -727,6 +713,7 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
                         ++EndingTalkCount;
                         SoulRetrieveTimer = 2000;
                         SummonBrokenTimer = 1;
+                        break;
                     case 1:
                         DoScriptText(SAY_FREE, m_creature);
                         ++EndingTalkCount;
@@ -822,23 +809,23 @@ CreatureAI* GetAI_npc_akama_shade(Creature *_Creature)
     return new npc_akamaAI (_Creature);
 }
 
-bool GossipSelect_npc_akama(Player *player, Creature *_Creature, uint32 sender, uint32 action )
-{
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
-    {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_akamaAI*)_Creature->AI())->BeginEvent(player);
-    }
-
-    return true;
-}
-
 bool GossipHello_npc_akama(Player *player, Creature *_Creature)
 {
     if (player->isAlive())
     {
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         player->SEND_GOSSIP_MENU(907, _Creature->GetGUID());
+    }
+
+    return true;
+}
+
+bool GossipSelect_npc_akama(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+{
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
+    {
+        player->CLOSE_GOSSIP_MENU();
+        ((npc_akamaAI*)_Creature->AI())->BeginEvent(player);
     }
 
     return true;
