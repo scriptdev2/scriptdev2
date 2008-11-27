@@ -240,24 +240,15 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
 
         if (pInstance)
         {
-            //if already done, just open the door and not do anything else
+            //if already done, not do anything
             if (pInstance->GetData(DATA_ILLIDARICOUNCILEVENT) == DONE)
-            {
-                OpenIllidanGate();
                 return;
-            }
 
             if (Creature* VoiceTrigger = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_BLOOD_ELF_COUNCIL_VOICE))))
                 VoiceTrigger->AI()->EnterEvadeMode();
 
             pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, NOT_STARTED);
         }
-    }
-
-    void OpenIllidanGate()
-    {
-        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE)))
-            Door->SetGoState(0);
     }
 
     void Aggro(Unit *who) {}
@@ -317,7 +308,6 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
                             VoiceTrigger->DealDamage(VoiceTrigger, VoiceTrigger->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
                         pInstance->SetData(DATA_ILLIDARICOUNCILEVENT, DONE);
-                        OpenIllidanGate();
                     }
                     m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                     return;
