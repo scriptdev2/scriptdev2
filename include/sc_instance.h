@@ -30,19 +30,11 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         ~ScriptedInstance() {}
 
         //All-purpose data storage 64 bit
-        virtual uint64 GetData64(uint32) {return 0; }
-        virtual void SetData64(uint32, uint64) { }
+        virtual uint64 GetData64(uint32 Data) { return 0; }
+        virtual void SetData64(uint32 Data, uint64 Value) { }
 
         //All-purpose data storage 32 bit
-        virtual uint32 GetData(uint32) { return 0; }
-        virtual void SetData(uint32, uint32 data) {}
-
-        // Called every instance update
-        virtual void Update(uint32) {}
-
-        // Save and Load instance data to the database
-        const char* Save() { return NULL; }
-        void Load(const char* in) { }
+        virtual uint32 GetData(uint32 Type) { return 0; }
+        virtual void SetData(uint32 Type, uint32 Data) {}
 };
-
 #endif
