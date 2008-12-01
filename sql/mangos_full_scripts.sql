@@ -604,6 +604,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_amnennar_the_coldbringer' WHER
 UPDATE `instance_template` SET `script`='instance_ruins_of_ahnqiraj' WHERE `map`=509;
 
 /* SCARLET MONASTERY */
+UPDATE `instance_template` SET `script`='instance_scarlet_monastery' WHERE `map`=189;
 UPDATE `creature_template` SET `ScriptName`='boss_arcanist_doan' WHERE `entry`=6487;
 UPDATE `creature_template` SET `ScriptName`='boss_azshir_the_sleepless' WHERE `entry`=6490;
 UPDATE `creature_template` SET `ScriptName`='boss_bloodmage_thalnos' WHERE `entry`=4543;

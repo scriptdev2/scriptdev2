@@ -423,19 +423,22 @@
 						RelativePath="..\scripts\zone\scarlet_monastery\boss_high_inquisitor_fairbanks.cpp">
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\boss_high_inquisitor_whitemane.cpp">
-					</File>
-					<File
 						RelativePath="..\scripts\zone\scarlet_monastery\boss_houndmaster_loksey.cpp">
 					</File>
 					<File
 						RelativePath="..\scripts\zone\scarlet_monastery\boss_interrogator_vishas.cpp">
 					</File>
 					<File
-						RelativePath="..\scripts\zone\scarlet_monastery\boss_scarlet_commander_mograine.cpp">
+						RelativePath="..\scripts\zone\scarlet_monastery\boss_mograine_and_whitemane.cpp">
 					</File>
 					<File
 						RelativePath="..\scripts\zone\scarlet_monastery\boss_scorn.cpp">
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\def_scarlet_monastery.h">
+					</File>
+					<File
+						RelativePath="..\scripts\zone\scarlet_monastery\instance_scarlet_monastery.cpp">
 					</File>
 				</Filter>
 				<Filter
