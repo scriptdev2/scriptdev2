@@ -22,6 +22,15 @@ SDCategory: Scarlet Monastery
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_scarlet_monastery.h"
+
+#define SAY_MO_AGGRO                -1189005
+#define SAY_MO_KILL                 -1189006
+#define SAY_MO_RESSURECTED          -1189007
+
+#define SAY_WH_INTRO                -1189008
+#define SAY_WH_KILL                 -1189009
+#define SAY_WH_RESSURECT            -1189010
 
 #define SPELL_DIVINESHIELD2         1020
 #define SPELL_CRUSADERSTRIKE5       35395
@@ -32,14 +41,6 @@ EndScriptData */
 #define SPELL_RETRIBUTIONAURA3      10299
 #define SPELL_BLESSINGOFPROTECTION3 10278
 #define SPELL_FLASHHEAL6            10916
-
-#define SAY_AGGRO                   "Infidels! They must be purified!"
-#define SAY_RES                     "At your side, milady!"
-#define SAY_DEATH                   "Unworthy!"
-
-#define SOUND_AGGRO                 5835
-#define SOUND_RES                   5837
-#define SOUND_DEATH                 5836
 
 struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 {
@@ -72,9 +73,13 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_MO_AGGRO, m_creature);
         DoCast(m_creature,SPELL_RETRIBUTIONAURA3);
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        DoScriptText(SAY_MO_KILL, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -83,7 +88,7 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
             return;
 
         //If we are <50% hp cast Arcane Bubble and start casting SPECIAL Arcane Explosion
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 50 && !m_creature->IsNonMeleeSpellCasted(false))
         {
             //heal_Timer
             if (Heal_Timer < diff)
@@ -165,16 +170,6 @@ struct MANGOS_DLL_DECL boss_scarlet_commander_mograineAI : public ScriptedAI
 #define SPELL_RENEW                     6078
 #define SPELL_FLASHHEAL6                10916
 
-#define SAY_AGGRO                       "There is no escape for you. The Crusade shall destroy all who carry the Scourge's taint."
-#define SAY_SPAWN                       "What, Mograine has fallen? You shall pay for this treachery! "
-#define SAY_RES                         "Arise, my champion!"
-#define SAY_DEATH                       "The Light has spoken!"
-
-//#define SOUND_AGGRO
-#define SOUND_RES                       5840
-#define SOUND_SPAWN                     5838
-#define SOUND_DEATH                     5839
-
 struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
     boss_high_inquisitor_whitemaneAI(Creature *c) : ScriptedAI(c)
@@ -208,7 +203,12 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
+        DoScriptText(SAY_WH_INTRO, m_creature);
+    }
+
+    void KilledUnit(Unit *victim)
+    {
+        DoScriptText(SAY_WH_KILL, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -222,15 +222,15 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
         {
         m_creature->Relocate(1163.113370,1398.856812,32.527786,3.171014);
 
-        DoYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_SPAWN);
+        DoScriptText(SAY_WH_RESSURECT, m_creature);
+
         DoCast(m_creature->getVictim(),SPELL_DEEPSLEEP);
         DoCast(m-creature->GetGUID(51117),SPELL_SCARLETRESURRECTION)
         }
         */
 
         //If we are <75% hp cast healing spells at self and Mograine
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 75 )
         {
             if (Healing_Timer < diff)
             {
@@ -242,7 +242,7 @@ struct MANGOS_DLL_DECL boss_high_inquisitor_whitemaneAI : public ScriptedAI
             }else Healing_Timer -= diff;
         }
 
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 30)
         {
             if (Renew_Timer < diff)
             {
@@ -310,6 +310,7 @@ CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature *_Creature)
 void AddSC_boss_mograine_and_whitemane()
 {
     Script *newscript;
+
     newscript = new Script;
     newscript->Name = "boss_scarlet_commander_mograine";
     newscript->GetAI = &GetAI_boss_scarlet_commander_mograine;
