@@ -614,6 +614,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_houndmaster_loksey' WHERE `ent
 UPDATE `creature_template` SET `ScriptName`='boss_interrogator_vishas' WHERE `entry`=3983;
 UPDATE `creature_template` SET `ScriptName`='boss_scarlet_commander_mograine' WHERE `entry`=3976;
 UPDATE `creature_template` SET `ScriptName`='boss_scorn' WHERE `entry`=14693;
+UPDATE `creature_template` SET `ScriptName`='mob_scarlet_trainee' WHERE `entry`=6575;
 
 /* SCHOLOMANCE */
 UPDATE `instance_template` SET `script`='instance_scholomance' WHERE `map`=289;
