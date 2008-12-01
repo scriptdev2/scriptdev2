@@ -29,7 +29,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
-    instance_zulaman(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_zulaman(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint64 akilzonGUID;
     uint64 nalorakkGUID;

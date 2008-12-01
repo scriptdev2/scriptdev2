@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 {
-    instance_mount_hyjal(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_mount_hyjal(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint64 RageWinterchill;
     uint64 Anetheron;

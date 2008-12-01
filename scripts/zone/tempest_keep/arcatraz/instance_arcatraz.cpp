@@ -45,7 +45,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 {
-    instance_arcatraz(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_arcatraz(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounter[ENCOUNTERS];
 

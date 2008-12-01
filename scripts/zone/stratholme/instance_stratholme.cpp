@@ -26,7 +26,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
 {
-    instance_stratholme(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_stratholme(Map *map) : ScriptedInstance(map) {Initialize();};
 
     bool IsSilverHandDead[5];
 

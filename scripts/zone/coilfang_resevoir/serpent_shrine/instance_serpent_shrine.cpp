@@ -37,7 +37,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
 {
-    instance_serpentshrine_cavern(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_serpentshrine_cavern(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint64 Sharkkis;
     uint64 Tidalvess;

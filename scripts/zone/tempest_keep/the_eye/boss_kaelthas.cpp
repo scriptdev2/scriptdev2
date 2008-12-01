@@ -110,15 +110,17 @@ EndScriptData */
 //Nether Vapor spell
 #define SPELL_NETHER_VAPOR                  35859
 //Phoenix spell
-#define SPELL_BURN                          36721
+#define SPELL_BURN                          36720
+#define SPELL_EMBER_BLAST                   34341
+#define SPELL_REBIRTH                       41587
 
 //Creature IDs
-#define PHOENIX                           21362
-#define PHOENIX_EGG                       21364
+#define PHOENIX                             21362
+#define PHOENIX_EGG                         21364
 
 //Phoenix egg and phoenix model
-#define PHOENIX_MODEL           19682
-#define PHOENIX_EGG_MODEL       20245
+#define PHOENIX_MODEL                       19682
+#define PHOENIX_EGG_MODEL                   20245
 
 //weapon id + position
 float KaelthasWeapons[7][5] =
@@ -1367,93 +1369,101 @@ struct MANGOS_DLL_DECL mob_kael_flamestrikeAI : public ScriptedAI
 };
 
 //Phoenix AI
-struct MANGOS_DLL_DECL mob_phoenixAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 {
-    mob_phoenixAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_phoenix_tkAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 Burn_Timer;
-    uint32 Hatch_Timer;
-    uint32 EggVis_Timer;
-    bool IsEgg;
+    uint32 Cycle_Timer;
 
     void Reset()
     {
-        Burn_Timer = 1000;
-        Hatch_Timer = 15000;
-        EggVis_Timer = 0;
-        IsEgg = false;
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_MODEL);
+        Cycle_Timer = 2000;
+        m_creature->CastSpell(m_creature,SPELL_BURN,false);
     }
 
-    void Hatch()
+    void Aggro(Unit *who) { }
+
+    void JustSummoned(Creature* summoned)
     {
-        IsEgg = false;
-        m_creature->SetHealth(m_creature->GetMaxHealth());
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_MODEL);
-        Burn_Timer = 1000;
-        Hatch_Timer = 15000;
-        EggVis_Timer = 0;
-        AttackStart(m_creature->getVictim());
+        summoned->AddThreat(m_creature->getVictim(),0.0f);
     }
 
-    void DamageTaken(Unit* pKiller, uint32 &damage)
+    void JustDied(Unit* killer)
     {
-        if (damage < m_creature->GetHealth())
-            return;
-
-        //Bird cannot die, only egg
-        if (!IsEgg)
-        {
-            //prevent death
-            damage = 0;
-            IsEgg = true;
-
-            m_creature->GetMotionMaster()->Clear();
-            m_creature->GetMotionMaster()->MoveIdle();
-            m_creature->SetHealth(m_creature->GetMaxHealth());
-            EggVis_Timer = 1000;
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
-        }
-    }
-
-    void Aggro(Unit *who)
-    {
+        //is this spell in use anylonger?
+        //m_creature->CastSpell(m_creature,SPELL_EMBER_BLAST,true);
+        m_creature->SummonCreature(PHOENIX_EGG,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,16000);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        //Check if we have a current target
-        if (!IsEgg)
-        {
-            //Return since we have no target
-            if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-                return;
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
 
-            if (Burn_Timer < diff)
-            {
-                DoCast(m_creature->getVictim(), SPELL_BURN);
-                Burn_Timer = 1000;
-            }else Burn_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
-        else
+        if (Cycle_Timer < diff)
         {
-            if (EggVis_Timer)
+            //spell Burn should do this, but it doesn't so hack it for now.
+            uint32 dmg = urand(4500,5500);
+            if (m_creature->GetHealth() > dmg)
+                m_creature->SetHealth(uint32(m_creature->GetHealth()-dmg));
+            Cycle_Timer = 2000;
+        }else Cycle_Timer -= diff;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+//Phoenix Egg AI
+struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
+{
+    mob_phoenix_egg_tkAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 Rebirth_Timer;
+
+    void Reset()
+    {
+        Rebirth_Timer = 15000;
+    }
+
+    //ignore any
+    void MoveInLineOfSight(Unit* who) { return; }
+
+    void AttackStart(Unit* who)
+    {
+        if (m_creature->Attack(who, false))
+        {
+            m_creature->AddThreat(who, 0.0f);
+            m_creature->SetInCombatWith(who);
+            who->SetInCombatWith(m_creature);
+
+            if (!InCombat)
             {
-                if (EggVis_Timer <= diff)
-                {
-                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, PHOENIX_EGG_MODEL);
-                    m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                    EggVis_Timer = 0;
-                }else EggVis_Timer -= diff;
+                InCombat = true;
+                Aggro(who);
             }
 
-            if (Hatch_Timer < diff)
-            {
-                Hatch();
-            }else Hatch_Timer -= diff;
+            DoStartNoMovement(who);
         }
+    }
+
+    void Aggro(Unit *who) { }
+
+    void JustSummoned(Creature* summoned)
+    {
+        summoned->AddThreat(m_creature->getVictim(), 0.0f);
+        summoned->CastSpell(m_creature,SPELL_REBIRTH,false);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!Rebirth_Timer)
+            return;
+
+        if (Rebirth_Timer <= diff)
+        {
+            m_creature->SummonCreature(PHOENIX,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,0);
+            Rebirth_Timer = 0;
+        }else Rebirth_Timer -= diff;
     }
 };
 
@@ -1487,9 +1497,14 @@ CreatureAI* GetAI_mob_kael_flamestrike(Creature *_Creature)
     return new mob_kael_flamestrikeAI (_Creature);
 }
 
-CreatureAI* GetAI_mob_phoenix(Creature *_Creature)
+CreatureAI* GetAI_mob_phoenix_tk(Creature *_Creature)
 {
-    return new mob_phoenixAI (_Creature);
+    return new mob_phoenix_tkAI (_Creature);
+}
+
+CreatureAI* GetAI_mob_phoenix_egg_tk(Creature *_Creature)
+{
+    return new mob_phoenix_egg_tkAI (_Creature);
 }
 
 void AddSC_boss_kaelthas()
@@ -1526,7 +1541,12 @@ void AddSC_boss_kaelthas()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name = "mob_phoenix";
-    newscript->GetAI = &GetAI_mob_phoenix;
+    newscript->Name = "mob_phoenix_tk";
+    newscript->GetAI = &GetAI_mob_phoenix_tk;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "mob_phoenix_egg_tk";
+    newscript->GetAI = &GetAI_mob_phoenix_egg_tk;
     newscript->RegisterSelf();
 }

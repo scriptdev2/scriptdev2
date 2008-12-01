@@ -38,7 +38,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 {
-    instance_steam_vault(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_steam_vault(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint64 ThespiaGUID;
     uint64 MekgineerGUID;

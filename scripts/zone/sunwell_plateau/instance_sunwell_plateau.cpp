@@ -38,7 +38,7 @@ UPDATE `instance_template` SET `script`='instance_sunwell_plateau' WHERE `map`=5
 
 struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 {
-    instance_sunwell_plateau(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_sunwell_plateau(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounters[ENCOUNTERS];
 

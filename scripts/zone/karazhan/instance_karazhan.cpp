@@ -42,10 +42,7 @@ EndScriptData */
 */
 struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 {
-    instance_karazhan(Map* map) : ScriptedInstance(map)
-    {
-        Initialize();
-    }
+    instance_karazhan(Map* map) : ScriptedInstance(map) {Initialize();}
 
     uint32 Encounters[ENCOUNTERS];
 

@@ -35,7 +35,7 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL instance_old_hillsbrad : public ScriptedInstance
 {
-    instance_old_hillsbrad(Map *Map) : ScriptedInstance(Map) {Initialize();};
+    instance_old_hillsbrad(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounter[ENCOUNTERS];
     uint32 mBarrelCount;
