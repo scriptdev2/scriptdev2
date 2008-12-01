@@ -541,8 +541,9 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1544010,'Did you think me weak? Soft? Who is the weak one now?!',10255,1,0,'magtheridon SAY_PLAYER_KILLED'),
 (-1544011,'The Legion...will consume you...all...',10258,1,0,'magtheridon SAY_DEATH'),
 (-1544012,'becomes enraged!',0,2,0,'magtheridon EMOTE_BERSERK'),
-(-1544013,'begins to cast Blast Nova!',0,2,0,'magtheridon EMOTE_BLASTNOVA'),
-(-1544014,'bonds begin to weaken!',0,2,0,'magtheridon EMOTE_BEGIN');
+(-1544013,'begins to cast Blast Nova!',0,3,0,'magtheridon EMOTE_BLASTNOVA'),
+(-1544014,'\'s bonds begin to weaken!',0,2,0,'magtheridon EMOTE_BEGIN'),
+(-1544015,'breaks free!',0,2,0,'magtheridon EMOTE_FREED');
 
 -- -1 545 000 THE STEAMVAULT
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
