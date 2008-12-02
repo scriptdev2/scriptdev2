@@ -1378,15 +1378,10 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
     void Reset()
     {
         Cycle_Timer = 2000;
-        m_creature->CastSpell(m_creature,SPELL_BURN,false);
+        m_creature->CastSpell(m_creature,SPELL_BURN,true);
     }
 
     void Aggro(Unit *who) { }
-
-    void JustSummoned(Creature* summoned)
-    {
-        summoned->AddThreat(m_creature->getVictim(),0.0f);
-    }
 
     void JustDied(Unit* killer)
     {
@@ -1402,7 +1397,7 @@ struct MANGOS_DLL_DECL mob_phoenix_tkAI : public ScriptedAI
 
         if (Cycle_Timer < diff)
         {
-            //spell Burn should do this, but it doesn't so hack it for now.
+            //spell Burn should possible do this, but it doesn't, so do this for now.
             uint32 dmg = urand(4500,5500);
             if (m_creature->GetHealth() > dmg)
                 m_creature->SetHealth(uint32(m_creature->GetHealth()-dmg));
@@ -1432,7 +1427,6 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
     {
         if (m_creature->Attack(who, false))
         {
-            m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
 
@@ -1451,7 +1445,7 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
     void JustSummoned(Creature* summoned)
     {
         summoned->AddThreat(m_creature->getVictim(), 0.0f);
-        summoned->CastSpell(m_creature,SPELL_REBIRTH,false);
+        summoned->CastSpell(summoned,SPELL_REBIRTH,false);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1461,7 +1455,7 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
 
         if (Rebirth_Timer <= diff)
         {
-            m_creature->SummonCreature(PHOENIX,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,0);
+            m_creature->SummonCreature(PHOENIX,m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),m_creature->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,5000);
             Rebirth_Timer = 0;
         }else Rebirth_Timer -= diff;
     }

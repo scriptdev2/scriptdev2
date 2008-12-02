@@ -61,9 +61,9 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
             DoorHighInquisitorGUID = go->GetGUID();
     }
 
-    uint64 GetData64(uint32 identifier)
+    uint64 GetData64(uint32 data)
     {
-        switch(identifier)
+        switch(data)
         {
             case DATA_MOGRAINE:
                 return MograineGUID;
@@ -82,10 +82,10 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
             Encounter[0] = data;
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 data)
     {
-        if (type == TYPE_MOGRAINE_AND_WHITE_EVENT)
-                return Encounter[0];
+        if (data == TYPE_MOGRAINE_AND_WHITE_EVENT)
+            return Encounter[0];
 
         return 0;
     }

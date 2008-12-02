@@ -28,13 +28,14 @@ EndScriptData */
 
 #define CONTAINMENT_CORE_SECURITY_FIELD_ALPHA 184318        //door opened when Wrath-Scryer Soccothrates dies
 #define CONTAINMENT_CORE_SECURITY_FIELD_BETA  184319        //door opened when Dalliah the Doomsayer dies
+#define SEAL_SPHERE 184802                                  //shield 'protecting' mellichar
 #define POD_ALPHA   183961                                  //pod first boss wave
 #define POD_BETA    183963                                  //pod second boss wave
 #define POD_DELTA   183964                                  //pod third boss wave
 #define POD_GAMMA   183962                                  //pod fourth boss wave
 #define POD_OMEGA   183965                                  //pod fifth boss wave
 
-#define MELLICHAR   21436                                   //skyriss will kill this unit
+#define MELLICHAR   20904                                   //skyriss will kill this unit
 
 /* Arcatraz encounters:
 1 - Zereketh the Unbound event
@@ -57,7 +58,8 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
     GameObject *Pod_Delta;
     GameObject *Pod_Omega;
 
-    uint64 Mellichar;
+    uint64 GoSphereGUID;
+    uint64 MellicharGUID;
 
     void Initialize()
     {
@@ -69,7 +71,8 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         Pod_Gamma = NULL;
         Pod_Omega = NULL;
 
-        Mellichar = 0;
+        GoSphereGUID = 0;
+        MellicharGUID = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounter[i] = NOT_STARTED;
@@ -78,7 +81,8 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounter[i]) return true;
+            if (Encounter[i])
+                return true;
 
         return false;
     }
@@ -89,6 +93,7 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         {
             case CONTAINMENT_CORE_SECURITY_FIELD_ALPHA: Containment_Core_Security_Field_Alpha = go; break;
             case CONTAINMENT_CORE_SECURITY_FIELD_BETA:  Containment_Core_Security_Field_Beta =  go; break;
+            case SEAL_SPHERE: GoSphereGUID = go->GetGUID(); break;
             case POD_ALPHA: Pod_Alpha = go; break;
             case POD_BETA:  Pod_Beta =  go; break;
             case POD_DELTA: Pod_Delta = go; break;
@@ -99,12 +104,8 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
-        {
-            case MELLICHAR:
-                Mellichar = creature->GetGUID();
-                break;
-        }
+        if (creature->GetEntry() == MELLICHAR)
+            MellicharGUID = creature->GetGUID();
     }
 
     void SetData(uint32 type, uint32 data)
@@ -116,21 +117,21 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
                 break;
 
             case TYPE_DALLIAH:
-                if( data == DONE )
-                    if( Containment_Core_Security_Field_Beta )
+                if (data == DONE)
+                    if (Containment_Core_Security_Field_Beta)
                         Containment_Core_Security_Field_Beta->UseDoorOrButton();
                 Encounter[1] = data;
                 break;
 
             case TYPE_SOCCOTHRATES:
-                if( data == DONE )
-                    if( Containment_Core_Security_Field_Alpha )
+                if (data == DONE)
+                    if (Containment_Core_Security_Field_Alpha)
                         Containment_Core_Security_Field_Alpha->UseDoorOrButton();
                 Encounter[2] = data;
                 break;
 
             case TYPE_HARBINGERSKYRISS:
-                if( data == NOT_STARTED || data == FAIL )
+                if (data == NOT_STARTED || data == FAIL)
                 {
                     Encounter[4] = NOT_STARTED;
                     Encounter[5] = NOT_STARTED;
@@ -142,45 +143,45 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
                 break;
 
             case TYPE_WARDEN_1:
-                if( data == IN_PROGRESS )
-                    if( Pod_Alpha )
+                if (data == IN_PROGRESS)
+                    if (Pod_Alpha)
                         Pod_Alpha->UseDoorOrButton();
                 Encounter[4] = data;
                 break;
 
             case TYPE_WARDEN_2:
-                if( data == IN_PROGRESS )
-                    if( Pod_Beta )
+                if (data == IN_PROGRESS)
+                    if (Pod_Beta)
                         Pod_Beta->UseDoorOrButton();
                 Encounter[5] = data;
                 break;
 
             case TYPE_WARDEN_3:
-                if( data == IN_PROGRESS )
-                    if( Pod_Delta )
+                if (data == IN_PROGRESS)
+                    if (Pod_Delta)
                         Pod_Delta->UseDoorOrButton();
                 Encounter[6] = data;
                 break;
 
             case TYPE_WARDEN_4:
-                if( data == IN_PROGRESS )
-                    if( Pod_Gamma )
+                if (data == IN_PROGRESS)
+                    if (Pod_Gamma)
                         Pod_Gamma->UseDoorOrButton();
                 Encounter[7] = data;
                 break;
 
             case TYPE_WARDEN_5:
-                if( data == IN_PROGRESS )
-                    if( Pod_Omega )
+                if (data == IN_PROGRESS)
+                    if (Pod_Omega)
                         Pod_Omega->UseDoorOrButton();
                 Encounter[8] = data;
                 break;
         }
     }
 
-    uint32 GetData(uint32 data)
+    uint32 GetData(uint32 type)
     {
-        switch(data)
+        switch(type)
         {
             case TYPE_HARBINGERSKYRISS:
                 return Encounter[3];
@@ -198,12 +199,14 @@ struct MANGOS_DLL_DECL instance_arcatraz : public ScriptedInstance
         return 0;
     }
 
-    uint64 GetData64(uint32 identifier)
+    uint64 GetData64(uint32 data)
     {
-        switch(identifier)
+        switch(data)
         {
             case DATA_MELLICHAR:
-                return Mellichar;
+                return MellicharGUID;
+            case DATA_SPHERE_SHIELD:
+                return GoSphereGUID;
         }
         return 0;
     }

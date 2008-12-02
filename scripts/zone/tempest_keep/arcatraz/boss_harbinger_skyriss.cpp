@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Harbinger_Skyriss
 SD%Complete: 45
-SDComment: CombatAI not fully implemented. Timers will need adjustments. Need better method to "kill" the warden. Need more docs on how event fully work. Reset all event and force start over if fail at one point?
+SDComment: CombatAI not fully implemented. Timers will need adjustments. Need more docs on how event fully work. Reset all event and force start over if fail at one point?
 SDCategory: Tempest Keep, The Arcatraz
 EndScriptData */
 
@@ -59,6 +59,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         HeroicMode = m_creature->GetMap()->IsHeroic();
+        Intro = false;
         Reset();
     }
 
@@ -80,11 +81,6 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_UNKNOWN2);
 
-        if (Intro)
-            Intro = true;
-        else
-            Intro = false;
-
         IsImage33 = false;
         IsImage66 = false;
 
@@ -101,18 +97,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         if (!Intro)
             return;
 
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
-        {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void AttackStart(Unit* who)
@@ -120,20 +105,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
         if (!Intro)
             return;
 
-        if (m_creature->Attack(who, true))
-        {
-            m_creature->AddThreat(who, 0.0f);
-            m_creature->SetInCombatWith(who);
-            who->SetInCombatWith(m_creature);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-                Aggro(who);
-            }
-
-            DoStartMovement(who);
-        }
+        ScriptedAI::AttackStart(who);
     }
 
     void Aggro(Unit *who)
@@ -151,8 +123,9 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        /*if( victim->GetEntry() == 21436 )
-            return;*/
+        //won't yell killing pet/other unit
+        if (victim->GetTypeId() != TYPEID_PLAYER)
+            return;
 
         switch(rand()%2)
         {
@@ -192,6 +165,8 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
                 {
                     case 1:
                         DoScriptText(SAY_INTRO, m_creature);
+                        if (GameObject* Sphere = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                            Sphere->SetGoState(0);
                         ++Intro_Phase;
                         Intro_Timer = 25000;
                         break;

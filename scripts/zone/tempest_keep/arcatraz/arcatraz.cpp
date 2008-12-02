@@ -87,7 +87,7 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         Pyroblast_Timer = 1000;
         Fireball_Timer = 2500;
 
-        if (pInstance )
+        if (pInstance)
         {
             if (pInstance->GetData(TYPE_WARDEN_2) == DONE)
                 Init = true;
@@ -298,6 +298,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         {
             if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;
+
             if (who->GetTypeId() != TYPEID_PLAYER)
                 return;
 
@@ -310,18 +311,20 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(YELL_INTRO1, m_creature);
-
-        //possibly wrong spell OR should also cast second spell to make bubble appear (visual for this spell appear to be the correct)
         DoCast(m_creature,SPELL_BUBBLE_VISUAL);
 
         if (pInstance)
         {
             pInstance->SetData(TYPE_HARBINGERSKYRISS,IN_PROGRESS);
+
+            if (GameObject* Sphere = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                Sphere->SetGoState(1);
+
             IsRunning = true;
         }
     }
 
-    uint32 CanProgress()
+    bool CanProgress()
     {
         if (pInstance)
         {
@@ -339,6 +342,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                 return true;
             if (Phase == 1 && pInstance->GetData(TYPE_HARBINGERSKYRISS) == IN_PROGRESS)
                 return true;
+
             return false;
         }
         return false;
@@ -346,12 +350,12 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
 
     void DoPrepareForPhase()
     {
-        if (pInstance )
+        if (pInstance)
         {
             m_creature->InterruptNonMeleeSpells(true);
             m_creature->RemoveSpellsCausingAura(SPELL_AURA_DUMMY);
 
-            switch( Phase )
+            switch(Phase)
             {
                 case 2:
                     DoCast(m_creature,SPELL_TARGET_ALPHA);
@@ -384,7 +388,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
 
         if (EventProgress_Timer < diff)
         {
-            if (pInstance )
+            if (pInstance)
             {
                 if (pInstance->GetData(TYPE_HARBINGERSKYRISS) == FAIL)
                     Reset();
@@ -396,7 +400,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
                 if (Phase != 7)
                     DoCast(m_creature,SPELL_TARGET_OMEGA);
 
-                switch( Phase )
+                switch(Phase)
                 {
                     case 2:
                         switch(rand()%2)
@@ -475,6 +479,7 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         } else EventProgress_Timer -= diff;
     }
 };
+
 CreatureAI* GetAI_npc_warden_mellichar(Creature *_Creature)
 {
     return new npc_warden_mellicharAI (_Creature);
