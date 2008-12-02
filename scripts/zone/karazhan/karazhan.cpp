@@ -47,32 +47,32 @@ EndContentData */
 
 struct Dialogue
 {
-    char* text;
-    uint32 soundid, timer;
+    int32 textid;
+    uint32 timer;
 };
 
 static Dialogue OzDialogue[]=
 {
-    {"Welcome Ladies and Gentlemen, to this evening's presentation!", 9174, 6000},
-    {"Tonight we plumb the depths of the human soul as we join a lost, lonely girl trying desperately -- with the help of her loyal companions -- to find her way home!", 9338, 18000},
-    {"But she is pursued... by a wicked malevolent crone!", 9339, 9000},
-    {"Will she survive? Will she prevail? Only time will tell. And now ... on with the show!", 9340, 15000}
+    {-1532103, 6000},
+    {-1532104, 18000},
+    {-1532105, 9000},
+    {-1532106, 15000}
 };
 
 static Dialogue HoodDialogue[]=
 {
-    {"Good evening, Ladies and Gentlemen! Welcome to this evening's presentation!", 9175, 6000},
-    {"Tonight, things are not what they seem. For tonight, your eyes may not be trusted", 9335, 10000},
-    {"Take for instance, this quiet, elderly woman, waiting for a visit from her granddaughter. Surely there is nothing to fear from this sweet, grey-haired, old lady.", 9336, 14000},
-    {"But don't let me pull the wool over your eyes. See for yourself what lies beneath those covers! And now... on with the show!", 9337, 15000}
+    {-1532107, 6000},
+    {-1532108, 10000},
+    {-1532109, 14000},
+    {-1532110, 15000}
 };
 
 static Dialogue RAJDialogue[]=
 {
-    {"Welcome, Ladies and Gentlemen, to this evening's presentation!", 9176, 5000},
-    {"Tonight, we explore a tale of forbidden love!", 9341, 7000},
-    {"But beware, for not all love stories end happily, as you may find out. Sometimes, love pricks like a thorn.", 9342, 14000},
-    {"But don't take it from me, see for yourself what tragedy lies ahead when the paths of star-crossed lovers meet. And now...on with the show!", 9343, 14000}
+    {-1532111, 5000},
+    {-1532112, 7000},
+    {-1532113, 14000},
+    {-1532114, 14000}
 };
 
 // Entries and spawn locations for creatures in Oz event
@@ -138,18 +138,16 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         PerformanceReady = false;
         IsTalking = false;
 
-        if(pInstance)
+        if (pInstance)
         {
             pInstance->SetData(DATA_OPERA_EVENT, NOT_STARTED);
 
             Event = pInstance->GetData(DATA_OPERA_PERFORMANCE);
 
-            GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
-            if(Door)
+            if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
                 Door->SetGoState(1);
 
-            GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
-            if(Curtain)
+            if (GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
                 Curtain->SetGoState(1);
         }
     }
@@ -167,9 +165,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
                 float x,y,z;
                 m_creature->GetPosition(x, y, z);
-                Creature* Spotlight;
-                Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 50000);
-                if(Spotlight)
+
+                if (Creature* Spotlight = m_creature->SummonCreature(CREATURE_SPOTLIGHT, x, y, z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 50000))
                 {
                     Spotlight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     Spotlight->CastSpell(Spotlight, SPELL_SPOTLIGHT, false);
@@ -178,10 +175,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 break;
 
             case 5:
-                if(pInstance)
+                if (pInstance)
                 {
-                    GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
-                    if(Door)
+                    if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
                         Door->SetGoState(1);
                 }
                 IsBeingEscorted = false;
@@ -192,57 +188,47 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     void Talk(uint32 count)
     {
-        char* text = NULL;
-        uint32 sound = 0;
+        int32 text = 0;
 
         switch(Event)
         {
             case EVENT_OZ:
-                if(OzDialogue[count].text)
-                    text = OzDialogue[count].text;
-                if(OzDialogue[count].soundid)
-                    sound = OzDialogue[count].soundid;
-                if(OzDialogue[count].timer)
+                if (OzDialogue[count].textid)
+                    text = OzDialogue[count].textid;
+                if (OzDialogue[count].timer)
                     TalkTimer = OzDialogue[count].timer;
                 break;
 
             case EVENT_HOOD:
-                if(HoodDialogue[count].text)
-                    text = HoodDialogue[count].text;
-                if(HoodDialogue[count].soundid)
-                    sound = HoodDialogue[count].soundid;
-                if(HoodDialogue[count].timer)
+                if (HoodDialogue[count].textid)
+                    text = HoodDialogue[count].textid;
+                if (HoodDialogue[count].timer)
                     TalkTimer = HoodDialogue[count].timer;
                 break;
 
             case EVENT_RAJ:
-                if(RAJDialogue[count].text)
-                    text = RAJDialogue[count].text;
-                if(RAJDialogue[count].soundid)
-                    sound = RAJDialogue[count].soundid;
-                if(RAJDialogue[count].timer)
+                if (RAJDialogue[count].textid)
+                    text = RAJDialogue[count].textid;
+                if (RAJDialogue[count].timer)
                     TalkTimer = RAJDialogue[count].timer;
                 break;
         }
 
-        if(text)
-            DoYell(text, LANG_UNIVERSAL, 0);
-        if(sound)
-            DoPlaySoundToSet(m_creature, sound);
+        if (text)
+            DoScriptText(text, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
     {
         npc_escortAI::UpdateAI(diff);
 
-        if(IsTalking)
+        if (IsTalking)
         {
-            if(TalkTimer < diff)
+            if (TalkTimer < diff)
             {
-                if(TalkCount > 3)
+                if (TalkCount > 3)
                 {
-                    Unit* Spotlight = Unit::GetUnit((*m_creature), SpotlightGUID);
-                    if(Spotlight)
+                    if (Unit* Spotlight = Unit::GetUnit((*m_creature), SpotlightGUID))
                     {
                         Spotlight->RemoveAllAuras();
                         Spotlight->SetVisibility(VISIBILITY_OFF);
@@ -257,30 +243,30 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                 m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_TALK);
                 Talk(TalkCount);
                 ++TalkCount;
-            }
-            else TalkTimer -= diff;
+            } else TalkTimer -= diff;
         }
 
-        if(PerformanceReady)
+        if (PerformanceReady)
         {
-            if(CurtainTimer)
-                if(CurtainTimer <= diff)
+            if (CurtainTimer)
             {
-                PrepareEncounter();
+                if (CurtainTimer <= diff)
+                {
+                    PrepareEncounter();
 
-                if(!pInstance)
-                    return;
+                    if (!pInstance)
+                        return;
 
-                GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS));
-                if(Curtain)
+                if (GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
                     Curtain->SetGoState(0);
 
-                CurtainTimer = 0;
-            }else CurtainTimer -= diff;
+                    CurtainTimer = 0;
+                }else CurtainTimer -= diff;
+            }
 
-            if(!RaidWiped)
+            if (!RaidWiped)
             {
-                if(WipeTimer < diff)
+                if (WipeTimer < diff)
                 {
                     Map *map = m_creature->GetMap();
                     if (!map->IsDungeon())
@@ -300,7 +286,7 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                         }
                     }
 
-                    if(RaidWiped)
+                    if (RaidWiped)
                     {
                         RaidWiped = true;
                         EnterEvadeMode();
@@ -309,10 +295,9 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     WipeTimer = 15000;
                 }else WipeTimer -= diff;
             }
-
         }
 
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         DoMeleeAttackIfReady();
@@ -320,13 +305,12 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
     void StartEvent()
     {
-        if(!pInstance)
+        if (!pInstance)
             return;
 
         pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
 
-        GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT));
-        if(Door)
+        if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
             Door->SetGoState(0);
 
         m_creature->CastSpell(m_creature, SPELL_TUXEDO, true);
@@ -340,18 +324,17 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         debug_log("SD2: Barnes Opera Event - Introduction complete - preparing encounter %d", Event);
         uint8 index = 0;
         uint8 count = 0;
+
         switch(Event)
         {
             case EVENT_OZ:
                 index = 0;
                 count = 4;
                 break;
-
             case EVENT_HOOD:
                 index = 4;
                 count = index+1;
                 break;
-
             case EVENT_RAJ:
                 index = 5;
                 count = index+1;
@@ -362,10 +345,10 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         {
             uint32 entry = ((uint32)Spawns[index][0]);
             float PosX = Spawns[index][1];
-            Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-            if(pCreature)
+
+            if (Creature* pCreature = m_creature->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
             {
-                                                            // In case database has bad flags
+                // In case database has bad flags
                 pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
@@ -389,19 +372,19 @@ CreatureAI* GetAI_npc_barnesAI(Creature* _Creature)
 
 bool GossipHello_npc_barnes(Player* player, Creature* _Creature)
 {
-    // Check for death of Moroes.
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
-    if(pInstance && (pInstance->GetData(DATA_MOROES_EVENT) >= DONE))
+
+    // Check for death of Moroes
+    if (pInstance && (pInstance->GetData(DATA_MOROES_EVENT) >= DONE))
     {
         player->ADD_GOSSIP_ITEM(0, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        if(!((npc_barnesAI*)_Creature->AI())->RaidWiped)
+        if (!((npc_barnesAI*)_Creature->AI())->RaidWiped)
             player->SEND_GOSSIP_MENU(8970, _Creature->GetGUID());
         else
             player->SEND_GOSSIP_MENU(8975, _Creature->GetGUID());
     }
-    else
-        player->SEND_GOSSIP_MENU(8978, _Creature->GetGUID());
+    else player->SEND_GOSSIP_MENU(8978, _Creature->GetGUID());
 
     return true;
 }
@@ -436,7 +419,7 @@ bool GossipHello_npc_berthold(Player* player, Creature* _Creature)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
                                                             // Check if Shade of Aran is dead or not
-    if(pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE))
+    if (pInstance && (pInstance->GetData(DATA_SHADEOFARAN_EVENT) >= DONE))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
@@ -445,7 +428,7 @@ bool GossipHello_npc_berthold(Player* player, Creature* _Creature)
 
 bool GossipSelect_npc_berthold(Player* player, Creature* _Creature, uint32 sender, uint32 action)
 {
-    if(action == GOSSIP_ACTION_INFO_DEF + 1)
+    if (action == GOSSIP_ACTION_INFO_DEF + 1)
         player->CastSpell(player, SPELL_TELEPORT, true);
 
     player->CLOSE_GOSSIP_MENU();
@@ -457,8 +440,8 @@ void AddSC_karazhan()
     Script* newscript;
 
     newscript = new Script;
-    newscript->GetAI = &GetAI_npc_barnesAI;
     newscript->Name = "npc_barnes";
+    newscript->GetAI = &GetAI_npc_barnesAI;
     newscript->pGossipHello = &GossipHello_npc_barnes;
     newscript->pGossipSelect = &GossipSelect_npc_barnes;
     newscript->RegisterSelf();
