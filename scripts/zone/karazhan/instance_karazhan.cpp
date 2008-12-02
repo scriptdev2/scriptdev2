@@ -46,7 +46,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     uint32 Encounters[ENCOUNTERS];
 
-    uint32 OperaEvent;                                      // 0 - OZ, 1 - HOOD, 2 - RAJ
+    uint32 OperaEvent;
     uint32 OzDeathCount;
 
     uint64 CurtainGUID;
@@ -66,8 +66,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         for (uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
 
-        OperaEvent      = rand()%3;                         // This never gets altered.
-        OzDeathCount    = 0;
+        OperaEvent          = urand(1,3);                   // 1 - OZ, 2 - HOOD, 3 - RAJ, this never gets altered.
+        OzDeathCount        = 0;
 
         CurtainGUID         = 0;
         StageDoorLeftGUID   = 0;
@@ -87,14 +87,15 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     bool IsEncounterInProgress() const
     {
         for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounters[i] == IN_PROGRESS) return true;
+            if (Encounters[i] == IN_PROGRESS)
+                return true;
 
         return false;
     }
 
-    uint32 GetData(uint32 identifier)
+    uint32 GetData(uint32 data)
     {
-        switch (identifier)
+        switch (data)
         {
             case DATA_ATTUMEN_EVENT:          return Encounters[0];
             case DATA_MOROES_EVENT:           return Encounters[1];
@@ -117,7 +118,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 entry)
     {
-        switch (entry)
+        switch (creature->GetEntry())
         {
             case 17229:   KilrekGUID = creature->GetGUID();      break;
             case 15688:   TerestianGUID = creature->GetGUID();   break;
@@ -125,9 +126,9 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         }
     }
 
-    uint64 GetData64(uint32 identifier)
+    uint64 GetData64(uint32 data)
     {
-        switch (identifier)
+        switch (data)
         {
             case DATA_KILREK:                      return KilrekGUID;
             case DATA_TERESTIAN:                   return TerestianGUID;
@@ -145,9 +146,9 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         return 0;
     }
 
-    void SetData(uint32 identifier, uint32 data)
+    void SetData(uint32 type, uint32 data)
     {
-        switch (identifier)
+        switch (type)
         {
             case DATA_ATTUMEN_EVENT:           Encounters[0]  = data; break;
             case DATA_MOROES_EVENT:
@@ -165,11 +166,10 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             case DATA_CHESS_EVENT:             Encounters[9]  = data; break;
             case DATA_MALCHEZZAR_EVENT:        Encounters[10] = data; break;
             case DATA_NIGHTBANE_EVENT:         Encounters[11] = data; break;
-
             case DATA_OPERA_OZ_DEATHCOUNT:     ++OzDeathCount;        break;
         }
 
-        if(data == DONE)
+        if (data == DONE)
             SaveToDB();
     }
 
@@ -192,10 +192,8 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
             //TODO: Set Object visibilities for Opera based on performance
             case EVENT_OZ:
                 break;
-
             case EVENT_HOOD:
                 break;
-
             case EVENT_RAJ:
                 break;
         }
@@ -204,13 +202,16 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     const char* Save()
     {
         OUT_SAVE_INST_DATA;
+
         std::ostringstream stream;
         stream << Encounters[0] << " "  << Encounters[1] << " "  << Encounters[2] << " "  << Encounters[3] << " "
             << Encounters[4] << " "  << Encounters[5] << " "  << Encounters[6] << " "  << Encounters[7] << " "
             << Encounters[8] << " "  << Encounters[9] << " "  << Encounters[10];
+
         char* out = new char[stream.str().length() + 1];
         strcpy(out, stream.str().c_str());
-        if(out)
+
+        if (out)
         {
             OUT_SAVE_INST_DATA_COMPLETE;
             return out;
@@ -221,20 +222,23 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     void Load(const char* in)
     {
-        if(!in)
+        if (!in)
         {
             OUT_LOAD_INST_DATA_FAIL;
             return;
         }
 
         OUT_LOAD_INST_DATA(in);
+
         std::istringstream stream(in);
         stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
             >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7]
             >> Encounters[8] >> Encounters[9] >> Encounters[10];
+
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
                 Encounters[i] = NOT_STARTED;
+
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
