@@ -15,22 +15,29 @@
  */
 
 /* ScriptData
-SDName: boss_maleki_the_pallid
-SD%Complete: 100
+SDName: Boss_Maleki_the_Pallid
+SD%Complete: 70
 SDComment:
 SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_stratholme.h"
 
-#define SPELL_FROSTNOVA    22645
-#define SPELL_FROSTBOLT    17503
-#define SPELL_DRAINLIFE    20743
-#define SPELL_ICETOMB    16869
+#define SPELL_FROSTBOLT     17503
+#define SPELL_DRAIN_LIFE    17238
+#define SPELL_DRAIN_MANA    17243
+#define SPELL_ICETOMB       16869
 
 struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
 {
-    boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 FrostNova_Timer;
     uint32 Frostbolt_Timer;
@@ -49,54 +56,39 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
     {
     }
 
+    void JustDied(Unit* Killer)
+    {
+    }
+
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
-
-        //FrostNova
-        if (FrostNova_Timer < diff)
-        {
-            //Cast
-            DoCast(m_creature->getVictim(),SPELL_FROSTNOVA);
-            //23 seconds until we should cast this again
-            FrostNova_Timer = 23000;
-        }else FrostNova_Timer -= diff;
 
         //Frostbolt
         if (Frostbolt_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 90) //90% chance to cast
-            {
+            if (rand()%100 < 90)
                 DoCast(m_creature->getVictim(),SPELL_FROSTBOLT);
-            }
-            //3.5 seconds until we should cast this again
+
             Frostbolt_Timer = 3500;
         }else Frostbolt_Timer -= diff;
 
         //IceTomb
         if (IceTomb_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 65) //65% chance to cast
-            {
+            if (rand()%100 < 65)
                 DoCast(m_creature->getVictim(),SPELL_ICETOMB);
-            }
-            //28 seconds until we should cast this again
+
             IceTomb_Timer = 28000;
         }else IceTomb_Timer -= diff;
 
         //DrainLife
         if (DrainLife_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 55) //55% chance to cast
-            {
-                DoCast(m_creature->getVictim(),SPELL_DRAINLIFE);
-            }
-            //31 seconds until we should cast this again
+            if (rand()%100 < 55)
+                DoCast(m_creature->getVictim(),SPELL_DRAIN_LIFE);
+
             DrainLife_Timer = 31000;
         }else DrainLife_Timer -= diff;
 

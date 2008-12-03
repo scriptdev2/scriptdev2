@@ -15,22 +15,29 @@
  */
 
 /* ScriptData
-SDName: boss_baroness_anastari
+SDName: Boss_Baroness_Anastari
 SD%Complete: 90
 SDComment: MC disabled
 SDCategory: Stratholme
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_stratholme.h"
 
 #define SPELL_BANSHEEWAIL   16565
-#define SPELL_BANSHEECURSE    16867
-#define SPELL_SILENCE    18327
-//#define SPELL_POSSESS   17244
+#define SPELL_BANSHEECURSE  16867
+#define SPELL_SILENCE       18327
+//#define SPELL_POSSESS       17244
 
 struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
 {
-    boss_baroness_anastariAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_baroness_anastariAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = (ScriptedInstance*)m_creature->GetInstanceData();
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 BansheeWail_Timer;
     uint32 BansheeCurse_Timer;
@@ -48,45 +55,40 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
     void Aggro(Unit *who)
     {
     }
+
+    void JustDied(Unit* Killer)
+    {
+    }
+
     void UpdateAI(const uint32 diff)
     {
-        //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //BansheeWail
         if (BansheeWail_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 95) //95% chance to cast
-            {
+            if (rand()%100 < 95)
                 DoCast(m_creature->getVictim(),SPELL_BANSHEEWAIL);
-            }
-            //4 seconds until we should cast this again
+
             BansheeWail_Timer = 4000;
         }else BansheeWail_Timer -= diff;
 
         //BansheeCurse
         if (BansheeCurse_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 75) //75% chance to cast
-            {
+            if (rand()%100 < 75)
                 DoCast(m_creature->getVictim(),SPELL_BANSHEECURSE);
-            }
-            //18 seconds until we should cast this again
+
             BansheeCurse_Timer = 18000;
         }else BansheeCurse_Timer -= diff;
 
         //Silence
         if (Silence_Timer < diff)
         {
-            //Cast
-            if (rand()%100 < 80) //80% chance to cast
-            {
+            if (rand()%100 < 80)
                 DoCast(m_creature->getVictim(),SPELL_SILENCE);
-            }
-            //13 seconds until we should cast this again
+
             Silence_Timer = 13000;
         }else Silence_Timer -= diff;
 
@@ -94,13 +96,12 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         /*            if (Possess_Timer < diff)
         {
         //Cast
-        if (rand()%100 < 65) //65% chance to cast
+        if (rand()%100 < 65)
         {
         Unit* target = NULL;
         target = SelectUnit(SELECT_TARGET_RANDOM,0);
         if (target)DoCast(target,SPELL_POSSESS);
         }
-        //50 seconds until we should cast this again
         Possess_Timer = 50000;
         }else Possess_Timer -= diff;
         */
@@ -112,7 +113,6 @@ CreatureAI* GetAI_boss_baroness_anastari(Creature *_Creature)
 {
     return new boss_baroness_anastariAI (_Creature);
 }
-
 
 void AddSC_boss_baroness_anastari()
 {
