@@ -660,6 +660,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `e
 UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
 
 /* SILITHUS */
+UPDATE `creature_template` SET `ScriptName`='npc_highlord_demitrian' WHERE `entry`=14347;
 UPDATE `creature_template` SET `ScriptName`='npcs_rutgar_and_frankal' WHERE `entry` IN (15170,15171);
 
 /* SILVERMOON */
