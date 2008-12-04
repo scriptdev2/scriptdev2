@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Stratholme
 SD%Complete: 50
-SDComment: in progress.
+SDComment: In progress. Undead side 75% implemented. Save/load not implemented. Baron run not implemented.
 SDCategory: Stratholme
 EndScriptData */
 
@@ -42,6 +42,7 @@ EndScriptData */
 #define C_RAMSTEIN              10439
 #define C_ABOM_BILE             10416
 #define C_ABOM_VENOM            10417
+#define C_BLACK_GUARD           10394
 
 #define ENCOUNTERS              6
 
@@ -53,6 +54,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
     bool IsSilverHandDead[5];
 
     uint32 BaronRun_Timer;
+    uint32 SlaugtherSquare_Timer;
 
     uint64 serviceEntranceGUID;
     uint64 gauntletGate1GUID;
@@ -79,6 +81,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
             IsSilverHandDead[5] = false;
 
         BaronRun_Timer = 0;
+        SlaugtherSquare_Timer = 0;
 
         serviceEntranceGUID = 0;
         gauntletGate1GUID = 0;
@@ -114,6 +117,37 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         return NULL;
     }
 
+    bool StartSlaugtherSquare()
+    {
+        //change to DONE when crystals implemented
+        if (Encounter[1] == IN_PROGRESS && Encounter[2] == IN_PROGRESS && Encounter[3] == IN_PROGRESS)
+        {
+            UpdateGoState(portGauntletGUID,0,false);
+            UpdateGoState(portSlaugtherGUID,0,false);
+            return true;
+        }
+
+        debug_log("SD2: Instance Stratholme: Cannot open slaugther square yet.");
+        return false;
+    }
+
+    //if withRestoreTime true, then newState will be ignored and GO should be restored to original state after 10 seconds
+    void UpdateGoState(uint64 goGuid, uint32 newState, bool withRestoreTime)
+    {
+        Player *player = GetPlayerInMap();
+
+        if (!player || !goGuid)
+            return;
+
+        if (GameObject *go = GameObject::GetGameObject(*player, goGuid))
+        {
+            if (withRestoreTime)
+                go->UseDoorOrButton(10);
+            else
+                go->SetGoState(newState);
+        }
+    }
+
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         switch(creature->GetEntry())
@@ -145,24 +179,111 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
+        Player *player = GetPlayerInMap();
+
+        if (!player)
+        {
+            debug_log("SD2: Instance Stratholme: SetData (Type: %u Data %u) cannot find any player.", type, data);
+            return;
+        }
+
         switch(type)
         {
             case TYPE_BARON_RUN:
+                switch(data)
+                {
+                    case IN_PROGRESS:
+                        if (Encounter[0] == IN_PROGRESS || Encounter[0] == FAIL)
+                            break;
+                        BaronRun_Timer = 2700000;
+                        debug_log("SD2: Instance Stratholme: Baron run in progress.");
+                        break;
+                    case FAIL:
+                        //may add code to remove aura from players, but in theory the time should be up already and removed.
+                        break;
+                    case DONE:
+                        BaronRun_Timer = 0;
+                        break;
+                }
                 Encounter[0] = data;
                 break;
             case TYPE_BARONESS:
                 Encounter[1] = data;
+                if (data == IN_PROGRESS)
+                    UpdateGoState(ziggurat1GUID,0,false);
+                if (data == IN_PROGRESS)                    //change to DONE when crystals implemented
+                    StartSlaugtherSquare();
                 break;
             case TYPE_NERUB:
                 Encounter[2] = data;
+                if (data == IN_PROGRESS)
+                    UpdateGoState(ziggurat2GUID,0,false);
+                if (data == IN_PROGRESS)                    //change to DONE when crystals implemented
+                    StartSlaugtherSquare();
                 break;
             case TYPE_PALLID:
                 Encounter[3] = data;
+                if (data == IN_PROGRESS)
+                    UpdateGoState(ziggurat3GUID,0,false);
+                if (data == IN_PROGRESS)                    //change to DONE when crystals implemented
+                    StartSlaugtherSquare();
                 break;
             case TYPE_RAMSTEIN:
+                if (data == IN_PROGRESS)
+                {
+                    if (Encounter[4] != IN_PROGRESS)
+                        UpdateGoState(portGauntletGUID,1,false);
+
+                    uint32 count = abomnationGUID.size();
+                    for(std::set<uint64>::iterator i = abomnationGUID.begin(); i != abomnationGUID.end(); ++i)
+                    {
+                        if (Unit* abom = Unit::GetUnit(*player, *i))
+                        {
+                            if (!abom->isAlive())
+                                --count;
+                        }
+                    }
+
+                    if (!count)
+                    {
+                        //a bit itchy, it should close the door after 10 secs, but it doesn't. skipping it for now.
+                        //UpdateGoState(ziggurat4GUID,0,true);
+                        player->SummonCreature(C_RAMSTEIN,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        debug_log("SD2: Instance Stratholme: Ramstein spawned.");
+                    } else debug_log("SD2: Instance Stratholme: %u Abomnation left to kill.",count);
+                }
+                if (data == DONE)
+                {
+                    SlaugtherSquare_Timer = 300000;
+                    debug_log("SD2: Instance Stratholme: Slaugther event will continue in 5 minutes.");
+                }
                 Encounter[4] = data;
                 break;
             case TYPE_BARON:
+                if (data == IN_PROGRESS)
+                {
+                    if (GetData(TYPE_BARON_RUN) == IN_PROGRESS)
+                    {
+                        if (Group *pGroup = player->GetGroup())
+                        {
+                            for(GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
+                            {
+                                Player* pGroupie = itr->getSource();
+                                if (!pGroupie)
+                                    continue;
+
+                                if (pGroupie->HasAura(SPELL_BARON_ULTIMATUM,0))
+                                    pGroupie->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
+                            }
+                        } else if (player->HasAura(SPELL_BARON_ULTIMATUM,0))
+                            player->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
+
+                        if (Unit *temp = Unit::GetUnit(*player,GetData64(DATA_BARON)))
+                            player->GroupEventHappens(QUEST_DEAD_MAN_PLEA,temp);
+
+                        SetData(TYPE_BARON_RUN,DONE);
+                    }
+                }
                 Encounter[5] = data;
                 break;
 
@@ -208,9 +329,9 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         return 0;
     }
 
-    uint64 GetData64(uint32 type)
+    uint64 GetData64(uint32 data)
     {
-        switch(type)
+        switch(data)
         {
             case DATA_BARON:
                 return baronGUID;
@@ -228,8 +349,27 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
             {
                 if (GetData(TYPE_BARON_RUN) != DONE)
                     SetData(TYPE_BARON_RUN, FAIL);
+
                 BaronRun_Timer = 0;
+                debug_log("SD2: Instance Stratholme: Baron run event reached end. Event has state %u.",Encounter[0]);
             }else BaronRun_Timer -= diff;
+        }
+
+        if (SlaugtherSquare_Timer)
+        {
+            if (SlaugtherSquare_Timer <= diff)
+            {
+                if (Player *p = GetPlayerInMap())
+                {
+                    for(uint8 i = 0; i < 4; i++)
+                        p->SummonCreature(C_BLACK_GUARD,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+
+                    UpdateGoState(ziggurat4GUID,0,false);
+                    UpdateGoState(ziggurat5GUID,0,false);
+                    debug_log("SD2: Instance Stratholme: Black guard sentries spawned. Opening gates to baron.");
+                }
+                SlaugtherSquare_Timer = 0;
+            }else SlaugtherSquare_Timer -= diff;
         }
     }
 };

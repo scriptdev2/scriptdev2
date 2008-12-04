@@ -21,4 +21,7 @@
 #define TYPE_SH_NEMAS           23
 #define TYPE_SH_VICAR           24
 #define TYPE_SH_AELMAR          25
+
+#define QUEST_DEAD_MAN_PLEA     8945
+#define SPELL_BARON_ULTIMATUM   27861
 #endif
