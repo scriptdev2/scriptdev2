@@ -271,6 +271,7 @@ UPDATE `instance_template` SET `script`='instance_old_hillsbrad' WHERE `map`=560
 UPDATE `creature_template` SET `ScriptName`='boss_lieutenant_drake' WHERE `entry`=17848;
 UPDATE `creature_template` SET `ScriptName`='boss_epoch_hunter' WHERE `entry`=18096;
 UPDATE `creature_template` SET `ScriptName`='boss_captain_skarloc' WHERE `entry`=17862;
+UPDATE `gameobject_template` SET `ScriptName`='go_barrel_old_hillsbrad' WHERE `entry`=182589;
 UPDATE `creature_template` SET `ScriptName`='npc_brazen' WHERE `entry`=18725;
 UPDATE `creature_template` SET `ScriptName`='npc_erozion' WHERE `entry`=18723;
 UPDATE `creature_template` SET `ScriptName`='npc_taretha' WHERE `entry`=18887;

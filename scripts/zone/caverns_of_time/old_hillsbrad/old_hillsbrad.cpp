@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Old_Hillsbrad
 SD%Complete: 40
-SDComment: All friendly NPC's. Thrall waypoints fairly complete, missing many details, but possible to complete escort.
+SDComment: Quest support: 10283, 10284. All friendly NPC's. Thrall waypoints fairly complete, missing many details, but possible to complete escort.
 SDCategory: Caverns of Time, Old Hillsbrad Foothills
 EndScriptData */
 
@@ -369,9 +369,16 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 }
 
                 //kill credit creature for quest
-                Unit* player = Unit::GetUnit(*m_creature, PlayerGUID);
-                if (player && player->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)player)->KilledMonster(20156,m_creature->GetGUID());
+                Map *map = m_creature->GetMap();
+                Map::PlayerList const& players = map->GetPlayers();
+                if (!players.isEmpty() && map->IsDungeon())
+                {
+                    for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    {
+                        if (Player* pPlayer = itr->getSource())
+                            pPlayer->KilledMonster(20156,m_creature->GetGUID());
+                    }
+                }
 
                 //alot will happen here, thrall and taretha talk, erozion appear at spot to explain
                 m_creature->SummonCreature(EROZION_ENTRY,2646.47,680.416,55.38,4.16,TEMPSUMMON_TIMED_DESPAWN,120000);
@@ -678,17 +685,18 @@ bool GossipHello_npc_thrall_old_hillsbrad(Player *player, Creature *_Creature)
 
     if (pInstance)
     {
-        //if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE && pInstance->GetData(TYPE_THRALL_EVENT) == NOT_STARTED)
-        if (pInstance->GetData(TYPE_THRALL_EVENT) == NOT_STARTED)
+        if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE && pInstance->GetData(TYPE_THRALL_EVENT) == NOT_STARTED)
         {
             player->ADD_GOSSIP_ITEM(0, "[PH] Start walking.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->SEND_GOSSIP_MENU(GOSSIP_ID_START, _Creature->GetGUID());
         }
+
         if (pInstance->GetData(TYPE_THRALL_PART1) == DONE && !pInstance->GetData(TYPE_THRALL_PART2))
         {
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_SKARLOC1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             player->SEND_GOSSIP_MENU(GOSSIP_ID_SKARLOC1, _Creature->GetGUID());
         }
+
         if (pInstance->GetData(TYPE_THRALL_PART2) == DONE && !pInstance->GetData(TYPE_THRALL_PART3))
         {
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_TARREN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
