@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Instance_Stratholme
 SD%Complete: 50
-SDComment: In progress. Undead side 75% implemented. Save/load not implemented. Baron run not implemented.
+SDComment: In progress. Undead side 75% implemented. Save/load not implemented.
 SDCategory: Stratholme
 EndScriptData */
 
@@ -43,6 +43,7 @@ EndScriptData */
 #define C_ABOM_BILE             10416
 #define C_ABOM_VENOM            10417
 #define C_BLACK_GUARD           10394
+#define C_YSIDA                 16031
 
 #define ENCOUNTERS              6
 
@@ -165,7 +166,11 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
         switch(go->GetEntry())
         {
             case GO_SERVICE_ENTRANCE:   serviceEntranceGUID = go->GetGUID(); break;
-            case GO_GAUNTLET_GATE1:     gauntletGate1GUID = go->GetGUID(); break;
+            case GO_GAUNTLET_GATE1:
+                //weird, but unless flag is set, client will not respond as expected. DB bug?
+                go->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_LOCKED);
+                gauntletGate1GUID = go->GetGUID();
+                break;
             case GO_ZIGGURAT1:          ziggurat1GUID = go->GetGUID(); break;
             case GO_ZIGGURAT2:          ziggurat2GUID = go->GetGUID(); break;
             case GO_ZIGGURAT3:          ziggurat3GUID = go->GetGUID(); break;
@@ -202,6 +207,9 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
                         //may add code to remove aura from players, but in theory the time should be up already and removed.
                         break;
                     case DONE:
+                        if (Unit *t = Unit::GetUnit(*player, ysidaTriggerGUID))
+                            t->SummonCreature(C_YSIDA,t->GetPositionX(),t->GetPositionY(),t->GetPositionZ(),t->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,1800000);
+
                         BaronRun_Timer = 0;
                         break;
                 }
@@ -351,7 +359,7 @@ struct MANGOS_DLL_DECL instance_stratholme : public ScriptedInstance
                     SetData(TYPE_BARON_RUN, FAIL);
 
                 BaronRun_Timer = 0;
-                debug_log("SD2: Instance Stratholme: Baron run event reached end. Event has state %u.",Encounter[0]);
+                debug_log("SD2: Instance Stratholme: Baron run event reached end. Event has state %u.",GetData(TYPE_BARON_RUN));
             }else BaronRun_Timer -= diff;
         }
 

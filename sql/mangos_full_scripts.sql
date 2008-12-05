@@ -697,11 +697,10 @@ UPDATE `creature_template` SET `ScriptName`='boss_timmy_the_cruel' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName`='boss_silver_hand_bosses' WHERE `entry` IN (17910,17911,17912,17913,17914);
 UPDATE `creature_template` SET `ScriptName`='boss_postmaster_malown' WHERE `entry`=11143;
 UPDATE `creature_template` SET `ScriptName`='boss_baron_rivendare' WHERE `entry`=10440;
-UPDATE `creature_template` SET `ScriptName`='mob_mindless_skeleton' WHERE `entry`=11197;
-UPDATE `creature_template` SET `ScriptName`='mob_thuzadin_acolyte' WHERE `entry`=10399;
 UPDATE `creature_template` SET `ScriptName`='mobs_spectral_ghostly_citizen' WHERE `entry` IN (10384,10385);
 UPDATE `creature_template` SET `ScriptName`='mob_restless_soul' WHERE `entry`=11122;
 UPDATE `creature_template` SET `ScriptName`='mob_freed_soul' WHERE `entry`=11136;
+UPDATE `gameobject_template` SET `ScriptName`='go_gauntlet_gate' WHERE `entry`=175357;
 
 /* SUNKEN TEMPLE */
 
