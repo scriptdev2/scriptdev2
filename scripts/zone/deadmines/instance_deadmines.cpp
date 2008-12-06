@@ -41,7 +41,6 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint32 Encounter[ENCOUNTERS];
 
-    uint64 doorLeverGUID;
     uint64 ironCladGUID;
     uint64 cannonGUID;
     uint64 smiteGUID;
@@ -54,7 +53,6 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounter[i] = NOT_STARTED;
 
-        doorLeverGUID = 0;
         ironCladGUID = 0;
         cannonGUID = 0;
         smiteGUID = 0;
@@ -129,8 +127,8 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        if (type = DATA_DEFIAS_DOOR)
-            return doorLeverGUID;
+        if (data = DATA_DEFIAS_DOOR)
+            return ironCladGUID;
 
         return 0;
     }
