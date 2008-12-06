@@ -249,6 +249,9 @@ extern void AddSC_boss_hungarfen();
 //Darkshore
 //Darnassus
 //Deadmines
+extern void AddSC_deadmines();
+extern void AddSC_instance_deadmines();
+
 //Deadwind pass
 //Desolace
 //Dire Maul
@@ -1433,6 +1436,9 @@ void ScriptsInit()
     //Darkshore
     //Darnassus
     //Deadmines
+    AddSC_deadmines();
+    AddSC_instance_deadmines();
+
     //Deadwind pass
     //Desolace
     //Dire Maul

@@ -16,9 +16,53 @@
 
 /* ScriptData
 SDName: Deadmines
-SD%Complete: 0
-SDComment: Placeholder
+SD%Complete: 90
+SDComment: Contains GO for event at end door
 SDCategory: Deadmines
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_deadmines.h"
+
+bool GOHello_go_door_lever_dm(Player *player, GameObject* _GO)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    GameObject *go = GameObject::GetGameObject(*player,pInstance->GetData64(DATA_DEFIAS_DOOR));
+    if (go && go->GetGoState() == 1)
+        return false;
+
+    return true;
+}
+
+bool GOHello_go_defias_cannon(Player *player, GameObject* _GO)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)_GO->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    if (pInstance->GetData(TYPE_DEFIAS_ENDDOOR) == DONE || pInstance->GetData(TYPE_DEFIAS_ENDDOOR) == IN_PROGRESS)
+        return false;
+
+    pInstance->SetData(TYPE_DEFIAS_ENDDOOR, IN_PROGRESS);
+    return false;
+}
+
+void AddSC_deadmines()
+{
+    Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "go_door_lever_dm";
+    newscript->pGOHello = &GOHello_go_door_lever_dm;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_defias_cannon";
+    newscript->pGOHello = &GOHello_go_defias_cannon;
+    newscript->RegisterSelf();
+}

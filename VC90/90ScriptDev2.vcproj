@@ -554,6 +554,14 @@
 						RelativePath="..\scripts\zone\deadmines\deadmines.cpp"
 						>
 					</File>
+					<File
+						RelativePath="..\scripts\zone\deadmines\def_deadmines.h"
+						>
+					</File>
+					<File
+						RelativePath="..\scripts\zone\deadmines\instance_deadmines.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Deadwind Pass"
