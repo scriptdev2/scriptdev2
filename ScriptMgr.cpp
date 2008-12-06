@@ -1119,8 +1119,8 @@ void LoadDatabase()
                         break;
 
                     case ACTION_T_SET_INST_DATA:
-                        if (temp.action[j].param2 > 3)
-                            error_db_log("SD2: Event %u Action %u attempts to set instance data above encounter state 3. Custom case?", i, j+1);
+                        if (temp.action[j].param2 > SPECIAL)
+                            error_db_log("SD2: Event %u Action %u attempts to set instance data above encounter state 4. Custom case?", i, j+1);
                         break;
 
                     case ACTION_T_YELL:
