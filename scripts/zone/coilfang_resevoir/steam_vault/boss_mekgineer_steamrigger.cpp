@@ -75,8 +75,8 @@ struct MANGOS_DLL_DECL boss_mekgineer_steamriggerAI : public ScriptedAI
         Summon50 = false;
         Summon25 = false;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, NOT_STARTED);
+        if (pInstance && m_creature->isAlive())
+            pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
