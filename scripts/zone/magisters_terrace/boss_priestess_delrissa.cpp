@@ -228,15 +228,15 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             return;
         }
 
-        pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 1);
         pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
+
         if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_DELRISSA_DOOR)))
             Door->SetGoState(0);
     }
 
     void CheckLootable()
     {
-        if (LackeysKilled > 4)
+        if (LackeysKilled > 3)
             m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
         else
             m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
@@ -378,11 +378,12 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
         Creature* Delrissa = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_DELRISSA)));
         if (Delrissa)
         {
-            ((boss_priestess_delrissaAI*)Delrissa->AI())->KilledLackey();
-            if (!Delrissa->isAlive() && pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) > 3)
-                ((boss_priestess_delrissaAI*)Delrissa->AI())->CheckLootable();
-
             pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 1);
+
+            ((boss_priestess_delrissaAI*)Delrissa->AI())->KilledLackey();
+
+            if (!Delrissa->isAlive() && pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) > 3)
+                Delrissa->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
         }
     }
 
