@@ -122,7 +122,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                     janalai_eggs_l = 20;
                     janalai_eggs_r = 20;
                 }
-                Encounters[4] = data;
+                Encounters[3] = data;
                 break;
             case DATA_J_HATCHLEFT:
                 janalai_eggs_l -= data;
