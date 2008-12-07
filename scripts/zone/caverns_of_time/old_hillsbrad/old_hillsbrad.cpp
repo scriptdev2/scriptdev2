@@ -679,13 +679,16 @@ CreatureAI* GetAI_npc_thrall_old_hillsbrad(Creature *_Creature)
 bool GossipHello_npc_thrall_old_hillsbrad(Player *player, Creature *_Creature)
 {
     if (_Creature->isQuestGiver())
+    {
         player->PrepareQuestMenu(_Creature->GetGUID());
+        player->SendPreparedQuest(_Creature->GetGUID());
+    }
 
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
 
     if (pInstance)
     {
-        if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE && pInstance->GetData(TYPE_THRALL_EVENT) == NOT_STARTED)
+        if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE && !pInstance->GetData(TYPE_THRALL_EVENT))
         {
             player->ADD_GOSSIP_ITEM(0, "[PH] Start walking.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->SEND_GOSSIP_MENU(GOSSIP_ID_START, _Creature->GetGUID());
