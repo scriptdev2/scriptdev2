@@ -47,6 +47,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
     boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();
     }
 
@@ -62,8 +63,6 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 
     void Reset()
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
-
         EventCheck_Timer = 5000;
         CorrosiveAcid_Timer = 25000;
         Fear_Timer = 40000;
@@ -107,6 +106,14 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 
         if (pInstance)
             pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (m_creature->HasAura(SPELL_BANISH,0))
+            return;
+
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void Aggro(Unit *who)
