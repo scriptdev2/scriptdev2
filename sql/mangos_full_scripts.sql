@@ -141,6 +141,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_susurrus' WHERE `entry`=17435;
 UPDATE `creature_template` SET `ScriptName`='npc_beaten_corpse' WHERE `entry`=10668;
 UPDATE `creature_template` SET `ScriptName`='npc_sputtervalve' WHERE `entry`=3442;
 UPDATE `creature_template` SET `ScriptName`='npc_taskmaster_fizzule' WHERE `entry`=7233;
+UPDATE `creature_template` SET `ScriptName`='npc_twiggy_flathead' WHERE `entry`=6248;
+DELETE FROM `areatrigger_scripts` WHERE `entry`=522;
+INSERT INTO `areatrigger_scripts` VALUES (522,'at_twiggy_flathead');
 
 /* BLACK TEMPLE */
 UPDATE `instance_template` SET `script`='instance_black_temple' WHERE `map`=564;

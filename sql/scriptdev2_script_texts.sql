@@ -55,7 +55,13 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1000119, 'Allow me a moment to rest. The journey taxes what little strength I have.', 0, 0, 1, 'wounded elf SAY_ELF_RESTING'),
 (-1000120, 'Did you hear something?', 0, 0, 1, 'wounded elf SAY_ELF_SUMMON2'),
 (-1000121, 'Falcon Watch, at last! Now, where\'s my... Oh no! My pack, it\'s missing! Where has -', 0, 0, 1, 'wounded elf SAY_ELF_COMPLETE'),
-(-1000122, 'You won\'t keep me from getting to Falcon Watch!', 0, 0, 1, 'wounded elf SAY_ELF_AGGRO');
+(-1000122, 'You won\'t keep me from getting to Falcon Watch!', 0, 0, 1, 'wounded elf SAY_ELF_AGGRO'),
+
+(-1000123, 'Ready when you are, $c.', 0, 0, 0, 'big will SAY_BIG_WILL_READY'),
+(-1000124, 'The Affray has begun. $n, get ready to fight!', 0, 0, 0, 'twiggy SAY_TWIGGY_BEGIN'),
+(-1000125, 'You! Enter the fray!', 0, 0, 0, 'twiggy SAY_TWIGGY_FRAY'),
+(-1000126, 'Challenger is down!', 0, 0, 0, 'twiggy SAY_TWIGGY_DOWN'),
+(-1000127, 'The Affray is over.', 0, 0, 0, 'twiggy SAY_TWIGGY_OVER');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
