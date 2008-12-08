@@ -1164,32 +1164,36 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || InCombat)
+        if (!who)
             return;
 
         //Check for OOC LOS Event
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        if (!InCombat)
         {
-            switch ((*i).Event.event_type)
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
-            case EVENT_T_OOC_LOS:
+                switch ((*i).Event.event_type)
                 {
-                    if ((*i).Event.event_param1 && m_creature->IsHostileTo(who))
-                        break;
+                    case EVENT_T_OOC_LOS:
+                    {
+                        if ((*i).Event.event_param1 && m_creature->IsHostileTo(who))
+                            break;
 
-                    if ((*i).Event.event_param2 && !m_creature->IsHostileTo(who))
-                        break;
+                        if ((*i).Event.event_param2 && !m_creature->IsHostileTo(who))
+                            break;
 
-                    ProcessEvent(*i, who);
+                        ProcessEvent(*i, who);
+                    }
+                    break;
                 }
-                break;
             }
         }
 
         if (m_creature->isCivilian() && m_creature->IsNeutralToAll())
             return;
 
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
+        if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
+            m_creature->IsHostileTo(who) && who->isInAccessablePlaceFor(m_creature))
         {
             if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;
@@ -1197,11 +1201,16 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
             {
-                if(who->HasStealthAura())
+                if (!m_creature->getVictim())
+                {
+                    AttackStart(who);
                     who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-
-                //Begin melee attack if we are within range
-                AttackStart(who);
+                }
+                else if (m_creature->GetMap()->IsDungeon())
+                {
+                    who->SetInCombatWith(m_creature);
+                    m_creature->AddThreat(who, 0.0f);
+                }
             }
         }
     }

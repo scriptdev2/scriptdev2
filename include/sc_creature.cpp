@@ -23,7 +23,8 @@ bool ScriptedAI::IsVisible(Unit* who) const
 
 void ScriptedAI::MoveInLineOfSight(Unit *who)
 {
-    if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature))
+    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() && 
+        m_creature->IsHostileTo(who) && who->isInAccessablePlaceFor(m_creature))
     {
         if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
             return;
@@ -31,8 +32,16 @@ void ScriptedAI::MoveInLineOfSight(Unit *who)
         float attackRadius = m_creature->GetAttackDistance(who);
         if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
         {
-            who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-            AttackStart(who);
+            if (!m_creature->getVictim())
+            {
+                AttackStart(who);
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+            }
+            else if (m_creature->GetMap()->IsDungeon())
+            {
+                who->SetInCombatWith(m_creature);
+                m_creature->AddThreat(who, 0.0f);
+            }
         }
     }
 }
