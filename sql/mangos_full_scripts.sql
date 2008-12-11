@@ -284,7 +284,10 @@ UPDATE `creature_template` SET `ScriptName`='npc_thrall_old_hillsbrad' WHERE `en
 UPDATE `creature_template` SET `ScriptName`='boss_chrono_lord_deja' WHERE `entry`=17879;
 UPDATE `creature_template` SET `ScriptName`='boss_aeonus' WHERE `entry`=17881;
 UPDATE `creature_template` SET `ScriptName`='boss_temporus' WHERE `entry`=17880;
-
+UPDATE `instance_template` SET `script`='instance_dark_portal' WHERE `map`=269;
+UPDATE `creature_template` SET `ScriptName`='npc_medivh_bm' WHERE `entry`=15608;
+UPDATE `creature_template` SET `ScriptName`='npc_time_rift' WHERE `entry`=17838;
+UPDATE `creature_template` SET `ScriptName`='npc_saat' WHERE `entry`=20201;
 
 /*  */
 /* COILFANG RESERVOIR */

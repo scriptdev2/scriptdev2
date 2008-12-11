@@ -22,6 +22,7 @@ SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_dark_portal.h"
 
 #define SAY_ENTER               -1269000
 #define SAY_AGGRO               -1269001
@@ -38,7 +39,15 @@ EndScriptData */
 
 struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 {
-    boss_temporusAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_temporusAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        HeroicMode = m_creature->GetMap()->IsHeroic();
+        Reset();
+    }
+
+    ScriptedInstance *pInstance;
+    bool HeroicMode;
 
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
@@ -69,6 +78,9 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
     void JustDied(Unit *victim)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (pInstance)
+            pInstance->SetData(TYPE_RIFT,SPECIAL);
     }
 
     void MoveInLineOfSight(Unit *who)

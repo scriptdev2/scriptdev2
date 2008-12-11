@@ -225,6 +225,8 @@ extern void AddSC_old_hillsbrad();
 extern void AddSC_boss_aeonus();
 extern void AddSC_boss_chrono_lord_deja();
 extern void AddSC_boss_temporus();
+extern void AddSC_dark_portal();
+extern void AddSC_instance_dark_portal();
 
 //Coilfang Resevoir
 //--Serpent Shrine Cavern
@@ -1413,6 +1415,8 @@ void ScriptsInit()
     AddSC_boss_aeonus();
     AddSC_boss_chrono_lord_deja();
     AddSC_boss_temporus();
+    AddSC_dark_portal();
+    AddSC_instance_dark_portal();
 
     //Coilfang Resevoir
     //--Serpent Shrine Cavern
