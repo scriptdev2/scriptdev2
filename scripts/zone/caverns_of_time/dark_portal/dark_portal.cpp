@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Dark_Portal
-SD%Complete: 20
+SD%Complete: 30
 SDComment: Misc NPC's and mobs for instance. Most here far from complete.
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
@@ -169,6 +169,18 @@ CreatureAI* GetAI_npc_medivh_bm(Creature *_Creature)
     return new npc_medivh_bmAI (_Creature);
 }
 
+struct Wave
+{
+    uint32 PortalMob[4];                                    //spawns for portal waves (in order)
+};
+
+static Wave PortalWaves[]=
+{
+    {C_ASSAS, C_WHELP, C_CHRON, 0},
+    {C_EXECU, C_CHRON, C_WHELP, C_ASSAS},
+    {C_EXECU, C_VANQU, C_CHRON, C_ASSAS}
+};
+
 struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
 {
     npc_time_riftAI(Creature *c) : ScriptedAI(c)
@@ -179,16 +191,89 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
  
     ScriptedInstance *pInstance;
  
-    void Reset() {}
+    uint32 TimeRiftWave_Timer;
+    uint8 mRiftWaveCount;
+    uint8 mPortalCount;
+    uint8 mWaveId;
+
+    void Reset()
+    {
+        TimeRiftWave_Timer = 15000;
+        mRiftWaveCount = 0;
+
+        if (!pInstance)
+            return;
+
+        mPortalCount = pInstance->GetData(DATA_PORTAL_COUNT);
+
+        if (mPortalCount < 6)
+            mWaveId = 0;
+        else if (mPortalCount > 12)
+            mWaveId = 2;
+        else mWaveId = 1;
+
+    }
+
     void Aggro(Unit *who) {}
+
+    void DoSummonAtRift(uint32 creature_entry)
+    {
+        if (!creature_entry)
+            return;
+
+        float x,y,z;
+        m_creature->GetRandomPoint(m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),10.0f,x,y,z);
+
+        //normalize Z-level if we can, if rift is not at ground level.
+        z = std::max(m_creature->GetMap()->GetHeight(x, y, MAX_HEIGHT), m_creature->GetMap()->GetWaterLevel(x, y));
+
+        Unit *Summon = m_creature->SummonCreature(creature_entry,x,y,z,m_creature->GetOrientation(),
+            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,30000);
+
+        if (Summon)
+        {
+            if (Unit *temp = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_MEDIVH)))
+                Summon->AddThreat(temp,0.0f);
+        }
+    }
+
+    void DoSelectSummon()
+    {
+        uint32 entry = 0;
+
+        if ((mRiftWaveCount > 2 && mWaveId < 1) || mRiftWaveCount > 3)
+            mRiftWaveCount = 0;
+
+        entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
+        debug_log("SD2: npc_time_rift: summoning wave creature (Wave %u, Entry %u).",mRiftWaveCount,entry);
+
+        ++mRiftWaveCount;
+
+        if (entry == C_WHELP)
+        {
+            for(uint8 i = 0; i < 3; i++)
+                DoSummonAtRift(entry);
+        }else DoSummonAtRift(entry);
+    }
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance && pInstance->GetData(TYPE_RIFT) == IN_PROGRESS)
+        if (!pInstance)
             return;
 
-        debug_log("SD2: npc_time_rift: no event in progress, i need to die.");
+        if (TimeRiftWave_Timer < diff)
+        {
+            DoSelectSummon();
+            TimeRiftWave_Timer = 15000;
+        }else TimeRiftWave_Timer -= diff;
+
+        if (m_creature->IsNonMeleeSpellCasted(false))
+            return;
+
+        debug_log("SD2: npc_time_rift: not casting anylonger, i need to die.");
         m_creature->setDeathState(JUST_DIED);
+
+        pInstance->SetData(TYPE_RIFT,SPECIAL);
     }
 };
 

@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Dark_Portal
-SD%Complete: 30
+SD%Complete: 50
 SDComment: Quest support: 9836, 10297. Currently in progress.
 SDCategory: Caverns of Time, The Dark Portal
 EndScriptData */
@@ -42,17 +42,17 @@ float PortalLocation[4][4]=
 struct Wave
 {
     uint32 PortalBoss;                                      //protector of current portal
-    uint32 PortalMob[4];                                    //spawns for portal waves (in order)
+    uint32 NextPortalTime;                                  //time to next portal, or 0 if portal boss need to be killed
 };
 
 static Wave RiftWaves[]=
 {
-    {RIFT_BOSS, C_ASSAS, C_WHELP, C_CHRON, 0},
-    {C_DEJA, C_ASSAS, C_WHELP, C_CHRON, 0},
-    {RIFT_BOSS, C_EXECU, C_CHRON, C_WHELP, C_ASSAS},
-    {C_TEMPO, C_EXECU, C_CHRON, C_WHELP, C_ASSAS},
-    {RIFT_BOSS, C_EXECU, C_VANQU, C_CHRON, C_ASSAS},
-    {C_AEONUS, 0, 0, 0, 0}
+    {RIFT_BOSS, 0},
+    {C_DEJA, 0},
+    {RIFT_BOSS, 120000},
+    {C_TEMPO, 140000},
+    {RIFT_BOSS, 120000},
+    {C_AEONUS, 0}
 };
 
 struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
@@ -66,11 +66,9 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     uint8 mRiftWaveCount;
     uint8 mRiftWaveId;
 
-    uint32 TimeRift_Timer;
-    bool IsRiftBoss;
+    uint32 NextPortal_Timer;
 
     uint64 MedivhGUID;
-    uint64 TimeRiftGUID[4];
     uint8 CurrentRiftId;
 
     void Initialize()
@@ -91,11 +89,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
         CurrentRiftId = 0;
 
-        TimeRift_Timer      = 30000;
-        IsRiftBoss          = true;
-
-        for(uint8 i = 0; i < 4; i++)
-            TimeRiftGUID[i] = 0;
+        NextPortal_Timer    = 0;
     }
 
     Player* GetPlayerInMap()
@@ -149,17 +143,6 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
     {
         if (creature->GetEntry() == C_MEDIVH)
             MedivhGUID = creature->GetGUID();
-    }
-
-    //perhaps store rift guids in list instead, make it possible (easier) to make selection return random.
-    uint64 SetNextRift()
-    {
-        ++CurrentRiftId;
-
-        if (CurrentRiftId >= 4)
-            CurrentRiftId = 0;
-
-        return TimeRiftGUID[CurrentRiftId];
     }
 
     uint8 GetRiftWaveId()
@@ -216,7 +199,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                     {
                         debug_log("SD2: Instance Dark Portal: Starting event.");
                         InitWorldState();
-                        DoSpawnPortals();
+                        Encounter[1] = IN_PROGRESS;
+                        NextPortal_Timer = 15000;
                     }
 
                     if (data == DONE)
@@ -235,10 +219,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
             case TYPE_RIFT:
                 if (data == SPECIAL)
                 {
-                    if (Unit *rift = Unit::GetUnit(*player,TimeRiftGUID[CurrentRiftId]))
-                        rift->SetVisibility(VISIBILITY_OFF);
-
-                    IsRiftBoss = true;
+                    if (mRiftPortalCount < 7)
+                        NextPortal_Timer = 5000;
                 }
                 else
                     Encounter[1] = data;
@@ -254,6 +236,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                 return Encounter[0];
             case TYPE_RIFT:
                 return Encounter[1];
+            case DATA_PORTAL_COUNT:
+                return mRiftPortalCount;
         }
         return 0;
     }
@@ -266,7 +250,27 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         return 0;
     }
 
-    void DoSpawnPortals()
+    Unit* SummonedPortalBoss(Unit* source)
+    {
+        uint32 entry = RiftWaves[GetRiftWaveId()].PortalBoss;
+        float x,y,z;
+        source->GetRandomPoint(source->GetPositionX(),source->GetPositionY(),source->GetPositionZ(),10.0f,x,y,z);
+        //normalize Z-level if we can, if rift is not at ground level.
+        z = std::max(instance->GetHeight(x, y, MAX_HEIGHT), instance->GetWaterLevel(x, y));
+
+        debug_log("SD2: Instance Dark Portal: Summoning rift boss entry %u.",entry);
+
+        Unit *Summon = source->SummonCreature(entry,x,y,z,source->GetOrientation(),
+            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+
+        if (Summon)
+            return Summon;
+
+        debug_log("SD2: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
+        return NULL;
+    }
+
+    void DoSpawnPortal()
     {
         Player *player = GetPlayerInMap();
         if (!player)
@@ -274,115 +278,59 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
         if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
         {
-            SetData(TYPE_RIFT,IN_PROGRESS);
-
             for(uint8 i = 0; i < 4; i++)
             {
-                Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
-                    PortalLocation[i][0],PortalLocation[i][1],PortalLocation[i][2],PortalLocation[i][3],
-                    TEMPSUMMON_CORPSE_DESPAWN,0);
-                if (temp)
+                int tmp = rand()%4;
+                if (tmp != CurrentRiftId)
                 {
-                    TimeRiftGUID[i] = temp->GetGUID();
-                    temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    temp->SetVisibility(VISIBILITY_OFF);
-                    debug_log("SD2: Instance Dark Portal: Time Rift %u created.",i);
+                    debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp,CurrentRiftId);
+
+                    CurrentRiftId = tmp;
+
+                    Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
+                        PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
+                        TEMPSUMMON_CORPSE_DESPAWN,0);
+
+                    if (temp)
+                    {
+                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        
+                        if (Unit* boss = SummonedPortalBoss(temp))
+                        {
+                            if (boss->GetEntry() == C_AEONUS)
+                            {
+                                boss->AddThreat(medivh,0.0f);
+                            }
+                            else
+                            {
+                                boss->AddThreat(temp,0.0f);
+                                temp->CastSpell(boss,SPELL_RIFT_CHANNEL,false);
+                            }
+                        }
+                    }
+
+                    break;
                 }
             }
-        }
-    }
-
-    void DoSummonAtRift(uint32 creature_entry)
-    {
-        Player *player = GetPlayerInMap();
-        if (!player || !creature_entry)
-            return;
-
-        if (Unit *rift = Unit::GetUnit(*player,TimeRiftGUID[CurrentRiftId]))
-        {
-            float x,y,z;
-            rift->GetRandomPoint(rift->GetPositionX(),rift->GetPositionY(),rift->GetPositionZ(),10.0f,x,y,z);
-
-            //normalize Z-level if we can, if rift is not at ground level.
-            z = std::max(instance->GetHeight(x, y, MAX_HEIGHT), instance->GetWaterLevel(x, y));
-
-            Unit *Summon = rift->SummonCreature(creature_entry,x,y,z,rift->GetOrientation(),
-                IsRiftBoss ? TEMPSUMMON_TIMED_OR_DEAD_DESPAWN : TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
-                IsRiftBoss ? 300000 : 30000);
-
-            if (Summon && !IsRiftBoss)
-            {
-                if (Unit *temp = Unit::GetUnit(*player,MedivhGUID))
-                    Summon->AddThreat(temp,0.0f);
-            }
-            else if (Summon && Summon->GetEntry() == C_AEONUS)
-            {
-                if (Unit *temp = Unit::GetUnit(*player,MedivhGUID))
-                    Summon->AddThreat(temp,0.0f);
-            }
-            else if (Summon)
-            {
-                rift->CastSpell(Summon,SPELL_RIFT_CHANNEL,false);
-                if (Unit *temp = Unit::GetUnit(*player,rift->GetGUID()))
-                    Summon->AddThreat(temp,0.0f);
-            }
-        }
-    }
-
-    void DoSelectSummon()
-    {
-        if (IsRiftBoss)
-        {
-            debug_log("SD2: Instance Dark Portal: Summoning rift boss (Count %u, Entry %u).",
-                mRiftPortalCount,RiftWaves[GetRiftWaveId()].PortalBoss);
-
-            DoSummonAtRift(RiftWaves[GetRiftWaveId()].PortalBoss);
-            IsRiftBoss = false;
-        }
-        else
-        {
-            uint32 entry = 0;
-
-            if ((mRiftWaveCount > 2 && GetRiftWaveId() < 1) || mRiftWaveCount > 3)
-                mRiftWaveCount = 0;
-
-            entry = RiftWaves[GetRiftWaveId()].PortalMob[mRiftWaveCount];
-            debug_log("SD2: Instance Dark Portal: no rift boss, summoning wave creature (Count %u, Entry %u).",
-                mRiftPortalCount,entry);
-
-            ++mRiftWaveCount;
-
-            if (entry == C_WHELP)
-            {
-                for(uint8 i = 0; i < 3; i++)
-                    DoSummonAtRift(entry);
-            }else DoSummonAtRift(entry);
         }
     }
 
     void Update(uint32 diff)
     {
-        if (GetData(TYPE_RIFT) == IN_PROGRESS && TimeRift_Timer)
+        if (GetData(TYPE_RIFT) != IN_PROGRESS)
+            return;
+
+        if (NextPortal_Timer)
         {
-            if (TimeRift_Timer < diff)
+            if (NextPortal_Timer < diff)
             {
-                if (IsRiftBoss)
-                {
-                    ++mRiftPortalCount;
-                    UpdateBMWorldState(WORLD_STATE_BM_RIFT,mRiftPortalCount);
+                ++mRiftPortalCount;
+                UpdateBMWorldState(WORLD_STATE_BM_RIFT,mRiftPortalCount);
 
-                    Player *p = GetPlayerInMap();
-                    if (!p)
-                        return;
-
-                    if (Unit *newRift = Unit::GetUnit(*p,SetNextRift()))
-                        newRift->SetVisibility(VISIBILITY_ON);
-                }
-
-                DoSelectSummon();
-                TimeRift_Timer = 15000;
-            }else TimeRift_Timer -= diff;
+                DoSpawnPortal();
+                NextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;
+            }else NextPortal_Timer -= diff;
         }
     }
 };
