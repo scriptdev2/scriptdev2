@@ -12,7 +12,6 @@
 #include "scripts/creature/mob_event_ai.h"
 
 //*** Global data ***
-int num_db_scripts;
 int num_sc_scripts;
 Script *m_scripts[MAX_SCRIPTS];
 
@@ -1178,10 +1177,9 @@ void ScriptsFree()
     delete []SpellSummary;
 
     // Free resources before library unload
-    for(int i=0;i<num_db_scripts;i++)
+    for(int i=0;i<num_sc_scripts;i++)
         delete m_scripts[i];
 
-    num_db_scripts = 0;
     num_sc_scripts = 0;
 }
 
@@ -1240,8 +1238,6 @@ void ScriptsInit()
     //Load database (must be called after SD2Config.SetSource). In case it failed, no need to even try load.
     if (CanLoadDB)
         LoadDatabase();
-
-    num_db_scripts = GetScriptNames().size();
 
     outstring_log("SD2: Loading C++ scripts");
     barGoLink bar(1);
@@ -1776,7 +1772,7 @@ void ScriptsInit()
 
     // -------------------
 
-    outstring_log(">> Loaded %i C++ Scripts (of %i ScriptNames defined in Mangos database)", num_sc_scripts, num_db_scripts);
+    outstring_log(">> Loaded %i C++ Scripts.", num_sc_scripts);
 }
 
 //*********************************
