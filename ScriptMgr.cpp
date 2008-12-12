@@ -556,21 +556,25 @@ extern void AddSC_winterspring();
 extern void AddSC_zangarmarsh();
 
 //Zul'Farrak
+extern void AddSC_zulfarrak();
+
 //Zul'Gurub
-extern void AddSC_boss_jeklik();
-extern void AddSC_boss_venoxis();
-extern void AddSC_boss_marli();
-extern void AddSC_boss_mandokir();
-extern void AddSC_boss_gahzranka();
-extern void AddSC_boss_thekal();
 extern void AddSC_boss_arlokk();
-extern void AddSC_boss_jindo();
-extern void AddSC_boss_hakkar();
+extern void AddSC_boss_gahzranka();
 extern void AddSC_boss_grilek();
+extern void AddSC_boss_hakkar();
 extern void AddSC_boss_hazzarah();
+extern void AddSC_boss_jeklik();
+extern void AddSC_boss_jindo();
+extern void AddSC_boss_mandokir();
+extern void AddSC_boss_marli();
+extern void AddSC_boss_ouro();
 extern void AddSC_boss_renataki();
+extern void AddSC_boss_thekal();
+extern void AddSC_boss_venoxis();
 extern void AddSC_boss_wushoolay();
 extern void AddSC_instance_zulgurub();
+
 //Zul'Aman
 extern void AddSC_boss_janalai();
 extern void AddSC_boss_nalorakk();
@@ -1745,19 +1749,22 @@ void ScriptsInit()
     AddSC_zangarmarsh();
 
     //Zul'Farrak
+    AddSC_zulfarrak();
+
     //Zul'Gurub
-    AddSC_boss_jeklik();
-    AddSC_boss_venoxis();
-    AddSC_boss_marli();
-    AddSC_boss_mandokir();
-    AddSC_boss_gahzranka();
-    AddSC_boss_thekal();
     AddSC_boss_arlokk();
-    AddSC_boss_jindo();
-    AddSC_boss_hakkar();
+    AddSC_boss_gahzranka();
     AddSC_boss_grilek();
+    AddSC_boss_hakkar();
     AddSC_boss_hazzarah();
+    AddSC_boss_jeklik();
+    AddSC_boss_jindo();
+    AddSC_boss_mandokir();
+    AddSC_boss_marli();
+    AddSC_boss_ouro();
     AddSC_boss_renataki();
+    AddSC_boss_thekal();
+    AddSC_boss_venoxis();
     AddSC_boss_wushoolay();
     AddSC_instance_zulgurub();
 
