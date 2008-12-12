@@ -30,6 +30,7 @@ EndScriptData */
 #define SAY_SLAY1         -1269015
 #define SAY_SLAY2         -1269016
 #define SAY_DEATH         -1269017
+#define EMOTE_FRENZY      -1269018
 
 #define SPELL_CLEAVE        40504
 #define SPELL_TIME_STOP     31422
@@ -110,6 +111,7 @@ struct MANGOS_DLL_DECL boss_aeonusAI : public ScriptedAI
         //Frenzy
         if (Frenzy_Timer < diff)
         {
+            DoScriptText(EMOTE_FRENZY, m_creature);
             DoCast(m_creature, SPELL_ENRAGE);
             Frenzy_Timer = 120000;
         }else Frenzy_Timer -= diff;

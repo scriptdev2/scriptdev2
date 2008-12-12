@@ -29,6 +29,16 @@ EndContentData */
 #include "precompiled.h"
 #include "def_dark_portal.h"
 
+#define SAY_ENTER               -1269020                    //where does this belong?
+#define SAY_INTRO               -1269021
+#define SAY_WEAK75              -1269022
+#define SAY_WEAK50              -1269023
+#define SAY_WEAK25              -1269024
+#define SAY_DEATH               -1269025
+#define SAY_WIN                 -1269026
+#define SAY_ORCS_ENTER          -1269027
+#define SAY_ORCS_ANSWER         -1269028
+
 #define SPELL_CHANNEL           31556
 #define SPELL_PORTAL_RUNE       32570                       //aura(portal on ground effect)
 
@@ -40,6 +50,8 @@ EndContentData */
 
 #define SPELL_CORRUPT           31326
 #define SPELL_CORRUPT_AEONUS    37853
+
+#define C_COUNCIL_ENFORCER      17023
 
 struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 {
@@ -78,7 +90,7 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
             if (pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
                 return;
 
-            //DoScriptText();
+            DoScriptText(SAY_INTRO, m_creature);
             pInstance->SetData(TYPE_MEDIVH,IN_PROGRESS);
             m_creature->CastSpell(m_creature,SPELL_CHANNEL,false);
         }
@@ -122,7 +134,10 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
             SpellCorrupt_Timer = 3000;
     }
 
-    void JustDied(Unit* Killer) {}
+    void JustDied(Unit* Killer)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+    }
 
     void UpdateAI(const uint32 diff)
     {
@@ -181,6 +196,8 @@ CreatureAI* GetAI_npc_time_rift(Creature *_Creature)
 {
     return new npc_time_riftAI (_Creature);
 }
+
+#define SAY_SAAT_WELCOME        -1269019
 
 #define GOSSIP_ITEM_OBTAIN      "[PH] Obtain Chrono-Beacon"
 #define SPELL_CHRONO_BEACON     34975
