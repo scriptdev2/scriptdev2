@@ -23,6 +23,7 @@ EndScriptData */
 
 /* ContentData
 npc_medivh_bm
+npc_time_rift
 npc_saat
 EndContentData */
 
@@ -64,10 +65,20 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
     ScriptedInstance *pInstance;
 
     uint32 SpellCorrupt_Timer;
+    uint32 Check_Timer;
+
+    bool Life75;
+    bool Life50;
+    bool Life25;
 
     void Reset()
     {
         SpellCorrupt_Timer = 0;
+        Check_Timer = 0;
+
+        Life75 = true;
+        Life50 = true;
+        Life25 = true;
 
         if (!pInstance)
             return;
@@ -93,19 +104,18 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
             DoScriptText(SAY_INTRO, m_creature);
             pInstance->SetData(TYPE_MEDIVH,IN_PROGRESS);
             m_creature->CastSpell(m_creature,SPELL_CHANNEL,false);
+            Check_Timer = 5000;
         }
         else if (who->GetTypeId() == TYPEID_UNIT && m_creature->IsWithinDistInMap(who, 15.0f))
         {
             uint32 entry = who->GetEntry();
             if (entry == C_ASSAS || entry == C_WHELP || entry == C_CHRON || entry == C_EXECU || entry == C_VANQU)
             {
-                who->GetMotionMaster()->MoveIdle();
                 who->StopMoving();
                 who->CastSpell(m_creature,SPELL_CORRUPT,false);
             }
             else if (entry == C_AEONUS)
             {
-                who->GetMotionMaster()->MoveIdle();
                 who->StopMoving();
                 who->CastSpell(m_creature,SPELL_CORRUPT_AEONUS,false);
             }
@@ -141,12 +151,14 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+        if (!pInstance)
+            return;
+
         if (SpellCorrupt_Timer)
         {
             if (SpellCorrupt_Timer < diff)
             {
-                if (pInstance)
-                    pInstance->SetData(TYPE_MEDIVH,SPECIAL);
+                pInstance->SetData(TYPE_MEDIVH,SPECIAL);
 
                 if (m_creature->HasAura(SPELL_CORRUPT_AEONUS,0))
                     SpellCorrupt_Timer = 1000;
@@ -155,6 +167,40 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                 else
                     SpellCorrupt_Timer = 0;
             }else SpellCorrupt_Timer -= diff;
+        }
+
+        if (Check_Timer)
+        {
+            if (Check_Timer < diff)
+            {
+                uint32 pct = pInstance->GetData(DATA_SHIELD);
+
+                Check_Timer = 5000;
+
+                if (Life25 && pct <= 25)
+                {
+                    DoScriptText(SAY_WEAK25, m_creature);
+                    Life25 = false;
+                    Check_Timer = 0;
+                }
+                else if (Life50 && pct <= 50)
+                {
+                    DoScriptText(SAY_WEAK50, m_creature);
+                    Life50 = false;
+                }
+                else if (Life75 && pct <= 75)
+                {
+                    DoScriptText(SAY_WEAK75, m_creature);
+                    Life75 = false;
+                }
+
+                if (pInstance->GetData(TYPE_MEDIVH) == DONE)
+                {
+                    DoScriptText(SAY_WIN, m_creature);
+                    Check_Timer = 0;
+                    //TODO: start the post-event here
+                }
+            }else Check_Timer -= diff;
         }
 
         //if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

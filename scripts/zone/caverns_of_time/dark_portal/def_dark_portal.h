@@ -10,6 +10,7 @@
 
 #define DATA_MEDIVH             10
 #define DATA_PORTAL_COUNT       11
+#define DATA_SHIELD             12
 
 #define WORLD_STATE_BM          2541
 #define WORLD_STATE_BM_SHIELD   2540

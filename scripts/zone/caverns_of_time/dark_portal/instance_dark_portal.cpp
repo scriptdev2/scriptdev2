@@ -238,6 +238,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                 return Encounter[1];
             case DATA_PORTAL_COUNT:
                 return mRiftPortalCount;
+            case DATA_SHIELD:
+                return mShieldPercent;
         }
         return 0;
     }
