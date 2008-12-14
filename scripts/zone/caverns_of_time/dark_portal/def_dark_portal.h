@@ -19,6 +19,7 @@
 #define QUEST_OPENING_PORTAL    10297
 #define QUEST_MASTER_TOUCH      9836
 
+#define C_TIME_KEEPER           17918
 #define C_RKEEP                 21104
 #define C_RLORD                 17839
 #define RIFT_BOSS               urand(0,1) ? C_RKEEP : C_RLORD

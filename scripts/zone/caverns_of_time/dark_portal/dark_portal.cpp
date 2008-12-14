@@ -108,6 +108,9 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
         }
         else if (who->GetTypeId() == TYPEID_UNIT && m_creature->IsWithinDistInMap(who, 15.0f))
         {
+            if (pInstance->GetData(TYPE_MEDIVH) != IN_PROGRESS)
+                return;
+
             uint32 entry = who->GetEntry();
             if (entry == C_ASSAS || entry == C_WHELP || entry == C_CHRON || entry == C_EXECU || entry == C_VANQU)
             {
@@ -146,6 +149,9 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
+        if (Killer->GetEntry() == m_creature->GetEntry())
+            return;
+
         DoScriptText(SAY_DEATH, m_creature);
     }
 
@@ -192,6 +198,15 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                 {
                     DoScriptText(SAY_WEAK75, m_creature);
                     Life75 = false;
+                }
+
+                //if we reach this it means event was running but at some point reset.
+                if (pInstance->GetData(TYPE_MEDIVH) == NOT_STARTED)
+                {
+                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                    m_creature->RemoveCorpse();
+                    m_creature->Respawn();
+                    return;
                 }
 
                 if (pInstance->GetData(TYPE_MEDIVH) == DONE)
@@ -266,6 +281,13 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
     {
         if (!creature_entry)
             return;
+
+        if (pInstance->GetData(TYPE_MEDIVH) != IN_PROGRESS)
+        {
+            m_creature->InterruptNonMeleeSpells(true);
+            m_creature->RemoveAllAuras();
+            return;
+        }
 
         float x,y,z;
         m_creature->GetRandomPoint(m_creature->GetPositionX(),m_creature->GetPositionY(),m_creature->GetPositionZ(),10.0f,x,y,z);

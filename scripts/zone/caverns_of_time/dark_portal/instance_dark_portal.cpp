@@ -106,7 +106,6 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
         }
 
         debug_log("SD2: Instance Black Portal: GetPlayerInMap, but PlayerList is empty!");
-        Clear();
         return NULL;
     }
 
@@ -133,16 +132,33 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     bool IsEncounterInProgress()
     {
-        if (GetData(TYPE_MEDIVH))
+        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
             return true;
 
         return false;
+    }
+
+    void OnPlayerEnter(Player *player)
+    {
+        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
+            return;
+
+        player->SendUpdateWorldState(WORLD_STATE_BM,0);
     }
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         if (creature->GetEntry() == C_MEDIVH)
             MedivhGUID = creature->GetGUID();
+    }
+
+    //what other conditions to check?
+    bool CanProgressEvent()
+    {
+        if (!GetPlayerInMap())
+            return false;
+
+        return true;
     }
 
     uint8 GetRiftWaveId()
@@ -320,8 +336,15 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
     void Update(uint32 diff)
     {
-        if (GetData(TYPE_RIFT) != IN_PROGRESS)
+        if (Encounter[1] != IN_PROGRESS)
             return;
+
+        //add delay timer?
+        if (!CanProgressEvent())
+        {
+            Clear();
+            return;
+        }
 
         if (NextPortal_Timer)
         {

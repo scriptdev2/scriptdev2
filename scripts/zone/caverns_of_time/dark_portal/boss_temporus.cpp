@@ -85,33 +85,17 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!who || m_creature->getVictim())
-            return;
-
         //Despawn Time Keeper
-        if (who->GetTypeId() == TYPEID_UNIT)
+        if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
         {
-            if(((Creature*)who)->GetEntry() == 17918 && m_creature->IsWithinDistInMap(who,20))
+            if (m_creature->IsWithinDistInMap(who,20.0f))
             {
-                //This is the wrong yell & sound for despawning time keepers!
-                DoScriptText(SAY_ENTER, m_creature);
-
+                DoScriptText(SAY_BANISH, m_creature);
                 m_creature->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             }
         }
 
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void UpdateAI(const uint32 diff)
@@ -130,8 +114,6 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
         //Spell Reflection
         if (SpellReflection_Timer < diff)
         {
-            DoScriptText(SAY_BANISH, m_creature);
-
             DoCast(m_creature, SPELL_REFLECT);
             SpellReflection_Timer = 40000+rand()%10000;
         }else SpellReflection_Timer -= diff;

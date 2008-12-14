@@ -64,6 +64,21 @@ struct MANGOS_DLL_DECL boss_chrono_lord_dejaAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
+    void MoveInLineOfSight(Unit *who)
+    {
+        //Despawn Time Keeper
+        if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
+        {
+            if (m_creature->IsWithinDistInMap(who,20.0f))
+            {
+                DoScriptText(SAY_BANISH, m_creature);
+                m_creature->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            }
+        }
+
+        ScriptedAI::MoveInLineOfSight(who);
+    }
+
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
