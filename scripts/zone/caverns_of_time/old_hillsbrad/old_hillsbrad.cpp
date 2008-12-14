@@ -482,6 +482,9 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustDied(Unit *slayer)
     {
+        if (pInstance)
+            pInstance->SetData(TYPE_THRALL_EVENT,FAIL);
+
         // Don't do a yell if he kills self (if player goes too far or at the end).
         if (slayer == m_creature)
             return;
@@ -491,9 +494,6 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case 0: DoScriptText(SAY_TH_RANDOM_DIE1, m_creature); break;
             case 1: DoScriptText(SAY_TH_RANDOM_DIE2, m_creature); break;
         }
-
-        if (pInstance)
-            pInstance->SetData(TYPE_THRALL_EVENT,FAIL);
     }
 
     void UpdateAI(const uint32 diff)
