@@ -1,5 +1,9 @@
 /*  */
 
+/* AREATRIGGER */
+DELETE FROM `areatrigger_scripts` WHERE `entry`=4560;
+INSERT INTO `areatrigger_scripts` VALUES (4560,'at_legion_teleporter');
+
 /* WORLD BOSS */
 UPDATE `creature_template` SET `ScriptName`='boss_ysondre' WHERE `entry`=14887;
 UPDATE `creature_template` SET `ScriptName`='boss_emeriss' WHERE `entry`=14889;
@@ -653,7 +657,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_shadowfang_prisoner' WHERE `ent
 /* SHADOWMOON VALLEY */
 UPDATE `creature_template` SET `ScriptName`='boss_doomwalker' WHERE `entry`=17711;
 UPDATE `creature_template` SET `ScriptName`='npc_drake_dealer_hurlunk' WHERE `entry`=23489;
-UPDATE `creature_template` SET `ScriptName`='npc_invis_legion_teleporter' WHERE `entry`=21807;
 UPDATE `creature_template` SET `ScriptName`='npcs_flanis_swiftwing_and_kagrosh' WHERE `entry` IN (21725,21727);
 UPDATE `creature_template` SET `ScriptName`='npc_murkblood_overseer' WHERE `entry`=23309;
 UPDATE `creature_template` SET `ScriptName`='npc_neltharaku' WHERE `entry`=21657;
