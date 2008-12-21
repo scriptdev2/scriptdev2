@@ -259,7 +259,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (pInstance && !pInstance->GetData(DATA_MOROES_EVENT))
@@ -280,7 +280,7 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 {
                     Temp = Unit::GetUnit((*m_creature),AddGUID[i]);
                     if (Temp && Temp->isAlive())
-                        if (!Temp->SelectHostilTarget() || !Temp->getVictim() )
+                        if (!Temp->SelectHostilTarget() || !Temp->getVictim())
                             ((Creature*)Temp)->AI()->AttackStart(m_creature->getVictim());
                 }
             }
@@ -322,13 +322,10 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
                 }else Wait_Timer -= diff;
             }
 
-            //Blind highest aggro, and attack second highest
+            //Gouge highest aggro, and attack second highest
             if (Gouge_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_GOUGE);
-
-                if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                    m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
                 Gouge_Timer = 40000;
             }else Gouge_Timer -= diff;
 
@@ -610,7 +607,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 {
     //Holy Pally
-    boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c)  {}
+    boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c) {}
 
     uint32 Cleanse_Timer;
     uint32 GreaterBless_Timer;
@@ -631,7 +628,7 @@ struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -693,7 +690,7 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
@@ -745,7 +742,7 @@ struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_moroes_guestAI::UpdateAI(diff);
