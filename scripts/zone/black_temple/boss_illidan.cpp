@@ -190,6 +190,9 @@ static Yells MaievTaunts[]=
 #define CENTER_Y            305.297
 #define CENTER_Z            353.192
 
+#define ITEM_ID_MAIN_HAND   32837
+#define ITEM_ID_OFF_HAND    32838
+
 /*** Phase Names ***/
 enum Phase
 {
@@ -980,8 +983,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         // Unequip warglaives if needed
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
+
         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
 
         IsTalking = false;
@@ -1259,14 +1262,14 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if (DemonTransformation[count].equip)
         {
             // Requip warglaives if needed
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_MAIN_HAND);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, ITEM_ID_OFF_HAND);
         }
         else
         {
             // Unequip warglaives if needed
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, 0);
         }
 
         if (DemonTransformation[count].phase != 8)
@@ -1342,10 +1345,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         DoCast(m_creature, SPELL_THROW_GLAIVE2);
 
         // We no longer wear the glaives!
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
 
         // since they are now channeling the flames (or will be)
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, 0);
 
         for(uint8 i = 0; i < 2; ++i)
         {
@@ -1479,8 +1482,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                         break;
                     case 8:
                         // Equip our warglaives!
-                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
-                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_MAIN_HAND);
+                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, ITEM_ID_OFF_HAND);
                         // Hostile if we weren't before
                         m_creature->setFaction(14);
                         break;
@@ -1748,9 +1751,11 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                                 GlaiveGUID[i] = 0;
                             }
                         }
+
                         // Re-equip our warblades!
-                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 45479);
-                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 45481);
+                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_MAIN_HAND);
+                        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, ITEM_ID_OFF_HAND);
+
                         // Prepare for landin'!
                         LandTimer = 5000;
                         RetrieveBladesTimer = 0;

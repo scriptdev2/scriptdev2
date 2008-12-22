@@ -87,11 +87,10 @@ static InfernalPoint InfernalPoints[] =
 #define NETHERSPITE_INFERNAL    17646                       //The netherspite infernal creature
 #define MALCHEZARS_AXE          17650                       //Malchezar's axes (creatures), summoned during phase 3
 
-#define INFERNAL_MODEL_INVISIBLE 11686                      //Infernal Effects
-#define SPELL_INFERNAL_RELAY     30834
+#define INFERNAL_MODEL_INVISIBLE    11686                   //Infernal Effects
+#define SPELL_INFERNAL_RELAY        30834
 
-#define AXE_EQUIP_MODEL          40066                      //Axes info
-#define AXE_EQUIP_INFO           33448898
+#define ITEM_ID_AXE                 33542                   //Axes info
 
 //---------Infernal code first
 struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
@@ -259,11 +258,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void ClearWeapons()
     {
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
-
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, 0);
 
         //damage
         const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
@@ -405,11 +401,8 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 m_creature->CastSpell(m_creature, SPELL_THRASH_AURA, true);
 
                 //models
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, AXE_EQUIP_MODEL);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, AXE_EQUIP_INFO);
-
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, AXE_EQUIP_MODEL);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, AXE_EQUIP_INFO);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_AXE);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, ITEM_ID_AXE);
 
                 //damage
                 const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
@@ -447,11 +440,11 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                     Creature *axe = m_creature->SummonCreature(MALCHEZARS_AXE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                     if (axe)
                     {
-                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, AXE_EQUIP_MODEL);
-                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, AXE_EQUIP_INFO);
+                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_AXE);
 
                         axe->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         axe->setFaction(m_creature->getFaction());
+
                         axes[i] = axe->GetGUID();
                         if (target)
                         {

@@ -27,6 +27,8 @@ EndScriptData */
 #define SPELL_AMBUSH         24337
 #define SPELL_THOUSANDBLADES 24649
 
+#define ITEM_ID_MAIN_HAND       0                           //was item display id 31818, but this id does not exist
+
 struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 {
     boss_renatakiAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -65,11 +67,11 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         if (Invisible_Timer < diff)
         {
             m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO , 218171138);
-            m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO  + 1, 3);
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);
+
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             Invisible = true;
 
             Invisible_Timer = 15000 + rand()%15000;
@@ -98,11 +100,10 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             if (Visible_Timer < diff)
             {
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,15268);
-                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 31818);
-                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO , 218171138);
-                m_creature->SetUInt32Value( UNIT_VIRTUAL_ITEM_INFO  + 1, 3);
+
+                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15268);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_MAIN_HAND);
+
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Invisible = false;
 

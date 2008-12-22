@@ -160,10 +160,8 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define SPEED_RUN                   (1.0f)
 #define SPEED_MOUNT                 (1.6f)
 
-#define THRALL_WEAPON_MODEL         22106
-#define THRALL_WEAPON_INFO          218169346
-#define THRALL_SHIELD_MODEL         18662
-#define THRALL_SHIELD_INFO          234948100
+#define ITEM_ID_WEAPON              927
+#define ITEM_ID_SHIELD              20913
 #define THRALL_MODEL_UNEQUIPPED     17292
 #define THRALL_MODEL_EQUIPPED       18165
 
@@ -235,12 +233,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             case 9:
                 DoScriptText(SAY_TH_ARMORY, m_creature);
                 m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, THRALL_WEAPON_MODEL);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, THRALL_SHIELD_MODEL);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, THRALL_SHIELD_INFO);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 1038);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_WEAPON);
+                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+2, ITEM_ID_SHIELD);
                 break;
             case 10:
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_EQUIPPED);
@@ -397,12 +391,8 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         {
             DoUnmount();
             HadMount = false;
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 0);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
+            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+2, 0);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_UNEQUIPPED);
         }
 
