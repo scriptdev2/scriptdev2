@@ -25,9 +25,6 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 ## Files to be installed
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
-	09_BraveWindfeather.sql \
-	11_SilvaFilnaveth.sql \
-	27_Vaelastraz.sql \
 	r56.sql \
 	r59.sql \
 	r63.sql \
