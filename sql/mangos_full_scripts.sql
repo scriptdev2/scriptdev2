@@ -821,6 +821,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_skyguard_handler_irena' WHERE `
 UPDATE `creature_template` SET `ScriptName`='npc_cairne_bloodhoof' WHERE `entry`=3057;
 
 /* TIRISFAL GLADES */
+UPDATE `gameobject_template` SET `ScriptName`='go_mausoleum_trigger' WHERE `entry`=104593;
+UPDATE `gameobject_template` SET `ScriptName`='go_mausoleum_door' WHERE `entry`=176594;
 UPDATE `creature_template` SET `ScriptName`='npc_calvin_montague' WHERE `entry`=6784;
 
 /* ULDAMAN */
