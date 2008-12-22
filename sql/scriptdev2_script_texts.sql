@@ -72,7 +72,10 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1000134, 'We\'ve had too many setbacks along the way: Hellfire Citadel, Fallen Sky Ridge, Firewing Point... Prince Kael\'thas will tolerate no further delays. I will tolerate nothing other than complete success!', 0, 0, 0, 'dawnforge PATHALEON_CULATOR_IMAGE_2_1'),
 (-1000135, 'I am returning to Tempest Keep. See to it that I do not have reason to return!', 0, 0, 0, 'dawnforge PATHALEON_CULATOR_IMAGE_2_2' ),
 (-1000136, 'Yes, my lord.', 0, 0, 0, 'dawnforge COMMANDER_DAWNFORGE_4 SAY_ARCANIST_ARDONIS_2'),
-(-1000137, 'See to it, Ardonis!', 0, 0, 0, 'dawnforge COMMANDER_DAWNFORGE_5');
+(-1000137, 'See to it, Ardonis!', 0, 0, 0, 'dawnforge COMMANDER_DAWNFORGE_5'),
+
+(-1000138, 'Avruu\'s magic... it still controls me. You must fight me, mortal. It\'s the only way to break the spell!', 0, 0, 0, 'aeranas SAY_SUMMON'),
+(-1000139, 'Avruu\'s magic is broken! I\'m free once again!', 0, 0, 0, 'aeranas SAY_FREE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
