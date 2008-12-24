@@ -45,6 +45,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     instance_karazhan(Map* map) : ScriptedInstance(map) {Initialize();}
 
     uint32 Encounters[ENCOUNTERS];
+    std::string str_data;
 
     uint32 OperaEvent;
     uint32 OzDeathCount;
@@ -170,7 +171,19 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         }
 
         if (data == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
+                << Encounters[3] << " " << Encounters[4] << " " << Encounters[5] << " " << Encounters[6] << " "
+                << Encounters[7] << " " << Encounters[8] << " " << Encounters[9] << " " << Encounters[10];
+
+            str_data = saveStream.str();
+
             SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
     }
 
     void OnObjectCreate(GameObject* go)
@@ -201,23 +214,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
     const char* Save()
     {
-        OUT_SAVE_INST_DATA;
-
-        std::ostringstream stream;
-        stream << Encounters[0] << " "  << Encounters[1] << " "  << Encounters[2] << " "  << Encounters[3] << " "
-            << Encounters[4] << " "  << Encounters[5] << " "  << Encounters[6] << " "  << Encounters[7] << " "
-            << Encounters[8] << " "  << Encounters[9] << " "  << Encounters[10];
-
-        char* out = new char[stream.str().length() + 1];
-        strcpy(out, stream.str().c_str());
-
-        if (out)
-        {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
-        }
-
-        return NULL;
+        return str_data.c_str();
     }
 
     void Load(const char* in)
@@ -230,13 +227,13 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         OUT_LOAD_INST_DATA(in);
 
-        std::istringstream stream(in);
-        stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
+        std::istringstream loadStream(in);
+        loadStream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
             >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7]
             >> Encounters[8] >> Encounters[9] >> Encounters[10];
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if(Encounters[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
+            if (Encounters[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
                 Encounters[i] = NOT_STARTED;
 
         OUT_LOAD_INST_DATA_COMPLETE;

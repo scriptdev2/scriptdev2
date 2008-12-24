@@ -42,6 +42,9 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 {
     instance_black_temple(Map *map) : ScriptedInstance(map) {Initialize();};
 
+    uint32 Encounters[ENCOUNTERS];
+    std::string str_data;
+
     uint64 Najentus;
     uint64 Akama;                                           // This is the Akama that starts the Illidan encounter.
     uint64 Akama_Shade;                                     // This is the Akama that starts the Shade of Akama encounter.
@@ -62,8 +65,6 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     uint64 ShahrazPreDoor;
     uint64 ShahrazPostDoor;
     uint64 CouncilDoor;
-
-    uint32 Encounters[ENCOUNTERS];
 
     void Initialize()
     {
@@ -103,7 +104,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 22887:    Najentus = creature->GetGUID();                  break;
             case 23089:    Akama = creature->GetGUID();                     break;
@@ -203,7 +204,19 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
 
         if (data == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
+                << Encounters[3] << " " << Encounters[4] << " " << Encounters[5] << " "
+                << Encounters[6] << " " << Encounters[7] << " " << Encounters[8];
+
+            str_data = saveStream.str();
+
             SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
     }
 
     uint32 GetData(uint32 type)
@@ -226,20 +239,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
 
     const char* Save()
     {
-        OUT_SAVE_INST_DATA;
-        std::ostringstream stream;
-        stream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
-            << Encounters[3] << " " << Encounters[4] << " " << Encounters[5] << " "
-            << Encounters[6] << " " << Encounters[7] << " " << Encounters[8];
-        char* out = new char[stream.str().length() + 1];
-        strcpy(out, stream.str().c_str());
-        if (out)
-        {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
-        }
-
-        return NULL;
+        return str_data.c_str();
     }
 
     void Load(const char* in)
@@ -251,13 +251,15 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
         }
 
         OUT_LOAD_INST_DATA(in);
-        std::istringstream stream(in);
-        stream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
-            >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7]
-            >> Encounters[8];
+
+        std::istringstream loadStream(in);
+        loadStream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3]
+            >> Encounters[4] >> Encounters[5] >> Encounters[6] >> Encounters[7] >> Encounters[8];
+
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             if (Encounters[i] == IN_PROGRESS)               // Do not load an encounter as "In Progress" - reset it instead.
                 Encounters[i] = NOT_STARTED;
+
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
