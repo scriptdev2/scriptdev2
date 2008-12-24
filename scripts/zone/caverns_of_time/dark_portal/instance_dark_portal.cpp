@@ -302,39 +302,35 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
 
         if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
         {
-            for(uint8 i = 0; i < 4; i++)
-            {
-                int tmp = rand()%4;
-                if (tmp != CurrentRiftId)
-                {
-                    debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp,CurrentRiftId);
+            int tmp = rand()%(4-1);
 
-                    CurrentRiftId = tmp;
+            if (tmp >= CurrentRiftId)
+                tmp++;
 
-                    Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
+            debug_log("SD2: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp,CurrentRiftId);
+
+            CurrentRiftId = tmp;
+
+            Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
                         PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
                         TEMPSUMMON_CORPSE_DESPAWN,0);
 
-                    if (temp)
-                    {
-                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            if (temp)
+            {
+                temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         
-                        if (Unit* boss = SummonedPortalBoss(temp))
-                        {
-                            if (boss->GetEntry() == C_AEONUS)
-                            {
-                                boss->AddThreat(medivh,0.0f);
-                            }
-                            else
-                            {
-                                boss->AddThreat(temp,0.0f);
-                                temp->CastSpell(boss,SPELL_RIFT_CHANNEL,false);
-                            }
-                        }
+                if (Unit* boss = SummonedPortalBoss(temp))
+                {
+                    if (boss->GetEntry() == C_AEONUS)
+                    {
+                        boss->AddThreat(medivh,0.0f);
                     }
-
-                    break;
+                    else
+                    {
+                        boss->AddThreat(temp,0.0f);
+                        temp->CastSpell(boss,SPELL_RIFT_CHANNEL,false);
+                    }
                 }
             }
         }

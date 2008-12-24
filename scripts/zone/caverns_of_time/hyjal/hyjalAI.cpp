@@ -139,7 +139,7 @@ void hyjalAI::EnterEvadeMode()
 
 void hyjalAI::Aggro(Unit *who)
 {
-    for(uint8 i = 0; i < 2; ++i)
+    for(uint8 i = 0; i < 3; ++i)
         if (Spell[i].Cooldown)
             SpellTimer[i] = Spell[i].Cooldown;
 
