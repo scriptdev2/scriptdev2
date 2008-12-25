@@ -128,6 +128,16 @@ UPDATE `creature_template` SET `ScriptName`='boss_grandmaster_vorpil' WHERE `ent
 UPDATE `creature_template` SET `ScriptName`='boss_blackheart_the_inciter' WHERE `entry`=18667;
 UPDATE `creature_template` SET `ScriptName`='boss_ambassador_hellmaw' WHERE `entry`=18731;
 
+/*  */
+/* AZJOL-NERUB */
+/*  */
+
+/* AHN'KAHET */
+
+
+/* AZJOL-NERUB */
+
+
 /* AZSHARA */
 UPDATE `creature_template` SET `ScriptName`='mobs_spitelashes' WHERE `entry` IN (6190,6193,6194,6195,6196,7885,7886,12204,12205);
 UPDATE `creature_template` SET `ScriptName`='npc_loramus_thalipedes' WHERE `entry`=7783;
@@ -256,6 +266,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_fallen_hero_of_horde' WHERE `en
 UPDATE `creature_template` SET `ScriptName`='mob_webbed_creature' WHERE `entry`=17680;
 UPDATE `creature_template` SET `ScriptName`='npc_captured_sunhawk_agent' WHERE `entry`=17824;
 
+/* BOREAN TUNDRA */
+
+
 /* BURNING STEPPES */
 UPDATE `creature_template` SET `ScriptName`='npc_ragged_john' WHERE `entry`=9563;
 
@@ -283,6 +296,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_brazen' WHERE `entry`=18725;
 UPDATE `creature_template` SET `ScriptName`='npc_erozion' WHERE `entry`=18723;
 UPDATE `creature_template` SET `ScriptName`='npc_taretha' WHERE `entry`=18887;
 UPDATE `creature_template` SET `ScriptName`='npc_thrall_old_hillsbrad' WHERE `entry`=17876;
+
+/* THE CULLING OF STRATHOLME */
 
 /* THE DARK PORTAL */
 UPDATE `creature_template` SET `ScriptName`='boss_chrono_lord_deja' WHERE `entry`=17879;
@@ -337,7 +352,16 @@ UPDATE `creature_template` SET `ScriptName`='mob_fathom_sporebat' WHERE `entry`=
 UPDATE `creature_template` SET `ScriptName`='mob_shield_generator_channel' WHERE `entry`=19870;
 
 
+/* CRYSTALSONG FOREST */
+
+
+/* DALARAN */
+
+
 /* DARKSHORE */
+
+
+/* DARNASSUS */
 
 
 /* DEADMINES */
@@ -352,6 +376,12 @@ UPDATE `gameobject_template` SET `ScriptName`='go_door_lever_dm' WHERE `entry`=1
 
 
 /* DIRE MAUL */
+
+
+/* DRAGONBLIGHT */
+
+
+/* DRAK'THARON KEEP */
 
 
 /* DUN MOROGH */
@@ -399,6 +429,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_rathis_tomber' WHERE `entry`=16
 /* GNOMEREGAN */
 
 
+/* GRIZZLY HILLS */
+
+
 /* GRUUL'S LAIR */
 UPDATE `instance_template` SET `script`='instance_gruuls_lair' WHERE `map` =565;
 UPDATE `creature_template` SET `ScriptName`='boss_gruul' WHERE `entry`=19044;
@@ -408,6 +441,9 @@ UPDATE `creature_template` SET `ScriptName`='boss_kiggler_the_crazed' WHERE `ent
 UPDATE `creature_template` SET `ScriptName`='boss_blindeye_the_seer' WHERE `entry`=18836;
 UPDATE `creature_template` SET `ScriptName`='boss_olm_the_summoner' WHERE `entry`=18834;
 UPDATE `creature_template` SET `ScriptName`='boss_krosh_firehand' WHERE `entry`=18832;
+
+/* GUNDRAK */
+
 
 /*  */
 /* HELLFIRE CITADEL */
@@ -457,6 +493,12 @@ UPDATE `creature_template` SET `ScriptName`='npc_wounded_blood_elf' WHERE `entry
 /* HINTERLANDS */
 
 
+/* HOWLING FJORD */
+
+
+/* ICECROWN */
+
+
 /* IRONFORGE */
 UPDATE `creature_template` SET `ScriptName`='npc_royal_historian_archesonus' WHERE `entry`=8879;
 
@@ -502,11 +544,10 @@ UPDATE `creature_template` SET `ScriptName`='npc_berthold' WHERE `entry`=16153;
 UPDATE `creature_template` SET `ScriptName`='npc_barnes' WHERE `entry`=16812;
 UPDATE `creature_template` SET `ScriptName`='npc_grandmother' WHERE `entry`=17603;
 
-
 /* LOCH MODAN */
 UPDATE `creature_template` SET `ScriptName`='npc_mountaineer_pebblebitty' WHERE `entry`=3836;
 
-/* Magister's Terrace */
+/* MAGISTER'S TERRACE */
 UPDATE `instance_template` SET `script`='instance_magisters_terrace' WHERE `map`=585;
 UPDATE `creature_template` SET `ScriptName`='boss_selin_fireheart' WHERE `entry`=24723;
 UPDATE `creature_template` SET `ScriptName`='mob_fel_crystal' WHERE `entry`=24722;
@@ -600,6 +641,20 @@ UPDATE `creature_template` SET `ScriptName`='npc_commander_dawnforge' WHERE `ent
 UPDATE `creature_template` SET `ScriptName`='npc_protectorate_nether_drake' WHERE `entry`=20903;
 UPDATE `creature_template` SET `ScriptName`='npc_veronia' WHERE `entry`=20162;
 
+/*  */
+/* THE NEXUS */
+/*  */
+
+/* EYE OF ETERNITY */
+
+/* NEXUS */
+
+/* OCULUS */
+
+
+/* OBSIDIAN SANCTUM */
+
+
 /* ONYXIA'S LAIR */
 UPDATE `creature_template` SET `ScriptName`='boss_onyxia' WHERE `entry`=10184;
 
@@ -675,6 +730,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_salsalabim' WHERE `entry`=18584
 UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
 UPDATE `creature_template` SET `ScriptName`='npc_zephyr' WHERE `entry`=25967;
 
+/* SHOLAZAR BASIN */
+
+
 /* SILITHUS */
 UPDATE `creature_template` SET `ScriptName`='npc_highlord_demitrian' WHERE `entry`=14347;
 UPDATE `creature_template` SET `ScriptName`='npcs_rutgar_and_frankal' WHERE `entry` IN (15170,15171);
@@ -689,6 +747,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_astor_hadren' WHERE `entry`=649
 
 /* STONETALON MOUNTAINS */
 UPDATE `creature_template` SET `ScriptName`='npc_braug_dimspirit' WHERE `entry`=4489;
+
+/* STORM PEAKS */
+
 
 /* STORMWIND CITY */
 UPDATE `creature_template` SET `ScriptName`='npc_archmage_malin' WHERE `entry`=2708;
@@ -830,6 +891,15 @@ UPDATE `creature_template` SET `ScriptName`='boss_ironaya' WHERE `entry`=7228;
 UPDATE `creature_template` SET `ScriptName`='mob_jadespine_basilisk' WHERE `entry`=4863;
 UPDATE `creature_template` SET `ScriptName`='npc_lore_keeper_of_norgannon' WHERE `entry`=7172;
 
+/*  */
+/* ULDUAR */
+/*  */
+
+/* HALLS OF LIGHTNING */
+
+/* HALLS OF STONE */
+
+
 /* UN'GORO CRATER */
 
 
@@ -837,6 +907,21 @@ UPDATE `creature_template` SET `ScriptName`='npc_lore_keeper_of_norgannon' WHERE
 UPDATE `creature_template` SET `ScriptName`='npc_lady_sylvanas_windrunner' WHERE `entry`=10181;
 UPDATE `creature_template` SET `ScriptName`='npc_highborne_lamenter' WHERE `entry`=21628;
 UPDATE `creature_template` SET `ScriptName`='npc_parqual_fintallas' WHERE `entry`=4488;
+
+/*  */
+/* UTGARDE KEEP */
+/*  */
+
+/* UTGARDE KEEP */
+
+/* UTGARDE PINNACLE */
+
+
+/* VAULT OF ARCHAVON */
+
+
+/* VIOLET HOLD */
+
 
 /* WAILING CAVERNS */
 
@@ -870,6 +955,9 @@ UPDATE `creature_template` SET `ScriptName`='mob_jandalai_firebomb' WHERE `entry
 UPDATE `creature_template` SET `ScriptName`='mob_amanishi_hatcher' WHERE `entry`=23818;
 UPDATE `creature_template` SET `ScriptName`='mob_hatchling' WHERE `entry`=23598;
 UPDATE `creature_template` SET `ScriptName`='npc_forest_frog' WHERE `entry`=24396;
+
+/* ZUL'DRAK */
+
 
 /* ZUL'FARRAK */
 UPDATE `creature_template` SET `ScriptName`='npc_sergeant_bly' WHERE `entry`=7604;

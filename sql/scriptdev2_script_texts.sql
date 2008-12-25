@@ -1164,6 +1164,14 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1568022,'Da Amani gonna rule again!',12076,1,0,'nalorakk SAY_SLAY2'),
 (-1568023,'I... be waitin\' on da udda side....',12077,1,0,'nalorakk SAY_DEATH');
 
+-- -1 574 000 UTGARDE KEEP
+
+-- -1 575 000 UTGARDE PINNACLE
+
+-- -1 576 000 NEXUS
+
+-- -1 578 000 OCULUS
+
 -- -1 580 000 SUNWELL PLATEAU
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
 (-1580000,'Aggh! No longer will I be a slave to Malygos! Challenge me and you will be destroyed!',12422,1,0,'kalecgos SAY_EVIL_AGGRO'),
@@ -1240,6 +1248,28 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1585027,'Master... grant me strength.',12419,1,0,'kaelthas MT SAY_TIRED'),
 (-1585028,'Do not... get too comfortable.',12420,1,0,'kaelthas MT SAY_RECAST_GRAVITY'),
 (-1585029,'My demise accomplishes nothing! The Master will have you! You will drown in your own blood! This world shall burn! Aaaghh!',12421,1,0,'kaelthas MT SAY_DEATH');
+
+-- -1 595 000 CULLING OF STRATHOLME
+
+-- -1 599 000 HALLS OF STONE
+
+-- -1 600 000 DRAK'THARON KEEP
+
+-- -1 601 000 AZJOL-NERUB
+
+-- -1 602 000 HALLS OF LIGHTNING
+
+-- -1 603 000 ULDUAR (RAID NIU)
+
+-- -1 604 000 GUNDRAK
+
+-- -1 608 000 VIOLET HOLD
+
+-- -1 615 000 OBSIDIAN SANCTUM
+
+-- -1 616 000 EYE OF ETERNITY
+
+-- -1 619 000 AHN'KAHET
 
 --
 -- Below just for beautiful view in table, run at own desire
