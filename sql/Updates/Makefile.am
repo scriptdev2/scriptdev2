@@ -26,4 +26,6 @@ pkgdatadir = $(datadir)/scriptdev2/sql/updates
 #  Install basic SQL files to datadir
 pkgdata_DATA = \
 	r814_scriptdev2_eventai_scripts.sql \
-	r820_scriptdev2_script_texts.sql
+	r820_scriptdev2_script_texts.sql \
+	r822_mangos.sql \
+	r822_scriptdev2_script_texts.sql

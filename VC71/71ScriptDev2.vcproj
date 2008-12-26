@@ -597,6 +597,9 @@
 						RelativePath="..\scripts\zone\naxxramas\boss_faerlina.cpp">
 					</File>
 					<File
+						RelativePath="..\scripts\zone\naxxramas\boss_four_horsemen.cpp">
+					</File>
+					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_gluth.cpp">
 					</File>
 					<File
@@ -613,9 +616,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_kelthuzad.cpp">
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_lady_blaumeux.cpp">
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_loatheb.cpp">
@@ -636,13 +636,7 @@
 						RelativePath="..\scripts\zone\naxxramas\boss_sapphiron.cpp">
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_sir_zeliek.cpp">
-					</File>
-					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_thaddius.cpp">
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_thane_korthazz.cpp">
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\instance_naxxramas.cpp">
