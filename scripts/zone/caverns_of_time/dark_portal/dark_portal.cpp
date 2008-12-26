@@ -162,7 +162,7 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
         if (SpellCorrupt_Timer)
         {
-            if (SpellCorrupt_Timer < diff)
+            if (SpellCorrupt_Timer <= diff)
             {
                 pInstance->SetData(TYPE_MEDIVH,SPECIAL);
 
@@ -177,7 +177,7 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
         if (Check_Timer)
         {
-            if (Check_Timer < diff)
+            if (Check_Timer <= diff)
             {
                 uint32 pct = pInstance->GetData(DATA_SHIELD);
 
