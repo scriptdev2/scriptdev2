@@ -16,18 +16,25 @@
 
 /* ScriptData
 SDName: Boss_Maexxna
-SD%Complete: 80
-SDComment:
+SD%Complete: 60
+SDComment: this needs review, and rewrite of the webwrap ability
 SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
 
 #define SPELL_WEBTRAP           28622                       //Spell is normally used by the webtrap on the wall NOT by Maexxna
+
 #define SPELL_WEBSPRAY          29484
+#define H_SPELL_WEBSPRAY        54125
 #define SPELL_POISONSHOCK       28741
+#define H_SPELL_POISONSHOCK     54122
 #define SPELL_NECROTICPOISON    28776
-#define SPELL_ENRAGE            28747
+#define H_SPELL_NECROTICPOISON  54121
+#define SPELL_FRENZY            54123
+#define H_SPELL_FRENZY          54124
+
+//spellId invalid
 #define SPELL_SUMMON_SPIDERLING 29434
 
 #define LOC_X1    3546.796
@@ -55,7 +62,7 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 
     void SetVictim(Unit* victim)
     {
-        if(victim)
+        if (victim)
         {
             victimGUID = victim->GetGUID();
             victim->CastSpell(victim, SPELL_WEBTRAP, true);
@@ -64,9 +71,9 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
-        if(damage > m_creature->GetHealth())
+        if (damage > m_creature->GetHealth())
         {
-            if(victimGUID)
+            if (victimGUID)
             {
                 Unit* victim = NULL;
                 victim = Unit::GetUnit((*m_creature), victimGUID);
@@ -160,7 +167,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
                         Wrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
                         break;
                 }
-                if(Wrap)
+                if (Wrap)
                 {
                     Wrap->setFaction(m_creature->getFaction());
                     ((mob_webwrapAI*)Wrap->AI())->SetVictim(target);
@@ -212,7 +219,7 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         //Enrage if not already enraged and below 30%
         if (!Enraged && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30)
         {
-            DoCast(m_creature,SPELL_ENRAGE);
+            DoCast(m_creature,SPELL_FRENZY);
             Enraged = true;
         }
 

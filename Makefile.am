@@ -242,7 +242,6 @@ scripts/zone/mulgore/mulgore.cpp \
 scripts/zone/nagrand/nagrand.cpp \
 scripts/zone/naxxramas/boss_anubrekhan.cpp \
 scripts/zone/naxxramas/boss_faerlina.cpp \
-scripts/zone/naxxramas/boss_feugen.cpp \
 scripts/zone/naxxramas/boss_gluth.cpp \
 scripts/zone/naxxramas/boss_gothik.cpp \
 scripts/zone/naxxramas/boss_grobbulus.cpp \
@@ -257,7 +256,6 @@ scripts/zone/naxxramas/boss_patchwerk.cpp \
 scripts/zone/naxxramas/boss_razuvious.cpp \
 scripts/zone/naxxramas/boss_sapphiron.cpp \
 scripts/zone/naxxramas/boss_sir_zeliek.cpp \
-scripts/zone/naxxramas/boss_stalagg.cpp \
 scripts/zone/naxxramas/boss_thaddius.cpp \
 scripts/zone/naxxramas/boss_thane_korthazz.cpp \
 scripts/zone/naxxramas/instance_naxxramas.cpp \

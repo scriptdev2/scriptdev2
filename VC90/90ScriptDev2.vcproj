@@ -995,10 +995,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_feugen.cpp"
-						>
-					</File>
-					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_gluth.cpp"
 						>
 					</File>
@@ -1052,10 +1048,6 @@
 					</File>
 					<File
 						RelativePath="..\scripts\zone\naxxramas\boss_sir_zeliek.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\scripts\zone\naxxramas\boss_stalagg.cpp"
 						>
 					</File>
 					<File
