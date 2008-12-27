@@ -424,6 +424,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_screecher_spirit' WHERE `entry`
 /* GHOSTLANDS */
 UPDATE `creature_template` SET `ScriptName`='npc_blood_knight_dawnstar' WHERE `entry`=17832;
 UPDATE `creature_template` SET `ScriptName`='npc_budd_nedreck' WHERE `entry`=23559;
+UPDATE `creature_template` SET `ScriptName`='npc_ranger_lilatha' WHERE `entry`=16295;
 UPDATE `creature_template` SET `ScriptName`='npc_rathis_tomber' WHERE `entry`=16224;
 
 /* GNOMEREGAN */

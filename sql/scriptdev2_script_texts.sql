@@ -75,7 +75,15 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 (-1000137, 'See to it, Ardonis!', 0, 0, 0, 'dawnforge COMMANDER_DAWNFORGE_5'),
 
 (-1000138, 'Avruu\'s magic... it still controls me. You must fight me, mortal. It\'s the only way to break the spell!', 0, 0, 0, 'aeranas SAY_SUMMON'),
-(-1000139, 'Avruu\'s magic is broken! I\'m free once again!', 0, 0, 0, 'aeranas SAY_FREE');
+(-1000139, 'Avruu\'s magic is broken! I\'m free once again!', 0, 0, 0, 'aeranas SAY_FREE'),
+
+(-1000140,'Let\'s go.',0,0,1,'lilatha SAY_START'),
+(-1000141,'$N, let\'s use the antechamber to the right.',0,0,1,'lilatha SAY_PROGRESS1'),
+(-1000142,'I can see the light at the end of the tunnel!',0,0,1,'lilatha SAY_PROGRESS2'),
+(-1000143,'There\'s Farstrider Enclave now, $C. Not far to go... Look out! Troll ambush!!',0,0,1,'lilatha SAY_PROGRESS3'),
+(-1000144,'Thank you for saving my life and bringing me back to safety, $N',0,0,1,'lilatha SAY_END1'),
+(-1000145,'Captain Helios, I\'ve been rescued from the Amani Catacombs. Reporting for duty, sir!',0,0,1,'lilatha SAY_END2'),
+(-1000146,'Liatha, get someone to look at those injuries. Thank you for bringing her back safely.',0,0,1,'lilatha CAPTAIN_ANSWER');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
