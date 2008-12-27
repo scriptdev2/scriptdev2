@@ -23,6 +23,9 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define EMOTE_BREATH            -1533082
+#define EMOTE_ENRAGE            -1533083
+
 #define SPELL_ICEBOLT           28522
 #define SPELL_FROST_BREATH      29318
 #define SPELL_FROST_AURA        28531
@@ -72,115 +75,101 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(m_creature->getVictim() && m_creature->isAlive())
+        if (phase == 1)
         {
-            if(phase == 1)
+            if (FrostAura_Timer < diff)
             {
-                if(FrostAura_Timer < diff)
-                {
-                    DoCast(m_creature->getVictim(),SPELL_FROST_AURA);
-                    FrostAura_Timer = 5000;
-                }else FrostAura_Timer -= diff;
+                DoCast(m_creature->getVictim(),SPELL_FROST_AURA);
+                FrostAura_Timer = 5000;
+            }else FrostAura_Timer -= diff;
 
-                if(LifeDrain_Timer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
+            if (LifeDrain_Timer < diff)
+            {
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_LIFE_DRAIN);
-                    LifeDrain_Timer = 24000;
-                }else LifeDrain_Timer -= diff;
 
-                if(Blizzard_Timer < diff)
-                {
-                    Unit* target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM,0);
+                LifeDrain_Timer = 24000;
+            }else LifeDrain_Timer -= diff;
 
+            if (Blizzard_Timer < diff)
+            {
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_BLIZZARD);
-                    Blizzard_Timer = 20000;
-                }else Blizzard_Timer -= diff;
 
-                if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 10)
+                Blizzard_Timer = 20000;
+            }else Blizzard_Timer -= diff;
+
+            if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() > 10)
+            {
+                if (Fly_Timer < diff)
                 {
-                    if(Fly_Timer < diff)
-                    {
-                        phase = 2;
-                        m_creature->InterruptNonMeleeSpells(false);
-                        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                        (*m_creature).GetMotionMaster()->Clear(false);
-                        (*m_creature).GetMotionMaster()->MoveIdle();
-                        DoCast(m_creature,11010);
-                        m_creature->SetHover(true);
-                        DoCast(m_creature,18430);
-                        Icebolt_Timer = 4000;
-                        Icebolt_Count = 0;
-                        landoff = false;
-                    }else Fly_Timer -= diff;
-                }
-
-                if (phase == 2)
-                {
-                    if(Icebolt_Timer < diff && Icebolt_Count < 5)
-                    {
-                        Unit* target = NULL;
-
-                        target = SelectUnit(SELECT_TARGET_RANDOM,0);
-
-                        DoCast(target,SPELL_ICEBOLT);
-                        Icebolt_Count ++;
-                        Icebolt_Timer = 4000;
-                    }else Icebolt_Timer -= diff;
-
-                    if(Icebolt_Count == 5 && !landoff)
-                    {
-                        if(FrostBreath_Timer < diff )
-                        {
-                            DoTextEmote("takes a deep breath...",NULL);
-                            DoCast(m_creature->getVictim(),SPELL_FROST_BREATH);
-                            land_Timer = 2000;
-                            landoff = true;
-                            FrostBreath_Timer = 6000;
-                        }else FrostBreath_Timer -= diff;
-                    }
-
-                    if(landoff)
-                    {
-                        if(land_Timer < diff)
-                        {
-                            phase = 1;
-                            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                            m_creature->SetHover(false);
-                            (*m_creature).GetMotionMaster()->Clear(false);
-                            (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
-                            Fly_Timer = 67000;
-                        }else land_Timer -= diff;
-                    }
-
-                }
-
-                if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() < 11)
-                {
-                    if (Beserk_Timer < diff)
-                    {
-                        DoTextEmote("enrages!",NULL);
-                        DoCast(m_creature,SPELL_BESERK);
-                        Beserk_Timer = 300000;
-                    }else Beserk_Timer -= diff;
-                }
-
-                if( phase!=2 && m_creature->getVictim() && m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
-                {
-                    if( m_creature->isAttackReady() )
-                    {
-                        m_creature->AttackerStateUpdate(m_creature->getVictim());
-                        m_creature->resetAttackTimer();
-                    }
-                }
+                    phase = 2;
+                    m_creature->InterruptNonMeleeSpells(false);
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
+                    (*m_creature).GetMotionMaster()->Clear(false);
+                    (*m_creature).GetMotionMaster()->MoveIdle();
+                    DoCast(m_creature,11010);
+                    m_creature->SetHover(true);
+                    DoCast(m_creature,18430);
+                    Icebolt_Timer = 4000;
+                    Icebolt_Count = 0;
+                    landoff = false;
+                }else Fly_Timer -= diff;
             }
         }
+
+        if (phase == 2)
+        {
+            if (Icebolt_Timer < diff && Icebolt_Count < 5)
+            {
+                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    DoCast(target,SPELL_ICEBOLT);
+
+                Icebolt_Count ++;
+                Icebolt_Timer = 4000;
+            }else Icebolt_Timer -= diff;
+
+            if (Icebolt_Count == 5 && !landoff)
+            {
+                if (FrostBreath_Timer < diff )
+                {
+                    DoScriptText(EMOTE_BREATH, m_creature);
+                    DoCast(m_creature->getVictim(),SPELL_FROST_BREATH);
+                    land_Timer = 2000;
+                    landoff = true;
+                    FrostBreath_Timer = 6000;
+                }else FrostBreath_Timer -= diff;
+            }
+
+            if (landoff)
+            {
+                if (land_Timer < diff)
+                {
+                    phase = 1;
+                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
+                    m_creature->SetHover(false);
+                    (*m_creature).GetMotionMaster()->Clear(false);
+                    (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
+                    Fly_Timer = 67000;
+                }else land_Timer -= diff;
+            }
+        }
+
+        if ((m_creature->GetHealth()*100) / m_creature->GetMaxHealth() <= 10)
+        {
+            if (Beserk_Timer < diff)
+            {
+                DoScriptText(EMOTE_ENRAGE, m_creature);
+                DoCast(m_creature,SPELL_BESERK);
+                Beserk_Timer = 300000;
+            }else Beserk_Timer -= diff;
+        }
+
+        if (phase!=2)
+            DoMeleeAttackIfReady();
     }
 };
 

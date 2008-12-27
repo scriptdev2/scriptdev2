@@ -28,4 +28,5 @@ pkgdata_DATA = \
 	r814_scriptdev2_eventai_scripts.sql \
 	r820_scriptdev2_script_texts.sql \
 	r822_mangos.sql \
-	r822_scriptdev2_script_texts.sql
+	r822_scriptdev2_script_texts.sql \
+	r823_scriptdev2_script_texts.sql
