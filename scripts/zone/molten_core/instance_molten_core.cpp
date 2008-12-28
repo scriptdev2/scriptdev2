@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch (creature_entry)
+        switch (creature->GetEntry())
         {
             case ID_LUCIFRON:
                 Lucifron = creature->GetGUID();

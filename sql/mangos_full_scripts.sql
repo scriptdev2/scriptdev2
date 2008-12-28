@@ -202,6 +202,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_spirit_of_olum' WHERE `entry`=2
 
 
 /* BLACKROCK DEPTHS */
+UPDATE `instance_template` SET `script`='instance_blackrock_depths' WHERE `map` =230;
 UPDATE `creature_template` SET `ScriptName`='boss_emperor_dagran_thaurissan' WHERE `entry`=9019;
 UPDATE `creature_template` SET `ScriptName`='boss_moira_bronzebeard' WHERE `entry`=8929;
 UPDATE `creature_template` SET `ScriptName`='boss_ambassador_flamelash' WHERE `entry`=9156;

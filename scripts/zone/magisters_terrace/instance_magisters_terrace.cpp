@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 entry)
     {
-        switch(entry)
+        switch(creature->GetEntry())
         {
             case 24723: SelinGUID = creature->GetGUID(); break;
             case 24560: DelrissaGUID = creature->GetGUID(); break;

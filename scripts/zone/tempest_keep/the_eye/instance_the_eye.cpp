@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL instance_the_eye : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 20064: ThaladredTheDarkener = creature->GetGUID(); break;
             case 20063: MasterEngineerTelonicus = creature->GetGUID(); break;

@@ -81,7 +81,7 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 18732:
                 GrandmasterVorpil = creature->GetGUID();

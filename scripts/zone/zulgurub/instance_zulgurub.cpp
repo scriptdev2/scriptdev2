@@ -39,7 +39,7 @@ struct MANGOS_DLL_DECL instance_zulgurub : public ScriptedInstance
 
     void OnCreatureCreate (Creature *creature, uint32 creature_entry)
     {
-        switch (creature_entry)
+        switch (creature->GetEntry())
         {
             case 11347:
                 LorKhanGUID = creature->GetGUID();

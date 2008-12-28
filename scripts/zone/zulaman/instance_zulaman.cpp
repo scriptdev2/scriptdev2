@@ -74,7 +74,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 23574: akilzonGUID  = creature->GetGUID(); break;
             case 23576: nalorakkGUID = creature->GetGUID(); break;

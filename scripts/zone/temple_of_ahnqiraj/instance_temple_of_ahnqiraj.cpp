@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL instance_temple_of_ahnqiraj : public ScriptedInstance
 
     void OnCreatureCreate (Creature *creature, uint32 creature_entry)
     {
-        switch (creature_entry)
+        switch (creature->GetEntry())
         {
             case 15263: SkeramGUID = creature->GetGUID(); break;
             case 15544: VemGUID = creature->GetGUID(); break;

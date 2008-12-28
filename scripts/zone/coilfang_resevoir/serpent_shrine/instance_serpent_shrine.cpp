@@ -78,7 +78,7 @@ struct MANGOS_DLL_DECL instance_serpentshrine_cavern : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 21212: LadyVashj = creature->GetGUID(); break;
             case 21214: Karathress = creature->GetGUID(); break;

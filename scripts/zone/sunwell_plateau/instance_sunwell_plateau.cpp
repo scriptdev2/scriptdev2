@@ -107,7 +107,7 @@ struct MANGOS_DLL_DECL instance_sunwell_plateau : public ScriptedInstance
 
     void OnCreatureCreate(Creature* creature, uint32 entry)
     {
-        switch(entry)
+        switch(creature->GetEntry())
         {
             case 24850: Kalecgos_Dragon     = creature->GetGUID(); break;
             case 24891: Kalecgos_Human      = creature->GetGUID(); break;

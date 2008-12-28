@@ -169,6 +169,7 @@ extern void AddSC_boss_magmus();
 extern void AddSC_boss_moira_bronzebeard();
 extern void AddSC_boss_seethrel();
 extern void AddSC_boss_vilerel();
+extern void AddSC_instance_blackrock_depths();
 
 //Blackrock Spire
 extern void AddSC_boss_drakkisath();
@@ -1361,6 +1362,7 @@ void ScriptsInit()
     AddSC_boss_moira_bronzebeard();
     AddSC_boss_seethrel();
     AddSC_boss_vilerel();
+    AddSC_instance_blackrock_depths();
 
     //Blackrock Spire
     AddSC_boss_drakkisath();

@@ -110,6 +110,8 @@ scripts/zone/blackrock_depths/boss_magmus.cpp \
 scripts/zone/blackrock_depths/boss_moira_bronzebeard.cpp \
 scripts/zone/blackrock_depths/boss_seethrel.cpp \
 scripts/zone/blackrock_depths/boss_vilerel.cpp \
+scripts/zone/blackrock_depths/def_blackrock_depths.h \
+scripts/zone/blackrock_depths/instance_blackrock_depths.cpp \
 scripts/zone/blackrock_spire/boss_drakkisath.cpp \
 scripts/zone/blackrock_spire/boss_gyth.cpp \
 scripts/zone/blackrock_spire/boss_halycon.cpp \

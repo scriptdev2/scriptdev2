@@ -55,7 +55,7 @@ struct MANGOS_DLL_DECL instance_shattered_halls : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch( creature_entry )
+        switch(creature->GetEntry())
         {
             case 16807: nethekurseGUID = creature->GetGUID(); break;
         }

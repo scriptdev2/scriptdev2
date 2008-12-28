@@ -65,7 +65,7 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
-        switch(creature_entry)
+        switch(creature->GetEntry())
         {
             case 18835: KigglerTheCrazed = creature->GetGUID(); break;
             case 18836: BlindeyeTheSeer = creature->GetGUID(); break;
