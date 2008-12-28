@@ -24,6 +24,7 @@ struct StringTextData
     uint32 SoundId;
     uint8  Type;
     uint32 Language;
+    uint32 Emote;
 };
 
 // Enums used by StringTextData::Type
@@ -626,7 +627,7 @@ void LoadDatabase()
     LoadMangosStrings(SD2Database,"eventai_texts",-1,1+(TEXT_SOURCE_RANGE));
 
     // Gather Additional data from EventAI Texts
-    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM eventai_texts");
+    result = SD2Database.PQuery("SELECT entry, sound, type, language, emote FROM eventai_texts");
 
     outstring_log("SD2: Loading EventAI Texts additional data...");
     if (result)
@@ -644,6 +645,7 @@ void LoadDatabase()
             temp.SoundId        = fields[1].GetInt32();
             temp.Type           = fields[2].GetInt32();
             temp.Language       = fields[3].GetInt32();
+            temp.Emote          = fields[4].GetInt32();
 
             if (i >= 0)
             {
@@ -690,7 +692,7 @@ void LoadDatabase()
     LoadMangosStrings(SD2Database,"script_texts",TEXT_SOURCE_RANGE,1+(TEXT_SOURCE_RANGE*2));
 
     // Gather Additional data from Script Texts
-    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM script_texts");
+    result = SD2Database.PQuery("SELECT entry, sound, type, language, emote FROM script_texts");
 
     outstring_log("SD2: Loading Script Texts additional data...");
     if (result)
@@ -708,6 +710,7 @@ void LoadDatabase()
             temp.SoundId        = fields[1].GetInt32();
             temp.Type           = fields[2].GetInt32();
             temp.Language       = fields[3].GetInt32();
+            temp.Emote          = fields[4].GetInt32();
 
             if (i >= 0)
             {
@@ -754,7 +757,7 @@ void LoadDatabase()
     LoadMangosStrings(SD2Database,"custom_texts",TEXT_SOURCE_RANGE*2,1+(TEXT_SOURCE_RANGE*3));
 
     // Gather Additional data from Custom Texts
-    result = SD2Database.PQuery("SELECT entry, sound, type, language FROM custom_texts");
+    result = SD2Database.PQuery("SELECT entry, sound, type, language, emote FROM custom_texts");
 
     outstring_log("SD2: Loading Custom Texts additional data...");
     if (result)
@@ -772,6 +775,7 @@ void LoadDatabase()
             temp.SoundId        = fields[1].GetInt32();
             temp.Type           = fields[2].GetInt32();
             temp.Language       = fields[3].GetInt32();
+            temp.Emote          = fields[4].GetInt32();
 
             if (i >= 0)
             {
@@ -1796,11 +1800,11 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
         return;
     }
 
-    debug_log("SD2: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u",textEntry,(*i).second.SoundId,(*i).second.Type,(*i).second.Language);
+    debug_log("SD2: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",textEntry,(*i).second.SoundId,(*i).second.Type,(*i).second.Language,(*i).second.Emote);
 
     if((*i).second.SoundId)
     {
-        if( GetSoundEntriesStore()->LookupEntry((*i).second.SoundId) )
+        if (GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
         {
             WorldPacket data(4);
             data.SetOpcode(SMSG_PLAY_SOUND);
@@ -1809,6 +1813,16 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
         }
         else
             error_log("SD2: DoScriptText entry %i tried to process invalid sound id %u.",textEntry,(*i).second.SoundId);
+    }
+
+    if((*i).second.Emote)
+    {
+        if (pSource->GetTypeId() == TYPEID_UNIT || pSource->GetTypeId() == TYPEID_PLAYER)
+        {
+            ((Unit*)pSource)->HandleEmoteCommand((*i).second.Emote);
+        }
+        else
+            error_log("SD2: DoScriptText entry %i tried to process emote for invalid TypeId (%u).",textEntry,pSource->GetTypeId());
     }
 
     switch((*i).second.Type)

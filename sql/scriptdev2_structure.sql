@@ -10,9 +10,10 @@ CREATE TABLE `custom_texts` (
   `content_loc6` text,
   `content_loc7` text,
   `content_loc8` text,
-  `sound` mediumint(8) unsigned NOT NULL default '0',
-  `type` tinyint unsigned NOT NULL default '0',
-  `language` tinyint unsigned NOT NULL default '0',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `emote` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `comment` text,
   PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Custom Texts';
@@ -69,9 +70,10 @@ CREATE TABLE `eventai_texts` (
   `content_loc6` text,
   `content_loc7` text,
   `content_loc8` text,
-  `sound` mediumint(8) unsigned NOT NULL default '0',
-  `type` tinyint unsigned NOT NULL default '0',
-  `language` tinyint unsigned NOT NULL default '0',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `emote` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `comment` text,
   PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Script Texts';
@@ -88,9 +90,10 @@ CREATE TABLE `script_texts` (
   `content_loc6` text,
   `content_loc7` text,
   `content_loc8` text,
-  `sound` mediumint(8) unsigned NOT NULL default '0',
-  `type` tinyint unsigned NOT NULL default '0',
-  `language` tinyint unsigned NOT NULL default '0',
+  `sound` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `language` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `emote` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `comment` text,
   PRIMARY KEY  (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Script Texts';
