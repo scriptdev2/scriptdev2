@@ -38,7 +38,7 @@ EndScriptData */
 #define SAY_DEATH       -1555007
 
 #define SPELL_BANISH            30231
-#define SPELL_CORROSIVE_ACID    23313
+#define SPELL_CORROSIVE_ACID    33551
 #define SPELL_FEAR              33547
 #define SPELL_ENRAGE            0                           //need to find proper spell
 
@@ -169,7 +169,7 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
 
         if (CorrosiveAcid_Timer < diff)
         {
-            DoCast(m_creature,SPELL_CORROSIVE_ACID);
+            DoCast(m_creature->getVictim(),SPELL_CORROSIVE_ACID);
             CorrosiveAcid_Timer = 25000;
         }else CorrosiveAcid_Timer -= diff;
 
