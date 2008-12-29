@@ -719,6 +719,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 Unit* target = GetTargetByType(param3, pActionInvoker);
 
+                if (param1 < OBJECT_END || param1 >= UNIT_END)
+                    return;
+
                 if (target)
                     target->SetUInt32Value(param1, param2);
             }

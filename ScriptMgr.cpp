@@ -1101,6 +1101,8 @@ void LoadDatabase()
 
                     //3rd param target
                     case ACTION_T_SET_UNIT_FIELD:
+                        if (temp.action[j].param1 < OBJECT_END || temp.action[j].param1 >= UNIT_END)
+                            error_db_log("SD2: Event %u Action %u param1 (UNIT_FIELD*). Index out of range for intended use.", i, j+1);
                         if (temp.action[j].param3 >= TARGET_T_END)
                             error_db_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
