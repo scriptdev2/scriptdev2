@@ -154,21 +154,15 @@ extern void AddSC_instance_black_temple();
 //Blackrock Depths
 extern void AddSC_blackrock_depths();
 extern void AddSC_boss_ambassador_flamelash();
-extern void AddSC_boss_angerrel();
 extern void AddSC_boss_anubshiah();
-extern void AddSC_boss_doomrel();
-extern void AddSC_boss_doperel();
 extern void AddSC_boss_draganthaurissan();
 extern void AddSC_boss_general_angerforge();
-extern void AddSC_boss_gloomrel();
 extern void AddSC_boss_gorosh_the_dervish();
 extern void AddSC_boss_grizzle();
-extern void AddSC_boss_haterel();
 extern void AddSC_boss_high_interrogator_gerstahn();
 extern void AddSC_boss_magmus();
 extern void AddSC_boss_moira_bronzebeard();
-extern void AddSC_boss_seethrel();
-extern void AddSC_boss_vilerel();
+extern void AddSC_boss_tomb_of_seven();
 extern void AddSC_instance_blackrock_depths();
 
 //Blackrock Spire
@@ -1347,21 +1341,15 @@ void ScriptsInit()
     //Blackrock Depths
     AddSC_blackrock_depths();
     AddSC_boss_ambassador_flamelash();
-    AddSC_boss_angerrel();
     AddSC_boss_anubshiah();
-    AddSC_boss_doomrel();
-    AddSC_boss_doperel();
     AddSC_boss_draganthaurissan();
     AddSC_boss_general_angerforge();
-    AddSC_boss_gloomrel();
     AddSC_boss_gorosh_the_dervish();
     AddSC_boss_grizzle();
-    AddSC_boss_haterel();
     AddSC_boss_high_interrogator_gerstahn();
     AddSC_boss_magmus();
     AddSC_boss_moira_bronzebeard();
-    AddSC_boss_seethrel();
-    AddSC_boss_vilerel();
+    AddSC_boss_tomb_of_seven();
     AddSC_instance_blackrock_depths();
 
     //Blackrock Spire

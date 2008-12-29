@@ -45,8 +45,6 @@ EndScriptData */
 #define GO_GOLEM_ROOM_S         170574
 #define GO_THONE_ROOM           170575
 
-//at 1526
-
 struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
     instance_blackrock_depths(Map *map) : ScriptedInstance(map) {Initialize();};

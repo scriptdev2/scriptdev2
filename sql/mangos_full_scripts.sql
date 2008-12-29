@@ -202,6 +202,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_spirit_of_olum' WHERE `entry`=2
 
 
 /* BLACKROCK DEPTHS */
+DELETE FROM `areatrigger_scripts` WHERE `entry`=1526;
+INSERT INTO `areatrigger_scripts` VALUES (1526,'at_ring_of_law');
 UPDATE `instance_template` SET `script`='instance_blackrock_depths' WHERE `map` =230;
 UPDATE `creature_template` SET `ScriptName`='boss_emperor_dagran_thaurissan' WHERE `entry`=9019;
 UPDATE `creature_template` SET `ScriptName`='boss_moira_bronzebeard' WHERE `entry`=8929;
@@ -219,7 +221,8 @@ UPDATE `creature_template` SET `ScriptName`='boss_high_interrogator_gerstahn' WH
 UPDATE `creature_template` SET `ScriptName`='boss_magmus' WHERE `entry`=9938;
 UPDATE `creature_template` SET `ScriptName`='boss_seethrel' WHERE `entry`=9038;
 UPDATE `creature_template` SET `ScriptName`='boss_vilerel' WHERE `entry`=9036;
-UPDATE `creature_template` SET `ScriptName`='phalanx' WHERE `entry`=9502;
+UPDATE `creature_template` SET `ScriptName`='mob_phalanx' WHERE `entry`=9502;
+UPDATE `creature_template` SET `ScriptName`='npc_grimstone' WHERE `entry`=10096;
 UPDATE `creature_template` SET `ScriptName`='npc_lokhtos_darkbargainer' WHERE `entry`=12944;
 UPDATE `creature_template` SET `ScriptName`='npc_kharan_mighthammer' WHERE `entry`=9021;
 
