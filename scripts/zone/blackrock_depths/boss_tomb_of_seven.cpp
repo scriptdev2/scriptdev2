@@ -571,10 +571,12 @@ CreatureAI* GetAI_boss_doomrel(Creature *_Creature)
     return new boss_doomrelAI (_Creature);
 }
 
+#define GOSSIP_ITEM_CHALLENGE   "Your bondage is at an end, Doom'rel. I challenge you!"
+
 bool GossipHello_boss_doomrel(Player *player, Creature *_Creature)
 {
-    player->ADD_GOSSIP_ITEM(0, "Challenge", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->SEND_GOSSIP_MENU(2602, _Creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->SEND_GOSSIP_MENU(2601, _Creature->GetGUID());
 
     return true;
 }

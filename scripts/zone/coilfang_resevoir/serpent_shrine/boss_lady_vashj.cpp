@@ -51,6 +51,7 @@ EndScriptData */
 #define SPELL_POISON_BOLT           40095
 #define SPELL_TOXIC_SPORES          38575
 #define SPELL_MAGIC_BARRIER         38112
+#define SPELL_SURGE                 38044
 
 #define MIDDLE_X                    30.134
 #define MIDDLE_Y                    -923.65
@@ -515,20 +516,12 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
         {
             if (pInstance)
             {
-                Unit *Vashj = NULL;
-                Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ));
-                if (Vashj)
+                if (Unit *Vashj = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ)))
                 {
-                    if (Vashj->IsWithinDistInMap(m_creature, 5))
+                    if (Vashj->IsWithinDistInMap(m_creature, 5.0f))
                     {
-                        //increase lady vashj damage (+5%)
-                        const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
-                        Vashj->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg/100) * 5)));
-                        Vashj->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg/100) * 5)));
-                        m_creature->UpdateDamagePhysical(BASE_ATTACK);
-
-                        //call Unsummon()
-                        m_creature->setDeathState(JUST_DIED);
+                        //increase lady vashj damage
+                        DoCast(Vashj, SPELL_SURGE);
                     }
                     else if(((boss_lady_vashjAI*)((Creature*)Vashj)->AI())->InCombat == false)
                     {
