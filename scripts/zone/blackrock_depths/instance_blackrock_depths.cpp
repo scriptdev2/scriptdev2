@@ -50,6 +50,7 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     instance_blackrock_depths(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounter[ENCOUNTERS];
+    std::string str_data;
 
     uint64 EmperorGUID;
     uint64 PhalanxGUID;
@@ -174,6 +175,20 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 Encounter[5] = data;
                 break;
         }
+
+        if (data == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " "
+                << Encounter[3] << " " << Encounter[4] << " " << Encounter[5];
+
+            str_data = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
     }
 
     uint32 GetData(uint32 type)
@@ -215,6 +230,32 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 return GoArena4GUID;
         }
         return 0;
+    }
+
+    const char* Save()
+    {
+        return str_data.c_str();
+    }
+
+    void Load(const char* in)
+    {
+        if (!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+
+        std::istringstream loadStream(in);
+        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3]
+            >> Encounter[4] >> Encounter[5];
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if (Encounter[i] == IN_PROGRESS)
+                Encounter[i] = NOT_STARTED;
+
+        OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 
