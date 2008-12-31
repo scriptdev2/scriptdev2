@@ -525,8 +525,169 @@ bool GossipSelect_npc_lokhtos_darkbargainer(Player *player, Creature *_Creature,
 }
 
 /*######
-##
+## npc_rocknot
 ######*/
+
+#define SAY_GOT_BEER        -1230000
+#define SPELL_DRUNKEN_RAGE  14872
+#define QUEST_ALE           4295
+
+float BarWpLocations[8][3]=
+{
+    {883.294861, -188.926300, -43.703655},
+    {872.763550, -185.605621, -43.703655},                  //b1
+    {867.923401, -188.006393, -43.703655},                  //b2
+    {863.295898, -190.795212, -43.703655},                  //b3
+    {856.139587, -194.652756, -43.703655},                  //b4
+    {851.878906, -196.928131, -43.703655},                  //b5
+    {877.035217, -187.048080, -43.703655},
+    {891.198000, -197.924000, -43.620400}                   //home
+};
+
+uint32 BarWpWait[8]=
+{
+    {0},
+    {5000},
+    {5000},
+    {5000},
+    {5000},
+    {15000},
+    {0},
+    {0}
+};
+
+struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
+{
+    npc_rocknotAI(Creature *c) : npc_escortAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+
+    uint32 BreakKeg_Timer;
+    uint32 BreakDoor_Timer;
+
+    void Reset()
+    {
+        if (IsBeingEscorted)
+            return;
+
+        BreakKeg_Timer = 0;
+        BreakDoor_Timer = 0;
+    }
+
+    void Aggro(Unit *who) { }
+
+    void DoGo(uint32 id, uint32 state)
+    {
+        if (GameObject *go = GameObject::GetGameObject(*m_creature,pInstance->GetData64(id)))
+            go->SetGoState(state);
+    }
+
+    void WaypointReached(uint32 i)
+    {
+        if (!pInstance)
+            return;
+
+        switch(i)
+        {
+            case 1:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                break;
+            case 2:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ATTACKUNARMED);
+                break;
+            case 3:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_ATTACKUNARMED);
+                break;
+            case 4:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                break;
+            case 5:
+                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KICK);
+                BreakKeg_Timer = 2000;
+                break;
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!pInstance)
+            return;
+
+        if (BreakKeg_Timer)
+        {
+            if (BreakKeg_Timer <= diff)
+            {
+                DoGo(DATA_GO_BAR_KEG,0);
+                BreakKeg_Timer = 0;
+                BreakDoor_Timer = 1000;
+            }else BreakKeg_Timer -= diff;
+        }
+
+        if (BreakDoor_Timer)
+        {
+            if (BreakDoor_Timer <= diff)
+            {
+                DoGo(DATA_GO_BAR_DOOR,2);
+                DoGo(DATA_GO_BAR_KEG_TRAP,0);               //doesn't work very well, leaving code here for future
+                                                            //spell by trap has effect61, this indicate the bar go hostile
+
+                if (Unit *tmp = Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_PHALANX)))
+                    tmp->setFaction(14);
+
+                //for later, this event(s) has alot more to it.
+                //optionally, DONE can trigger bar to go hostile.
+                pInstance->SetData(TYPE_BAR,DONE);
+
+                BreakDoor_Timer = 0;
+            }else BreakDoor_Timer -= diff;
+        }
+
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+CreatureAI* GetAI_npc_rocknot(Creature *_Creature)
+{
+    npc_rocknotAI* Rocknot_AI = new npc_rocknotAI(_Creature);
+
+    for(uint8 i = 0; i < 8; ++i)
+        Rocknot_AI->AddWaypoint(i, BarWpLocations[i][0], BarWpLocations[i][1], BarWpLocations[i][2], BarWpWait[i]);
+
+    return (CreatureAI*)Rocknot_AI;
+}
+
+bool ChooseReward_npc_rocknot(Player *player, Creature *_Creature, const Quest *_Quest, uint32 item)
+{
+    ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
+
+    if (!pInstance)
+        return true;
+
+    if (pInstance->GetData(TYPE_BAR) == DONE || pInstance->GetData(TYPE_BAR) == SPECIAL)
+        return true;
+
+    if (_Quest->GetQuestId() == QUEST_ALE)
+    {
+        if (pInstance->GetData(TYPE_BAR) != IN_PROGRESS)
+            pInstance->SetData(TYPE_BAR,IN_PROGRESS);
+
+        pInstance->SetData(TYPE_BAR,SPECIAL);
+
+        //keep track of amount in instance script, returns SPECIAL if amount ok and event in progress
+        if (pInstance->GetData(TYPE_BAR) == SPECIAL)
+        {
+            DoScriptText(SAY_GOT_BEER, _Creature);
+            _Creature->CastSpell(_Creature,SPELL_DRUNKEN_RAGE,false);
+            ((npc_escortAI*)(_Creature->AI()))->Start(false, false, false);
+        }
+    }
+
+    return true;
+}
 
 void AddSC_blackrock_depths()
 {
@@ -557,5 +718,11 @@ void AddSC_blackrock_depths()
     newscript->Name = "npc_lokhtos_darkbargainer";
     newscript->pGossipHello =  &GossipHello_npc_lokhtos_darkbargainer;
     newscript->pGossipSelect = &GossipSelect_npc_lokhtos_darkbargainer;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_rocknot";
+    newscript->GetAI = &GetAI_npc_rocknot;
+    newscript->pChooseReward = &ChooseReward_npc_rocknot;
     newscript->RegisterSelf();
 }

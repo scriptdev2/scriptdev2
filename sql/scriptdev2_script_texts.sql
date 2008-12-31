@@ -131,6 +131,8 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,
 -- -1 229 000 BLACKROCK SPIRE
 
 -- -1 230 000 BLACKROCK DEPTHS
+INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES
+(-1230000,'Ah, hits the spot!',0,0,0,'rocknot SAY_GOT_BEER');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO `script_texts` (`entry`,`content_default`,`sound`,`type`,`language`,`comment`) VALUES

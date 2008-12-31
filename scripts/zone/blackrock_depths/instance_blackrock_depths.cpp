@@ -37,6 +37,8 @@ EndScriptData */
 #define GO_SHADOW_MECHANISM     161461
 #define GO_SHADOW_GIANT_DOOR    157923
 #define GO_SHADOW_DUMMY         161516
+#define GO_BAR_KEG_SHOT         170607
+#define GO_BAR_KEG_TRAP         171941
 #define GO_BAR_DOOR             170571
 #define GO_TOMB_ENTER           170576
 #define GO_TOMB_EXIT            170577
@@ -63,6 +65,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     uint64 GoShadowMechGUID;
     uint64 GoShadowGiantGUID;
     uint64 GoShadowDummyGUID;
+    uint64 GoBarKegGUID;
+    uint64 GoBarKegTrapGUID;
     uint64 GoBarDoorGUID;
     uint64 GoTombEnterGUID;
     uint64 GoTombExitGUID;
@@ -70,6 +74,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     uint64 GoGolemNGUID;
     uint64 GoGolemSGUID;
     uint64 GoThoneGUID;
+
+    uint32 BarAleCount;
 
     void Initialize()
     {
@@ -84,6 +90,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         GoShadowMechGUID = 0;
         GoShadowGiantGUID = 0;
         GoShadowDummyGUID = 0;
+        GoBarKegGUID = 0;
+        GoBarKegTrapGUID = 0;
         GoBarDoorGUID = 0;
         GoTombEnterGUID = 0;
         GoTombExitGUID = 0;
@@ -91,6 +99,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         GoGolemNGUID = 0;
         GoGolemSGUID = 0;
         GoThoneGUID = 0;
+
+        BarAleCount = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounter[i] = NOT_STARTED;
@@ -117,8 +127,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
     {
         switch(creature->GetEntry())
         {
-            case C_EMPEROR: break;
-            case C_PHALANX: break;
+            case C_EMPEROR: EmperorGUID = creature->GetGUID(); break;
+            case C_PHALANX: PhalanxGUID = creature->GetGUID(); break;
         }
     }
 
@@ -134,6 +144,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             case GO_SHADOW_MECHANISM: GoShadowMechGUID = go->GetGUID(); break;
             case GO_SHADOW_GIANT_DOOR: GoShadowGiantGUID = go->GetGUID(); break;
             case GO_SHADOW_DUMMY: GoShadowDummyGUID = go->GetGUID(); break;
+            case GO_BAR_KEG_SHOT: GoBarKegGUID = go->GetGUID(); break;
+            case GO_BAR_KEG_TRAP: GoBarKegTrapGUID = go->GetGUID(); break;
             case GO_BAR_DOOR: GoBarDoorGUID = go->GetGUID(); break;
             case GO_TOMB_ENTER: GoTombEnterGUID = go->GetGUID(); break;
             case GO_TOMB_EXIT: GoTombExitGUID = go->GetGUID(); break;
@@ -154,6 +166,8 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             return;
         }
 
+        debug_log("SD2: Instance Blackrock Depths: SetData update (Type: %u Data %u)", type, data);
+
         switch(type)
         {
             case TYPE_RING_OF_LAW:
@@ -163,7 +177,10 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 Encounter[1] = data;
                 break;
             case TYPE_BAR:
-                Encounter[2] = data;
+                if (data == SPECIAL)
+                    ++BarAleCount;
+                else
+                    Encounter[2] = data;
                 break;
             case TYPE_TOMB_OF_SEVEN:
                 Encounter[3] = data;
@@ -200,7 +217,10 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             case TYPE_VAULT:
                 return Encounter[1];
             case TYPE_BAR:
-                return Encounter[2];
+                if (Encounter[2] == IN_PROGRESS && BarAleCount == 3)
+                    return SPECIAL;
+                else
+                    return Encounter[2];
             case TYPE_TOMB_OF_SEVEN:
                 return Encounter[3];
             case TYPE_LYCEUM:
@@ -228,6 +248,13 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 return GoArena3GUID;
             case DATA_ARENA4:
                 return GoArena4GUID;
+
+            case DATA_GO_BAR_KEG:
+                return GoBarKegGUID;
+            case DATA_GO_BAR_KEG_TRAP:
+                return GoBarKegTrapGUID;
+            case DATA_GO_BAR_DOOR:
+                return GoBarDoorGUID;
         }
         return 0;
     }

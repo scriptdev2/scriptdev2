@@ -14,8 +14,13 @@
 
 #define DATA_EMPEROR            10
 #define DATA_PHALANX            11
+
 #define DATA_ARENA1             12
 #define DATA_ARENA2             13
 #define DATA_ARENA3             14
 #define DATA_ARENA4             15
+
+#define DATA_GO_BAR_KEG         16
+#define DATA_GO_BAR_KEG_TRAP    17
+#define DATA_GO_BAR_DOOR        18
 #endif
