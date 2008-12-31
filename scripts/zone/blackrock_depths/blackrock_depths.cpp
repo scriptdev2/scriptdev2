@@ -16,12 +16,14 @@
 
 /* ScriptData
 SDName: Blackrock_Depths
-SD%Complete: 95
+SD%Complete: 50
 SDComment: Quest support: 4001, 4342, 7604. Vendor Lokhtos Darkbargainer.
 SDCategory: Blackrock Depths
 EndScriptData */
 
 /* ContentData
+at_ring_of_law
+npc_grimstone
 mob_phalanx
 npc_kharan_mighthammer
 npc_lokhtos_darkbargainer
@@ -29,43 +31,297 @@ EndContentData */
 
 #include "precompiled.h"
 #include "def_blackrock_depths.h"
+#include "../../npc/npc_escortAI.h"
+
+#define C_GRIMSTONE         10096
+#define C_THELDREN          16059
+
+//4 or 6 in total? 1+2+1 / 2+2+2 / 3+3. Depending on this, code should be changed.
+#define MOB_AMOUNT          4
+
+uint32 RingMob[]=
+{
+    8925,                                                   // Dredge Worm
+    8926,                                                   // Deep Stinger
+    8927,                                                   // Dark Screecher
+    8928,                                                   // Burrowing Thundersnout
+    8933,                                                   // Cave Creeper
+    8932,                                                   // Borer Beetle
+};
+
+uint32 RingBoss[]=
+{
+    9027,                                                   // Gorosh
+    9028,                                                   // Grizzle
+    9029,                                                   // Eviscerator
+    9030,                                                   // Ok'thor
+    9031,                                                   // Anub'shiah
+    9032,                                                   // Hedrum
+};
+
+float RingLocations[6][3]=
+{
+    {604.802673, -191.081985, -54.058590},                  // ring
+    {604.072998, -222.106918, -52.743759},                  // first gate
+    {621.400391, -214.499054, -52.814453},                  // hiding in corner
+    {601.300781, -198.556992, -53.950256},                  // ring
+    {631.818359, -180.548126, -52.654770},                  // second gate
+    {627.390381, -201.075974, -52.692917}                   // hiding in corner
+};
 
 bool AreaTrigger_at_ring_of_law(Player *player, AreaTriggerEntry *at)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)player->GetInstanceData());
+
+    if (pInstance)
+    {
+        if (pInstance->GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || pInstance->GetData(TYPE_RING_OF_LAW) == DONE)
+            return false;
+
+        pInstance->SetData(TYPE_RING_OF_LAW,IN_PROGRESS);
+        player->SummonCreature(C_GRIMSTONE,625.559,-205.618,-52.735,2.609,TEMPSUMMON_DEAD_DESPAWN,0);
+
+        return false;
+    }
     return false;
 }
 
-struct MANGOS_DLL_DECL npc_grimstoneAI : public ScriptedAI
+/*######
+## npc_grimstone
+######*/
+
+//TODO: implement quest part of event (different end boss)
+struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
 {
-    npc_grimstoneAI(Creature *c) : ScriptedAI(c)
+    npc_grimstoneAI(Creature *c) : npc_escortAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        MobSpawnId = rand()%6;
         Reset();
     }
 
     ScriptedInstance* pInstance;
 
+    uint8 EventPhase;
+    uint32 Event_Timer;
+
+    uint8 MobSpawnId;
+    uint8 MobCount;
+    uint32 MobDeath_Timer;
+
+    uint64 RingMobGUID[4];
+    uint64 RingBossGUID;
+
+    bool CanWalk;
+
     void Reset()
     {
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+        EventPhase = 0;
+        Event_Timer = 1000;
+
+        MobCount = 0;
+        MobDeath_Timer = 0;
+
+        for(uint8 i = 0; i < MOB_AMOUNT; i++)
+            RingMobGUID[i] = 0;
+
+        RingBossGUID = 0;
+
+        CanWalk = false;
     }
 
-    void Aggro(Unit *who)
+    void Aggro(Unit *who) { }
+
+    void DoGate(uint32 id, uint32 state)
     {
+        if (GameObject *go = GameObject::GetGameObject(*m_creature,pInstance->GetData64(id)))
+            go->SetGoState(state);
+
+        debug_log("SD2: npc_grimstone, arena gate update state.");
+    }
+
+    //TODO: move them to center
+    void SummonRingMob()
+    {
+        if (Creature* tmp = m_creature->SummonCreature(RingMob[MobSpawnId],608.960,-235.322,-53.907,1.857,TEMPSUMMON_DEAD_DESPAWN,0))
+            RingMobGUID[MobCount] = tmp->GetGUID();
+
+        ++MobCount;
+
+        if (MobCount == MOB_AMOUNT)
+            MobDeath_Timer = 2500;
+    }
+
+    //TODO: move them to center
+    void SummonRingBoss()
+    {
+        if (Creature* tmp = m_creature->SummonCreature(RingBoss[rand()%6],644.300,-175.989,-53.739,3.418,TEMPSUMMON_DEAD_DESPAWN,0))
+            RingBossGUID = tmp->GetGUID();
+
+        MobDeath_Timer = 2500;
+    }
+
+    void WaypointReached(uint32 i)
+    {
+        switch(i)
+        {
+            case 0:
+                DoScriptText(-1000000, m_creature);//2
+                CanWalk = false;
+                Event_Timer = 5000;
+                break;
+            case 1:
+                DoScriptText(-1000000, m_creature);//4
+                CanWalk = false;
+                Event_Timer = 5000;
+                break;
+            case 2:
+                CanWalk = false;
+                break;
+            case 3:
+                DoScriptText(-1000000, m_creature);//5
+                break;
+            case 4:
+                DoScriptText(-1000000, m_creature);//6
+                CanWalk = false;
+                Event_Timer = 5000;
+                break;
+            case 5:
+                if (pInstance)
+                {
+                    pInstance->SetData(TYPE_RING_OF_LAW,DONE);
+                    debug_log("SD2: npc_grimstone: event reached end and set complete.");
+                }
+                break;
+        }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!pInstance)
             return;
 
-        DoMeleeAttackIfReady();
+        if (MobDeath_Timer)
+        {
+            if (MobDeath_Timer <= diff)
+            {
+                MobDeath_Timer = 2500;
+
+                if (RingBossGUID)
+                {
+                    Creature *boss = (Creature*)Unit::GetUnit(*m_creature,RingBossGUID);
+                    if (boss && !boss->isAlive() && boss->isDead())
+                    {
+                        RingBossGUID = 0;
+                        Event_Timer = 5000;
+                        MobDeath_Timer = 0;
+                        return;
+                    }
+                    return;
+                }
+
+                for(uint8 i = 0; i < MOB_AMOUNT; i++)
+                {
+                    Creature *mob = (Creature*)Unit::GetUnit(*m_creature,RingMobGUID[i]);
+                    if (mob && !mob->isAlive() && mob->isDead())
+                    {
+                        RingMobGUID[i] = 0;
+                        --MobCount;
+
+                        //seems all are gone, so set timer to continue and discontinue this
+                        if (!MobCount)
+                        {
+                            Event_Timer = 5000;
+                            MobDeath_Timer = 0;
+                        }
+                    }
+                }
+            }else MobDeath_Timer -= diff;
+        }
+
+        if (Event_Timer)
+        {
+            if (Event_Timer <= diff)
+            {
+                switch(EventPhase)
+                {
+                    case 0:
+                        DoScriptText(-1000000, m_creature);//1
+                        DoGate(DATA_ARENA4,1);
+                        Start(false, false, false);
+                        CanWalk = true;
+                        Event_Timer = 0;
+                        break;
+                    case 1:
+                        CanWalk = true;
+                        Event_Timer = 0;
+                        break;
+                    case 2:
+                        Event_Timer = 2000;
+                        break;
+                    case 3:
+                        DoGate(DATA_ARENA1,0);
+                        Event_Timer = 3000;
+                        break;
+                    case 4:
+                        CanWalk = true;
+                        m_creature->SetVisibility(VISIBILITY_OFF);
+                        SummonRingMob();
+                        Event_Timer = 8000;
+                        break;
+                    case 5:
+                        SummonRingMob();
+                        SummonRingMob();
+                        Event_Timer = 8000;
+                        break;
+                    case 6:
+                        SummonRingMob();
+                        Event_Timer = 0;
+                        break;
+                    case 7:
+                        m_creature->SetVisibility(VISIBILITY_ON);
+                        DoGate(DATA_ARENA1,1);
+                        DoScriptText(-1000000, m_creature);//4
+                        CanWalk = true;
+                        Event_Timer = 0;
+                        break;
+                    case 8:
+                        DoGate(DATA_ARENA2,0);
+                        Event_Timer = 5000;
+                        break;
+                    case 9:
+                        m_creature->SetVisibility(VISIBILITY_OFF);
+                        SummonRingBoss();
+                        Event_Timer = 0;
+                        break;
+                    case 10:
+                        //if quest, complete
+                        DoGate(DATA_ARENA2,1);
+                        DoGate(DATA_ARENA3,0);
+                        DoGate(DATA_ARENA4,0);
+                        CanWalk = true;
+                        Event_Timer = 0;
+                        break;
+                }
+                ++EventPhase;
+            }else Event_Timer -= diff;
+        }
+
+        if (CanWalk)
+            npc_escortAI::UpdateAI(diff);
     }
 };
 
 CreatureAI* GetAI_npc_grimstone(Creature *_Creature)
 {
-    return new npc_grimstoneAI (_Creature);
+    npc_grimstoneAI* Grimstone_AI = new npc_grimstoneAI(_Creature);
+
+    for(uint8 i = 0; i < 6; ++i)
+        Grimstone_AI->AddWaypoint(i, RingLocations[i][0], RingLocations[i][1], RingLocations[i][2]);
+
+    return (CreatureAI*)Grimstone_AI;
 }
 
 /*######

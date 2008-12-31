@@ -16,8 +16,8 @@
 
 /* ScriptData
 SDName: Instance_Blackrock_Depths
-SD%Complete: 10
-SDComment:
+SD%Complete: 20
+SDComment: events: ring of law
 SDCategory: Blackrock Depths
 EndScriptData */
 
@@ -204,6 +204,15 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
                 return EmperorGUID;
             case DATA_PHALANX:
                 return PhalanxGUID;
+
+            case DATA_ARENA1:
+                return GoArena1GUID;
+            case DATA_ARENA2:
+                return GoArena2GUID;
+            case DATA_ARENA3:
+                return GoArena3GUID;
+            case DATA_ARENA4:
+                return GoArena4GUID;
         }
         return 0;
     }
