@@ -546,14 +546,14 @@ float BarWpLocations[8][3]=
 
 uint32 BarWpWait[8]=
 {
-    {0},
-    {5000},
-    {5000},
-    {5000},
-    {5000},
-    {15000},
-    {0},
-    {0}
+    0,
+    5000,
+    5000,
+    5000,
+    5000,
+    15000,
+    0,
+    0
 };
 
 struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
