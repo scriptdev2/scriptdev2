@@ -353,7 +353,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_enchanted_elemental' WHERE `ent
 UPDATE `creature_template` SET `ScriptName`='mob_tainted_elemental' WHERE `entry`=22009;
 UPDATE `creature_template` SET `ScriptName`='mob_coilfang_elite' WHERE `entry`=22055;
 UPDATE `creature_template` SET `ScriptName`='mob_coilfang_strider' WHERE `entry`=22056;
-UPDATE `creature_template` SET `ScriptName`='mob_fathom_sporebat' WHERE `entry`=22140;
+UPDATE `creature_template` SET `ScriptName`='mob_toxic_sporebat' WHERE `entry`=22140;
 UPDATE `creature_template` SET `ScriptName`='mob_shield_generator_channel' WHERE `entry`=19870;
 
 

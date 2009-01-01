@@ -67,7 +67,7 @@ EndScriptData */
 #define TAINTED_ELEMENTAL           22009
 #define COILFANG_STRIDER            22056
 #define COILFANG_ELITE              22055
-#define FATHOM_SPOREBAT             22140
+#define TOXIC_SPOREBAT              22140
 
 float ElementPos[8][4] =
 {
@@ -312,11 +312,9 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                                                             // This needs an entry in spell_script_target
                     DoCast(m_creature, SPELL_MAGIC_BARRIER, true);
 
-                    Creature *pCreature;
                     for(uint8 i = 0; i < 4; i++)
                     {
-                        pCreature = m_creature->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0],  ShieldGeneratorChannelPos[i][1],  ShieldGeneratorChannelPos[i][2],  ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
-                        if (pCreature)
+                        if (Creature *pCreature = m_creature->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0],  ShieldGeneratorChannelPos[i][1],  ShieldGeneratorChannelPos[i][2],  ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
                             ShieldGeneratorChannel[i] = pCreature->GetGUID();
                     }
 
@@ -329,14 +327,9 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
                 //SummonSporebat_Timer
                 if (SummonSporebat_Timer < diff)
                 {
-                    Creature *Sporebat = NULL;
-                    Sporebat = m_creature->SummonCreature(FATHOM_SPOREBAT, SPOREBAT_X, SPOREBAT_Y, SPOREBAT_Z, SPOREBAT_O, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-
-                    if (Sporebat)
+                    if (Creature *Sporebat = m_creature->SummonCreature(TOXIC_SPOREBAT, SPOREBAT_X, SPOREBAT_Y, SPOREBAT_Z, SPOREBAT_O, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
                     {
-                        Unit *target = NULL;
-                        target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                        if (target)
+                        if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                             Sporebat->AI()->AttackStart(target);
                     }
 
@@ -395,11 +388,9 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             }else ForkedLightning_Timer -= diff;
 
             //EnchantedElemental_Timer
-            if(EnchantedElemental_Timer < diff)
+            if (EnchantedElemental_Timer < diff)
             {
-                Creature *Elemental;
-                Elemental = m_creature->SummonCreature(ENCHANTED_ELEMENTAL, ElementPos[EnchantedElemental_Pos][0], ElementPos[EnchantedElemental_Pos][1], ElementPos[EnchantedElemental_Pos][2], ElementPos[EnchantedElemental_Pos][3], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-                if (Elemental)
+                if (Creature *Elemental = m_creature->SummonCreature(ENCHANTED_ELEMENTAL, ElementPos[EnchantedElemental_Pos][0], ElementPos[EnchantedElemental_Pos][1], ElementPos[EnchantedElemental_Pos][2], ElementPos[EnchantedElemental_Pos][3], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
                     Elemental->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ());
 
                 if (EnchantedElemental_Pos == 7)
@@ -413,10 +404,8 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             //TaintedElemental_Timer
             if (TaintedElemental_Timer < diff)
             {
-                Creature *Tain_Elemental;
                 uint32 pos = rand()%8;
-                Tain_Elemental = m_creature->SummonCreature(TAINTED_ELEMENTAL, ElementPos[pos][0], ElementPos[pos][1], ElementPos[pos][2], ElementPos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
-                if (Tain_Elemental)
+                if (Creature *Tain_Elemental = m_creature->SummonCreature(TAINTED_ELEMENTAL, ElementPos[pos][0], ElementPos[pos][1], ElementPos[pos][2], ElementPos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
                 {
                     Tain_Elemental->GetMotionMaster()->Clear();
                     Tain_Elemental->GetMotionMaster()->MoveIdle();
@@ -428,14 +417,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             //CoilfangElite_Timer
             if (CoilfangElite_Timer < diff)
             {
-                Creature *CoilfangElite;
                 uint32 pos = rand()%3;
-                CoilfangElite = m_creature->SummonCreature(COILFANG_ELITE, CoilfangElitePos[pos][0], CoilfangElitePos[pos][1], CoilfangElitePos[pos][2], CoilfangElitePos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000);
-                if (CoilfangElite)
+                if (Creature *CoilfangElite = m_creature->SummonCreature(COILFANG_ELITE, CoilfangElitePos[pos][0], CoilfangElitePos[pos][1], CoilfangElitePos[pos][2], CoilfangElitePos[pos][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 45000))
                 {
-                    Unit *target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if (target)
+                    if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         CoilfangElite->AI()->AttackStart(target);
                 }
 
@@ -445,14 +430,10 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             //CoilfangStrider_Timer
             if (CoilfangStrider_Timer < diff)
             {
-                Creature *CoilfangStrider;
                 uint32 pos = rand()%3;
-                CoilfangStrider = m_creature->SummonCreature(COILFANG_STRIDER, CoilfangStriderPos[pos][0], CoilfangStriderPos[pos][1], CoilfangStriderPos[pos][2], CoilfangStriderPos[pos][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                if (CoilfangStrider)
+                if (Creature *CoilfangStrider = m_creature->SummonCreature(COILFANG_STRIDER, CoilfangStriderPos[pos][0], CoilfangStriderPos[pos][1], CoilfangStriderPos[pos][2], CoilfangStriderPos[pos][3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
                 {
-                    Unit *target = NULL;
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if (target)
+                    if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         CoilfangStrider->AI()->AttackStart(target);
                 }
 
@@ -559,10 +540,7 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     {
         if (pInstance)
         {
-            Creature *Vashj = NULL;
-            Vashj = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ)));
-
-            if (Vashj)
+            if (Creature *Vashj = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_LADYVASHJ))))
                 ((boss_lady_vashjAI*)Vashj->AI())->EventTaintedElementalDeath();
         }
     }
@@ -587,11 +565,11 @@ struct MANGOS_DLL_DECL mob_tainted_elementalAI : public ScriptedAI
     }
 };
 
-//Fathom Sporebat
+//Toxic Sporebat
 //Toxic Spores: Used in Phase 3 by the Spore Bats, it creates a contaminated green patch of ground, dealing about 2775-3225 nature damage every second to anyone who stands in it.
-struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
+struct MANGOS_DLL_DECL mob_toxic_sporebatAI : public ScriptedAI
 {
-    mob_fathom_sporebatAI(Creature *c) : ScriptedAI(c)
+    mob_toxic_sporebatAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
@@ -620,11 +598,8 @@ struct MANGOS_DLL_DECL mob_fathom_sporebatAI : public ScriptedAI
         //ToxicSpore_Timer
         if (ToxicSpore_Timer < diff)
         {
-            Unit *target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
             //The Spores will hit you anywhere in the instance: underwater, at the elevator, at the entrance, wherever.
-            if (target)
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(target, SPELL_TOXIC_SPORES);
 
             ToxicSpore_Timer = 20000+rand()%5000;
@@ -820,9 +795,9 @@ CreatureAI* GetAI_mob_tainted_elemental(Creature *_Creature)
     return new mob_tainted_elementalAI (_Creature);
 }
 
-CreatureAI* GetAI_mob_fathom_sporebat(Creature *_Creature)
+CreatureAI* GetAI_mob_toxic_sporebat(Creature *_Creature)
 {
-    return new mob_fathom_sporebatAI (_Creature);
+    return new mob_toxic_sporebatAI (_Creature);
 }
 
 CreatureAI* GetAI_mob_shield_generator_channel(Creature *_Creature)
@@ -849,8 +824,8 @@ void AddSC_boss_lady_vashj()
     newscript->RegisterSelf();
 
     newscript = new Script;
-    newscript->Name = "mob_fathom_sporebat";
-    newscript->GetAI = &GetAI_mob_fathom_sporebat;
+    newscript->Name = "mob_toxic_sporebat";
+    newscript->GetAI = &GetAI_mob_toxic_sporebat;
     newscript->RegisterSelf();
 
     newscript = new Script;
