@@ -85,7 +85,10 @@ bool GossipHello_npc_shadowfang_prisoner(Player *player, Creature *_Creature)
 {
     ScriptedInstance* pInstance = ((ScriptedInstance*)_Creature->GetInstanceData());
 
-    if (pInstance && !pInstance->GetData(TYPE_FREE_NPC) && pInstance->GetData(TYPE_RETHILGORE) == DONE)
+    if (!pInstance)
+        return false;
+    
+    if (pInstance->GetData(TYPE_FREE_NPC) != DONE && pInstance->GetData(TYPE_RETHILGORE) == DONE)
         player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM_DOOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
@@ -98,7 +101,7 @@ bool GossipSelect_npc_shadowfang_prisoner(Player *player, Creature *_Creature, u
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(_Creature->AI()))->Start(false, false, false, player->GetGUID());
+        ((npc_escortAI*)(_Creature->AI()))->Start(false, false, false);
     }
     return true;
 }

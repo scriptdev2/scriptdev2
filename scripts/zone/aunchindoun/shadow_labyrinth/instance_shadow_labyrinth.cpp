@@ -41,16 +41,19 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
     instance_shadow_labyrinth(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounter[ENCOUNTERS];
+    std::string str_data;
 
-    GameObject *RefectoryDoor;
-    GameObject *ScreamingHallDoor;
+    uint64 RefectoryDoorGUID;
+    uint64 ScreamingHallDoorGUID;
+
     uint64 GrandmasterVorpil;
     uint32 FelOverseerCount;
 
     void Initialize()
     {
-        RefectoryDoor = NULL;
-        ScreamingHallDoor = NULL;
+        RefectoryDoorGUID = 0;
+        ScreamingHallDoorGUID = 0;
+
         GrandmasterVorpil = 0;
         FelOverseerCount = 0;
 
@@ -70,12 +73,8 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case REFECTORY_DOOR:
-                RefectoryDoor = go;
-                break;
-            case SCREAMING_HALL_DOOR:
-                ScreamingHallDoor = go;
-                break;
+            case REFECTORY_DOOR: RefectoryDoorGUID = go->GetGUID(); break;
+            case SCREAMING_HALL_DOOR: ScreamingHallDoorGUID = go->GetGUID(); break;
         }
     }
 
@@ -93,6 +92,37 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
+    Player* GetPlayerInMap()
+    {
+        Map::PlayerList const& players = instance->GetPlayers();
+
+        if (!players.isEmpty())
+        {
+            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            {
+                if (Player* plr = itr->getSource())
+                    return plr;
+            }
+        }
+
+        debug_log("SD2: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
+        return NULL;
+    }
+
+    void HandleGameObject(uint64 guid, uint32 state)
+    {
+        Player *player = GetPlayerInMap();
+
+        if (!player || !guid)
+        {
+            debug_log("SD2: Shadow Labyrinth: HandleGameObject fail");
+            return;
+        }
+
+        if (GameObject *go = GameObject::GetGameObject(*player,guid))
+            go->SetGoState(state);
+    }
+
     void SetData(uint32 type, uint32 data)
     {
         switch(type)
@@ -102,14 +132,14 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 break;
 
             case TYPE_OVERSEER:
-                if( data != DONE )
+                if (data != DONE)
                     error_log("SD2: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
-                if( FelOverseerCount )
+                if (FelOverseerCount)
                 {
                     --FelOverseerCount;
                     debug_log("SD2: Shadow Labyrinth: %u Fel Overseers left to kill.",FelOverseerCount);
                 }
-                if( FelOverseerCount == 0 )
+                if (FelOverseerCount == 0)
                 {
                     Encounter[1] = DONE;
                     debug_log("SD2: Shadow Labyrinth: TYPE_OVERSEER == DONE");
@@ -117,19 +147,17 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 break;
 
             case DATA_BLACKHEARTTHEINCITEREVENT:
-                if( data == DONE )
+                if (data == DONE)
                 {
-                    if( RefectoryDoor )
-                        RefectoryDoor->UseDoorOrButton();
+                    HandleGameObject(RefectoryDoorGUID,0);
                 }
                 Encounter[2] = data;
                 break;
 
             case DATA_GRANDMASTERVORPILEVENT:
-                if( data == DONE )
+                if (data == DONE)
                 {
-                    if( ScreamingHallDoor )
-                        ScreamingHallDoor->UseDoorOrButton();
+                    HandleGameObject(ScreamingHallDoorGUID,0);
                 }
                 Encounter[3] = data;
                 break;
@@ -138,11 +166,28 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 Encounter[4] = data;
                 break;
         }
+
+        if (data == DONE)
+        {
+            if (type == TYPE_OVERSEER && FelOverseerCount != 0)
+                return;
+
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << Encounter[0] << " " << Encounter[1] << " "
+                << Encounter[2] << " " << Encounter[3] << " " << Encounter[4];
+
+            str_data = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
     }
 
     uint32 GetData(uint32 type)
     {
-        switch( type )
+        switch(type)
         {
             case TYPE_HELLMAW:
                 return Encounter[0];
@@ -150,6 +195,31 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 return Encounter[1];
         }
         return false;
+    }
+
+    const char* Save()
+    {
+        return str_data.c_str();
+    }
+
+    void Load(const char* in)
+    {
+        if (!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+
+        std::istringstream loadStream(in);
+        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3] >> Encounter[4];
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if (Encounter[i] == IN_PROGRESS)
+                Encounter[i] = NOT_STARTED;
+
+        OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 

@@ -35,29 +35,61 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
     instance_shadowfang_keep(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint32 Encounter[ENCOUNTERS];
+    std::string str_data;
 
-    GameObject *DoorCourtyard;
-    GameObject *DoorSorcerer;
-    GameObject *DoorArugal;
+    uint64 DoorCourtyardGUID;
+    uint64 DoorSorcererGUID;
+    uint64 DoorArugalGUID;
 
     void Initialize()
     {
-        DoorCourtyard  = NULL;
-        DoorSorcerer   = NULL;
-        DoorArugal     = NULL;
+        DoorCourtyardGUID = 0;
+        DoorSorcererGUID = 0;
+        DoorArugalGUID = 0;
 
         for(uint8 i=0; i < ENCOUNTERS; ++i)
             Encounter[i] = NOT_STARTED;
+    }
+
+    Player* GetPlayerInMap()
+    {
+        Map::PlayerList const& players = instance->GetPlayers();
+
+        if (!players.isEmpty())
+        {
+            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            {
+                if (Player* plr = itr->getSource())
+                    return plr;
+            }
+        }
+
+        debug_log("SD2: Instance Shadowfang Keep: GetPlayerInMap, but PlayerList is empty!");
+        return NULL;
     }
 
     void OnObjectCreate(GameObject *go)
     {
         switch(go->GetEntry())
         {
-            case ENTRY_COURTYARD_DOOR: DoorCourtyard = go; break;
-            case ENTRY_SORCERER_DOOR: DoorSorcerer = go; break;
-            case ENTRY_ARUGAL_DOOR: DoorArugal = go; break;
+            case ENTRY_COURTYARD_DOOR: DoorCourtyardGUID = go->GetGUID(); break;
+            case ENTRY_SORCERER_DOOR: DoorSorcererGUID = go->GetGUID(); break;
+            case ENTRY_ARUGAL_DOOR: DoorArugalGUID = go->GetGUID(); break;
         }
+    }
+
+    void HandleGameObject(uint64 guid, uint32 state)
+    {
+        Player *player = GetPlayerInMap();
+
+        if (!player || !guid)
+        {
+            debug_log("SD2: Instance Shadowfang Keep: HandleGameObject fail");
+            return;
+        }
+
+        if (GameObject *go = GameObject::GetGameObject(*player,guid))
+            go->SetGoState(state);
     }
 
     void SetData(uint32 type, uint32 data)
@@ -67,8 +99,7 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
             case TYPE_FREE_NPC:
                 if (data == DONE)
                 {
-                    if (DoorCourtyard)
-                        DoorCourtyard->SetGoState(0);
+                    HandleGameObject(DoorCourtyardGUID,0);
                 }
                 Encounter[0] = data;
                 break;
@@ -78,19 +109,30 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
             case TYPE_FENRUS:
                 if (data == DONE)
                 {
-                    if (DoorSorcerer)
-                        DoorSorcerer->SetGoState(0);
+                    HandleGameObject(DoorSorcererGUID,0);
                 }
                 Encounter[2] = data;
                 break;
             case TYPE_NANDOS:
                 if (data == DONE)
                 {
-                    if (DoorArugal)
-                        DoorArugal->SetGoState(0);
+                    HandleGameObject(DoorArugalGUID,0);
                 }
                 Encounter[3] = data;
                 break;
+        }
+
+        if (data == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " " << Encounter[3];
+
+            str_data = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
         }
     }
 
@@ -110,6 +152,30 @@ struct MANGOS_DLL_DECL instance_shadowfang_keep : public ScriptedInstance
         return 0;
     }
 
+    const char* Save()
+    {
+        return str_data.c_str();
+    }
+
+    void Load(const char* in)
+    {
+        if (!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+
+        std::istringstream loadStream(in);
+        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3];
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if (Encounter[i] == IN_PROGRESS)
+                Encounter[i] = NOT_STARTED;
+
+        OUT_LOAD_INST_DATA_COMPLETE;
+    }
 };
 
 InstanceData* GetInstanceData_instance_shadowfang_keep(Map* map)
