@@ -23,9 +23,8 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "def_hyjal.h"
-#include "WorldPacket.h"
 
-#define ENCOUNTERS     5
+#define ENCOUNTERS          5
 
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event
@@ -123,7 +122,7 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
             case DATA_TRASH:
                 if (data) Trash = data;
                 else      Trash--;
-                UpdateWorldState(2453, data);
+                UpdateWorldState(WORLD_STATE_ENEMYCOUNT, Trash);
                 break;
         }
 
@@ -158,12 +157,18 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         return 0;
     }
 
-    void UpdateWorldState(uint32 field, uint32 value)
+    void UpdateWorldState(uint32 id, uint32 state)
     {
-        WorldPacket data(SMSG_UPDATE_WORLD_STATE, 8);
-        data << field;
-        data << value;
-        ((InstanceMap*)instance)->SendToPlayers(&data);
+        Map::PlayerList const& players = instance->GetPlayers();
+
+        if (!players.isEmpty())
+        {
+            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            {
+                if (Player* player = itr->getSource())
+                    player->SendUpdateWorldState(id,state);
+            }
+        }else debug_log("SD2: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
     }
 
     const char* Save()

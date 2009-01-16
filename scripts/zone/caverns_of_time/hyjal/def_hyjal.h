@@ -5,6 +5,10 @@
 #ifndef DEF_HYJAL_H
 #define DEF_HYJAL_H
 
+#define WORLD_STATE_WAVES         2842
+#define WORLD_STATE_ENEMY         2453
+#define WORLD_STATE_ENEMYCOUNT    2454
+
 #define DATA_ANETHERON            1
 #define DATA_ANETHERONEVENT       2
 #define DATA_ARCHIMONDE           3
