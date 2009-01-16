@@ -100,6 +100,9 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
 
     void JustDied(Unit* killer)
     {
+        if (killer->GetEntry() == m_creature->GetEntry())
+            return;
+
         if (PlayerGUID)
         {
             if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
