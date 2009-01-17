@@ -186,31 +186,23 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+        if (!IntroOnce && m_creature->IsWithinDistInMap(who, 50.0f))
         {
-            if (!IntroOnce && m_creature->IsWithinDistInMap(who, 75))
-            {
-                DoScriptText(SAY_INTRO, m_creature);
-                IntroOnce = true;
-                IsIntroEvent = true;
-
-                if (pInstance)
-                    pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
-            }
-
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE )
+            if (who->GetTypeId() != TYPEID_PLAYER)
                 return;
 
-            if (IsIntroEvent || !IsMainEvent)
-                return;
+            DoScriptText(SAY_INTRO, m_creature);
+            IntroOnce = true;
+            IsIntroEvent = true;
 
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
+            if (pInstance)
+                pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
         }
+
+        if (IsIntroEvent || !IsMainEvent)
+            return;
+
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void Aggro(Unit *who)
@@ -344,13 +336,15 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
             if (pInstance->GetData64(DATA_NETHEKURSE))
             {
                 Creature *pKurse = (Creature*)Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_NETHEKURSE));
-                if (pKurse)
+                if (pKurse && m_creature->GetDistance(pKurse) < 45.0f)
+                {
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonAggro();
-            }
 
-            if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS )
-                return;
-            else pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
+                    if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
+                        return;
+                    else pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
+                }
+            }
         }
     }
 
@@ -358,6 +352,9 @@ struct MANGOS_DLL_DECL mob_fel_orc_convertAI : public ScriptedAI
     {
         if (pInstance)
         {
+            if (pInstance->GetData(TYPE_NETHEKURSE) != IN_PROGRESS)
+                return;
+
             if (pInstance->GetData64(DATA_NETHEKURSE))
             {
                 Creature *pKurse = (Creature*)Unit::GetUnit(*m_creature,pInstance->GetData64(DATA_NETHEKURSE));
