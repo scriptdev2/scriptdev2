@@ -170,13 +170,13 @@ struct MANGOS_DLL_DECL boss_ambassador_hellmawAI : public ScriptedAI
         if (CorrosiveAcid_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_CORROSIVE_ACID);
-            CorrosiveAcid_Timer = 25000;
+            CorrosiveAcid_Timer = 15000 + rand()%10000;
         }else CorrosiveAcid_Timer -= diff;
 
         if (Fear_Timer < diff)
         {
             DoCast(m_creature,SPELL_FEAR);
-            Fear_Timer = 35000;
+            Fear_Timer = 20000 + rand()%15000;
         }else Fear_Timer -= diff;
 
         /*if (HeroicMode)

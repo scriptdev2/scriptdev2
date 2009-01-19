@@ -105,6 +105,9 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             DoPlaySoundToSet(m_creature, SOUND_SLAY_3);
             break;
         }
+
+        DoCast(m_creature->getVictim(), SPELL_MARK_DEATH);
+
     }
 
     void JustDied(Unit* Killer)
@@ -185,15 +188,26 @@ struct MANGOS_DLL_DECL boss_doomwalkerAI : public ScriptedAI
             //Spell Chain Lightning
             if (Chain_Timer < diff)
             {
-                DoCast(m_creature->getVictim(),SPELL_CHAIN_LIGHTNING);
-                Chain_Timer = 15000 + rand()%25000;
+
+                Unit* target = NULL;
+                target = SelectUnit(SELECT_TARGET_RANDOM,1);
+
+                if (!target)
+                target = m_creature->getVictim();
+
+                if (target)
+                {
+                    DoCast(target,SPELL_CHAIN_LIGHTNING);
+                }
+
+                Chain_Timer = 10000 + rand()%25000;
             }else Chain_Timer -= diff;
 
             //Spell Sunder Armor
             if (Armor_Timer < diff)
             {
                 DoCast(m_creature->getVictim(),SPELL_SUNDER_ARMOR);
-                Armor_Timer = 15000 + rand()%15000;
+                Armor_Timer = 10000 + rand()%15000;
             }else Armor_Timer -= diff;
 
             DoMeleeAttackIfReady();

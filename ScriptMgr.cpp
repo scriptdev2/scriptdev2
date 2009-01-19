@@ -298,6 +298,7 @@ extern void AddSC_instance_magtheridons_lair();
 //--Shattered Halls
 extern void AddSC_boss_grand_warlock_nethekurse();
 extern void AddSC_boss_warbringer_omrogg();
+extern void AddSC_boss_warchief_kargath_bladefist();
 extern void AddSC_instance_shattered_halls();
 
 //--Ramparts
@@ -1486,6 +1487,7 @@ void ScriptsInit()
     //--Shattered Halls
     AddSC_boss_grand_warlock_nethekurse();
     AddSC_boss_warbringer_omrogg();
+    AddSC_boss_warchief_kargath_bladefist();
     AddSC_instance_shattered_halls();
 
     //--Ramparts

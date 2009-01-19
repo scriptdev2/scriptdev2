@@ -1064,6 +1064,9 @@
 							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_warbringer_omrogg.cpp">
 						</File>
 						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\boss_warchief_kargath_bladefist.cpp">
+						</File>
+						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\shattered_halls\def_shattered_halls.h">
 						</File>
 						<File

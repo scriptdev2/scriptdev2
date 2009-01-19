@@ -108,7 +108,7 @@ struct MANGOS_DLL_DECL boss_nethermancer_sepethreaAI : public ScriptedAI
         if (frost_attack_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_FROST_ATTACK);
-            frost_attack_Timer = 7000 + rand()%30000;
+            frost_attack_Timer = 7000 + rand()%3000;
         }else frost_attack_Timer -= diff;
 
         //Arcane Blast

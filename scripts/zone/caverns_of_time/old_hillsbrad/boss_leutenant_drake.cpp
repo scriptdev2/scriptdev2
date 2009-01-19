@@ -158,7 +158,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         {
             DoScriptText(SAY_SHOUT, m_creature);
             DoCast(m_creature->getVictim(), SPELL_FRIGHTENING_SHOUT);
-            Fear_Timer = 30000+rand()%10000;
+            Fear_Timer = 25000+rand()%10000;
         }else Fear_Timer -= diff;
 
         //Mortal Strike
@@ -166,7 +166,7 @@ struct MANGOS_DLL_DECL boss_lieutenant_drakeAI : public ScriptedAI
         {
             DoScriptText(SAY_MORTAL, m_creature);
             DoCast(m_creature->getVictim(), SPELL_MORTAL_STRIKE);
-            MortalStrike_Timer = 45000+rand()%5000;
+            MortalStrike_Timer = 20000+rand()%10000;
         }else MortalStrike_Timer -= diff;
 
         DoMeleeAttackIfReady();

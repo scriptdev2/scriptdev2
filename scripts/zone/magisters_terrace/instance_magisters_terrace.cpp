@@ -49,6 +49,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     uint64 SelinDoorGUID;
     uint64 SelinEncounterDoorGUID;
     uint64 DelrissaDoorGUID;
+    uint64 KaelDoorGUID;
     uint64 KaelStatue[2];
 
     bool InitializedItr;
@@ -68,6 +69,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         SelinDoorGUID = 0;
         SelinEncounterDoorGUID = 0;
         DelrissaDoorGUID = 0;
+        KaelDoorGUID = 0;
         KaelStatue[0] = 0;
         KaelStatue[1] = 0;
 
@@ -131,6 +133,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             //Assembly Chamber Door
             case 188065:  SelinEncounterDoorGUID = go->GetGUID(); break;
             case 187770:  DelrissaDoorGUID = go->GetGUID();       break;
+            case 188064:  KaelDoorGUID = go->GetGUID();           break;
             case 188165:  KaelStatue[0] = go->GetGUID();          break;
             case 188166:  KaelStatue[1] = go->GetGUID();          break;
         }
@@ -146,6 +149,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case DATA_SELIN_DOOR:           return SelinDoorGUID;
             case DATA_SELIN_ENCOUNTER_DOOR: return SelinEncounterDoorGUID;
             case DATA_DELRISSA_DOOR:        return DelrissaDoorGUID;
+            case DATA_KAEL_DOOR:            return KaelDoorGUID;
             case DATA_KAEL_STATUE_LEFT:     return KaelStatue[0];
             case DATA_KAEL_STATUE_RIGHT:    return KaelStatue[1];
 

@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 
     void Reset()
     {
-        EnergyBoltTimer = 1700;
+        EnergyBoltTimer = 1000;
     }
 
     void JustDied(Unit* slayer)

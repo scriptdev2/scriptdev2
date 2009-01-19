@@ -47,9 +47,9 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
     void Reset()
     {
         SonicBoom_Timer = 30000;
-        MurmursTouch_Timer = 20000;
-        Resonance_Timer = 10000;
-        MagneticPull_Timer = 45000;
+        MurmursTouch_Timer = 8000 + rand()%12000;
+        Resonance_Timer = 5000;
+        MagneticPull_Timer = 15000 + rand()%15000;
         CanSonicBoom = false;
         CanShockWave = false;
         pTarget = 0;
@@ -58,6 +58,23 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         uint32 hp = (m_creature->GetMaxHealth()*40)/100;
         if (hp)
             m_creature->SetHealth(hp);
+    }
+
+    void SonicBoomEffect()
+    {
+        std::list<HostilReference *> t_list = m_creature->getThreatManager().getThreatList();
+        for( std::list<HostilReference *>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr )
+        {
+           Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+           if (target && target->GetTypeId() == TYPEID_PLAYER)
+           {
+               if (m_creature->IsWithinDistInMap(target, 34))
+               {
+                   target->SetHealth(target->GetMaxHealth() - target->GetMaxHealth() * 0.8);
+               }
+           }
+        }
+    
     }
 
     void Aggro(Unit *who) { }
@@ -74,6 +91,8 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if (CanSonicBoom)
             {
                 DoCast(m_creature, SPELL_SONIC_BOOM_CAST,true);
+                SonicBoomEffect();
+
                 CanSonicBoom = false;
                 SonicBoom_Timer = 30000;
             }
@@ -94,17 +113,19 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
             if(target)
                 DoCast(target, SPELL_MURMURS_TOUCH);*/
             DoCast(m_creature, SPELL_MURMURS_TOUCH);
-            MurmursTouch_Timer = 30000;
+            MurmursTouch_Timer = 25000 + rand()%10000;
         }else MurmursTouch_Timer -= diff;
 
         //Resonance_Timer
-        if (Resonance_Timer < diff)
+        if (!CanSonicBoom && !m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
-            if (!m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
+            if (Resonance_Timer < diff)
+            {
                 DoCast(m_creature->getVictim(), SPELL_RESONANCE);
-            Resonance_Timer = 5000;
-        }else Resonance_Timer -= diff;
-
+                Resonance_Timer = 5000;
+            }else Resonance_Timer -= diff;
+        }
+        
         //MagneticPull_Timer
         if (MagneticPull_Timer < diff)
         {
@@ -126,7 +147,7 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
                 if (Unit* target = Unit::GetUnit(*m_creature,pTarget))
                     target->CastSpell(target,SPELL_SHOCKWAVE,true);
 
-                MagneticPull_Timer = 35000;
+                MagneticPull_Timer = 15000 + rand()%15000;
                 CanShockWave = false;
                 pTarget = 0;
             }

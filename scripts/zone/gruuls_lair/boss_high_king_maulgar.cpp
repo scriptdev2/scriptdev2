@@ -52,6 +52,7 @@ EndScriptData */
 #define SPELL_ARCANE_EXPLOSION  33237
 #define SPELL_GREATER_PW_SHIELD 33147
 #define SPELL_HEAL              33144
+#define SPELL_PRAYEROFHEALING   33152
 #define SPELL_GREATER_FIREBALL  33051
 #define SPELL_SPELLSHIELD       33054
 #define SPELL_BLAST_WAVE        33061
@@ -398,15 +399,14 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
             EnterEvadeMode();
 
-        //GreaterPolymorph_Timer / disabled: it makes you fall under the texture / if you've got vmaps feel free to uncomment this
-        /*if(GreaterPolymorph_Timer < diff)
+        if(GreatherPolymorph_Timer < diff)
         {
             Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if(target)
                 DoCast(target, SPELL_GREATER_POLYMORPH);
 
-            GreaterPolymorph_Timer = 20000;
-        }else GreaterPolymorph_Timer -= diff;*/
+            GreatherPolymorph_Timer = 15000 + rand()%5000;
+        }else GreatherPolymorph_Timer -= diff;
 
         //LightningBolt_Timer
         if (LightningBolt_Timer < diff)
@@ -427,7 +427,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
         {
             DoCast(m_creature->getVictim(), SPELL_ARCANE_EXPLOSION);
             if (m_creature->getThreatManager().getThreat(m_creature->getVictim()))
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-25);
+                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-75);
             ArcaneExplosion_Timer = 30000;
         }else ArcaneExplosion_Timer -= diff;
 
@@ -446,13 +446,15 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
 
     uint32 GreaterPowerWordShield_Timer;
     uint32 Heal_Timer;
+    uint32 PrayerofHealing_Timer;
 
     ScriptedInstance* pInstance;
 
     void Reset()
     {
         GreaterPowerWordShield_Timer = 5000;
-        Heal_Timer = 30000;
+        Heal_Timer = 25000 + rand()%15000;
+        PrayerofHealing_Timer = 45000 + rand()%10000;
 
         //reset encounter
         if (pInstance)
@@ -523,8 +525,15 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
         if (Heal_Timer < diff)
         {
             DoCast(m_creature, SPELL_HEAL);
-            Heal_Timer = 25000 + rand()%15000;
+            Heal_Timer = 15000 + rand()%25000;
         }else Heal_Timer -= diff;
+
+        //PrayerofHealing_Timer
+        if (PrayerofHealing_Timer < diff)
+        {
+            DoCast(m_creature, SPELL_PRAYEROFHEALING);
+            PrayerofHealing_Timer = 35000 + rand()%15000;
+        }else PrayerofHealing_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }

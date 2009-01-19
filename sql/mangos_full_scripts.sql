@@ -475,6 +475,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_warbringer_omrogg' WHERE `entr
 UPDATE `creature_template` SET `ScriptName`='mob_fel_orc_convert' WHERE `entry`=17083;
 UPDATE `creature_template` SET `ScriptName`='mob_lesser_shadow_fissure' WHERE `entry`=17471;
 UPDATE `creature_template` SET `ScriptName`='mob_omrogg_heads' WHERE `entry` IN (19523,19524);
+UPDATE `creature_template` SET `ScriptName`='boss_warchief_kargath_bladefist' WHERE `entry`=16808;
 UPDATE `instance_template` SET `script`='instance_shattered_halls' WHERE `map`=540;
 
 /* MAGTHERIDON'S LAIR */
@@ -544,6 +545,7 @@ UPDATE `creature_template` SET `ScriptName`='mob_shadow_of_aran' WHERE `entry`=1
 UPDATE `creature_template` SET `ScriptName`='mob_aran_elemental' WHERE `entry`=17167;
 UPDATE `creature_template` SET `ScriptName`='mob_kilrek' WHERE `entry`=17229;
 UPDATE `creature_template` SET `ScriptName`='mob_demon_chain' WHERE `entry`=17248;
+UPDATE `creature_template` SET `ScriptName`='mob_karazhan_imp' WHERE `entry`=17267;
 UPDATE `creature_template` SET `ScriptName`='mob_cyclone' WHERE `entry`=18412;
 UPDATE `creature_template` SET `ScriptName`='netherspite_infernal' WHERE `entry`=17646;
 UPDATE `creature_template` SET `ScriptName`='npc_berthold' WHERE `entry`=16153;

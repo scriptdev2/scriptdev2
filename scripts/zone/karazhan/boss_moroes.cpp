@@ -98,6 +98,8 @@ struct MANGOS_DLL_DECL boss_moroesAI : public ScriptedAI
         m_creature->setFaction(16);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
 
         if (pInstance)
             pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);

@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Boss_Felblood_Kaelthas
 SD%Complete: 80
-SDComment: Normal and Heroic Support. Issues: Arcane Spheres do not initially follow targets. TODO: Convert Phoenix to ACID.
+SDComment: Normal and Heroic Support. Issues: Arcane Spheres do not initially follow targets.
 SDCategory: Magisters' Terrace
 EndScriptData */
 
@@ -25,7 +25,7 @@ EndScriptData */
 #include "def_magisters_terrace.h"
 #include "WorldPacket.h"
 
-#define SAY_AGGRO                   -1585023                //This yell should be done when the room is cleared. For now, set it as aggro yell.
+#define SAY_AGGRO                   -1585023                //This yell should be done when the room is cleared. For now, set it as a movelineofsight yell.
 #define SAY_PHOENIX                 -1585024
 #define SAY_FLAMESTRIKE             -1585025
 #define SAY_GRAVITY_LAPSE           -1585026
@@ -40,7 +40,8 @@ EndScriptData */
 #define SPELL_FIREBALL_HEROIC         46164                 //       4950-6050
 
 #define SPELL_PHOENIX                 44194                 // Summons a phoenix (Doesn't work?)
-#define SPELL_PHOENIX_BURN            44198                 // A spell Phoenix uses to damage everything around
+#define SPELL_PHOENIX_BURN            44197                 // A spell Phoenix uses to damage everything around
+#define SPELL_REBIRTH_DMG             44196                 // DMG if a Phoenix rebirth happen
 
 #define SPELL_FLAMESTRIKE1_NORMAL     44190                 // Damage part
 #define SPELL_FLAMESTRIKE1_HEROIC     46163                 // Heroic damage part
@@ -103,6 +104,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     bool FirstGravityLapse;
     bool Heroic;
+    bool HasTaunted;
 
     uint8 Phase;
     // 0 = Not started
@@ -113,7 +115,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
     {
         // TODO: Timers
         FireballTimer = 0;
-        PhoenixTimer = 30000;
+        PhoenixTimer = 10000;
         FlameStrikeTimer = 25000;
         CombatPulseTimer = 0;
 
@@ -123,16 +125,25 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         GravityLapsePhase = 0;
 
         FirstGravityLapse = true;
+        HasTaunted = false;
 
         Phase = 0;
 
         if (pInstance)
             pInstance->SetData(DATA_KAELTHAS_EVENT, 0);
+
+            GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_KAEL_DOOR));
+            if (Door)
+                Door->SetGoState(0);                        // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
+                                                            // Small door opened after event are expected to be closed by default
     }
 
     void JustDied(Unit *killer)
     {
         DoScriptText(SAY_DEATH, m_creature);
+        GameObject* EncounterDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_KAEL_DOOR));
+        if (EncounterDoor)
+            EncounterDoor->SetGoState(0);                   // Open the encounter door
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)
@@ -143,7 +154,23 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoScriptText(SAY_AGGRO, m_creature);
+        if (pInstance)
+        {
+            GameObject* EncounterDoor = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_KAEL_DOOR));
+            if (EncounterDoor)
+                EncounterDoor->SetGoState(1);               //Close the encounter door, open it in JustDied/Reset
+        }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!HasTaunted && m_creature->IsWithinDistInMap(who, 40.0))
+        {
+            DoScriptText(SAY_AGGRO, m_creature);
+            HasTaunted = true;
+        }
+
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void SetThreatList(Creature* SummonedUnit)
@@ -260,6 +287,10 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
 
                 if (PhoenixTimer < diff)
                 {
+
+                    Unit* target = NULL;
+                    target = SelectUnit(SELECT_TARGET_RANDOM,1);
+
                     uint32 random = rand()%2 + 1;
                     float x = KaelLocations[random][0];
                     float y = KaelLocations[random][1];
@@ -269,11 +300,12 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                     {
                         Phoenix->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
                         SetThreatList(Phoenix);
+                        Phoenix->AI()->AttackStart(target);
                     }
 
                     DoScriptText(SAY_PHOENIX, m_creature);
 
-                    PhoenixTimer = 40000;
+                    PhoenixTimer = 60000;
                 }else PhoenixTimer -= diff;
 
                 if (FlameStrikeTimer < diff)
@@ -283,7 +315,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                         DoCast(target, SPELL_FLAMESTRIKE3, true);
                         DoScriptText(SAY_FLAMESTRIKE, m_creature);
                     }
-                    FlameStrikeTimer = 20000 + rand()%5000;
+                    FlameStrikeTimer = 15000 + rand()%10000;
                 }else FlameStrikeTimer -= diff;
 
                 // Below 50%
@@ -348,10 +380,20 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                             GravityLapseTimer = 30000;
                             GravityLapsePhase = 4;
 
+
                             for(uint8 i = 0; i < 3; ++i)
                             {
+                                Unit* target = NULL;
+                                target = SelectUnit(SELECT_TARGET_RANDOM,0);
+
                                 Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                                if (Orb) SetThreatList(Orb);
+                                if (Orb && target)
+                                { 
+                                    //SetThreatList(Orb);
+                                    Orb->AddThreat(target, 1.0f);
+                                    Orb->AI()->AttackStart(target);
+                                }
+
                             }
 
                             DoCast(m_creature, SPELL_GRAVITY_LAPSE_CHANNEL);
@@ -408,17 +450,67 @@ struct MANGOS_DLL_DECL mob_felkael_flamestrikeAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
 {
-    mob_felkael_phoenixAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mob_felkael_phoenixAI(Creature* c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
 
+    ScriptedInstance* pInstance;
     uint32 BurnTimer;
+    uint32 Death_Timer;
+    bool Rebirth;  
+    bool FakeDeath;  
 
     void Reset()
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
+        m_creature->CastSpell(m_creature,SPELL_PHOENIX_BURN,true);
         BurnTimer = 2000;
+        Death_Timer = 2700;
+        Rebirth = false;
+        FakeDeath = false;
     }
 
     void Aggro(Unit* who) {}
+
+    void DamageTaken(Unit* pKiller, uint32 &damage)
+    {
+        if (damage < m_creature->GetHealth())
+            return;
+
+        //Prevent glitch if in fake death
+        if (FakeDeath)
+        {
+            damage = 0;
+            return;
+
+        }
+        //Don't really die in all phases of Kael'Thas
+        if (pInstance && pInstance->GetData(DATA_KAELTHAS_EVENT) == 0)
+        {
+            //prevent death
+            damage = 0;
+            FakeDeath = true;
+
+            m_creature->InterruptNonMeleeSpells(false);
+            m_creature->SetHealth(0);
+            m_creature->StopMoving();
+            m_creature->ClearComboPointHolders();
+            m_creature->RemoveAllAurasOnDeath();
+            m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_20_PERCENT, false);
+            m_creature->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
+            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            m_creature->ClearAllReactives();
+            m_creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
+            m_creature->GetMotionMaster()->Clear();
+            m_creature->GetMotionMaster()->MoveIdle();
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
+
+       }
+
+    }
 
     void JustDied(Unit* slayer)
     {
@@ -427,14 +519,42 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
+
+        //If we are fake death, we cast revbirth and after that we kill the phoenix to spawn the egg.
+        if (FakeDeath)
+        {  
+            if (!Rebirth)
+            {
+                DoCast(m_creature, SPELL_REBIRTH_DMG);
+                Rebirth = true;
+            }
+
+            if (Rebirth) 
+            {
+            
+                if (Death_Timer < diff)
+                {
+                    DoSpawnCreature(CREATURE_PHOENIX_EGG, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);   
+                    m_creature->setDeathState(JUST_DIED);
+                    m_creature->RemoveCorpse(); 
+                    Rebirth = false;
+                }else Death_Timer -= diff;
+            }
+
+
+        }
+
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (BurnTimer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_PHOENIX_BURN);
-            BurnTimer = 2000;
-        }else BurnTimer -= diff;
+            //spell Burn should possible do this, but it doesn't, so do this for now.
+            uint32 dmg = urand(1650,2050);
+            m_creature->DealDamage(m_creature, dmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, NULL, false);
+            BurnTimer += 2000;
+        } BurnTimer -= diff;
+
 
         DoMeleeAttackIfReady();
     }
@@ -446,7 +566,11 @@ struct MANGOS_DLL_DECL mob_felkael_phoenix_eggAI : public ScriptedAI
 
     uint32 HatchTimer;
 
-    void Reset() { HatchTimer = 15000; }
+    void Reset() 
+    { 
+        HatchTimer = 10000; 
+
+    }
 
     void Aggro(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
@@ -455,9 +579,10 @@ struct MANGOS_DLL_DECL mob_felkael_phoenix_eggAI : public ScriptedAI
     {
         if (HatchTimer < diff)
         {
-            DoSpawnCreature(CREATURE_PHOENIX, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+            DoSpawnCreature(CREATURE_PHOENIX, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
             m_creature->DealDamage(m_creature, m_creature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }else HatchTimer -= diff;
+
     }
 };
 
@@ -468,38 +593,20 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
     uint32 DespawnTimer;
     uint32 ChangeTargetTimer;
 
-    bool TargetLocked;
-
     void Reset()
     {
         DespawnTimer = 30000;
-        ChangeTargetTimer = 5000;
-        TargetLocked = false;
+        ChangeTargetTimer = 6000 + rand()%6000;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
         m_creature->setFaction(14);
         DoCast(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, true);
     }
 
-    void MoveInLineOfSight(Unit* who)
-    {
-        if (TargetLocked)
-            return;
-
-        if (who && who->IsHostileTo(m_creature) && (m_creature->IsWithinDistInMap(who, 25)))
-            StalkTarget(who);
-    }
 
     void Aggro(Unit* who) {}
 
-    void StalkTarget(Unit* target)
-    {
-        if (!target)
-            return;
-
-        m_creature->GetMotionMaster()->MoveChase(target);
-        TargetLocked = true;
-    }
 
     void UpdateAI(const uint32 diff)
     {
@@ -512,8 +619,15 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
 
         if (ChangeTargetTimer < diff)
         {
-            TargetLocked = false;
-            ChangeTargetTimer = 10000;
+
+            Unit* target = NULL;
+            target = SelectUnit(SELECT_TARGET_RANDOM,0);
+            if (target)
+                m_creature->AddThreat(target, 1.0f);
+                m_creature->TauntApply(target);
+                AttackStart(target);
+
+            ChangeTargetTimer = 5000 + rand()%10000;
         }else ChangeTargetTimer -= diff;
     }
 };

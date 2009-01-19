@@ -57,8 +57,8 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
 
     void Reset()
     {
-        SandBreath_Timer = 25000;
-        ImpendingDeath_Timer = 30000;
+        SandBreath_Timer = 8000 + rand()%8000;
+        ImpendingDeath_Timer = 25000 + rand()%5000;
         WingBuffet_Timer = 35000;
         Mda_Timer = 40000;
     }
@@ -109,13 +109,13 @@ struct MANGOS_DLL_DECL boss_epoch_hunterAI : public ScriptedAI
                 case 1: DoScriptText(SAY_BREATH2, m_creature); break;
             }
 
-            SandBreath_Timer = 25000+rand()%5000;
+            SandBreath_Timer = 10000 + rand()%10000;
         }else SandBreath_Timer -= diff;
 
         if (ImpendingDeath_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_IMPENDING_DEATH);
-            ImpendingDeath_Timer = 30000+rand()%5000;
+            ImpendingDeath_Timer = 25000+rand()%5000;
         }else ImpendingDeath_Timer -= diff;
 
         if (WingBuffet_Timer < diff)

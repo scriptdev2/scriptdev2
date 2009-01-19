@@ -81,6 +81,9 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
 
         if (pInstance)
             pInstance->SetData(DATA_GRUULEVENT, 0);
+
+        m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
+        m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void Aggro(Unit *who)
@@ -267,7 +270,7 @@ struct MANGOS_DLL_DECL boss_gruulAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_CAVE_IN);
 
-                if(CaveIn_StaticTimer > 4000)
+                if(CaveIn_StaticTimer >= 4000)
                     CaveIn_StaticTimer -= 2000;
 
                     CaveIn_Timer = CaveIn_StaticTimer;
