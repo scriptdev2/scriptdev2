@@ -271,7 +271,6 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 31:
                 DoScriptText(SAY_TH_MOUNTS_UP, m_creature);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                 DoMount();
                 break;
             case 37:
@@ -340,11 +339,9 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 96:
                 DoScriptText(SAY_TH_EPOCH_WONDER, m_creature);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                 break;
             case 97:
                 DoScriptText(SAY_TH_EPOCH_KILL_TARETHA, m_creature);
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
                 m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 break;
             case 98:

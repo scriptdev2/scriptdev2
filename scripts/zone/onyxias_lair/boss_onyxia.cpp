@@ -116,7 +116,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 60) && (Phase == 1))
         {
             Phase = 2;
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             m_creature->GetMotionMaster()->Clear(false);
             m_creature->GetMotionMaster()->MoveIdle();
@@ -127,7 +126,6 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
         {
             Phase = 3;
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
-            m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
             DoScriptText(SAY_PHASE_3_TRANS, m_creature);
         }
 

@@ -327,7 +327,6 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
                     if (Unit *will = Unit::GetUnit(*m_creature,BigWillGUID))
                     {
                         will->setFaction(32);
-                        will->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
                         DoScriptText(SAY_BIG_WILL_READY, will, player);
                     }
                     Event_Timer = 5000;

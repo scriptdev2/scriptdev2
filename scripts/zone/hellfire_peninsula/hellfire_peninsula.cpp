@@ -293,8 +293,6 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
                 break;
             case 13:
                 DoScriptText(SAY_ELF_RESTING, m_creature, player);
-                // make the NPC kneel
-                m_creature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
                 break;
             case 14:
                 DoScriptText(SAY_ELF_SUMMON2, m_creature, player);
