@@ -25,8 +25,14 @@ EndScriptData */
 boss_warchief_kargath_bladefist
 EndContentData */
 
-
 #include "precompiled.h"
+
+#define SAY_AGGRO1                      -1540042
+#define SAY_AGGRO2                      -1540043
+#define SAY_AGGRO3                      -1540044
+#define SAY_SLAY1                       -1540045
+#define SAY_SLAY2                       -1540046
+#define SAY_DEATH                       -1540047
 
 #define SPELL_BLADE_DANCE               30739
 #define H_SPELL_CHARGE                  25821
@@ -41,19 +47,6 @@ EndContentData */
 float AssassEntrance[3] = {275.136,-84.29,2.3}; // y -8
 float AssassExit[3] = {184.233,-84.29,2.3}; // y -8
 float AddsEntrance[3] = {306.036,-84.29,1.93};
-
-#define SOUND_AGGRO1                    10323
-#define SAY_AGGRO1                      "Ours is the true Horde! The only Horde!"
-#define SOUND_AGGRO2                    10324
-#define SAY_AGGRO2                      "I'll carve the meat from your bones!"
-#define SOUND_AGGRO3                    10325
-#define SAY_AGGRO3                      "I am called Bladefist for a reason, as you will see!"
-#define SOUND_SLAY1                     10326
-#define SAY_SLAY1                       "For the real Horde!"
-#define SOUND_SLAY2                     10327
-#define SAY_SLAY2                       "I am the only Warchief!"
-#define SOUND_DEATH                     10328
-#define SAY_DEATH                       "The true Horde... will.. prevail.."
 
 struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
 {
@@ -93,7 +86,6 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         summoned = 2;
         InBlade = false;
         Wait_Timer = 0;
-        
 
         Charge_timer = 0;
         Blade_Dance_Timer = 45000;
@@ -106,18 +98,9 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
     {
         switch (rand()%3)
         {
-        case 0:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO1);
-            DoYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-            break;
-        case 1:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO2);
-            DoYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-            break;
-        case 2:
-            DoPlaySoundToSet(m_creature,SOUND_AGGRO3);
-            DoYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-            break;
+            case 0:DoScriptText(SAY_AGGRO1, m_creature);break;
+            case 1:DoScriptText(SAY_AGGRO2, m_creature);break;
+            case 2:DoScriptText(SAY_AGGRO3, m_creature);break;
         }
     }
 
@@ -143,22 +126,15 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
         {
             switch(rand()%2)
             {
-            case 0:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY1);
-                DoYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                break;
-            case 1:
-                DoPlaySoundToSet(m_creature, SOUND_SLAY2);
-                DoYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                break;
+                case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+                case 1: DoScriptText(SAY_SLAY2, m_creature); break;
             }
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        DoPlaySoundToSet(m_creature, SOUND_DEATH);
-        DoYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+        DoScriptText(SAY_DEATH, m_creature);
         removeAdds();
     }
 
