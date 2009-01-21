@@ -29,8 +29,6 @@ EndScriptData */
 #define SPELL_SUNDERINCLEAVE    25174
 #define SPELL_KNOCKAWAY         10101
 
-#define SAY_AGGRO1              "Mine! Mine! Mine! Gizlock is the ruler of this domain! You shall never reveal my presence!"
-
 struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 {
     boss_theravenianAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -64,7 +62,6 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -103,6 +100,7 @@ struct MANGOS_DLL_DECL boss_theravenianAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_theravenian(Creature *_Creature)
 {
     return new boss_theravenianAI (_Creature);

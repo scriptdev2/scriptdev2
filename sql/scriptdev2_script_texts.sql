@@ -103,12 +103,20 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 -- -1 048 000 BLACKFATHOM DEEPS
 
 -- -1 070 000 ULDAMAN
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
+(-1070000,'None may steal the secrets of the makers!',5851,1,0,0,'ironaya SAY_AGGRO');
 
 -- -1 090 000 GNOMEREGAN
 
 -- -1 109 000 SUNKEN TEMPLE
 
 -- -1 129 000 RAZORFEN DOWNS
+INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
+(-1129000,'You\'ll never leave this place... alive.',5825,1,0,0,'amnennar SAY_AGGRO'),
+(-1129001,'To me, my servants!',5828,1,0,0,'amnennar SAY_SUMMON60'),
+(-1129002,'Come, spirits, attend your master!',5829,1,0,0,'amnennar SAY_SUMMON30'),
+(-1129003,'I am the hand of the Lich King!',5827,1,0,0,'amnennar SAY_HP'),
+(-1129004,'Too...easy!',5826,1,0,0,'amnennar SAY_KILL');
 
 -- -1 189 000 SCARLET MONASTERY
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -132,7 +140,9 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 
 -- -1 230 000 BLACKROCK DEPTHS
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
-(-1230000,'Ah, hits the spot!',0,0,0,0,'rocknot SAY_GOT_BEER');
+(-1230000,'Ah, hits the spot!',0,0,0,0,'rocknot SAY_GOT_BEER'),
+(-1230001,'Come to aid the Throne!',0,1,0,0,'dagran SAY_AGGRO'),
+(-1230002,'Hail to the king, baby!',0,1,0,0,'dagran SAY_SLAY');
 
 -- -1 249 000 ONYXIA'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

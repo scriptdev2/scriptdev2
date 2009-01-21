@@ -1253,7 +1253,7 @@ void flesh_tentacleAI::JustDied(Unit* killer)
 {
     if (!Parent)
     {
-        DoYell("Error: No Parent variable", LANG_UNIVERSAL, NULL);
+        error_log("SD2: flesh_tentacle: No Parent variable");
         return;
     }
 
@@ -1261,7 +1261,7 @@ void flesh_tentacleAI::JustDied(Unit* killer)
 
     if (Cthun)
         ((cthunAI*)(Cthun->AI()))->FleshTentcleKilled();
-    else DoYell("Error: No Cthun", LANG_UNIVERSAL, NULL);
+    else error_log("SD2: flesh_tentacle: No Cthun");
 }
 
 //GetAIs
