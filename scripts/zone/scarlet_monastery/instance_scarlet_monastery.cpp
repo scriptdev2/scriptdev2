@@ -32,6 +32,7 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
 
     uint64 MograineGUID;
     uint64 WhitemaneGUID;
+    uint64 VorrelGUID;
     uint64 DoorHighInquisitorGUID;
 
     uint32 Encounter[ENCOUNTERS];
@@ -40,6 +41,7 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
     {
         MograineGUID = 0;
         WhitemaneGUID = 0;
+        VorrelGUID = 0;
         DoorHighInquisitorGUID = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
@@ -52,6 +54,7 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
         {
             case 3976: MograineGUID = creature->GetGUID(); break;
             case 3977: WhitemaneGUID = creature->GetGUID(); break;
+            case 3981: VorrelGUID = creature->GetGUID(); break;
         }
     }
 
@@ -69,6 +72,8 @@ struct MANGOS_DLL_DECL instance_scarlet_monastery : public ScriptedInstance
                 return MograineGUID;
             case DATA_WHITEMANE:
                 return WhitemaneGUID;
+            case DATA_VORREL:
+                return VorrelGUID;
             case DATA_DOOR_WHITEMANE:
                 return DoorHighInquisitorGUID;
         }

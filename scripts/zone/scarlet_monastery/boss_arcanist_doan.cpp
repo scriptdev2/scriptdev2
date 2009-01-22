@@ -23,6 +23,9 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define SAY_AGGRO                       -1189019
+#define SAY_SPECIALAE                   -1189020
+
 #define SPELL_POLYMORPH                 12826
 #define SPELL_AOESILENCE                8988
 #define SPELL_ARCANEEXPLOSION3          8438
@@ -33,19 +36,12 @@ EndScriptData */
 #define SPELL_MANASHIELD4               10191
 #define SPELL_ARCANEBUBBLE              9438
 
-#define SAY_AGGRO                       "You will not defile these mysteries!"
-#define SAY_SPECIALAE                   "Burn in righteous fire!"
-
-#define SOUND_AGGRO                     5842
-#define SOUND_SPECIALAE                 5843
-
 struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 {
     boss_arcanist_doanAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 FullAOE_Timer;
     uint32 Polymorph_Timer;
-    uint32 Yell_Timer;
     uint32 ArcaneBubble_Timer;
     uint32 AoESilence_Timer;
     uint32 ArcaneExplosion3_Timer;
@@ -58,7 +54,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
     {
         FullAOE_Timer = 5000;
         Polymorph_Timer = 1;
-        Yell_Timer = 2000;
         ArcaneBubble_Timer = 3000;
         AoESilence_Timer = 20000;
         ArcaneExplosion3_Timer = 10000;
@@ -70,8 +65,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
+        DoScriptText(SAY_AGGRO, m_creature);
     }
 
     void UpdateAI(const uint32 diff)
@@ -91,13 +85,6 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
                 Polymorph_Timer = 40000;
             }else Polymorph_Timer -= diff;
 
-            if (Yell_Timer < diff)
-            {
-                DoYell(SAY_SPECIALAE,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(m_creature,SOUND_SPECIALAE);
-                Yell_Timer = 40000;
-            }else Yell_Timer -= diff;
-
             if (ArcaneBubble_Timer < diff)
             {
                 DoCast(m_creature,SPELL_ARCANEBUBBLE);
@@ -106,6 +93,7 @@ struct MANGOS_DLL_DECL boss_arcanist_doanAI : public ScriptedAI
 
             if (FullAOE_Timer < diff)
             {
+                DoScriptText(SAY_SPECIALAE, m_creature);
                 DoCast(m_creature->getVictim(),SPELL_FIREAOE);
                 FullAOE_Timer = 40000;
             }else FullAOE_Timer -= diff;

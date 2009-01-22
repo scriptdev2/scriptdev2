@@ -23,11 +23,10 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_SUMMONSCARLETHOUND        17164
-#define SPELL_ENRAGE                    28747
+#define SAY_AGGRO                       -1189021
 
-#define SAY_AGGRO                       "Release the hounds!"
-#define SOUND_AGGRO                     5841
+#define SPELL_SUMMONSCARLETHOUND        17164
+#define SPELL_ENRAGE                    6742
 
 struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 {
@@ -37,14 +36,12 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
 
     void Reset()
     {
-        Enrage_Timer = 6000000;
+        Enrage_Timer = 0;
     }
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,SOUND_AGGRO);
-
+        DoScriptText(SAY_AGGRO, m_creature);
         DoCast(m_creature,SPELL_SUMMONSCARLETHOUND);
     }
 
@@ -53,16 +50,17 @@ struct MANGOS_DLL_DECL boss_houndmaster_lokseyAI : public ScriptedAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //If we are <10% hp cast healing spells at self and Mograine
-        if ( m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10 && !m_creature->IsNonMeleeSpellCasted(false) && Enrage_Timer < diff)
+        //If we are <25% hp, bloodlust
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 25 && Enrage_Timer < diff)
         {
             DoCast(m_creature,SPELL_ENRAGE);
-            Enrage_Timer = 900000;
+            Enrage_Timer = 60000;
         }else Enrage_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_houndmaster_loksey(Creature *_Creature)
 {
     return new boss_houndmaster_lokseyAI (_Creature);
