@@ -23,9 +23,11 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SPELL_FIRESHIELD        19626
-#define SPELL_BLASTWAVE         13021
-#define SPELL_FRENZY            28371
+#define EMOTE_GENERIC_FRENZY_KILL   -1000001
+
+#define SPELL_FIRESHIELD            19626
+#define SPELL_BLASTWAVE             13021
+#define SPELL_FRENZY                28371
 
 struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
 {
@@ -71,8 +73,7 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
             if (Frenzy_Timer < diff)
             {
                 DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote("goes into a killing frenzy!",NULL);
-
+                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
                 Frenzy_Timer = 24000;
             }else Frenzy_Timer -= diff;
         }

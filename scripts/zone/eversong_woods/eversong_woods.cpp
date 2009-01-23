@@ -58,7 +58,10 @@ CreatureAI* GetAI_mobs_mana_tapped(Creature *_Creature)
 ## npc_prospector_anvilward
 ######*/
 
-#define QUEST_THE_DWARVEN_SPY 8483
+#define SAY_ANVIL1              -1000209
+#define SAY_ANVIL2              -1000210
+
+#define QUEST_THE_DWARVEN_SPY   8483
 
 struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
 {
@@ -68,13 +71,18 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
     {
+        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+
+        if (!player)
+            return;
+
         switch (i)
         {
             case 0:
-                m_creature->Say("Very well. Let's see what you have to show me, $N.", LANG_UNIVERSAL, PlayerGUID);
+                DoScriptText(SAY_ANVIL1, m_creature, player);
                 break;
             case 5:
-                m_creature->Say("What manner of trick is this, $R? If you seek to ambush me, I warn you I will not go down quietly!", LANG_UNIVERSAL, PlayerGUID);
+                DoScriptText(SAY_ANVIL1, m_creature, player);
                 break;
             case 6:
                 m_creature->setFaction(24);

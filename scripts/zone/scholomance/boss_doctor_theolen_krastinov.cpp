@@ -24,9 +24,11 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_scholomance.h"
 
-#define SPELL_REND              18106
-#define SPELL_CLEAVE            15584
-#define SPELL_FRENZY            28371
+#define EMOTE_GENERIC_FRENZY_KILL   -1000001
+
+#define SPELL_REND                  18106
+#define SPELL_CLEAVE                15584
+#define SPELL_FRENZY                28371
 
 struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
 {
@@ -84,8 +86,7 @@ struct MANGOS_DLL_DECL boss_theolenkrastinovAI : public ScriptedAI
             if (Frenzy_Timer < diff)
             {
                 DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote("goes into a killing frenzy!",NULL);
-
+                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
                 Frenzy_Timer = 8000;
             }else Frenzy_Timer -= diff;
         }

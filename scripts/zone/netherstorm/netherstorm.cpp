@@ -35,12 +35,12 @@ EndContentData */
 ## npc_manaforge_control_console
 ######*/
 
-#define EMOTE_START     "Warning! Emergency shutdown process initiated by $N. Shutdown will complete in two minutes."
-#define EMOTE_60        "Emergency shutdown will complete in one minute."
-#define EMOTE_30        "Emergency shutdown will complete in thirty seconds."
-#define EMOTE_10        "Emergency shutdown will complete in ten seconds."
-#define EMOTE_COMPLETE  "Emergency shutdown complete."
-#define EMOTE_ABORT     "Emergency shutdown aborted."
+#define EMOTE_START     -1000211
+#define EMOTE_60        -1000212
+#define EMOTE_30        -1000213
+#define EMOTE_10        -1000214
+#define EMOTE_COMPLETE  -1000215
+#define EMOTE_ABORT     -1000216
 
 #define ENTRY_BNAAR_C_CONSOLE   20209
 #define ENTRY_CORUU_C_CONSOLE   20417
@@ -88,12 +88,12 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
         //we have no way of telling the creature was hit by spell -> got aura applied after 10-12 seconds
         //then no way for the mobs to actually stop the shutdown as intended.
         if( spell->Id == SPELL_INTERRUPT_1 )
-            DoSay("Silence! I kill you!",LANG_UNIVERSAL, NULL);
+            ...
     }*/
 
     void JustDied(Unit* killer)
     {
-        DoTextEmote(EMOTE_ABORT, NULL);
+        DoScriptText(EMOTE_ABORT, m_creature);
 
         if( someplayer )
         {
@@ -220,44 +220,46 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
     {
         if( Event_Timer < diff )
         {
+            Unit *playertarget = NULL;
+
+            if (someplayer)
+            {
+                playertarget = Unit::GetUnit((*m_creature),someplayer);
+                if (!playertarget)
+                    return;
+                if (playertarget->GetTypeId() != TYPEID_PLAYER)
+                    return;
+            }else return;
+
             switch(Phase)
             {
                 case 1:
-                    if( someplayer )
-                    {
-                        Unit* u = Unit::GetUnit((*m_creature),someplayer);
-                        if( u && u->GetTypeId() == TYPEID_PLAYER ) DoTextEmote(EMOTE_START, u);
-                    }
+                    DoScriptText(EMOTE_START, m_creature, playertarget);
                     Event_Timer = 60000;
                     Wave = true;
                     ++Phase;
                     break;
                 case 2:
-                    DoTextEmote(EMOTE_60, NULL);
+                    DoScriptText(EMOTE_60, m_creature, playertarget);
                     Event_Timer = 30000;
                     ++Phase;
                     break;
                 case 3:
-                    DoTextEmote(EMOTE_30, NULL);
+                    DoScriptText(EMOTE_30, m_creature, playertarget);
                     Event_Timer = 20000;
                     DoFinalSpawnForCreature(m_creature);
                     ++Phase;
                     break;
                 case 4:
-                    DoTextEmote(EMOTE_10, NULL);
+                    DoScriptText(EMOTE_10, m_creature, playertarget);
                     Event_Timer = 10000;
                     Wave = false;
                     ++Phase;
                     break;
                 case 5:
-                    DoTextEmote(EMOTE_COMPLETE, NULL);
-                    if( someplayer )
-                    {
-                        Unit* u = Unit::GetUnit((*m_creature),someplayer);
-                        if( u && u->GetTypeId() == TYPEID_PLAYER )
-                            ((Player*)u)->KilledMonster(m_creature->GetEntry(),m_creature->GetGUID());
-                        DoCast(m_creature,SPELL_DISABLE_VISUAL);
-                    }
+                    DoScriptText(EMOTE_COMPLETE, m_creature, playertarget);
+                    ((Player*)playertarget)->KilledMonster(m_creature->GetEntry(),m_creature->GetGUID());
+                    DoCast(m_creature,SPELL_DISABLE_VISUAL);
                     if( goConsole )
                     {
                         if( GameObject* go = GameObject::GetGameObject((*m_creature),goConsole) )
@@ -295,8 +297,7 @@ bool GOHello_go_manaforge_control_console(Player *player, GameObject* _GO)
         player->SendPreparedQuest(_GO->GetGUID());
     }
 
-    Creature* manaforge;
-    manaforge = NULL;
+    Creature* manaforge = NULL;
 
     switch( _GO->GetAreaId() )
     {

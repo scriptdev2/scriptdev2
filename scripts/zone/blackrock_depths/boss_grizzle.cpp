@@ -23,6 +23,8 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define EMOTE_GENERIC_FRENZY_KILL   -1000001
+
 #define SPELL_GROUNDTREMOR          6524
 #define SPELL_FRENZY                28371
 
@@ -62,8 +64,7 @@ struct MANGOS_DLL_DECL boss_grizzleAI : public ScriptedAI
             if (Frenzy_Timer < diff)
             {
                 DoCast(m_creature,SPELL_FRENZY);
-                DoTextEmote("goes into a killing frenzy!",NULL);
-
+                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, m_creature);
                 Frenzy_Timer = 15000;
             }else Frenzy_Timer -= diff;
         }

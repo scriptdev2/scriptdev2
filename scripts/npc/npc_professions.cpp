@@ -632,10 +632,8 @@ void SendActionMenu_npc_prof_blacksmith(Player *player, Creature *_Creature, uin
         case GOSSIP_ACTION_INFO_DEF + 3:
             if(HasWeaponSub(player))
             {
-                                                            //unknown textID (TALK_MUST_UNLEARN_WEAPON)
+                //unknown textID (TALK_MUST_UNLEARN_WEAPON)
                 player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
-                                                            //Temporary, not offilike
-                _Creature->MonsterSay(TALK_MUST_UNLEARN_WEAPON,0,player->GetGUID());
             }
             else if( EquippedOk(player,S_UNLEARN_WEAPON) )
             {

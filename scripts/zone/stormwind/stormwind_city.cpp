@@ -174,6 +174,8 @@ CreatureAI* GetAI_npc_dashel_stonefist(Creature *_creature)
 ## npc_general_marcus_jonathan
 ######*/
 
+#define SAY_GREETING    -1000208
+
 bool ReceiveEmote_npc_general_marcus_jonathan(Player *player, Creature *_Creature, uint32 emote)
 {
     if(player->GetTeam() == ALLIANCE)
@@ -185,7 +187,7 @@ bool ReceiveEmote_npc_general_marcus_jonathan(Player *player, Creature *_Creatur
         }
         if (emote == TEXTEMOTE_WAVE)
         {
-            _Creature->MonsterSay("Greetings citizen",LANG_COMMON,0);
+            DoScriptText(SAY_GREETING, _Creature, player);
         }
     }
     return true;
