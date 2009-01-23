@@ -36,7 +36,7 @@ EndContentData */
 ## mob_aquementas
 ######*/
 
-#define AGGRO_YELL_AQUE     "Who dares awaken Aquementas?"
+#define AGGRO_YELL_AQUE     -1000168
 
 #define SPELL_AQUA_JET      13586
 #define SPELL_FROST_SHOCK   15089
@@ -79,7 +79,7 @@ struct MANGOS_DLL_DECL mob_aquementasAI : public ScriptedAI
 
     void Aggro(Unit* who)
     {
-        DoYell(AGGRO_YELL_AQUE,LANG_UNIVERSAL,who);
+        DoScriptText(AGGRO_YELL_AQUE, m_creature, who);
     }
 
     void UpdateAI(const uint32 diff)

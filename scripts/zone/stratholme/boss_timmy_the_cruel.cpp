@@ -23,47 +23,23 @@ EndScriptData */
 
 #include "precompiled.h"
 
-#define SAY_SPAWN   "TIMMY!"
+#define SAY_SPAWN               "TIMMY!"
 
-#define SPELL_RAVENOUSCLAW    17470
+#define SPELL_RAVENOUSCLAW      17470
 
 struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
 {
     boss_timmy_the_cruelAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     uint32 RavenousClaw_Timer;
-    bool HasYelled;
 
     void Reset()
     {
         RavenousClaw_Timer = 10000;
-        HasYelled = false;
     }
 
     void Aggro(Unit *who)
     {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || m_creature->getVictim())
-            return;
-
-        if (who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
-            {
-                if (!HasYelled)
-                {
-                    DoYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
-                    HasYelled = true;
-                }
-
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -75,15 +51,14 @@ struct MANGOS_DLL_DECL boss_timmy_the_cruelAI : public ScriptedAI
         //RavenousClaw
         if (RavenousClaw_Timer < diff)
         {
-            //Cast
             DoCast(m_creature->getVictim(),SPELL_RAVENOUSCLAW);
-            //15 seconds until we should cast this again
             RavenousClaw_Timer = 15000;
         }else RavenousClaw_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_timmy_the_cruel(Creature *_Creature)
 {
     return new boss_timmy_the_cruelAI (_Creature);

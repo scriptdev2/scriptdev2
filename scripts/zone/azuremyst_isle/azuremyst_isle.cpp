@@ -37,15 +37,14 @@ EndContentData */
 ## npc_draenei_survivor
 ######*/
 
-#define HEAL1        "The last thing I remember is the ship falling and us getting into the pods. I'll go see how I can help. Thank you!"
-#define HEAL2        "$C, Where am I? Who are you? Oh no! What happened to the ship?."
-#define HEAL3        "$C You saved me! I owe you a debt that I can never repay. I'll go see if I can help the others."
-#define HEAL4        "Ugh... what is this place? Is that all that's left of the ship over there?"
-
-#define HELP1        "Oh, the pain..."
-#define HELP2        "Everything hurts, Please make it stop..."
-#define HELP3        "Ughhh... I hurt. Can you help me?"
-#define HELP4        "I don't know if I can make it, please help me..."
+#define SAY_HEAL1       -1000176
+#define SAY_HEAL2       -1000177
+#define SAY_HEAL3       -1000178
+#define SAY_HEAL4       -1000179
+#define SAY_HELP1       -1000180
+#define SAY_HELP2       -1000181
+#define SAY_HELP3       -1000182
+#define SAY_HELP4       -1000183
 
 struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
 {
@@ -91,27 +90,13 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         {
             switch (rand()%4)                               //Random switch between 4 texts
             {
-                case 0:
-                    DoSay(HELP1, LANG_UNIVERSAL, NULL);
-                    SayingTimer = 15000;
-                    say = false;
-                    break;
-                case 1:
-                    DoSay(HELP2, LANG_UNIVERSAL, NULL);
-                    SayingTimer = 15000;
-                    say = false;
-                    break;
-                case 2:
-                    DoSay(HELP3, LANG_UNIVERSAL, NULL);
-                    SayingTimer = 15000;
-                    say = false;
-                    break;
-                case 3:
-                    DoSay(HELP4, LANG_UNIVERSAL, NULL);
-                    SayingTimer = 15000;
-                    say = false;
-                    break;
+                case 0: DoScriptText(SAY_HELP1, m_creature, who); break;
+                case 1: DoScriptText(SAY_HELP2, m_creature, who); break;
+                case 2: DoScriptText(SAY_HELP3, m_creature, who); break;
+                case 3: DoScriptText(SAY_HELP4, m_creature, who); break;
             }
+            SayingTimer = 15000;
+            say = false;
         }
         else
         {
@@ -179,10 +164,10 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
             m_creature->HandleEmoteCommand(ANIM_RISE);
             switch (rand()%4)                               //This switch doesn't work at all, creature say nothing!
             {
-                case 0: DoSay(HEAL1, LANG_UNIVERSAL, Hitter); break;
-                case 1: DoSay(HEAL2, LANG_UNIVERSAL, Hitter); break;
-                case 2: DoSay(HEAL3, LANG_UNIVERSAL, Hitter); break;
-                case 3: DoSay(HEAL4, LANG_UNIVERSAL, Hitter); break;
+                case 0: DoScriptText(SAY_HEAL1, m_creature, Hitter); break;
+                case 1: DoScriptText(SAY_HEAL2, m_creature, Hitter); break;
+                case 2: DoScriptText(SAY_HEAL3, m_creature, Hitter); break;
+                case 3: DoScriptText(SAY_HEAL4, m_creature, Hitter); break;
             }
             HealSay    = true;
         }
@@ -197,10 +182,11 @@ CreatureAI* GetAI_npc_draenei_survivor(Creature *_Creature)
 ## npc_engineer_spark_overgrind
 ######*/
 
-#define SAY_TEXT        "Yes Master, all goes along as planned."
-#define SAY_EMOTE       "puts the shell to his ear."
+#define SAY_TEXT        -1000184
+#define EMOTE_SHELL     -1000185
+#define SAY_ATTACK      -1000186
+
 #define GOSSIP_FIGHT    "Traitor! You will be brought to justice!"
-#define ATTACK_YELL     "Now I cut you!"
 #define SPELL_DYNAMITE  7978
 
 struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
@@ -225,8 +211,8 @@ struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
         {
             if (Emote_Timer < diff)
             {
-                DoSay(SAY_TEXT,LANG_UNIVERSAL,NULL);
-                DoTextEmote(SAY_EMOTE,NULL);
+                DoScriptText(SAY_TEXT, m_creature);
+                DoScriptText(EMOTE_SHELL, m_creature);
                 Emote_Timer = 120000 + rand()%30000;
             }else Emote_Timer -= diff;
         }
@@ -264,7 +250,7 @@ bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature *_Creatu
     {
         player->CLOSE_GOSSIP_MENU();
         _Creature->setFaction(14);
-        _Creature->Yell(ATTACK_YELL, LANG_UNIVERSAL, player->GetGUID());
+        DoScriptText(SAY_ATTACK, _Creature, player);
         ((npc_engineer_spark_overgrindAI*)_Creature->AI())->AttackStart(player);
     }
     return true;

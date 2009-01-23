@@ -31,7 +31,7 @@ EndContentData */
 ## npc_narm_faulk
 ######*/
 
-#define SAY_HEAL "Thank you, dear Paladin, you just saved my life."
+#define SAY_HEAL    -1000187
 
 struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
 {
@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL npc_narm_faulkAI : public ScriptedAI
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             //m_creature->RemoveAllAuras();
-            DoSay(SAY_HEAL,LANG_COMMON,NULL);
+            DoScriptText(SAY_HEAL, m_creature, Hitter);
             spellHit = true;
         }
     }

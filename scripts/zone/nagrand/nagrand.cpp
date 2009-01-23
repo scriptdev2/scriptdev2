@@ -76,13 +76,12 @@ CreatureAI* GetAI_mob_shattered_rumbler(Creature *_Creature)
 ## mob_lump
 ######*/
 
+#define SAY_LUMP_0          -1000190
+#define SAY_LUMP_1          -1000191
+#define SAY_LUMP_DEFEAT     -1000192
+
 #define SPELL_VISUAL_SLEEP  16093
 #define SPELL_SPEAR_THROW   32248
-
-#define LUMP_SAY0 "In Nagrand, food hunt ogre!"
-#define LUMP_SAY1 "You taste good with maybe a little salt and pepper."
-
-#define LUMP_DEFEAT "OK, OK! Lump give up!"
 
 struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
 {
@@ -120,7 +119,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 m_creature->CombatStop();
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
-                m_creature->Say(LUMP_DEFEAT, LANG_UNIVERSAL, 0);
+                DoScriptText(SAY_LUMP_DEFEAT, m_creature, done_by);
 
                 bReset = true;
             }
@@ -138,10 +137,10 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
         switch(rand()%2)
         {
             case 0:
-                DoSay(LUMP_SAY0,LANG_UNIVERSAL,NULL);
+                DoScriptText(SAY_LUMP_0, m_creature, who);
                 break;
             case 1:
-                DoSay(LUMP_SAY1,LANG_UNIVERSAL,NULL);
+                DoScriptText(SAY_LUMP_1, m_creature, who);
                 break;
         }
     }

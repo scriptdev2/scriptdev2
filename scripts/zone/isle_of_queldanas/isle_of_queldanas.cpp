@@ -64,8 +64,8 @@ bool GossipSelect_npc_ayren_cloudbreaker(Player *player, Creature *_Creature, ui
 ## npc_converted_sentry
 ######*/
 
-#define SAY_CONVERTED_1         "Deployment sucessful. Trespassers will be neutralized."
-#define SAY_CONVERTED_2         "Objective acquired. Initiating security routines."
+#define SAY_CONVERTED_1         -1000188
+#define SAY_CONVERTED_2         -1000189
 
 #define SPELL_CONVERT_CREDIT    45009
 
@@ -83,9 +83,11 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who)
-        { return; }
-    void Aggro(Unit* who)
-        { }
+    {
+        return;
+    }
+
+    void Aggro(Unit* who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -94,8 +96,8 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
             if( Timer <= diff )
             {
                 uint32 i = urand(1,2);
-                if( i=1 ) DoSay(SAY_CONVERTED_1,LANG_UNIVERSAL,NULL);
-                else DoSay(SAY_CONVERTED_2,LANG_UNIVERSAL,NULL);
+                if( i=1 ) DoScriptText(SAY_CONVERTED_1, m_creature);
+                else DoScriptText(SAY_CONVERTED_2, m_creature);
 
                 DoCast(m_creature,SPELL_CONVERT_CREDIT);
                 ((Pet*)m_creature)->SetDuration(7500);

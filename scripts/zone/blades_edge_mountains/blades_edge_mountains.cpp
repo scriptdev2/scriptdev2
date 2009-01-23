@@ -64,11 +64,11 @@ CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
 ## mobs_nether_drake
 ######*/
 
-#define SAY_NIHIL_1         "Muahahahaha! You fool! You've released me from my banishment in the interstices between space and time!"
-#define SAY_NIHIL_2         "All of Draenor shall quick beneath my feet! I will destroy this world and reshape it in my image!"
-#define SAY_NIHIL_3         "Where shall I begin? I cannot bother myself with a worm such as yourself. There is a world to be conquered!"
-#define SAY_NIHIL_4         "No doubt the fools that banished me are long dead. I shall take wing survey my demense. Pray to whatever gods you hold dear that we do not meet again."
-#define SAY_NIHIL_INTERRUPT "NOOOOooooooo!"
+#define SAY_NIHIL_1                 -1000169
+#define SAY_NIHIL_2                 -1000170
+#define SAY_NIHIL_3                 -1000171
+#define SAY_NIHIL_4                 -1000172
+#define SAY_NIHIL_INTERRUPT         -1000173
 
 #define ENTRY_WHELP                 20021
 #define ENTRY_PROTO                 21821
@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
     {
         NihilSpeech_Timer = 2000;
         IsNihil = false;
-        if( m_creature->GetEntry() == ENTRY_NIHIL )
+        if (m_creature->GetEntry() == ENTRY_NIHIL)
         {
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             IsNihil = true;
@@ -114,11 +114,11 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
-        if( spell->Id == SPELL_T_PHASE_MODULATOR && caster->GetTypeId() == TYPEID_PLAYER )
+        if (spell->Id == SPELL_T_PHASE_MODULATOR && caster->GetTypeId() == TYPEID_PLAYER)
         {
             uint32 cEntry = 0;
 
-            switch( m_creature->GetEntry() )
+            switch(m_creature->GetEntry())
             {
                 case ENTRY_WHELP:
                     switch(rand()%4)
@@ -154,9 +154,9 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
                     }
                     break;
                 case ENTRY_NIHIL:
-                    if( NihilSpeech_Phase )
+                    if (NihilSpeech_Phase)
                     {
-                        DoYell(SAY_NIHIL_INTERRUPT,LANG_UNIVERSAL,NULL);
+                        DoScriptText(SAY_NIHIL_INTERRUPT, m_creature);
                         IsNihil = false;
                         switch(rand()%3)
                         {
@@ -168,11 +168,11 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
                     break;
             }
 
-            if( cEntry )
+            if (cEntry)
             {
                 m_creature->UpdateEntry(cEntry);
 
-                if( cEntry == ENTRY_NIHIL )
+                if (cEntry == ENTRY_NIHIL)
                 {
                     m_creature->InterruptNonMeleeSpells(true);
                     m_creature->RemoveAllAuras();
@@ -187,33 +187,33 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if( IsNihil )
+        if (IsNihil)
         {
-            if( NihilSpeech_Phase )
+            if (NihilSpeech_Phase)
             {
-                if(NihilSpeech_Timer <= diff)
+                if (NihilSpeech_Timer <= diff)
                 {
-                    switch( NihilSpeech_Phase )
+                    switch(NihilSpeech_Phase)
                     {
                         case 1:
-                            DoSay(SAY_NIHIL_1,LANG_UNIVERSAL,NULL);
+                            DoScriptText(SAY_NIHIL_1, m_creature);
                             ++NihilSpeech_Phase;
                             break;
                         case 2:
-                            DoSay(SAY_NIHIL_2,LANG_UNIVERSAL,NULL);
+                            DoScriptText(SAY_NIHIL_2, m_creature);
                             ++NihilSpeech_Phase;
                             break;
                         case 3:
-                            DoSay(SAY_NIHIL_3,LANG_UNIVERSAL,NULL);
+                            DoScriptText(SAY_NIHIL_3, m_creature);
                             ++NihilSpeech_Phase;
                             break;
                         case 4:
-                            DoSay(SAY_NIHIL_4,LANG_UNIVERSAL,NULL);
+                            DoScriptText(SAY_NIHIL_4, m_creature);
                             ++NihilSpeech_Phase;
                             break;
                         case 5:
                             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                                                            // + MOVEMENTFLAG_LEVITATING
+                            // + MOVEMENTFLAG_LEVITATING ?
                             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
                             //then take off to random location. creature is initially summoned, so don't bother do anything else.
                             m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX()+100, m_creature->GetPositionY(), m_creature->GetPositionZ()+100);
@@ -226,24 +226,24 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
             return;                                         //anything below here is not interesting for Nihil, so skip it
         }
 
-        if( !m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if( IntangiblePresence_Timer <= diff )
+        if (IntangiblePresence_Timer <= diff)
         {
             DoCast(m_creature->getVictim(),SPELL_INTANGIBLE_PRESENCE);
             IntangiblePresence_Timer = 15000+rand()%15000;
         }else IntangiblePresence_Timer -= diff;
 
-        if( ManaBurn_Timer <= diff )
+        if (ManaBurn_Timer <= diff)
         {
             Unit* target = m_creature->getVictim();
-            if( target && target->getPowerType() == POWER_MANA )
+            if (target && target->getPowerType() == POWER_MANA)
                 DoCast(target,SPELL_MANA_BURN);
             ManaBurn_Timer = 8000+rand()%8000;
         }else ManaBurn_Timer -= diff;
 
-        if( ArcaneBlast_Timer <= diff )
+        if (ArcaneBlast_Timer <= diff)
         {
             DoCast(m_creature->getVictim(),SPELL_ARCANE_BLAST);
             ArcaneBlast_Timer = 2500+rand()%5000;
@@ -261,43 +261,30 @@ CreatureAI* GetAI_mobs_nether_drake(Creature *_Creature)
 ## npc_daranelle
 ######*/
 
+#define SAY_SPELL_INFLUENCE     -1000174
+
 struct MANGOS_DLL_DECL npc_daranelleAI : public ScriptedAI
 {
     npc_daranelleAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void Reset()
-    {
-    }
+    void Reset() { }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
         if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if(who->HasAura(36904,0))
+            if (who->HasAura(36904,0) && m_creature->IsWithinDistInMap(who, 10.0f))
             {
-                DoSay("Good $N, you are under the spell's influence. I must analyze it quickly, then we can talk.",LANG_COMMON,who);
+                DoScriptText(SAY_SPELL_INFLUENCE, m_creature, who);
                 //TODO: Move the below to updateAI and run if this statement == true
                 ((Player*)who)->KilledMonster(21511, m_creature->GetGUID());
                 ((Player*)who)->RemoveAurasDueToSpell(36904);
             }
         }
 
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
+        ScriptedAI::MoveInLineOfSight(who);
     }
 };
 
@@ -384,13 +371,7 @@ bool GossipSelect_npc_skyguard_handler_irena(Player *player, Creature *_Creature
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 172;                                     //from ogri'la
-        nodes[1] = 171;                                     //end at skettis
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 706
+        player->CastSpell(player,41278,true);               //TaxiPath 706
     }
     return true;
 }

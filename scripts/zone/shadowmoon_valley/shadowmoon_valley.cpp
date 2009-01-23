@@ -38,11 +38,11 @@ EndContentData */
 # mob_mature_netherwing_drake
 #####*/
 
+#define SAY_JUST_EATEN                  -1000175
+
 #define SPELL_PLACE_CARCASS             38439
 #define SPELL_JUST_EATEN                38502
 #define SPELL_NETHER_BREATH             38467
-
-#define SAY_JUST_EATEN                  "Thank you, mortal."
 
 struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
 {
@@ -118,7 +118,9 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
             IsEating = false;
             DoCast(m_creature, SPELL_JUST_EATEN);
             m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-            DoSay(SAY_JUST_EATEN, LANG_DRACONIC, NULL);
+
+            DoScriptText(SAY_JUST_EATEN, m_creature);
+
             if(PlayerGUID)
             {
                 Player* plr = ((Player*)Unit::GetUnit((*m_creature), PlayerGUID));

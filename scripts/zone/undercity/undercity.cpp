@@ -33,8 +33,8 @@ EndContentData */
 ## npc_lady_sylvanas_windrunner
 ######*/
 
-#define SAY_LAMENT_END              "Belore..."
-#define EMOTE_LAMENT_END            "kneels down and pick up the amulet."
+#define SAY_LAMENT_END              -1000196
+#define EMOTE_LAMENT_END            -1000197
 
 #define SOUND_CREDIT                10896
 #define ENTRY_HIGHBORNE_LAMENTER    21628
@@ -111,8 +111,8 @@ struct MANGOS_DLL_DECL npc_lady_sylvanas_windrunnerAI : public ScriptedAI
                 LamentEvent_Timer = 2000;
                 if( !m_creature->HasAura(SPELL_SYLVANAS_CAST,0) )
                 {
-                    DoSay(SAY_LAMENT_END,LANG_UNIVERSAL,NULL);
-                    DoTextEmote(EMOTE_LAMENT_END,NULL);
+                    DoScriptText(SAY_LAMENT_END, m_creature);
+                    DoScriptText(EMOTE_LAMENT_END, m_creature);
                     LamentEvent = false;
                 }
             }else LamentEvent_Timer -= diff;

@@ -36,7 +36,7 @@ EndContentData */
 ## mob_unkor_the_ruthless
 ######*/
 
-#define SAY_SUBMIT                      "I give up! Please don't kill me!"
+#define SAY_SUBMIT                      -1000194
 
 #define FACTION_HOSTILE                 45
 #define FACTION_FRIENDLY                35
@@ -66,7 +66,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
 
     void DoNice()
     {
-        DoSay(SAY_SUBMIT,LANG_UNIVERSAL,NULL);
+        DoScriptText(SAY_SUBMIT, m_creature);
         m_creature->setFaction(FACTION_FRIENDLY);
         m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_SIT);
         m_creature->RemoveAllAuras();
@@ -240,7 +240,7 @@ CreatureAI* GetAI_mob_netherweb_victim(Creature *_Creature)
 
 #define GOSSIP_FLOON1           "You owe Sim'salabim money. Hand them over or die!"
 #define GOSSIP_FLOON2           "Hand over the money or die...again!"
-#define SAY_FLOON_ATTACK        "I choose the third option: KILLING YOU!"
+#define SAY_FLOON_ATTACK        -1000195
 
 #define FACTION_HOSTILE_FL      1738
 #define FACTION_FRIENDLY_FL     35
@@ -318,7 +318,7 @@ bool GossipSelect_npc_floon(Player *player, Creature *_Creature, uint32 sender, 
     {
         player->CLOSE_GOSSIP_MENU();
         _Creature->setFaction(FACTION_HOSTILE_FL);
-        ((npc_floonAI*)_Creature->AI())->DoSay(SAY_FLOON_ATTACK,LANG_UNIVERSAL,player);
+        DoScriptText(SAY_FLOON_ATTACK,_Creature,player);
         ((npc_floonAI*)_Creature->AI())->AttackStart(player);
     }
     return true;

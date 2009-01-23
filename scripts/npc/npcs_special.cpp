@@ -39,10 +39,11 @@ EndContentData */
 # npc_chicken_cluck
 #########*/
 
+#define EMOTE_A_HELLO       -1000204
+#define EMOTE_H_HELLO       -1000205
+#define EMOTE_CLUCK_TEXT2   -1000206
+
 #define QUEST_CLUCK         3861
-#define EMOTE_A_HELLO       "looks up at you quizzically. Maybe you should inspect it?"
-#define EMOTE_H_HELLO       "looks at you unexpectadly."
-#define CLUCK_TEXT2         "starts pecking at the feed."
 #define FACTION_FRIENDLY    84
 #define FACTION_CHICKEN     31
 
@@ -94,18 +95,17 @@ bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32
                 {
                     _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
                     _Creature->setFaction(FACTION_FRIENDLY);
-                    _Creature->MonsterTextEmote(EMOTE_A_HELLO, 0);
+                    DoScriptText(EMOTE_A_HELLO, _Creature);
                 }
             }
-        } else
-        _Creature->MonsterTextEmote(EMOTE_H_HELLO,0);
+        } else DoScriptText(EMOTE_H_HELLO,_Creature);
     }
     if( emote == TEXTEMOTE_CHEER && player->GetTeam() == ALLIANCE )
         if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE )
     {
         _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
         _Creature->setFaction(FACTION_FRIENDLY);
-        _Creature->MonsterTextEmote(CLUCK_TEXT2, 0);
+        DoScriptText(EMOTE_CLUCK_TEXT2, _Creature);
     }
 
     return true;
@@ -143,9 +143,9 @@ bool ReceiveEmote_npc_dancing_flames( Player *player, Creature *_Creature, uint3
 ## Triage quest
 ######*/
 
-#define SAY_DOC1 "I'm saved! Thank you, doctor!"
-#define SAY_DOC2 "HOORAY! I AM SAVED!"
-#define SAY_DOC3 "Sweet, sweet embrace... take me..."
+#define SAY_DOC1    -1000201
+#define SAY_DOC2    -1000202
+#define SAY_DOC3    -1000203
 
 struct Location
 {
@@ -325,7 +325,13 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
                                                             //stand up
             m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, PLAYER_STATE_NONE);
-            DoSay(SAY_DOC1,LANG_UNIVERSAL,NULL);
+
+            switch(rand()%3)
+            {
+                case 0: DoScriptText(SAY_DOC1,m_creature); break;
+                case 1: DoScriptText(SAY_DOC2,m_creature); break;
+                case 2: DoScriptText(SAY_DOC3,m_creature); break;
+            }
 
             uint32 mobId = m_creature->GetEntry();
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
