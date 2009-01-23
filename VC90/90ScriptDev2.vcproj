@@ -2465,7 +2465,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2476,7 +2476,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2487,7 +2487,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>
@@ -2498,7 +2498,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
-					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+					CommandLine="echo on&#x0D;&#x0A;cd &quot;$(SolutionDir)&quot;&#x0D;&#x0A;&quot;..\..\..\win\VC90\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"
 				/>

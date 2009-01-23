@@ -1691,7 +1691,7 @@
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
 					CommandLine="cd &quot;$(SolutionDir)&quot;
-&quot;..\..\..\win\VC71\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+&quot;..\..\..\win\VC71\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"/>
 			</FileConfiguration>
@@ -1701,7 +1701,7 @@
 					Name="VCCustomBuildTool"
 					Description="Extracting Revision"
 					CommandLine="cd &quot;$(SolutionDir)&quot;
-&quot;..\..\..\win\VC71\genrevision__$(PlatformName)_$(ConfigurationName)\genrevision.exe&quot;"
+&quot;..\..\..\win\VC71\genrevision__Win32_$(ConfigurationName)\genrevision.exe&quot;"
 					AdditionalDependencies=".svn/entries"
 					Outputs="revision.h"/>
 			</FileConfiguration>
