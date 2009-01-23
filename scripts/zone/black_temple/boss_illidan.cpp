@@ -49,87 +49,103 @@ enum CreatureEntry
 // Gossip for when a player clicks Akama
 #define GOSSIP_ITEM          "We are ready to face Illidan"
 
+#define SAY_CONVO_1         -1564097
+#define SAY_CONVO_2         -1564098
+#define SAY_CONVO_3         -1564099
+#define SAY_CONVO_4         -1564100
+#define SAY_CONVO_5         -1564101
+#define SAY_CONVO_6         -1564102
+#define SAY_CONVO_7         -1564103
+#define SAY_CONVO_8         -1564104
+#define SAY_CONVO_9         -1564105
+#define SAY_CONVO_10        -1564106
+#define SAY_CONVO_11        -1564107
+#define SAY_CONVO_12        -1564108
+#define SAY_CONVO_13        -1564109
+#define SAY_CONVO_14        -1564110
+#define SAY_CONVO_15        -1564111
+
+#define SAY_TAUNT_1         -1564112
+#define SAY_TAUNT_2         -1564113
+#define SAY_TAUNT_3         -1564114
+#define SAY_TAUNT_4         -1564115
+
+#define SAY_MAIEV_TAUNT_1   -1564116
+#define SAY_MAIEV_TAUNT_2   -1564117
+#define SAY_MAIEV_TAUNT_3   -1564118
+#define SAY_MAIEV_TAUNT_4   -1564119
+
+//emote only defined if not related to textId (in database)
 struct Yells
 {
-    uint32 sound;
-    char* text;
+    int32 textId;
     uint32 creature, timer, emote;
     bool Talk;
 };
 
 static Yells Conversation[]=
 {
-    {11463, "Akama... your duplicity is hardly surprising. I should have slaughtered you and your malformed brethren long ago.", ILLIDAN_STORMRAGE, 8000, 0, true},
-    {0, NULL, ILLIDAN_STORMRAGE, 5000, 396, true},
-    {11389, "We've come to end your reign, Illidan. My people and all of Outland shall be free!", AKAMA, 7000, 25, true},
-    {0, NULL, AKAMA, 5000, 66, true},
-    {11464, "Boldly said. But I remain unconvinced.", ILLIDAN_STORMRAGE, 8000, 396, true},
-    {11380, "The time has come! The moment is at hand!", AKAMA, 3000, 22, true},
-    {0, NULL, AKAMA, 2000, 15, true},
-    {11466, "You are not prepared!", ILLIDAN_STORMRAGE, 3000, 406, true},
-    {0, NULL, EMPTY, 1000, 0, true},
-    {0, NULL, EMPTY, 0, 0, false},
-    {11476, "Is this it, mortals? Is this all the fury you can muster?", ILLIDAN_STORMRAGE, 8000, 0, true},
-    {11491, "Their fury pales before mine, Illidan. We have some unsettled business between us.", MAIEV_SHADOWSONG, 8000, 5, true},
-    {11477, "Maiev... How is this even possible?", ILLIDAN_STORMRAGE, 7000, 1, true},
-    {11492, "Ah... my long hunt is finally over. Today, Justice will be done!", MAIEV_SHADOWSONG, 8000, 15, true},
-    {11470, "Feel the hatred of ten thousand years!", ILLIDAN_STORMRAGE, 1000, 0, false},
-    {11496, "Ahh... It is finished. You are beaten.", MAIEV_SHADOWSONG, 6000, 0, true},
+    {SAY_CONVO_1, ILLIDAN_STORMRAGE, 8000, 0, true},
+    {0, ILLIDAN_STORMRAGE, 5000, 396, true},
+    {SAY_CONVO_2, AKAMA, 7000, 0, true},
+    {0, AKAMA, 5000, 66, true},
+    {SAY_CONVO_3, ILLIDAN_STORMRAGE, 8000, 0, true},
+    {SAY_CONVO_4, AKAMA, 3000, 0, true},
+    {0, AKAMA, 2000, 15, true},
+    {SAY_CONVO_5, ILLIDAN_STORMRAGE, 3000, 0, true},
+    {0, EMPTY, 1000, 0, true},
+    {0, EMPTY, 0, 0, false},
+    {SAY_CONVO_6, ILLIDAN_STORMRAGE, 8000, 0, true},
+    {SAY_CONVO_7, MAIEV_SHADOWSONG, 8000, 0, true},
+    {SAY_CONVO_8, ILLIDAN_STORMRAGE, 7000, 0, true},
+    {SAY_CONVO_9, MAIEV_SHADOWSONG, 8000, 0, true},
+    {SAY_CONVO_10, ILLIDAN_STORMRAGE, 1000, 0, false},
+    {SAY_CONVO_11, MAIEV_SHADOWSONG, 6000, 0, true},
     // Emote dead for now. Kill him later
-    {11478, "You have won... Maiev...but the huntress... is nothing...without the hunt... you... are nothing... without me..", ILLIDAN_STORMRAGE, 22000, 65, true},
-    {11497, "He is right. I feel nothing... I am nothing... Farewell, champions.", MAIEV_SHADOWSONG, 9000, 0, true},
-    {11498, NULL, MAIEV_SHADOWSONG, 0, true},
-    {11387, "The Light will fill these dismal halls once again. I swear it.", AKAMA, 8000, 0, true},
-    {0, NULL, EMPTY, 1000, 0, false}
+    {SAY_CONVO_12, ILLIDAN_STORMRAGE, 22000, 0, true},
+    {SAY_CONVO_13, MAIEV_SHADOWSONG, 9000, 0, true},
+    {SAY_CONVO_14, MAIEV_SHADOWSONG, 0, true},
+    {SAY_CONVO_15, AKAMA, 8000, 0, true},
+    {0, EMPTY, 1000, 0, false}
 };
 
 static Yells RandomTaunts[]=
 {
-    {11467, "I can feel your hatred.", ILLIDAN_STORMRAGE, 0, 0, false},
-    {11468, "Give in to your fear!", ILLIDAN_STORMRAGE, 0, 0, false},
-    {11469, "You know nothing of power!", ILLIDAN_STORMRAGE, 0, 0, false},
-    {11471, "Such... arrogance!", ILLIDAN_STORMRAGE, 0, 0, false}
+    {SAY_TAUNT_1, ILLIDAN_STORMRAGE, 0, 0, false},
+    {SAY_TAUNT_2, ILLIDAN_STORMRAGE, 0, 0, false},
+    {SAY_TAUNT_3, ILLIDAN_STORMRAGE, 0, 0, false},
+    {SAY_TAUNT_4, ILLIDAN_STORMRAGE, 0, 0, false}
 };
 
 static Yells MaievTaunts[]=
 {
-    {11493, "That is for Naisha!", MAIEV_SHADOWSONG, 0, false},
-    {11494, "Bleed as I have bled!", MAIEV_SHADOWSONG, 0, 0, false},
-    {11495, "There shall be no prison for you this time!", MAIEV_SHADOWSONG, 0, 0, false},
-    {11500, "Meet your end, demon!", MAIEV_SHADOWSONG, 0, 0, false}
+    {SAY_MAIEV_TAUNT_1, MAIEV_SHADOWSONG, 0, 0, false},
+    {SAY_MAIEV_TAUNT_2, MAIEV_SHADOWSONG, 0, 0, false},
+    {SAY_MAIEV_TAUNT_3, MAIEV_SHADOWSONG, 0, 0, false},
+    {SAY_MAIEV_TAUNT_4, MAIEV_SHADOWSONG, 0, 0, false}
 };
 
 // Yells for/by Akama
-#define SAY_AKAMA_BEWARE      "Be wary friends, The Betrayer meditates in the court just beyond."
-#define SOUND_AKAMA_BEWARE    11388
-#define SAY_AKAMA_MINION      "Come, my minions. Deal with this traitor as he deserves!"
-#define SOUND_AKAMA_MINION    11465
-#define SAY_AKAMA_LEAVE       "I'll deal with these mongrels. Strike now, friends! Strike at the betrayer!"
-#define SOUND_AKAMA_LEAVE     11390
+#define SAY_AKAMA_BEWARE      -1564120
+#define SAY_AKAMA_MINION      -1564121
+#define SAY_AKAMA_LEAVE       -1564122
 
 // Self explanatory
-#define SAY_KILL1             "Who shall be next to taste my blades?!"
-#define SOUND_KILL1           11473
-#define SAY_KILL2             "This is too easy!"
-#define SOUND_KILL2           11472
+#define SAY_KILL1             -1564123
+#define SAY_KILL2             -1564124
 
 // I think I'll fly now and let my subordinates take you on
-#define SAY_TAKEOFF           "I will not be touched by rabble such as you!"
-#define SOUND_TAKEOFF         11479
-#define SAY_SUMMONFLAMES      "Behold the flames of Azzinoth!"
-#define SOUND_SUMMONFLAMES    11480
+#define SAY_TAKEOFF           -1564125
+#define SAY_SUMMONFLAMES      -1564126
 
 // When casting Eye Blast. Demon Fire will be appear on places that he casts this
-#define SAY_EYE_BLAST         "Stare into the eyes of the Betrayer!"
-#define SOUND_EYE_BLAST       11481
+#define SAY_EYE_BLAST         -1564127
 
 // kk, I go big, dark and demon on you.
-#define SAY_MORPH             "Behold the power... of the demon within!"
-#define SOUND_MORPH           11475
+#define SAY_MORPH             -1564128
 
 // I KILL!
-#define SAY_ENRAGE            "You've wasted too much time mortals, now you shall fall!"
-#define SOUND_ENRAGE          11474
+#define SAY_ENRAGE            -1564129
 
 /************** Spells *************/
 // Normal Form
@@ -631,14 +647,12 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                         switch(TalkCount)
                         {
                             case 0:
-                                Illidan->Yell(SAY_AKAMA_MINION, LANG_UNIVERSAL, 0);
-                                DoPlaySoundToSet(Illidan, SOUND_AKAMA_MINION);
+                                DoScriptText(SAY_AKAMA_MINION, Illidan);
                                 TalkTimer = 8000;
                                 TalkCount = 1;
                                 break;
                             case 1:
-                                DoYell(SAY_AKAMA_LEAVE, LANG_UNIVERSAL, NULL);
-                                DoPlaySoundToSet(m_creature, SOUND_AKAMA_LEAVE);
+                                DoScriptText(SAY_AKAMA_LEAVE, m_creature);
                                 TalkTimer = 3000;
                                 TalkCount = 2;
                                 break;
@@ -718,8 +732,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                         ChannelCount++;
                         break;
                     case 5:
-                        DoYell(SAY_AKAMA_BEWARE, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(m_creature, SOUND_AKAMA_BEWARE);
+                        DoScriptText(SAY_AKAMA_BEWARE, m_creature);
                         if (ChannelGUID)
                         {
                             Unit* ChannelTarget = Unit::GetUnit((*m_creature), ChannelGUID);
@@ -1071,14 +1084,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         switch(rand()%2)
         {
-            case 0:
-                DoYell(SAY_KILL1, LANG_UNIVERSAL, victim);
-                DoPlaySoundToSet(m_creature, SOUND_KILL1);
-                break;
-            case 1:
-                DoYell(SAY_KILL2, LANG_UNIVERSAL, victim);
-                DoPlaySoundToSet(m_creature, SOUND_KILL2);
-                break;
+            case 0: DoScriptText(SAY_KILL1, m_creature, victim); break;
+            case 1: DoScriptText(SAY_KILL2, m_creature, victim); break;
         }
     }
 
@@ -1108,8 +1115,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         DarkBarrageTimer += 10000;
 
-        DoYell(SAY_EYE_BLAST, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_EYE_BLAST);
+        DoScriptText(SAY_EYE_BLAST, m_creature);
 
         uint32 initial = rand()%4;
         uint32 final = 0;
@@ -1175,11 +1181,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if (!m_creature->isAlive())
             return;
 
-        uint32 sound = Conversation[count].sound;
-        char* text = NULL;
+        int32 text = 0;
 
-        if (Conversation[count].text)
-            text = Conversation[count].text;
+        if (Conversation[count].textId)
+            text = Conversation[count].textId;
 
         TalkTimer = Conversation[count].timer;
         uint32 emote = Conversation[count].emote;
@@ -1218,11 +1223,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         if (creature)
         {
-            creature->HandleEmoteCommand(emote);            // Make the creature do some animation!
+            if (emote)
+                creature->HandleEmoteCommand(emote);        // Make the creature do some animation!
             if (text)
-                creature->Yell(text, LANG_UNIVERSAL, 0);    // Have the creature yell out some text
-            if (sound)
-                DoPlaySoundToSet(creature, sound);          // Play some sound on the creature
+                DoScriptText(text, creature);               // Have the creature yell out some text
         }
     }
 
@@ -1300,8 +1304,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     /** To reduce the amount of code in UpdateAI, we can seperate them into different functions and simply call them from UpdateAI **/
     void EnterPhase2()
     {
-        DoYell(SAY_TAKEOFF, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_TAKEOFF);
+        DoScriptText(SAY_TAKEOFF, m_creature);
 
         SummonBladesTimer = 10000;                          // Summon Glaives when this decrements
         SummonFlamesTimer = 20000;                          // Summon Flames when this decrements
@@ -1313,9 +1316,6 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         // So players don't shoot us down
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-
-        // Animate our take off!
-        m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
 
         // We now hover!
         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
@@ -1364,8 +1364,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
     void SummonFlamesOfAzzinoth()
     {
-        DoYell(SAY_SUMMONFLAMES, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(m_creature, SOUND_SUMMONFLAMES);
+        DoScriptText(SAY_SUMMONFLAMES, m_creature);
 
         for(uint8 i = 0; i < 2; ++i)
         {
@@ -1394,15 +1393,13 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 }
                 else
                 {
-                    DoTextEmote("is unable to summon a Flame of Azzinoth.", NULL);
-                    error_log("SD2 ERROR: Illidan Stormrage AI: Unable to summon Flame of Azzinoth (entry: 22997), please check your database");
+                    error_log("SD2: Illidan Stormrage AI: Unable to summon Flame of Azzinoth (entry: 22997), please check your database");
                     EnterEvadeMode();
                 }
             }
             else
             {
-                DoTextEmote("is unable to summon a Blade of Azzinoth.", NULL);
-                error_log("SD2 ERROR: Illidan Stormrage AI: Unable to summon Blade of Azzinoth (entry: 22996), please check your database");
+                error_log("SD2: Illidan Stormrage AI: Unable to summon Blade of Azzinoth (entry: 22996), please check your database");
             }
         }
         DoResetThreat();                                    // And now reset our threatlist
@@ -1433,8 +1430,8 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         else                                                // If Maiev cannot be summoned, reset the encounter and post some errors to the console.
         {
             EnterEvadeMode();
-            DoTextEmote("is unable to summon Maiev Shadowsong and enter Phase 4. Resetting Encounter.", NULL);
-            error_log("SD2 ERROR: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
+            debug_log("SD2: Unable to summon Maiev Shadowsong and enter Phase 4. Resetting Encounter.");
+            error_log("SD2: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
         }
     }
 
@@ -1590,8 +1587,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         {
             if (BerserkTimer < diff)
             {
-                DoYell(SAY_ENRAGE, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_ENRAGE);
+                DoScriptText(SAY_ENRAGE, m_creature);
                 DoCast(m_creature, SPELL_BERSERK, true);
             }else BerserkTimer -= diff;
         }
@@ -1626,12 +1622,9 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             if (TauntTimer < diff)                           // His random taunt/yell timer.
             {
                 uint32 random = rand()%4;
-                char* yell = RandomTaunts[random].text;
-                uint32 soundid = RandomTaunts[random].sound;
+                int32 yell = RandomTaunts[random].textId;
                 if (yell)
-                    DoYell(yell, LANG_UNIVERSAL, NULL);
-                if (soundid)
-                    DoPlaySoundToSet(m_creature, soundid);
+                    DoScriptText(yell, m_creature);
                 TauntTimer = 32000;
             }else TauntTimer -= diff;
 
@@ -1831,8 +1824,9 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
                 Phase = PHASE_DEMON_SEQUENCE;               // Transform sequence
                 DemonFormSequence = 0;
                 AnimationTimer = 0;
-                DoYell(SAY_MORPH, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(m_creature, SOUND_MORPH);
+
+                DoScriptText(SAY_MORPH, m_creature);
+
                 TransformTimer = 60000;
                 FlameBurstTimer = 10000;
                 ShadowDemonTimer = 30000;
@@ -2068,10 +2062,10 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
         if (TauntTimer < diff)
         {
             uint32 random = rand()%4;
-            char* text = MaievTaunts[random].text;
-            uint32 sound = MaievTaunts[random].sound;
-            DoYell(text, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(m_creature, sound);
+            int32 text = MaievTaunts[random].textId;
+
+            DoScriptText(text, m_creature);
+
             TauntTimer = 22000 + rand()%21 * 1000;
         }else TauntTimer -= diff;
 
