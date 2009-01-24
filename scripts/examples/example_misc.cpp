@@ -15,28 +15,49 @@
  */
 
 /* ScriptData
-SDName: Item_Test
+SDName: Example_Misc
 SD%Complete: 100
-SDComment: Used for Testing Item Scripts
-SDCategory: Items
+SDComment: Item, Areatrigger and other small code examples
+SDCategory: Script Examples
 EndScriptData */
 
 #include "precompiled.h"
 
-extern void LoadDatabase();
+bool AT_example_areatrigger(Player *player, AreaTriggerEntry *at)
+{
+    player->Say("Hi!",LANG_UNIVERSAL);
+    return true;
+}
 
-bool ItemUse_item_test(Player *player, Item* _Item, SpellCastTargets const& targets)
+extern void LoadDatabase();
+bool ItemUse_example_item(Player *player, Item* _Item, SpellCastTargets const& targets)
 {
     LoadDatabase();
     return true;
 }
 
-void AddSC_item_test()
+bool GOHello_example_go_teleporter(Player *player, GameObject* _GO)
+{
+    player->TeleportTo(0, 1807.07f,336.105f,70.3975f,0.0f);
+    return false;
+}
+
+void AddSC_example_misc()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name = "item_test";
-    newscript->pItemUse = &ItemUse_item_test;
+    newscript->Name = "example_areatrigger";
+    newscript->pAreaTrigger = &AT_example_areatrigger;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "example_item";
+    newscript->pItemUse = &ItemUse_example_item;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "example_go_teleporter";
+    newscript->pGOHello = &GOHello_example_go_teleporter;
     newscript->RegisterSelf();
 }

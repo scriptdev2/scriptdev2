@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: Custom_Example
+SDName: Example_Creature
 SD%Complete: 100
 SDComment: Short custom scripting example
 SDCategory: Script Examples
@@ -56,11 +56,11 @@ EndScriptData */
 #define SAY_DANCE       "I always thought I was a good dancer"
 #define SAY_SALUTE      "Move out Soldier!"
 
-struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
+struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
 {
     //*** HANDLED FUNCTION ***
     //This is the constructor, called only once when the creature is first created
-    custom_exampleAI(Creature *c) : ScriptedAI(c) {Reset();}
+    example_creatureAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     //*** CUSTOM VARIABLES ****
     //These variables are for use only by this individual script.
@@ -210,13 +210,13 @@ struct MANGOS_DLL_DECL custom_exampleAI : public ScriptedAI
 
 //This is the GetAI method used by all scripts that involve AI
 //It is called every time a new creature using this script is created
-CreatureAI* GetAI_custom_example(Creature *_Creature)
+CreatureAI* GetAI_example_creature(Creature *_Creature)
 {
-    return new custom_exampleAI (_Creature);
+    return new example_creatureAI (_Creature);
 }
 
 //This function is called when the player clicks an option on the gossip menu
-void SendDefaultMenu_custom_example(Player *player, Creature *_Creature, uint32 action)
+void SendDefaultMenu_example_creature(Player *player, Creature *_Creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
@@ -228,16 +228,16 @@ void SendDefaultMenu_custom_example(Player *player, Creature *_Creature, uint32 
 }
 
 //This function is called when the player clicks an option on the gossip menu
-bool GossipSelect_custom_example(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_example_creature(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (sender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_custom_example(player, _Creature, action);
+        SendDefaultMenu_example_creature(player, _Creature, action);
 
     return true;
 }
 
 //This function is called when the player opens the gossip menu
-bool GossipHello_custom_example(Player *player, Creature *_Creature)
+bool GossipHello_example_creature(Player *player, Creature *_Creature)
 {
     player->ADD_GOSSIP_ITEM( 0, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->PlayerTalkClass->SendGossipMenu(907,_Creature->GetGUID());
@@ -246,15 +246,15 @@ bool GossipHello_custom_example(Player *player, Creature *_Creature)
 }
 
 //Our Recive emote function
-bool ReceiveEmote_custom_example(Player *player, Creature *_Creature, uint32 emote)
+bool ReceiveEmote_example_creature(Player *player, Creature *_Creature, uint32 emote)
 {
     _Creature->HandleEmoteCommand(emote);
 
     if (emote == TEXTEMOTE_DANCE)
-        ((custom_exampleAI*)_Creature->AI())->DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
+        ((example_creatureAI*)_Creature->AI())->DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
 
     if (emote == TEXTEMOTE_SALUTE)
-        ((custom_exampleAI*)_Creature->AI())->DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
+        ((example_creatureAI*)_Creature->AI())->DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
 
     return true;
 }
@@ -263,15 +263,15 @@ bool ReceiveEmote_custom_example(Player *player, Creature *_Creature, uint32 emo
 //It must define all handled functions that are to be run in this script
 //For example if you want this Script to handle Emotes you must include
 //newscript->ReciveEmote = My_Emote_Function;
-void AddSC_custom_example()
+void AddSC_example_creature()
 {
     Script *newscript;
 
     newscript = new Script;
-    newscript->Name = "custom_example";
-    newscript->GetAI = &GetAI_custom_example;
-    newscript->pGossipHello = &GossipHello_custom_example;
-    newscript->pGossipSelect = &GossipSelect_custom_example;
-    newscript->pReceiveEmote = &ReceiveEmote_custom_example;
+    newscript->Name = "example_creature";
+    newscript->GetAI = &GetAI_example_creature;
+    newscript->pGossipHello = &GossipHello_example_creature;
+    newscript->pGossipSelect = &GossipSelect_example_creature;
+    newscript->pReceiveEmote = &ReceiveEmote_example_creature;
     newscript->RegisterSelf();
 }

@@ -75,9 +75,12 @@ extern void AddSC_mob_event();
 extern void AddSC_generic_creature();
 
 // -- Custom --
-extern void AddSC_custom_example();
-extern void AddSC_custom_gossip_codebox();
-extern void AddSC_test();
+
+// -- Examples --
+extern void AddSC_example_creature();
+extern void AddSC_example_escort();
+extern void AddSC_example_gossip_codebox();
+extern void AddSC_example_misc();
 
 // -- GO --
 extern void AddSC_go_scripts();
@@ -89,7 +92,6 @@ extern void AddSC_guards();
 
 // -- Item --
 extern void AddSC_item_scripts();
-extern void AddSC_item_test();
 
 // -- NPC --
 extern void AddSC_npc_professions();
@@ -1267,9 +1269,12 @@ void ScriptsInit()
     AddSC_generic_creature();
 
     // -- Custom --
-    AddSC_custom_example();
-    AddSC_custom_gossip_codebox();
-    AddSC_test();
+
+    // -- Examples --
+    AddSC_example_creature();
+    AddSC_example_escort();
+    AddSC_example_gossip_codebox();
+    AddSC_example_misc();
 
     // -- GO --
     AddSC_go_scripts();
@@ -1281,7 +1286,6 @@ void ScriptsInit()
 
     // -- Item --
     AddSC_item_scripts();
-    AddSC_item_test();
 
     // -- NPC --
     AddSC_npc_professions();

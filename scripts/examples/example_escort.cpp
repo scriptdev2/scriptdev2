@@ -15,7 +15,7 @@
  */
 
 /* ScriptData
-SDName: Test
+SDName: Example_Escort
 SD%Complete: 100
 SDComment: Script used for testing escortAI
 SDCategory: Script Examples
@@ -24,12 +24,12 @@ EndScriptData */
 #include "precompiled.h"
 #include "../npc/npc_escortAI.h"
 
-struct MANGOS_DLL_DECL npc_testAI : public npc_escortAI
+struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 {
     public:
 
         // CreatureAI functions
-        npc_testAI(Creature *c) : npc_escortAI(c) {Reset();}
+        example_escortAI(Creature *c) : npc_escortAI(c) {Reset();}
 
         uint32 DeathCoilTimer;
         uint32 ChatTimer;
@@ -134,9 +134,9 @@ struct MANGOS_DLL_DECL npc_testAI : public npc_escortAI
         }
 };
 
-CreatureAI* GetAI_test(Creature *_Creature)
+CreatureAI* GetAI_example_escort(Creature *_Creature)
 {
-    npc_testAI* testAI = new npc_testAI(_Creature);
+    example_escortAI* testAI = new example_escortAI(_Creature);
 
     testAI->AddWaypoint(0, 1231, -4419, 23);
     testAI->AddWaypoint(1, 1198, -4440, 23, 0);
@@ -147,7 +147,7 @@ CreatureAI* GetAI_test(Creature *_Creature)
     return (CreatureAI*)testAI;
 }
 
-bool GossipHello_npc_test(Player *player, Creature *_Creature)
+bool GossipHello_example_escort(Player *player, Creature *_Creature)
 {
     player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
     _Creature->prepareGossipMenu(player,0);
@@ -160,7 +160,7 @@ bool GossipHello_npc_test(Player *player, Creature *_Creature)
     return true;
 }
 
-bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_example_escort(Player *player, Creature *_Creature, uint32 sender, uint32 action )
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -188,13 +188,13 @@ bool GossipSelect_npc_test(Player *player, Creature *_Creature, uint32 sender, u
     return false;
 }
 
-void AddSC_test()
+void AddSC_example_escort()
 {
     Script *newscript;
     newscript = new Script;
-    newscript->Name = "test";
-    newscript->GetAI = &GetAI_test;
-    newscript->pGossipHello          = &GossipHello_npc_test;
-    newscript->pGossipSelect         = &GossipSelect_npc_test;
+    newscript->Name = "example_escort";
+    newscript->GetAI = &GetAI_example_escort;
+    newscript->pGossipHello = &GossipHello_example_escort;
+    newscript->pGossipSelect = &GossipSelect_example_escort;
     newscript->RegisterSelf();
 }

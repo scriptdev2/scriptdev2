@@ -155,6 +155,22 @@
 				</File>
 			</Filter>
 			<Filter
+				Name="examples"
+				>
+				<File
+					RelativePath="..\scripts\examples\example_creature.cpp">
+				</File>
+				<File
+					RelativePath="..\scripts\examples\example_escort.cpp">
+				</File>
+				<File
+					RelativePath="..\scripts\examples\example_gossip_codebox.cpp">
+				</File>
+				<File
+					RelativePath="..\scripts\examples\example_misc.cpp">
+				</File>
+			</Filter>
+			<Filter
 				Name="guard">
 				<File
 					RelativePath="..\scripts\guard\guard_ai.cpp">
@@ -192,15 +208,6 @@
 			</Filter>
 			<Filter
 				Name="custom">
-				<File
-					RelativePath="..\scripts\custom\custom_example.cpp">
-				</File>
-				<File
-					RelativePath="..\scripts\custom\custom_gossip_codebox.cpp">
-				</File>
-				<File
-					RelativePath="..\scripts\custom\test.cpp">
-				</File>
 			</Filter>
 			<Filter
 				Name="areatrigger">
@@ -218,9 +225,6 @@
 				Name="item">
 				<File
 					RelativePath="..\scripts\item\item_scripts.cpp">
-				</File>
-				<File
-					RelativePath="..\scripts\item\item_test.cpp">
 				</File>
 			</Filter>
 			<Filter

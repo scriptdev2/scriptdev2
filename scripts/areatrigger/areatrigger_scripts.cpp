@@ -23,7 +23,6 @@ EndScriptData */
 
 /* ContentData
 at_legion_teleporter    4560 Teleporter TO Invasion Point: Cataclysm
-at_test                 script test only
 EndContentData */
 
 #include "precompiled.h"
@@ -52,12 +51,6 @@ bool AreaTrigger_at_legion_teleporter(Player *player, AreaTriggerEntry *at)
     return false;
 }
 
-bool ATtest(Player *player, AreaTriggerEntry *at)
-{
-    player->Say("Hi!",LANG_UNIVERSAL);
-    return true;
-}
-
 void AddSC_areatrigger_scripts()
 {
     Script *newscript;
@@ -65,10 +58,5 @@ void AddSC_areatrigger_scripts()
     newscript = new Script;
     newscript->Name = "at_legion_teleporter";
     newscript->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_test";
-    newscript->pAreaTrigger = &ATtest;
     newscript->RegisterSelf();
 }
