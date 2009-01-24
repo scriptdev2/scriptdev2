@@ -417,7 +417,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_tirion_fordring' WHERE `entry`=
 UPDATE `creature_template` SET `ScriptName`='npc_henze_faulk' WHERE `entry`=6172;
 
 /* EVERSONG WOODS */
-UPDATE `creature_template` SET `ScriptName`='mobs_mana_tapped' WHERE `entry` IN (15273,15274,15294,15298,15367);
 UPDATE `creature_template` SET `ScriptName`='npc_prospector_anvilward' WHERE `entry`=15420;
 
 /* FELWOOD */
