@@ -531,7 +531,6 @@ CreatureAI* GetAI_npc_doctor(Creature *_Creature)
 ######*/
 
 #define SPELL_DEATHTOUCH                5
-#define SAY_AGGRO                        "This area is closed!"
 
 struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 {
@@ -544,7 +543,6 @@ struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
 
     void Aggro(Unit *who)
     {
-        DoYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
     }
 
     void UpdateAI(const uint32 diff)
