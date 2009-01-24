@@ -24,11 +24,18 @@ EndScriptData */
 #include "precompiled.h"
 #include <cstring>
 
+#define SAY_NOT_INTERESTED  -1999922
+#define SAY_WRONG           -1999923
+#define SAY_CORRECT         -1999924
+
+#define GOSSIP_ITEM_1       "A quiz: what's your name?"
+#define GOSSIP_ITEM_2       "I'm not interested"
+
 //This function is called when the player opens the gossip menubool
 bool GossipHello_example_gossip_codebox(Player *player, Creature *_Creature)
 {
-    player->ADD_GOSSIP_ITEM_EXTENDED(0, "A quiz: what's your name?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, true);
-    player->ADD_GOSSIP_ITEM(0, "I'm not interested", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    player->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, true);
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     player->PlayerTalkClass->SendGossipMenu(907,_Creature->GetGUID());
     return true;
@@ -39,7 +46,7 @@ bool GossipSelect_example_gossip_codebox(Player *player, Creature *_Creature, ui
 {
     if(action == GOSSIP_ACTION_INFO_DEF+2)
     {
-        _Creature->Say("Normal select, guess you're not interested.", LANG_UNIVERSAL, 0);
+        DoScriptText(SAY_NOT_INTERESTED, _Creature);
         player->CLOSE_GOSSIP_MENU();
     }
     return true;
@@ -53,12 +60,12 @@ bool GossipSelectWithCode_example_gossip_codebox( Player *player, Creature *_Cre
         {
             if(std::strcmp(sCode, player->GetName())!=0)
             {
-                _Creature->Say("Wrong!", LANG_UNIVERSAL, 0);
+                DoScriptText(SAY_WRONG, _Creature);
                 _Creature->CastSpell(player, 12826, true);
             }
             else
             {
-                _Creature->Say("You're right, you are allowed to see my inner secrets.", LANG_UNIVERSAL, 0);
+                DoScriptText(SAY_CORRECT, _Creature);
                 _Creature->CastSpell(player, 26990, true);
             }
             player->CLOSE_GOSSIP_MENU();

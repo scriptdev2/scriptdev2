@@ -35,6 +35,24 @@ EndScriptData */
 // Functions with Handled Function marked above them are functions that are called automatically by the core
 // Functions that are marked Custom Function are functions I've created to simplify code
 
+//List of text id's. The text is stored in database, also in a localized version
+//(if translation not exist for the textId, default english text will be used)
+//Not required to define in this way, but simplify if changes are needed.
+#define SAY_AGGRO       -1999900
+#define SAY_RANDOM_0    -1999901
+#define SAY_RANDOM_1    -1999902
+#define SAY_RANDOM_2    -1999903
+#define SAY_RANDOM_3    -1999904
+#define SAY_RANDOM_4    -1999905
+#define SAY_BESERK      -1999906
+#define SAY_PHASE       -1999907
+#define SAY_DANCE       -1999908
+#define SAY_SALUTE      -1999909
+
+//List of gossip item texts. Items will appear in the gossip window.
+#define GOSSIP_ITEM     "I'm looking for a fight"
+
+//List of spells. Not required to define them in this way, but will make it easier to maintain in case spellId change
 #define SPELL_BUFF      25661
 #define SPELL_ONE       12555
 #define SPELL_ONE_ALT   24099
@@ -42,19 +60,6 @@ EndScriptData */
 #define SPELL_THREE     26027
 #define SPELL_ENRAGE    23537
 #define SPELL_BESERK    32309
-
-#define SAY_AGGRO       "Let the games begin."
-#define SAY_RANDOM_0    "I see endless suffering. I see torment. I see rage. I see everything."
-#define SAY_RANDOM_1    "Muahahahaha"
-#define SAY_RANDOM_2    "These mortal infedels my lord, they have invaded your sanctum and seek to steal your secrets."
-#define SAY_RANDOM_3    "You are already dead."
-#define SAY_RANDOM_4    "Where to go? What to do? So many choices that all end in pain, end in death."
-#define SAY_BESERK      "$N, I sentance you to death!"
-#define SAY_PHASE       "The suffering has just begun!"
-
-#define GOSSIP_ITEM     "I'm looking for a fight"
-#define SAY_DANCE       "I always thought I was a good dancer"
-#define SAY_SALUTE      "Move out Soldier!"
 
 struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
 {
@@ -92,8 +97,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         //Say some stuff
-        DoSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(m_creature,8280);
+        DoScriptText(SAY_AGGRO, m_creature, who);
     }
 
     //*** HANDLED FUNCTION ***
@@ -109,30 +113,11 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
                 //Random switch between 5 outcomes
                 switch (rand()%5)
                 {
-                    case 0:
-                        DoYell(SAY_RANDOM_0,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,8831);  //8831 is the index of the sound we are playing. You find these numbers in SoundEntries.dbc
-                        break;
-
-                    case 1:
-                        DoYell(SAY_RANDOM_1,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,8818);
-                        break;
-
-                    case 2:
-                        DoYell(SAY_RANDOM_2,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,8041);
-                        break;
-
-                    case 3:
-                        DoYell(SAY_RANDOM_3,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,8581);
-                        break;
-
-                    case 4:
-                        DoYell(SAY_RANDOM_4,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(m_creature,8791);
-                        break;
+                    case 0: DoScriptText(SAY_RANDOM_0, m_creature); break;
+                    case 1: DoScriptText(SAY_RANDOM_1, m_creature); break;
+                    case 2: DoScriptText(SAY_RANDOM_2, m_creature); break;
+                    case 3: DoScriptText(SAY_RANDOM_3, m_creature); break;
+                    case 4: DoScriptText(SAY_RANDOM_4, m_creature); break;
                 }
 
                 Say_Timer = 45000;                          //Say something agian in 45 seconds
@@ -186,8 +171,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
             if (Beserk_Timer < diff)
         {
             //Say our line then cast uber death spell
-            DoPlaySoundToSet(m_creature,8588);
-            DoYell(SAY_BESERK,LANG_UNIVERSAL,m_creature->getVictim());
+            DoScriptText(SAY_BESERK, m_creature, m_creature->getVictim());
             DoCast(m_creature->getVictim(),SPELL_BESERK);
 
             //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
@@ -200,7 +184,7 @@ struct MANGOS_DLL_DECL example_creatureAI : public ScriptedAI
         {
             //Go to next phase
             Phase++;
-            DoYell(SAY_PHASE,LANG_UNIVERSAL,NULL);
+            DoScriptText(SAY_PHASE, m_creature);
             DoCast(m_creature,SPELL_ENRAGE);
         }else Phase_Timer -= diff;
 
@@ -251,10 +235,10 @@ bool ReceiveEmote_example_creature(Player *player, Creature *_Creature, uint32 e
     _Creature->HandleEmoteCommand(emote);
 
     if (emote == TEXTEMOTE_DANCE)
-        ((example_creatureAI*)_Creature->AI())->DoSay(SAY_DANCE,LANG_UNIVERSAL,NULL);
+        DoScriptText(SAY_DANCE, _Creature);
 
     if (emote == TEXTEMOTE_SALUTE)
-        ((example_creatureAI*)_Creature->AI())->DoSay(SAY_SALUTE,LANG_UNIVERSAL,NULL);
+        DoScriptText(SAY_SALUTE, _Creature);
 
     return true;
 }

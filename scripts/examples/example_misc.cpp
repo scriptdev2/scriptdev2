@@ -23,9 +23,11 @@ EndScriptData */
 
 #include "precompiled.h"
 
+#define SAY_HI  -1999925
+
 bool AT_example_areatrigger(Player *player, AreaTriggerEntry *at)
 {
-    player->Say("Hi!",LANG_UNIVERSAL);
+    DoScriptText(SAY_HI, player);
     return true;
 }
 

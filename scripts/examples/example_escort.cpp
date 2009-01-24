@@ -24,6 +24,23 @@ EndScriptData */
 #include "precompiled.h"
 #include "../npc/npc_escortAI.h"
 
+#define SAY_AGGRO1      -1999910
+#define SAY_AGGRO2      -1999911
+#define SAY_WP_1        -1999912
+#define SAY_WP_2        -1999913
+#define SAY_WP_3        -1999914
+#define SAY_WP_4        -1999915
+#define SAY_DEATH_1     -1999916
+#define SAY_DEATH_2     -1999917
+#define SAY_DEATH_3     -1999918
+#define SAY_SPELL       -1999919
+#define SAY_RAND_1      -1999920
+#define SAY_RAND_2      -1999921
+
+#define GOSSIP_ITEM_1   "Click to Test Escort(Attack, Defend, Run)"
+#define GOSSIP_ITEM_2   "Click to Test Escort(NoAttack, NoDefend, Walk)"
+#define GOSSIP_ITEM_3   "Click to Test Escort(NoAttack, Defend, Walk)"
+
 struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 {
     public:
@@ -40,12 +57,12 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             switch (i)
             {
                 case 1:
-                    m_creature->Say("Hmm a nice day for a walk alright", LANG_UNIVERSAL, 0);
+                    DoScriptText(SAY_WP_1, m_creature);
                     break;
 
                 case 3:
                 {
-                    m_creature->Say("Wild Felboar attack!", LANG_UNIVERSAL, 0);
+                    DoScriptText(SAY_WP_2, m_creature);
                     Creature* temp = m_creature->SummonCreature(21878, m_creature->GetPositionX()+5, m_creature->GetPositionY()+7, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
 
                     temp->AI()->AttackStart(m_creature);
@@ -54,25 +71,27 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
 
                 case 4:
                 {
-                    m_creature->Say("Time for me to go! See ya around $N!", LANG_UNIVERSAL, PlayerGUID);
-                    m_creature->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
-
                     Unit* temp = Unit::GetUnit(*m_creature, PlayerGUID);
                     if (temp)
                     {
-                        temp->MonsterSay("Bye Bye!", LANG_UNIVERSAL, 0);
-                        temp->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+                        //temp is the target of the text
+                        DoScriptText(SAY_WP_3, m_creature, temp);
+                        //temp is the source of the text
+                        DoScriptText(SAY_WP_4, temp);
                     }
                 }
                 break;
             }
         }
 
-        void Aggro(Unit*)
+        void Aggro(Unit* who)
         {
             if (IsBeingEscorted)
-                m_creature->Say("Help $N! I'm under attack!", LANG_UNIVERSAL, PlayerGUID);
-            else m_creature->Say("Die scum!", LANG_UNIVERSAL, 0);
+            {
+                if (Unit* temp = Unit::GetUnit(*m_creature, PlayerGUID))
+                    DoScriptText(SAY_AGGRO1, m_creature, temp);
+            }
+            else DoScriptText(SAY_AGGRO2, m_creature);
         }
 
         void Reset()
@@ -85,16 +104,17 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
         {
             if (IsBeingEscorted)
             {
+                Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
                 //killer = m_creature when player got to far from creature
                 if (killer == m_creature)
                 {
-                    Unit *pTemp = Unit::GetUnit(*m_creature,PlayerGUID);
-                    if( pTemp )
-                        DoWhisper("How dare you leave me like that! I hate you! =*(", pTemp);
+                    //This is actually a whisper. You control the text type in database
+                    if (pTemp)
+                        DoScriptText(SAY_DEATH_1, m_creature, pTemp);
                 }
-                else m_creature->Say("...no...how could you let me die $N", LANG_UNIVERSAL, PlayerGUID);
+                else if (pTemp) DoScriptText(SAY_DEATH_2, m_creature, pTemp);
             }
-            else m_creature->Say("ugh...", LANG_UNIVERSAL, 0);
+            else DoScriptText(SAY_DEATH_3, m_creature);
         }
 
         void UpdateAI(const uint32 diff)
@@ -107,7 +127,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             {
                 if (DeathCoilTimer < diff)
                 {
-                    m_creature->Say("Taste death!", LANG_UNIVERSAL, 0);
+                    DoScriptText(SAY_SPELL, m_creature);
                     m_creature->CastSpell(m_creature->getVictim(), 33130, false);
 
                     DeathCoilTimer = 4000;
@@ -120,11 +140,11 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
                 {
                     if (m_creature->HasAura(3593, 0))
                     {
-                        m_creature->Say("Fireworks!", LANG_UNIVERSAL, 0);
+                        DoScriptText(SAY_RAND_1, m_creature);
                         m_creature->CastSpell(m_creature, 11540, false);
                     }else
                     {
-                        m_creature->Say("Hmm, I think I could use a buff", LANG_UNIVERSAL, 0);
+                        DoScriptText(SAY_RAND_2, m_creature);
                         m_creature->CastSpell(m_creature, 3593, false);
                     }
 
@@ -152,9 +172,9 @@ bool GossipHello_example_escort(Player *player, Creature *_Creature)
     player->TalkedToCreature(_Creature->GetEntry(),_Creature->GetGUID());
     _Creature->prepareGossipMenu(player,0);
 
-    player->ADD_GOSSIP_ITEM(0, "Click to Test Escort(Attack, Defend, Run)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    player->ADD_GOSSIP_ITEM(0, "Click to Test Escort(NoAttack, NoDefend, Walk)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-    player->ADD_GOSSIP_ITEM(0, "Click to Test Escort(NoAttack, Defend, Walk)", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
     _Creature->sendPreparedGossip( player );
     return true;
