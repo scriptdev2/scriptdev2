@@ -273,12 +273,12 @@ struct MANGOS_DLL_DECL boss_warchief_kargath_bladefistAI : public ScriptedAI
             DoMeleeAttackIfReady();
         }
 
-        if(resetcheck_timer < diff)
+        if (resetcheck_timer < diff)
         {
             uint32 tempx,tempy;
-            tempx = m_creature->GetPositionX();
-            tempy = m_creature->GetPositionY();
-            if ( tempx > 255 || tempx < 205)
+            tempx = uint32(m_creature->GetPositionX());
+            tempy = uint32(m_creature->GetPositionY());
+            if (tempx > 255 || tempx < 205)
             {
                 EnterEvadeMode(); 
             }
