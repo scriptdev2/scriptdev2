@@ -42,6 +42,8 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
     uint64 BlindeyeTheSeer;
     uint64 OlmTheSummoner;
     uint64 KroshFirehand;
+    uint64 MaulgarDoorGUID;
+    uint64 GruulEncounterDoorGUID;
 
     void Initialize()
     {
@@ -50,6 +52,8 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
         BlindeyeTheSeer = 0;
         OlmTheSummoner = 0;
         KroshFirehand = 0;
+        MaulgarDoorGUID = 0;
+        GruulEncounterDoorGUID = 0;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = false;
@@ -73,6 +77,15 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
             case 18832: KroshFirehand = creature->GetGUID(); break;
         }
     }
+    
+    void OnObjectCreate(GameObject* go)
+    {
+        switch(go->GetEntry())
+        {
+            case 184468: MaulgarDoorGUID = go->GetGUID(); break;
+            case 184662: GruulEncounterDoorGUID = go->GetGUID(); break;
+        }
+    }
 
     void SetData64(uint32 type, uint64 data)
     {
@@ -94,6 +107,10 @@ struct MANGOS_DLL_DECL instance_gruuls_lair : public ScriptedInstance
                 return OlmTheSummoner;
             case DATA_KROSHFIREHAND:
                 return KroshFirehand;
+            case DATA_MAULGAR_DOOR:
+                return MaulgarDoorGUID;
+            case DATA_GRUUL_ENCOUNTER_DOOR:
+                return GruulEncounterDoorGUID;
         }
         return 0;
     }

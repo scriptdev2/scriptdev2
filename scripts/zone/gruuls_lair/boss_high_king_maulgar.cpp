@@ -106,7 +106,8 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
 
         //reset encounter
         if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, 0);
+            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        else error_log(ERROR_INST_DATA);
     }
 
     void KilledUnit()
@@ -124,7 +125,13 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, 0);
+        {        
+            pInstance->SetData(DATA_MAULGAREVENT, DONE);
+            
+            GameObject* ContinueDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_MAULGAR_DOOR));
+            if(ContinueDoor)
+                ContinueDoor->SetGoState(0); // Open the door leading further in
+        }
     }
 
     void Aggro(Unit *who) { StartEvent(who); }
@@ -148,7 +155,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-        pInstance->SetData(DATA_MAULGAREVENT, 1);
+        pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
