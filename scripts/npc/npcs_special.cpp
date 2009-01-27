@@ -483,6 +483,9 @@ void npc_doctorAI::UpdateAI(const uint32 diff)
 
             if (Patient)
             {
+                //303, this flag appear to be required for client side item->spell to work (TARGET_SINGLE_FRIEND) 
+                Patient->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
+
                 Patients.push_back(Patient->GetGUID());
                 ((npc_injured_patientAI*)Patient->AI())->Doctorguid = m_creature->GetGUID();
 
