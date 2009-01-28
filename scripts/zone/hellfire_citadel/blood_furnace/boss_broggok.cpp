@@ -51,24 +51,32 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
     }
 
+    void JustSummoned(Creature *summoned)
+    {
+        summoned->setFaction(16);
+        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        summoned->CastSpell(summoned,SPELL_POISON,false,0,0,m_creature->GetGUID());
+    }
+
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if(AcidSpray_Timer < diff)
+        if (AcidSpray_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_SLIME_SPRAY);
             AcidSpray_Timer = 4000+rand()%8000;
         }else AcidSpray_Timer -=diff;
 
-        if(PoisonBolt_Timer < diff)
+        if (PoisonBolt_Timer < diff)
         {
             DoCast(m_creature->getVictim(),SPELL_POISON_BOLT);
             PoisonBolt_Timer = 4000+rand()%8000;
         }else PoisonBolt_Timer -=diff;
 
-        if(PoisonSpawn_Timer < diff)
+        if (PoisonSpawn_Timer < diff)
         {
             DoCast(m_creature,SPELL_POISON_CLOUD);
             PoisonSpawn_Timer = 20000;
@@ -82,14 +90,7 @@ struct MANGOS_DLL_DECL mob_broggok_poisoncloudAI : public ScriptedAI
 {
     mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    void Reset()
-    {
-        m_creature->setFaction(16);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        m_creature->CastSpell(m_creature,SPELL_POISON,false);
-    }
-
+    void Reset() { }
     void MoveInLineOfSight(Unit *who) { }
     void AttackStart(Unit *who) { }
     void Aggro(Unit* who) { }
