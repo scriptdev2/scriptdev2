@@ -58,6 +58,8 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     boss_grandmaster_vorpilAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        HeroicMode = c->GetMap()->IsHeroic();
+        Intro = false;
         Reset();
     }
 
@@ -74,14 +76,11 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void Reset()
     {
-        HeroicMode = m_creature->GetMap()->IsHeroic();
-
         ShadowBoltVolley_Timer = 7000 + rand()%7000;
         DrawShadows_Timer = 40000;
         Teleport_Timer = 1000;
         VoidTraveler_Timer = 20000;
         Banish_Timer = 25000;
-        Intro = false;
         Teleport = false;
 
         if (pInstance)
@@ -90,31 +89,14 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature))
+        //not sure about right radius
+        if (!Intro && m_creature->IsWithinDistInMap(who, 50))
         {
-            //not sure about right radius
-            if(!Intro && m_creature->IsWithinDistInMap(who, 50))
-            {
-                DoScriptText(SAY_INTRO, m_creature);
-                DoCast(m_creature, SPELL_VOID_PORTAL_A,true);
-
-                m_creature->SummonCreature(ENTRY_VOID_PORTAL,-262.40,-229.57,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-                m_creature->SummonCreature(ENTRY_VOID_PORTAL,-260.35,-297.56,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-                m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-                m_creature->SummonCreature(ENTRY_VOID_PORTAL,-301.64,-255.97,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
-                Intro = true;
-            }
-
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
+            DoScriptText(SAY_INTRO, m_creature);
+            Intro = true;
         }
+
+        ScriptedAI::MoveInLineOfSight(who);
     }
 
     void Aggro(Unit *who)
@@ -125,6 +107,12 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO3, m_creature); break;
         }
+
+        DoCast(m_creature, SPELL_VOID_PORTAL_A,true);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-262.40,-229.57,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-260.35,-297.56,17.08,0,TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-292.05,-270.37,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
+        m_creature->SummonCreature(ENTRY_VOID_PORTAL,-301.64,-255.97,12.68,0,TEMPSUMMON_CORPSE_DESPAWN,0);
 
         if (pInstance)
             pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
@@ -141,13 +129,13 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        if( summoned->GetEntry() == ENTRY_VOID_TRAVELER )
+        if (summoned->GetEntry() == ENTRY_VOID_TRAVELER)
         {
             summoned->GetMotionMaster()->MoveChase(m_creature);
             summoned->SetSpeed(MOVE_WALK,0.8,true);
         }
 
-        if( summoned->GetEntry() == ENTRY_VOID_PORTAL )
+        if (summoned->GetEntry() == ENTRY_VOID_PORTAL)
             summoned->CastSpell(summoned,SPELL_VOID_PORTAL_VISUAL,true);
     }
 
@@ -162,7 +150,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         if (Teleport)
@@ -188,8 +176,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
                 }
                 Teleport = false;
 
-                if (HeroicMode) DoCast(m_creature->getVictim(), H_SPELL_RAIN_OF_FIRE);
-                else DoCast(m_creature->getVictim(), SPELL_RAIN_OF_FIRE);
+                DoCast(m_creature->getVictim(), HeroicMode ? H_SPELL_RAIN_OF_FIRE : SPELL_RAIN_OF_FIRE);
 
                 Teleport_Timer = 1000;
             }else Teleport_Timer -= diff;
@@ -208,27 +195,17 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
             Teleport = true;
         }else DrawShadows_Timer -= diff;
 
-        if( VoidTraveler_Timer < diff )
+        if (VoidTraveler_Timer < diff)
         {
             DoScriptText(SAY_HELP, m_creature);
 
             switch(rand()%5)
             {
-                case 0:
-                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_A,true);
-                    break;
-                case 1:
-                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_B,true);
-                    break;
-                case 2:
-                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_C,true);
-                    break;
-                case 3:
-                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_D,true);
-                    break;
-                case 4:
-                    DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_E,true);
-                    break;
+                case 0: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_A,true); break;
+                case 1: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_B,true); break;
+                case 2: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_C,true); break;
+                case 3: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_D,true); break;
+                case 4: DoCast(m_creature,SPELL_SUMMON_VOIDWALKER_E,true); break;
             }
             //faster rate when below (X) health?
             VoidTraveler_Timer = 35000;
@@ -247,6 +224,7 @@ struct MANGOS_DLL_DECL boss_grandmaster_vorpilAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_boss_grandmaster_vorpil(Creature *_Creature)
 {
     return new boss_grandmaster_vorpilAI (_Creature);
