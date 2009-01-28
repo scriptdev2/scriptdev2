@@ -49,7 +49,7 @@ EndScriptData */
 //Caribdis Spells
 #define SPELL_WATER_BOLT_VOLLEY     38335
 #define SPELL_TIDAL_SURGE           38353
-#define SPELL_HEAL                  41386
+#define SPELL_HEAL                  38330
 
 //entry and position for Seer Olum
 #define SEER_OLUM                   22820
