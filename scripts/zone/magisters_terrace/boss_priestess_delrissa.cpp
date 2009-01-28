@@ -467,7 +467,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -484,18 +484,19 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
         }else Vanish_Timer -= diff;
 
         if (InVanish)
-            if (Wait_Timer < diff)
         {
-            DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
-            DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
-            m_creature->SetVisibility(VISIBILITY_ON);       // ...? Hacklike
-            InVanish = false;
-        }else Wait_Timer -= diff;
+            if (Wait_Timer < diff)
+            {
+                DoCast(m_creature->getVictim(), SPELL_BACKSTAB, true);
+                DoCast(m_creature->getVictim(), SPELL_KIDNEY_SHOT, true);
+                m_creature->SetVisibility(VISIBILITY_ON);       // ...? Hacklike
+                InVanish = false;
+            }else Wait_Timer -= diff;
+        }
 
         if (Gouge_Timer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_GOUGE);
-            m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
             Gouge_Timer = 5500;
         }else Gouge_Timer -= diff;
 
@@ -559,9 +560,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 {
     //Warlock
-    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c)
-    {
-    }
+    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c) {}
 
     bool HasSummonedImp;
 
@@ -573,7 +572,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 
     void Reset()
     {
-        //HasSummonedImp = false;
+        HasSummonedImp = false;
 
         Immolate_Timer = 6000;
         Shadow_Bolt_Timer = 3000;
@@ -598,7 +597,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
             HasSummonedImp = true;
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -670,7 +669,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -702,7 +701,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 {
     //Mage
-    boss_yazzaiAI(Creature *c) : boss_priestess_guestAI(c)  {}
+    boss_yazzaiAI(Creature *c) : boss_priestess_guestAI(c) {}
 
     bool HasIceBlocked;
 
@@ -733,7 +732,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -743,7 +742,6 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
             if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 DoCast(target, SPELL_POLYMORPH);
-                m_creature->getThreatManager().modifyThreatPercent(target,-100);
                 Polymorph_Timer = 20000;
             }
         }else Polymorph_Timer -= diff;
@@ -785,13 +783,16 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
             for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
+                {
                     //if in melee range
                     if (target->IsWithinDistInMap(m_creature, 5))
-                {
-                    InMeleeRange = true;
-                    break;
+                    {
+                        InMeleeRange = true;
+                        break;
+                    }
                 }
             }
+
             //if anybody is in melee range than escape by blink
             if (InMeleeRange)
                 DoCast(m_creature, SPELL_BLINK);
@@ -832,6 +833,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
         Hamstring_Timer = 4500;
         Mortal_Strike_Timer = 8000;
         DoCast(m_creature, SPELL_BATTLE_SHOUT);
+
         boss_priestess_guestAI::Reset();
     }
 
@@ -842,7 +844,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -854,16 +856,20 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
             for(std::list<HostilReference*>::iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
             {
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
-                                                            //if in melee range
-                    if (target->IsWithinDistInMap(m_creature, 5))
                 {
-                    InMeleeRange = true;
-                    break;
+                    //if in melee range
+                    if (target->IsWithinDistInMap(m_creature, 5))
+                    {
+                        InMeleeRange = true;
+                        break;
+                    }
                 }
             }
+
             //if nobody is in melee range than try to use Intercept
-            if(!InMeleeRange)
+            if (!InMeleeRange)
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_INTERCEPT_STUN);
+
             Intercept_Stun_Timer = 10000;
         }else Intercept_Stun_Timer -= diff;
 
@@ -947,7 +953,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
     void Reset()
     {
         //SliverGUID = 0;
-        //HasSummonedSliver = false;
+        HasSummonedSliver = false;
 
         Aimed_Shot_Timer = 6000;
         Shoot_Timer = 2500;
@@ -977,12 +983,12 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
             }
         }
 
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
 
-        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), 5))
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), 5.0f))
         {
             if (Wing_Clip_Timer < diff)
             {
@@ -993,13 +999,12 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
             if (Freezing_Trap_Timer < diff)
             {
                 DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
-                m_creature->getThreatManager().modifyThreatPercent(m_creature->getVictim(),-100);
                 Freezing_Trap_Timer = 30000;
             }else Freezing_Trap_Timer -= diff;
 
-            if (!m_creature->getVictim()->hasUnitState(UNIT_STAT_STUNNED | UNIT_STAT_ROOT | UNIT_STAT_CONFUSED | UNIT_STAT_DISTRACTED))
-                DoMeleeAttackIfReady();
-        }else
+            DoMeleeAttackIfReady();
+        }
+        else
         {
             if (Concussive_Shot_Timer < diff)
             {
@@ -1074,7 +1079,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -1161,7 +1166,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 
     void UpdateAI(const uint32 diff)
     {
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         boss_priestess_guestAI::UpdateAI(diff);
@@ -1187,12 +1192,16 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
         if (Recombobulate_Timer < diff)
         {
             for(uint8 i = 0; i < Group.size(); ++i)
-                if(Unit* pAdd = Unit::GetUnit(*m_creature, Group[i]->guid))
-                    if(pAdd->IsPolymorphed())
+            {
+                if (Unit* pAdd = Unit::GetUnit(*m_creature, Group[i]->guid))
+                {
+                    if (pAdd->IsPolymorphed())
                     {
                         DoCast(pAdd, SPELL_RECOMBOBULATE);
                         break;
                     }
+                }
+            }
         }else Recombobulate_Timer -= diff;
 
         if (High_Explosive_Sheep_Timer < diff)
