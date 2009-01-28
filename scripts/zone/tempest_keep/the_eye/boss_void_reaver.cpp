@@ -37,7 +37,8 @@ EndScriptData */
 #define SPELL_KNOCK_AWAY            25778
 #define SPELL_BERSERK               26662
 
-#define CREATURE_ORB_TARGET         19577
+//Unknown function. If target not found, this will be created and used as dummy target instead?
+//#define CREATURE_ORB_TARGET         19577
 
 struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 {
@@ -70,9 +71,6 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        if (victim->GetEntry() == CREATURE_ORB_TARGET)
-            return;
-
         switch(rand()%3)
         {
             case 0: DoScriptText(SAY_SLAY1, m_creature); break;
@@ -99,7 +97,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         // Pounding
@@ -137,12 +135,7 @@ struct MANGOS_DLL_DECL boss_void_reaverAI : public ScriptedAI
                 target = *(target_list.begin()+rand()%target_list.size());
 
             if (target)
-            {
-                Unit* Spawn = NULL;
-                Spawn = m_creature->SummonCreature(CREATURE_ORB_TARGET, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
-                if (Spawn)
-                    DoCast(Spawn, SPELL_ARCANE_ORB_MISSILE);
-            }
+                DoCast(target, SPELL_ARCANE_ORB_MISSILE);
 
             ArcaneOrb_Timer = 3000;
         }else ArcaneOrb_Timer -= diff;
