@@ -52,8 +52,7 @@ EndScriptData */
 #define SPELL_GRIP_OF_THE_LEGION    31972
 #define SPELL_DOOMFIRE_STRIKE       31903                   //summons two creatures
 #define SPELL_DOOMFIRE_SPAWN        32074
-#define SPELL_DOOMFIRE_VISUAL       42344                   //This is actually a Zul'Aman spell, but the proper Doomfire spell sometimes freezes the server if a player stands in it for too long
-#define SPELL_DOOMFIRE_DAMAGE       31944
+#define SPELL_DOOMFIRE              31945
 #define SPELL_SOUL_CHARGE_YELLOW    32045
 #define SPELL_SOUL_CHARGE_GREEN     32051
 #define SPELL_SOUL_CHARGE_RED       32052
@@ -64,7 +63,7 @@ EndScriptData */
 
 #define CREATURE_ARCHIMONDE             17968
 #define CREATURE_DOOMFIRE               18095
-#define CREATURE_DOOMFIRE_TARGETING     18104
+#define CREATURE_DOOMFIRE_SPIRIT        18104
 #define CREATURE_ANCIENT_WISP           17946
 #define CREATURE_CHANNEL_TARGET         22418
 
@@ -122,188 +121,62 @@ struct mob_ancient_wispAI : public ScriptedAI
     }
 };
 
-/* This script controls the Doomfire mob. Unlike the other Doomfire mob, this one does not stalk players.
-   Instead, this doomfire will simply stand in one place after spawning and deal damage to any players that
-   are within 3 yards. Another creature called Doomfire Targetting spawns this creature as well as stalks. */
+/* This script is merely a placeholder for the Doomfire that triggers Doomfire spell. It will
+   MoveChase the Doomfire Spirit always, until despawn (AttackStart is called upon it's spawn) */
 struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
 {
-    mob_doomfireAI(Creature* c) : ScriptedAI(c)
-    {
-        Reset();
-    }
+    mob_doomfireAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
-    uint32 CheckTimer;
-    uint32 RefreshTimer;
+    void Reset() { }
 
-    bool TargetSelected;
+    void MoveInLineOfSight(Unit* who) { }
+    void Aggro(Unit* who) { }
+    void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
+};
 
-    uint64 ArchimondeGUID;
+/* This is the script for the Doomfire Spirit Mob. This mob simply follow players or
+   travels in random directions if target cannot be found. */
+struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
+{
+    mob_doomfire_targettingAI(Creature* c) : ScriptedAI(c) { Reset(); }
+
     uint64 TargetGUID;
+    uint32 ChangeTargetTimer;
 
     void Reset()
     {
-        CheckTimer = 5000;
-        RefreshTimer = 0;
-
-        TargetSelected = false;
-
-        ArchimondeGUID = 0;
         TargetGUID = 0;
+        ChangeTargetTimer = 5000;
     }
-
-    void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
-
-    void Aggro(Unit* who) { }
 
     void MoveInLineOfSight(Unit* who)
     {
-        // Do not do anything if who does not exist, or we are refreshing our timer, or who is Doomfire, Archimonde or Doomfire targetting
-        if (!who || who == m_creature || RefreshTimer || who->GetEntry() == CREATURE_ANCIENT_WISP ||
-            who->GetEntry() == CREATURE_ARCHIMONDE || who->GetEntry() == CREATURE_DOOMFIRE ||
-            who->GetEntry() == CREATURE_DOOMFIRE_TARGETING || !who->isTargetableForAttack())
-            return;
-
-        if (m_creature->IsWithinDistInMap(who, 3))
-        {
-            TargetSelected = true;
+        //will update once TargetGUID is 0. In case noone actually moves(not likely) and this is 0
+        //when UpdateAI needs it, it will be forced to select randomPoint
+        if (!TargetGUID && who->GetTypeId() == TYPEID_PLAYER)
             TargetGUID = who->GetGUID();
-            RefreshTimer = 2000;
-        }
-    }
-
-    void KilledUnit(Unit* victim)
-    {
-        bool suicide = true;
-        if (ArchimondeGUID)
-        {
-            Creature* Archimonde = ((Creature*)Unit::GetUnit((*m_creature), ArchimondeGUID));
-            if (Archimonde && Archimonde->isAlive())
-            {
-                suicide = false;
-                Archimonde->AI()->KilledUnit(victim);
-            }
-        }
-
-        if (suicide)
-            m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (RefreshTimer < diff)
-            RefreshTimer = 0;
-        else RefreshTimer -= diff;
-
-        if (TargetSelected && TargetGUID)
-        {
-            Unit* target = Unit::GetUnit((*m_creature), TargetGUID);
-            if (target && target->isAlive())
-            {
-                target->CastSpell(target, SPELL_DOOMFIRE_DAMAGE, true);
-                TargetGUID = 0;
-                TargetSelected = false;
-            }
-        }
-
-        if (CheckTimer < diff)
-        {
-            if (ArchimondeGUID)
-            {
-                Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID);
-                if (!Archimonde || !Archimonde->isAlive())
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                CheckTimer = 5000;
-            }
-            else m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }else CheckTimer -= diff;
-    }
-};
-
-/* This is the script for the Doomfire Targetting Mob. This mob simply follows players and/or travels in random directions and spawns the actual Doomfire which does damage to anyone that moves close.  */
-struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
-{
-    mob_doomfire_targettingAI(Creature* c) : ScriptedAI(c)
-    {
-        Reset();
-    }
-
-    uint32 ChangeTargetTimer;
-    uint32 SummonTimer;                                     // This timer will serve as both a summon timer for the doomfire that does damage as well as to check on Archionde
-
-    uint64 ArchimondeGUID;
-
-    void Reset()
-    {
-        ChangeTargetTimer = 5000;
-        SummonTimer = 1000;
-
-        ArchimondeGUID = 0;
     }
 
     void Aggro(Unit* who) {}
 
-    void MoveInLineOfSight(Unit* who)
-    {
-        // Do not do anything if who does not exist, or who is Doomfire, Archimonde or Doomfire targetting
-        if (!who || who == m_creature || who->GetEntry() == CREATURE_ARCHIMONDE
-            || who->GetEntry() == CREATURE_DOOMFIRE || who->GetEntry() == CREATURE_DOOMFIRE_TARGETING || !who->isTargetableForAttack())
-            return;
-
-        m_creature->AddThreat(who, 0.0f);
-    }
-
     void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
-            return;
-
-        if (SummonTimer < diff)
-        {
-            if (ArchimondeGUID)
-            {
-                Unit* Archimonde = Unit::GetUnit((*m_creature), ArchimondeGUID);
-                if (Archimonde && Archimonde->isAlive())
-                {
-                    Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE, 0, 0, 2, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
-                    if (Doomfire)
-                    {
-                        Doomfire->CastSpell(Doomfire, SPELL_DOOMFIRE_VISUAL, true);
-                        ((mob_doomfireAI*)Doomfire->AI())->ArchimondeGUID = ArchimondeGUID;
-                        Doomfire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    }
-                    SummonTimer = 500;
-                }
-                else
-                    m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }
-            else
-                m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        }else SummonTimer -= diff;
-
         if (ChangeTargetTimer < diff)
         {
-            Unit* target = NULL;
-            switch(rand()%2)
+            if (Unit *temp = Unit::GetUnit(*m_creature,TargetGUID))
             {
-                case 0:                                     // stalk player
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                    if (target && target->isAlive())
-                    {
-                        m_creature->AddThreat(target, m_creature->getThreatManager().getThreat(m_creature->getVictim()));
-                        m_creature->GetMotionMaster()->MoveChase(target);
-                    }
-                    break;
-
-                case 1:                                     // random location
-                    float x = 0;
-                    float y = 0;
-                    float z = 0;
-                    m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 40, x, y, z);
-                    m_creature->GetMotionMaster()->MovePoint(0, x, y, z);
-                    break;
+                m_creature->GetMotionMaster()->MoveFollow(temp,0.0f,0.0f);
+                TargetGUID = 0;
             }
+            else
+            {
+                float x,y,z = 0.0;
+                m_creature->GetRandomPoint(m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 40, x, y, z);
+                m_creature->GetMotionMaster()->MovePoint(0, x, y, z);
+            }
+
             ChangeTargetTimer = 5000;
         }else ChangeTargetTimer -= diff;
     }
@@ -314,8 +187,8 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
    hardest bit to code. Finger of Death is simply a distance check - if no one is in melee range, then
    select a random target and cast the spell on them. However, if someone IS in melee range, and this
    is NOT the main tank (creature's victim), then we aggro that player and they become the new victim.
-   For Doomfire, we summon a mob (Doomfire Targetting) that summons another mob (Doomfire every second)
-   Doomfire Targetting 'stalks' players whilst Doomfire damages player that are within range. */
+   For Doomfire, we summon a mob (Doomfire Spirit) for the Doomfire mob to follow. It's spirit will
+   randomly select it's target to follow and then we create the random movement making it unpredictable. */
 
 // This is used to sort by distance in order to see who is the closest target, when checking for Finger of Death
 struct TargetDistanceOrder : public std::binary_function<const Unit, const Unit, bool>
@@ -338,6 +211,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     }
 
     ScriptedInstance* pInstance;
+
+    uint64 DoomfireSpiritGUID;
 
     uint32 DrainNordrassilTimer;
     uint32 FearTimer;
@@ -362,6 +237,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     {
         if (pInstance)
             pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
+
+        DoomfireSpiritGUID = 0;
 
         DrainNordrassilTimer = 0;
         FearTimer = 42000;
@@ -474,31 +351,40 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
         return false;
     }
 
+    void JustSummoned(Creature *summoned)
+    {
+        summoned->setFaction(m_creature->getFaction());
+        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+        if (summoned->GetEntry() == CREATURE_DOOMFIRE_SPIRIT)
+        {
+            DoomfireSpiritGUID = summoned->GetGUID();
+        }
+
+        if (summoned->GetEntry() == CREATURE_DOOMFIRE)
+        {
+            summoned->CastSpell(summoned,SPELL_DOOMFIRE_SPAWN,false);
+            summoned->CastSpell(summoned,SPELL_DOOMFIRE,true,0,0,m_creature->GetGUID());
+
+            if (Unit *DoomfireSpirit = Unit::GetUnit(*m_creature, DoomfireSpiritGUID))
+            {
+                summoned->GetMotionMaster()->MoveFollow(DoomfireSpirit,0.0f,0.0f);
+                DoomfireSpiritGUID = 0;
+            }
+        }
+    }
+
+    //this is code doing close to what the summoning spell would do (spell 31903)
     void SummonDoomfire(Unit* target)
     {
-        Creature* Doomfire = DoSpawnCreature(CREATURE_DOOMFIRE_TARGETING, rand()%30, rand()%30, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
-        if (Doomfire)
-        {
-            ((mob_doomfire_targettingAI*)Doomfire->AI())->ArchimondeGUID = m_creature->GetGUID();
-            Doomfire->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SummonCreature(CREATURE_DOOMFIRE_SPIRIT,
+            target->GetPositionX()+15.0,target->GetPositionY()+15.0,target->GetPositionZ(),0,
+            TEMPSUMMON_TIMED_DESPAWN, 27000);
 
-            // Give Doomfire a taste of everyone in the threatlist = more targets to chase.
-            std::list<HostilReference*>::iterator itr;
-            for(itr = m_creature->getThreatManager().getThreatList().begin(); itr != m_creature->getThreatManager().getThreatList().end(); ++itr)
-                Doomfire->AddThreat(Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()), 1.0f);
-
-            Doomfire->setFaction(m_creature->getFaction());
-            DoCast(Doomfire, SPELL_DOOMFIRE_SPAWN);
-            Doomfire->CastSpell(Doomfire, SPELL_DOOMFIRE_VISUAL, true);
-
-            if (target)
-                Doomfire->AI()->AttackStart(target);
-
-            if (rand()%2 == 0)
-                DoScriptText(SAY_DOOMFIRE1, m_creature);
-            else
-                DoScriptText(SAY_DOOMFIRE2, m_creature);
-        }
+        m_creature->SummonCreature(CREATURE_DOOMFIRE,
+            target->GetPositionX()-15.0,target->GetPositionY()-15.0,target->GetPositionZ(),0,
+            TEMPSUMMON_TIMED_DESPAWN, 27000);
     }
 
     void UnleashSoulCharge()
@@ -691,8 +577,20 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
         if (DoomfireTimer < diff)
         {
-            SummonDoomfire(SelectUnit(SELECT_TARGET_RANDOM, 1));
-            DoomfireTimer = 40000;
+            if (rand()%2 == 0)
+                DoScriptText(SAY_DOOMFIRE1, m_creature);
+            else
+                DoScriptText(SAY_DOOMFIRE2, m_creature);
+
+            Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            if (!temp)
+                temp = m_creature->getVictim();
+
+            //replace with spell cast 31903 once implicitTarget 73 implemented
+            SummonDoomfire(temp);
+
+            //supposedly three doomfire can be up at the same time
+            DoomfireTimer = 20000;
         }else DoomfireTimer -= diff;
 
         if (MeleeRangeCheckTimer < diff)
