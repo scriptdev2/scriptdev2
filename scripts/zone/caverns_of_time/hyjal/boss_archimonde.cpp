@@ -213,6 +213,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
     ScriptedInstance* pInstance;
 
     uint64 DoomfireSpiritGUID;
+    uint64 WorldTreeGUID;
 
     uint32 DrainNordrassilTimer;
     uint32 FearTimer;
@@ -239,6 +240,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
 
         DoomfireSpiritGUID = 0;
+        WorldTreeGUID = 0;
 
         DrainNordrassilTimer = 0;
         FearTimer = 42000;
@@ -446,8 +448,12 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
             {
                 if (!IsChanneling)
                 {
-                    Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
-                    if (Nordrassil)
+                    Creature *temp = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 1200000);
+
+                    if (temp)
+                        WorldTreeGUID = temp->GetGUID();
+
+                    if (Unit *Nordrassil = Unit::GetUnit(*m_creature, WorldTreeGUID))
                     {
                         Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         Nordrassil->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
@@ -456,11 +462,8 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     }
                 }
 
-                Creature* Nordrassil = m_creature->SummonCreature(CREATURE_CHANNEL_TARGET, NORDRASSIL_X, NORDRASSIL_Y, NORDRASSIL_Z, 0, TEMPSUMMON_TIMED_DESPAWN, 5000);
-                if (Nordrassil)
+                if (Unit *Nordrassil = Unit::GetUnit(*m_creature, WorldTreeGUID))
                 {
-                    Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    Nordrassil->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
                     Nordrassil->CastSpell(m_creature, SPELL_DRAIN_WORLD_TREE_2, true);
                     DrainNordrassilTimer = 1000;
                 }
