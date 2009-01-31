@@ -165,31 +165,31 @@ void ScriptedAI::DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool trigger
     m_creature->CastSpell(who, spellInfo, triggered);
 }
 
-void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)
+/*void ScriptedAI::DoSay(const char* text, uint32 language, Unit* target)
 {
     if (target) m_creature->Say(text, language, target->GetGUID());
     else m_creature->Say(text, language, 0);
-}
+}*/
 
-void ScriptedAI::DoYell(const char* text, uint32 language, Unit* target)
+/*void ScriptedAI::DoYell(const char* text, uint32 language, Unit* target)
 {
     if (target) m_creature->Yell(text, language, target->GetGUID());
     else m_creature->Yell(text, language, 0);
-}
+}*/
 
-void ScriptedAI::DoTextEmote(const char* text, Unit* target, bool IsBossEmote)
+/*void ScriptedAI::DoTextEmote(const char* text, Unit* target, bool IsBossEmote)
 {
     if (target) m_creature->TextEmote(text, target->GetGUID(), IsBossEmote);
     else m_creature->TextEmote(text, 0, IsBossEmote);
-}
+}*/
 
-void ScriptedAI::DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper)
+/*void ScriptedAI::DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper)
 {
     if (!reciever || reciever->GetTypeId() != TYPEID_PLAYER)
         return;
 
     m_creature->Whisper(text, reciever->GetGUID(), IsBossWhisper);
-}
+}*/
 
 void ScriptedAI::DoPlaySoundToSet(Unit* unit, uint32 sound)
 {
@@ -516,7 +516,7 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
     Unit* pUnit = NULL;
 
     MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
-    MaNGOS::UnitLastSearcher<MostHPMissingInRange> searcher(pUnit, u_check);
+    MaNGOS::UnitLastSearcher<MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
 
     /*
     typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
@@ -539,7 +539,7 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float range)
     std::list<Creature*> pList;
 
     FriendlyCCedInRange u_check(m_creature, range);
-    MaNGOS::CreatureListSearcher<FriendlyCCedInRange> searcher(pList, u_check);
+    MaNGOS::CreatureListSearcher<FriendlyCCedInRange> searcher(m_creature, pList, u_check);
 
     TypeContainerVisitor<MaNGOS::CreatureListSearcher<FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
@@ -559,7 +559,7 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float range, uint32 s
     std::list<Creature*> pList;
 
     FriendlyMissingBuffInRange u_check(m_creature, range, spellid);
-    MaNGOS::CreatureListSearcher<FriendlyMissingBuffInRange> searcher(pList, u_check);
+    MaNGOS::CreatureListSearcher<FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
 
     TypeContainerVisitor<MaNGOS::CreatureListSearcher<FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 

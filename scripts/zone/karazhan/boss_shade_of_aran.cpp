@@ -270,8 +270,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 m_creature->CastSpell(m_creature, SPELL_MASS_POLY, true);
                 m_creature->CastSpell(m_creature, SPELL_CONJURE, false);
                 m_creature->CastSpell(m_creature, SPELL_DRINK, false);
-                                                            //Sitting down
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 1);
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_SIT);
                 DrinkInturruptTimer = 10000;
             }
         }
@@ -281,7 +280,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         {
             Drinking = false;
             m_creature->RemoveAurasDueToSpell(SPELL_DRINK);
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
             m_creature->SetPower(POWER_MANA, m_creature->GetMaxPower(POWER_MANA)-32000);
             m_creature->CastSpell(m_creature, SPELL_POTION, false);
         }
@@ -293,7 +292,7 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                 DrinkInturruptTimer -= diff;
             else
             {
-                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
                 m_creature->CastSpell(m_creature, SPELL_POTION, true);
                 m_creature->CastSpell(m_creature, SPELL_AOE_PYROBLAST, false);
                 DrinkInturrupted = true;

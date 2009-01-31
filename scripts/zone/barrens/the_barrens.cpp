@@ -362,7 +362,7 @@ Creature* SelectCreatureInGrid(Player *player, uint32 entry, float range)
     cell.SetNoCreate();
 
     MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*player, entry, true, range);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(player, pCreature, creature_check);
 
     TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
 

@@ -401,7 +401,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         cell.SetNoCreate();
 
         MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, entry, true, range);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
 
         TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
 
@@ -438,8 +438,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         ardonis->SendUpdateToPlayer(player);
 
         //Set them to kneel
-        m_creature->SetStandState(PLAYER_STATE_KNEEL);
-        ardonis->SetStandState(PLAYER_STATE_KNEEL);
+        m_creature->SetStandState(UNIT_STAND_STATE_KNEEL);
+        ardonis->SetStandState(UNIT_STAND_STATE_KNEEL);
     }
 
     //Set them back to each other
@@ -463,8 +463,8 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
             ardonis->SendUpdateToPlayer(player);
 
             //Set state
-            m_creature->SetStandState(PLAYER_STATE_NONE);
-            ardonis->SetStandState(PLAYER_STATE_NONE);
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+            ardonis->SetStandState(UNIT_STAND_STATE_STAND);
         }
     }
 
@@ -636,7 +636,7 @@ Creature* SearchDawnforge(Player *source, uint32 entry, float range)
     cell.SetNoCreate();
 
     MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(source, pCreature, creature_check);
 
     TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
 

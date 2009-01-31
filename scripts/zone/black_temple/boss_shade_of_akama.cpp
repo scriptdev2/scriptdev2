@@ -344,7 +344,7 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         std::list<Creature*> ChannelerList;
 
         AllCreaturesOfEntryInRange check(m_creature, CREATURE_CHANNELER, 50);
-        MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(ChannelerList, check);
+        MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange> searcher(m_creature, ChannelerList, check);
         TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
         CellLock<GridReadGuard> cell_lock(cell, pair);

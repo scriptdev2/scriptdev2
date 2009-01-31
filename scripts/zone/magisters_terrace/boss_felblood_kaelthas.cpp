@@ -506,7 +506,7 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
             m_creature->SetUInt64Value(UNIT_FIELD_TARGET,0); 
             m_creature->GetMotionMaster()->Clear();
             m_creature->GetMotionMaster()->MoveIdle();
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,PLAYER_STATE_DEAD);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
 
        }
 

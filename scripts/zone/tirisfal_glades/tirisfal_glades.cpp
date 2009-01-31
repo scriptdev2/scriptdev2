@@ -49,7 +49,7 @@ GameObject* SearchMausoleumGo(Unit *source, uint32 entry, float range)
     cell.SetNoCreate();
 
     MaNGOS::NearestGameObjectEntryInObjectRangeCheck go_check(*source, entry, range);
-    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(pGo, go_check);
+    MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck> searcher(source, pGo, go_check);
 
     TypeContainerVisitor<MaNGOS::GameObjectLastSearcher<MaNGOS::NearestGameObjectEntryInObjectRangeCheck>, GridTypeMapContainer> go_searcher(searcher);
 

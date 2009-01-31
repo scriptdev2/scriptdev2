@@ -138,16 +138,16 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void DoCastSpell(Unit* who,SpellEntry const *spellInfo, bool triggered = false);
 
     //Creature say
-    void DoSay(const char* text, uint32 language, Unit* target);
+    //void DoSay(const char* text, uint32 language, Unit* target);
 
     //Creature Yell
-    void DoYell(const char* text, uint32 language, Unit* target);
+    //void DoYell(const char* text, uint32 language, Unit* target);
 
     //Creature Text emote, optional bool for boss emote text
-    void DoTextEmote(const char* text, Unit* target, bool IsBossEmote = false);
+    //void DoTextEmote(const char* text, Unit* target, bool IsBossEmote = false);
 
     //Creature whisper, optional bool for boss whisper
-    void DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper = false);
+    //void DoWhisper(const char* text, Unit* reciever, bool IsBossWhisper = false);
 
     //Plays a sound to all nearby players
     void DoPlaySoundToSet(Unit* unit, uint32 sound);

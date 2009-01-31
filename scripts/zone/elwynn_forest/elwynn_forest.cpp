@@ -44,7 +44,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
     {
         lifeTimer = 120000;
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,7);   // lay down
+        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);   // lay down
         spellHit = false;
     }
 
@@ -73,7 +73,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
         if(Spellkind->Id == 8593 && !spellHit)
         {
             DoCast(m_creature,32343);
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
+            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_STAND);
             m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 0);
             //m_creature->RemoveAllAuras();
             DoScriptText(SAY_HEAL, m_creature, Hitter);

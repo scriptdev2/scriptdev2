@@ -1164,7 +1164,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         cell.SetNoCreate();
 
         AgonizingFlamesTargetCheck check(m_creature);
-        MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck> searcher(target, check);
+        MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck> searcher(m_creature, target, check);
         TypeContainerVisitor<MaNGOS::PlayerSearcher<AgonizingFlamesTargetCheck>, GridTypeMapContainer> visitor(searcher);
 
         CellLock<GridReadGuard> cell_lock(cell, pair);
@@ -2159,7 +2159,7 @@ bool GOHello_cage_trap(Player* plr, GameObject* go)
 
     // Grid search for nearest live creature of entry 23304 within 10 yards
     MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck check(*plr, 23304, true, 10);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(trigger, check);
+    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(go, trigger, check);
 
     TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> cSearcher(searcher);
 

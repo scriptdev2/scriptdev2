@@ -385,7 +385,7 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
         std::list<Creature*> unitList;
 
         AnyBugCheck u_check(m_creature, 150);
-        MaNGOS::CreatureListSearcher<AnyBugCheck> searcher(unitList, u_check);
+        MaNGOS::CreatureListSearcher<AnyBugCheck> searcher(m_creature, unitList, u_check);
         TypeContainerVisitor<MaNGOS::CreatureListSearcher<AnyBugCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
         CellLock<GridReadGuard> cell_lock(cell, p);
         cell_lock->Visit(cell_lock, grid_creature_searcher, *(m_creature->GetMap()));
