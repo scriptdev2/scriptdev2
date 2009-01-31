@@ -497,16 +497,14 @@ struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
 
     void Reset()
     {
-        //m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS,0);
         m_creature->setFaction(16);
-        //m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        //DoCast(m_creature,SPELL_VOID_ZONE_DAMAGE);
+        DoCast(m_creature,SPELL_VOID_ZONE_DAMAGE);
     }
 
-    void Aggro(Unit* who) {
-        m_creature->CastSpell(who,24183,false);
-    }
+    void Aggro(Unit* who) { }
 };
 CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
 {

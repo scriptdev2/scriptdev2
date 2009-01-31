@@ -76,7 +76,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.1));
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_SLEEP);
+        m_creature->SetStandState(UNIT_STAND_STATE_SLEEP);
     }
 
     void Aggro(Unit *who) {}
@@ -104,7 +104,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
         if (Spell->SpellFamilyFlags2 & 0x080000000)
         {
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
-            m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
+            m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
             m_creature->CastSpell(m_creature, SPELL_STUNNED, true);
 
@@ -270,8 +270,8 @@ struct MANGOS_DLL_DECL npc_injured_draeneiAI : public ScriptedAI
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*.15));
         switch (rand()%2)
         {
-            case 0: m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_SIT); break;
-            case 1: m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_SLEEP); break;
+            case 0: m_creature->SetStandState(UNIT_STAND_STATE_SIT); break;
+            case 1: m_creature->SetStandState(UNIT_STAND_STATE_SLEEP); break;
         }
     }
 

@@ -58,7 +58,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
         CanDoQuest = false;
         UnkorUnfriendly_Timer = 0;
         Pulverize_Timer = 3000;
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
+        m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_creature->setFaction(FACTION_HOSTILE);
     }
 
@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
     {
         DoScriptText(SAY_SUBMIT, m_creature);
         m_creature->setFaction(FACTION_FRIENDLY);
-        m_creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_SIT);
+        m_creature->SetStandState(UNIT_STAND_STATE_SIT);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();

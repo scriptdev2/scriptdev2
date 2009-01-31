@@ -910,14 +910,14 @@ void PretendToDie(Creature* _Creature)
     _Creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     _Creature->GetMotionMaster()->MovementExpired(false);
     _Creature->GetMotionMaster()->MoveIdle();
-    _Creature->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
+    _Creature->SetStandState(UNIT_STAND_STATE_DEAD);
 };
 
 void Resurrect(Creature* target)
 {
     target->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     target->SetHealth(target->GetMaxHealth());
-    target->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
+    target->SetStandState(UNIT_STAND_STATE_STAND);
     target->CastSpell(target, SPELL_RES_VISUAL, true);
     if (target->getVictim())
     {
