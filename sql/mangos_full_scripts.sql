@@ -48,6 +48,7 @@ UPDATE `creature_template` SET `ScriptName`='guard_shattrath_scryer' WHERE `entr
 
 /* ITEM */
 UPDATE `item_template` SET `ScriptName`='item_area_52_special' WHERE `entry`=28132;
+UPDATE `item_template` SET `ScriptName`='item_arcane_charges' WHERE `entry`=34475;
 UPDATE `item_template` SET `ScriptName`='item_attuned_crystal_cores' WHERE `entry`=34368;
 UPDATE `item_template` SET `ScriptName`='item_blackwhelp_net' WHERE `entry`=31129;
 UPDATE `item_template` SET `ScriptName`='item_disciplinary_rod' WHERE `entry`=22473;
