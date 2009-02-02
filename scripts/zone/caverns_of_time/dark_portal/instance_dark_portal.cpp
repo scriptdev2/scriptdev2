@@ -227,6 +227,7 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
                         //this may be completed further out in the post-event
                         if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
                         {
+                            debug_log("SD2: Instance Dark Portal: Event completed.");
                             player->GroupEventHappens(QUEST_OPENING_PORTAL,medivh);
                             player->GroupEventHappens(QUEST_MASTER_TOUCH,medivh);
                         }
@@ -312,8 +313,8 @@ struct MANGOS_DLL_DECL instance_dark_portal : public ScriptedInstance
             CurrentRiftId = tmp;
 
             Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
-                        PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
-                        TEMPSUMMON_CORPSE_DESPAWN,0);
+                PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
+                TEMPSUMMON_CORPSE_DESPAWN,0);
 
             if (temp)
             {

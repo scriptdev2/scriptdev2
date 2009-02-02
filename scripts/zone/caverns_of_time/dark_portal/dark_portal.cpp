@@ -98,7 +98,7 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
 
         if (who->GetTypeId() == TYPEID_PLAYER && m_creature->IsWithinDistInMap(who, 10.0f))
         {
-            if (pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
+            if (pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS || pInstance->GetData(TYPE_MEDIVH) == DONE)
                 return;
 
             DoScriptText(SAY_INTRO, m_creature);
@@ -187,7 +187,6 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                 {
                     DoScriptText(SAY_WEAK25, m_creature);
                     Life25 = false;
-                    Check_Timer = 0;
                 }
                 else if (Life50 && pct <= 50)
                 {
@@ -209,11 +208,16 @@ struct MANGOS_DLL_DECL npc_medivh_bmAI : public ScriptedAI
                     return;
                 }
 
-                if (pInstance->GetData(TYPE_MEDIVH) == DONE)
+                if (pInstance->GetData(TYPE_RIFT) == DONE)
                 {
                     DoScriptText(SAY_WIN, m_creature);
                     Check_Timer = 0;
+
+                    if (m_creature->HasAura(SPELL_CHANNEL,0))
+                        m_creature->RemoveAura(SPELL_CHANNEL,0);
+
                     //TODO: start the post-event here
+                    pInstance->SetData(TYPE_MEDIVH,DONE);
                 }
             }else Check_Timer -= diff;
         }
@@ -341,7 +345,8 @@ struct MANGOS_DLL_DECL npc_time_riftAI : public ScriptedAI
         debug_log("SD2: npc_time_rift: not casting anylonger, i need to die.");
         m_creature->setDeathState(JUST_DIED);
 
-        pInstance->SetData(TYPE_RIFT,SPECIAL);
+        if (pInstance->GetData(TYPE_RIFT) == IN_PROGRESS)
+            pInstance->SetData(TYPE_RIFT,SPECIAL);
     }
 };
 
