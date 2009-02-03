@@ -34,14 +34,17 @@ EndScriptData */
 //#define SAY_DEATH                   "What...happen...ed."
 
 //Pure energy spell info
-#define SPELL_ENERGY_BOLT           44342
+#define SPELL_ENERGY_BOLT           46156
 #define SPELL_ENERGY_FEEDBACK       44335
 
 //Vexallus spell info
 #define SPELL_CHAIN_LIGHTNING       44318
-#define SPELL_SUMMON_PURE_ENERGY    44322                   //not-working, this script summon this creatures without this spell
 #define SPELL_OVERLOAD              44353
 #define SPELL_ARCANE_SHOCK          44319
+
+#define SPELL_SUMMON_PURE_ENERGY    44322                   //mod scale -10
+#define H_SPELL_SUMMON_PURE_ENERGY1 46154                   //mod scale -5
+#define H_SPELL_SUMMON_PURE_ENERGY2 46159                   //mod scale -5
 
 //Creatures
 #define CREATURE_PURE_ENERGY        24745
@@ -51,8 +54,8 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
     boss_vexallusAI(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        Reset();
         Heroic = c->GetMap()->IsHeroic();
+        Reset();
     }
 
     ScriptedInstance* pInstance;
@@ -72,7 +75,6 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         OverloadTimer = 2200;
         SpawnAddInterval = 15;
         AlreadySpawnedAmount = 0;
-
         Enraged = false;
 
         if (pInstance)
@@ -90,9 +92,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
         {
             pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
 
-            GameObject* Door = NULL;
-            Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_VEXALLUS_DOOR));
-            if (Door)
+            if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_VEXALLUS_DOOR)))
                 Door->SetGoState(0);
         }
     }
@@ -105,12 +105,22 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
     }
 
+    void JustSummoned(Creature *summoned)
+    {
+        if (Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            summoned->GetMotionMaster()->MoveFollow(temp,0,0);
+
+        //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
+        summoned->SetOwnerGUID(m_creature->GetGUID());
+        summoned->CastSpell(summoned,SPELL_ENERGY_BOLT,false,0,0,m_creature->GetGUID());
+    }
+
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 11)
+        if (m_creature->GetHealth()*100 / m_creature->GetMaxHealth() <= 10)
         {
             Enraged = true;
         }
@@ -123,22 +133,19 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
                 DoScriptText(SAY_ENERGY, m_creature);
                 DoScriptText(EMOTE_DISCHARGE_ENERGY, m_creature);
 
-                Creature* PureEnergyCreature = NULL;
-                PureEnergyCreature = DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-
-                Unit* target = NULL;
-                target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (PureEnergyCreature && target)
-                    PureEnergyCreature->AI()->AttackStart(target);
-
-                if (Heroic)                                  // *Heroic mode only - he summons two instead of one.
+                if (Heroic)
                 {
-                    PureEnergyCreature = DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-
-                    target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if (PureEnergyCreature && target)
-                        PureEnergyCreature->AI()->AttackStart(target);
+                    m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY1,false);
+                    m_creature->CastSpell(m_creature,H_SPELL_SUMMON_PURE_ENERGY2,false);
                 }
+                else
+                    m_creature->CastSpell(m_creature,SPELL_SUMMON_PURE_ENERGY,false);
+
+                //below are workaround summons, remove when summoning spells w/implicitTarget 73 implemented in Mangos
+                DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+
+                if (Heroic)
+                    DoSpawnCreature(CREATURE_PURE_ENERGY, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                 ++AlreadySpawnedAmount;
             }
@@ -147,6 +154,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(target, SPELL_CHAIN_LIGHTNING);
+
                 ChainLightningTimer = 10000;
             }else ChainLightningTimer -= diff;
 
@@ -154,14 +162,17 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(target, SPELL_ARCANE_SHOCK);
+
                 ArcaneShockTimer = 8000;
             }else ArcaneShockTimer -= diff;
-        }else
+        }
+        else
         {
             if (OverloadTimer < diff)
             {
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(target, SPELL_OVERLOAD);
+
                 OverloadTimer = 2200;
             }else OverloadTimer -= diff;
         }
@@ -179,31 +190,20 @@ struct MANGOS_DLL_DECL mob_pure_energyAI : public ScriptedAI
 {
     mob_pure_energyAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    uint32 EnergyBoltTimer;
-
-    void Reset()
-    {
-        EnergyBoltTimer = 1000;
-    }
+    void Reset() { }
 
     void JustDied(Unit* slayer)
     {
-        slayer->CastSpell(slayer, SPELL_ENERGY_FEEDBACK, true, 0, 0, m_creature->GetGUID());
-    }
-
-    void Aggro(Unit *who){}
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->getVictim() || !m_creature->SelectHostilTarget())
-            return;
-
-        if (EnergyBoltTimer < diff)
+        if (Unit *temp = m_creature->GetOwner())
         {
-            DoCast(m_creature->getVictim(), SPELL_ENERGY_BOLT);
-            EnergyBoltTimer = 1700;
-        }else EnergyBoltTimer -= diff;
+            if (temp && temp->isAlive())
+                slayer->CastSpell(slayer, SPELL_ENERGY_FEEDBACK, true, 0, 0, temp->GetGUID());
+        }
     }
+
+    void Aggro(Unit *who) { }
+    void MoveInLineOfSight(Unit *who) { }
+    void AttackStart(Unit *who) { }
 };
 
 CreatureAI* GetAI_mob_pure_energy(Creature *_Creature)
