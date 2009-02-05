@@ -23,7 +23,7 @@ bool ScriptedAI::IsVisible(Unit* who) const
 
 void ScriptedAI::MoveInLineOfSight(Unit *who)
 {
-    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() && 
+    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
         m_creature->IsHostileTo(who) && who->isInAccessablePlaceFor(m_creature))
     {
         if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
@@ -34,8 +34,8 @@ void ScriptedAI::MoveInLineOfSight(Unit *who)
         {
             if (!m_creature->getVictim())
             {
-                AttackStart(who);
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                AttackStart(who);
             }
             else if (m_creature->GetMap()->IsDungeon())
             {
@@ -70,9 +70,9 @@ void ScriptedAI::AttackStart(Unit* who)
 void ScriptedAI::UpdateAI(const uint32 diff)
 {
     //Check if we have a current target
-    if (m_creature->isAlive() && m_creature->SelectHostilTarget() && m_creature->getVictim())
+    if (m_creature->SelectHostilTarget() && m_creature->getVictim())
     {
-        if (m_creature->isAttackReady() )
+        if (m_creature->isAttackReady())
         {
             //If we are within range melee the target
             if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
@@ -124,11 +124,10 @@ void ScriptedAI::DoStartNoMovement(Unit* victim)
     m_creature->StopMoving();
 }
 
-
 void ScriptedAI::DoMeleeAttackIfReady()
 {
-    //Make sure our attack is ready and we aren't currently casting before checking distance
-    if (m_creature->isAttackReady() && !m_creature->IsNonMeleeSpellCasted(false))
+    //Make sure our attack is ready before checking distance
+    if (m_creature->isAttackReady())
     {
         //If we are within range melee the target
         if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
@@ -571,16 +570,25 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float range, uint32 s
 
 void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
 {
-    if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
+    if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
+        m_creature->IsHostileTo(who) && who->isInAccessablePlaceFor(m_creature))
     {
         if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
             return;
 
         float attackRadius = m_creature->GetAttackDistance(who);
-        if( m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
+        if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
         {
-            who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-            AttackStart(who);
+            if (!m_creature->getVictim())
+            {
+                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                AttackStart(who);
+            }
+            else if (m_creature->GetMap()->IsDungeon())
+            {
+                who->SetInCombatWith(m_creature);
+                m_creature->AddThreat(who, 0.0f);
+            }
         }
     }
 }

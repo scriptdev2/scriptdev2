@@ -638,14 +638,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                             //Melee current victim if flag not set
                             if (!(param3 & CAST_NO_MELEE_IF_OOM))
                             {
-                                AttackDistance = 0;
-                                AttackAngle = 0;
+                                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                                {
+                                    AttackDistance = 0;
+                                    AttackAngle = 0;
 
-                                m_creature->GetMotionMaster()->Clear(false);
-                                m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
+                                    m_creature->GetMotionMaster()->Clear(false);
+                                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
+                                }
                             }
 
-                        }else
+                        }
+                        else
                         {
                             //Interrupt any previous spell
                             if (caster->IsNonMeleeSpellCasted(false) && param3 & CAST_INTURRUPT_PREVIOUS)
@@ -835,9 +839,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                 if (CombatMovementEnabled)
                 {
-                    //Drop current movement gen
-                    m_creature->GetMotionMaster()->Clear(false);
-                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    {
+                        //Drop current movement gen
+                        m_creature->GetMotionMaster()->Clear(false);
+                        m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
+                    }
                 }
             }
             break;
@@ -1306,7 +1313,8 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
             EventDiff = 0;
             EventUpdateTime = EVENT_UPDATE_TIME;
-        }else
+        }
+        else
         {
             EventDiff += diff;
             EventUpdateTime -= diff;
