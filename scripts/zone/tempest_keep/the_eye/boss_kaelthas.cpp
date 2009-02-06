@@ -146,56 +146,16 @@ float KaelthasWeapons[7][5] =
 //Base AI for Advisors
 struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
-    bool FakeDeath;
-    uint32 DelayRes_Timer;
-    uint64 DelayRes_Target;
-
     advisorbase_ai(Creature *c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
-            return;
-
-        if( !m_creature->getVictim() && who->isTargetableForAttack() && ( m_creature->IsHostileTo( who )) && who->isInAccessablePlaceFor(m_creature) )
-        {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if(m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who) )
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-        }
-    }
-
-    void AttackStart(Unit* who)
-    {
-        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
-            return;
-
-        if (m_creature->Attack(who, true))
-        {
-            m_creature->AddThreat(who, 0.0f);
-            m_creature->SetInCombatWith(who);
-            who->SetInCombatWith(m_creature);
-
-            if (!InCombat)
-            {
-                InCombat = true;
-                Aggro(who);
-            }
-
-            DoStartMovement(who);
-        }
-    }
+    ScriptedInstance* pInstance;
+    bool FakeDeath;
+    uint32 DelayRes_Timer;
+    uint64 DelayRes_Target;
 
     void Reset()
     {
@@ -210,12 +170,25 @@ struct MANGOS_DLL_DECL advisorbase_ai : public ScriptedAI
         //reset encounter
         if (pInstance && (pInstance->GetData(DATA_KAELTHASEVENT) == 1 || pInstance->GetData(DATA_KAELTHASEVENT) == 3))
         {
-            Creature *Kaelthas = NULL;
-            Kaelthas = (Creature*)(Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KAELTHAS)));
-
-            if (Kaelthas)
+            if (Creature *Kaelthas = (Creature*)Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_KAELTHAS)))
                 Kaelthas->AI()->EnterEvadeMode();
         }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+            return;
+
+        ScriptedAI::MoveInLineOfSight(who);
+    }
+
+    void AttackStart(Unit* who)
+    {
+        if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+            return;
+
+        ScriptedAI::AttackStart(who);
     }
 
     void Revive(Unit* Target)
@@ -356,11 +329,9 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
-        Creature *pCreature;
         for(uint8 i = 0; i < 4; i++)
         {
-            pCreature = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[i]));
-            if (pCreature)
+            if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), AdvisorGuid[i]))
             {
                 pCreature->Respawn();
                 pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -393,9 +364,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-            Unit *target = NULL;
-            target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if (target)
+            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 AttackStart(target);
 
         }
@@ -412,6 +381,40 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
             Phase_Timer = 23000;
             Phase = 1;
         }
+    }
+
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
+            m_creature->IsHostileTo(who) && who->isInAccessablePlaceFor(m_creature))
+        {
+            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
+                return;
+
+            float attackRadius = m_creature->GetAttackDistance(who);
+            if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
+            {
+                if (!m_creature->getVictim() && Phase >= 4)
+                {
+                    who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
+                    AttackStart(who);
+                }
+                else if (m_creature->GetMap()->IsDungeon())
+                {
+                    if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+                        StartEvent();
+
+                    who->SetInCombatWith(m_creature);
+                    m_creature->AddThreat(who, 0.0f);
+                }
+            }
+        }
+    }
+
+    void Aggro(Unit *who)
+    {
+        if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+            StartEvent();
     }
 
     void KilledUnit()
@@ -434,44 +437,10 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, 0);
 
-        Creature *pCreature;
         for(uint8 i = 0; i < 4; i++)
         {
-            pCreature = (Creature*)(Unit::GetUnit((*m_creature), AdvisorGuid[i]));
-            if (pCreature)
-            {
+            if (Creature *pCreature = (Creature*)Unit::GetUnit((*m_creature), AdvisorGuid[i]))
                 pCreature->DealDamage(pCreature, pCreature->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            }
-        }
-    }
-
-    void Aggro(Unit *who)
-    {
-        if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
-            StartEvent();
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (!m_creature->getVictim() && who->isTargetableForAttack() && who->isInAccessablePlaceFor(m_creature) && m_creature->IsHostileTo(who))
-        {
-            if (!m_creature->canFly() && m_creature->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
-                return;
-
-            float attackRadius = m_creature->GetAttackDistance(who);
-            if (Phase >= 4 && m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->IsWithinLOSInMap(who))
-            {
-                who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
-                AttackStart(who);
-            }
-            else if (who->isAlive())
-            {
-                if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase && m_creature->IsWithinDistInMap(who, 60.0f))
-                    StartEvent();
-
-                //add to the threat list, so we can use SelectTarget
-                m_creature->AddThreat(who,0.0f);
-            }
         }
     }
 
@@ -711,13 +680,15 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     pInstance->SetData(DATA_KAELTHASEVENT, 4);
 
+                    // Sometimes people can collect Aggro in Phase 1-3. Reset threat before releasing Kael.
+                    DoResetThreat();
+
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
                     if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    {
                         AttackStart(target);
-                    }
+
                     Phase_Timer = 30000;
                 }else Phase_Timer -= diff;
             }
@@ -793,8 +764,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
 
                     if (Phoenix)
                     {
-                        Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                        if (target)
+                        if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 0))
                             Phoenix->AI()->AttackStart(target);
                     }else error_log("SD2: Kael'Thas Phoenix could not be spawned");
 
@@ -846,7 +816,8 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                             DoCast(m_creature->getVictim(), SPELL_PYROBLAST);
                             PyrosCasted++;
 
-                        }else
+                        }
+                        else
                         {
                             ChainPyros = false;
                             Fireball_Timer = 2500;
@@ -915,8 +886,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 // 2) At that point he will put a Gravity Lapse debuff on everyone
                                 for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
                                 {
-                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                    if (pUnit)
+                                    if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {
                                         m_creature->CastSpell(pUnit, SPELL_KNOCKBACK, true);
                                         //Gravity lapse - needs an exception in Spell system to work
@@ -949,8 +919,7 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                 //Remove flight
                                 for (i = m_creature->getThreatManager().getThreatList().begin(); i!= m_creature->getThreatManager().getThreatList().end();i++)
                                 {
-                                    Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid());
-                                    if (pUnit)
+                                    if (Unit* pUnit = Unit::GetUnit((*m_creature), (*i)->getUnitGuid()))
                                     {
                                         //Using packet workaround
                                         WorldPacket data(12);
@@ -960,12 +929,12 @@ struct MANGOS_DLL_DECL boss_kaelthasAI : public ScriptedAI
                                         pUnit->SendMessageToSet(&data, true);
                                     }
                                 }
+
                                 m_creature->RemoveAurasDueToSpell(SPELL_NETHER_VAPOR);
                                 InGravityLapse = false;
                                 GravityLapse_Timer = 60000;
                                 GravityLapse_Phase = 0;
                                 AttackStart(m_creature->getVictim());
-                                DoResetThreat();
                                 break;
                         }
                     }else GravityLapse_Timer -= diff;
@@ -1015,11 +984,6 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         advisorbase_ai::Reset();
     }
 
-    void JustDied(Unit* pKiller)
-    {
-        DoScriptText(SAY_THALADRED_DEATH, m_creature);
-    }
-
     void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
@@ -1032,6 +996,11 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
         m_creature->AddThreat(who, 5000000.0f);
     }
 
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_THALADRED_DEATH, m_creature);
+    }
+
     void UpdateAI(const uint32 diff)
     {
         advisorbase_ai::UpdateAI(diff);
@@ -1041,7 +1010,7 @@ struct MANGOS_DLL_DECL boss_thaladred_the_darkenerAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Gaze_Timer
@@ -1087,11 +1056,6 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         advisorbase_ai::Reset();
     }
 
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
-    }
-
     void Aggro(Unit *who)
     {
         if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
@@ -1103,6 +1067,11 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
         DoScriptText(SAY_SANGUINAR_AGGRO, m_creature);
     }
 
+    void JustDied(Unit* Killer)
+    {
+        DoScriptText(SAY_SANGUINAR_DEATH, m_creature);
+    }
+
     void UpdateAI(const uint32 diff)
     {
         advisorbase_ai::UpdateAI(diff);
@@ -1112,7 +1081,7 @@ struct MANGOS_DLL_DECL boss_lord_sanguinarAI : public advisorbase_ai
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Fear_Timer
@@ -1192,7 +1161,7 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
             return;
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //Yell_Timer
