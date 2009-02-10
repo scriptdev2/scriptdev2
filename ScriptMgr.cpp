@@ -1191,7 +1191,7 @@ void ScriptsFree()
     delete []SpellSummary;
 
     // Free resources before library unload
-    for(int i=0;i<num_sc_scripts;i++)
+    for(int i=0;i<MAX_SCRIPTS;i++)
         delete m_scripts[i];
 
     num_sc_scripts = 0;
@@ -1876,8 +1876,12 @@ void Script::RegisterSelf()
     {
         m_scripts[id] = this;
         ++num_sc_scripts;
-    } else
+    }
+    else
+    {
         debug_log("SD2: RegisterSelf, but script named %s does not have ScriptName assigned in database.",(this)->Name.c_str());
+        delete this;
+    }
 }
 
 //********************************
