@@ -1055,8 +1055,18 @@ void LoadDatabase()
 
                     case ACTION_T_CAST:
                         {
-                            if (!GetSpellStore()->LookupEntry(temp.action[j].param1))
+                            const SpellEntry *spell = GetSpellStore()->LookupEntry(temp.action[j].param1);
+                            if (!spell)
                                 error_db_log("SD2: Event %u Action %u uses non-existant SpellID %u.", i, j+1, temp.action[j].param1);
+                            else
+                            {
+                                if (spell->RecoveryTime > 0 && temp.event_flags & EFLAG_REPEATABLE)
+                                {
+                                    //output as debug for now, also because there's no general rule all spells have RecoveryTime
+                                    if (temp.event_param3 < spell->RecoveryTime)
+                                        debug_log("SD2: Event %u Action %u uses SpellID %u but cooldown is longer(%u) than minumum defined in event param3(%u).", i, j+1,temp.action[j].param1, spell->RecoveryTime, temp.event_param3);
+                                }
+                            }
 
                             if (temp.action[j].param2 >= TARGET_T_END)
                                 error_db_log("SD2: Event %u Action %u uses incorrect Target type", i, j+1);
