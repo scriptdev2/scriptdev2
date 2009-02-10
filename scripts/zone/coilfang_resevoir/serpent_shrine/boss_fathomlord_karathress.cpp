@@ -41,6 +41,7 @@ EndScriptData */
 #define SPELL_POWER_OF_CARIBDIS     38451
 #define SPELL_ENRAGE                24318
 #define SPELL_SEAR_NOVA             38445
+#define SPELL_BLESSING_OF_THE_TIDES 38449
 //Sharkkis spells
 #define SPELL_LEECHING_THROW        29436
 #define SPELL_THE_BEAST_WITHIN      38373
@@ -74,6 +75,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
     uint32 CataclysmicBolt_Timer;
     uint32 Enrage_Timer;
+    bool bMobsChecked;
 
     uint64 Advisors[3];
 
@@ -81,14 +83,13 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     {
         CataclysmicBolt_Timer = 10000;
         Enrage_Timer = 600000;                              //10 minutes
+        bMobsChecked = false;
 
-        Creature* Advisor;
         for(uint8 i = 0; i < 3; ++i)
         {
             if (Advisors[i])
             {
-                Advisor = ((Creature*)Unit::GetUnit(*m_creature, Advisors[i]));
-                if (Advisor)
+                if (Creature *Advisor = (Creature*)Unit::GetUnit(*m_creature, Advisors[i]))
                 {
                     if (Advisor->isAlive())
                     {
@@ -187,7 +188,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
@@ -209,6 +210,29 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
             CataclysmicBolt_Timer = 10000;
         }else CataclysmicBolt_Timer -= diff;
+
+        //hp under 75%
+        if (!bMobsChecked && (m_creature->GetHealth()/m_creature->GetMaxHealth())*100 <= 75)
+        {
+            for(uint8 i = 0; i < 3; ++i)
+            {
+                if (Unit *Advisor = Unit::GetUnit(*m_creature, Advisors[i]))
+                {
+                    //stack max three times (one for each alive)
+                    if (Advisor->isAlive())
+                    {
+                        m_creature->InterruptNonMeleeSpells(false);
+                        m_creature->CastSpell(m_creature, SPELL_BLESSING_OF_THE_TIDES,false);
+                    }
+                }
+            }
+
+            //yell if we now have the aura
+            if (m_creature->HasAura(SPELL_BLESSING_OF_THE_TIDES))
+                DoScriptText(SAY_GAIN_BLESSING, m_creature);
+
+            bMobsChecked = true;
+        }
 
         //Enrage_Timer
         if (Enrage_Timer < diff)
