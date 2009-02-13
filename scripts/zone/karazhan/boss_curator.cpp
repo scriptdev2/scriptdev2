@@ -91,7 +91,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
             //if evocate, then break evocate
             if (Evocating)
             {
-                if (m_creature->HasAura(SPELL_EVOCATION, 0))
+                if (m_creature->HasAura(SPELL_EVOCATION))
                     m_creature->RemoveAurasDueToSpell(SPELL_EVOCATION);
 
                 Evocating = false;
@@ -110,7 +110,7 @@ struct MANGOS_DLL_DECL boss_curatorAI : public ScriptedAI
         if (Evocating)
         {
             //not supposed to do anything while evocate
-            if (m_creature->HasAura(SPELL_EVOCATION, 0))
+            if (m_creature->HasAura(SPELL_EVOCATION))
                 return;
             else
                 Evocating = false;
