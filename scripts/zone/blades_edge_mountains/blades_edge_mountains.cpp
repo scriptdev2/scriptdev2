@@ -84,7 +84,7 @@ CreatureAI* GetAI_mobs_bladespire_ogre(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 {
-    mobs_nether_drakeAI(Creature *c) : ScriptedAI(c) {Reset();}
+    mobs_nether_drakeAI(Creature *c) : ScriptedAI(c) { Reset(); }
 
     bool IsNihil;
     uint32 NihilSpeech_Timer;
@@ -96,14 +96,9 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
     void Reset()
     {
-        NihilSpeech_Timer = 2000;
         IsNihil = false;
-        if (m_creature->GetEntry() == ENTRY_NIHIL)
-        {
-            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            IsNihil = true;
-        }
-        NihilSpeech_Phase = 1;
+        NihilSpeech_Timer = 3000;
+        NihilSpeech_Phase = 0;
 
         ArcaneBlast_Timer = 7500;
         ManaBurn_Timer = 10000;
@@ -112,75 +107,55 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
 
     void Aggro(Unit* who) { }
 
+    void MoveInLineOfSight(Unit *who)
+    {
+        if (m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+            return;
+
+        ScriptedAI::MoveInLineOfSight(who);
+    }
+
+    //in case creature was not summoned (not expected)
+    void MovementInform(uint32 type, uint32 id)
+    {
+        if (type != POINT_MOTION_TYPE)
+            return;
+
+        if (id == 0)
+        {
+            m_creature->setDeathState(JUST_DIED);
+            m_creature->RemoveCorpse();
+            m_creature->SetHealth(0);
+        }
+    }
+
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (spell->Id == SPELL_T_PHASE_MODULATOR && caster->GetTypeId() == TYPEID_PLAYER)
         {
-            uint32 cEntry = 0;
+            const uint32 entry_list[4] = {ENTRY_PROTO, ENTRY_ADOLE, ENTRY_MATUR, ENTRY_NIHIL};
+            int cid = rand()%(4-1);
 
-            switch(m_creature->GetEntry())
+            if (entry_list[cid] == m_creature->GetEntry())
+                ++cid;
+
+            //we are nihil, so say before transform
+            if (m_creature->GetEntry() == ENTRY_NIHIL)
             {
-                case ENTRY_WHELP:
-                    switch(rand()%4)
-                    {
-                        case 0: cEntry = ENTRY_PROTO; break;
-                        case 1: cEntry = ENTRY_ADOLE; break;
-                        case 2: cEntry = ENTRY_MATUR; break;
-                        case 3: cEntry = ENTRY_NIHIL; break;
-                    }
-                    break;
-                case ENTRY_PROTO:
-                    switch(rand()%3)
-                    {
-                        case 0: cEntry = ENTRY_ADOLE; break;
-                        case 1: cEntry = ENTRY_MATUR; break;
-                        case 2: cEntry = ENTRY_NIHIL; break;
-                    }
-                    break;
-                case ENTRY_ADOLE:
-                    switch(rand()%3)
-                    {
-                        case 0: cEntry = ENTRY_PROTO; break;
-                        case 1: cEntry = ENTRY_MATUR; break;
-                        case 2: cEntry = ENTRY_NIHIL; break;
-                    }
-                    break;
-                case ENTRY_MATUR:
-                    switch(rand()%3)
-                    {
-                        case 0: cEntry = ENTRY_PROTO; break;
-                        case 1: cEntry = ENTRY_ADOLE; break;
-                        case 2: cEntry = ENTRY_NIHIL; break;
-                    }
-                    break;
-                case ENTRY_NIHIL:
-                    if (NihilSpeech_Phase)
-                    {
-                        DoScriptText(SAY_NIHIL_INTERRUPT, m_creature);
-                        IsNihil = false;
-                        switch(rand()%3)
-                        {
-                            case 0: cEntry = ENTRY_PROTO; break;
-                            case 1: cEntry = ENTRY_ADOLE; break;
-                            case 2: cEntry = ENTRY_MATUR; break;
-                        }
-                    }
-                    break;
+                DoScriptText(SAY_NIHIL_INTERRUPT, m_creature);
+                m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                IsNihil = false;
             }
 
-            if (cEntry)
+            if (m_creature->UpdateEntry(entry_list[cid]))
             {
-                m_creature->UpdateEntry(cEntry);
-
-                if (cEntry == ENTRY_NIHIL)
+                if (entry_list[cid] == ENTRY_NIHIL)
                 {
-                    m_creature->InterruptNonMeleeSpells(true);
-                    m_creature->RemoveAllAuras();
-                    m_creature->DeleteThreatList();
-                    m_creature->CombatStop();
-                    InCombat = false;
-                    Reset();
-                }
+                    EnterEvadeMode();
+                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    IsNihil = true;
+                }else
+                    AttackStart(caster);
             }
         }
     }
@@ -189,41 +164,38 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
     {
         if (IsNihil)
         {
-            if (NihilSpeech_Phase)
+            if (NihilSpeech_Timer <= diff)
             {
-                if (NihilSpeech_Timer <= diff)
+                switch(NihilSpeech_Phase)
                 {
-                    switch(NihilSpeech_Phase)
-                    {
-                        case 1:
-                            DoScriptText(SAY_NIHIL_1, m_creature);
-                            ++NihilSpeech_Phase;
-                            break;
-                        case 2:
-                            DoScriptText(SAY_NIHIL_2, m_creature);
-                            ++NihilSpeech_Phase;
-                            break;
-                        case 3:
-                            DoScriptText(SAY_NIHIL_3, m_creature);
-                            ++NihilSpeech_Phase;
-                            break;
-                        case 4:
-                            DoScriptText(SAY_NIHIL_4, m_creature);
-                            ++NihilSpeech_Phase;
-                            break;
-                        case 5:
-                            m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                            // + MOVEMENTFLAG_LEVITATING ?
-                            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
-                            //then take off to random location. creature is initially summoned, so don't bother do anything else.
-                            m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX()+100, m_creature->GetPositionY(), m_creature->GetPositionZ()+100);
-                            NihilSpeech_Phase = 0;
-                            break;
-                    }
-                    NihilSpeech_Timer = 5000;
-                }else NihilSpeech_Timer -=diff;
-            }
-            return;                                         //anything below here is not interesting for Nihil, so skip it
+                    case 0:
+                        DoScriptText(SAY_NIHIL_1, m_creature);
+                        ++NihilSpeech_Phase;
+                        break;
+                    case 1:
+                        DoScriptText(SAY_NIHIL_2, m_creature);
+                        ++NihilSpeech_Phase;
+                        break;
+                    case 2:
+                        DoScriptText(SAY_NIHIL_3, m_creature);
+                        ++NihilSpeech_Phase;
+                        break;
+                    case 3:
+                        DoScriptText(SAY_NIHIL_4, m_creature);
+                        ++NihilSpeech_Phase;
+                        break;
+                    case 4:
+                        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        //take off to location above
+                        m_creature->GetMotionMaster()->MovePoint(0, m_creature->GetPositionX()+50.0f, m_creature->GetPositionY(), m_creature->GetPositionZ()+50.0f);
+                        ++NihilSpeech_Phase;
+                        break;
+                }
+                NihilSpeech_Timer = 5000;
+            }else NihilSpeech_Timer -=diff;
+
+            //anything below here is not interesting for Nihil, so skip it
+            return;
         }
 
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -252,6 +224,7 @@ struct MANGOS_DLL_DECL mobs_nether_drakeAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
 CreatureAI* GetAI_mobs_nether_drake(Creature *_Creature)
 {
     return new mobs_nether_drakeAI (_Creature);
