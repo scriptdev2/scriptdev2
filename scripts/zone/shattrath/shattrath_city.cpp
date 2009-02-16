@@ -31,6 +31,35 @@ EndContentData */
 #include "precompiled.h"
 
 /*######
+## npc_ishanah
+######*/
+
+#define GOSSIP_ISHANAH_1    "Who are the Sha'tar?"
+#define GOSSIP_ISHANAH_2    "Isn't Shattrath a draenei city? Why do you allow others here?"
+
+bool GossipHello_npc_ishanah(Player *player, Creature *_Creature)
+{
+    if (_Creature->isQuestGiver())
+        player->PrepareQuestMenu(_Creature->GetGUID());
+
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ISHANAH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->ADD_GOSSIP_ITEM(0, GOSSIP_ISHANAH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_ishanah(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+{
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
+        player->SEND_GOSSIP_MENU(9458, _Creature->GetGUID());
+    else if (action == GOSSIP_ACTION_INFO_DEF+2)
+        player->SEND_GOSSIP_MENU(9459, _Creature->GetGUID());
+
+    return true;
+}
+
+/*######
 ## npc_raliq_the_drunk
 ######*/
 
@@ -243,26 +272,32 @@ void AddSC_shattrath_city()
     Script *newscript;
 
     newscript = new Script;
+    newscript->Name = "npc_ishanah";
+    newscript->pGossipHello = &GossipHello_npc_ishanah;
+    newscript->pGossipSelect = &GossipSelect_npc_ishanah;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
     newscript->Name = "npc_raliq_the_drunk";
-    newscript->pGossipHello =  &GossipHello_npc_raliq_the_drunk;
+    newscript->pGossipHello = &GossipHello_npc_raliq_the_drunk;
     newscript->pGossipSelect = &GossipSelect_npc_raliq_the_drunk;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_salsalabim";
     newscript->GetAI = &GetAI_npc_salsalabim;
-    newscript->pGossipHello =  &GossipHello_npc_salsalabim;
+    newscript->pGossipHello = &GossipHello_npc_salsalabim;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_shattrathflaskvendors";
-    newscript->pGossipHello =  &GossipHello_npc_shattrathflaskvendors;
+    newscript->pGossipHello = &GossipHello_npc_shattrathflaskvendors;
     newscript->pGossipSelect = &GossipSelect_npc_shattrathflaskvendors;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_zephyr";
-    newscript->pGossipHello =  &GossipHello_npc_zephyr;
+    newscript->pGossipHello = &GossipHello_npc_zephyr;
     newscript->pGossipSelect = &GossipSelect_npc_zephyr;
     newscript->RegisterSelf();
 }
