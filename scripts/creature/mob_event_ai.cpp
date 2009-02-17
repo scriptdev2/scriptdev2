@@ -757,10 +757,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             {
                 CombatMovementEnabled = param1;
 
-                //Allow movement (create new targeted movement gen if none exist already)
+                //Allow movement (create new targeted movement gen only if idle)
                 if (CombatMovementEnabled)
                 {
-                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == IDLE_MOTION_TYPE)
                     {
                         m_creature->GetMotionMaster()->Clear(false);
                         m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim(), AttackDistance, AttackAngle);
@@ -1258,23 +1258,6 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         {
             EventDiff += diff;
 
-            //Check for range based events
-            //if (m_creature->GetDistance(m_creature->getVictim()) >
-            if (Combat)
-            {
-                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
-                {
-                    switch ((*i).Event.event_type)
-                    {
-                        case EVENT_T_RANGE:
-                            float dist = m_creature->GetDistance(m_creature->getVictim());
-                            if (dist > (*i).Event.event_param1 && dist < (*i).Event.event_param2)
-                                ProcessEvent(*i);
-                            break;
-                    }
-                }
-            }
-
             //Check for time based events
             for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
@@ -1293,9 +1276,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     else (*i).Time = 0;
                 }
 
+                //Events that are updated every EVENT_UPDATE_TIME
                 switch ((*i).Event.event_type)
                 {
-                    //Events that are updated every EVENT_UPDATE_TIME
                     case EVENT_T_TIMER_OOC:
                         ProcessEvent(*i);
                         break;
@@ -1305,8 +1288,18 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                     case EVENT_T_TARGET_HP:
                     case EVENT_T_TARGET_CASTING:
                     case EVENT_T_FRIENDLY_HP:
-                        if( Combat )
+                        if (Combat)
                             ProcessEvent(*i);
+                        break;
+                    case EVENT_T_RANGE:
+                        if (Combat)
+                        {
+                            if (m_creature->IsWithinDistInMap(m_creature->getVictim(),(float)(*i).Event.event_param2))
+                            {
+                                if (m_creature->GetDistance(m_creature->getVictim()) >= (float)(*i).Event.event_param1)
+                                    ProcessEvent(*i);
+                            }
+                        }
                         break;
                 }
             }
