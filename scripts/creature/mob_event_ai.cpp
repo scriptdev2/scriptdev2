@@ -23,6 +23,7 @@ EndScriptData */
 
 #include "precompiled.h"
 #include "mob_event_ai.h"
+#include "ObjectMgr.h"
 
 #define EVENT_UPDATE_TIME               500
 #define SPELL_RUN_AWAY                  8225
@@ -453,6 +454,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                 }
             }
             break;
+        case EVENT_T_REACHED_HOME:
+            {
+            }
+            break;
         default:
             if (EAI_ErrorLevel > 0)
                 error_db_log("SD2: Creature %u using Event %u has invalid Event Type(%u), missing from ProcessEvent() Switch.", m_creature->GetEntry(), pHolder.Event.event_id, pHolder.Event.event_type);
@@ -574,6 +579,43 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
                     DoScriptText(temp, m_creature, target);
                 }
+            }
+            break;
+        case ACTION_T_SET_FACTION:
+            {
+                if (param1)
+                    m_creature->setFaction(param1);
+                else
+                {
+                    if (CreatureInfo const* ci = GetCreatureTemplateStore(m_creature->GetEntry()))
+                    {
+                        //if no id provided, assume reset and then use default
+                        if (m_creature->getFaction() != ci->faction_A)
+                            m_creature->setFaction(ci->faction_A);
+                    }
+                }
+            }
+            break;
+        case ACTION_T_MORPH_TO_ENTRY_OR_MODEL:
+            {
+                if (param1 || param2)
+                {
+                    //set model based on entry from creature_template
+                    if (param1)
+                    {
+                        if (CreatureInfo const* ci = GetCreatureTemplateStore(param1))
+                        {
+                            //use default display
+                            if (ci->DisplayID_A)
+                                m_creature->SetDisplayId(ci->DisplayID_A);
+                        }
+                    }
+                    //if no param1, then use value from param2 (modelId)
+                    else
+                        m_creature->SetDisplayId(param2);
+                }
+                else
+                    m_creature->DeMorph();
             }
             break;
         case ACTION_T_SOUND:
@@ -998,7 +1040,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
 
-        //Handle Evade events and reset all events to enabled
+        //Reset all events to enabled
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
             switch ((*i).Event.event_type)
@@ -1027,30 +1069,39 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         }
     }
 
+    //when creature reach home after EnterEvadeMode
+    void JustReachedHome()
+    {
+        m_creature->LoadCreaturesAddon();
+
+        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        {
+            if ((*i).Event.event_type == EVENT_T_REACHED_HOME)
+                ProcessEvent(*i);
+        }
+
+        Reset();
+    }
+
     void EnterEvadeMode()
     {
+        m_creature->InterruptNonMeleeSpells(true);
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop();
-        m_creature->LoadCreaturesAddon();
-        if( m_creature->isAlive() )
+
+        if (m_creature->isAlive())
             m_creature->GetMotionMaster()->MoveTargetedHome();
 
         m_creature->SetLootRecipient(NULL);
 
         InCombat = false;
-        Reset();
 
         //Handle Evade events
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
-            {
-                //Evade
-                case EVENT_T_EVADE:
-                    ProcessEvent(*i);
-                    break;
-            }
+            if ((*i).Event.event_type == EVENT_T_EVADE)
+                ProcessEvent(*i);
         }
     }
 
