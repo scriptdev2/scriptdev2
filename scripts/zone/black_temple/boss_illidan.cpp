@@ -435,6 +435,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
         SummonMinionTimer = 2000;
 
         WalkTimer = 0;
+        IsWalking = false;
 
         TalkTimer = 0;
         TalkCount = 0;
@@ -863,6 +864,11 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
     boss_illidan_stormrageAI(Creature* c) : ScriptedAI(c)
     {
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        for(uint8 i = 0; i < 2; i++)
+        {
+            FlameGUID[i] = 0;
+            GlaiveGUID[i] = 0;
+        }
         Reset();
     }
 

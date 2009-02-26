@@ -157,7 +157,13 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
 
 struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 {
-    boss_malchezaarAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_malchezaarAI(Creature *c) : ScriptedAI(c)
+    {
+        for(uint8 i =0; i < 2; ++i)
+            axes[i] = 0;
+
+        Reset();
+    }
 
     uint32 EnfeebleTimer;
     uint32 EnfeebleResetTimer;
@@ -187,7 +193,10 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
         positions.clear();
 
         for(int i =0; i < 5; ++i)
+        {
             enfeeble_targets[i] = 0;
+            enfeeble_health[i] = 0;
+        }
 
         for(int i = 0; i < TOTAL_INFERNAL_POINTS; ++i)
             positions.push_back(&InfernalPoints[i]);

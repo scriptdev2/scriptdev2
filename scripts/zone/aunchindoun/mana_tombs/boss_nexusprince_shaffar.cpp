@@ -200,7 +200,7 @@ CreatureAI* GetAI_boss_nexusprince_shaffar(Creature *_Creature)
 
 struct MANGOS_DLL_DECL mob_ethereal_beaconAI : public ScriptedAI
 {
-    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c)
+    mob_ethereal_beaconAI(Creature *c) : ScriptedAI(c), CanEvade(false)
     {
         HeroicMode = m_creature->GetMap()->IsHeroic();
         Reset();

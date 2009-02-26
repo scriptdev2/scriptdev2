@@ -540,7 +540,7 @@ struct MANGOS_DLL_DECL boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestAI
 {
     //Holy Priest
-    boss_lady_catriona_von_indiAI(Creature *c) : boss_moroes_guestAI(c) {}
+    boss_lady_catriona_von_indiAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
 
     uint32 DispelMagic_Timer;
     uint32 GreaterHeal_Timer;
@@ -609,7 +609,7 @@ struct MANGOS_DLL_DECL boss_lady_catriona_von_indiAI : public boss_moroes_guestA
 struct MANGOS_DLL_DECL boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 {
     //Holy Pally
-    boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c) {}
+    boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
 
     uint32 Cleanse_Timer;
     uint32 GreaterBless_Timer;
@@ -725,7 +725,7 @@ struct MANGOS_DLL_DECL boss_lord_robin_darisAI : public boss_moroes_guestAI
 struct MANGOS_DLL_DECL boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 {
     //Arms Warr
-    boss_lord_crispin_ferenceAI(Creature *c) : boss_moroes_guestAI(c) {}
+    boss_lord_crispin_ferenceAI(Creature *c) : boss_moroes_guestAI(c) {Reset();}
 
     uint32 Disarm_Timer;
     uint32 HeroicStrike_Timer;
