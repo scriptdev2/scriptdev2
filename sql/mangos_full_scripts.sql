@@ -14,6 +14,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_azuregos' WHERE `entry`=6109;
 UPDATE `creature_template` SET `ScriptName`='mob_dementeddruids' WHERE `entry`=15260;
 
 /* GO */
+UPDATE `gameobject_template` SET `ScriptName`='go_cat_figurine' WHERE `entry`=13873;
 UPDATE `gameobject_template` SET `ScriptName`='go_northern_crystal_pylon' WHERE `entry`=164955;
 UPDATE `gameobject_template` SET `ScriptName`='go_western_crystal_pylon' WHERE `entry`=164956;
 UPDATE `gameobject_template` SET `ScriptName`='go_eastern_crystal_pylon' WHERE `entry`=164957;

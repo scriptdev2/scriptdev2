@@ -22,6 +22,7 @@ SDCategory: Game Objects
 EndScriptData */
 
 /* ContentData
+go_cat_figurine (the "trap" version of GO, two different exist)
 go_northern_crystal_pylon
 go_eastern_crystal_pylon
 go_western_crystal_pylon
@@ -33,6 +34,18 @@ go_tablet_of_the_seven
 EndContentData */
 
 #include "precompiled.h"
+
+/*######
+## go_cat_figurine
+######*/
+
+#define SPELL_SUMMON_GHOST_SABER    5968
+
+bool GOHello_go_cat_figurine(Player *player, GameObject* _GO)
+{
+    player->CastSpell(player,SPELL_SUMMON_GHOST_SABER,true);
+    return false;
+}
 
 /*######
 ## go_crystal_pylons (3x)
@@ -150,6 +163,11 @@ bool GOHello_go_tablet_of_the_seven(Player *player, GameObject* _GO)
 void AddSC_go_scripts()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "go_cat_figurine";
+    newscript->pGOHello =           &GOHello_go_cat_figurine;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "go_northern_crystal_pylon";
