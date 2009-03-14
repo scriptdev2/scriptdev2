@@ -28,9 +28,11 @@ struct Script
 {
     Script() :
         pGossipHello(NULL), pQuestAccept(NULL), pGossipSelect(NULL), pGossipSelectWithCode(NULL),
-        pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL), pChooseReward(NULL),
-        pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL), pGOQuestAccept(NULL),
-        pGOChooseReward(NULL),pReceiveEmote(NULL),pItemUse(NULL), GetAI(NULL), GetInstanceData(NULL)
+        pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL),
+        pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL),
+        pGOQuestAccept(NULL), pGOChooseReward(NULL),pReceiveEmote(NULL),pItemUse(NULL),
+        pEffectDummyCreature(NULL), pEffectDummyGameObj(NULL), pEffectDummyItem(NULL),
+        GetAI(NULL), GetInstanceData(NULL)
     {}
 
     std::string Name;
@@ -53,6 +55,9 @@ struct Script
     bool (*pGOChooseReward      )(Player*, GameObject*, Quest const*, uint32 );
     bool (*pReceiveEmote        )(Player*, Creature*, uint32 );
     bool (*pItemUse             )(Player*, Item*, SpellCastTargets const& );
+    bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature* );
+    bool (*pEffectDummyGameObj  )(Unit*, uint32, uint32, GameObject* );
+    bool (*pEffectDummyItem     )(Unit*, uint32, uint32, Item* );
 
     CreatureAI* (*GetAI)(Creature*);
     InstanceData* (*GetInstanceData)(Map*);

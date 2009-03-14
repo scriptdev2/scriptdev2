@@ -2166,6 +2166,36 @@ bool ReceiveEmote( Player *player, Creature *_Creature, uint32 emote )
 }
 
 MANGOS_DLL_EXPORT
+bool EffectDummyCreature(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
+{
+    Script *tmpscript = m_scripts[pCreatureTarget->GetScriptId()];
+
+    if (!tmpscript || !tmpscript->pEffectDummyCreature) return false;
+
+    return tmpscript->pEffectDummyCreature(pCaster, spellId, effIndex, pCreatureTarget);
+}
+
+MANGOS_DLL_EXPORT
+bool EffectDummyGameObj(Unit *pCaster, uint32 spellId, uint32 effIndex, GameObject *pGameObjTarget)
+{
+    Script *tmpscript = m_scripts[pGameObjTarget->GetGOInfo()->ScriptId];
+
+    if (!tmpscript || !tmpscript->pEffectDummyGameObj) return false;
+
+    return tmpscript->pEffectDummyGameObj(pCaster, spellId, effIndex, pGameObjTarget);
+}
+
+MANGOS_DLL_EXPORT
+bool EffectDummyItem(Unit *pCaster, uint32 spellId, uint32 effIndex, Item *pItemTarget)
+{
+    Script *tmpscript = m_scripts[pItemTarget->GetProto()->ScriptId];
+
+    if (!tmpscript || !tmpscript->pEffectDummyItem) return false;
+
+    return tmpscript->pEffectDummyItem(pCaster, spellId, effIndex, pItemTarget);
+}
+
+MANGOS_DLL_EXPORT
 InstanceData* CreateInstanceData(Map *map)
 {
     if (!map->IsDungeon()) return NULL;
