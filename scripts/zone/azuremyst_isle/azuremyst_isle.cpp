@@ -414,6 +414,79 @@ CreatureAI* GetAI_npc_magwinAI(Creature *_Creature)
 }
 
 /*######
+## npc_nestlewood_owlkin
+######*/
+
+enum
+{
+    SPELL_INOCULATE_OWLKIN  = 29528,
+    ENTRY_OWLKIN            = 16518,
+    ENTRY_OWLKIN_INOC       = 16534,
+};
+
+struct MANGOS_DLL_DECL npc_nestlewood_owlkinAI : public ScriptedAI
+{
+    npc_nestlewood_owlkinAI(Creature *c) : ScriptedAI(c) {Reset();}
+
+    uint32 DespawnTimer;
+
+    void Reset()
+    {
+        DespawnTimer = 0;
+        m_creature->SetVisibility(VISIBILITY_ON);
+    }
+
+    void Aggro(Unit *who) {}
+
+    void UpdateAI(const uint32 diff)
+    {
+        //timer gets adjusted by the triggered aura effect
+        if (DespawnTimer)
+        {
+            if (DespawnTimer <= diff)
+            {
+                //once we are able to, despawn us
+                m_creature->SetVisibility(VISIBILITY_OFF);
+                m_creature->setDeathState(JUST_DIED);
+                m_creature->SetHealth(0);
+                m_creature->CombatStop();
+                m_creature->DeleteThreatList();
+                m_creature->RemoveCorpse();
+            }else DespawnTimer -= diff;
+        }
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_npc_nestlewood_owlkin(Creature* pCreature)
+{
+    return new npc_nestlewood_owlkinAI(pCreature);
+}
+
+bool EffectDummyCreature_npc_nestlewood_owlkin(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
+{
+    //always check spellid and effectindex
+    if (spellId == SPELL_INOCULATE_OWLKIN && effIndex == 0)
+    {
+        if (pCreatureTarget->GetEntry() != ENTRY_OWLKIN)
+            return true;
+
+        pCreatureTarget->UpdateEntry(ENTRY_OWLKIN_INOC);
+
+        //set despawn timer, since we want to remove creature after a short time
+        ((npc_nestlewood_owlkinAI*)pCreatureTarget->AI())->DespawnTimer = 15000;
+
+        //always return true when we are handling this spell and effect
+        return true;
+    }
+    return false;
+}
+
+/*######
 ## npc_susurrus
 ######*/
 
@@ -476,6 +549,12 @@ void AddSC_azuremyst_isle()
     newscript->Name = "npc_magwin";
     newscript->GetAI = &GetAI_npc_magwinAI;
     newscript->pQuestAccept = &QuestAccept_npc_magwin;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_nestlewood_owlkin";
+    newscript->GetAI = &GetAI_npc_nestlewood_owlkin;
+    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_nestlewood_owlkin;
     newscript->RegisterSelf();
 
     newscript = new Script;
