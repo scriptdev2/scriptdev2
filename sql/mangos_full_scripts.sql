@@ -72,6 +72,7 @@ UPDATE `item_template` SET `ScriptName`='item_zezzaks_shard' WHERE `entry`=31463
 /* NPC (usually creatures to be found in more than one specific zone) */
 UPDATE `creature_template` SET `ScriptName`='npc_chicken_cluck' WHERE `entry`=620;
 UPDATE `creature_template` SET `ScriptName`='npc_dancing_flames' WHERE `entry`=25305;
+UPDATE `creature_template` SET `ScriptName`='npc_garments_of_quests' WHERE `entry` IN (12429,12423,12427,12430,12428);
 UPDATE `creature_template` SET `ScriptName`='npc_guardian' WHERE `entry`=5764;
 UPDATE `creature_template` SET `ScriptName`='npc_mount_vendor' WHERE `entry` IN (384,1261,1460,2357,3362,3685,4730,4731,4885,7952,7955,16264,17584);
 UPDATE `creature_template` SET `ScriptName`='npc_doctor' WHERE `entry` IN (12939,12920);
@@ -98,6 +99,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_ravenholdt' WHERE `entry`=13936
 
 
 /* ASHENVALE */
+UPDATE `creature_template` SET `ScriptName`='npc_ruul_snowhoof' WHERE `entry`=12818;
 UPDATE `creature_template` SET `ScriptName`='npc_torek' WHERE `entry`=12858;
 
 /*  */
@@ -737,6 +739,8 @@ UPDATE `creature_template` SET `ScriptName`='mob_enslaved_netherwing_drake' WHER
 
 /* SHATTRATH */
 UPDATE `creature_template` SET `ScriptName`='npc_ishanah' WHERE `entry`=18538;
+UPDATE `creature_template` SET `ScriptName`='npc_khadgar' WHERE `entry`=18166;
+UPDATE `creature_template` SET `ScriptName`='npc_khadgars_servant' WHERE `entry`=19685;
 UPDATE `creature_template` SET `ScriptName`='npc_raliq_the_drunk' WHERE `entry`=18585;
 UPDATE `creature_template` SET `ScriptName`='npc_salsalabim' WHERE `entry`=18584;
 UPDATE `creature_template` SET `ScriptName`='npc_shattrathflaskvendors' WHERE `entry` IN (23483,23484);
