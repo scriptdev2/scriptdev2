@@ -194,8 +194,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000227,'This timeway is currently collapsing. What that may hold for the past, present and future is currently unknown...',0,3,0,0,'WHISPER_CUSTODIAN_11'),
 (-1000228,'The timeways are currently ranked in order from least catastrophic to most catastrophic. Note that they are all classified as catastrophic, meaning that any single one of these timeways collapsing would mean that your world would end. We only classify them in such a way so that the heroes and adventurers that are sent here know which timeway best suits their abilities.',0,3,0,0,'WHISPER_CUSTODIAN_12'),
 (-1000229,'All we know of this timeway is that it leads to Mount Hyjal. The Infinite Dragonflight have gone to great lengths to prevent our involvement. We know next to nothing, mortal. Soridormi is currently attempting to break through the timeway\'s defenses but has thus far been unsuccessful. You might be our only hope of breaking through and resolving the conflict.',0,3,0,0,'WHISPER_CUSTODIAN_13'),
-(-1000230,'Our time is at an end $N. I would wish you luck, if such a thing existed.',0,3,0,0,'WHISPER_CUSTODIAN_14');
+(-1000230,'Our time is at an end $N. I would wish you luck, if such a thing existed.',0,3,0,0,'WHISPER_CUSTODIAN_14'),
 
+(-1000231,'Ah, $GPriest:Priestess; you came along just in time. I appreciate it.',0,0,1,2,'SAY_DG_KEL_HEALED'),
+(-1000232,'Thank you! Thank you, $GPriest:Priestess;. Now i can take on those gnolls with your power back to me!',0,0,1,1,'SAY_DG_KEL_THANKS'),
+(-1000233,'Farewell to you, and may shadow always protect you!',0,0,1,3,'SAY_DG_KEL_GOODBYE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
