@@ -537,9 +537,17 @@ enum
     ENTRY_KORJA             = 12430,
     ENTRY_DG_KEL            = 12428,
 
-    SAY_DG_KEL_HEALED       = -1000231,
+    SAY_COMMON_HEALED       = -1000231,
     SAY_DG_KEL_THANKS       = -1000232,
     SAY_DG_KEL_GOODBYE      = -1000233,
+    SAY_ROBERTS_THANKS      = -1000256,
+    SAY_ROBERTS_GOODBYE     = -1000257,
+    SAY_KORJA_THANKS        = -1000258,
+    SAY_KORJA_GOODBYE       = -1000259,
+    SAY_DOLF_THANKS         = -1000260,
+    SAY_DOLF_GOODBYE        = -1000261,
+    SAY_SHAYA_THANKS        = -1000262,
+    SAY_SHAYA_GOODBYE       = -1000263,
 };
 
 float fRunTo[5][3]=
@@ -600,14 +608,14 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_SHAYA_THANKS,m_creature,pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -617,14 +625,14 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_ROBERTS_THANKS,m_creature,pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -634,14 +642,14 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_DOLF_THANKS,m_creature,pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -651,14 +659,14 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_KORJA_THANKS,m_creature,pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                //DoScriptText(...,m_creature,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -675,7 +683,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                             {
                                 caster = pCaster->GetGUID();
                                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_DG_KEL_HEALED,m_creature,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED,m_creature,pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -717,19 +725,19 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
                     switch(m_creature->GetEntry())
                     {
                         case ENTRY_SHAYA:
-                            //DoScriptText(...,m_creature,pUnit);
+                            DoScriptText(SAY_SHAYA_GOODBYE,m_creature,pUnit);
                             m_creature->GetMotionMaster()->MovePoint(0, fRunTo[0][0], fRunTo[0][1], fRunTo[0][2]);
                             break;
                         case ENTRY_ROBERTS:
-                            //DoScriptText(...,m_creature,pUnit);
+                            DoScriptText(SAY_ROBERTS_GOODBYE,m_creature,pUnit);
                             m_creature->GetMotionMaster()->MovePoint(0, fRunTo[1][0], fRunTo[1][1], fRunTo[1][2]);
                             break;
                         case ENTRY_DOLF:
-                            //DoScriptText(...,m_creature,pUnit);
+                            DoScriptText(SAY_DOLF_GOODBYE,m_creature,pUnit);
                             m_creature->GetMotionMaster()->MovePoint(0, fRunTo[2][0], fRunTo[2][1], fRunTo[2][2]);
                             break;
                         case ENTRY_KORJA:
-                            //DoScriptText(...,m_creature,pUnit);
+                            DoScriptText(SAY_KORJA_GOODBYE,m_creature,pUnit);
                             m_creature->GetMotionMaster()->MovePoint(0, fRunTo[3][0], fRunTo[3][1], fRunTo[3][2]);
                             break;
                         case ENTRY_DG_KEL:
