@@ -745,6 +745,9 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public ScriptedAI
             }else RunAwayTimer -= diff;
         }
 
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
         DoMeleeAttackIfReady();
     }
 };
