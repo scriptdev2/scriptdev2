@@ -96,7 +96,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_ravenholdt' WHERE `entry`=13936
 
 
 /* ARATHI HIGHLANDS */
-
+UPDATE `creature_template` SET `ScriptName`='npc_professor_phizzlethorpe' WHERE `entry`=2768;
 
 /* ASHENVALE */
 UPDATE `creature_template` SET `ScriptName`='npc_ruul_snowhoof' WHERE `entry`=12818;
