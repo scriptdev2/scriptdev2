@@ -121,19 +121,26 @@ struct MANGOS_DLL_DECL boss_arlokkAI : public ScriptedAI
 
             Panther = m_creature->SummonCreature(15101,-11532.79980,-1649.6734,41.4800,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
 
-            if (markedTarget && Panther)
+            if (Panther)
             {
-                DoScriptText(SAY_FEAST_PANTHER, m_creature, markedTarget);
-                Panther ->AI()->AttackStart(markedTarget);
+                if (markedTarget)
+                {
+                    DoScriptText(SAY_FEAST_PANTHER, m_creature, markedTarget);
+                    Panther ->AI()->AttackStart(markedTarget);
+                }
+                else
+                    Panther ->AI()->AttackStart(target);
             }
-            else Panther ->AI()->AttackStart(target);
 
             Panther = m_creature->SummonCreature(15101,-11532.9970,-1606.4840,41.2979,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
 
-            if (markedTarget && Panther)
-                Panther ->AI()->AttackStart(markedTarget);
-            else
-                Panther ->AI()->AttackStart(target);
+            if (Panther)
+            {
+                if (markedTarget)
+                    Panther ->AI()->AttackStart(markedTarget);
+                else
+                    Panther ->AI()->AttackStart(target);
+            }
 
             Counter++;
             Summon_Timer = 5000;

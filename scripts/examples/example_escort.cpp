@@ -64,8 +64,8 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
                 {
                     DoScriptText(SAY_WP_2, m_creature);
                     Creature* temp = m_creature->SummonCreature(21878, m_creature->GetPositionX()+5, m_creature->GetPositionY()+7, m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
-
-                    temp->AI()->AttackStart(m_creature);
+                    if(temp)
+                        temp->AI()->AttackStart(m_creature);
                 }
                 break;
 
