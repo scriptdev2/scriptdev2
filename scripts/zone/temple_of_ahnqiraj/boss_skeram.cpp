@@ -289,6 +289,9 @@ struct MANGOS_DLL_DECL boss_skeramAI : public ScriptedAI
         ((boss_skeramAI*)Image2->AI())->IsImage = true;
 
         Invisible = true;
+        delete place1;
+        delete place2;
+        delete place3;
     }
 };
 
