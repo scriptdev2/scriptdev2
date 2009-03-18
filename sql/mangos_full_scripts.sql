@@ -738,6 +738,7 @@ UPDATE creature_template SET ScriptName='mob_mature_netherwing_drake' WHERE entr
 UPDATE creature_template SET ScriptName='mob_enslaved_netherwing_drake' WHERE entry=21722;
 
 /* SHATTRATH */
+UPDATE creature_template SET ScriptName='npc_dirty_larry' WHERE entry=19720;
 UPDATE creature_template SET ScriptName='npc_ishanah' WHERE entry=18538;
 UPDATE creature_template SET ScriptName='npc_khadgar' WHERE entry=18166;
 UPDATE creature_template SET ScriptName='npc_khadgars_servant' WHERE entry=19685;

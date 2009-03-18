@@ -17,11 +17,12 @@
 /* ScriptData
 SDName: Shattrath_City
 SD%Complete: 100
-SDComment: Quest support: 10004, 10009. Flask vendors, Teleport to Caverns of Time
+SDComment: Quest support: 10004, 10009, 10211, 10231. Flask vendors, Teleport to Caverns of Time
 SDCategory: Shattrath City
 EndScriptData */
 
 /* ContentData
+npc_dirty_larry
 npc_ishanah
 npc_khadgar
 npc_khadgars_servant
@@ -33,6 +34,243 @@ EndContentData */
 
 #include "precompiled.h"
 #include "../../npc/npc_escortAI.h"
+
+enum
+{
+    SAY_START               = -1000274,
+    SAY_COUNT               = -1000275,
+    SAY_COUNT_1             = -1000276,
+    SAY_COUNT_2             = -1000277,
+    SAY_ATTACK              = -1000278,
+    SAY_GIVEUP              = -1000279,
+    QUEST_WHAT_BOOK         = 10231,
+    ENTRY_CREEPJACK         = 19726,
+    ENTRY_MALONE            = 19725,
+};
+
+#define GOSSIP_ITEM_BOOK    "Ezekiel said that you might have a certain book..."
+
+struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
+{
+    npc_dirty_larryAI(Creature* pC) : ScriptedAI(pC)
+    {
+        m_uiNpcFlags = pC->GetUInt32Value(UNIT_NPC_FLAGS);
+        m_uiCreepjackGUID = 0;
+        m_uiMaloneGUID = 0;
+        Reset();
+    }
+
+    uint32 m_uiNpcFlags;
+
+    uint64 m_uiCreepjackGUID;
+    uint64 m_uiMaloneGUID;
+    uint64 m_uiPlayerGUID;
+
+    bool bEvent;
+    bool bActiveAttack;
+
+    uint32 m_uiSayTimer;
+    uint32 m_uiStep;
+
+    void Reset()
+    {
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
+
+        m_uiPlayerGUID = 0;
+        m_uiCreepjackGUID = 0;
+        m_uiMaloneGUID = 0;
+
+        bEvent = false;
+        bActiveAttack = false;
+
+        m_uiSayTimer = 1000;
+        m_uiStep = 0;
+
+        //expect database to have correct faction (1194) and then only unit flags set/remove needed
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
+        m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
+    }
+
+    Creature* SelectCreatureInGrid(uint32 uiEntry, float fRange)
+    {
+        Creature* pCreature = NULL;
+
+        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
+        Cell cell(pair);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, uiEntry, true, fRange);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
+
+        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+
+        CellLock<GridReadGuard> cell_lock(cell, pair);
+        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
+
+        return pCreature;
+    }
+
+    void Aggro(Unit* who) {}
+
+    void SetRuffies(uint64 guid, bool bAttack, bool bReset)
+    {
+        Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, guid);
+
+        if (!pCreature)
+            return;
+
+        if (bReset)
+        {
+            if (!pCreature->IsInEvadeMode() && pCreature->isAlive())
+                pCreature->AI()->EnterEvadeMode();
+
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
+        }
+        else
+        {
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
+            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
+
+            if (!pCreature->isAlive())
+                return;
+
+            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+
+            if (bAttack)
+            {
+                if (Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+                {
+                    if (pUnit->isAlive())
+                        pCreature->AI()->AttackStart(pUnit);
+                }
+            }
+        }
+    }
+
+    void StartEvent()
+    {
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
+
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);
+        m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_9);
+
+        if (Creature* pCreepjack = SelectCreatureInGrid(ENTRY_CREEPJACK, 20.0f))
+            m_uiCreepjackGUID = pCreepjack->GetGUID();
+
+        if (Creature* pMalone = SelectCreatureInGrid(ENTRY_MALONE, 20.0f))
+            m_uiMaloneGUID = pMalone->GetGUID();
+
+        bEvent = true;
+    }
+
+    uint32 NextStep(uint32 uiStep)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, m_uiPlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+        {
+            SetRuffies(m_uiCreepjackGUID,false,true);
+            SetRuffies(m_uiMaloneGUID,false,true);
+            EnterEvadeMode();
+            return 0;
+        }
+
+        switch(uiStep)
+        {
+            case 1:
+                DoScriptText(SAY_START, m_creature, pUnit);
+                SetRuffies(m_uiCreepjackGUID,false,false);
+                SetRuffies(m_uiMaloneGUID,false,false);
+                return 3000;
+            case 2: DoScriptText(SAY_COUNT, m_creature, pUnit); return 5000;
+            case 3: DoScriptText(SAY_COUNT_1, m_creature, pUnit); return 3000;
+            case 4: DoScriptText(SAY_COUNT_2, m_creature, pUnit); return 3000;
+            case 5: DoScriptText(SAY_ATTACK, m_creature, pUnit); return 3000;
+            case 6:
+                if (!InCombat && pUnit->isAlive())
+                    AttackStart(pUnit);
+
+                SetRuffies(m_uiCreepjackGUID,true,false);
+                SetRuffies(m_uiMaloneGUID,true,false);
+                bActiveAttack = true;
+                return 2000;
+            default: return 0;
+        }
+    }
+
+    void DamageTaken(Unit* pDoneBy, uint32 &damage)
+    {
+        if (damage < m_creature->GetHealth())
+            return;
+
+        //damage will kill, this is pretty much the same as 1%HP left
+        if (bEvent)
+        {
+            damage = 0;
+
+            if (Player* pPlayer = (Player*)Unit::GetUnit(*m_creature, m_uiPlayerGUID))
+            {
+                DoScriptText(SAY_GIVEUP, m_creature, pPlayer);
+                pPlayer->GroupEventHappens(QUEST_WHAT_BOOK, m_creature);
+            }
+
+            SetRuffies(m_uiCreepjackGUID,false,true);
+            SetRuffies(m_uiMaloneGUID,false,true);
+            EnterEvadeMode();
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (bEvent && !bActiveAttack)
+        {
+            if (m_uiSayTimer < diff)
+                m_uiSayTimer = NextStep(++m_uiStep);
+            else
+                m_uiSayTimer -= diff;
+        }
+
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+bool GossipHello_npc_dirty_larry(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pPlayer->GetQuestStatus(QUEST_WHAT_BOOK) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BOOK, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_dirty_larry(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action)
+{
+    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        ((npc_dirty_larryAI*)pCreature->AI())->m_uiPlayerGUID = pPlayer->GetGUID();
+        ((npc_dirty_larryAI*)pCreature->AI())->StartEvent();
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+
+    return true;
+}
+
+CreatureAI* GetAI_npc_dirty_larry(Creature* pCreature)
+{
+    return new npc_dirty_larryAI(pCreature);
+}
 
 /*######
 ## npc_ishanah
@@ -500,6 +738,13 @@ bool GossipSelect_npc_zephyr(Player *player, Creature *_Creature, uint32 sender,
 void AddSC_shattrath_city()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_dirty_larry";
+    newscript->GetAI = &GetAI_npc_dirty_larry;
+    newscript->pGossipHello = &GossipHello_npc_dirty_larry;
+    newscript->pGossipSelect = &GossipSelect_npc_dirty_larry;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_ishanah";
