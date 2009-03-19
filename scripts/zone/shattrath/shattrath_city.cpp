@@ -404,6 +404,7 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
         else
             error_log("SD2: npc_khadgars_servant can not obtain ownerGUID or ownerGUID is not a player.");
 
+        c->SetSpeed(MOVE_WALK,1.3f);
         Reset();
     }
 
