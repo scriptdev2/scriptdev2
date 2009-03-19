@@ -39,7 +39,10 @@ EndContentData */
 ## go_cat_figurine
 ######*/
 
-#define SPELL_SUMMON_GHOST_SABER    5968
+enum
+{
+    SPELL_SUMMON_GHOST_SABER    = 5968,
+};
 
 bool GOHello_go_cat_figurine(Player *player, GameObject* _GO)
 {
@@ -120,6 +123,26 @@ bool GOHello_go_field_repair_bot_74A(Player *player, GameObject* _GO)
 }
 
 /*######
+## go_gilded_brazier
+######*/
+
+enum
+{
+    NPC_STILLBLADE  = 17716,
+};
+
+bool GOHello_go_gilded_brazier(Player* pPlayer, GameObject* pGO)
+{
+    if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
+    {
+        if (Creature* pCreature = pPlayer->SummonCreature(NPC_STILLBLADE, 8087.632, -7542.740, 151.568, 0.122, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
+            pCreature->AI()->AttackStart(pPlayer);
+    }
+
+    return true;
+}
+
+/*######
 ## go_orb_of_command
 ######*/
 
@@ -192,6 +215,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_field_repair_bot_74A";
     newscript->pGOHello =           &GOHello_go_field_repair_bot_74A;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_gilded_brazier";
+    newscript->pGOHello =           &GOHello_go_gilded_brazier;
     newscript->RegisterSelf();
 
     newscript = new Script;
