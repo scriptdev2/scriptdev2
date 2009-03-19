@@ -94,23 +94,35 @@ bool GossipSelect_npc_budd_nedreck(Player *player, Creature *_Creature, uint32 s
 ## npc_ranger_lilatha
 ######*/
 
-#define SAY_START           -1000140
-#define SAY_PROGRESS1       -1000141
-#define SAY_PROGRESS2       -1000142
-#define SAY_PROGRESS3       -1000143
-#define SAY_END1            -1000144
-#define SAY_END2            -1000145
-#define CAPTAIN_ANSWER      -1000146
+enum
+{
+    SAY_START           = -1000140,
+    SAY_PROGRESS1       = -1000141,
+    SAY_PROGRESS2       = -1000142,
+    SAY_PROGRESS3       = -1000143,
+    SAY_END1            = -1000144,
+    SAY_END2            = -1000145,
+    CAPTAIN_ANSWER      = -1000146,
 
-#define QUEST_CATACOMBS     9212
-#define GO_CAGE             181152
-#define NPC_CAPTAIN_HELIOS  16220
+    QUEST_CATACOMBS     = 9212,
+    GO_CAGE             = 181152,
+    NPC_CAPTAIN_HELIOS  = 16220,
+    FACTION_SMOON_E     = 1603,
+};
 
 struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 {
-    npc_ranger_lilathaAI(Creature *c) : npc_escortAI(c) {Reset();}
+    npc_ranger_lilathaAI(Creature *c) : npc_escortAI(c)
+    {
+        m_uiNormFaction = c->getFaction();
+        m_uiGoCageGUID = 0;
+        Reset();
+    }
 
-    void SetCage(bool open)
+    uint32 m_uiNormFaction;
+    uint64 m_uiGoCageGUID;
+
+    GameObject* GetGoCage()
     {
         GameObject* pGo = NULL;
 
@@ -127,13 +139,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         CellLock<GridReadGuard> cell_lock(cell, pair);
         cell_lock->Visit(cell_lock, go_searcher,*(m_creature->GetMap()));
 
-        if (pGo)
-        {
-            if (open)
-                pGo->SetGoState(0);
-            else
-                pGo->SetGoState(1);
-        } else error_log("SD2: npc_ranger_lilatha: Cannot find Cage!");
+        return pGo;
     }
 
     void CaptainAnswer()
@@ -155,35 +161,46 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
 
         if (pCreature)
             DoScriptText(CAPTAIN_ANSWER, pCreature);
-        else error_log("SD2: npc_ranger_lilatha: Captain Helios not found!");
+        else
+            error_log("SD2: npc_ranger_lilatha: Captain Helios not found!");
     }
 
     void WaypointReached(uint32 i)
     {
-        Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player || player->GetTypeId() != TYPEID_PLAYER)
+        if (!pPlayer || pPlayer->GetTypeId() != TYPEID_PLAYER)
             return;
 
         switch(i)
         {
             case 0:
+                if (GameObject* pGoTemp = GetGoCage())
+                    m_uiGoCageGUID = pGoTemp->GetGUID();
+
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
-                SetCage(true);
-                DoScriptText(SAY_START, m_creature, player);
+
+                if (GameObject* pGo = GameObject::GetGameObject(*m_creature,m_uiGoCageGUID))
+                    pGo->SetGoState(0);
+
+                DoScriptText(SAY_START, m_creature, pPlayer);
+                break;
+            case 1:
+                if (GameObject* pGo = GameObject::GetGameObject(*m_creature,m_uiGoCageGUID))
+                    pGo->SetGoState(1);
                 break;
             case 5:
-                DoScriptText(SAY_PROGRESS1, m_creature, player);
+                DoScriptText(SAY_PROGRESS1, m_creature, pPlayer);
                 break;
             case 11:
-                DoScriptText(SAY_PROGRESS2, m_creature, player); 
+                DoScriptText(SAY_PROGRESS2, m_creature, pPlayer); 
                 break;
             case 18:
-                DoScriptText(SAY_PROGRESS3, m_creature, player);
-                if (Creature* Summ1 = m_creature->SummonCreature(16342, 7627.083984, -7532.538086, 152.128616, 1.082733, TEMPSUMMON_DEAD_DESPAWN, 0))
-                    Summ1->AI()->AttackStart(m_creature);
-                if (Creature* Summ2 = m_creature->SummonCreature(16343, 7620.432129, -7532.550293, 152.454865, 0.827478, TEMPSUMMON_DEAD_DESPAWN, 0))
-                    Summ2->AI()->AttackStart(player);
+                DoScriptText(SAY_PROGRESS3, m_creature, pPlayer);
+                if (Creature* pSum1 = m_creature->SummonCreature(16342, 7627.083984, -7532.538086, 152.128616, 1.082733, TEMPSUMMON_DEAD_DESPAWN, 0))
+                    pSum1->AI()->AttackStart(m_creature);
+                if (Creature* pSum2 = m_creature->SummonCreature(16343, 7620.432129, -7532.550293, 152.454865, 0.827478, TEMPSUMMON_DEAD_DESPAWN, 0))
+                    pSum2->AI()->AttackStart(pPlayer);
                 break;
             case 19:
                 m_creature->SetSpeed(MOVE_RUN, 1.5f);
@@ -192,13 +209,13 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 m_creature->SetSpeed(MOVE_WALK, 1.0f);
                 break;
             case 30:
-                ((Player*)player)->GroupEventHappens(QUEST_CATACOMBS,m_creature);
+                ((Player*)pPlayer)->GroupEventHappens(QUEST_CATACOMBS,m_creature);
                 break;
             case 32:
-                DoScriptText(SAY_END1, m_creature, player);
+                DoScriptText(SAY_END1, m_creature, pPlayer);
                 break;
             case 33:
-                DoScriptText(SAY_END2, m_creature, player);
+                DoScriptText(SAY_END2, m_creature, pPlayer);
                 CaptainAnswer();
                 break;
         }
@@ -207,21 +224,20 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     void Reset()
     {
         if (!IsBeingEscorted)
-            m_creature->setFaction(1602);
-
-        SetCage(false);
+        {
+            m_creature->setFaction(m_uiNormFaction);
+            m_uiGoCageGUID = 0;
+        }
     }
 
-    void Aggro(Unit* who)
-    {
-    }
+    void Aggro(Unit* who) {}
 
     void JustDied(Unit* killer)
     {
-        if (PlayerGUID)
+        if (IsBeingEscorted && PlayerGUID)
         {
-            if (Unit* player = Unit::GetUnit((*m_creature), PlayerGUID))
-                ((Player*)player)->FailQuest(QUEST_CATACOMBS);
+            if (Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID))
+                ((Player*)pPlayer)->FailQuest(QUEST_CATACOMBS);
         }
     }
 
@@ -231,30 +247,34 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_ranger_lilathaAI(Creature *_Creature)
+CreatureAI* GetAI_npc_ranger_lilathaAI(Creature* pCreature)
 {
-    npc_ranger_lilathaAI* ranger_lilathaAI = new npc_ranger_lilathaAI(_Creature);
+    npc_ranger_lilathaAI* ranger_lilathaAI = new npc_ranger_lilathaAI(pCreature);
 
-    ranger_lilathaAI->AddWaypoint(0, 7545.07, -7359.87, 162.354, 4000);// Say0
+    // Say0
+    ranger_lilathaAI->AddWaypoint(0, 7545.07, -7359.87, 162.354, 4000);
     ranger_lilathaAI->AddWaypoint(1, 7550.048340, -7362.237793, 162.235657);
     ranger_lilathaAI->AddWaypoint(2, 7566.976074, -7364.315430, 161.738770);
     ranger_lilathaAI->AddWaypoint(3, 7578.830566, -7361.677734, 161.738770);
     ranger_lilathaAI->AddWaypoint(4, 7590.969238, -7359.053711, 162.257660);
-    ranger_lilathaAI->AddWaypoint(5, 7598.354004, -7362.815430, 162.256683, 4000);// Say1
+    // Say1
+    ranger_lilathaAI->AddWaypoint(5, 7598.354004, -7362.815430, 162.256683, 4000);
     ranger_lilathaAI->AddWaypoint(6, 7605.861328, -7380.424316, 161.937073);
     ranger_lilathaAI->AddWaypoint(7, 7605.295410, -7387.382813, 157.253998);
     ranger_lilathaAI->AddWaypoint(8, 7606.131836, -7393.893555, 156.941925);
     ranger_lilathaAI->AddWaypoint(9, 7615.207520, -7400.187012, 157.142639);
     ranger_lilathaAI->AddWaypoint(10, 7618.956543, -7402.652832, 158.202042);
     ranger_lilathaAI->AddWaypoint(11, 7636.850586, -7401.756836, 162.144791);
-    ranger_lilathaAI->AddWaypoint(12, 7637.058105, -7404.944824, 162.206970, 4000);// Say2
+    // Say2
+    ranger_lilathaAI->AddWaypoint(12, 7637.058105, -7404.944824, 162.206970, 4000);
     ranger_lilathaAI->AddWaypoint(13, 7636.910645, -7412.585449, 162.366425);
     ranger_lilathaAI->AddWaypoint(14, 7637.607910, -7425.591797, 162.630661);
     ranger_lilathaAI->AddWaypoint(15, 7637.816895, -7459.057129, 163.302704);
     ranger_lilathaAI->AddWaypoint(16, 7638.859863, -7470.902344, 162.517059);
     ranger_lilathaAI->AddWaypoint(17, 7641.395996, -7488.217285, 157.381287);
     ranger_lilathaAI->AddWaypoint(18, 7634.455566, -7505.451660, 154.682159);
-    ranger_lilathaAI->AddWaypoint(19, 7631.906738, -7516.948730, 153.597382);// Say3
+    // Say3
+    ranger_lilathaAI->AddWaypoint(19, 7631.906738, -7516.948730, 153.597382);
     ranger_lilathaAI->AddWaypoint(20, 7622.231445, -7537.037598, 151.587112);
     ranger_lilathaAI->AddWaypoint(21, 7610.921875, -7550.670410, 149.639374);
     ranger_lilathaAI->AddWaypoint(22, 7598.229004, -7562.551758, 145.953888);
@@ -267,19 +287,21 @@ CreatureAI* GetAI_npc_ranger_lilathaAI(Creature *_Creature)
     ranger_lilathaAI->AddWaypoint(29, 7571.155762, -7659.118652, 151.244568);
     ranger_lilathaAI->AddWaypoint(30, 7579.119629, -7662.213867, 151.651505);
     ranger_lilathaAI->AddWaypoint(31, 7603.768066, -7667.000488, 153.997726);
-    ranger_lilathaAI->AddWaypoint(32, 7603.768066, -7667.000488, 153.997726, 4000);// Say4
-    ranger_lilathaAI->AddWaypoint(33, 7603.768066, -7667.000488, 153.997726, 8000);// Say5
+    // Say4
+    ranger_lilathaAI->AddWaypoint(32, 7603.768066, -7667.000488, 153.997726, 4000);
+    // Say5
+    ranger_lilathaAI->AddWaypoint(33, 7603.768066, -7667.000488, 153.997726, 8000);
     ranger_lilathaAI->AddWaypoint(34, 7603.768066, -7667.000488, 153.997726);
 
     return (CreatureAI*)ranger_lilathaAI;
 }
 
-bool QuestAccept_npc_ranger_lilatha(Player* player, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_ranger_lilatha(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
 {
-    if (quest->GetQuestId() == QUEST_CATACOMBS)
+    if (pQuest->GetQuestId() == QUEST_CATACOMBS)
     {
-        creature->setFaction(1603);
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, false, player->GetGUID());
+        pCreature->setFaction(FACTION_SMOON_E);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
     }
     return true;
 }
