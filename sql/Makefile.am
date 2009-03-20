@@ -29,4 +29,5 @@ pkgdata_DATA = \
 	create_database.sql \
 	mangos_full_scripts.sql \
 	scriptdev2_script_texts.sql \
+	scriptdev2_script_waypoint.sql \
 	scriptdev2_structure.sql
