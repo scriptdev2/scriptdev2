@@ -11,7 +11,6 @@
 #include "ProgressBar.h"
 #include "scripts/creature/mob_event_ai.h"
 
-//*** Global data ***
 int num_sc_scripts;
 Script *m_scripts[MAX_SCRIPTS];
 
@@ -43,20 +42,16 @@ enum ChatType
 // Text Maps
 UNORDERED_MAP<int32, StringTextData> TextMap;
 
-//*** End Global data ***
+// Waypoint lists
+std::list<PointMovement> PointMovementList;
 
-//*** EventAI data ***
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
 std::list<EventAI_Event> EventAI_Event_List;
 
 //Event AI summon structure. Used exclusivly by mob_event_ai.cpp.
 UNORDERED_MAP<uint32, EventAI_Summon> EventAI_Summon_Map;
 
-//Event AI error prevention structure. Used at runtime to prevent error log spam of same creature id.
-//UNORDERED_MAP<uint32, EventAI_CreatureError> EventAI_CreatureErrorPreventionList;
-
 uint32 EAI_ErrorLevel;
-//*** End EventAI data ***
 
 void FillSpellSummary();
 
@@ -817,6 +812,67 @@ void LoadDatabase()
         bar.step();
         outstring_log("");
         outstring_log(">> Loaded 0 additional Custom Texts data. DB table `custom_texts` is empty.");
+    }
+
+    // Drop Existing Waypoint list
+    PointMovementList.clear();
+    uint64 uiCreatureCount = 0;
+
+    // Load Waypoints
+    result = SD2Database.PQuery("SELECT COUNT(entry) FROM script_waypoint GROUP BY entry");
+    if (result)
+    {
+        uiCreatureCount = result->GetRowCount();
+        delete result;
+    }
+
+    outstring_log("SD2: Loading Script Waypoints for %u creature(s)...", uiCreatureCount);
+
+    result = SD2Database.PQuery("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY pointid");
+
+    if (result)
+    {
+        barGoLink bar(result->GetRowCount());
+        uint32 uiNodeCount = 0;
+
+        do
+        {
+            bar.step();
+            Field* pFields = result->Fetch();
+            PointMovement pTemp;
+
+            pTemp.m_uiCreatureEntry  = pFields[0].GetUInt32();
+            pTemp.m_uiPointId        = pFields[1].GetUInt32();
+            pTemp.m_fX               = pFields[2].GetFloat();
+            pTemp.m_fY               = pFields[3].GetFloat();
+            pTemp.m_fZ               = pFields[4].GetFloat();
+            pTemp.m_uiWaitTime       = pFields[5].GetUInt32();
+
+            CreatureInfo const* pCInfo = GetCreatureTemplateStore(pTemp.m_uiCreatureEntry);
+            if (!pCInfo)
+            {
+                error_db_log("SD2: DB table script_waypoint has waypoint for non-existant creature entry %u", pTemp.m_uiCreatureEntry);
+                continue;
+            }
+
+            if (!pCInfo->ScriptID)
+                error_db_log("SD2: DB table script_waypoint has waypoint for creature entry %u, but creature does not have ScriptName defined and then useless.", pTemp.m_uiCreatureEntry);
+
+            PointMovementList.push_back(pTemp);
+            ++uiNodeCount;
+        } while (result->NextRow());
+
+        delete result;
+
+        outstring_log("");
+        outstring_log(">> Loaded %u Script Waypoint nodes.", uiNodeCount);
+    }
+    else
+    {
+        barGoLink bar(1);
+        bar.step();
+        outstring_log("");
+        outstring_log(">> Loaded 0 Script Waypoints. DB table `script_waypoint` is empty.");
     }
 
     //Gather additional data for EventAI

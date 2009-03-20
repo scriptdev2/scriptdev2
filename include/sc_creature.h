@@ -41,6 +41,16 @@ enum SelectAggroTarget
     SELECT_TARGET_BOTTOMAGGRO,                              //Selects targets from bottom aggro to top
 };
 
+struct PointMovement
+{
+    uint32 m_uiCreatureEntry;
+    uint32 m_uiPointId;
+    float m_fX;
+    float m_fY;
+    float m_fZ;
+    uint32 m_uiWaitTime;
+};
+
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
     ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false) {}
