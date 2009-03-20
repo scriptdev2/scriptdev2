@@ -918,6 +918,17 @@ void LoadDatabase()
         outstring_log(">> Loaded 0 EventAI Summon definitions. DB table `eventai_summons` is empty.");
     }
 
+    //Drop Existing EventAI List
+    EventAI_Event_List.clear();
+    uint64 uiEAICreatureCount = 0;
+
+    result = SD2Database.PQuery("SELECT COUNT(creature_id) FROM eventai_scripts GROUP BY creature_id");
+    if (result)
+    {
+        uiEAICreatureCount = result->GetRowCount();
+        delete result;
+    }
+
     //Gather event data
     result = SD2Database.PQuery("SELECT id, creature_id, event_type, event_inverse_phase_mask, event_chance, event_flags, "
         "event_param1, event_param2, event_param3, event_param4, "
@@ -926,10 +937,7 @@ void LoadDatabase()
         "action3_type, action3_param1, action3_param2, action3_param3 "
         "FROM eventai_scripts");
 
-    //Drop Existing EventAI List
-    EventAI_Event_List.clear();
-
-    outstring_log("SD2: Loading EventAI scripts...");
+    outstring_log("SD2: Loading EventAI scripts for %u creature(s)...", uiEAICreatureCount);
     if (result)
     {
         barGoLink bar(result->GetRowCount());
