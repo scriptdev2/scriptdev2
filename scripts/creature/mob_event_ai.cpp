@@ -1229,23 +1229,23 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             return;
 
         //Check for OOC LOS Event
-        if (!InCombat)
+        if (!m_creature->getVictim())
         {
-            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            for (std::list<EventHolder>::iterator itr = EventList.begin(); itr != EventList.end(); ++itr)
             {
-                switch ((*i).Event.event_type)
+                if ((*itr).Event.event_type == EVENT_T_OOC_LOS)
                 {
-                    case EVENT_T_OOC_LOS:
+                    //can trigger if closer than fMaxAllowedRange
+                    float fMaxAllowedRange = (*itr).Event.event_param2;
+
+                    //if range is ok and we are actually in LOS
+                    if (m_creature->IsWithinDistInMap(who, fMaxAllowedRange) && m_creature->IsWithinLOSInMap(who))
                     {
-                        if ((*i).Event.event_param1 && m_creature->IsHostileTo(who))
-                            break;
-
-                        if ((*i).Event.event_param2 && !m_creature->IsHostileTo(who))
-                            break;
-
-                        ProcessEvent(*i, who);
+                        //if friendly event&&who is not hostile OR hostile event&&who is hostile
+                        if (((*itr).Event.event_param1 && !m_creature->IsHostileTo(who)) ||
+                            ((!(*itr).Event.event_param1) && m_creature->IsHostileTo(who)))
+                            ProcessEvent(*itr, who);
                     }
-                    break;
                 }
             }
         }
