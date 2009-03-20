@@ -20,6 +20,7 @@ UPDATE gameobject_template SET ScriptName='go_western_crystal_pylon' WHERE entry
 UPDATE gameobject_template SET ScriptName='go_eastern_crystal_pylon' WHERE entry=164957;
 UPDATE gameobject_template SET ScriptName='go_barov_journal' WHERE entry=180794;
 UPDATE gameobject_template SET ScriptName='go_field_repair_bot_74A' where entry=179552;
+UPDATE gameobject_template SET ScriptName='go_gilded_brazier' WHERE entry=181956;
 UPDATE gameobject_template SET ScriptName='go_orb_of_command' WHERE entry=179879;
 UPDATE gameobject_template SET ScriptName='go_tablet_of_madness' WHERE entry=180368;
 UPDATE gameobject_template SET ScriptName='go_tablet_of_the_seven' WHERE entry=169294;

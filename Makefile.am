@@ -170,9 +170,11 @@ scripts/zone/darkshore/darkshore.cpp \
 scripts/zone/deadmines/deadmines.cpp \
 scripts/zone/deadmines/def_deadmines.h \
 scripts/zone/deadmines/instance_deadmines.cpp \
+scripts/zone/dragonblight/dragonblight.cpp \
 scripts/zone/dun_morogh/dun_morogh.cpp \
 scripts/zone/dustwallow_marsh/dustwallow_marsh.cpp \
 scripts/zone/eastern_plaguelands/eastern_plaguelands.cpp \
+scripts/zone/ebon_hold/ebon_hold.cpp \
 scripts/zone/elwynn_forest/elwynn_forest.cpp \
 scripts/zone/eversong_woods/eversong_woods.cpp \
 scripts/zone/felwood/felwood.cpp \

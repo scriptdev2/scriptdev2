@@ -2290,6 +2290,18 @@
 				<Filter
 					Name="Dragonblight"
 					>
+					<File
+						RelativePath="..\scripts\zone\dragonblight\dragonblight.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Ebon Hold"
+					>
+					<File
+						RelativePath="..\scripts\zone\ebon_hold\ebon_hold.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Grizzly Hills"
