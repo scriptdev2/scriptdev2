@@ -964,11 +964,17 @@ void LoadDatabase()
 
             //Creature does not exist in database
             if (!GetCreatureTemplateStore(temp.creature_id))
+            {
                 error_db_log("SD2: Event %u has script for non-existing creature.", i);
+                continue;
+            }
 
             //Report any errors in event
             if (temp.event_type >= EVENT_T_END)
+            {
                 error_db_log("SD2: Event %u has incorrect event type. Maybe DB requires updated version of SD2.", i);
+                continue;
+            }
 
             //No chance of this event occuring
             if (temp.event_chance == 0)
@@ -1049,8 +1055,20 @@ void LoadDatabase()
                 case EVENT_T_RANGE:
                 case EVENT_T_FRIENDLY_HP:
                 case EVENT_T_FRIENDLY_IS_CC:
+                    {
+                        if (temp.event_param4 < temp.event_param3)
+                            error_db_log("SD2: Creature %u are using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
+                    }
+                    break;
+
                 case EVENT_T_FRIENDLY_MISSING_BUFF:
                     {
+                        if (!GetSpellStore()->LookupEntry(temp.event_param1))
+                        {
+                            error_db_log("SD2: Creature %u has non-existant SpellID(%u) defined in event %u.", temp.creature_id, temp.event_param1, i);
+                            continue;
+                        }
+
                         if (temp.event_param4 < temp.event_param3)
                             error_db_log("SD2: Creature %u are using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
                     }
@@ -1072,6 +1090,16 @@ void LoadDatabase()
                     {
                         if (temp.event_param2 < temp.event_param1)
                             error_db_log("SD2: Creature %u are using event(%u) with param2 < param1 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
+                    }
+                    break;
+
+                case EVENT_T_SUMMONED_UNIT:
+                    {
+                        if (!GetCreatureTemplateStore(temp.event_param1))
+                        {
+                            error_db_log("SD2: Creature %u has non-existant creature entry (%u) defined in event %u.", temp.creature_id, temp.event_param1, i);
+                            continue;
+                        }
                     }
                     break;
 
@@ -1179,6 +1207,14 @@ void LoadDatabase()
                             temp.event_flags |= EFLAG_REPEATABLE;
                         }
 
+                    }
+                    break;
+
+                case EVENT_T_QUEST_ACCEPT:
+                case EVENT_T_QUEST_COMPLETE:
+                    {
+                        error_db_log("SD2: Creature %u using not implemented event (%u) in event %u.", temp.creature_id, temp.event_id, i);
+                        continue;
                     }
                     break;
             }
