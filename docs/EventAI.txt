@@ -314,6 +314,25 @@ This is commonly used for NPC's who will do something special once another NPC i
 Expires only when creature has returned to it's home location after Evade. Out of combat event.
 Most commonly used to cast spells that can not be casted in EVENT_T_EVADE and other effects that does not fit in while still running back to spawn/home location.
 
+---------------------------
+22 = EVENT_T_RECEIVE_EMOTE:
+---------------------------
+Expires only when creature receive emote from player. Valid text emote id's are in Mangos source (enum TextEmotes)
+Event does not require any conditions to process, however many are ecpected to have condition.
+
+EventAI use conditions from available in Mangos (enum ConditionType)
+Current implemented conditions:
+CONDITION_NONE (0)            0            0
+CONDITION_AURA (1)            spell_id     effindex
+CONDITION_ITEM (2)            item_id      count
+CONDITION_ITEM_EQUIPPED (3)   item_id      count
+CONDITION_ZONEID (4)          zone_id      0
+CONDITION_REPUTATION_RANK (5) faction_id   min_rank
+CONDITION_TEAM (6)            player_team  0 (469-Alliance / 67-Horde)
+CONDITION_SKILL (7)           skill_id     min_skill_value
+CONDITION_QUESTREWARDED (8)   quest_id     0, if quest are rewarded
+CONDITION_QUESTTAKEN (9)      quest_id     0, while quest active(incomplete)
+CONDITION_ACTIVE_EVENT (12)   event_id     0, note this is id from dbc, also defined in Mangos source(enum HolidayIds) NOT id of game_event in database
 
 =========================================
 Action Types
