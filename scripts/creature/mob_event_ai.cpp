@@ -24,6 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "mob_event_ai.h"
 #include "ObjectMgr.h"
+#include "GameEventMgr.h"
 
 #define EVENT_UPDATE_TIME               500
 #define SPELL_RUN_AWAY                  8225
@@ -455,6 +456,10 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             }
             break;
         case EVENT_T_REACHED_HOME:
+            {
+            }
+            break;
+        case EVENT_T_RECEIVE_EMOTE:
             {
             }
             break;
@@ -1415,11 +1420,87 @@ CreatureAI* GetAI_mob_eventai(Creature* pCreature)
     return new Mob_EventAI(pCreature, EventList);
 }
 
+bool ReceiveEmote_mob_eventai(Player* pPlayer, Creature* pCreature, uint32 uiEmote)
+{
+    Mob_EventAI* pTmpCreature = (Mob_EventAI*)(pCreature->AI());
+
+    if (pTmpCreature->EventList.empty())
+        return true;
+
+    for (std::list<EventHolder>::iterator itr = pTmpCreature->EventList.begin(); itr != pTmpCreature->EventList.end(); ++itr)
+    {
+        if ((*itr).Event.event_type == EVENT_T_RECEIVE_EMOTE)
+        {
+            if ((*itr).Event.event_param1 != uiEmote)
+                return true;
+
+            bool bProcess = false;
+
+            switch((*itr).Event.event_param2)
+            {
+                //enum ConditionType
+                case CONDITION_NONE:                        // 0 0
+                    bProcess = true;
+                    break;
+                case CONDITION_AURA:                        // spell_id     effindex
+                    if (pPlayer->HasAura((*itr).Event.event_param3,(*itr).Event.event_param4))
+                        bProcess = true;
+                    break;
+                case CONDITION_ITEM:                        // item_id      count
+                    if (pPlayer->HasItemCount((*itr).Event.event_param3,(*itr).Event.event_param4))
+                        bProcess = true;
+                    break;
+                case CONDITION_ITEM_EQUIPPED:               // item_id      count
+                    if (pPlayer->HasItemOrGemWithIdEquipped((*itr).Event.event_param3,(*itr).Event.event_param4))
+                        bProcess = true;
+                    break;
+                case CONDITION_ZONEID:                      // zone_id      0
+                    if (pPlayer->GetZoneId() == (*itr).Event.event_param3)
+                        bProcess = true;
+                    break;
+                case CONDITION_REPUTATION_RANK:             // faction_id   min_rank
+                    if (pPlayer->GetReputationRank((*itr).Event.event_param3) >= (*itr).Event.event_param4)
+                        bProcess = true;
+                    break;
+                case CONDITION_TEAM:                        // player_team  0, (469 - Alliance 67 - Horde)
+                    if (pPlayer->GetTeam() == (*itr).Event.event_param3)
+                        bProcess = true;
+                    break;
+                case CONDITION_SKILL:                       // skill_id     min skill_value
+                    if (pPlayer->HasSkill((*itr).Event.event_param3) && pPlayer->GetSkillValue((*itr).Event.event_param3) >= (*itr).Event.event_param4)
+                        bProcess = true;
+                    break;
+                case CONDITION_QUESTREWARDED:               // quest_id     0
+                    if (pPlayer->GetQuestRewardStatus((*itr).Event.event_param3))
+                        bProcess = true;
+                    break;
+                case CONDITION_QUESTTAKEN:                  // quest_id     0, for condition true while quest active.
+                    if (pPlayer->GetQuestStatus((*itr).Event.event_param3) == QUEST_STATUS_INCOMPLETE)
+                        bProcess = true;
+                    break;
+                case CONDITION_ACTIVE_EVENT:                // event_id     0
+                    if (IsHolidayActive(HolidayIds((*itr).Event.event_param3)))
+                        bProcess = true;
+                    break;
+            }
+
+            if (bProcess)
+            {
+                debug_log("SD2: ReceiveEmote EventAI: Condition ok, processing");
+                pTmpCreature->ProcessEvent(*itr, pPlayer);
+            }
+        }
+    }
+
+    return true;
+}
+
 void AddSC_mob_event()
 {
     Script *newscript;
     newscript = new Script;
     newscript->Name = "mob_eventai";
     newscript->GetAI = &GetAI_mob_eventai;
+    newscript->pReceiveEmote = &ReceiveEmote_mob_eventai;
     newscript->RegisterSelf();
 }

@@ -74,6 +74,7 @@ Events will not repeat until the creature exits combat unless EFLAG_REPEATABLE i
 17   EVENT_T_SUMMONED_UNIT       CreatureId, RepeatMin, RepeatMax                        Expires after creature with entry = (param1) is spawned or for all spawns if param1 = 0. Will repeat every (Param2) and (Param3).
 18   EVENT_T_TARGET_MANA         ManaMax%, ManaMin%, RepeatMin, RepeatMax
 21   EVENT_T_REACHED_HOME        NONE                                                    Expires when creature reach it's home(spawn) location after Evade.
+22   EVENT_T_RECEIVE_EMOTE       EmoteId, Condition, CondValue1, CondValue2              Expires when creature receive emote with text emote id(enum TextEmotes). Condition can be defined. If set, then most conditions has additional value (see enum ConditionType)
 
 =========================================
 Action Types

@@ -31,6 +31,7 @@ enum Event_Types
     EVENT_T_QUEST_ACCEPT            = 19,   //QuestID
     EVENT_T_QUEST_COMPLETE          = 20,   //
     EVENT_T_REACHED_HOME            = 21,   //NONE
+    EVENT_T_RECEIVE_EMOTE           = 22,   //EmoteId, Condition, CondValue1, CondValue2
 
     EVENT_T_END,
 };

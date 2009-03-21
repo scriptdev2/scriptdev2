@@ -1088,6 +1088,99 @@ void LoadDatabase()
                         }
                     }
                     break;
+
+                case EVENT_T_RECEIVE_EMOTE:
+                    {
+                        //no good way to check for valid textEmote (enum TextEmotes)
+
+                        switch(temp.event_param2)
+                        {
+                            case CONDITION_AURA:
+                                if (!GetSpellStore()->LookupEntry(temp.event_param3))
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are not valid.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_TEAM:
+                                if (temp.event_param3 != HORDE || temp.event_param3 != ALLIANCE)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are not valid.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_QUESTREWARDED:
+                            case CONDITION_QUESTTAKEN:
+                                if (!GetQuestTemplateStore(temp.event_param3))
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are not valid.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_ACTIVE_EVENT:
+                                if (temp.event_param3 != 
+                                    (HOLIDAY_FIREWORKS_SPECTACULAR | HOLIDAY_FEAST_OF_WINTER_VEIL | HOLIDAY_NOBLEGARDEN |
+                                    HOLIDAY_CHILDRENS_WEEK | HOLIDAY_CALL_TO_ARMS_AV | HOLIDAY_CALL_TO_ARMS_WG |
+                                    HOLIDAY_CALL_TO_ARMS_AB | HOLIDAY_FISHING_EXTRAVAGANZA | HOLIDAY_HARVEST_FESTIVAL |
+                                    HOLIDAY_HALLOWS_END | HOLIDAY_LUNAR_FESTIVAL | HOLIDAY_LOVE_IS_IN_THE_AIR |
+                                    HOLIDAY_FIRE_FESTIVAL | HOLIDAY_CALL_TO_ARMS_ES | HOLIDAY_BREWFEST |
+                                    HOLIDAY_DARKMOON_FAIRE_ELWYNN | HOLIDAY_DARKMOON_FAIRE_THUNDER | HOLIDAY_DARKMOON_FAIRE_SHATTRATH |
+                                    HOLIDAY_CALL_TO_ARMS_SA | HOLIDAY_WOTLK_LAUNCH))
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are not valid.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_REPUTATION_RANK:
+                                if (!temp.event_param3)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are missing.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                if (temp.event_param4 > REP_EXALTED)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param4 (CondValue2: %u) are not valid.",temp.creature_id, i, temp.event_param4);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_ITEM:
+                            case CONDITION_ITEM_EQUIPPED:
+                            case CONDITION_SKILL:
+                                if (!temp.event_param3)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are missing.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                if (!temp.event_param4)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param4 (CondValue2: %u) are missing.",temp.creature_id, i, temp.event_param4);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_ZONEID:
+                                if (!temp.event_param3)
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param3 (CondValue1: %u) are missing.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                                break;
+                            case CONDITION_NONE:
+                                break;
+                            default:
+                                {
+                                    error_db_log("SD2: Creature %u using event %u: param2 (Condition: %u) are not valid/not implemented for script.",temp.creature_id, i, temp.event_param3);
+                                    continue;
+                                }
+                        }
+
+                        if (!(temp.event_flags & EFLAG_REPEATABLE))
+                        {
+                            error_db_log("SD2: Creature %u using event %u: EFLAG_REPEATABLE not set. Event must always be repeatable. Flag applied.", temp.creature_id, i);
+                            temp.event_flags |= EFLAG_REPEATABLE;
+                        }
+
+                    }
+                    break;
             }
 
             for (uint32 j = 0; j < MAX_ACTIONS; j++)
