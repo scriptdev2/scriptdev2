@@ -1371,11 +1371,11 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
+CreatureAI* GetAI_mob_eventai(Creature* pCreature)
 {
     //Select events by creature id
     std::list<EventHolder> EventList;
-    uint32 ID = _Creature->GetEntry();
+    uint32 ID = pCreature->GetEntry();
 
     std::list<EventAI_Event>::iterator i;
 
@@ -1388,30 +1388,14 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
                 continue;
 #endif
-            if( _Creature->GetMap()->IsDungeon() )
+            if (pCreature->GetMap()->IsDungeon())
             {
-                if( _Creature->GetMap()->IsHeroic() )
+                if ((pCreature->GetMap()->IsHeroic() && (*i).event_flags & EFLAG_HEROIC) ||
+                    (!pCreature->GetMap()->IsHeroic() && (*i).event_flags & EFLAG_NORMAL))
                 {
-                    if( (*i).event_flags & EFLAG_HEROIC )
-                    {
-                        EventList.push_back(EventHolder(*i));
-                        continue;
-                    }else if( (*i).event_flags & EFLAG_NORMAL )
-                        continue;
+                    //event flagged for instance mode
+                    EventList.push_back(EventHolder(*i));
                 }
-                else
-                {
-                    if( (*i).event_flags & EFLAG_NORMAL )
-                    {
-                        EventList.push_back(EventHolder(*i));
-                        continue;
-                    }else if( (*i).event_flags & EFLAG_HEROIC )
-                        continue;
-                }
-
-                if (EAI_ErrorLevel > 1)
-                    error_db_log("SD2: Creature %u Event %u. Creature are in instance but neither EFLAG_NORMAL or EFLAG_HEROIC are set. Event Disabled.", _Creature->GetEntry(), (*i).event_id);
-
                 continue;
             }
 
@@ -1423,12 +1407,12 @@ CreatureAI* GetAI_Mob_EventAI(Creature *_Creature)
     if (EventList.empty())
     {
         if (EAI_ErrorLevel > 1)
-            error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI. Preventing EventAI on this creature.", _Creature->GetEntry());
+            error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI (missing instance mode flags?). Preventing EventAI on this creature.", pCreature->GetEntry());
 
         return NULL;
     }
 
-    return new Mob_EventAI (_Creature, EventList);
+    return new Mob_EventAI(pCreature, EventList);
 }
 
 void AddSC_mob_event()
@@ -1436,6 +1420,6 @@ void AddSC_mob_event()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "mob_eventai";
-    newscript->GetAI = &GetAI_Mob_EventAI;
+    newscript->GetAI = &GetAI_mob_eventai;
     newscript->RegisterSelf();
 }
