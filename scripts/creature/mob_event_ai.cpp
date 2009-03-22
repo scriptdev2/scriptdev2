@@ -43,6 +43,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     Mob_EventAI(Creature *c, std::list<EventHolder> pEventList) : ScriptedAI(c)
     {
         EventList = pEventList;
+        bEmptyList = pEventList.empty();
         Phase = 0;
         CombatMovementEnabled = true;
         MeleeEnabled = true;
@@ -50,13 +51,12 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         AttackAngle = 0.0f;
 
         //Handle Spawned Events
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        if (!bEmptyList)
         {
-            switch ((*i).Event.event_type)
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
-                case EVENT_T_SPAWNED:
+                if ((*i).Event.event_type == EVENT_T_SPAWNED)
                     ProcessEvent(*i);
-                    break;
             }
         }
 
@@ -72,6 +72,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     std::list<EventHolder> EventList;                       //Holder for events (stores enabled, time, and eventid)
     uint32 EventUpdateTime;                                 //Time between event updates
     uint32 EventDiff;                                       //Time between the last event call
+    bool bEmptyList;
 
     //Variables used by Events themselves
     uint8 Phase;                                            //Current phase, max 32 phases
@@ -1028,15 +1029,14 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         InCombat = false;
         Reset();
 
+        if (bEmptyList)
+            return;
+
         //Handle Spawned Events
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
-            {
-            case EVENT_T_SPAWNED:
+            if ((*i).Event.event_type == EVENT_T_SPAWNED)
                 ProcessEvent(*i);
-                break;
-            }
         }
     }
 
@@ -1044,6 +1044,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     {
         EventUpdateTime = EVENT_UPDATE_TIME;
         EventDiff = 0;
+
+        if (bEmptyList)
+            return;
 
         //Reset all events to enabled
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
@@ -1057,11 +1060,13 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                         {
                             (*i).Time = (*i).Event.event_param1;
                             (*i).Enabled = true;
-                        }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                        }
+                        else if ((*i).Event.event_param2 > (*i).Event.event_param1)
                         {
                             (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2);
                             (*i).Enabled = true;
-                        }else if (EAI_ErrorLevel > 0)
+                        }
+                        else if (EAI_ErrorLevel > 0)
                             error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
                     }
                     break;
@@ -1079,10 +1084,13 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
     {
         m_creature->LoadCreaturesAddon();
 
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        if (!bEmptyList)
         {
-            if ((*i).Event.event_type == EVENT_T_REACHED_HOME)
-                ProcessEvent(*i);
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            {
+                if ((*i).Event.event_type == EVENT_T_REACHED_HOME)
+                    ProcessEvent(*i);
+            }
         }
 
         Reset();
@@ -1102,6 +1110,9 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
         InCombat = false;
 
+        if (bEmptyList)
+            return;
+
         //Handle Evade events
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
@@ -1115,83 +1126,75 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
         InCombat = false;
         Reset();
 
+        if (bEmptyList)
+            return;
+
         //Handle Evade events
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
-            {
-                //Evade
-                case EVENT_T_DEATH:
-                    ProcessEvent(*i, killer);
-                    break;
-            }
+            if ((*i).Event.event_type == EVENT_T_DEATH)
+                ProcessEvent(*i, killer);
         }
     }
 
     void KilledUnit(Unit* victim)
     {
-        if (victim->GetTypeId() != TYPEID_PLAYER)
+        if (bEmptyList || victim->GetTypeId() != TYPEID_PLAYER)
             return;
 
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
-            {
-                //Kill
-                case EVENT_T_KILL:
-                    ProcessEvent(*i, victim);
-                    break;
-            }
+            if ((*i).Event.event_type == EVENT_T_KILL)
+                ProcessEvent(*i, victim);
         }
-
     }
 
     void JustSummoned(Creature* pUnit)
     {
-        if (!pUnit)
+        if (bEmptyList || !pUnit)
             return;
 
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
-            {
-                //Summoned
-                case EVENT_T_SUMMONED_UNIT:
-                    ProcessEvent(*i, pUnit);
-                    break;
-            }
+            if ((*i).Event.event_type == EVENT_T_SUMMONED_UNIT)
+                ProcessEvent(*i, pUnit);
         }
     }
 
     void Aggro(Unit *who)
     {
         //Check for on combat start events
-        for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+        if (!bEmptyList)
         {
-            switch ((*i).Event.event_type)
+            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
             {
+                switch ((*i).Event.event_type)
+                {
                 case EVENT_T_AGGRO:
                     (*i).Enabled = true;
                     ProcessEvent(*i, who);
                     break;
-                //Reset all in combat timers
+                    //Reset all in combat timers
                 case EVENT_T_TIMER:
                     if ((*i).Event.event_param2 == (*i).Event.event_param1)
                     {
                         (*i).Time = (*i).Event.event_param1;
                         (*i).Enabled = true;
-                    }else if ((*i).Event.event_param2 > (*i).Event.event_param1)
+                    }
+                    else if ((*i).Event.event_param2 > (*i).Event.event_param1)
                     {
                         (*i).Time = urand((*i).Event.event_param1, (*i).Event.event_param2);
                         (*i).Enabled = true;
-                    }else if (EAI_ErrorLevel > 0)
+                    }
+                    else if (EAI_ErrorLevel > 0)
                         error_db_log("SD2: Creature %u using Event %u (Type = %u) has InitialMax < InitialMin. Event disabled.", m_creature->GetEntry(), (*i).Event.event_id, (*i).Event.event_type);
                     break;
-                //All normal events need to be re-enabled and their time set to 0
+                    //All normal events need to be re-enabled and their time set to 0
                 default:
                     (*i).Enabled = true;
                     (*i).Time = 0;
                     break;
+                }
             }
         }
 
@@ -1234,7 +1237,7 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             return;
 
         //Check for OOC LOS Event
-        if (!m_creature->getVictim())
+        if (!bEmptyList && !m_creature->getVictim())
         {
             for (std::list<EventHolder>::iterator itr = EventList.begin(); itr != EventList.end(); ++itr)
             {
@@ -1283,19 +1286,19 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
 
     void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
     {
+        if (bEmptyList)
+            return;
+
         for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
         {
-            switch ((*i).Event.event_type)
+            if ((*i).Event.event_type == EVENT_T_SPELLHIT)
             {
-                //Spell hit
-                case EVENT_T_SPELLHIT:
-                    {
-                        //If spell id matches (or no spell id) & if spell school matches (or no spell school)
-                        if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
-                            if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
-                                ProcessEvent(*i, pUnit);
-                    }
-                    break;
+                //If spell id matches (or no spell id) & if spell school matches (or no spell school)
+                if (!(*i).Event.event_param1 || pSpell->Id == (*i).Event.event_param1)
+                {
+                    if ((*i).Event.event_param2_s == -1 || pSpell->SchoolMask == (*i).Event.event_param2)
+                        ProcessEvent(*i, pUnit);
+                }
             }
         }
     }
@@ -1310,31 +1313,33 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
             return;
 
         //Events are only updated once every EVENT_UPDATE_TIME ms to prevent lag with large amount of events
-        if (EventUpdateTime < diff)
+        if (!bEmptyList)
         {
-            EventDiff += diff;
-
-            //Check for time based events
-            for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
+            if (EventUpdateTime < diff)
             {
-                //Decrement Timers
-                if ((*i).Time)
+                EventDiff += diff;
+
+                //Check for time based events
+                for (std::list<EventHolder>::iterator i = EventList.begin(); i != EventList.end(); ++i)
                 {
-                    if ((*i).Time > EventDiff)
+                    //Decrement Timers
+                    if ((*i).Time)
                     {
-                         //Do not decrement timers if event cannot trigger in this phase
-                        if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
-                            (*i).Time -= EventDiff;
+                        if ((*i).Time > EventDiff)
+                        {
+                            //Do not decrement timers if event cannot trigger in this phase
+                            if (!((*i).Event.event_inverse_phase_mask & (1 << Phase)))
+                                (*i).Time -= EventDiff;
 
-                        //Skip processing of events that have time remaining
-                        continue;
+                            //Skip processing of events that have time remaining
+                            continue;
+                        }
+                        else (*i).Time = 0;
                     }
-                    else (*i).Time = 0;
-                }
 
-                //Events that are updated every EVENT_UPDATE_TIME
-                switch ((*i).Event.event_type)
-                {
+                    //Events that are updated every EVENT_UPDATE_TIME
+                    switch ((*i).Event.event_type)
+                    {
                     case EVENT_T_TIMER_OOC:
                         ProcessEvent(*i);
                         break;
@@ -1357,16 +1362,17 @@ struct MANGOS_DLL_DECL Mob_EventAI : public ScriptedAI
                             }
                         }
                         break;
+                    }
                 }
-            }
 
-            EventDiff = 0;
-            EventUpdateTime = EVENT_UPDATE_TIME;
-        }
-        else
-        {
-            EventDiff += diff;
-            EventUpdateTime -= diff;
+                EventDiff = 0;
+                EventUpdateTime = EVENT_UPDATE_TIME;
+            }
+            else
+            {
+                EventDiff += diff;
+                EventUpdateTime -= diff;
+            }
         }
 
         //Melee Auto-Attack
@@ -1408,13 +1414,11 @@ CreatureAI* GetAI_mob_eventai(Creature* pCreature)
         }
     }
 
-    //EventAI is pointless to use without events and may cause crashes
+    //EventAI is pointless to use without events, so provide error
     if (EventList.empty())
     {
         if (EAI_ErrorLevel > 1)
-            error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI (missing instance mode flags?). Preventing EventAI on this creature.", pCreature->GetEntry());
-
-        return NULL;
+            error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI (missing instance mode flags?).", pCreature->GetEntry());
     }
 
     return new Mob_EventAI(pCreature, EventList);
@@ -1424,7 +1428,7 @@ bool ReceiveEmote_mob_eventai(Player* pPlayer, Creature* pCreature, uint32 uiEmo
 {
     Mob_EventAI* pTmpCreature = (Mob_EventAI*)(pCreature->AI());
 
-    if (pTmpCreature->EventList.empty())
+    if (pTmpCreature->bEmptyList)
         return true;
 
     for (std::list<EventHolder>::iterator itr = pTmpCreature->EventList.begin(); itr != pTmpCreature->EventList.end(); ++itr)
