@@ -136,27 +136,7 @@ CreatureAI* GetAI_npc_professor_phizzlethorpe(Creature* pCreature)
 {
     npc_professor_phizzlethorpeAI* phizzleAI = new npc_professor_phizzlethorpeAI(pCreature);
 
-    phizzleAI->AddWaypoint(0, -2066.45, -2085.96, 9.08);
-    phizzleAI->AddWaypoint(1, -2077.99, -2105.33, 13.24);
-    phizzleAI->AddWaypoint(2, -2074.60, -2109.67, 14.24);
-    phizzleAI->AddWaypoint(3, -2076.60, -2117.46, 16.67);
-    phizzleAI->AddWaypoint(4, -2073.51, -2123.46, 18.42, 2000);
-    phizzleAI->AddWaypoint(5, -2073.51, -2123.46, 18.42, 4000);
-    phizzleAI->AddWaypoint(6, -2066.60, -2131.85, 21.56);
-    phizzleAI->AddWaypoint(7, -2053.85, -2143.19, 20.31);
-    phizzleAI->AddWaypoint(8, -2043.49, -2153.73, 20.20, 10000);
-    phizzleAI->AddWaypoint(9, -2043.49, -2153.73, 20.20, 20000);
-    phizzleAI->AddWaypoint(10, -2043.49, -2153.73, 20.20, 10000);
-    phizzleAI->AddWaypoint(11, -2043.49, -2153.73, 20.20, 2000);
-    phizzleAI->AddWaypoint(12, -2053.85, -2143.19, 20.31);
-    phizzleAI->AddWaypoint(13, -2066.60, -2131.85, 21.56);
-    phizzleAI->AddWaypoint(14, -2073.51, -2123.46, 18.42);
-    phizzleAI->AddWaypoint(15, -2076.60, -2117.46, 16.67);
-    phizzleAI->AddWaypoint(16, -2074.60, -2109.67, 14.24);
-    phizzleAI->AddWaypoint(17, -2077.99, -2105.33, 13.24);
-    phizzleAI->AddWaypoint(18, -2066.45, -2085.96, 9.08);
-    phizzleAI->AddWaypoint(19, -2066.41, -2086.21, 8.97, 6000);
-    phizzleAI->AddWaypoint(20, -2066.41, -2086.21, 8.97, 2000);
+    phizzleAI->FillPointMovementListForCreature();
 
     return (CreatureAI*)phizzleAI;
 }
