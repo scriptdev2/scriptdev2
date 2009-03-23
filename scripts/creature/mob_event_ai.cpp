@@ -1386,15 +1386,17 @@ CreatureAI* GetAI_mob_eventai(Creature* pCreature)
 {
     //Select events by creature id
     std::list<EventHolder> EventList;
-    uint32 ID = pCreature->GetEntry();
 
-    std::list<EventAI_Event>::iterator i;
+    //Find creature id in the Event map
+    UNORDERED_MAP<uint32, std::vector<EventAI_Event>>::iterator CreatureEvents = EventAI_Event_Map.find(pCreature->GetEntry());
 
-    for (i = EventAI_Event_List.begin(); i != EventAI_Event_List.end(); ++i)
+    if (CreatureEvents != EventAI_Event_Map.end())
     {
-        if ((*i).creature_id == ID)
+        std::vector<EventAI_Event>::iterator i;
+
+        for (i = (*CreatureEvents).second.begin(); i != (*CreatureEvents).second.end(); ++i)
         {
-//Debug check
+            //Debug check
 #ifndef _DEBUG
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
                 continue;
@@ -1412,13 +1414,18 @@ CreatureAI* GetAI_mob_eventai(Creature* pCreature)
 
             EventList.push_back(EventHolder(*i));
         }
-    }
 
-    //EventAI is pointless to use without events, so provide error
-    if (EventList.empty())
+        //EventMap had events but they were not added because they must be for instance
+        if (EventList.empty())
+        {
+            if (EAI_ErrorLevel > 1)
+                error_db_log("SD2: CreatureId has events but no events added to list because of instance flags.", pCreature->GetEntry());
+        }
+    }
+    else
     {
         if (EAI_ErrorLevel > 1)
-            error_db_log("SD2: Eventlist for Creature %u is empty but creature is using Mob_EventAI (missing instance mode flags?).", pCreature->GetEntry());
+            error_db_log("SD2: EventMap for Creature %u is empty but creature is using Mob_EventAI.", pCreature->GetEntry());
     }
 
     return new Mob_EventAI(pCreature, EventList);
