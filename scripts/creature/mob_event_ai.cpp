@@ -1388,7 +1388,7 @@ CreatureAI* GetAI_mob_eventai(Creature* pCreature)
     std::list<EventHolder> EventList;
 
     //Find creature id in the Event map
-    UNORDERED_MAP<uint32, std::vector<EventAI_Event>>::iterator CreatureEvents = EventAI_Event_Map.find(pCreature->GetEntry());
+    UNORDERED_MAP<uint32, std::vector<EventAI_Event> >::iterator CreatureEvents = EventAI_Event_Map.find(pCreature->GetEntry());
 
     if (CreatureEvents != EventAI_Event_Map.end())
     {

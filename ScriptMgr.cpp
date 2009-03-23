@@ -46,7 +46,7 @@ UNORDERED_MAP<int32, StringTextData> TextMap;
 std::list<PointMovement> PointMovementList;
 
 //Event AI structure. Used exclusivly by mob_event_ai.cpp (60 bytes each)
-UNORDERED_MAP<uint32, std::vector<EventAI_Event>> EventAI_Event_Map;
+UNORDERED_MAP<uint32, std::vector<EventAI_Event> > EventAI_Event_Map;
 
 //Event AI summon structure. Used exclusivly by mob_event_ai.cpp.
 UNORDERED_MAP<uint32, EventAI_Summon> EventAI_Summon_Map;
