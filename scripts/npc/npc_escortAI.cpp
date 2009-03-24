@@ -133,16 +133,23 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 //Correct movement speed
                 if (Run)
                     m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                else
+                    m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
                 //Continue with waypoints
                 if (!IsOnHold)
                 {
-                    m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
-                    debug_log("SD2: EscortAI Reconnect WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
-                    WaitTimer = 0;
-                    ReconnectWP = false;
-                    return;
+                    if (CurrentWP != WaypointList.end())
+                    {
+                        m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
+                        debug_log("SD2: EscortAI Reconnect WP is: %u, %f, %f, %f", CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z);
+
+                        WaitTimer = 0;
+                        ReconnectWP = false;
+                        return;
+                    }
+                    else
+                        debug_log("SD2: EscortAI Reconnected to end of WP list");
                 }
             }
 
