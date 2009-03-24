@@ -608,6 +608,7 @@ UPDATE creature_template SET ScriptName='mob_flamewaker_priest' WHERE entry=1166
 
 /* MOONGLADE */
 UPDATE creature_template SET ScriptName='npc_bunthen_plainswind' WHERE entry=11798;
+UPDATE creature_template SET ScriptName='npc_clintar_dw_spirit' WHERE entry=22916;
 UPDATE creature_template SET ScriptName='npc_great_bear_spirit' WHERE entry=11956;
 UPDATE creature_template SET ScriptName='npc_silva_filnaveth' WHERE entry=11800;
 
