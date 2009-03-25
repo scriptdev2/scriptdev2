@@ -126,7 +126,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
     void Reset()
     {
         if (pInstance)
-            pInstance->SetData(TYPE_JANALAIEVENT, NOT_STARTED);
+            pInstance->SetData(TYPE_JANALAI, NOT_STARTED);
 
         fire_breath_timer = 8000;
         bomb_timer = 30000;
@@ -153,7 +153,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (pInstance)
-            pInstance->SetData(TYPE_JANALAIEVENT, DONE);
+            pInstance->SetData(TYPE_JANALAI, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_janalaiAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, m_creature);
 
         if (pInstance)
-            pInstance->SetData(TYPE_JANALAIEVENT, IN_PROGRESS);
+            pInstance->SetData(TYPE_JANALAI, IN_PROGRESS);
     }
 
     void FireWall()                                         // Create Firewall
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance && (pInstance->GetData(TYPE_JANALAIEVENT) == IN_PROGRESS))
+        if (pInstance && (pInstance->GetData(TYPE_JANALAI) == IN_PROGRESS))
         {
             if (!start && !hatch)
             {
@@ -673,7 +673,7 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
             start = true;
         }
 
-        if (delete_timer < diff && (pInstance && !(pInstance->GetData(TYPE_JANALAIEVENT) == IN_PROGRESS)))
+        if (delete_timer < diff && (pInstance && !(pInstance->GetData(TYPE_JANALAI) == IN_PROGRESS)))
         {
             if (!(m_creature->getVictim()))
                 m_creature->DealDamage(m_creature, m_creature->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);

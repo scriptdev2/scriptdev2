@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulaman.h"
 
-#define ENCOUNTERS     5
+#define ENCOUNTERS     7
 #define RAND_VENDOR    2
 
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
@@ -35,6 +35,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     uint64 nalorakkGUID;
     uint64 janalaiGUID;
     uint64 halazziGUID;
+    uint64 zuljinGUID;
+    uint64 malacrassGUID;
 
     uint64 StrangeGongGUID;
     uint64 HexlordEntranceGUID;
@@ -51,6 +53,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         nalorakkGUID = 0;
         janalaiGUID = 0;
         halazziGUID = 0;
+        zuljinGUID = 0;
+        malacrassGUID = 0;
 
         StrangeGongGUID = 0;
         HexlordEntranceGUID = 0;
@@ -60,6 +64,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
             Encounters[i] = NOT_STARTED;
+
         for(uint8 i = 0; i < RAND_VENDOR; i++)
             RandVendor[i] = NOT_STARTED;
     }
@@ -76,10 +81,12 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(creature->GetEntry())
         {
-            case 23574: akilzonGUID  = creature->GetGUID(); break;
-            case 23576: nalorakkGUID = creature->GetGUID(); break;
-            case 23578: janalaiGUID  = creature->GetGUID(); break;
-            case 23577: halazziGUID  = creature->GetGUID(); break;
+            case 23574: akilzonGUID     = creature->GetGUID(); break;
+            case 23576: nalorakkGUID    = creature->GetGUID(); break;
+            case 23578: janalaiGUID     = creature->GetGUID(); break;
+            case 23577: halazziGUID     = creature->GetGUID(); break;
+            case 23863: zuljinGUID      = creature->GetGUID(); break;
+            case 24239: malacrassGUID   = creature->GetGUID(); break;
         }
     }
 
@@ -104,9 +111,13 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 return janalaiGUID;
             case DATA_HALAZZI:
                 return halazziGUID;
-            case DATA_GONG:
+            case DATA_ZULJIN:
+                return zuljinGUID;
+            case DATA_MALACRASS:
+                return malacrassGUID;
+            case DATA_GO_GONG:
                 return StrangeGongGUID;
-            case DATA_HEXLORD_GATE:
+            case DATA_GO_HEXLORD_GATE:
                 return HexlordEntranceGUID;
         }
         return 0;
@@ -116,8 +127,8 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
     {
         switch(type)
         {
-            case TYPE_JANALAIEVENT:
-                if(data == NOT_STARTED)
+            case TYPE_JANALAI:
+                if (data == NOT_STARTED)
                 {
                     janalai_eggs_l = 20;
                     janalai_eggs_r = 20;
@@ -148,14 +159,18 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         {
             case TYPE_EVENT_RUN:
                 return Encounters[0];
-            case TYPE_AKILZONEVENT:
+            case TYPE_AKILZON:
                 return Encounters[1];
-            case TYPE_NALORAKKEVENT:
+            case TYPE_NALORAKK:
                 return Encounters[2];
-            case TYPE_JANALAIEVENT:
+            case TYPE_JANALAI:
                 return Encounters[3];
-            case TYPE_HALAZZIEVENT:
+            case TYPE_HALAZZI:
                 return Encounters[4];
+            case TYPE_ZULJIN:
+                return Encounters[5];
+            case TYPE_MALACRASS:
+                return Encounters[6];
 
             case DATA_J_EGGSLEFT:
                 return janalai_eggs_l;
