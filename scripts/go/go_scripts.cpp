@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -29,6 +29,7 @@ go_western_crystal_pylon
 go_barov_journal
 go_field_repair_bot_74A
 go_orb_of_command
+go_sacred_fire_of_life
 go_tablet_of_madness
 go_tablet_of_the_seven
 EndContentData */
@@ -154,6 +155,19 @@ bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
     return true;
 }
 
+enum
+{
+    NPC_ARIKARA     = 10882,
+};
+
+bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
+{
+    if (pGO->GetGoType() == GAMEOBJECT_TYPE_GOOBER)
+        pPlayer->SummonCreature(NPC_ARIKARA, -5008.338, -2118.894, 83.657, 0.874, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+
+    return true;
+}
+
 /*######
 ## go_tablet_of_madness
 ######*/
@@ -225,6 +239,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_orb_of_command";
     newscript->pGOHello =           &GOHello_go_orb_of_command;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_sacred_fire_of_life";
+    newscript->pGOHello =           &GOHello_go_sacred_fire_of_life;
     newscript->RegisterSelf();
 
     newscript = new Script;
