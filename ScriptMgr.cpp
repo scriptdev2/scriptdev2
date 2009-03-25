@@ -398,6 +398,7 @@ extern void AddSC_orgrimmar();
 //Ragefire Chasm
 //Razorfen Downs
 extern void AddSC_boss_amnennar_the_coldbringer();
+extern void AddSC_razorfen_downs();
 
 //Redridge Mountains
 //Ruins of Ahn'Qiraj
@@ -1912,6 +1913,7 @@ void ScriptsInit()
     //Ragefire Chasm
     //Razorfen Downs
     AddSC_boss_amnennar_the_coldbringer();
+    AddSC_razorfen_downs();
 
     //Redridge Mountains
     //Ruins of Ahn'Qiraj

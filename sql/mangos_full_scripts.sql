@@ -683,6 +683,7 @@ UPDATE creature_template SET ScriptName='npc_thrall_warchief' WHERE entry=4949;
 
 /* RAZORFEN DOWNS */
 UPDATE creature_template SET ScriptName='boss_amnennar_the_coldbringer' WHERE entry=7358;
+UPDATE creature_template SET ScriptName='npc_henry_stern' WHERE entry=8696;
 
 /* REDRIDGE MOUNTAINS */
 
