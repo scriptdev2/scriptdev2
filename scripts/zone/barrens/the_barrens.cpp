@@ -388,18 +388,20 @@ bool AreaTrigger_at_twiggy_flathead(Player *player, AreaTriggerEntry *at)
         {
             //we don't want player to start event if failed already.
             if (player->GetQuestSlotState(slot) == QUEST_STATE_FAIL)
-                return false;
+                return true;
         }
 
         Creature* Twiggy = SelectCreatureInGrid(player, C_TWIGGY, 30);
 
         if (!Twiggy)
-            return false;
+            return true;
 
         if (((npc_twiggy_flatheadAI*)Twiggy->AI())->CanStartEvent(player))
+            return false;                                   //ok to let mangos process further
+        else
             return true;
     }
-    return false;
+    return true;
 }
 
 void AddSC_the_barrens()
