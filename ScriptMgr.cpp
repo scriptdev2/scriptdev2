@@ -2127,12 +2127,7 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
     if((*i).second.SoundId)
     {
         if (GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
-        {
-            WorldPacket data(4);
-            data.SetOpcode(SMSG_PLAY_SOUND);
-            data << uint32((*i).second.SoundId);
-            pSource->SendMessageToSet(&data,false);
-        }
+            pSource->PlayDirectSound((*i).second.SoundId);
         else
             error_log("SD2: DoScriptText entry %i tried to process invalid sound id %u.",textEntry,(*i).second.SoundId);
     }
