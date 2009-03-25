@@ -20,6 +20,9 @@ enum
     SAY_INST_SACRIF2        = -1568077,
     SAY_INST_COMPLETE       = -1568078,
 
+    WORLD_STATE_ID          = 3104,
+    WORLD_STATE_COUNTER     = 3106,
+
     TYPE_EVENT_RUN          = 1,
     TYPE_AKILZON            = 2,
     TYPE_NALORAKK           = 3,

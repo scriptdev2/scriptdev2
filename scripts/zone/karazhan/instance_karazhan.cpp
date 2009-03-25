@@ -58,6 +58,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     uint64 MoroesGUID;
     uint64 LibraryDoor;                                     // Door at Shade of Aran
     uint64 MassiveDoor;                                     // Door at Netherspite
+    uint64 SideEntranceDoor;                                // Side Entrance
     uint64 GamesmansDoor;                                   // Door before Chess
     uint64 GamesmansExitDoor;                               // Door after Chess
     uint64 NetherspaceDoor;                                 // Door at Malchezaar
@@ -80,6 +81,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
         LibraryDoor         = 0;
         MassiveDoor         = 0;
+        SideEntranceDoor    = 0;
         GamesmansDoor       = 0;
         GamesmansExitDoor   = 0;
         NetherspaceDoor     = 0;
@@ -131,17 +133,18 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch (data)
         {
-            case DATA_KILREK:                      return KilrekGUID;
-            case DATA_TERESTIAN:                   return TerestianGUID;
-            case DATA_MOROES:                      return MoroesGUID;
-            case DATA_GAMEOBJECT_STAGEDOORLEFT:    return StageDoorLeftGUID;
-            case DATA_GAMEOBJECT_STAGEDOORRIGHT:   return StageDoorRightGUID;
-            case DATA_GAMEOBJECT_CURTAINS:         return CurtainGUID;
-            case DATA_GAMEOBJECT_LIBRARY_DOOR:     return LibraryDoor;
-            case DATA_GAMEOBJECT_MASSIVE_DOOR:     return MassiveDoor;
-            case DATA_GAMEOBJECT_GAME_DOOR:        return GamesmansDoor;
-            case DATA_GAMEOBJECT_GAME_EXIT_DOOR:   return GamesmansExitDoor;
-            case DATA_GAMEOBJECT_NETHER_DOOR:      return NetherspaceDoor;
+            case DATA_KILREK:                       return KilrekGUID;
+            case DATA_TERESTIAN:                    return TerestianGUID;
+            case DATA_MOROES:                       return MoroesGUID;
+            case DATA_GAMEOBJECT_STAGEDOORLEFT:     return StageDoorLeftGUID;
+            case DATA_GAMEOBJECT_STAGEDOORRIGHT:    return StageDoorRightGUID;
+            case DATA_GAMEOBJECT_CURTAINS:          return CurtainGUID;
+            case DATA_GAMEOBJECT_LIBRARY_DOOR:      return LibraryDoor;
+            case DATA_GAMEOBJECT_MASSIVE_DOOR:      return MassiveDoor;
+            case DATA_GO_SIDE_ENTRANCE_DOOR:        return SideEntranceDoor;
+            case DATA_GAMEOBJECT_GAME_DOOR:         return GamesmansDoor;
+            case DATA_GAMEOBJECT_GAME_EXIT_DOOR:    return GamesmansExitDoor;
+            case DATA_GAMEOBJECT_NETHER_DOOR:       return NetherspaceDoor;
         }
 
         return 0;
@@ -190,14 +193,21 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case 183932:   CurtainGUID          = go->GetGUID();         break;
-            case 184278:   StageDoorLeftGUID    = go->GetGUID();         break;
-            case 184279:   StageDoorRightGUID   = go->GetGUID();         break;
-            case 184517:   LibraryDoor          = go->GetGUID();         break;
-            case 185521:   MassiveDoor          = go->GetGUID();         break;
-            case 184276:   GamesmansDoor        = go->GetGUID();         break;
-            case 184277:   GamesmansExitDoor    = go->GetGUID();         break;
-            case 185134:   NetherspaceDoor      = go->GetGUID();         break;
+            case 183932: CurtainGUID        = go->GetGUID(); break;
+            case 184278: StageDoorLeftGUID  = go->GetGUID(); break;
+            case 184279: StageDoorRightGUID = go->GetGUID(); break;
+            case 184517: LibraryDoor        = go->GetGUID(); break;
+            case 185521: MassiveDoor        = go->GetGUID(); break;
+            case 184276: GamesmansDoor      = go->GetGUID(); break;
+            case 184277: GamesmansExitDoor  = go->GetGUID(); break;
+            case 185134: NetherspaceDoor    = go->GetGUID(); break;
+            case 184275:
+                SideEntranceDoor = go->GetGUID();
+                if (GetData(DATA_OPERA_EVENT) != DONE)
+                    go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+                else
+                    go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
+                break;
         }
 
         switch(OperaEvent)

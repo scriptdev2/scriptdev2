@@ -588,6 +588,8 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
                 lDoor->SetGoState(0);
             if (GameObject* rDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
                 rDoor->SetGoState(0);
+            if (GameObject* pSideEntrance = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
+                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
     }
 
@@ -785,6 +787,8 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
                 lDoor->SetGoState(0);
             if (GameObject* rDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
                 rDoor->SetGoState(0);
+            if (GameObject* pSideEntrance = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
+                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
     }
 
@@ -1031,6 +1035,8 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
                 lDoor->SetGoState(0);
             if (GameObject* rDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
                 rDoor->SetGoState(0);
+            if (GameObject* pSideEntrance = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
+                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
     }
 
@@ -1119,6 +1125,8 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
                 lDoor->SetGoState(0);
             if (GameObject* rDoor = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
                 rDoor->SetGoState(0);
+            if (GameObject* pSideEntrance = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
+                pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
     }
 
