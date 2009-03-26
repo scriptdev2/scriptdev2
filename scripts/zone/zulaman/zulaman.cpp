@@ -27,6 +27,7 @@ EndContentData */
 
 #include "precompiled.h"
 #include "def_zulaman.h"
+#include "../../npc/npc_escortAI.h"
 
 /*######
 ## npc_forest_frog
@@ -97,6 +98,139 @@ CreatureAI* GetAI_npc_forest_frog(Creature *_Creature)
     return new npc_forest_frogAI (_Creature);
 }
 
+/*######
+## npc_harrison_jones_za
+######*/
+
+enum
+{
+    SAY_START               = -1568079,
+    SAY_AT_GONG             = -1568080,
+    SAY_OPEN_ENTRANCE       = -1568081
+};
+
+#define GOSSIP_ITEM_BEGIN   "[PH] Begin"
+
+struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
+{
+    npc_harrison_jones_zaAI(Creature *c) : npc_escortAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+
+    void WaypointReached(uint32 i)
+    {
+        if (!pInstance)
+            return;
+
+        switch(i)
+        {
+            case 1:
+                DoScriptText(SAY_AT_GONG, m_creature);
+                if (GameObject* pEntranceDoor = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_GO_GONG)))
+                    pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                IsOnHold = true;
+                break;
+            case 3:
+                DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
+
+                if (GameObject* pEntranceDoor = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_GO_ENTRANCE)))
+                    pEntranceDoor->SetGoState(0);
+
+                pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);
+                break;
+        }
+    }
+
+    void Reset()
+    {
+    }
+
+    void StartEvent()
+    {
+        DoScriptText(SAY_START, m_creature);
+        Start(false,true,false,0);
+    }
+
+    void SetHoldState(bool bOnHold)
+    {
+        IsOnHold = bOnHold;
+    }
+
+    void Aggro(Unit* who)
+    {
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+bool GossipHello_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+    if (pInstance && pInstance->GetData(TYPE_EVENT_RUN) == NOT_STARTED)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BEGIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_harrison_jones_za(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    {
+        ((npc_harrison_jones_zaAI*)pCreature->AI())->StartEvent();
+        pPlayer->CLOSE_GOSSIP_MENU();
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_harrison_jones_za(Creature* pCreature)
+{
+    npc_harrison_jones_zaAI* tempAI = new npc_harrison_jones_zaAI(pCreature);
+
+    //TODO: create proper waypoints
+    tempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)tempAI;
+}
+
+/*######
+## go_strange_gong
+######*/
+
+//Unsure how this Gong must work. Here we always return false to allow Mangos always process further.
+bool GOHello_go_strange_gong(Player* pPlayer, GameObject* pGo)
+{
+    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+
+    if (!pInstance)
+        return false;
+
+    if (pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL)
+    {
+        if (Creature* pCreature = (Creature*)Unit::GetUnit(*pPlayer,pInstance->GetData64(DATA_HARRISON)))
+            ((npc_harrison_jones_zaAI*)pCreature->AI())->SetHoldState(false);
+        else
+            error_log("SD2: Instance Zulaman: go_strange_gong failed");
+
+        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+        return false;
+    }
+
+    pInstance->SetData(TYPE_EVENT_RUN, SPECIAL);
+    return false;
+}
+
 void AddSC_zulaman()
 {
     Script *newscript;
@@ -104,5 +238,17 @@ void AddSC_zulaman()
     newscript = new Script;
     newscript->Name = "npc_forest_frog";
     newscript->GetAI = &GetAI_npc_forest_frog;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_harrison_jones_za";
+    newscript->GetAI = &GetAI_npc_harrison_jones_za;
+    newscript->pGossipHello =  &GossipHello_npc_harrison_jones_za;
+    newscript->pGossipSelect = &GossipSelect_npc_harrison_jones_za;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_strange_gong";
+    newscript->pGOHello = &GOHello_go_strange_gong;
     newscript->RegisterSelf();
 }

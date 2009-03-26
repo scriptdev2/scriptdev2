@@ -380,4 +380,11 @@ INSERT INTO script_waypoint VALUES
 (22916, 48, 7515.78, -3060.16, 445.727, 0, ''),
 (22916, 49, 7516.46, -3058.11, 445.682, 10000, 'quest credit');
 
+DELETE FROM script_waypoint WHERE entry=24358; -- incomplete, in-progress, needs to be done
+INSERT INTO script_waypoint VALUES
+(24358, 0, 121.193970, 1645.619385, 42.021, 0, ''),
+(24358, 1, 132.051468, 1642.176025, 42.021, 5000, 'SAY_AT_GONG'),
+(24358, 2, 120.670631, 1636.346802, 42.415, 0, ''),
+(24358, 3, 120.536003, 1611.654663, 43.473, 30000, 'SAY_OPEN_ENTRANCE');
+
 -- EOF

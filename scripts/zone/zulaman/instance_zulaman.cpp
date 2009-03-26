@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Instance_Zulaman
-SD%Complete: 60
+SD%Complete: 25
 SDComment:
 SDCategory: Zul'Aman
 EndScriptData */
@@ -24,178 +24,311 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulaman.h"
 
-#define ENCOUNTERS     7
-#define RAND_VENDOR    2
-
 struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
 {
-    instance_zulaman(Map *map) : ScriptedInstance(map) {Initialize();};
+    instance_zulaman(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
-    uint64 akilzonGUID;
-    uint64 nalorakkGUID;
-    uint64 janalaiGUID;
-    uint64 halazziGUID;
-    uint64 zuljinGUID;
-    uint64 malacrassGUID;
+    std::string strInstData;
+    uint32 m_uiEventTimer;
+    uint32 m_uiEventMinuteStep;
 
-    uint64 StrangeGongGUID;
-    uint64 HexlordEntranceGUID;
+    uint32 m_uiGongCount;
 
-    uint32 janalai_eggs_l;
-    uint32 janalai_eggs_r;
+    uint64 m_uiAkilzonGUID;
+    uint64 m_uiNalorakkGUID;
+    uint64 m_uiJanalaiGUID;
+    uint64 m_uiHalazziGUID;
+    uint64 m_uiZuljinGUID;
+    uint64 m_uiMalacrassGUID;
+    uint64 m_uiHarrisonGUID;
 
-    uint32 Encounters[ENCOUNTERS];
-    uint32 RandVendor[RAND_VENDOR];
+    uint64 m_uiStrangeGongGUID;
+    uint64 m_uiMassiveGateGUID;
+    uint64 m_uiMalacrassEntranceGUID;
+
+    uint32 m_uiJanalaiEggCntL;
+    uint32 m_uiJanalaiEggCntR;
+
+    uint32 m_uiEncounter[ENCOUNTERS];
+    uint32 m_uiRandVendor[RAND_VENDOR];
 
     void Initialize()
     {
-        akilzonGUID = 0;
-        nalorakkGUID = 0;
-        janalaiGUID = 0;
-        halazziGUID = 0;
-        zuljinGUID = 0;
-        malacrassGUID = 0;
+        m_uiEventTimer = MINUTE*IN_MILISECONDS;
+        m_uiEventMinuteStep = MINUTE/3;
 
-        StrangeGongGUID = 0;
-        HexlordEntranceGUID = 0;
+        m_uiGongCount = 0;
 
-        janalai_eggs_l = 20;
-        janalai_eggs_r = 20;
+        m_uiAkilzonGUID = 0;
+        m_uiNalorakkGUID = 0;
+        m_uiJanalaiGUID = 0;
+        m_uiHalazziGUID = 0;
+        m_uiZuljinGUID = 0;
+        m_uiMalacrassGUID = 0;
+        m_uiHarrisonGUID = 0;
+
+        m_uiStrangeGongGUID = 0;
+        m_uiMassiveGateGUID = 0;
+        m_uiMalacrassEntranceGUID = 0;
+
+        m_uiJanalaiEggCntL = 20;
+        m_uiJanalaiEggCntR = 20;
 
         for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounters[i] = NOT_STARTED;
+            m_uiEncounter[i] = NOT_STARTED;
 
         for(uint8 i = 0; i < RAND_VENDOR; i++)
-            RandVendor[i] = NOT_STARTED;
+            m_uiRandVendor[i] = NOT_STARTED;
     }
 
-    bool IsEncounterInProgress() const
+    void UpdateInstanceWorldState(uint32 uiId, uint32 uiState)
     {
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            if(Encounters[i] == IN_PROGRESS) return true;
+        Map::PlayerList const& players = instance->GetPlayers();
 
-        return false;
-    }
-
-    void OnCreatureCreate(Creature *creature, uint32 creature_entry)
-    {
-        switch(creature->GetEntry())
+        if (!players.isEmpty())
         {
-            case 23574: akilzonGUID     = creature->GetGUID(); break;
-            case 23576: nalorakkGUID    = creature->GetGUID(); break;
-            case 23578: janalaiGUID     = creature->GetGUID(); break;
-            case 23577: halazziGUID     = creature->GetGUID(); break;
-            case 23863: zuljinGUID      = creature->GetGUID(); break;
-            case 24239: malacrassGUID   = creature->GetGUID(); break;
-        }
-    }
-
-    void OnObjectCreate(GameObject *go)
-    {
-        switch(go->GetEntry())
-        {
-            case 187359: StrangeGongGUID        = go->GetGUID(); break;
-            case 186305: HexlordEntranceGUID    = go->GetGUID(); break;
-        }
-    }
-
-    uint64 GetData64(uint32 data)
-    {
-        switch(data)
-        {
-            case DATA_AKILZON:
-                return akilzonGUID;
-            case DATA_NALORAKK:
-                return nalorakkGUID;
-            case DATA_JANALAI:
-                return janalaiGUID;
-            case DATA_HALAZZI:
-                return halazziGUID;
-            case DATA_ZULJIN:
-                return zuljinGUID;
-            case DATA_MALACRASS:
-                return malacrassGUID;
-            case DATA_GO_GONG:
-                return StrangeGongGUID;
-            case DATA_GO_HEXLORD_GATE:
-                return HexlordEntranceGUID;
-        }
-        return 0;
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch(type)
-        {
-            case TYPE_JANALAI:
-                if (data == NOT_STARTED)
+            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            {
+                if (Player* pPlayer = itr->getSource())
                 {
-                    janalai_eggs_l = 20;
-                    janalai_eggs_r = 20;
+                    pPlayer->SendUpdateWorldState(uiId, uiState);
+                    debug_log("SD2: Instance Zulaman: UpdateInstanceWorldState for id %u with state %u",uiId,uiState);
                 }
-                Encounters[3] = data;
-                break;
-            case DATA_J_HATCHLEFT:
-                janalai_eggs_l -= data;
-                break;
-            case DATA_J_HATCHRIGHT:
-                janalai_eggs_r -= data;
-                break;
-            case TYPE_RAND_VENDOR_1:
-                RandVendor[0] = data;
-                break;
-            case TYPE_RAND_VENDOR_2:
-                RandVendor[1] = data;
-                break;
-            default:
-                error_log("SD2: Zul'Aman: ERROR SetData = %u for type %u does not exist/not implemented.",data,type);
-                break;
+            }
+        }
+        else
+            debug_log("SD2: Instance Zulaman: UpdateInstanceWorldState, but PlayerList is empty.");
+    }
+
+    void OnCreatureCreate(Creature* pCreature, uint32 uiCreatureEntry)
+    {
+        switch(pCreature->GetEntry())
+        {
+            case 23574: m_uiAkilzonGUID     = pCreature->GetGUID(); break;
+            case 23576: m_uiNalorakkGUID    = pCreature->GetGUID(); break;
+            case 23578: m_uiJanalaiGUID     = pCreature->GetGUID(); break;
+            case 23577: m_uiHalazziGUID     = pCreature->GetGUID(); break;
+            case 23863: m_uiZuljinGUID      = pCreature->GetGUID(); break;
+            case 24239: m_uiMalacrassGUID   = pCreature->GetGUID(); break;
+            case 24358: m_uiHarrisonGUID    = pCreature->GetGUID(); break;
         }
     }
 
-    uint32 GetData(uint32 type)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(type)
+        switch(pGo->GetEntry())
+        {
+            case 187359:
+                m_uiStrangeGongGUID = pGo->GetGUID();
+                if (GetData(TYPE_EVENT_RUN) != DONE)
+                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                else
+                    pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                break;
+            case 186728: m_uiMassiveGateGUID        = pGo->GetGUID(); break;
+            case 186305: m_uiMalacrassEntranceGUID  = pGo->GetGUID(); break;
+        }
+    }
+
+    void SetData(uint32 uiType, uint32 uiData)
+    {
+        debug_log("SD2: Instance Zulaman: SetData received for type %u with data %u",uiType,uiData);
+
+        switch(uiType)
         {
             case TYPE_EVENT_RUN:
-                return Encounters[0];
-            case TYPE_AKILZON:
-                return Encounters[1];
-            case TYPE_NALORAKK:
-                return Encounters[2];
+                if (uiData == SPECIAL)
+                {
+                    ++m_uiGongCount;
+                    if (m_uiGongCount == 5)
+                        m_uiEncounter[0] = uiData;
+                }
+                if (uiData == IN_PROGRESS)
+                {
+                    UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                    UpdateInstanceWorldState(WORLD_STATE_ID,1);
+                    m_uiEncounter[0] = uiData;
+                }
+                break;
             case TYPE_JANALAI:
-                return Encounters[3];
+                if (uiData == NOT_STARTED)
+                {
+                    m_uiJanalaiEggCntL = 20;
+                    m_uiJanalaiEggCntR = 20;
+                }
+                m_uiEncounter[3] = uiData;
+                break;
+            case DATA_J_HATCHLEFT:
+                m_uiJanalaiEggCntL -= uiData;
+                break;
+            case DATA_J_HATCHRIGHT:
+            m_uiJanalaiEggCntR -= uiData;
+                break;
+            case TYPE_RAND_VENDOR_1:
+                m_uiRandVendor[0] = uiData;
+                break;
+            case TYPE_RAND_VENDOR_2:
+                m_uiRandVendor[1] = uiData;
+                break;
+            default:
+                error_log("SD2: Instance Zulaman: ERROR SetData = %u for type %u does not exist/not implemented.",uiType,uiData);
+                break;
+        }
+
+        if (uiData == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
+                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5] << " " << m_uiEncounter[6];
+
+            strInstData = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
+    }
+
+    const char* Save()
+    {
+        return strInstData.c_str();
+    }
+
+    void Load(const char* chrIn)
+    {
+        if (!chrIn)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(chrIn);
+
+        std::istringstream loadStream(chrIn);
+        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
+            >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6];
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if (m_uiEncounter[i] == IN_PROGRESS)
+                m_uiEncounter[i] = NOT_STARTED;
+
+        OUT_LOAD_INST_DATA_COMPLETE;
+    }
+
+    uint32 GetData(uint32 uiType)
+    {
+        switch(uiType)
+        {
+            case TYPE_EVENT_RUN:
+                return m_uiEncounter[0];
+            case TYPE_AKILZON:
+                return m_uiEncounter[1];
+            case TYPE_NALORAKK:
+                return m_uiEncounter[2];
+            case TYPE_JANALAI:
+                return m_uiEncounter[3];
             case TYPE_HALAZZI:
-                return Encounters[4];
+                return m_uiEncounter[4];
             case TYPE_ZULJIN:
-                return Encounters[5];
+                return m_uiEncounter[5];
             case TYPE_MALACRASS:
-                return Encounters[6];
+                return m_uiEncounter[6];
 
             case DATA_J_EGGSLEFT:
-                return janalai_eggs_l;
+                return m_uiJanalaiEggCntL;
             case DATA_J_EGGSRIGHT:
-                return janalai_eggs_r;
+                return m_uiJanalaiEggCntR;
 
             case TYPE_RAND_VENDOR_1:
-                return RandVendor[0];
+                return m_uiRandVendor[0];
             case TYPE_RAND_VENDOR_2:
-                return RandVendor[1];
+                return m_uiRandVendor[1];
         }
         return 0;
+    }
+
+    uint64 GetData64(uint32 uiData)
+    {
+        switch(uiData)
+        {
+            case DATA_AKILZON:
+                return m_uiAkilzonGUID;
+            case DATA_NALORAKK:
+                return m_uiNalorakkGUID;
+            case DATA_JANALAI:
+                return m_uiJanalaiGUID;
+            case DATA_HALAZZI:
+                return m_uiHalazziGUID;
+            case DATA_ZULJIN:
+                return m_uiZuljinGUID;
+            case DATA_MALACRASS:
+                return m_uiMalacrassGUID;
+            case DATA_HARRISON:
+                return m_uiHarrisonGUID;
+            case DATA_GO_GONG:
+                return m_uiStrangeGongGUID;
+            case DATA_GO_ENTRANCE:
+                return m_uiMassiveGateGUID;
+            case DATA_GO_MALACRASS_GATE:
+                return m_uiMalacrassEntranceGUID;
+        }
+        return 0;
+    }
+
+    Player* GetFirstPlayerInInstance()
+    {
+        Map::PlayerList const& pPlayers = instance->GetPlayers();
+
+        if (!pPlayers.isEmpty())
+        {
+            for(Map::PlayerList::const_iterator itr = pPlayers.begin(); itr != pPlayers.end(); ++itr)
+            {
+                if (Player* pPlr = itr->getSource())
+                    return pPlr;
+            }
+        }
+
+        debug_log("SD2: Instance Zulaman: GetFirstPlayerInInstance, but PlayerList is empty.");
+        return NULL;
+    }
+
+    void Update(uint32 uiDiff)
+    {
+        if (GetData(TYPE_EVENT_RUN) == IN_PROGRESS)
+        {
+            if (m_uiEventTimer <= uiDiff)
+            {
+                if (m_uiEventMinuteStep == 0)
+                {
+                    debug_log("SD2: Instance Zulaman: event time reach end, event failed.");
+                    m_uiEncounter[0] = FAIL;
+                    return;
+                }
+
+                --m_uiEventMinuteStep;
+                UpdateInstanceWorldState(WORLD_STATE_COUNTER, m_uiEventMinuteStep);
+
+                debug_log("SD2: Instance Zulaman: minute decrease to %u.",m_uiEventMinuteStep);
+
+                m_uiEventTimer = MINUTE*IN_MILISECONDS;
+            }
+            else
+                m_uiEventTimer -= uiDiff;
+        }
     }
 };
 
-InstanceData* GetInstanceData_instance_zulaman(Map* map)
+InstanceData* GetInstanceData_instance_zulaman(Map* pMap)
 {
-    return new instance_zulaman(map);
+    return new instance_zulaman(pMap);
 }
 
 void AddSC_instance_zulaman()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_zulaman";
-    newscript->GetInstanceData = &GetInstanceData_instance_zulaman;
-    newscript->RegisterSelf();
+    Script* pNewScript;
+    pNewScript = new Script;
+    pNewScript->Name = "instance_zulaman";
+    pNewScript->GetInstanceData = &GetInstanceData_instance_zulaman;
+    pNewScript->RegisterSelf();
 }
