@@ -150,6 +150,28 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                     m_uiEncounter[0] = uiData;
                 }
                 break;
+            case TYPE_AKILZON:
+                if (uiData == DONE)
+                {
+                    if (m_uiEncounter[0] == IN_PROGRESS)
+                    {
+                        m_uiEventMinuteStep += MINUTE/6;    //add 10 minutes
+                        UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                    }
+                }
+                m_uiEncounter[1] = uiData;
+                break;
+            case TYPE_NALORAKK:
+                if (uiData == DONE)
+                {
+                    if (m_uiEncounter[0] == IN_PROGRESS)
+                    {
+                        m_uiEventMinuteStep += MINUTE/4;    //add 15 minutes
+                        UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
+                    }
+                }
+                m_uiEncounter[2] = uiData;
+                break;
             case TYPE_JANALAI:
                 if (uiData == NOT_STARTED)
                 {
@@ -162,7 +184,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 m_uiJanalaiEggCntL -= uiData;
                 break;
             case DATA_J_HATCHRIGHT:
-            m_uiJanalaiEggCntR -= uiData;
+                m_uiJanalaiEggCntR -= uiData;
                 break;
             case TYPE_RAND_VENDOR_1:
                 m_uiRandVendor[0] = uiData;
