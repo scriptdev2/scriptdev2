@@ -109,15 +109,15 @@ CreatureAI* GetAI_boss_herod(Creature* pCreature)
 
 struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
 {
-    mob_scarlet_traineeAI(Creature *c) : npc_escortAI(c) {Reset();}
+    mob_scarlet_traineeAI(Creature *c) : npc_escortAI(c)
+    {
+        Start_Timer = urand(1000,6000);
+        Reset();
+    }
 
     uint32 Start_Timer;
 
-    void Reset()
-    {
-        Start_Timer = urand(1500,4500);
-    }
-
+    void Reset() { }
     void WaypointReached(uint32 uiPoint) { }
     void Aggro(Unit* who) { }
 
