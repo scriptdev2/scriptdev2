@@ -972,8 +972,12 @@ UPDATE creature_template SET ScriptName='npc_mortog_steamhead' WHERE entry=23373
 UPDATE instance_template SET script='instance_zulaman' WHERE map=568;
 UPDATE creature_template SET ScriptName='npc_harrison_jones_za' WHERE entry=24358;
 UPDATE gameobject_template SET ScriptName='go_strange_gong' WHERE entry=187359;
+UPDATE creature_template SET ScriptName='boss_akilzon' WHERE entry=23574;
+UPDATE creature_template SET ScriptName='boss_halazzi' WHERE entry=23577;
 UPDATE creature_template SET ScriptName='boss_janalai' WHERE entry=23578;
+UPDATE creature_template SET ScriptName='boss_malacrass' WHERE entry=24239;
 UPDATE creature_template SET ScriptName='boss_nalorakk' WHERE entry=23576;
+UPDATE creature_template SET ScriptName='boss_zuljin' WHERE entry=23863;
 UPDATE creature_template SET ScriptName='mob_jandalai_firebomb' WHERE entry=23920;
 UPDATE creature_template SET ScriptName='mob_amanishi_hatcher' WHERE entry=23818;
 UPDATE creature_template SET ScriptName='mob_hatchling' WHERE entry=23598;

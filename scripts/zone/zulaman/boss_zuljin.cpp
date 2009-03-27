@@ -87,10 +87,71 @@ enum
     PHASE_EAGLE                     = 1,
     PHASE_LYNX                      = 2,
     PHASE_DRAGONHAWK                = 3,
-    PHASE_TROLL                     = 4,
+    PHASE_TROLL                     = 4
 };
 
 //coords for going for changing form
 const float CENTER_X = 120.148811;
 const float CENTER_Y = 703.713684;
 const float CENTER_Z = 45.111477;
+
+struct MANGOS_DLL_DECL boss_zuljinAI : public ScriptedAI
+{
+    boss_zuljinAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        switch(rand()%2)
+        {
+            case 0: DoScriptText(SAY_KILL1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL2, m_creature); break;
+        }
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (!pInstance)
+            return;
+
+        pInstance->SetData(TYPE_ZULJIN, DONE);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_zuljin(Creature* pCreature)
+{
+    return new boss_zuljinAI(pCreature);
+}
+
+void AddSC_boss_zuljin()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name = "boss_zuljin";
+    newscript->GetAI = &GetAI_boss_zuljin;
+    newscript->RegisterSelf();
+}

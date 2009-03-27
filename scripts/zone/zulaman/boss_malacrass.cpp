@@ -94,7 +94,7 @@ enum
     //Warrior
     SPELL_WR_MORTAL_STRIKE  = 43441,
     SPELL_WR_WHIRLWIND      = 43442,
-    SPELL_WR_SPELL_REFLECT  = 43443,
+    SPELL_WR_SPELL_REFLECT  = 43443
 };
 
 //Adds positions
@@ -114,3 +114,64 @@ static uint32 AddEntryList[8]=
     24246,                                                  //Darkheart
     24247,                                                  //Koragg
 };
+
+struct MANGOS_DLL_DECL boss_malacrassAI : public ScriptedAI
+{
+    boss_malacrassAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        switch(rand()%2)
+        {
+            case 0: DoScriptText(SAY_KILL1, m_creature); break;
+            case 1: DoScriptText(SAY_KILL2, m_creature); break;
+        }
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (!pInstance)
+            return;
+
+        pInstance->SetData(TYPE_MALACRASS, DONE);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_malacrass(Creature* pCreature)
+{
+    return new boss_malacrassAI(pCreature);
+}
+
+void AddSC_boss_malacrass()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name = "boss_malacrass";
+    newscript->GetAI = &GetAI_boss_malacrass;
+    newscript->RegisterSelf();
+}

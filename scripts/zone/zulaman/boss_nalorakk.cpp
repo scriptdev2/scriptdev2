@@ -22,37 +22,41 @@ SDCategory: Zul'Aman
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_zulaman.h"
 
-#define SAY_WAVE1_AGGRO         -1568010
-#define SAY_WAVE2_STAIR1        -1568011
-#define SAY_WAVE3_STAIR2        -1568012
-#define SAY_WAVE4_PLATFORM      -1568013
+enum
+{
+    SAY_WAVE1_AGGRO         = -1568010,
+    SAY_WAVE2_STAIR1        = -1568011,
+    SAY_WAVE3_STAIR2        = -1568012,
+    SAY_WAVE4_PLATFORM      = -1568013,
 
-#define SAY_EVENT1_SACRIFICE    -1568014
-#define SAY_EVENT2_SACRIFICE    -1568015
+    SAY_EVENT1_SACRIFICE    = -1568014,
+    SAY_EVENT2_SACRIFICE    = -1568015,
 
-#define SAY_AGGRO               -1568016
-#define SAY_SURGE               -1568017
-#define SAY_TOBEAR              -1568018
-#define SAY_TOTROLL             -1568019
-#define SAY_BERSERK             -1568020
-#define SAY_SLAY1               -1568021
-#define SAY_SLAY2               -1568022
-#define SAY_DEATH               -1568023
+    SAY_AGGRO               = -1568016,
+    SAY_SURGE               = -1568017,
+    SAY_TOBEAR              = -1568018,
+    SAY_TOTROLL             = -1568019,
+    SAY_BERSERK             = -1568020,
+    SAY_SLAY1               = -1568021,
+    SAY_SLAY2               = -1568022,
+    SAY_DEATH               = -1568023,
 
-#define SPELL_BERSERK           45078                       //unsure, this increases damage, size and speed
+    SPELL_BERSERK           = 45078,                        //unsure, this increases damage, size and speed
 
-//Defines for Troll form
-#define SPELL_BRUTALSWIPE       42384
-//#define SPELL_MANGLE            42389 This doesn't seem to apply the mangle debuff after all
-#define SPELL_MANGLEEFFECT      44955
-#define SPELL_SURGE             42402
-#define SPELL_BEARFORM          42377
+    //Defines for Troll form
+    SPELL_BRUTALSWIPE       = 42384,
+    //SPELL_MANGLE            = 42389,                        //This doesn't seem to apply the mangle debuff after all
+    SPELL_MANGLEEFFECT      = 44955,
+    SPELL_SURGE             = 42402,
+    SPELL_BEARFORM          = 42377,
 
-//Defines for Bear form
-#define SPELL_LACERATINGSLASH   42395
-#define SPELL_RENDFLESH         42397
-#define SPELL_DEAFENINGROAR     42398
+    //Defines for Bear form
+    SPELL_LACERATINGSLASH   = 42395,
+    SPELL_RENDFLESH         = 42397,
+    SPELL_DEAFENINGROAR     = 42398
+};
 
 struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
 {
@@ -112,6 +116,11 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, m_creature);
+
+        if (!pInstance)
+            return;
+
+        pInstance->SetData(TYPE_NALORAKK, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -234,9 +243,9 @@ struct MANGOS_DLL_DECL boss_nalorakkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nalorakk(Creature *_Creature)
+CreatureAI* GetAI_boss_nalorakk(Creature* pCreature)
 {
-    return new boss_nalorakkAI (_Creature);
+    return new boss_nalorakkAI(pCreature);
 }
 
 void AddSC_boss_nalorakk()

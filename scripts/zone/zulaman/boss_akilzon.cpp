@@ -52,5 +52,66 @@ enum
     SE_LOC_Y_MAX            = 1435,
     SE_LOC_Y_MIN            = 1370,
 
-    MOB_TEMP_TRIGGER        = 23920,
+    MOB_TEMP_TRIGGER        = 23920
 };
+
+struct MANGOS_DLL_DECL boss_akilzonAI : public ScriptedAI
+{
+    boss_akilzonAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
+
+    void Reset()
+    {
+    }
+
+    void Aggro(Unit* pWho)
+    {
+        DoScriptText(SAY_AGGRO, m_creature);
+    }
+
+    void KilledUnit(Unit* pVictim)
+    {
+        switch(rand()%2)
+        {
+            case 0: DoScriptText(SAY_SLAY1, m_creature); break;
+            case 1: DoScriptText(SAY_SLAY2, m_creature); break;
+        }
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        DoScriptText(SAY_DEATH, m_creature);
+
+        if (!pInstance)
+            return;
+
+        pInstance->SetData(TYPE_AKILZON, DONE);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+            return;
+
+        DoMeleeAttackIfReady();
+    }
+};
+
+CreatureAI* GetAI_boss_akilzon(Creature* pCreature)
+{
+    return new boss_akilzonAI(pCreature);
+}
+
+void AddSC_boss_akilzon()
+{
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name = "boss_akilzon";
+    newscript->GetAI = &GetAI_boss_akilzon;
+    newscript->RegisterSelf();
+}
