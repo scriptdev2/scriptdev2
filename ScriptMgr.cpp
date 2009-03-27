@@ -6,7 +6,7 @@
 #include "../../shared/Config/Config.h"
 #include "config.h"
 #include "Database/DatabaseEnv.h"
-#include "Database/DBCStores.h"
+#include "DBCStores.h"
 #include "ObjectMgr.h"
 #include "ProgressBar.h"
 #include "scripts/creature/mob_event_ai.h"
