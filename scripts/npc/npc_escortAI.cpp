@@ -268,11 +268,13 @@ void npc_escortAI::AddWaypoint(uint32 id, float x, float y, float z, uint32 Wait
 
 void npc_escortAI::FillPointMovementListForCreature()
 {
-    std::list<PointMovement>::iterator itr;
+    UNORDERED_MAP<uint32, std::vector<PointMovement> >::iterator pPointsEntries = PointMovementMap.find(m_creature->GetEntry());
 
-    for (itr = PointMovementList.begin(); itr != PointMovementList.end(); ++itr)
+    if (pPointsEntries != PointMovementMap.end())
     {
-        if (itr->m_uiCreatureEntry == m_creature->GetEntry())
+        std::vector<PointMovement>::iterator itr;
+
+        for (itr = pPointsEntries->second.begin(); itr != pPointsEntries->second.end(); ++itr)
         {
             Escort_Waypoint pPoint(itr->m_uiPointId,itr->m_fX,itr->m_fY,itr->m_fZ,itr->m_uiWaitTime);
             WaypointList.push_back(pPoint);

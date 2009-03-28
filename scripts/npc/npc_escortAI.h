@@ -5,7 +5,7 @@
 #ifndef SC_ESCORTAI_H
 #define SC_ESCORTAI_H
 
-extern std::list<PointMovement> PointMovementList;
+extern UNORDERED_MAP<uint32, std::vector<PointMovement> > PointMovementMap;
 
 struct Escort_Waypoint
 {
