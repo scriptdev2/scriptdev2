@@ -132,9 +132,9 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             if (ReconnectWP)
             {
                 //Correct movement speed
-                if (bIsRunning)
+                if (bIsRunning && m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
                     m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-                else
+                else if (!bIsRunning && !m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
                     m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
                 //Continue with waypoints
