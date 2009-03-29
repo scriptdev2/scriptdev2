@@ -60,6 +60,8 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
 
         void Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID = 0);
 
+        void SetRun(bool bRun = true);
+
     // EscortAI variables
     protected:
         uint64 PlayerGUID;
@@ -85,6 +87,6 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         bool Defend;
         bool Returning;
         bool ReconnectWP;
-        bool Run;
+        bool bIsRunning;
 };
 #endif

@@ -132,7 +132,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
             if (ReconnectWP)
             {
                 //Correct movement speed
-                if (Run)
+                if (bIsRunning)
                     m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
                 else
                     m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
@@ -284,6 +284,30 @@ void npc_escortAI::FillPointMovementListForCreature()
     }
 }
 
+void npc_escortAI::SetRun(bool bRun)
+{
+    if (bRun)
+    {
+        if (!bIsRunning)
+        {
+            m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            bIsRunning = true;
+        }
+        else
+            debug_log("SD2: EscortAI attempt to set run mode, but is already running.");
+    }
+    else
+    {
+        if (bIsRunning)
+        {
+            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+            bIsRunning = false;
+        }
+        else
+            debug_log("SD2: EscortAI attempt to set walk mode, but is already walking.");
+    }
+}
+
 void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
 {
     if (InCombat)
@@ -306,7 +330,7 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
 
     Attack = bAttack;
     Defend = bDefend;
-    Run = bRun;
+    bIsRunning = bRun;
     PlayerGUID = pGUID;
 
     //store original NpcFlags
@@ -316,12 +340,12 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     if (m_uiNpcFlags)
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
 
-    debug_log("SD2: EscortAI started with %d waypoints. Attack = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), Attack, Defend, Run, PlayerGUID);
+    debug_log("SD2: EscortAI started with %d waypoints. Attack = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), Attack, Defend, bIsRunning, PlayerGUID);
 
     CurrentWP = WaypointList.begin();
 
     //Set initial speed
-    if (Run)
+    if (bIsRunning)
         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
     else
         m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
