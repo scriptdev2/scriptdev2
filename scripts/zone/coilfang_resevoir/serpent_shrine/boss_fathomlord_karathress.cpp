@@ -221,8 +221,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
                     //stack max three times (one for each alive)
                     if (Advisor->isAlive())
                     {
-                        m_creature->InterruptNonMeleeSpells(false);
-                        m_creature->CastSpell(m_creature, SPELL_BLESSING_OF_THE_TIDES,false);
+                        Advisor->InterruptNonMeleeSpells(false);
+                        Advisor->CastSpell(m_creature, SPELL_BLESSING_OF_THE_TIDES, false);
                     }
                 }
             }
