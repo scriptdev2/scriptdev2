@@ -90,8 +90,8 @@ void npc_escortAI::JustRespawned()
     IsBeingEscorted = false;
     IsOnHold = false;
 
-    //Re-Enable gossip
-    m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    //Restore original NpcFlags
+    m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
     Reset();
 }
@@ -112,7 +112,8 @@ void npc_escortAI::EnterEvadeMode()
         m_creature->GetMotionMaster()->MovementExpired();
         m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z);
 
-    }else
+    }
+    else
     {
         m_creature->GetMotionMaster()->MovementExpired();
         m_creature->GetMotionMaster()->MoveTargetedHome();
@@ -165,8 +166,8 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 m_creature->Respawn();
                 m_creature->GetMotionMaster()->Clear(true);
 
-                //Re-Enable gossip
-                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                //Restore original NpcFlags
+                m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
 
                 IsBeingEscorted = false;
                 WaitTimer = 0;
@@ -203,8 +204,8 @@ void npc_escortAI::UpdateAI(const uint32 diff)
                 m_creature->Respawn();
                 m_creature->GetMotionMaster()->Clear(true);
 
-                //Re-Enable gossip
-                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                //Restore original NpcFlags
+                m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
             }
 
             PlayerTimer = 1000;
@@ -239,7 +240,8 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
         Returning = false;
         WaitTimer = 1;
 
-    }else
+    }
+    else
     {
         //Make sure that we are still on the right waypoint
         if (CurrentWP->id != id)
@@ -290,9 +292,15 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
         return;
     }
 
+    if (IsBeingEscorted)
+    {
+        error_log("SD2: EscortAI attempt to Start while already escorting");
+        return;
+    }
+
     if (WaypointList.empty())
     {
-        debug_log("SD2 ERROR: Call to escortAI::Start with 0 waypoints");
+        error_db_log("SD2: EscortAI Start with 0 waypoints (possible missing entry in script_waypoint)");
         return;
     }
 
@@ -301,6 +309,13 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     Run = bRun;
     PlayerGUID = pGUID;
 
+    //store original NpcFlags
+    m_uiNpcFlags = m_creature->GetUInt32Value(UNIT_NPC_FLAGS);
+
+    //remove them if any
+    if (m_uiNpcFlags)
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
+
     debug_log("SD2: EscortAI started with %d waypoints. Attack = %d, Defend = %d, Run = %d, PlayerGUID = %d", WaypointList.size(), Attack, Defend, Run, PlayerGUID);
 
     CurrentWP = WaypointList.begin();
@@ -308,7 +323,8 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     //Set initial speed
     if (Run)
         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-    else m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+    else
+        m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
     //Start WP
     m_creature->GetMotionMaster()->MovePoint(CurrentWP->id, CurrentWP->x, CurrentWP->y, CurrentWP->z );
@@ -317,7 +333,4 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     ReconnectWP = false;
     Returning = false;
     IsOnHold = false;
-
-    //Disable gossip
-    m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 }

@@ -69,6 +69,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
     private:
         uint32 WaitTimer;
         uint32 PlayerTimer;
+        uint32 m_uiNpcFlags;
 
         struct
         {
