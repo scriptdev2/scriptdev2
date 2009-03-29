@@ -38,41 +38,30 @@ EndContentData */
 
 struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
 {
-    npc_defias_traitorAI(Creature *c) : npc_escortAI(c)
-    {
-        IsWalking = false;
-        Reset();
-    }
-
-    bool IsWalking;
+    npc_defias_traitorAI(Creature *c) : npc_escortAI(c) { Reset(); }
 
     void WaypointReached(uint32 i)
     {
         Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player)
+        if (!player || player->GetTypeId() != TYPEID_PLAYER)
             return;
-
-        if (IsWalking && !m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
 
         switch (i)
         {
             case 35:
-                IsWalking = true;
+                SetRun(false);
                 break;
             case 36:
                 DoScriptText(SAY_PROGRESS, m_creature, player);
                 break;
             case 44:
                 DoScriptText(SAY_END, m_creature, player);
-                {
-                    if (player && player->GetTypeId() == TYPEID_PLAYER)
-                        ((Player*)player)->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,m_creature);
-                }
+                ((Player*)player)->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,m_creature);
                 break;
         }
     }
+
     void Aggro(Unit* who)
     {
         switch(rand()%2)
@@ -82,15 +71,7 @@ struct MANGOS_DLL_DECL npc_defias_traitorAI : public npc_escortAI
         }
     }
 
-    void Reset()
-    {
-        if (IsWalking && !m_creature->HasUnitMovementFlag(MOVEMENTFLAG_WALK_MODE))
-        {
-            m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-            return;
-        }
-        IsWalking = false;
-    }
+    void Reset() { }
 
     void JustDied(Unit* killer)
     {
