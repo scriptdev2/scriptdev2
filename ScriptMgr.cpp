@@ -35,6 +35,7 @@ enum ChatType
     CHAT_TYPE_BOSS_EMOTE        = 3,
     CHAT_TYPE_WHISPER           = 4,
     CHAT_TYPE_BOSS_WHISPER      = 5,
+    CHAT_TYPE_ZONE_YELL         = 6
 };
 
 #define TEXT_SOURCE_RANGE   -1000000                        //the amount of entries each text source has available
@@ -670,7 +671,7 @@ void LoadDatabase()
             if (!GetLanguageDescByID(temp.Language))
                 error_db_log("SD2: Entry %i in table `eventai_texts` using Language %u but Language does not exist.",i,temp.Language);
 
-            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+            if (temp.Type > CHAT_TYPE_ZONE_YELL)
                 error_db_log("SD2: Entry %i in table `eventai_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
 
             TextMap[i] = temp;
@@ -735,7 +736,7 @@ void LoadDatabase()
             if (!GetLanguageDescByID(temp.Language))
                 error_db_log("SD2: Entry %i in table `script_texts` using Language %u but Language does not exist.",i,temp.Language);
 
-            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+            if (temp.Type > CHAT_TYPE_ZONE_YELL)
                 error_db_log("SD2: Entry %i in table `script_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
 
             TextMap[i] = temp;
@@ -800,7 +801,7 @@ void LoadDatabase()
             if (!GetLanguageDescByID(temp.Language))
                 error_db_log("SD2: Entry %i in table `custom_texts` using Language %u but Language does not exist.",i,temp.Language);
 
-            if (temp.Type > CHAT_TYPE_BOSS_WHISPER)
+            if (temp.Type > CHAT_TYPE_ZONE_YELL)
                 error_db_log("SD2: Entry %i in table `custom_texts` has Type %u but this Chat Type does not exist.",i,temp.Type);
 
             TextMap[i] = temp;
@@ -2177,6 +2178,9 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit* target)
                     pSource->MonsterWhisper(textEntry, target->GetGUID(), true);
                 else error_log("SD2: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", textEntry);
             }break;
+        case CHAT_TYPE_ZONE_YELL:
+            pSource->MonsterYellToZone(textEntry, (*i).second.Language, target ? target->GetGUID() : 0);
+            break;
     }
 }
 
