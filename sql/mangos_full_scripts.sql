@@ -76,6 +76,7 @@ UPDATE creature_template SET ScriptName='npc_chicken_cluck' WHERE entry=620;
 UPDATE creature_template SET ScriptName='npc_dancing_flames' WHERE entry=25305;
 UPDATE creature_template SET ScriptName='npc_garments_of_quests' WHERE entry IN (12429,12423,12427,12430,12428);
 UPDATE creature_template SET ScriptName='npc_guardian' WHERE entry=5764;
+UPDATE creature_template SET ScriptName='npc_kingdom_of_dalaran_quests' WHERE entry IN (29169,23729,26673,27158,29158,29161,26471,29155,29159,29160,29162);
 UPDATE creature_template SET ScriptName='npc_mount_vendor' WHERE entry IN (384,1261,1460,2357,3362,3685,4730,4731,4885,7952,7955,16264,17584);
 UPDATE creature_template SET ScriptName='npc_doctor' WHERE entry IN (12939,12920);
 UPDATE creature_template SET ScriptName='npc_injured_patient' WHERE entry IN (12936,12937,12938,12923,12924,12925);
