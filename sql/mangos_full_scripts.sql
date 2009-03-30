@@ -816,6 +816,7 @@ UPDATE gameobject_template SET ScriptName='go_gauntlet_gate' WHERE entry=175357;
 UPDATE creature_template SET ScriptName='mob_aquementas' WHERE entry=9453;
 UPDATE creature_template SET ScriptName='npc_custodian_of_time' WHERE entry=20129;
 UPDATE creature_template SET ScriptName='npc_marin_noggenfogger' WHERE entry=7564;
+UPDATE creature_template SET ScriptName='npc_oox17tn' WHERE entry=7784;
 UPDATE creature_template SET ScriptName='npc_steward_of_time' WHERE entry=20142;
 UPDATE creature_template SET ScriptName='npc_stone_watcher_of_norgannon' WHERE entry=7918;
 

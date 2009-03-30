@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Tanaris
 SD%Complete: 80
-SDComment: Quest support: 2954, 4005, 10277, 10279(Special flight path). Noggenfogger vendor
+SDComment: Quest support: 648, 2954, 4005, 10277, 10279(Special flight path). Noggenfogger vendor
 SDCategory: Tanaris
 EndScriptData */
 
@@ -25,6 +25,7 @@ EndScriptData */
 mob_aquementas
 npc_custodian_of_time
 npc_marin_noggenfogger
+npc_oox17tn
 npc_steward_of_time
 npc_stone_watcher_of_norgannon
 EndContentData */
@@ -245,6 +246,142 @@ bool GossipSelect_npc_marin_noggenfogger(Player *player, Creature *_Creature, ui
 }
 
 /*######
+## npc_oox17tn
+######*/
+
+enum
+{
+    SAY_START               = -1000287,
+    SAY_AGGRO1              = -1000288,
+    SAY_AGGRO2              = -1000289,
+    SAY_AMBUSH              = -1000290,
+    SAY_AMBUSH_REPLY        = -1000291,
+    SAY_END                 = -1000292,
+
+    QUEST_RESCUE_OOX_17TN   = 648,
+    FACTION_ESCORTEE_A      = 774,
+    FACTION_ESCORTEE_H      = 775,
+
+    NPC_SCORPION            = 7803,
+    NPC_SCOFFLAW            = 7805,
+    NPC_SHADOW_MAGE         = 5617
+};
+
+struct MANGOS_DLL_DECL npc_oox17tnAI : public npc_escortAI
+{
+    npc_oox17tnAI(Creature *c) : npc_escortAI(c)
+    {
+        normFaction = c->getFaction();
+        Reset();
+    }
+
+    uint32 normFaction;
+
+    void WaypointReached(uint32 i)
+    {
+        Unit* pPlayer = Unit::GetUnit((*m_creature), PlayerGUID);
+
+        if (!pPlayer)
+            return;
+
+        switch (i)
+        {
+            //1. Ambush: 3 scorpions
+            case 22:
+                DoScriptText(SAY_AMBUSH,m_creature);
+                m_creature->SummonCreature(NPC_SCORPION, -8340.70, -4448.17, 9.17, 3.10, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                m_creature->SummonCreature(NPC_SCORPION, -8343.18, -4444.35, 9.44, 2.35, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                m_creature->SummonCreature(NPC_SCORPION, -8348.70, -4457.80, 9.58, 2.02, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+                break;
+            //2. Ambush: 2 Rogues & 1 Shadow Mage
+            case 28:
+                DoScriptText(SAY_AMBUSH,m_creature);
+
+                m_creature->SummonCreature(NPC_SCOFFLAW, -7488.02, -4786.56 ,10.67, 3.74, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                m_creature->SummonCreature(NPC_SHADOW_MAGE, -7486.41, -4791.55 ,10.54, 3.26, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+
+                if (Creature* pCreature = m_creature->SummonCreature(NPC_SCOFFLAW, -7488.47, -4800.77, 9.77, 2.50,TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
+                    DoScriptText(SAY_AMBUSH_REPLY,pCreature);
+
+                break;
+            case 34:
+                DoScriptText(SAY_END,m_creature);
+                // Award quest credit
+                if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+                    ((Player*)pPlayer)->GroupEventHappens(QUEST_RESCUE_OOX_17TN,m_creature);
+                break;
+        }
+    }
+
+    void Reset()
+    {
+        if (!IsBeingEscorted)
+            m_creature->setFaction(normFaction);
+    }
+
+    void Aggro(Unit* who)
+    {
+        //For an small probability he say something when it aggros
+        switch(rand()%10)
+        {
+           case 0: DoScriptText(SAY_AGGRO1,m_creature); break;
+           case 1: DoScriptText(SAY_AGGRO2,m_creature); break;
+        }
+    }
+
+    void JustSummoned(Creature* summoned)
+    {
+        summoned->AI()->AttackStart(m_creature);
+    }
+
+    void JustDied(Unit* killer)
+    {
+        if (!IsBeingEscorted)
+            return;
+
+        if (Unit* pPlayer = Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            // If NPC dies, player fails the quest
+            if (pPlayer && pPlayer->GetTypeId() == TYPEID_PLAYER)
+                ((Player*)pPlayer)->FailQuest(QUEST_RESCUE_OOX_17TN);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+CreatureAI* GetAI_npc_oox17tn(Creature* pCreature)
+{
+    npc_oox17tnAI* oox17AI = new npc_oox17tnAI(pCreature);
+
+    oox17AI->FillPointMovementListForCreature();
+    
+    return (CreatureAI*)oox17AI;
+}
+
+bool QuestAccept_npc_oox17tn(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_RESCUE_OOX_17TN)
+    {
+        DoScriptText(SAY_START, pCreature);
+
+        pCreature->SetStandState(UNIT_STAND_STATE_STAND);
+
+        if (pPlayer->GetTeam() == ALLIANCE)
+            pCreature->setFaction(FACTION_ESCORTEE_A);
+
+        if (pPlayer->GetTeam() == HORDE)
+            pCreature->setFaction(FACTION_ESCORTEE_H);
+
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+    }
+    return true;
+}
+
+/*######
 ## npc_steward_of_time
 ######*/
 
@@ -360,6 +497,12 @@ void AddSC_tanaris()
     newscript->Name = "npc_marin_noggenfogger";
     newscript->pGossipHello =  &GossipHello_npc_marin_noggenfogger;
     newscript->pGossipSelect = &GossipSelect_npc_marin_noggenfogger;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_oox17tn";
+    newscript->GetAI = &GetAI_npc_oox17tn;
+    newscript->pQuestAccept = &QuestAccept_npc_oox17tn;
     newscript->RegisterSelf();
 
     newscript = new Script;

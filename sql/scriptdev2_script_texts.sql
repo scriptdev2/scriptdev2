@@ -256,7 +256,14 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000283, 'That\'s the first relic, but there are still two more. Follow me, $N.',0,0,0,0,'clintar SAY_RELIC1'),
 (-1000284, 'I\'ve recovered the second relic. Take a moment to rest, and then we\'ll continue to the last reliquary.',0,0,0,0,'clintar SAY_RELIC2'),
 (-1000285, 'We have all three of the relics, but my energy is rapidly fading. We must make our way back to Dreamwarden Lurosa! He will let you know what to do next.',0,0,0,0,'clintar SAY_RELIC3'),
-(-1000286, 'Lurosa, I am entrusting the Relics of Aviana to $N, who will take them to Morthis Whisperwing. I must return completely to the Emerald Dream now. Do not let $N fail!',0,0,0,1,'clintar SAY_END');
+(-1000286, 'Lurosa, I am entrusting the Relics of Aviana to $N, who will take them to Morthis Whisperwing. I must return completely to the Emerald Dream now. Do not let $N fail!',0,0,0,1,'clintar SAY_END'),
+
+(-1000287,'Emergency power activated! Initializing ambulancery motor! CLUCK!',0,0,0,0,'oox17 SAY_START'),
+(-1000288,'Physical threat detected! Evasive action! CLUCK!',0,0,0,0,'oox17 SAY_AGGRO1'),
+(-1000289,'Thread analyzed! Activating combat plan beta! CLUCK!',0,0,0,0,'oox17 SAY_AGGRO2'),
+(-1000290,'CLUCK! Sensors detect spatial anomaly - danger imminent! CLUCK!',0,0,0,0,'oox17 SAY_AMBUSH'),
+(-1000291,'No one challanges the Wastewander nomads - not even robotic chickens! ATTACK!',0,0,0,0,'oox17 SAY_AMBUSH_REPLY'),
+(-1000292,'Cloaking systems online! CLUCK! Engaging cloak for transport to Booty Bay!',0,0,0,0,'oox17 SAY_END');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
