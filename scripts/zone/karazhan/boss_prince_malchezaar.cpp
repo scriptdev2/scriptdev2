@@ -90,7 +90,7 @@ static InfernalPoint InfernalPoints[] =
 #define INFERNAL_MODEL_INVISIBLE    11686                   //Infernal Effects
 #define SPELL_INFERNAL_RELAY        30834
 
-#define ITEM_ID_AXE                 33542                   //Axes info
+#define EQUIP_ID_AXE                33542                   //Axes info
 
 //---------Infernal code first
 struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
@@ -270,8 +270,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
     void ClearWeapons()
     {
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
-        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, 0);
+        SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
 
         //damage
         const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
@@ -413,8 +412,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                 m_creature->CastSpell(m_creature, SPELL_THRASH_AURA, true);
 
                 //models
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_AXE);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, ITEM_ID_AXE);
+                SetEquipmentSlots(false, EQUIP_ID_AXE, EQUIP_ID_AXE, EQUIP_NO_CHANGE);
 
                 //damage
                 const CreatureInfo *cinfo = m_creature->GetCreatureInfo();
@@ -452,8 +450,6 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
                     Creature *axe = m_creature->SummonCreature(MALCHEZARS_AXE, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                     if (axe)
                     {
-                        axe->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_AXE);
-
                         axe->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                         axe->setFaction(m_creature->getFaction());
 

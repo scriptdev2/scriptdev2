@@ -24,10 +24,10 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_zulgurub.h"
 
-#define SPELL_AMBUSH         24337
-#define SPELL_THOUSANDBLADES 24649
+#define SPELL_AMBUSH            24337
+#define SPELL_THOUSANDBLADES    24649
 
-#define ITEM_ID_MAIN_HAND       0                           //was item display id 31818, but this id does not exist
+#define EQUIP_ID_MAIN_HAND      0                           //was item display id 31818, but this id does not exist
 
 struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
 {
@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
         {
             m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
+            SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);
 
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -102,7 +102,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15268);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_MAIN_HAND);
+                SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
 
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 Invisible = false;

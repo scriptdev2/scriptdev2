@@ -160,8 +160,8 @@ bool GossipSelect_npc_erozion(Player *player, Creature *_Creature, uint32 sender
 #define SPEED_RUN                   (1.0f)
 #define SPEED_MOUNT                 (1.6f)
 
-#define ITEM_ID_WEAPON              927
-#define ITEM_ID_SHIELD              20913
+#define EQUIP_ID_WEAPON             927
+#define EQUIP_ID_SHIELD             20913
 #define THRALL_MODEL_UNEQUIPPED     17292
 #define THRALL_MODEL_EQUIPPED       18165
 
@@ -232,8 +232,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 break;
             case 9:
                 DoScriptText(SAY_TH_ARMORY, m_creature);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, ITEM_ID_WEAPON);
-                m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+2, ITEM_ID_SHIELD);
+                SetEquipmentSlots(false, EQUIP_ID_WEAPON, EQUIP_ID_SHIELD, EQUIP_NO_CHANGE);
                 break;
             case 10:
                 m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_EQUIPPED);
@@ -390,8 +389,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
         {
             DoUnmount();
             HadMount = false;
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+0, 0);
-            m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+2, 0);
+            SetEquipmentSlots(true);
             m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_UNEQUIPPED);
         }
 
