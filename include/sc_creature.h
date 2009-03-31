@@ -59,7 +59,7 @@ struct PointMovement
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false) {}
+    ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false), bCombatMovement(true) {}
     ~ScriptedAI() {}
 
     //*************
@@ -201,6 +201,11 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     void SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand = EQUIP_NO_CHANGE, int32 uiOffHand = EQUIP_NO_CHANGE, int32 uiRanged = EQUIP_NO_CHANGE);
 
     void SetSheathState(SheathState newState);
+
+    void SetCombatMovement(bool bCombatMove);
+
+    protected:
+        bool bCombatMovement;
 };
 
 struct MANGOS_DLL_DECL Scripted_NoMovementAI : public ScriptedAI

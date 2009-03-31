@@ -591,6 +591,11 @@ void ScriptedAI::SetSheathState(SheathState newState)
     m_creature->SetByteValue(UNIT_FIELD_BYTES_2, 0, newState);
 }
 
+void ScriptedAI::SetCombatMovement(bool bCombatMove)
+{
+    bCombatMovement = bCombatMove;
+}
+
 void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
 {
     if (!m_creature->hasUnitState(UNIT_STAT_STUNNED) && who->isTargetableForAttack() &&
