@@ -956,6 +956,7 @@ UPDATE creature_template SET ScriptName='npcs_dithers_and_arbington' WHERE entry
 UPDATE creature_template SET ScriptName='npc_the_scourge_cauldron' WHERE entry=11152;
 
 /* WESTFALL */
+UPDATE creature_template SET ScriptName='npc_daphne_stilwell' WHERE entry=6182;
 UPDATE creature_template SET ScriptName='npc_defias_traitor' WHERE entry=467;
 
 /* WETLANDS */

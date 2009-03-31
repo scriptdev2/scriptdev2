@@ -263,7 +263,13 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000289,'Thread analyzed! Activating combat plan beta! CLUCK!',0,0,0,0,'oox17 SAY_AGGRO2'),
 (-1000290,'CLUCK! Sensors detect spatial anomaly - danger imminent! CLUCK!',0,0,0,0,'oox17 SAY_AMBUSH'),
 (-1000291,'No one challanges the Wastewander nomads - not even robotic chickens! ATTACK!',0,0,0,0,'oox17 SAY_AMBUSH_REPLY'),
-(-1000292,'Cloaking systems online! CLUCK! Engaging cloak for transport to Booty Bay!',0,0,0,0,'oox17 SAY_END');
+(-1000292,'Cloaking systems online! CLUCK! Engaging cloak for transport to Booty Bay!',0,0,0,0,'oox17 SAY_END'),
+
+(-1000293,'To the house! Stay close to me, no matter what! I have my gun and ammo there!',0,0,7,0,'stilwell SAY_DS_START'),
+(-1000294,'We showed that one!',0,0,7,0,'stilwell SAY_DS_DOWN_1'),
+(-1000295,'One more down!',0,0,7,0,'stilwell SAY_DS_DOWN_2'),
+(-1000296,'We\'ve done it! We won!',0,0,7,0,'stilwell SAY_DS_DOWN_3'),
+(-1000297,'Meet me down by the orchard--I just need to put my gun away.',0,0,7,0,'stilwell SAY_DS_PROLOGUE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
