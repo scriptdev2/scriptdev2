@@ -51,8 +51,11 @@ void npc_escortAI::AttackStart(Unit *who)
             Aggro(who);
         }
 
-        m_creature->GetMotionMaster()->MovementExpired();
-        m_creature->GetMotionMaster()->MoveChase(who);
+        if (bCombatMovement)
+        {
+            m_creature->GetMotionMaster()->MovementExpired();
+            m_creature->GetMotionMaster()->MoveChase(who);
+        }
     }
 }
 
@@ -89,6 +92,7 @@ void npc_escortAI::JustRespawned()
     InCombat = false;
     IsBeingEscorted = false;
     IsOnHold = false;
+    bCombatMovement = true;
 
     //Restore original NpcFlags
     m_creature->SetUInt32Value(UNIT_NPC_FLAGS, m_uiNpcFlags);
@@ -110,6 +114,11 @@ void npc_escortAI::EnterEvadeMode()
         debug_log("SD2: EscortAI has left combat and is now returning to last point.");
         Returning = true;
         m_creature->GetMotionMaster()->MovementExpired();
+
+        //if default is WAYPOINT_MOTION_TYPE, must MoveIdle to prevent from using
+        if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
+            m_creature->GetMotionMaster()->MoveIdle();
+
         m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z);
 
     }
@@ -238,8 +247,9 @@ void npc_escortAI::MovementInform(uint32 type, uint32 id)
         debug_log("SD2: EscortAI has returned to original position before combat");
         ReconnectWP = true;
         Returning = false;
-        WaitTimer = 1;
 
+        if (!WaitTimer)
+            WaitTimer = 1;
     }
     else
     {
@@ -289,23 +299,18 @@ void npc_escortAI::SetRun(bool bRun)
     if (bRun)
     {
         if (!bIsRunning)
-        {
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-            bIsRunning = true;
-        }
         else
             debug_log("SD2: EscortAI attempt to set run mode, but is already running.");
     }
     else
     {
         if (bIsRunning)
-        {
             m_creature->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
-            bIsRunning = false;
-        }
         else
             debug_log("SD2: EscortAI attempt to set walk mode, but is already walking.");
     }
+    bIsRunning = bRun;
 }
 
 void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
@@ -326,6 +331,13 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     {
         error_db_log("SD2: EscortAI Start with 0 waypoints (possible missing entry in script_waypoint)");
         return;
+    }
+
+    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
+    {
+        m_creature->GetMotionMaster()->MovementExpired();
+        m_creature->GetMotionMaster()->MoveIdle();
+        debug_log("SD2: EscortAI start with WAYPOINT_MOTION_TYPE, changed to MoveIdle.");
     }
 
     Attack = bAttack;
@@ -357,4 +369,5 @@ void npc_escortAI::Start(bool bAttack, bool bDefend, bool bRun, uint64 pGUID)
     ReconnectWP = false;
     Returning = false;
     IsOnHold = false;
+    bCombatMovement = true;
 }
