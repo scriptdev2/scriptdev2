@@ -6,6 +6,7 @@
 #include "Item.h"
 #include "Spell.h"
 #include "WorldPacket.h"
+#include "ObjectMgr.h"
 
 // Spell summary for ScriptedAI::SelectSpell
 struct TSpellSummary {
@@ -563,6 +564,31 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float range, uint32 s
     cell_lock->Visit(cell_lock, grid_creature_searcher, *(m_creature->GetMap()));
 
     return pList;
+}
+
+void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 uiOffHand, int32 uiRanged)
+{
+    if (bLoadDefault)
+    {
+        if (CreatureInfo const* pInfo = GetCreatureTemplateStore(m_creature->GetEntry()))
+            m_creature->LoadEquipment(pInfo->equipmentId,true);
+
+        return;
+    }
+
+    if (uiMainHand >= 0)
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, uint32(uiMainHand));
+
+    if (uiOffHand >= 0)
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, uint32(uiOffHand));
+
+    if (uiRanged >= 0)
+        m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, uint32(uiRanged));
+}
+
+void ScriptedAI::SetSheatState(SheathState newState)
+{
+    m_creature->SetByteValue(UNIT_FIELD_BYTES_2, 0, newState);
 }
 
 void Scripted_NoMovementAI::MoveInLineOfSight(Unit *who)
