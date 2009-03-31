@@ -586,7 +586,7 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 ui
         m_creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, uint32(uiRanged));
 }
 
-void ScriptedAI::SetSheatState(SheathState newState)
+void ScriptedAI::SetSheathState(SheathState newState)
 {
     m_creature->SetByteValue(UNIT_FIELD_BYTES_2, 0, newState);
 }
