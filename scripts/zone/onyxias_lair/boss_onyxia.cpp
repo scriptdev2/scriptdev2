@@ -127,6 +127,7 @@ struct MANGOS_DLL_DECL boss_onyxiaAI : public ScriptedAI
             Phase = 3;
             m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
             DoScriptText(SAY_PHASE_3_TRANS, m_creature);
+            m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
         }
 
         if (Phase == 1 || Phase == 3)
