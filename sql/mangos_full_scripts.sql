@@ -168,6 +168,7 @@ UPDATE creature_template SET ScriptName='npc_taskmaster_fizzule' WHERE entry=723
 UPDATE creature_template SET ScriptName='npc_twiggy_flathead' WHERE entry=6248;
 DELETE FROM areatrigger_scripts WHERE entry=522;
 INSERT INTO areatrigger_scripts VALUES (522,'at_twiggy_flathead');
+UPDATE creature_template SET ScriptName='npc_wizzlecranks_shredder' WHERE entry=3439;
 
 /* BLACK TEMPLE */
 UPDATE instance_template SET script='instance_black_temple' WHERE map=564;

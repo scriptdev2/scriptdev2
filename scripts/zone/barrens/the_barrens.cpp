@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: The_Barrens
 SD%Complete: 90
-SDComment: Quest support: 1719, 2458, 4921, 6981
+SDComment: Quest support: 863, 1719, 2458, 4921, 6981
 SDCategory: Barrens
 EndScriptData */
 
@@ -27,9 +27,11 @@ npc_sputtervalve
 npc_taskmaster_fizzule
 npc_twiggy_flathead
 at_twiggy_flathead
+npc_wizzlecrank_shredder
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
 
 /*######
 ## npc_beaten_corpse
@@ -404,6 +406,144 @@ bool AreaTrigger_at_twiggy_flathead(Player *player, AreaTriggerEntry *at)
     return true;
 }
 
+/*#####
+## npc_wizzlecranks_shredder
+#####*/
+
+enum
+{
+    SAY_START           = -1000298,
+    SAY_STARTUP1        = -1000299,
+    SAY_STARTUP2        = -1000300,
+    SAY_MERCENARY       = -1000301,
+    SAY_PROGRESS_1      = -1000302,
+    SAY_PROGRESS_2      = -1000303,
+    SAY_PROGRESS_3      = -1000304,
+    SAY_END             = -1000305,
+
+    QUEST_ESCAPE        = 863,
+    FACTION_RATCHET     = 637,
+    NPC_PILOT_WIZZ      = 3451,
+    NPC_MERCENARY       = 3282
+};
+
+struct MANGOS_DLL_DECL npc_wizzlecranks_shredderAI : public npc_escortAI
+{
+    npc_wizzlecranks_shredderAI(Creature* c) : npc_escortAI(c)
+    {
+        uiNormFaction = c->getFaction();
+        Reset();
+    }
+
+    uint32 uiNormFaction;
+
+    void MoveInLineOfSight(Unit* pUnit)
+    {
+        if (IsBeingEscorted && !m_creature->getVictim())
+        {
+            if (pUnit->GetEntry() == NPC_MERCENARY)
+            {
+                if (m_creature->IsWithinDistInMap(pUnit, 50.0f))
+                    pUnit->AddThreat(m_creature, 0.0f);
+            }
+        }
+
+        npc_escortAI::MoveInLineOfSight(pUnit);
+    }
+
+    void WaypointReached(uint32 i)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(i)
+        {
+            case 3:
+                DoScriptText(SAY_STARTUP1, m_creature, pUnit);
+                break;
+            case 10:
+                DoScriptText(SAY_STARTUP2, m_creature, pUnit);
+                SetRun(false);
+                break;
+            case 21:
+                DoScriptText(SAY_PROGRESS_1, m_creature, pUnit);
+                SetRun();
+                break;
+            case 27:
+                DoScriptText(SAY_PROGRESS_2, m_creature, pUnit);
+                break;
+            case 29:
+                DoScriptText(SAY_PROGRESS_3, m_creature, pUnit);
+                SetRun(false);
+                break;
+            case 30:
+                DoScriptText(SAY_END, m_creature, pUnit);
+                break;
+            case 31:
+                ((Player*)pUnit)->GroupEventHappens(QUEST_ESCAPE, m_creature);
+                m_creature->SummonCreature(NPC_PILOT_WIZZ, 1089.837, -2986.644, 91.752, 3.807, TEMPSUMMON_TIMED_DESPAWN, 180000);
+                break;
+        }
+    }
+
+    void Reset()
+    {
+        if (!IsBeingEscorted)
+        {
+            m_creature->setFaction(uiNormFaction);
+            if (m_creature->getStandState() == UNIT_STAND_STATE_DEAD)
+                m_creature->SetStandState(UNIT_STAND_STATE_STAND);
+        }
+    }
+
+    void Aggro(Unit* who)
+    {
+        if (who->GetEntry() == NPC_MERCENARY)
+            DoScriptText(SAY_MERCENARY, who);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
+    }
+
+    void JustDied(Unit* killer)
+    {
+        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            if (((Player*)pUnit)->GetQuestStatus(QUEST_ESCAPE) == QUEST_STATUS_INCOMPLETE)
+                ((Player*)pUnit)->FailQuest(QUEST_ESCAPE);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+bool QuestAccept_npc_wizzlecranks_shredder(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ESCAPE)
+    {
+        DoScriptText(SAY_START, pCreature);
+        pCreature->setFaction(FACTION_RATCHET);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, true, pPlayer->GetGUID());
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_wizzlecranks_shredder(Creature* pCreature)
+{
+    npc_wizzlecranks_shredderAI* thisAI = new npc_wizzlecranks_shredderAI(pCreature);
+
+    thisAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)thisAI;
+}
+
 void AddSC_the_barrens()
 {
     Script *newscript;
@@ -434,5 +574,11 @@ void AddSC_the_barrens()
     newscript = new Script;
     newscript->Name = "at_twiggy_flathead";
     newscript->pAreaTrigger = &AreaTrigger_at_twiggy_flathead;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name="npc_wizzlecranks_shredder";
+    newscript->GetAI = &GetAI_npc_wizzlecranks_shredder;
+    newscript->pQuestAccept = &QuestAccept_npc_wizzlecranks_shredder;
     newscript->RegisterSelf();
 }
