@@ -278,7 +278,21 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000302, 'Looks like we\'re out of woods, eh? Wonder what this does...',0,0,0,0,'wizzlecrank SAY_PROGRESS_1'),
 (-1000303, 'Come on, don\'t break down on me now!',0,0,0,393,'wizzlecrank SAY_PROGRESS_2'),
 (-1000304, 'That was a close one! Well, let\'s get going, it\'s still a ways to Ratchet!',0,0,0,0,'wizzlecrank SAY_PROGRESS_3'),
-(-1000305, 'Hmm... I don\'t think this blinking red light is a good thing...',0,0,0,0,'wizzlecrank SAY_END');
+(-1000305, 'Hmm... I don\'t think this blinking red light is a good thing...',0,0,0,0,'wizzlecrank SAY_END'),
+
+(-1000306, 'Let\'s get to the others, and keep an eye open for those wolves cutside...',0,0,1,0,'erland SAY_START_1'),
+(-1000307, 'Be careful, $N. Those wolves like to hide among the trees.',0,0,1,0,'erland SAY_START_2'),
+(-1000308, 'A $C attacks!',0,0,1,0,'erland SAY_AGGRO_1'),
+(-1000309, 'Beware! I am under attack!',0,0,1,0,'erland SAY_AGGRO_2'),
+(-1000310, 'Oh no! A $C is upon us!',0,0,1,0,'erland SAY_AGGRO_3'),
+(-1000311, 'We\'re almost there!',0,0,1,0,'erland SAY_PROGRESS'),
+(-1000312, 'We made it! Thanks, $N. I couldn\'t have gotten without you.',0,0,1,0,'erland SAY_END'),
+(-1000313, 'It\'s good to see you again, Erland. What is your report?',0,0,33,1,'erland SAY_RANE'),
+(-1000314, 'Masses of wolves are to the east, and whoever lived at Malden\'s Orchard is gone.',0,0,1,1,'erland SAY_RANE_REPLY'),
+(-1000315, 'If I am excused, then I\'d like to check on Quinn...',0,0,1,1,'erland SAY_CHECK_NEXT'),
+(-1000316, 'Hello, Quinn. How are you faring?',0,0,1,1,'erland SAY_QUINN'),
+(-1000317, 'I\'ve been better. Ivar the Foul got the better of me...',0,0,33,1,'erland SAY_QUINN_REPLY'),
+(-1000318, 'Try to take better care of yourself, Quinn. You were lucky this time.',0,0,1,1,'erland SAY_BYE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

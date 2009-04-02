@@ -17,15 +17,17 @@
 /* ScriptData
 SDName: Silverpine_Forest
 SD%Complete: 100
-SDComment: Quest support: 1886
+SDComment: Quest support: 435, 1886
 SDCategory: Silverpine Forest
 EndScriptData */
 
 /* ContentData
 npc_astor_hadren
+npc_deathstalker_erland
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
 
 /*######
 ## npc_astor_hadren
@@ -83,9 +85,153 @@ bool GossipSelect_npc_astor_hadren(Player *player, Creature *_Creature, uint32 s
     return true;
 }
 
-/*######
-## AddSC
-######*/
+/*#####
+## npc_deathstalker_erland
+#####*/
+
+enum
+{
+    SAY_START_1         = -1000306,
+    SAY_START_2         = -1000307,
+    SAY_AGGRO_1         = -1000308,
+    SAY_AGGRO_2         = -1000309,
+    SAY_AGGRO_3         = -1000310,
+    SAY_PROGRESS        = -1000311,
+    SAY_END             = -1000312,
+    SAY_RANE            = -1000313,
+    SAY_RANE_REPLY      = -1000314,
+    SAY_CHECK_NEXT      = -1000315,
+    SAY_QUINN           = -1000316,
+    SAY_QUINN_REPLY     = -1000317,
+    SAY_BYE             = -1000318,
+
+    QUEST_ERLAND        = 435,
+    NPC_RANE            = 1950,
+    NPC_QUINN           = 1951
+};
+
+struct MANGOS_DLL_DECL npc_deathstalker_erlandAI : public npc_escortAI
+{
+    npc_deathstalker_erlandAI(Creature* c) : npc_escortAI(c)
+    {
+        uiRaneGUID = 0;
+        uiQuinnGUID = 0;
+        Reset();
+    }
+
+    uint64 uiRaneGUID;
+    uint64 uiQuinnGUID;
+
+    void MoveInLineOfSight(Unit* pUnit)
+    {
+        if (IsBeingEscorted)
+        {
+            if (!uiRaneGUID && pUnit->GetEntry() == NPC_RANE)
+            {
+                if (m_creature->IsWithinDistInMap(pUnit, 30.0f))
+                    uiRaneGUID = pUnit->GetGUID();
+            }
+            if (!uiQuinnGUID && pUnit->GetEntry() == NPC_QUINN)
+            {
+                if (m_creature->IsWithinDistInMap(pUnit, 30.0f))
+                    uiQuinnGUID = pUnit->GetGUID();
+            }
+        }
+
+        npc_escortAI::MoveInLineOfSight(pUnit);
+    }
+
+    void WaypointReached(uint32 i)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(i)
+        {
+            case 0:
+                DoScriptText(SAY_START_2, m_creature, pUnit);
+                break;
+            case 13:
+                DoScriptText(SAY_END, m_creature, pUnit);
+                ((Player*)pUnit)->GroupEventHappens(QUEST_ERLAND, m_creature);
+                break;
+            case 14:
+                if (Unit* pRane = Unit::GetUnit(*m_creature, uiRaneGUID))
+                    DoScriptText(SAY_RANE, pRane, m_creature);
+                break;
+            case 15:
+                DoScriptText(SAY_RANE_REPLY, m_creature);
+                break;
+            case 16:
+                DoScriptText(SAY_CHECK_NEXT, m_creature);
+                break;
+            case 24:
+                DoScriptText(SAY_QUINN, m_creature);
+                break;
+            case 25:
+                if (Unit* pQuinn = Unit::GetUnit(*m_creature, uiQuinnGUID))
+                    DoScriptText(SAY_QUINN_REPLY, pQuinn, m_creature);
+                break;
+            case 26:
+                DoScriptText(SAY_BYE, m_creature);
+                break;
+        }
+    }
+
+    void Reset()
+    {
+        if (!IsBeingEscorted)
+        {
+            uiRaneGUID = 0;
+            uiQuinnGUID = 0;
+        }
+    }
+
+    void Aggro(Unit* who)
+    {
+        switch(rand()%3)
+        {
+            case 0: DoScriptText(SAY_AGGRO_1, m_creature, who); break;
+            case 1: DoScriptText(SAY_AGGRO_2, m_creature, who); break;
+            case 2: DoScriptText(SAY_AGGRO_3, m_creature, who); break;
+        }
+    }
+
+    void JustDied(Unit* killer)
+    {
+        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            if (((Player*)pUnit)->GetQuestStatus(QUEST_ERLAND) == QUEST_STATUS_INCOMPLETE)
+                ((Player*)pUnit)->FailQuest(QUEST_ERLAND);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ERLAND)
+    {
+        DoScriptText(SAY_START_1, pCreature);
+        ((npc_escortAI*)(pCreature->AI()))->Start(true, true, false, pPlayer->GetGUID());
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_deathstalker_erland(Creature* pCreature)
+{
+    npc_deathstalker_erlandAI* thisAI = new npc_deathstalker_erlandAI(pCreature);
+
+    thisAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)thisAI;
+}
 
 void AddSC_silverpine_forest()
 {
@@ -96,5 +242,11 @@ void AddSC_silverpine_forest()
     newscript->pGossipHello =  &GossipHello_npc_astor_hadren;
     newscript->pGossipSelect = &GossipSelect_npc_astor_hadren;
     newscript->GetAI = &GetAI_npc_astor_hadren;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_deathstalker_erland";
+    newscript->GetAI = &GetAI_npc_deathstalker_erland;
+    newscript->pQuestAccept = &QuestAccept_npc_deathstalker_erland;
     newscript->RegisterSelf();
 }
