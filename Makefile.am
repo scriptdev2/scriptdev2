@@ -189,6 +189,8 @@ scripts/zone/hellfire_citadel/blood_furnace/boss_kelidan_the_breaker.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/def_hellfire_ramparts.h \
+scripts/zone/hellfire_citadel/hellfire_ramparts/instance_hellfire_ramparts.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/boss_magtheridon.cpp \
 scripts/zone/hellfire_citadel/magtheridons_lair/def_magtheridons_lair.h \
 scripts/zone/hellfire_citadel/magtheridons_lair/instance_magtheridons_lair.cpp \

@@ -307,6 +307,7 @@ extern void AddSC_instance_shattered_halls();
 //--Ramparts
 extern void AddSC_boss_watchkeeper_gargolmar();
 extern void AddSC_boss_omor_the_unscarred();
+extern void AddSC_instance_ramparts();
 
 //Hellfire Peninsula
 extern void AddSC_boss_doomlordkazzak();
@@ -1827,6 +1828,7 @@ void ScriptsInit()
     //--Ramparts
     AddSC_boss_watchkeeper_gargolmar();
     AddSC_boss_omor_the_unscarred();
+    AddSC_instance_ramparts();
 
     //Hellfire Peninsula
     AddSC_boss_doomlordkazzak();

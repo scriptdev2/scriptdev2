@@ -479,6 +479,7 @@ UPDATE creature_template SET ScriptName='mob_shadowmoon_channeler' WHERE entry=1
 /* Vazruden,Omor the Unscarred,Watchkeeper Gargolmar */
 UPDATE creature_template SET ScriptName='boss_omor_the_unscarred' WHERE entry=17308;
 UPDATE creature_template SET ScriptName='boss_watchkeeper_gargolmar' WHERE entry=17306;
+UPDATE instance_template SET script='instance_ramparts' WHERE map=543;
 
 /* SHATTERED HALLS */
 /* Nethekurse and his spawned shadowfissure */
