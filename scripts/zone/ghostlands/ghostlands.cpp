@@ -116,11 +116,13 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
     {
         m_uiNormFaction = c->getFaction();
         m_uiGoCageGUID = 0;
+        m_uiHeliosGUID = 0;
         Reset();
     }
 
     uint32 m_uiNormFaction;
     uint64 m_uiGoCageGUID;
+    uint64 m_uiHeliosGUID;
 
     GameObject* GetGoCage()
     {
@@ -142,27 +144,18 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         return pGo;
     }
 
-    void CaptainAnswer()
+    void MoveInLineOfSight(Unit* pUnit)
     {
-        Creature* pCreature = NULL;
+        if (IsBeingEscorted)
+        {
+            if (!m_uiHeliosGUID && pUnit->GetEntry() == NPC_CAPTAIN_HELIOS)
+            {
+                if (m_creature->IsWithinDistInMap(pUnit, 30.0f))
+                    m_uiHeliosGUID = pUnit->GetGUID();
+            }
+        }
 
-        CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
-        Cell cell(pair);
-        cell.data.Part.reserved = ALL_DISTRICT;
-        cell.SetNoCreate();
-
-        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*m_creature, NPC_CAPTAIN_HELIOS, true, 30);
-        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(m_creature, pCreature, creature_check);
-
-        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-        CellLock<GridReadGuard> cell_lock(cell, pair);
-        cell_lock->Visit(cell_lock, creature_searcher,*(m_creature->GetMap()));
-
-        if (pCreature)
-            DoScriptText(CAPTAIN_ANSWER, pCreature);
-        else
-            error_log("SD2: npc_ranger_lilatha: Captain Helios not found!");
+        npc_escortAI::MoveInLineOfSight(pUnit);
     }
 
     void WaypointReached(uint32 i)
@@ -203,10 +196,10 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                     pSum2->AI()->AttackStart(pPlayer);
                 break;
             case 19:
-                m_creature->SetSpeed(MOVE_RUN, 1.5f);
+                SetRun();
                 break; 
             case 25:
-                m_creature->SetSpeed(MOVE_WALK, 1.0f);
+                SetRun(false);
                 break;
             case 30:
                 ((Player*)pPlayer)->GroupEventHappens(QUEST_CATACOMBS,m_creature);
@@ -216,7 +209,8 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 break;
             case 33:
                 DoScriptText(SAY_END2, m_creature, pPlayer);
-                CaptainAnswer();
+                if (Unit* pHelios = Unit::GetUnit(*m_creature, m_uiHeliosGUID))
+                    DoScriptText(CAPTAIN_ANSWER, pHelios, m_creature);
                 break;
         }
     }
@@ -227,6 +221,7 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         {
             m_creature->setFaction(m_uiNormFaction);
             m_uiGoCageGUID = 0;
+            m_uiHeliosGUID = 0;
         }
     }
 
