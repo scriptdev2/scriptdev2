@@ -292,7 +292,12 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000315, 'If I am excused, then I\'d like to check on Quinn...',0,0,1,1,'erland SAY_CHECK_NEXT'),
 (-1000316, 'Hello, Quinn. How are you faring?',0,0,1,1,'erland SAY_QUINN'),
 (-1000317, 'I\'ve been better. Ivar the Foul got the better of me...',0,0,33,1,'erland SAY_QUINN_REPLY'),
-(-1000318, 'Try to take better care of yourself, Quinn. You were lucky this time.',0,0,1,1,'erland SAY_BYE');
+(-1000318, 'Try to take better care of yourself, Quinn. You were lucky this time.',0,0,1,1,'erland SAY_BYE'),
+
+(-1000319, 'Let the trial begin, Bloodwrath, attack!',0,1,1,0,'kelerun SayId1'),
+(-1000320, 'Champion Lightrend, make me proud!',0,1,1,0,'kelerun SayId2'),
+(-1000321, 'Show this upstart how a real Blood Knight fights, Swiftblade!',0,1,1,0,'kelerun SayId3'),
+(-1000322, 'Show $n the meaning of pain, Sunstriker!',0,1,1,0,'kelerun SayId4');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
