@@ -396,7 +396,7 @@ UPDATE gameobject_template SET ScriptName='go_door_lever_dm' WHERE entry=101833;
 
 
 /* DRAGONBLIGHT */
-
+UPDATE creature_template SET ScriptName='npc_alexstrasza_wr_gate' WHERE entry=31333;
 
 /* DRAK'THARON KEEP */
 

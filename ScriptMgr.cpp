@@ -255,6 +255,9 @@ extern void AddSC_instance_deadmines();
 //Deadwind pass
 //Desolace
 //Dire Maul
+
+extern void AddSC_dragonblight();
+
 //Dun Morogh
 extern void AddSC_dun_morogh();
 
@@ -1776,6 +1779,9 @@ void ScriptsInit()
     //Deadwind pass
     //Desolace
     //Dire Maul
+
+    AddSC_dragonblight();
+
     //Dun Morogh
     AddSC_dun_morogh();
 
