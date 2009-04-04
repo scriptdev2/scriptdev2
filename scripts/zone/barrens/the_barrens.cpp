@@ -187,9 +187,9 @@ bool ReciveEmote_npc_taskmaster_fizzule(Player* pPlayer, Creature* pCreature, ui
 #define SAY_TWIGGY_DOWN                     -1000126
 #define SAY_TWIGGY_OVER                     -1000127
 
-#define C_TWIGGY                            6248
-#define C_BIG_WILL                          6238
-#define C_AFFRAY_CHALLENGER                 6240
+#define NPC_TWIGGY                          6248
+#define NPC_BIG_WILL                        6238
+#define NPC_AFFRAY_CHALLENGER               6240
 #define QUEST_AFFRAY                        1719
 
 float AffrayChallengerLoc[6][4]=
@@ -253,7 +253,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
     {
         for(uint8 i = 0; i < 6; i++)
         {
-            Creature* pCreature = m_creature->SummonCreature(C_AFFRAY_CHALLENGER, AffrayChallengerLoc[i][0], AffrayChallengerLoc[i][1], AffrayChallengerLoc[i][2], AffrayChallengerLoc[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+            Creature* pCreature = m_creature->SummonCreature(NPC_AFFRAY_CHALLENGER, AffrayChallengerLoc[i][0], AffrayChallengerLoc[i][1], AffrayChallengerLoc[i][2], AffrayChallengerLoc[i][3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
             if (!pCreature)
             {
                 debug_log("SD2: npc_twiggy_flathead event cannot summon challenger as expected.");
@@ -324,7 +324,7 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
                         ++Step;
                     break;
                 case 2:
-                    if (Unit *temp = m_creature->SummonCreature(C_BIG_WILL,-1713.79,-4342.09,6.05,6.15,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,300000))
+                    if (Unit *temp = m_creature->SummonCreature(NPC_BIG_WILL,-1713.79,-4342.09,6.05,6.15,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,300000))
                     {
                         BigWillGUID = temp->GetGUID();
                         temp->setFaction(35);
@@ -362,26 +362,6 @@ CreatureAI* GetAI_npc_twiggy_flathead(Creature *_Creature)
     return new npc_twiggy_flatheadAI (_Creature);
 }
 
-Creature* SelectCreatureInGrid(Player *player, uint32 entry, float range)
-{
-    Creature* pCreature = NULL;
-
-    CellPair pair(MaNGOS::ComputeCellPair(player->GetPositionX(), player->GetPositionY()));
-    Cell cell(pair);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
-    MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*player, entry, true, range);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(player, pCreature, creature_check);
-
-    TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-    CellLock<GridReadGuard> cell_lock(cell, pair);
-    cell_lock->Visit(cell_lock, creature_searcher,*(player->GetMap()));
-
-    return pCreature;
-}
-
 bool AreaTrigger_at_twiggy_flathead(Player *player, AreaTriggerEntry *at)
 {
     if (!player->isDead() && player->GetQuestStatus(QUEST_AFFRAY) == QUEST_STATUS_INCOMPLETE)
@@ -393,12 +373,25 @@ bool AreaTrigger_at_twiggy_flathead(Player *player, AreaTriggerEntry *at)
                 return true;
         }
 
-        Creature* Twiggy = SelectCreatureInGrid(player, C_TWIGGY, 30);
+        Creature* pCreature = NULL;
 
-        if (!Twiggy)
+        CellPair pair(MaNGOS::ComputeCellPair(player->GetPositionX(), player->GetPositionY()));
+        Cell cell(pair);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*player, NPC_TWIGGY, true, 30.0f);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(player, pCreature, creature_check);
+
+        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+
+        CellLock<GridReadGuard> cell_lock(cell, pair);
+        cell_lock->Visit(cell_lock, creature_searcher,*(player->GetMap()));
+
+        if (!pCreature)
             return true;
 
-        if (((npc_twiggy_flatheadAI*)Twiggy->AI())->CanStartEvent(player))
+        if (((npc_twiggy_flatheadAI*)pCreature->AI())->CanStartEvent(player))
             return false;                                   //ok to let mangos process further
         else
             return true;

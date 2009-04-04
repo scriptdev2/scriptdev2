@@ -353,11 +353,11 @@ bool GOHello_go_manaforge_control_console(Player *player, GameObject* _GO)
 #define SPELL_SUNFURY_DISGUISE              34603
 
 // Entries of Arcanist Ardonis, Commander Dawnforge, Pathaleon the Curators Image
-int CreatureEntry[3][1] =
+const uint32 uiCreatureEntry[3] =
 {
-    {19830},                                                // Ardonis
-    {19831},                                                // Dawnforge
-    {21504}                                                 // Pathaleon
+    19830,                                                  // Ardonis
+    19831,                                                  // Dawnforge
+    21504                                                   // Pathaleon
 };
 
 struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
@@ -472,7 +472,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
     {
         if (!isEvent)
         {
-            Creature *ardonis = SelectCreatureInGrid(CreatureEntry[0][0], 10.0f);
+            Creature *ardonis = SelectCreatureInGrid(uiCreatureEntry[0], 10.0f);
             if (!ardonis)
                 return false;
 
@@ -541,7 +541,7 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
             //Phase 4 Pathaleon spawns up to phase 9
             case 4:
                 //spawn pathaleon's image
-                m_creature->SummonCreature(CreatureEntry[2][0], 2325.851563, 2799.534668, 133.084229, 6.038996, TEMPSUMMON_TIMED_DESPAWN, 90000);
+                m_creature->SummonCreature(uiCreatureEntry[2], 2325.851563, 2799.534668, 133.084229, 6.038996, TEMPSUMMON_TIMED_DESPAWN, 90000);
                 ++Phase;
                 Phase_Timer = 500;
                 break;
@@ -626,26 +626,6 @@ CreatureAI* GetAI_npc_commander_dawnforge(Creature* _Creature)
     return new npc_commander_dawnforgeAI(_Creature);
 }
 
-Creature* SearchDawnforge(Player *source, uint32 entry, float range)
-{
-    Creature* pCreature = NULL;
-
-    CellPair pair(MaNGOS::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
-    Cell cell(pair);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
-    MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
-    MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(source, pCreature, creature_check);
-
-    TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
-
-    CellLock<GridReadGuard> cell_lock(cell, pair);
-    cell_lock->Visit(cell_lock, creature_searcher,*(source->GetMap()));
-
-    return pCreature;
-}
-
 bool AreaTrigger_at_commander_dawnforge(Player *player, AreaTriggerEntry *at)
 {
     //if player lost aura or not have at all, we should not try start event.
@@ -654,12 +634,27 @@ bool AreaTrigger_at_commander_dawnforge(Player *player, AreaTriggerEntry *at)
 
     if (player->isAlive() && player->GetQuestStatus(QUEST_INFO_GATHERING) == QUEST_STATUS_INCOMPLETE)
     {
-        Creature* Dawnforge = SearchDawnforge(player, CreatureEntry[1][0], 30.0f);
+        Creature* pCreature = NULL;
 
-        if (!Dawnforge)
+        uint32 uiEntry = uiCreatureEntry[1];
+
+        CellPair pair(MaNGOS::ComputeCellPair(player->GetPositionX(), player->GetPositionY()));
+        Cell cell(pair);
+        cell.data.Part.reserved = ALL_DISTRICT;
+        cell.SetNoCreate();
+
+        MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*player, uiEntry, true, 30.0f);
+        MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(player, pCreature, creature_check);
+
+        TypeContainerVisitor<MaNGOS::CreatureLastSearcher<MaNGOS::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+
+        CellLock<GridReadGuard> cell_lock(cell, pair);
+        cell_lock->Visit(cell_lock, creature_searcher,*(player->GetMap()));
+
+        if (!pCreature)
             return false;
 
-        if (((npc_commander_dawnforgeAI*)Dawnforge->AI())->CanStartEvent(player))
+        if (((npc_commander_dawnforgeAI*)pCreature->AI())->CanStartEvent(player))
             return true;
     }
     return false;
