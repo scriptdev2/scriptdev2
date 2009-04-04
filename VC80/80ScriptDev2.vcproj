@@ -1191,6 +1191,10 @@
 				<Filter
 					Name="Teldrassil"
 					>
+					<File
+						RelativePath="..\scripts\zone\teldrassil\teldrassil.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Temple of Ahn&apos;Qiraj"
