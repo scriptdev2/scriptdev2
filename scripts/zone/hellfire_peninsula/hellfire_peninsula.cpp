@@ -130,38 +130,48 @@ bool GOHello_go_haaleshi_altar(Player *player, GameObject* _GO)
 ## npc_wing_commander_dabiree
 ######*/
 
-#define GOSSIP_ITEM1_DAB "Fly me to Murketh and Shaadraz Gateways"
-#define GOSSIP_ITEM2_DAB "Fly me to Shatter Point"
-
-bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature *_Creature)
+enum
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    SPELL_TAXI_TO_GATEWAYS      = 33768,
+    SPELL_TAXI_TO_SHATTER       = 35069,
+    QUEST_MISSION_GATEWAYS_A    = 10146,
+    QUEST_SHATTER_POINT         = 10340
+};
+
+#define GOSSIP_ITEM1_DAB        "Fly me to Murketh and Shaadraz Gateways"
+#define GOSSIP_ITEM2_DAB        "Fly me to Shatter Point"
+
+bool GossipHello_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     //Mission: The Murketh and Shaadraz Gateways
-    if (player->GetQuestStatus(10146) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_A) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Shatter Point
-    if (!player->GetQuestRewardStatus(10340))
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    if (pPlayer->GetQuestStatus(QUEST_SHATTER_POINT) == QUEST_STATUS_COMPLETE ||
+        pPlayer->GetQuestRewardStatus(QUEST_SHATTER_POINT))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
-
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_wing_commander_dabiree(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,33768,true);               //TaxiPath 585 (Gateways Murket and Shaadraz)
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 585
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_GATEWAYS,true);
     }
-    if (action == GOSSIP_ACTION_INFO_DEF + 2)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,35069,true);               //TaxiPath 612 (Taxi - Hellfire Peninsula - Expedition Point to Shatter Point)
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 612
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_SHATTER,true);
     }
     return true;
 }
@@ -170,38 +180,50 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature *_Creature
 ## npc_gryphoneer_windbellow
 ######*/
 
-#define GOSSIP_ITEM1_WIN "Fly me to The Abyssal Shelf"
-#define GOSSIP_ITEM2_WIN "Fly me to Honor Point"
-
-bool GossipHello_npc_gryphoneer_windbellow(Player *player, Creature *_Creature)
+enum
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    QUEST_ABYSSAL_A             = 10163,
+    QUEST_RETURN_ABYSSAL_A      = 10346,
+    QUEST_TO_THE_FRONT          = 10382,
+    SPELL_TAXI_AERIAL_ASSULT    = 33899,
+    SPELL_TAXI_TO_BEACH_HEAD    = 35065
+};
+
+#define GOSSIP_ITEM1_WIN        "Fly me to The Abyssal Shelf"
+#define GOSSIP_ITEM2_WIN        "Fly me to Honor Point"
+
+bool GossipHello_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
-    if (player->GetQuestStatus(10163) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10346) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE ||
+        pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_A) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Go to the Front
-    if (player->GetQuestStatus(10382) != QUEST_STATUS_NONE && !player->GetQuestRewardStatus(10382))
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    if (pPlayer->GetQuestStatus(QUEST_TO_THE_FRONT) == QUEST_STATUS_COMPLETE ||
+        pPlayer->GetQuestRewardStatus(QUEST_TO_THE_FRONT))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_WIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
-
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_gryphoneer_windbellow(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF + 1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,33899,true);               //TaxiPath 589 (Aerial Assault Flight (Alliance))
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 589
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_AERIAL_ASSULT,true);
     }
-    if (action == GOSSIP_ACTION_INFO_DEF + 2)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,35065,true);               //TaxiPath 607 (Taxi - Hellfire Peninsula - Shatter Point to Beach Head)
+        pPlayer->CLOSE_GOSSIP_MENU();
+        //TaxiPath 607
+        pPlayer->CastSpell(pPlayer,SPELL_TAXI_TO_BEACH_HEAD,true);
     }
     return true;
 }
@@ -210,47 +232,62 @@ bool GossipSelect_npc_gryphoneer_windbellow(Player *player, Creature *_Creature,
 ## npc_wing_commander_brack
 ######*/
 
-#define GOSSIP_ITEM1_BRA "Fly me to Murketh and Shaadraz Gateways"
-#define GOSSIP_ITEM2_BRA "Fly me to The Abyssal Shelf"
-#define GOSSIP_ITEM3_BRA "Fly me to Spinebreaker Post"
-
-bool GossipHello_npc_wing_commander_brack(Player *player, Creature *_Creature)
+enum
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    QUEST_MISSION_GATEWAYS_H    = 10129,
+    QUEST_ABYSSAL_H             = 10162,
+    QUEST_RETURN_ABYSSAL_H      = 10347,
+    QUEST_SPINEBREAKER          = 10242,
+    SPELL_TAXI_GATEWAYS_H       = 33659,
+    SPELL_TAXI_ASSULT_H         = 33825,
+    SPELL_TAXI_SPINEBREAKER     = 34578
+};
+
+#define GOSSIP_ITEM1_BRA        "Fly me to Murketh and Shaadraz Gateways"
+#define GOSSIP_ITEM2_BRA        "Fly me to The Abyssal Shelf"
+#define GOSSIP_ITEM3_BRA        "Lend me a Wind Rider, I'm going to Spinebreaker Post."
+
+bool GossipHello_npc_wing_commander_brack(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     //Mission: The Murketh and Shaadraz Gateways
-    if (player->GetQuestStatus(10129) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (pPlayer->GetQuestStatus(QUEST_MISSION_GATEWAYS_H) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM1_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     //Mission: The Abyssal Shelf || Return to the Abyssal Shelf
-    if (player->GetQuestStatus(10162) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10347) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    if (pPlayer->GetQuestStatus(QUEST_ABYSSAL_H) == QUEST_STATUS_INCOMPLETE ||
+        pPlayer->GetQuestStatus(QUEST_RETURN_ABYSSAL_H) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM2_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
     //Spinebreaker Post
-    if (player->GetQuestStatus(10242) == QUEST_STATUS_COMPLETE && !player->GetQuestRewardStatus(10242))
-        player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+    if (pPlayer->GetQuestStatus(QUEST_SPINEBREAKER) == QUEST_STATUS_COMPLETE ||
+        pPlayer->GetQuestRewardStatus(QUEST_SPINEBREAKER))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
-
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_wing_commander_brack(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_wing_commander_brack(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            player->CLOSE_GOSSIP_MENU();
-            player->CastSpell(player,33659,true);           //TaxiPath 584 (Gateways Murket and Shaadraz)
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            //TaxiPath 584
+            pPlayer->CastSpell(pPlayer,SPELL_TAXI_GATEWAYS_H,true);
             break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            player->CLOSE_GOSSIP_MENU();
-            player->CastSpell(player,33825,true);           //TaxiPath 587 (Aerial Assault Flight (Horde))
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            //TaxiPath 587
+            pPlayer->CastSpell(pPlayer,SPELL_TAXI_ASSULT_H,true);
             break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            player->CLOSE_GOSSIP_MENU();
-            player->CastSpell(player,34578,true);           //TaxiPath 604 (Taxi - Reaver's Fall to Spinebreaker Ridge)
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->CLOSE_GOSSIP_MENU();
+            //TaxiPath 604
+            pPlayer->CastSpell(pPlayer,SPELL_TAXI_SPINEBREAKER,true);
             break;
     }
     return true;
