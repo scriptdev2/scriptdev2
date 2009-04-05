@@ -17,75 +17,36 @@
 /* ScriptData
 SDName: Boss_Warlord_Najentus
 SD%Complete: 90
-SDComment: Using a creature workaround instead of a GO for Impaling Spine.
+SDComment: Does the GO need script? Uncomment code to test.
 SDCategory: Black Temple
 EndScriptData */
 
 #include "precompiled.h"
 #include "def_black_temple.h"
 
-#define SAY_AGGRO                       -1564000
-#define SAY_NEEDLE1                     -1564001
-#define SAY_NEEDLE2                     -1564002
-#define SAY_SLAY1                       -1564003
-#define SAY_SLAY2                       -1564004
-#define SAY_SPECIAL1                    -1564005
-#define SAY_SPECIAL2                    -1564006
-#define SAY_ENRAGE1                     -1564007            //is this text actually in use?
-#define SAY_ENRAGE2                     -1564008
-#define SAY_DEATH                       -1564009
-
-//Spells
-#define SPELL_CRASHINGWAVE              40100
-#define SPELL_NEEDLE_SPINE              39835
-#define SPELL_NEEDLE_AOE                39968
-#define SPELL_TIDAL_BURST               39878
-#define SPELL_TIDAL_SHIELD              39872               // Not going to use this since Hurl Spine doesn't dispel it.
-#define SPELL_IMPALING_SPINE            39837
-#define SPELL_CREATE_NAJENTUS_SPINE     39956
-#define SPELL_HURL_SPINE                39948
-#define SPELL_SHIELD_VISUAL             37136
-#define SPELL_BERSERK                   45078
-
-#define DISPLAYID_SPINE                 7362
-
-struct MANGOS_DLL_DECL mob_najentus_spineAI : public ScriptedAI
+enum
 {
-    mob_najentus_spineAI(Creature *c) : ScriptedAI(c)
-    {
-        Reset();
-    }
+    SAY_AGGRO                       = -1564000,
+    SAY_NEEDLE1                     = -1564001,
+    SAY_NEEDLE2                     = -1564002,
+    SAY_SLAY1                       = -1564003,
+    SAY_SLAY2                       = -1564004,
+    SAY_SPECIAL1                    = -1564005,
+    SAY_SPECIAL2                    = -1564006,
+    SAY_ENRAGE1                     = -1564007,             //is this text actually in use?
+    SAY_ENRAGE2                     = -1564008,
+    SAY_DEATH                       = -1564009,
 
-    uint64 SpineVictimGUID;
-
-    void Reset() {  SpineVictimGUID = 0; }
-
-    void SetSpineVictimGUID(uint64 guid){ SpineVictimGUID = guid; }
-
-    void JustDied(Unit *killer)
-    {
-        // Make the killer have the Najentus Spine item to pierce Tidal Shield
-        if (killer)
-            killer->CastSpell(killer, SPELL_CREATE_NAJENTUS_SPINE, true);
-    }
-
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (damage < m_creature->GetHealth()) return;
-
-        // Remove the Impaling Spine DoT from whoever was affected
-        if (SpineVictimGUID)
-        {
-            Unit* victim = Unit::GetUnit((*m_creature), SpineVictimGUID);
-            if (victim && ((victim->HasAura(SPELL_IMPALING_SPINE, 0)) || (victim->HasAura(SPELL_IMPALING_SPINE, 1)) || (victim->HasAura(SPELL_IMPALING_SPINE, 2))))
-                victim->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
-        }
-    }
-
-    void Aggro(Unit* who) {}
-    void AttackStart(Unit* who) {}
-    void MoveInLineOfSight(Unit* who) {}
-    void UpdateAI(const uint32 diff) {}
+    SPELL_CRASHINGWAVE              = 40100,
+    SPELL_NEEDLE_SPINE              = 39835,
+    SPELL_NEEDLE_AOE                = 39968,
+    SPELL_TIDAL_BURST               = 39878,
+    SPELL_TIDAL_SHIELD              = 39872,                // Not going to use this since Hurl Spine doesn't dispel it.
+    SPELL_IMPALING_SPINE            = 39837,
+    SPELL_CREATE_NAJENTUS_SPINE     = 39956,
+    SPELL_HURL_SPINE                = 39948,
+    SPELL_SHIELD_VISUAL             = 37136,
+    SPELL_BERSERK                   = 45078
 };
 
 struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
@@ -106,9 +67,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     uint32 CheckTimer;                                      // This timer checks if Najentus is Tidal Shielded and if so, regens health. If not, sets IsShielded to false
     uint32 DispelShieldTimer;                               // This shield is only supposed to last 30 seconds, but the SPELL_SHIELD_VISUAL lasts forever
 
-    uint64 SpineTargetGUID;
-    uint64 SpineGUID;
-
     bool IsShielded;
 
     void Reset()
@@ -122,9 +80,6 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         ImpalingSpineTimer = 45000;
         CheckTimer = 2000;
         DispelShieldTimer = 30000;
-
-        SpineTargetGUID = 0;
-        SpineGUID = 0;
 
         if (pInstance)
         {
@@ -174,6 +129,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             {
                 if (m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                     m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
+
                 if (m_creature->HasAura(SPELL_TIDAL_SHIELD, 0))
                     m_creature->RemoveAurasDueToSpell(SPELL_TIDAL_SHIELD);
 
@@ -195,41 +151,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, m_creature);
-
         DoZoneInCombat();
-    }
-
-    // This is a workaround since we cannot summon GameObjects at will.
-    // Instead, we create a custom creature on top of the player.
-    // When someone kills the creature, the killer gets the "Naj'entus Spine" item.
-    // This item is the only item that should be able to pierce Tidal Shield
-    void DoImpalingSpineWorkaround(Unit* target)
-    {
-        Creature* Spine = NULL;
-        Spine = m_creature->SummonCreature(500000, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_DEAD_DESPAWN, 10000);
-        if (Spine)
-        {
-            Spine->setFaction(m_creature->getFaction());
-            ((mob_najentus_spineAI*)Spine->AI())->SetSpineVictimGUID(target->GetGUID());
-            SpineTargetGUID = target->GetGUID();
-        }
-    }
-
-    bool RemoveImpalingSpine(uint64 guid)
-    {
-        if (!IsShielded || guid == SpineTargetGUID) return false;
-
-        if (SpineTargetGUID)
-        {
-            Unit* target = Unit::GetUnit((*m_creature), SpineTargetGUID);
-            if (target && target->HasAura(SPELL_IMPALING_SPINE, 0))
-            {
-                target->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
-                return true;
-            }
-        }
-
-        return false;
     }
 
     void UpdateAI(const uint32 diff)
@@ -255,11 +177,14 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
             if (!m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                 DoCast(m_creature, SPELL_SHIELD_VISUAL);
+
             if (DispelShieldTimer < diff)
             {
                 m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
                 if (m_creature->HasAura(SPELL_SHIELD_VISUAL, 0))
                     m_creature->RemoveAurasDueToSpell(SPELL_SHIELD_VISUAL);
+
                 IsShielded = false;
             }else DispelShieldTimer -= diff;
 
@@ -281,6 +206,7 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
             for(uint8 i = 0; i < 3; ++i)
             {
                 Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
                 if (!target)
                     target = m_creature->getVictim();
 
@@ -304,14 +230,17 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if (ImpalingSpineTimer < diff)
         {
             Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
             if (!target)
                 target = m_creature->getVictim();
 
             if (target && (target->GetTypeId() == TYPEID_PLAYER))
             {
                 DoCast(target, SPELL_IMPALING_SPINE);
-                //DoImpalingSpineWorkaround(target);
-                SpineTargetGUID = target->GetGUID();
+
+                //if (pInstance)
+                    //pInstance->SetData64(DATA_SPINED_PLAYER,target->GetGUID());
+
                 ImpalingSpineTimer = 45000;
 
                 switch(rand()%2)
@@ -339,35 +268,30 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_najentus_spine(Player *player, GameObject* _GO)
+CreatureAI* GetAI_boss_najentus(Creature* pCreature)
 {
-    ScriptedInstance* pInstance = ((ScriptedInstance*)_GO->GetInstanceData());
-    if (pInstance)
+    return new boss_najentusAI(pCreature);
+}
+
+/*
+bool GOHello_go_najentus_spine(Player* pPlayer, GameObject* pGO)
+{
+    if (ScriptedInstance* pInstance = (ScriptedInstance*)pGO->GetInstanceData())
     {
-        uint64 NajentusGUID = pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS);
-        if (NajentusGUID)
+        uint64 uiPlayerTargetGuid = pInstance->GetData64(DATA_SPINED_PLAYER);
+
+        if (Player* pPlayerTarget = (Player*)Unit::GetUnit(*pPlayer, uiPlayerTargetGuid))
         {
-            Creature* Najentus = ((Creature*)Unit::GetUnit((*_GO), NajentusGUID));
-            if (Najentus)
-            {
-                if (((boss_najentusAI*)Najentus->AI())->RemoveImpalingSpine(player->GetGUID()))
-                    return true;
-            }else error_log("ERROR: Na'entus Spine GameObject unable to find Naj'entus");
-        }else error_log("ERROR: Invalid GUID acquired for Naj'entus by Naj'entus Spine GameObject");
-    }else error_log("ERROR: Naj'entus Spine spawned in invalid instance or location");
+            if (pPlayerTarget->HasAura(SPELL_IMPALING_SPINE))
+                pPlayerTarget->RemoveAurasDueToSpell(SPELL_IMPALING_SPINE);
 
-    return true;
-}
+            pInstance->SetData64(DATA_SPINED_PLAYER,0);
+        }
+    }
 
-CreatureAI* GetAI_mob_najentus_spine(Creature *_Creature)
-{
-    return new mob_najentus_spineAI (_Creature);
+    return false;
 }
-
-CreatureAI* GetAI_boss_najentus(Creature *_Creature)
-{
-    return new boss_najentusAI (_Creature);
-}
+*/
 
 void AddSC_boss_najentus()
 {
@@ -377,13 +301,8 @@ void AddSC_boss_najentus()
     newscript->GetAI = &GetAI_boss_najentus;
     newscript->RegisterSelf();
 
-    newscript = new Script;
-    newscript->Name = "mob_najentus_spine";
-    newscript->GetAI = &GetAI_mob_najentus_spine;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
+    /*newscript = new Script;
     newscript->Name = "go_najentus_spine";
     newscript->pGOHello = &GOHello_go_najentus_spine;
-    newscript->RegisterSelf();
+    newscript->RegisterSelf();*/
 }

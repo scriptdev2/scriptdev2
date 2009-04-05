@@ -46,6 +46,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     std::string str_data;
 
     uint64 Najentus;
+    uint64 uiSpinePlayerTargetGUID;
     uint64 Akama;                                           // This is the Akama that starts the Illidan encounter.
     uint64 Akama_Shade;                                     // This is the Akama that starts the Shade of Akama encounter.
     uint64 ShadeOfAkama;
@@ -69,6 +70,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
     void Initialize()
     {
         Najentus = 0;
+        uiSpinePlayerTargetGUID = 0;
         Akama = 0;
         Akama_Shade = 0;
         ShadeOfAkama = 0;
@@ -183,6 +185,7 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
                 return 0;
             case DATA_GO_POST_SHAHRAZ_DOOR:         return ShahrazPostDoor;
             case DATA_GO_COUNCIL_DOOR:              return CouncilDoor;
+            case DATA_SPINED_PLAYER:                return uiSpinePlayerTargetGUID;
         }
 
         return 0;
@@ -217,6 +220,12 @@ struct MANGOS_DLL_DECL instance_black_temple : public ScriptedInstance
             SaveToDB();
             OUT_SAVE_INST_DATA_COMPLETE;
         }
+    }
+
+    void SetData64(uint32 uiDataType, uint64 uiGuid)
+    {
+        if (uiDataType == DATA_SPINED_PLAYER)
+            uiSpinePlayerTargetGUID = uiGuid;
     }
 
     uint32 GetData(uint32 type)
