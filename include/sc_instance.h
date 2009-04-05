@@ -30,12 +30,5 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         ScriptedInstance(Map *map) : InstanceData(map) {}
         ~ScriptedInstance() {}
 
-        //All-purpose data storage 64 bit
-        virtual uint64 GetData64(uint32 Data) { return 0; }
-        virtual void SetData64(uint32 Data, uint64 Value) { }
-
-        //All-purpose data storage 32 bit
-        virtual uint32 GetData(uint32 Type) { return 0; }
-        virtual void SetData(uint32 Type, uint32 Data) {}
 };
 #endif

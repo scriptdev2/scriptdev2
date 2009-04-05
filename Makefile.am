@@ -43,8 +43,6 @@ scripts/boss/boss_emeriss.cpp \
 scripts/boss/boss_lethon.cpp \
 scripts/boss/boss_taerar.cpp \
 scripts/boss/boss_ysondre.cpp \
-scripts/creature/mob_event_ai.cpp \
-scripts/creature/mob_event_ai.h \
 scripts/creature/mob_generic_creature.cpp \
 scripts/creature/simple_ai.cpp \
 scripts/creature/simple_ai.h \

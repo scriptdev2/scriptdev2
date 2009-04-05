@@ -525,14 +525,14 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 
     Unit* pUnit = NULL;
 
-    MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
-    MaNGOS::UnitLastSearcher<MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
+    MaNGOS::MostHPMissingInRange u_check(m_creature, range, MinHPDiff);
+    MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange> searcher(m_creature, pUnit, u_check);
 
     /*
     typedef TYPELIST_4(GameObject, Creature*except pets*, DynamicObject, Corpse*Bones*) AllGridObjectTypes;
     This means that if we only search grid then we cannot possibly return pets or players so this is safe
     */
-    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+    TypeContainerVisitor<MaNGOS::UnitLastSearcher<MaNGOS::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
     CellLock<GridReadGuard> cell_lock(cell, p);
     cell_lock->Visit(cell_lock, grid_unit_searcher, *(m_creature->GetMap()));
@@ -548,10 +548,10 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float range)
 
     std::list<Creature*> pList;
 
-    FriendlyCCedInRange u_check(m_creature, range);
-    MaNGOS::CreatureListSearcher<FriendlyCCedInRange> searcher(m_creature, pList, u_check);
+    MaNGOS::FriendlyCCedInRange u_check(m_creature, range);
+    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange> searcher(m_creature, pList, u_check);
 
-    TypeContainerVisitor<MaNGOS::CreatureListSearcher<FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     CellLock<GridReadGuard> cell_lock(cell, p);
     cell_lock->Visit(cell_lock, grid_creature_searcher, *(m_creature->GetMap()));
@@ -568,10 +568,10 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float range, uint32 s
 
     std::list<Creature*> pList;
 
-    FriendlyMissingBuffInRange u_check(m_creature, range, spellid);
-    MaNGOS::CreatureListSearcher<FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
+    MaNGOS::FriendlyMissingBuffInRange u_check(m_creature, range, spellid);
+    MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange> searcher(m_creature, pList, u_check);
 
-    TypeContainerVisitor<MaNGOS::CreatureListSearcher<FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<MaNGOS::CreatureListSearcher<MaNGOS::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     CellLock<GridReadGuard> cell_lock(cell, p);
     cell_lock->Visit(cell_lock, grid_creature_searcher, *(m_creature->GetMap()));
