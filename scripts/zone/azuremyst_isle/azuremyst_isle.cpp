@@ -182,76 +182,110 @@ CreatureAI* GetAI_npc_draenei_survivor(Creature *_Creature)
 ## npc_engineer_spark_overgrind
 ######*/
 
-#define SAY_TEXT        -1000184
-#define EMOTE_SHELL     -1000185
-#define SAY_ATTACK      -1000186
+enum
+{
+    SAY_TEXT                = -1000184,
+    EMOTE_SHELL             = -1000185,
+    SAY_ATTACK              = -1000186,
 
-#define GOSSIP_FIGHT    "Traitor! You will be brought to justice!"
-#define SPELL_DYNAMITE  7978
+    AREA_COVE               = 3579,
+    AREA_ISLE               = 3639,
+    QUEST_GNOMERCY          = 9537,
+    FACTION_HOSTILE         = 14,
+    SPELL_DYNAMITE          = 7978
+};
+
+#define GOSSIP_FIGHT        "Traitor! You will be brought to justice!"
 
 struct MANGOS_DLL_DECL npc_engineer_spark_overgrindAI : public ScriptedAI
 {
-    npc_engineer_spark_overgrindAI(Creature *c) : ScriptedAI(c) {Reset();}
+    npc_engineer_spark_overgrindAI(Creature *c) : ScriptedAI(c)
+    {
+        uiNormFaction = c->getFaction();
+        uiNpcFlags = c->GetUInt32Value(UNIT_NPC_FLAGS);
+        Reset();
 
-    uint32 Dynamite_Timer;
-    uint32 Emote_Timer;
+        if (c->GetAreaId() == AREA_COVE || c->GetAreaId() == AREA_ISLE)
+            bIsTreeEvent = true;
+    }
+
+    uint32 uiNpcFlags;
+    uint32 uiNormFaction;
+
+    uint32 uiDynamiteTimer;
+    uint32 uiEmoteTimer;
+
+    bool bIsTreeEvent;
 
     void Reset()
     {
-        Dynamite_Timer = 8000;
-        Emote_Timer = 120000 + rand()%30000;
-        m_creature->setFaction(875);
+        m_creature->setFaction(uiNormFaction);
+        m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
+
+        uiDynamiteTimer = 8000;
+        uiEmoteTimer = 120000 + rand()%30000;
+
+        bIsTreeEvent = false;
     }
 
-    void Aggro(Unit *who) { }
+    void Aggro(Unit *who)
+    {
+        DoScriptText(SAY_ATTACK, m_creature, who);
+    }
 
     void UpdateAI(const uint32 diff)
     {
-        if( !InCombat )
+        if (!InCombat && !bIsTreeEvent)
         {
-            if (Emote_Timer < diff)
+            if (uiEmoteTimer < diff)
             {
                 DoScriptText(SAY_TEXT, m_creature);
                 DoScriptText(EMOTE_SHELL, m_creature);
-                Emote_Timer = 120000 + rand()%30000;
-            }else Emote_Timer -= diff;
+                uiEmoteTimer = 120000 + rand()%30000;
+            }
+            else uiEmoteTimer -= diff;
+        }
+        else if (bIsTreeEvent)
+        {
+            //nothing here yet
+            return;
         }
 
-        if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (Dynamite_Timer < diff)
+        if (uiDynamiteTimer < diff)
         {
             DoCast(m_creature->getVictim(), SPELL_DYNAMITE);
-            Dynamite_Timer = 8000;
-        } else Dynamite_Timer -= diff;
+            uiDynamiteTimer = 8000;
+        }
+        else uiDynamiteTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature *_Creature)
+CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* pCreature)
 {
-    return new npc_engineer_spark_overgrindAI (_Creature);
+    return new npc_engineer_spark_overgrindAI(pCreature);
 }
 
-bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature *_Creature)
+bool GossipHello_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreature)
 {
-    if( player->GetQuestStatus(9537) == QUEST_STATUS_INCOMPLETE )
-        player->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (pPlayer->GetQuestStatus(QUEST_GNOMERCY) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_engineer_spark_overgrind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction )
 {
-    if( action == GOSSIP_ACTION_INFO_DEF )
+    if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        player->CLOSE_GOSSIP_MENU();
-        _Creature->setFaction(14);
-        DoScriptText(SAY_ATTACK, _Creature, player);
-        ((npc_engineer_spark_overgrindAI*)_Creature->AI())->AttackStart(player);
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pCreature->setFaction(FACTION_HOSTILE);
+        ((npc_engineer_spark_overgrindAI*)pCreature->AI())->AttackStart(pPlayer);
     }
     return true;
 }
