@@ -19,6 +19,10 @@ UPDATE gameobject_template SET ScriptName='go_northern_crystal_pylon' WHERE entr
 UPDATE gameobject_template SET ScriptName='go_western_crystal_pylon' WHERE entry=164956;
 UPDATE gameobject_template SET ScriptName='go_eastern_crystal_pylon' WHERE entry=164957;
 UPDATE gameobject_template SET ScriptName='go_barov_journal' WHERE entry=180794;
+UPDATE gameobject_template SET ScriptName='go_ethereum_prison' WHERE entry BETWEEN 184418 AND 184431;
+UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry BETWEEN 185465 AND 185467;
+UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry=184595;
+UPDATE gameobject_template SET ScriptName='go_ethereum_stasis' WHERE entry BETWEEN 185461 AND 185464;
 UPDATE gameobject_template SET ScriptName='go_field_repair_bot_74A' where entry=179552;
 UPDATE gameobject_template SET ScriptName='go_gilded_brazier' WHERE entry=181956;
 UPDATE gameobject_template SET ScriptName='go_orb_of_command' WHERE entry=179879;

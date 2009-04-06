@@ -111,6 +111,79 @@ bool GOHello_go_barov_journal(Player *player, GameObject* _GO)
 }
 
 /*######
+## go_ethereum_prison
+######*/
+
+enum
+{
+    SPELL_REP_LC        = 39456,
+    SPELL_REP_SHAT      = 39457,
+    SPELL_REP_CE        = 39460,
+    SPELL_REP_CON       = 39474,
+    SPELL_REP_KT        = 39475,
+    SPELL_REP_SPOR      = 39476
+};
+
+const uint32 uiNpcPrisonEntry[] =
+{
+    22810, 22811, 22812, 22813, 22814, 22815,               //good guys
+    20783, 20784, 20785, 20786, 20788, 20789, 20790         //bad guys
+};
+
+bool GOHello_go_ethereum_prison(Player* pPlayer, GameObject* pGo)
+{
+    int iRandom = rand() % (sizeof(uiNpcPrisonEntry) / sizeof(uint32));
+
+    if (Creature* pCreature = pPlayer->SummonCreature(uiNpcPrisonEntry[iRandom],
+        pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
+        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+    {
+        if (!pCreature->IsHostileTo(pPlayer))
+        {
+            uint32 uiSpell = 0;
+            FactionTemplateEntry const* pFaction = pCreature->getFactionTemplateEntry();
+
+            switch(pFaction->faction)
+            {
+                case 1011: uiSpell = SPELL_REP_LC; break;
+                case 935: uiSpell = SPELL_REP_SHAT; break;
+                case 942: uiSpell = SPELL_REP_CE; break;
+                case 933: uiSpell = SPELL_REP_CON; break;
+                case 989: uiSpell = SPELL_REP_KT; break;
+                case 970: uiSpell = SPELL_REP_SPOR; break;
+            }
+
+            if (uiSpell)
+                pCreature->CastSpell(pPlayer,uiSpell,false);
+            else
+                error_log("SD2: go_ethereum_prison summoned creature (entry %u) but faction (%u) are not expected by script.",pCreature->GetEntry(),pCreature->getFaction());
+        }
+    }
+
+    return false;
+}
+
+/*######
+## go_ethereum_stasis
+######*/
+
+const uint32 uiNpcStasisEntry[] =
+{
+    22825, 20888, 22827, 22826, 22828
+};
+
+bool GOHello_go_ethereum_stasis(Player* pPlayer, GameObject* pGo)
+{
+    int iRandom = rand() % (sizeof(uiNpcStasisEntry) / sizeof(uint32));
+
+    pPlayer->SummonCreature(uiNpcStasisEntry[iRandom],
+        pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), pGo->GetAngle(pPlayer),
+        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+
+    return false;
+}
+
+/*######
 ## go_field_repair_bot_74A
 ######*/
 
@@ -255,6 +328,16 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_barov_journal";
     newscript->pGOHello =           &GOHello_go_barov_journal;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_ethereum_prison";
+    newscript->pGOHello =           &GOHello_go_ethereum_prison;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_ethereum_stasis";
+    newscript->pGOHello =           &GOHello_go_ethereum_stasis;
     newscript->RegisterSelf();
 
     newscript = new Script;
