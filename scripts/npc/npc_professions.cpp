@@ -812,6 +812,138 @@ bool GossipSelect_npc_prof_blacksmith(Player *player, Creature *_Creature, uint3
 }*/
 
 /*###
+# engineering trinkets
+###*/
+
+enum
+{
+    NPC_ZAP                     = 14742,
+    NPC_JHORDY                  = 14743,
+    NPC_KABLAM                  = 21493,
+    NPC_SMILES                  = 21494,
+
+    SPELL_LEARN_TO_EVERLOOK     = 23490,
+    SPELL_LEARN_TO_GADGET       = 23491,
+    SPELL_LEARN_TO_AREA52       = 36956,
+    SPELL_LEARN_TO_TOSHLEY      = 36957,
+
+    SPELL_TO_EVERLOOK           = 23486,
+    SPELL_TO_GADGET             = 23489,
+    SPELL_TO_AREA52             = 36954,
+    SPELL_TO_TOSHLEY            = 36955,
+
+    ITEM_GNOMISH_CARD           = 10790,
+    ITEM_GOBLIN_CARD            = 10791
+};
+
+#define GOSSIP_ITEM_ZAP         "[PH] Unknown"
+#define GOSSIP_ITEM_JHORDY      "I must build a beacon for this marvelous device!"
+#define GOSSIP_ITEM_KABLAM      "[PH] Unknown"
+#define GOSSIP_ITEM_SMILES      "[PH] Unknown"
+
+bool GossipHello_npc_engineering_tele_trinket(Player* pPlayer, Creature* pCreature)
+{
+    uint32 uiNpcTextId = 0;
+    std::string strGossipItem;
+    bool bCanLearn = false;
+
+    if (pPlayer->HasSkill(SKILL_ENGINERING))
+    {
+        switch(pCreature->GetEntry())
+        {
+            case NPC_ZAP:
+                uiNpcTextId = 7249;
+                if (pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 260 && pPlayer->HasSpell(S_GOBLIN))
+                {
+                    if (!pPlayer->HasSpell(SPELL_TO_EVERLOOK))
+                    {
+                        bCanLearn = true;
+                        strGossipItem = GOSSIP_ITEM_ZAP;
+                    }
+                    else if (pPlayer->HasSpell(SPELL_TO_EVERLOOK))
+                        uiNpcTextId = 0;
+                }
+                break;
+            case NPC_JHORDY:
+                uiNpcTextId = 7251;
+                if (pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 260 && pPlayer->HasSpell(S_GNOMISH))
+                {
+                    if (!pPlayer->HasSpell(SPELL_TO_GADGET))
+                    {
+                        bCanLearn = true;
+                        strGossipItem = GOSSIP_ITEM_JHORDY;
+                    }
+                    else if (pPlayer->HasSpell(SPELL_TO_GADGET))
+                        uiNpcTextId = 7252;
+                }
+                break;
+            case NPC_KABLAM:
+                uiNpcTextId = 10365;
+                if (pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 350 && pPlayer->HasSpell(S_GOBLIN))
+                {
+                    if (!pPlayer->HasSpell(SPELL_TO_AREA52))
+                    {
+                        bCanLearn = true;
+                        strGossipItem = GOSSIP_ITEM_KABLAM;
+                    }
+                    else if (pPlayer->HasSpell(SPELL_TO_AREA52))
+                        uiNpcTextId = 0;
+                }
+                break;
+            case NPC_SMILES:
+                uiNpcTextId = 10363;
+                if (pPlayer->GetBaseSkillValue(SKILL_ENGINERING) >= 350 && pPlayer->HasSpell(S_GNOMISH))
+                {
+                    if (!pPlayer->HasSpell(SPELL_TO_TOSHLEY))
+                    {
+                        bCanLearn = true;
+                        strGossipItem = GOSSIP_ITEM_SMILES;
+                    }
+                    else if (pPlayer->HasSpell(SPELL_TO_TOSHLEY))
+                        uiNpcTextId = 0;
+                }
+                break;
+        }
+    }
+
+    if (bCanLearn)
+    {
+        if (pPlayer->HasItemCount(ITEM_GOBLIN_CARD,1) || pPlayer->HasItemCount(ITEM_GNOMISH_CARD,1))
+            pPlayer->ADD_GOSSIP_ITEM(0, strGossipItem, pCreature->GetEntry(), GOSSIP_ACTION_INFO_DEF+1);
+    }
+
+    pPlayer->SEND_GOSSIP_MENU(uiNpcTextId ? uiNpcTextId : pCreature->GetNpcTextId(), pCreature->GetGUID());
+    return true;
+}
+
+bool GossipSelect_npc_engineering_tele_trinket(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        pPlayer->CLOSE_GOSSIP_MENU();
+
+    if (uiSender != pCreature->GetEntry())
+        return true;
+
+    switch(uiSender)
+    {
+        case NPC_ZAP:
+            pPlayer->CastSpell(pPlayer,SPELL_LEARN_TO_EVERLOOK,false);
+            break;
+        case NPC_JHORDY:
+            pPlayer->CastSpell(pPlayer,SPELL_LEARN_TO_GADGET,false);
+            break;
+        case NPC_KABLAM:
+            pPlayer->CastSpell(pPlayer,SPELL_LEARN_TO_AREA52,false);
+            break;
+        case NPC_SMILES:
+            pPlayer->CastSpell(pPlayer,SPELL_LEARN_TO_TOSHLEY,false);
+            break;
+    }
+
+    return true;
+}
+
+/*###
 # start menues leatherworking
 ###*/
 
@@ -1181,6 +1313,12 @@ void AddSC_npc_professions()
     newscript->Name = "npc_prof_blacksmith";
     newscript->pGossipHello =  &GossipHello_npc_prof_blacksmith;
     newscript->pGossipSelect = &GossipSelect_npc_prof_blacksmith;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_engineering_tele_trinket";
+    newscript->pGossipHello =  &GossipHello_npc_engineering_tele_trinket;
+    newscript->pGossipSelect = &GossipSelect_npc_engineering_tele_trinket;
     newscript->RegisterSelf();
 
     newscript = new Script;
