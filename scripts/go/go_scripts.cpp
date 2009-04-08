@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: GO_Scripts
 SD%Complete: 100
-SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
+SDComment: Quest support: 4285,4287,4288(crystal pylons), 4296, 5088, 10990, 10991, 10992. Field_Repair_Bot->Teaches spell 22704. Barov_journal->Teaches spell 26089
 SDCategory: Game Objects
 EndScriptData */
 
@@ -27,11 +27,16 @@ go_northern_crystal_pylon
 go_eastern_crystal_pylon
 go_western_crystal_pylon
 go_barov_journal
+go_ethereum_prison
+go_ethereum_stasis
 go_field_repair_bot_74A
 go_orb_of_command
 go_sacred_fire_of_life
+go_shrine_of_the_birds
 go_tablet_of_madness
 go_tablet_of_the_seven
+go_tele_to_dalaran_crystal
+go_tele_to_violet_stand
 EndContentData */
 
 #include "precompiled.h"
@@ -228,6 +233,10 @@ bool GOHello_go_orb_of_command(Player *player, GameObject* _GO)
     return true;
 }
 
+/*######
+## go_sacred_fire_of_life
+######*/
+
 enum
 {
     NPC_ARIKARA     = 10882,
@@ -239,6 +248,46 @@ bool GOHello_go_sacred_fire_of_life(Player* pPlayer, GameObject* pGO)
         pPlayer->SummonCreature(NPC_ARIKARA, -5008.338, -2118.894, 83.657, 0.874, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
 
     return true;
+}
+
+/*######
+## go_shrine_of_the_birds
+######*/
+
+enum
+{
+    NPC_HAWK_GUARD      = 22992,
+    NPC_EAGLE_GUARD     = 22993,
+    NPC_FALCON_GUARD    = 22994,
+    GO_SHRINE_HAWK      = 185551,
+    GO_SHRINE_EAGLE     = 185547,
+    GO_SHRINE_FALCON    = 185553
+};
+
+bool GOHello_go_shrine_of_the_birds(Player* pPlayer, GameObject* pGo)
+{
+    uint32 uiBirdEntry = 0;
+
+    float fX,fY,fZ;
+    pGo->GetClosePoint(fX,fY,fZ,pGo->GetObjectSize(),INTERACTION_DISTANCE);
+
+    switch(pGo->GetEntry())
+    {
+        case GO_SHRINE_HAWK:
+            uiBirdEntry = NPC_HAWK_GUARD;
+            break;
+        case GO_SHRINE_EAGLE:
+            uiBirdEntry = NPC_EAGLE_GUARD;
+            break;
+        case GO_SHRINE_FALCON:
+            uiBirdEntry = NPC_FALCON_GUARD;
+            break;
+    }
+
+    if (uiBirdEntry)
+        pPlayer->SummonCreature(uiBirdEntry, fX, fY, fZ, pGo->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+
+    return false;
 }
 
 /*######
@@ -358,6 +407,11 @@ void AddSC_go_scripts()
     newscript = new Script;
     newscript->Name = "go_sacred_fire_of_life";
     newscript->pGOHello =           &GOHello_go_sacred_fire_of_life;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "go_shrine_of_the_birds";
+    newscript->pGOHello =           &GOHello_go_shrine_of_the_birds;
     newscript->RegisterSelf();
 
     newscript = new Script;
