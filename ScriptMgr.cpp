@@ -225,6 +225,8 @@ extern void AddSC_instance_steam_vault();
 extern void AddSC_boss_hungarfen();
 
 //Darkshore
+extern void AddSC_darkshore();
+
 //Darnassus
 //Deadmines
 extern void AddSC_deadmines();
@@ -1058,6 +1060,8 @@ void ScriptsInit()
     AddSC_boss_hungarfen();
 
     //Darkshore
+    AddSC_darkshore();
+
     //Darnassus
     //Deadmines
     AddSC_deadmines();
