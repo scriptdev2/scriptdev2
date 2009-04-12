@@ -382,6 +382,7 @@ UPDATE creature_template SET ScriptName='mob_shield_generator_channel' WHERE ent
 
 
 /* DARKSHORE */
+UPDATE creature_template SET ScriptName='npc_prospector_remtravel' WHERE entry=2917;
 UPDATE creature_template SET ScriptName='npc_threshwackonator' WHERE entry=6669;
 
 /* DARNASSUS */

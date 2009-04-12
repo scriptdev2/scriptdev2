@@ -17,15 +17,151 @@
 /* ScriptData
 SDName: Darkshore
 SD%Complete: 100
-SDComment: Quest support: 2078
+SDComment: Quest support: 731, 2078
 SDCategory: Darkshore
 EndScriptData */
 
 /* ContentData
+npc_prospector_remtravel
 npc_threshwackonator
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
+
+/*####
+# npc_prospector_remtravel
+####*/
+
+enum
+{
+    SAY_REM_START               = -1000327,
+    SAY_REM_AGGRO               = -1000339,
+    SAY_REM_RAMP1_1             = -1000328,
+    SAY_REM_RAMP1_2             = -1000329,
+    SAY_REM_BOOK                = -1000330,
+    SAY_REM_TENT1_1             = -1000331,
+    SAY_REM_TENT1_2             = -1000332,
+    SAY_REM_MOSS                = -1000333,
+    EMOTE_REM_MOSS              = -1000334,
+    SAY_REM_MOSS_PROGRESS       = -1000335,
+    SAY_REM_PROGRESS            = -1000336,
+    SAY_REM_REMEMBER            = -1000337,
+    EMOTE_REM_END               = -1000338,
+
+    FACTION_ESCORTEE            = 10,
+    QUEST_ABSENT_MINDED_PT2     = 731,
+    NPC_GRAVEL_SCOUT            = 2158,
+    NPC_GRAVEL_BONE             = 2159,
+    NPC_GRAVEL_GEO              = 2160
+};
+
+struct MANGOS_DLL_DECL npc_prospector_remtravelAI : public npc_escortAI
+{
+    npc_prospector_remtravelAI(Creature *c) : npc_escortAI(c) { Reset(); }
+
+    void WaypointReached(uint32 i)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(i)
+        {
+            case 0:
+                DoScriptText(SAY_REM_START, m_creature, pUnit);
+                break;
+            case 5:
+                DoScriptText(SAY_REM_RAMP1_1, m_creature, pUnit);
+                break;
+            case 6:
+                DoSpawnCreature(NPC_GRAVEL_SCOUT, -10.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_GRAVEL_BONE, -10.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 9:
+                DoScriptText(SAY_REM_RAMP1_2, m_creature, pUnit);
+                break;
+            case 14:
+                //depend quest rewarded?
+                DoScriptText(SAY_REM_BOOK, m_creature, pUnit);
+                break;
+            case 15:
+                DoScriptText(SAY_REM_TENT1_1, m_creature, pUnit);
+                break;
+            case 16:
+                DoSpawnCreature(NPC_GRAVEL_SCOUT, -10.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_GRAVEL_BONE, -10.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 17:
+                DoScriptText(SAY_REM_TENT1_2, m_creature, pUnit);
+                break;
+            case 26:
+                DoScriptText(SAY_REM_MOSS, m_creature, pUnit);
+                break;
+            case 27:
+                DoScriptText(EMOTE_REM_MOSS, m_creature, pUnit);
+                break;
+            case 28:
+                DoScriptText(SAY_REM_MOSS_PROGRESS, m_creature, pUnit);
+                break;
+            case 29:
+                DoSpawnCreature(NPC_GRAVEL_SCOUT, -15.0f, 3.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_GRAVEL_BONE, -15.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_GRAVEL_GEO, -15.0f, 7.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 31:
+                DoScriptText(SAY_REM_PROGRESS, m_creature, pUnit);
+                break;
+            case 41:
+                DoScriptText(SAY_REM_REMEMBER, m_creature, pUnit);
+                break;
+            case 42:
+                DoScriptText(EMOTE_REM_END, m_creature, pUnit);
+                ((Player*)pUnit)->GroupEventHappens(QUEST_ABSENT_MINDED_PT2,m_creature);
+                break;
+        }
+    }
+
+    void Reset() { }
+
+    void Aggro(Unit* who)
+    {
+        if (rand()%2)
+            DoScriptText(SAY_REM_AGGRO, m_creature, who);
+    }
+
+    void JustSummoned(Creature* pSummoned)
+    {
+        //unsure if it should be any
+        //pSummoned->AI()->AttackStart(m_creature);
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+CreatureAI* GetAI_npc_prospector_remtravel(Creature* pCreature)
+{
+    npc_prospector_remtravelAI* tempAI = new npc_prospector_remtravelAI(pCreature);
+
+    tempAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)tempAI;
+}
+
+bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ABSENT_MINDED_PT2)
+    {
+        ((npc_escortAI*)(pCreature->AI()))->Start(false, true, false, pPlayer->GetGUID());
+        pCreature->setFaction(FACTION_ESCORTEE);
+    }
+
+    return true;
+}
 
 /*####
 # npc_threshwackonator
@@ -197,6 +333,12 @@ bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uin
 void AddSC_darkshore()
 {
     Script *newscript;
+
+    newscript = new Script;
+    newscript->Name = "npc_prospector_remtravel";
+    newscript->GetAI = &GetAI_npc_prospector_remtravel;
+    newscript->pQuestAccept = &QuestAccept_npc_prospector_remtravel;
+    newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_threshwackonator";
