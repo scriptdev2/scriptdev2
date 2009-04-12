@@ -629,6 +629,7 @@ UPDATE creature_template SET ScriptName='npc_great_bear_spirit' WHERE entry=1195
 UPDATE creature_template SET ScriptName='npc_silva_filnaveth' WHERE entry=11800;
 
 /* MULGORE */
+UPDATE creature_template SET ScriptName='npc_kyle_the_frenzied' WHERE entry=23616;
 UPDATE creature_template SET ScriptName='npc_skorn_whitecloud' WHERE entry=3052;
 
 /* NAGRAND */

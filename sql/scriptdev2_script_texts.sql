@@ -317,7 +317,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000336, 'Nope. didn\'t leave the fossil back here!',0,0,7,0,'remtravel SAY_REM_PROGRESS'),
 (-1000337, 'Ah. I remember now! I gave the mysterious fossil to Hollee! Check with her.',0,0,7,0,'remtravel SAY_REM_REMEMBER'),
 (-1000338, '%s goes back to work, oblivious to everything around him.',0,2,7,0,'remtravel EMOTE_REM_END'),
-(-1000339, 'Something tells me this $r wants the mysterious fossil too. Help!',0,0,7,0,'remtravel SAY_REM_AGGRO');
+(-1000339, 'Something tells me this $r wants the mysterious fossil too. Help!',0,0,7,0,'remtravel SAY_REM_AGGRO'),
+
+(-1000340, '%s howls in delight at the sight of his lunch!',0,2,0,0,'kyle EMOTE_SEE_LUNCH'),
+(-1000341, '%s eats his lunch.',0,2,0,0,'kyle EMOTE_EAT_LUNCH'),
+(-1000342, '%s thanks you with a special dance.',0,2,0,0,'kyle EMOTE_DANCE');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
