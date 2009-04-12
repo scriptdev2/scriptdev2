@@ -966,6 +966,7 @@ UPDATE creature_template SET ScriptName='npc_parqual_fintallas' WHERE entry=4488
 
 /* WESTERN PLAGUELANDS */
 UPDATE creature_template SET ScriptName='npcs_dithers_and_arbington' WHERE entry IN (11056,11057);
+UPDATE creature_template SET ScriptName='npc_myranda_the_hag' WHERE entry=11872;
 UPDATE creature_template SET ScriptName='npc_the_scourge_cauldron' WHERE entry=11152;
 
 /* WESTFALL */
