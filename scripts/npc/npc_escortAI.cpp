@@ -40,14 +40,6 @@ void npc_escortAI::AttackStart(Unit *who)
         if (!InCombat)
         {
             InCombat = true;
-
-            if (IsBeingEscorted)
-            {
-                //Store last position
-                m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);
-                debug_log("SD2: EscortAI has entered combat and stored last location.");
-            }
-
             Aggro(who);
         }
 
@@ -111,7 +103,7 @@ void npc_escortAI::EnterEvadeMode()
 
     if (IsBeingEscorted)
     {
-        debug_log("SD2: EscortAI has left combat and is now returning to last point.");
+        debug_log("SD2: EscortAI has left combat and is now returning to CombatStartPosition.");
         Returning = true;
         m_creature->GetMotionMaster()->MovementExpired();
 
@@ -119,8 +111,9 @@ void npc_escortAI::EnterEvadeMode()
         if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
             m_creature->GetMotionMaster()->MoveIdle();
 
-        m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, LastPos.x, LastPos.y, LastPos.z);
-
+        float fPosX, fPosY, fPosZ;
+        m_creature->GetCombatStartPosition(fPosX, fPosY, fPosZ);
+        m_creature->GetMotionMaster()->MovePoint(WP_LAST_POINT, fPosX, fPosY, fPosZ);
     }
     else
     {

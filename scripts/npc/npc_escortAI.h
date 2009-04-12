@@ -37,7 +37,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         virtual void Reset() = 0;
 
         // CreatureAI functions
-        npc_escortAI(Creature *c) : ScriptedAI(c), IsBeingEscorted(false), PlayerTimer(1000) {m_creature->GetPosition(LastPos.x, LastPos.y, LastPos.z);}
+        npc_escortAI(Creature *c) : ScriptedAI(c), IsBeingEscorted(false), PlayerTimer(1000) {}
 
         bool IsVisible(Unit*) const;
 
@@ -72,13 +72,6 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         uint32 WaitTimer;
         uint32 PlayerTimer;
         uint32 m_uiNpcFlags;
-
-        struct
-        {
-            float x;
-            float y;
-            float z;
-        }LastPos;
 
         std::list<Escort_Waypoint> WaypointList;
         std::list<Escort_Waypoint>::iterator CurrentWP;
