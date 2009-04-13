@@ -289,9 +289,6 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, who->GetGUID());
             pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
         }
-
-        // spawn one of the pets on aggro
-        DoCast(m_creature, urand(0,1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT);
     }
 
     void UpdateAI(const uint32 diff)
@@ -308,12 +305,19 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         }
 
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
         //someone evaded!
         if (pInstance && !pInstance->GetData(DATA_KARATHRESSEVENT))
+        {
             EnterEvadeMode();
+            return;
+        }
+
+        //spawn pet if not exist or if not alive
+        if (!m_creature->GetPet() || !m_creature->GetPet()->isAlive())
+            DoCast(m_creature, urand(0,1) ? SPELL_SUMMON_FATHOM_LURKER : SPELL_SUMMON_FATHOM_SPOREBAT);
 
         //LeechingThrow_Timer
         if (LeechingThrow_Timer < diff)
