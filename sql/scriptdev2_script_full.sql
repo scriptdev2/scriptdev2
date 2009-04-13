@@ -2,7 +2,8 @@
 -- Version data (part used in command .server info )
 --
 
-UPDATE sd2_db_version SET version='ScriptDev2 (for MaNGOS 7658+) ';
+DELETE FROM sd2_db_version;
+INSERT INTO sd2_db_version (version) VALUES ('ScriptDev2 (for MaNGOS 7658+) ');
 
 --
 -- Below contains data for table `script_texts` mainly used in C++ parts.
