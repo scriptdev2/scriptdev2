@@ -74,8 +74,6 @@ struct MANGOS_DLL_DECL npc_bartlebyAI : public ScriptedAI
     void Reset()
     {
         m_creature->setFaction(11);
-        m_creature->setEmoteState(7);
-
         PlayerGUID = 0;
     }
 
@@ -131,7 +129,6 @@ struct MANGOS_DLL_DECL npc_dashel_stonefistAI : public ScriptedAI
     void Reset()
     {
         m_creature->setFaction(11);
-        m_creature->setEmoteState(7);
     }
 
     void DamageTaken(Unit *done_by, uint32 & damage)
