@@ -1,50 +1,53 @@
+
 --- How to install ScriptDev2 ---
 
 1) Download MaNGOS (using git clone)
 
 2) Do the source stuff:
 
- MS Windows:
-  - Create a new folder under "src\bindings\" within the MaNGOS source called "ScriptDev2"
-  - Checkout the ScriptDev2 trunk from "https://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2"
-  - Apply the Git patch - "git am src/bindings/ScriptDev2/patches/MaNGOS-yyyy-mm-dd-ScriptDev2.patch" where 'yyyy' is year, 'mm' is month and 'dd' is the day of the target MaNGOS commit/relase
-  - Compile MaNGOS
-  - Compile ScriptDev2 using the ScriptVC70, ScriptVC80, or ScriptVC90 Solution within the ScriptDev2 folder (this will overwrite the Mangoscript dll in the output directory)
+MS Windows:
+- Create a new folder under "src\bindings\" within the MaNGOS source called "ScriptDev2"
+- Checkout the ScriptDev2 trunk from "https://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2"
+- Apply the Git patch to Mangos - "git am src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch" ('XXXX' is revision number for Mangos).
+- Compile MaNGOS
+- Compile ScriptDev2 using the ScriptVC70, ScriptVC80, or ScriptVC90 Solution within the ScriptDev2 folder (this will overwrite the Mangoscript dll in the output directory)
 
- GNU/Linux:
-  - Checkout the ScriptDev2 to "src/bindings/ScriptDev2" - "svn co https://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2 src/bindings/ScriptDev2"
-  SVN:
-   - Apply MaNGOS-rXXXX-ScriptDev2.patch, where XXXX is the highest version to that of your MaNGOS revision, to Mangos Source
-  GIT:
-   - Apply the Git patch - "git am src/bindings/ScriptDev2/patches/MaNGOS-yyyy-mm-dd-ScriptDev2.patch" where 'yyyy' is year, 'mm' is month and 'dd' is the day of the target MaNGOS commit/relase
+GNU/Linux:
+- Checkout the ScriptDev2 to "src/bindings/ScriptDev2" - "svn co https://scriptdev2.svn.sourceforge.net/svnroot/scriptdev2 src/bindings/ScriptDev2"
+SVN:
+- Apply MaNGOS-XXXX-ScriptDev2.patch to Mangos, where XXXX is the highest version to that of your MaNGOS revision.
+GIT:
+- Apply the Git patch to Mangos - "git am src/bindings/ScriptDev2/patches/MaNGOS-XXXX-ScriptDev2.patch"
 
- - Compile MaNGOS (ScriptDev2 will automatically be built when compiling Mangos from here on)
+- Compile MaNGOS (ScriptDev2 will automatically be built when compiling Mangos from here on)
 
-3) Create the default ScriptDev2 database using "sql\create_database.sql", then execute "sql\scriptdev2_structure.sql" on that database.
+3) Create the default ScriptDev2 database using
+"sql\scriptdev2_create_database.sql", then execute
+"sql\scriptdev2_create_structure.sql" on that database.
 
-4) Execute the included "sql\scriptdev2_script_texts.sql" on your ScriptDev2 database.
+4) Execute the following on your ScriptDev2 database.
+- sql\scriptdev2_script_full.sql
 
-5) Optionally, apply scripts from ACID now.
+5) Execute the following file on your MaNGOS database.
+- sql\mangos_scriptname_full.sql
 
-6) Execute the included "sql\mangos_full_scripts.sql" on your MaNGOS database.
+6) Place the included "scriptdev2.conf" file within the directory containing your "mangosd.conf" and "realmd.conf" files. You may need to change this file to match the database you created and any custom settings you wish to use. Note this file will be different created for Unix based systems.
 
-7) Place the included "scriptdev2.conf" file within the directory containing your "mangosd.conf" and "realmd.conf" files. You may need to change this file to match the database you created and any custom settings you wish to use. Note this file will be different created for Unix based systems.
-
-8) Run mangosd from your output directory
+7) Run mangosd from your output directory
 
 
 To update ScriptDev2:
 
 MS Windows:
- - All you have to do is open src\bindings\ and right click on the ScriptDev2 folder and click "Update" and then follow steps 4, 6, 7, and 8 again. You must still compile MaNGOS before ScriptDev2 when on the Windows platform.
+- All you have to do is open src\bindings\ and right click on the ScriptDev2 folder and click "Update" and then follow steps 4, 6, 7, and 8 again. You must still compile MaNGOS before ScriptDev2 when on the Windows platform.
 
 GNU/Linux:
- - Go to the src/bindings/ScriptDev2 directory - "cd src/bindings/ScriptDev2"
- - Update ScriptDev2 - "svn up"
+- Go to the src/bindings/ScriptDev2 directory - "cd src/bindings/ScriptDev2"
+- Update ScriptDev2 - "svn up"
 
 To update your Database with new Scriptdev2 SQL changes you can either:
- a) apply only the changes that were made during that revision by looking in the sql\update folder or (files named rXXX_scriptdev2.sql should be executed on the scriptdev2 db while rXXX_mangos.sql should be executed on your mangos db)
- b) reapply "mangos_full_scripts.sql" to your MaNGOS database.
+a) apply only the changes that were made during that revision by looking in the sql\update folder or (files named rXXX_scriptdev2.sql should be executed on the scriptdev2 db while rXXX_mangos.sql should be executed on your mangos db)
+b) reapply "mangos_scriptname_full.sql" to your MaNGOS database.
 
 You can view the ScriptDev2 Change Log at:
 http://scriptdev2.svn.sourceforge.net/viewvc/scriptdev2/?view=log
