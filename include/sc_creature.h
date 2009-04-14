@@ -59,7 +59,7 @@ struct PointMovement
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    ScriptedAI(Creature* creature) : m_creature(creature), InCombat(false), bCombatMovement(true) {}
+    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), InCombat(false), bCombatMovement(true) {}
     ~ScriptedAI() {}
 
     //*************
@@ -114,9 +114,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
     // Variables
     //*************
-
-    //Pointer to creature we are manipulating
-    Creature* m_creature;
 
     //Bool for if we are in combat or not
     bool InCombat;
