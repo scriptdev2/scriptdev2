@@ -17,7 +17,7 @@
 /* ScriptData
 SDName: Zangarmarsh
 SD%Complete: 100
-SDComment: Quest support: 9785, 9803, 10009. Mark Of ... buffs.
+SDComment: Quest support: 9752, 9785, 9803, 10009. Mark Of ... buffs.
 SDCategory: Zangarmarsh
 EndScriptData */
 
@@ -25,10 +25,12 @@ EndScriptData */
 npcs_ashyen_and_keleth
 npc_cooshcoosh
 npc_elder_kuruti
+npc_kayra_longmane
 npc_mortog_steamhead
 EndContentData */
 
 #include "precompiled.h"
+#include "../../npc/npc_escortAI.h"
 
 /*######
 ## npcs_ashyen_and_keleth
@@ -222,6 +224,97 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature *_Creature, uint32 s
     return true;
 }
 
+/*#####
+## npc_kayra_longmane
+#####*/
+
+enum
+{
+    SAY_START           = -1000343,
+    SAY_AMBUSH1         = -1000344,
+    SAY_PROGRESS        = -1000345,
+    SAY_AMBUSH2         = -1000346,
+    SAY_END             = -1000347,
+
+    QUEST_ESCAPE_FROM   = 9752,
+    NPC_SLAVEBINDER     = 18042
+};
+
+struct MANGOS_DLL_DECL npc_kayra_longmaneAI : public npc_escortAI
+{
+    npc_kayra_longmaneAI(Creature* c) : npc_escortAI(c) { Reset(); }
+
+    void WaypointReached(uint32 i)
+    {
+        Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID);
+
+        if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
+            return;
+
+        switch(i)
+        {
+            case 4:
+                DoScriptText(SAY_AMBUSH1, m_creature, pUnit);
+                DoSpawnCreature(NPC_SLAVEBINDER, -10.0f, -5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_SLAVEBINDER, -8.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 5:
+                DoScriptText(SAY_PROGRESS, m_creature, pUnit);
+                SetRun();
+                break;
+            case 16:
+                DoScriptText(SAY_AMBUSH2, m_creature, pUnit);
+                DoSpawnCreature(NPC_SLAVEBINDER, -10.0f, -5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                DoSpawnCreature(NPC_SLAVEBINDER, -8.0f, 5.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 17:
+                DoScriptText(SAY_END, m_creature, pUnit);
+                break;
+            case 25:
+                ((Player*)pUnit)->GroupEventHappens(QUEST_ESCAPE_FROM, m_creature);
+                break;
+        }
+    }
+
+    void Reset() { }
+    void Aggro(Unit* who) { }
+
+    void JustDied(Unit* killer)
+    {
+        if (Unit* pUnit = Unit::GetUnit(*m_creature, PlayerGUID))
+        {
+            if (((Player*)pUnit)->GetQuestStatus(QUEST_ESCAPE_FROM) == QUEST_STATUS_INCOMPLETE)
+                ((Player*)pUnit)->FailQuest(QUEST_ESCAPE_FROM);
+        }
+    }
+
+    void UpdateAI(const uint32 diff)
+    {
+        //TODO: abilities
+
+        npc_escortAI::UpdateAI(diff);
+    }
+};
+
+bool QuestAccept_npc_kayra_longmane(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+{
+    if (pQuest->GetQuestId() == QUEST_ESCAPE_FROM)
+    {
+        DoScriptText(SAY_START, pCreature, pPlayer);
+        ((npc_escortAI*)(pCreature->AI()))->Start(false, true, false, pPlayer->GetGUID());
+    }
+    return true;
+}
+
+CreatureAI* GetAI_npc_kayra_longmane(Creature* pCreature)
+{
+    npc_kayra_longmaneAI* thisAI = new npc_kayra_longmaneAI(pCreature);
+
+    thisAI->FillPointMovementListForCreature();
+
+    return (CreatureAI*)thisAI;
+}
+
 /*######
 ## npc_mortog_steamhead
 ######*/
@@ -269,6 +362,12 @@ void AddSC_zangarmarsh()
     newscript->Name = "npc_elder_kuruti";
     newscript->pGossipHello =  &GossipHello_npc_elder_kuruti;
     newscript->pGossipSelect = &GossipSelect_npc_elder_kuruti;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_kayra_longmane";
+    newscript->GetAI = &GetAI_npc_kayra_longmane;
+    newscript->pQuestAccept = &QuestAccept_npc_kayra_longmane;
     newscript->RegisterSelf();
 
     newscript = new Script;

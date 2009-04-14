@@ -986,6 +986,7 @@ UPDATE creature_template SET ScriptName='npc_witch_doctor_mauari' WHERE entry=10
 UPDATE creature_template SET ScriptName='npcs_ashyen_and_keleth' WHERE entry IN (17900,17901);
 UPDATE creature_template SET ScriptName='npc_cooshcoosh' WHERE entry=18586;
 UPDATE creature_template SET ScriptName='npc_elder_kuruti' WHERE entry=18197;
+UPDATE creature_template SET ScriptName='npc_kayra_longmane' WHERE entry=17969;
 UPDATE creature_template SET ScriptName='npc_mortog_steamhead' WHERE entry=23373;
 
 /* ZUL'AMAN */
