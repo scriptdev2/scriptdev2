@@ -793,7 +793,6 @@ UPDATE creature_template SET ScriptName='npc_braug_dimspirit' WHERE entry=4489;
 UPDATE creature_template SET ScriptName='npc_archmage_malin' WHERE entry=2708;
 UPDATE creature_template SET ScriptName='npc_bartleby' WHERE entry=6090;
 UPDATE creature_template SET ScriptName='npc_dashel_stonefist' WHERE entry=4961;
-UPDATE creature_template SET ScriptName='npc_general_marcus_jonathan' WHERE entry=466;
 UPDATE creature_template SET ScriptName='npc_lady_katrana_prestor' WHERE entry=1749;
 
 /* STRANGLETHORN VALE */
