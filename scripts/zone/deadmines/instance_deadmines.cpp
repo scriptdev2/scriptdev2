@@ -119,7 +119,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        if (type = TYPE_DEFIAS_ENDDOOR)
+        if (type == TYPE_DEFIAS_ENDDOOR)
             return Encounter[0];
 
         return 0;
@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        if (data = DATA_DEFIAS_DOOR)
+        if (data == DATA_DEFIAS_DOOR)
             return ironCladGUID;
 
         return 0;
