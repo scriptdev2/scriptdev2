@@ -79,39 +79,41 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         if(m_creature->SelectHostilTarget() && m_creature->getVictim())
             DoMeleeAttackIfReady();
     }
+
+    void ReceiveEmote (Player *player, uint32 emote)
+    {
+        if (emote == TEXTEMOTE_CHICKEN)
+        {
+            if (player->GetTeam() == ALLIANCE)
+            {
+                if (rand()%30 == 1)
+                {
+                    if (player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE)
+                    {
+                        m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                        m_creature->setFaction(FACTION_FRIENDLY);
+                        DoScriptText(EMOTE_A_HELLO, m_creature);
+                    }
+                }
+            }
+            else
+                DoScriptText(EMOTE_H_HELLO,m_creature);
+        }
+        if (emote == TEXTEMOTE_CHEER && player->GetTeam() == ALLIANCE)
+        {
+            if (player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE)
+            {
+                m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                m_creature->setFaction(FACTION_FRIENDLY);
+                DoScriptText(EMOTE_CLUCK_TEXT2, m_creature);
+            }
+        }
+    }
 };
 
 CreatureAI* GetAI_npc_chicken_cluck(Creature *_Creature)
 {
     return new npc_chicken_cluckAI(_Creature);
-}
-
-bool ReceiveEmote_npc_chicken_cluck( Player *player, Creature *_Creature, uint32 emote )
-{
-    if( emote == TEXTEMOTE_CHICKEN )
-    {
-        if( player->GetTeam() == ALLIANCE )
-        {
-            if( rand()%30 == 1 )
-            {
-                if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_NONE )
-                {
-                    _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                    _Creature->setFaction(FACTION_FRIENDLY);
-                    DoScriptText(EMOTE_A_HELLO, _Creature);
-                }
-            }
-        } else DoScriptText(EMOTE_H_HELLO,_Creature);
-    }
-    if( emote == TEXTEMOTE_CHEER && player->GetTeam() == ALLIANCE )
-        if( player->GetQuestStatus(QUEST_CLUCK) == QUEST_STATUS_COMPLETE )
-    {
-        _Creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-        _Creature->setFaction(FACTION_FRIENDLY);
-        DoScriptText(EMOTE_CLUCK_TEXT2, _Creature);
-    }
-
-    return true;
 }
 
 bool QuestAccept_npc_chicken_cluck(Player *player, Creature *_Creature, const Quest *_Quest )
@@ -134,12 +136,23 @@ bool QuestComplete_npc_chicken_cluck(Player *player, Creature *_Creature, const 
 ## npc_dancing_flames
 ######*/
 
-bool ReceiveEmote_npc_dancing_flames( Player *player, Creature *_Creature, uint32 emote )
+struct MANGOS_DLL_DECL npc_dancing_flamesAI : public ScriptedAI
 {
-    if( emote == TEXTEMOTE_DANCE )
-        _Creature->CastSpell(player,47057,false);
+    npc_dancing_flamesAI(Creature *c) : ScriptedAI(c) {Reset();}
 
-    return true;
+    void Reset() {}
+    void Aggro(Unit*) {}
+
+    void ReceiveEmote( Player *player, uint32 emote )
+    {
+        if( emote == TEXTEMOTE_DANCE )
+            m_creature->CastSpell(player,47057,false);
+    }
+};
+
+CreatureAI* GetAI_npc_dancing_flames(Creature *_Creature)
+{
+    return new npc_dancing_flamesAI(_Creature);
 }
 
 /*######
@@ -1080,14 +1093,13 @@ void AddSC_npcs_special()
     newscript = new Script;
     newscript->Name = "npc_chicken_cluck";
     newscript->GetAI = &GetAI_npc_chicken_cluck;
-    newscript->pReceiveEmote =  &ReceiveEmote_npc_chicken_cluck;
     newscript->pQuestAccept =   &QuestAccept_npc_chicken_cluck;
     newscript->pQuestComplete = &QuestComplete_npc_chicken_cluck;
     newscript->RegisterSelf();
 
     newscript = new Script;
     newscript->Name = "npc_dancing_flames";
-    newscript->pReceiveEmote =  &ReceiveEmote_npc_dancing_flames;
+    newscript->GetAI = &GetAI_npc_dancing_flames;
     newscript->RegisterSelf();
 
     newscript = new Script;

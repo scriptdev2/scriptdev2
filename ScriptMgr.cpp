@@ -1694,15 +1694,6 @@ bool ItemUse( Player *player, Item* _Item, SpellCastTargets const& targets)
 }
 
 MANGOS_DLL_EXPORT
-bool ReceiveEmote( Player *player, Creature *_Creature, uint32 emote )
-{
-    Script *tmpscript = m_scripts[_Creature->GetScriptId()];
-    if (!tmpscript || !tmpscript->pReceiveEmote) return false;
-
-    return tmpscript->pReceiveEmote(player, _Creature, emote);
-}
-
-MANGOS_DLL_EXPORT
 bool EffectDummyCreature(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
 {
     Script *tmpscript = m_scripts[pCreatureTarget->GetScriptId()];
