@@ -236,6 +236,8 @@ extern void AddSC_instance_deadmines();
 
 //Deadwind pass
 //Desolace
+extern void AddSC_desolace();
+
 //Dire Maul
 
 extern void AddSC_dragonblight();
@@ -1076,6 +1078,8 @@ void ScriptsInit()
 
     //Deadwind pass
     //Desolace
+    AddSC_desolace();
+
     //Dire Maul
 
     AddSC_dragonblight();

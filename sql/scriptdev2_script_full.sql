@@ -334,7 +334,11 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1000344, 'Looks like we won\'t get away so easy. Get ready!',0,0,0,0,'kayra SAY_AMBUSH1'),
 (-1000345, 'Let\'s keep moving. We\'re not safe here!',0,0,0,0,'kayra SAY_PROGRESS'),
 (-1000346, 'Look out, $N! Enemies ahead!',0,0,0,0,'kayra SAY_AMBUSH2'),
-(-1000347, 'We\'re almost to the refuge! Let\'s go.',0,0,0,0,'kayra SAY_END');
+(-1000347, 'We\'re almost to the refuge! Let\'s go.',0,0,0,0,'kayra SAY_END'),
+
+(-1000348, 'Ah...the wondrous sound of kodos. I love the way they make the ground shake... inspect the beast for me.',0,0,0,0,'kodo round SAY_SMEED_HOME_1'),
+(-1000349, 'Hey, look out with that kodo! You had better inspect that beast before i give you credit!',0,0,0,0,'kodo round SAY_SMEED_HOME_2'),
+(-1000350, 'That kodo sure is a beauty. Wait a minute, where are my bifocals? Perhaps you should inspect the beast for me.',0,0,0,0,'kodo round SAY_SMEED_HOME_3');
 
 -- -1 033 000 SHADOWFANG KEEP
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES

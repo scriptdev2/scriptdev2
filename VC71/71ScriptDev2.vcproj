@@ -279,6 +279,9 @@
 				</Filter>
 				<Filter
 					Name="Desolace">
+					<File
+						RelativePath="..\scripts\zone\desolace\desolace.cpp">
+					</File>
 				</Filter>
 				<Filter
 					Name="Dire Maul">
