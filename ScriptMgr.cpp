@@ -3,7 +3,7 @@
  * Please see the included DOCS/LICENSE.TXT for more information */
 
 #include "precompiled.h"
-#include "../../shared/Config/Config.h"
+#include "Config/Config.h"
 #include "config.h"
 #include "Database/DatabaseEnv.h"
 #include "DBCStores.h"

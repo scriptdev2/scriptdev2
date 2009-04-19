@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2005-2008 MaNGOS <http://www.mangosproject.org/>
+/*
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #ifndef SC_CONFIG_H
 #define SC_CONFIG_H
 
-#include "../../framework/Platform/CompilerDefs.h"
+#include "Platform/CompilerDefs.h"
 #include "revision.h"
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
