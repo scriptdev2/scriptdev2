@@ -28,5 +28,6 @@ pkgdatadir = $(datadir)/scriptdev2/sql
 pkgdata_DATA = \
 	mangos_scriptname_full.sql \
 	scriptdev2_create_database.sql \
-	scriptdev2_create_structure.sql \
+	scriptdev2_create_structure_mysql.sql \
+	scriptdev2_create_structure_pgsql.sql \
 	scriptdev2_script_full.sql
