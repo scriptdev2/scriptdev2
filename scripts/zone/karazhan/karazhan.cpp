@@ -148,11 +148,11 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
             Event = pInstance->GetData(DATA_OPERA_PERFORMANCE);
 
-            if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                Door->SetGoState(1);
+            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+                pDoor->SetGoState(1);
 
-            if (GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
-                Curtain->SetGoState(1);
+            if (GameObject* pCurtain = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
+                pCurtain->SetGoState(1);
         }
     }
 
@@ -181,8 +181,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
             case 5:
                 if (pInstance)
                 {
-                    if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                        Door->SetGoState(1);
+                    if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+                        pDoor->SetGoState(1);
                 }
                 IsBeingEscorted = false;
                 PerformanceReady = true;
@@ -262,8 +262,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
                     if (!pInstance)
                         return;
 
-                if (GameObject* Curtain = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
-                    Curtain->SetGoState(0);
+                    if (GameObject* pCurtain = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_CURTAINS)))
+                        pCurtain->SetGoState(0);
 
                     CurtainTimer = 0;
                 }else CurtainTimer -= diff;
@@ -315,8 +315,8 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
 
         pInstance->SetData(DATA_OPERA_EVENT, IN_PROGRESS);
 
-        if (GameObject* Door = GameObject::GetGameObject((*m_creature), pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-            Door->SetGoState(0);
+        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
+            pDoor->SetGoState(0);
 
         m_creature->CastSpell(m_creature, SPELL_TUXEDO, true);
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);

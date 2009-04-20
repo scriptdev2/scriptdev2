@@ -124,8 +124,8 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
 
         if( goConsole )
         {
-            if( GameObject* go = GameObject::GetGameObject((*m_creature),goConsole) )
-                go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+            if (GameObject* pGo = m_creature->GetMap()->GetGameObject(goConsole))
+                pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
         }
     }
 
@@ -260,10 +260,10 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
                     DoScriptText(EMOTE_COMPLETE, m_creature, playertarget);
                     ((Player*)playertarget)->KilledMonster(m_creature->GetEntry(),m_creature->GetGUID());
                     DoCast(m_creature,SPELL_DISABLE_VISUAL);
-                    if( goConsole )
+                    if (goConsole)
                     {
-                        if( GameObject* go = GameObject::GetGameObject((*m_creature),goConsole) )
-                            go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
+                        if (GameObject* pGo = m_creature->GetMap()->GetGameObject(goConsole))
+                            pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_IN_USE);
                     }
                     ++Phase;
                     break;

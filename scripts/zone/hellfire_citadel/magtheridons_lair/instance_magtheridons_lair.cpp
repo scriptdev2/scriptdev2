@@ -174,8 +174,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                     RespawnTimer = 10000;
                 if (data != IN_PROGRESS)
                 {
-                     if (GameObject *Door = GameObject::GetGameObject(*player, DoorGUID))
-                        Door->SetGoState(0);
+                    if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                        pDoor->SetGoState(0);
                 }
                 break;
             case TYPE_CHANNELER_EVENT:
@@ -202,8 +202,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
 
                             CageTimer = 0;
 
-                            if (GameObject *Door = GameObject::GetGameObject(*player, DoorGUID))
-                                Door->SetGoState(0);
+                            if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                                pDoor->SetGoState(0);
                         }
                         break;
                     case IN_PROGRESS:                       // Event start.
@@ -226,8 +226,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                             if (Magtheridon && Magtheridon->isAlive())
                                 CageTimer = 120000;
 
-                            if (GameObject *Door = GameObject::GetGameObject(*player, DoorGUID))
-                                Door->SetGoState(1);
+                            if (GameObject* pDoor = instance->GetGameObject(DoorGUID))
+                                pDoor->SetGoState(1);
                         }
                         break;
                     case DONE:                              // Add buff and check if all channelers are dead.
@@ -250,8 +250,8 @@ struct MANGOS_DLL_DECL instance_magtheridons_lair : public ScriptedInstance
                 // IN_PROGRESS - collapse / NOT_STARTED - reset
                 for(std::set<uint64>::iterator i = ColumnGUID.begin(); i != ColumnGUID.end(); ++i)
                 {
-                    if (GameObject *Column = GameObject::GetGameObject(*player, *i))
-                        Column->SetGoState(!data);
+                    if (GameObject* pColumn = instance->GetGameObject(*i))
+                        pColumn->SetGoState(!data);
                 }
                 break;
         }

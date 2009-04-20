@@ -114,10 +114,12 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
 
     void ToggleGate(bool close)
     {
-        if (GameObject* Gate = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
+        if (GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
         {
-            if (close) Gate->SetGoState(1);                 // Closed
-            else       Gate->SetGoState(0);                 // Opened
+            if (close)
+                pGate->SetGoState(1);                       // Closed
+            else
+                pGate->SetGoState(0);                       // Opened
         }
     }
 

@@ -212,19 +212,23 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
 
     void ToggleMainDoors(bool close)
     {
-        if (GameObject* Doors = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
+        if (GameObject* pDoors = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
         {
-            if (close) Doors->SetGoState(1);                // Closed
-            else       Doors->SetGoState(0);                // Open
+            if (close)
+                pDoors->SetGoState(1);                      // Closed
+            else
+                pDoors->SetGoState(0);                      // Open
         }
     }
 
     void ToggleGate(bool close)
     {
-        if (GameObject* Doors = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
+        if (GameObject* pDoors = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
         {
-            if (close) Doors->SetGoState(1);                // Closed
-            else       Doors->SetGoState(0);                // Open
+            if (close)
+                pDoors->SetGoState(1);                      // Closed
+            else
+                pDoors->SetGoState(0);                      // Open
         }
     }
 

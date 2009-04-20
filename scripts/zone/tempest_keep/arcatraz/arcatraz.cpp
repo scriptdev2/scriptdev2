@@ -317,8 +317,8 @@ struct MANGOS_DLL_DECL npc_warden_mellicharAI : public ScriptedAI
         {
             pInstance->SetData(TYPE_HARBINGERSKYRISS,IN_PROGRESS);
 
-            if (GameObject* Sphere = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_SPHERE_SHIELD)))
-                Sphere->SetGoState(1);
+            if (GameObject* pSphere = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                pSphere->SetGoState(1);
 
             IsRunning = true;
         }

@@ -143,8 +143,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
                                                             // Not in progress
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, NOT_STARTED);
 
-            if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
-                Door->SetGoState(0);
+            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                pDoor->SetGoState(0);
         }
     }
 
@@ -164,8 +164,9 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
         if (pInstance)
         {
             pInstance->SetData(DATA_SHADEOFARAN_EVENT, DONE);
-            if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
-                Door->SetGoState(0);
+
+            if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                pDoor->SetGoState(0);
         }
     }
 
@@ -228,8 +229,8 @@ struct MANGOS_DLL_DECL boss_aranAI : public ScriptedAI
             {
                 if (pInstance)
                 {
-                    if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
-                        Door->SetGoState(1);
+                    if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_LIBRARY_DOOR)))
+                        pDoor->SetGoState(1);
 
                     CloseDoorTimer = 0;
                 }

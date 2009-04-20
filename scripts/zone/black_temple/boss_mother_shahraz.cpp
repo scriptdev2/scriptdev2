@@ -129,10 +129,10 @@ struct MANGOS_DLL_DECL boss_shahrazAI : public ScriptedAI
 
     void OpenDoors()
     {
-        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_POST_SHAHRAZ_DOOR)))
-            Door->SetGoState(0);
-        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_COUNCIL_DOOR)))
-            Door->SetGoState(0);
+        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_POST_SHAHRAZ_DOOR)))
+            pDoor->SetGoState(0);
+        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_COUNCIL_DOOR)))
+            pDoor->SetGoState(0);
     }
 
     void Aggro(Unit *who)

@@ -127,26 +127,18 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
-
-        if (!player)
-        {
-            debug_log("SD2: Instance Steamvault: SetData (Type: %u Data %u) cannot find any player.", type, data);
-            return;
-        }
-
         switch(type)
         {
             case TYPE_HYDROMANCER_THESPIA:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelHydro))
-                        _go->SetGoState(0);
+                    if (GameObject* pGo = instance->GetGameObject(AccessPanelHydro))
+                        pGo->SetGoState(0);
 
                     if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
                     {
-                        if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
-                            _go->SetGoState(0);
+                        if (GameObject* pGo = instance->GetGameObject(MainChambersDoor))
+                            pGo->SetGoState(0);
                     }
 
                     debug_log("SD2: Instance Steamvault: Access panel used.");
@@ -156,13 +148,13 @@ struct MANGOS_DLL_DECL instance_steam_vault : public ScriptedInstance
             case TYPE_MEKGINEER_STEAMRIGGER:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelMek))
-                        _go->SetGoState(0);
+                    if (GameObject* pGo = instance->GetGameObject(AccessPanelMek))
+                        pGo->SetGoState(0);
 
                     if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
                     {
-                        if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
-                            _go->SetGoState(0);
+                        if (GameObject* pGo = instance->GetGameObject(MainChambersDoor))
+                            pGo->SetGoState(0);
                     }
 
                     debug_log("SD2: Instance Steamvault: Access panel used.");

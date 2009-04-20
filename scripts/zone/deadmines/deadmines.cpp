@@ -31,8 +31,8 @@ bool GOHello_go_door_lever_dm(Player *player, GameObject* _GO)
     if (!pInstance)
         return false;
 
-    GameObject *go = GameObject::GetGameObject(*player,pInstance->GetData64(DATA_DEFIAS_DOOR));
-    if (go && go->GetGoState() == 1)
+    GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_DEFIAS_DOOR));
+    if (pGo && pGo->GetGoState() == 1)
         return false;
 
     return true;

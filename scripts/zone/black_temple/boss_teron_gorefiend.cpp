@@ -249,8 +249,8 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
 
     void OpenMotherDoor()
     {
-        if (GameObject* Door = GameObject::GetGameObject(*m_creature, pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            Door->SetGoState(0);
+        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
+            pDoor->SetGoState(0);
     }
 
     void Aggro(Unit *who) {}

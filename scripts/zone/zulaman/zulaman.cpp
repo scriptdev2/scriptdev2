@@ -130,14 +130,14 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
         {
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
-                if (GameObject* pEntranceDoor = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_GO_GONG)))
+                if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_GONG)))
                     pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 IsOnHold = true;
                 break;
             case 3:
                 DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
 
-                if (GameObject* pEntranceDoor = GameObject::GetGameObject(*m_creature,pInstance->GetData64(DATA_GO_ENTRANCE)))
+                if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_ENTRANCE)))
                     pEntranceDoor->SetGoState(0);
 
                 pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);

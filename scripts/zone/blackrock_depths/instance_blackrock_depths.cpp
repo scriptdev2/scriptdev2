@@ -158,14 +158,6 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
-
-        if (!player)
-        {
-            debug_log("SD2: Instance Blackrock Depths: SetData (Type: %u Data %u) cannot find any player.", type, data);
-            return;
-        }
-
         debug_log("SD2: Instance Blackrock Depths: SetData update (Type: %u Data %u)", type, data);
 
         switch(type)

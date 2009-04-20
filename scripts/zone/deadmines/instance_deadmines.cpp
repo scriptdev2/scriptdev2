@@ -95,21 +95,13 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
-
-        if (!player)
-        {
-            debug_log("SD2: Instance Deadmines: SetData (Type: %u Data %u) cannot find any player.", type, data);
-            return;
-        }
-
         if (type == TYPE_DEFIAS_ENDDOOR)
         {
             if (data == IN_PROGRESS)
             {
-                if (GameObject *go = GameObject::GetGameObject(*player,ironCladGUID))
+                if (GameObject* pGo = instance->GetGameObject(ironCladGUID))
                 {
-                    go->SetGoState(2);
+                    pGo->SetGoState(2);
                     IronDoor_Timer = 3000;
                 }
             }
