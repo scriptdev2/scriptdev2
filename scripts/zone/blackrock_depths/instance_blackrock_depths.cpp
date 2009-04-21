@@ -106,23 +106,6 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
             Encounter[i] = NOT_STARTED;
     }
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* plr = itr->getSource())
-                    return plr;
-            }
-        }
-
-        debug_log("SD2: Instance Blackrock Depths: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         switch(creature->GetEntry())

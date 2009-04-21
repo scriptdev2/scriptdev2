@@ -92,33 +92,8 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* plr = itr->getSource())
-                    return plr;
-            }
-        }
-
-        debug_log("SD2: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
     void HandleGameObject(uint64 guid, uint32 state)
     {
-        Player *player = GetPlayerInMap();
-
-        if (!player || !guid)
-        {
-            debug_log("SD2: Shadow Labyrinth: HandleGameObject fail");
-            return;
-        }
-
         if (GameObject* pGo = instance->GetGameObject(guid))
             pGo->SetGoState(state);
     }

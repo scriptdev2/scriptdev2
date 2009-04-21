@@ -298,23 +298,6 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
         return 0;
     }
 
-    Player* GetFirstPlayerInInstance()
-    {
-        Map::PlayerList const& pPlayers = instance->GetPlayers();
-
-        if (!pPlayers.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = pPlayers.begin(); itr != pPlayers.end(); ++itr)
-            {
-                if (Player* pPlr = itr->getSource())
-                    return pPlr;
-            }
-        }
-
-        debug_log("SD2: Instance Zulaman: GetFirstPlayerInInstance, but PlayerList is empty.");
-        return NULL;
-    }
-
     void Update(uint32 uiDiff)
     {
         if (GetData(TYPE_EVENT_RUN) == IN_PROGRESS)

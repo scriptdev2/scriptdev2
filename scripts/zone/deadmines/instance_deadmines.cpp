@@ -61,23 +61,6 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         Door_Step = 0;
     }
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* plr = itr->getSource())
-                    return plr;
-            }
-        }
-
-        debug_log("SD2: Instance Deadmines: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         if (creature->GetEntry() == C_MR_SMITE)
@@ -131,39 +114,33 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
         {
             if (IronDoor_Timer <= diff)
             {
-                Player *player = GetPlayerInMap();
-                if (!player)
-                    return;
-
-                Unit *Smite = Unit::GetUnit(*player,smiteGUID);
-                if (!Smite)
-                    return;
-
-                Creature *pi1 = NULL;
-                Creature *pi2 = NULL;
-
-                switch(Door_Step)
+                if (Creature* pMrSmite = instance->GetCreature(smiteGUID))
                 {
-                    case 0:
-                        DoScriptText(INST_SAY_ALARM1,Smite);
-                        IronDoor_Timer = 2000;
-                        ++Door_Step;
-                        break;
-                    case 1:
-                        pi1 = Smite->SummonCreature(C_PIRATE, 93.68,-678.63,7.71,2.09, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
-                        if (pi1) pi1->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
-                        pi2 = Smite->SummonCreature(C_PIRATE,102.63,-685.07,7.42,1.28, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
-                        if (pi2) pi2->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
-                        ++Door_Step;
-                        IronDoor_Timer = 10000;
-                        break;
-                    case 2:
-                        DoScriptText(INST_SAY_ALARM2,Smite);
-                        Door_Step = 0;
-                        IronDoor_Timer = 0;
-                        debug_log("SD2: Instance Deadmines: Iron door event reached end.");
-                        break;
+                    switch(Door_Step)
+                    {
+                        case 0:
+                            DoScriptText(INST_SAY_ALARM1,pMrSmite);
+                            IronDoor_Timer = 2000;
+                            ++Door_Step;
+                            break;
+                        case 1:
+                            if (Creature* pi1 = pMrSmite->SummonCreature(C_PIRATE, 93.68,-678.63,7.71,2.09, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
+                                pi1->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
+                            if (Creature* pi2 = pMrSmite->SummonCreature(C_PIRATE,102.63,-685.07,7.42,1.28, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
+                                pi2->GetMotionMaster()->MovePoint(0,100.11,-670.65,7.42);
+                            ++Door_Step;
+                            IronDoor_Timer = 10000;
+                            break;
+                        case 2:
+                            DoScriptText(INST_SAY_ALARM2,pMrSmite);
+                            Door_Step = 0;
+                            IronDoor_Timer = 0;
+                            debug_log("SD2: Instance Deadmines: Iron door event reached end.");
+                            break;
+                    }
                 }
+                else
+                    IronDoor_Timer = 0;
             }else IronDoor_Timer -= diff;
         }
     }
