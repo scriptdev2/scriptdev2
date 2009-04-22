@@ -463,7 +463,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
-        m_creature->CombatStop();
+        m_creature->CombatStop(true);
     }
 
     void KillAllElites()
@@ -660,7 +660,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                                 IsTalking = true;
                                 TalkTimer = 2000;
                                 m_creature->RemoveAllAuras();
-                                m_creature->CombatStop();
+                                m_creature->CombatStop(true);
                                 m_creature->AttackStop();
                                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                                 TalkCount = 3;
@@ -1448,7 +1448,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             Creature* Maiev = ((Creature*)Unit::GetUnit((*m_creature), MaievGUID));
             if (Maiev)
             {
-                Maiev->CombatStop();                        // Maiev shouldn't do anything either. No point in her attacking us =]
+                Maiev->CombatStop(true);                    // Maiev shouldn't do anything either. No point in her attacking us =]
                 Maiev->GetMotionMaster()->Clear(false);     // Stop her from moving as well
                 Maiev->GetMotionMaster()->MoveIdle();
                 float distance = 10.0f;

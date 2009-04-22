@@ -157,7 +157,7 @@ struct MANGOS_DLL_DECL npc_draenei_survivorAI : public ScriptedAI
                 m_creature->GetMotionMaster()->MoveIdle();
                 m_creature->setDeathState(JUST_DIED);
                 m_creature->SetHealth(0);
-                m_creature->CombatStop();
+                m_creature->CombatStop(true);
                 m_creature->DeleteThreatList();
                 m_creature->RemoveCorpse();
             }else RunAwayTimer -= diff;
@@ -453,7 +453,7 @@ struct MANGOS_DLL_DECL npc_nestlewood_owlkinAI : public ScriptedAI
                 m_creature->SetVisibility(VISIBILITY_OFF);
                 m_creature->setDeathState(JUST_DIED);
                 m_creature->SetHealth(0);
-                m_creature->CombatStop();
+                m_creature->CombatStop(true);
                 m_creature->DeleteThreatList();
                 m_creature->RemoveCorpse();
             }else DespawnTimer -= diff;

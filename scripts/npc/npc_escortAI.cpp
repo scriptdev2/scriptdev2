@@ -98,7 +98,7 @@ void npc_escortAI::EnterEvadeMode()
 
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
-    m_creature->CombatStop();
+    m_creature->CombatStop(true);
     m_creature->SetLootRecipient(NULL);
 
     if (IsBeingEscorted)
@@ -163,7 +163,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
 
                 m_creature->setDeathState(JUST_DIED);
                 m_creature->SetHealth(0);
-                m_creature->CombatStop();
+                m_creature->CombatStop(true);
                 m_creature->DeleteThreatList();
                 m_creature->Respawn();
                 m_creature->GetMotionMaster()->Clear(true);
@@ -201,7 +201,7 @@ void npc_escortAI::UpdateAI(const uint32 diff)
 
                 m_creature->setDeathState(JUST_DIED);
                 m_creature->SetHealth(0);
-                m_creature->CombatStop();
+                m_creature->CombatStop(true);
                 m_creature->DeleteThreatList();
                 m_creature->Respawn();
                 m_creature->GetMotionMaster()->Clear(true);

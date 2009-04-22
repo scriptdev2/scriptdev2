@@ -116,7 +116,7 @@ struct MANGOS_DLL_DECL mob_lumpAI : public ScriptedAI
                 m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 m_creature->RemoveAllAuras();
                 m_creature->DeleteThreatList();
-                m_creature->CombatStop();
+                m_creature->CombatStop(true);
                 m_creature->setFaction(1080);               //friendly
                 m_creature->SetStandState(UNIT_STAND_STATE_SIT);
                 DoScriptText(SAY_LUMP_DEFEAT, m_creature, done_by);

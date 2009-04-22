@@ -123,10 +123,9 @@ void hyjalAI::Reset()
 
 void hyjalAI::EnterEvadeMode()
 {
-    m_creature->InterruptNonMeleeSpells(true);
     m_creature->RemoveAllAuras();
     m_creature->DeleteThreatList();
-    m_creature->CombatStop();
+    m_creature->CombatStop(true);
     m_creature->LoadCreaturesAddon();
 
     if (m_creature->isAlive())
