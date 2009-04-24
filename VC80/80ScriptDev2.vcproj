@@ -2485,6 +2485,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\sc_instance.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\include\sc_instance.h"
 				>
 			</File>
