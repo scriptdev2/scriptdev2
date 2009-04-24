@@ -52,17 +52,16 @@ void ScriptedAI::AttackStart(Unit* who)
     if (!who)
         return;
 
+    bool bInCombat = m_creature->isInCombat();
+
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        if (!InCombat)
-        {
-            InCombat = true;
+        if (!bInCombat)
             Aggro(who);
-        }
 
         DoStartMovement(who);
     }
@@ -97,13 +96,11 @@ void ScriptedAI::EnterEvadeMode()
 
     m_creature->SetLootRecipient(NULL);
 
-    InCombat = false;
     Reset();
 }
 
 void ScriptedAI::JustRespawned()
 {
-    InCombat = false;
     Reset();
 }
 
@@ -638,17 +635,16 @@ void Scripted_NoMovementAI::AttackStart(Unit* who)
     if (!who)
         return;
 
+    bool bInCombat = m_creature->isInCombat();
+
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        if (!InCombat)
-        {
-            InCombat = true;
+        if (!bInCombat)
             Aggro(who);
-        }
 
         DoStartNoMovement(who);
     }

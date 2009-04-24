@@ -484,8 +484,6 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
     uint32 Fear_Timer;
     uint32 Infernal_Timer;
 
-    uint32 ChannelCheck_Timer;
-
     bool InfernalSpawned;
 
     void Reset()
@@ -494,8 +492,6 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         DarkMending_Timer = 10000;
         Fear_Timer = 15000 + rand()%5000;
         Infernal_Timer = 10000 + rand()%40000;
-
-        ChannelCheck_Timer = 5000;
 
         InfernalSpawned = false;
 
@@ -540,22 +536,13 @@ struct MANGOS_DLL_DECL mob_hellfire_channelerAI : public ScriptedAI
         killer->CastSpell(killer,SPELL_SOUL_TRANSFER,false);
     }
 
+    void JustReachedHome()
+    {
+        DoCast(m_creature, SPELL_SHADOW_GRASP_C);
+    }
+
     void UpdateAI(const uint32 diff)
     {
-        if (!InCombat)
-        {
-            if (ChannelCheck_Timer < diff)
-            {
-                ChannelCheck_Timer = 5000;
-
-                //if we already casting, then do nothing
-                if (m_creature->IsNonMeleeSpellCasted(true))
-                    return;
-
-                DoCast(m_creature, SPELL_SHADOW_GRASP_C);
-            }else ChannelCheck_Timer -= diff;
-        }
-
         //Return since we have no target
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
             return;

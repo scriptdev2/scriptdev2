@@ -459,8 +459,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     // Do not call reset in Akama's evade mode, as this will stop him from summoning minions after he kills the first bit
     void EnterEvadeMode()
     {
-        InCombat = false;
-
         m_creature->RemoveAllAuras();
         m_creature->DeleteThreatList();
         m_creature->CombatStop(true);
@@ -480,7 +478,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     void ReturnToIllidan()
     {
         KillAllElites();
-        InCombat = false;
         FightMinions = false;
         IsReturningToIllidan = true;
         WayPoint = WayPointList.begin();
@@ -640,7 +637,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                 if (Illidan->IsInEvadeMode() && !m_creature->IsInEvadeMode())
                     EnterEvadeMode();
 
-                if (((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 85) && InCombat && !FightMinions)
+                if (((Illidan->GetHealth()*100 / Illidan->GetMaxHealth()) < 85) && m_creature->isInCombat() && !FightMinions)
                 {
                     if (TalkTimer < diff)
                     {
@@ -1023,17 +1020,16 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         if (who == m_creature)
             return;
 
+        bool bInCombat = m_creature->isInCombat();
+
         if (m_creature->Attack(who, true))
         {
             m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
 
-            if (!InCombat)
-            {
-                InCombat = true;
+            if (!bInCombat)
                 Aggro(who);
-            }
 
             DoStartMovement(who);
         }

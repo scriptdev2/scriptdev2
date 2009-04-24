@@ -597,7 +597,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
         if (Spell->Id == SPELL_LESSER_HEAL_R2 || Spell->Id == SPELL_FORTITUDE_R1)
         {
             //not while in combat
-            if (InCombat)
+            if (m_creature->isInCombat())
                 return;
 
             //nothing to be done now
@@ -708,7 +708,7 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (bCanRun && !InCombat)
+        if (bCanRun && !m_creature->isInCombat())
         {
             if (RunAwayTimer <= diff)
             {

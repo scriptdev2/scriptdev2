@@ -193,7 +193,7 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
             case 4: DoScriptText(SAY_COUNT_2, m_creature, pUnit); return 3000;
             case 5: DoScriptText(SAY_ATTACK, m_creature, pUnit); return 3000;
             case 6:
-                if (!InCombat && pUnit->isAlive())
+                if (!m_creature->isInCombat() && pUnit->isAlive())
                     AttackStart(pUnit);
 
                 SetRuffies(m_uiCreepjackGUID,true,false);

@@ -143,18 +143,16 @@ struct MANGOS_DLL_DECL boss_twinemperorsAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoZoneInCombat();
-        InCombat = true;
+
         Creature *pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
         {
             // TODO: we should activate the other boss location so he can start attackning even if nobody
             // is near I dont know how to do that
-            ScriptedAI *otherAI = (ScriptedAI*)pOtherBoss->AI();
-            if (!otherAI->InCombat)
+            if (!pOtherBoss->isInCombat())
             {
                 DoPlaySoundToSet(m_creature, IAmVeklor() ? SOUND_VL_AGGRO : SOUND_VN_AGGRO);
-                otherAI->AttackStart(who);
-                otherAI->DoZoneInCombat();
+                pOtherBoss->AI()->AttackStart(who);
             }
         }
     }
@@ -654,20 +652,19 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
         if (!who)
             return;
 
-        if (who->isTargetableForAttack())
-        {
-            // VL doesn't melee
-            if ( m_creature->Attack(who, false) )
-            {
-                m_creature->GetMotionMaster()->MoveChase(who, VEKLOR_DIST, 0);
-                m_creature->AddThreat(who, 0.0f);
-            }
+        bool bInCombat = m_creature->isInCombat();
 
-            if (!InCombat)
-            {
-                InCombat = true;
+        // VL doesn't melee
+        if (m_creature->Attack(who, false))
+        {
+            m_creature->AddThreat(who, 0.0f);
+            m_creature->SetInCombatWith(who);
+            who->SetInCombatWith(m_creature);
+
+            if (!bInCombat)
                 Aggro(who);
-            }
+
+            m_creature->GetMotionMaster()->MoveChase(who, VEKLOR_DIST, 0);
         }
     }
 };

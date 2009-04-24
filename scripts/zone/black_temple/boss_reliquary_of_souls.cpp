@@ -208,19 +208,18 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!InCombat)
+                if (!m_creature->getVictim())
                 {
                     if (pInstance)
                         pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
 
                     Phase = 1;
-                                                            // I R ANNNGRRRY!
+
+                    // I R ANNNGRRRY!
                     m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,375);
                     SummonEssenceTimer = 8000;
                     AnimationTimer = 5100;
                     m_creature->AddThreat(who, 1.0f);
-
-                    InCombat = true;
                 }
             }
         }
@@ -285,8 +284,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
             pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
             OpenMotherDoor();
         }
-
-        InCombat = false;
     }
 
     void UpdateAI(const uint32 diff)
@@ -779,7 +776,7 @@ struct MANGOS_DLL_DECL boss_essence_of_desireAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if (!InCombat)
+                if (!m_creature->isInCombat())
                 {
                     DoCast(who, AURA_OF_DESIRE);
                 }
@@ -870,7 +867,7 @@ struct MANGOS_DLL_DECL boss_essence_of_angerAI : public ScriptedAI
             float attackRadius = m_creature->GetAttackDistance(who);
             if (m_creature->IsWithinDistInMap(who, attackRadius) && m_creature->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && m_creature->IsWithinLOSInMap(who))
             {
-                if (!InCombat)
+                if (!m_creature->isInCombat())
                 {
                     DoCast(who, AURA_OF_ANGER);
                 }

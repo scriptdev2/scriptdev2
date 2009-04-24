@@ -123,7 +123,7 @@ struct MANGOS_DLL_DECL example_escortAI : public npc_escortAI
             npc_escortAI::UpdateAI(diff);
 
             //Combat check
-            if (InCombat && m_creature->getVictim())
+            if (m_creature->isInCombat() && m_creature->getVictim())
             {
                 if (DeathCoilTimer < diff)
                 {

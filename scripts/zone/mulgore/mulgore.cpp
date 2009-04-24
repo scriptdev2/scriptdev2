@@ -68,7 +68,7 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
 
     void SpellHit(Unit* pCaster, SpellEntry const* pSpell)
     {
-        if (!InCombat && !bEvent && pSpell->Id == SPELL_LUNCH)
+        if (!m_creature->isInCombat() && !bEvent && pSpell->Id == SPELL_LUNCH)
         {
             if (pCaster->GetTypeId() == TYPEID_PLAYER)
                 uiPlayerGUID = pCaster->GetGUID();

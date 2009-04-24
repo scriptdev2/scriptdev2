@@ -59,7 +59,7 @@ struct PointMovement
 
 struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), InCombat(false), bCombatMovement(true) {}
+    explicit ScriptedAI(Creature* pCreature) : CreatureAI(pCreature), bCombatMovement(true) {}
     ~ScriptedAI() {}
 
     //*************
@@ -114,9 +114,6 @@ struct MANGOS_DLL_DECL ScriptedAI : public CreatureAI
     //*************
     // Variables
     //*************
-
-    //Bool for if we are in combat or not
-    bool InCombat;
 
     //*************
     //Pure virtual functions

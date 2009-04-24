@@ -99,17 +99,16 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
 
     void AttackStart(Unit* who)
     {
+        bool bInCombat = m_creature->isInCombat();
+
         if (m_creature->Attack(who, true))
         {
             m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
 
-            if (!InCombat)
-            {
-                InCombat = true;
+            if (!bInCombat)
                 Aggro(who);
-            }
 
             //TODO: Make it so he moves when target out of range
             DoStartNoMovement(who);

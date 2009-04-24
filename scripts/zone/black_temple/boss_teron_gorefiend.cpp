@@ -270,7 +270,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                 AttackStart(who);
             }
 
-            if (!InCombat && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
+            if (!m_creature->isInCombat() && !Intro && m_creature->IsWithinDistInMap(who, 200.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
                 if (pInstance)
                     pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
@@ -452,7 +452,7 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
                     DoomBlossom->setFaction(m_creature->getFaction());
                     DoomBlossom->AddThreat(target, 1.0f);
                     ((mob_doom_blossomAI*)DoomBlossom->AI())->SetTeronGUID(m_creature->GetGUID());
-                    ((mob_doom_blossomAI*)DoomBlossom->AI())->InCombat = true;
+
                     SetThreatList(DoomBlossom);
                     SummonDoomBlossomTimer = 35000;
                 }

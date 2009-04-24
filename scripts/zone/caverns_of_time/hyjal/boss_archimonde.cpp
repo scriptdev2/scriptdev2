@@ -427,7 +427,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!InCombat)
+        if (!m_creature->isInCombat())
         {
             if (pInstance)
             {

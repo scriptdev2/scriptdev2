@@ -240,7 +240,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //to prevent abuses during phase 2
-        if (Phase == 2 && !m_creature->getVictim() && InCombat)
+        if (Phase == 2 && !m_creature->getVictim() && m_creature->isInCombat())
             EnterEvadeMode();
 
         //Return since we have no target
@@ -504,7 +504,7 @@ struct MANGOS_DLL_DECL mob_enchanted_elementalAI : public ScriptedAI
                         //increase lady vashj damage
                         DoCast(Vashj, SPELL_SURGE);
                     }
-                    else if(((boss_lady_vashjAI*)((Creature*)Vashj)->AI())->InCombat == false)
+                    else if (!Vashj->isInCombat())
                     {
                         //call Unsummon()
                         m_creature->setDeathState(JUST_DIED);

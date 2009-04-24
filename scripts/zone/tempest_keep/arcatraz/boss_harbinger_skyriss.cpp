@@ -154,7 +154,7 @@ struct MANGOS_DLL_DECL boss_harbinger_skyrissAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!Intro && !InCombat)
+        if (!Intro && !m_creature->isInCombat())
         {
             if (!pInstance)
                 return;

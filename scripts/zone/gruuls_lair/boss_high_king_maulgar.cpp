@@ -161,7 +161,7 @@ struct MANGOS_DLL_DECL boss_high_king_maulgarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!m_creature->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
@@ -283,7 +283,7 @@ struct MANGOS_DLL_DECL boss_olm_the_summonerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!m_creature->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
@@ -374,7 +374,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if(!InCombat)
+                if(!m_creature->isInCombat())
                 {
                     AttackStart(who);
                     if (pInstance)
@@ -390,7 +390,7 @@ struct MANGOS_DLL_DECL boss_kiggler_the_crazedAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!m_creature->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
@@ -489,7 +489,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!InCombat)
+                if (!m_creature->isInCombat())
                 {
                     AttackStart(who);
                     if (pInstance)
@@ -505,7 +505,7 @@ struct MANGOS_DLL_DECL boss_blindeye_the_seerAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!m_creature->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
@@ -593,7 +593,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
             {
                 who->RemoveSpellsCausingAura(SPELL_AURA_MOD_STEALTH);
 
-                if (!InCombat)
+                if (!m_creature->isInCombat())
                 {
                     AttackStart(who);
                     if (pInstance)
@@ -609,7 +609,7 @@ struct MANGOS_DLL_DECL boss_krosh_firehandAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!InCombat && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!m_creature->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
         {
             Unit* target = Unit::GetUnit((*m_creature), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
 
