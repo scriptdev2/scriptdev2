@@ -30,6 +30,9 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
 {
     instance_blood_furnace(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
 
+    uint32 m_auiEncounter[ENCOUNTERS];
+    std::string str_data;
+
     uint64 m_uiMakerGUID;
     uint64 m_uiBroggokGUID;
     uint64 m_uiKelidanGUID;
@@ -49,8 +52,6 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
     uint64 m_uiPrisonCell6GUID;
     uint64 m_uiPrisonCell7GUID;
     uint64 m_uiPrisonCell8GUID;
-
-    uint32 m_auiEncounter[ENCOUNTERS];
 
     void Initialize()
     {
@@ -188,6 +189,19 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
                 error_log("SD2: Instance Blood Furnace SetData with Type %u Data %u, but this is not implemented.",uiType,uiData);
                 break;
         }
+
+        if (uiData == DONE)
+        {
+            OUT_SAVE_INST_DATA;
+
+            std::ostringstream saveStream;
+            saveStream << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2];
+
+            str_data = saveStream.str();
+
+            SaveToDB();
+            OUT_SAVE_INST_DATA_COMPLETE;
+        }
     }
 
     uint32 GetData(uint32 uiData)
@@ -200,6 +214,31 @@ struct MANGOS_DLL_DECL instance_blood_furnace : public ScriptedInstance
         }
 
         return 0;
+    }
+
+    const char* Save()
+    {
+        return str_data.c_str();
+    }
+
+    void Load(const char* in)
+    {
+        if (!in)
+        {
+            OUT_LOAD_INST_DATA_FAIL;
+            return;
+        }
+
+        OUT_LOAD_INST_DATA(in);
+
+        std::istringstream loadStream(in);
+        loadStream >> m_auiEncounter[0] >> m_auiEncounter[1] >> m_auiEncounter[2];
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            if (m_auiEncounter[i] == IN_PROGRESS || m_auiEncounter[i] == FAIL)
+                m_auiEncounter[i] = NOT_STARTED;
+
+        OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 
