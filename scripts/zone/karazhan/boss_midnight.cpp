@@ -112,7 +112,7 @@ struct MANGOS_DLL_DECL boss_midnightAI : public ScriptedAI
 
                     if (Unit *pAttumen = Unit::GetUnit(*m_creature, Attumen))
                     {
-                        pAttumen->SetUInt32Value(UNIT_FIELD_DISPLAYID, MOUNTED_DISPLAYID);
+                        pAttumen->SetDisplayId(MOUNTED_DISPLAYID);
                         pAttumen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
                         if (pAttumen->getVictim())
@@ -269,7 +269,7 @@ struct MANGOS_DLL_DECL boss_attumenAI : public ScriptedAI
             RandomYellTimer = 30000 + (rand()%31)*1000;
         } else RandomYellTimer -= diff;
 
-        if (m_creature->GetUInt32Value(UNIT_FIELD_DISPLAYID) == MOUNTED_DISPLAYID)
+        if (m_creature->GetDisplayId() == MOUNTED_DISPLAYID)
         {
             if (ChargeTimer < diff)
             {

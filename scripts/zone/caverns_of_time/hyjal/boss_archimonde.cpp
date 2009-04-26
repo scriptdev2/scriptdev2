@@ -456,7 +456,7 @@ struct MANGOS_DLL_DECL boss_archimondeAI : public ScriptedAI
                     if (Unit *Nordrassil = Unit::GetUnit(*m_creature, WorldTreeGUID))
                     {
                         Nordrassil->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                        Nordrassil->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
+                        Nordrassil->SetDisplayId(11686);
                         DoCast(Nordrassil, SPELL_DRAIN_WORLD_TREE);
                         IsChanneling = true;
                     }

@@ -235,7 +235,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
                 SetEquipmentSlots(false, EQUIP_ID_WEAPON, EQUIP_ID_SHIELD, EQUIP_NO_CHANGE);
                 break;
             case 10:
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_EQUIPPED);
+                m_creature->SetDisplayId(THRALL_MODEL_EQUIPPED);
                 break;
             case 11:
                 SetRun();
@@ -390,7 +390,7 @@ struct MANGOS_DLL_DECL npc_thrall_old_hillsbradAI : public npc_escortAI
             DoUnmount();
             HadMount = false;
             SetEquipmentSlots(true);
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, THRALL_MODEL_UNEQUIPPED);
+            m_creature->SetDisplayId(THRALL_MODEL_UNEQUIPPED);
         }
 
         if (IsBeingEscorted)

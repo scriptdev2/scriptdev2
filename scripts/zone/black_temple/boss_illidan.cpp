@@ -519,7 +519,7 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
                 ChannelGUID = Channel->GetGUID();
 
                 // Invisible but spell visuals can still be seen.
-                Channel->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
+                Channel->SetDisplayId(11686);
                 Channel->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
                 float PosX, PosY, PosZ;
@@ -991,7 +991,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         TauntTimer = 30000;                                 // This timer may be off.
 
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 21135);
+        m_creature->SetDisplayId(21135);
         m_creature->InterruptNonMeleeSpells(false);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1259,7 +1259,7 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         if (displayid)
             // It's morphin time!
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, displayid);
+            m_creature->SetDisplayId(displayid);
         /*if (size)
             m_creature->SetUInt32Value(OBJECT_FIELD_SCALE_X, size); // Let us grow! (or shrink)*/
 

@@ -318,7 +318,7 @@ struct MANGOS_DLL_DECL boss_supremusAI : public ScriptedAI
                 if (MoltenFlame)
                 {
                     // Invisible model
-                    MoltenFlame->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
+                    MoltenFlame->SetDisplayId(11686);
                     ((molten_flameAI*)MoltenFlame->AI())->SetSupremusGUID(m_creature->GetGUID());
                     ((molten_flameAI*)MoltenFlame->AI())->StalkTarget(target);
                     SummonFlameTimer = 20000;

@@ -139,7 +139,7 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
     {
         if (spell->Id == SPELL_INFERNAL_RELAY)
         {
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, m_creature->GetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID));
+            m_creature->SetDisplayId(m_creature->GetUInt32Value(UNIT_FIELD_NATIVEDISPLAYID));
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             HellfireTimer = 4000;
             CleanupTimer = 170000;
@@ -357,7 +357,7 @@ struct MANGOS_DLL_DECL boss_malchezaarAI : public ScriptedAI
 
         if (Infernal)
         {
-            Infernal->SetUInt32Value(UNIT_FIELD_DISPLAYID, INFERNAL_MODEL_INVISIBLE);
+            Infernal->SetDisplayId(INFERNAL_MODEL_INVISIBLE);
             Infernal->setFaction(m_creature->getFaction());
             if (point)
                 ((netherspite_infernalAI*)Infernal->AI())->point=point;

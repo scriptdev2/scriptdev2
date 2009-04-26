@@ -69,7 +69,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
             SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID,11686);
+            m_creature->SetDisplayId(11686);
 
             m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             Invisible = true;
@@ -101,7 +101,7 @@ struct MANGOS_DLL_DECL boss_renatakiAI : public ScriptedAI
             {
                 m_creature->InterruptSpell(CURRENT_GENERIC_SPELL);
 
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, 15268);
+                m_creature->SetDisplayId(15268);
                 SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_NO_CHANGE, EQUIP_NO_CHANGE);
 
                 m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

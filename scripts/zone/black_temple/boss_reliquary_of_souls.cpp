@@ -372,7 +372,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                         DoScriptText(SUFF_SAY_AFTER, EssenceSuffering);
 
                         EssenceSuffering->DeleteThreatList();
-                        EssenceSuffering->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
+                        EssenceSuffering->SetDisplayId(11686);
                         EssenceSuffering->setFaction(35);
                         m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
                         SummonEssenceTimer = 20000;         //60000;
@@ -480,7 +480,7 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 
                             DoScriptText(DESI_SAY_AFTER, EssenceDesire);
 
-                            EssenceDesire->SetUInt32Value(UNIT_FIELD_DISPLAYID, 11686);
+                            EssenceDesire->SetDisplayId(11686);
                             m_creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
                             SummonEssenceTimer = 20000;
                             AnimationTimer = 18200;
