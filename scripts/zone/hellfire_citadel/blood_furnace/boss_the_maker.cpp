@@ -22,22 +22,32 @@ SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_blood_furnace.h"
 
-#define SAY_AGGRO_1                 -1542009
-#define SAY_AGGRO_2                 -1542010
-#define SAY_AGGRO_3                 -1542011
-#define SAY_KILL_1                  -1542012
-#define SAY_KILL_2                  -1542013
-#define SAY_DIE                     -1542014
+enum
+{
+    SAY_AGGRO_1                 = -1542009,
+    SAY_AGGRO_2                 = -1542010,
+    SAY_AGGRO_3                 = -1542011,
+    SAY_KILL_1                  = -1542012,
+    SAY_KILL_2                  = -1542013,
+    SAY_DIE                     = -1542014,
 
-#define SPELL_ACID_SPRAY            38153                   // heroic 38973 ??? 38153
-#define SPELL_EXPLODING_BREAKER     30925
-#define SPELL_KNOCKDOWN             20276
-#define SPELL_DOMINATION            25772                   // ???
+    SPELL_ACID_SPRAY            = 38153,                    // heroic 38973 ??? 38153
+    SPELL_EXPLODING_BREAKER     = 30925,
+    SPELL_KNOCKDOWN             = 20276,
+    SPELL_DOMINATION            = 25772                     // ???
+};
 
 struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
 {
-    boss_the_makerAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_the_makerAI(Creature *c) : ScriptedAI(c) 
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 AcidSpray_Timer;
     uint32 ExplodingBreaker_Timer;
@@ -49,7 +59,7 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
         AcidSpray_Timer = 15000;
         ExplodingBreaker_Timer = 6000;
         Domination_Timer = 120000;
-        Knockdown_Timer    = 10000;
+        Knockdown_Timer = 10000;
     }
 
     void Aggro(Unit *who)
@@ -60,6 +70,15 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
             case 1: DoScriptText(SAY_AGGRO_2, m_creature); break;
             case 2: DoScriptText(SAY_AGGRO_3, m_creature); break;
         }
+
+        if (pInstance)
+            pInstance->SetData(TYPE_THE_MAKER_EVENT,IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (pInstance)
+            pInstance->SetData(TYPE_THE_MAKER_EVENT,FAIL);
     }
 
     void KilledUnit(Unit* victim)
@@ -74,6 +93,9 @@ struct MANGOS_DLL_DECL boss_the_makerAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DIE, m_creature);
+
+        if (pInstance)
+            pInstance->SetData(TYPE_THE_MAKER_EVENT,DONE);
     }
 
     void UpdateAI(const uint32 diff)

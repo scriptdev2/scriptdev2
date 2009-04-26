@@ -22,18 +22,28 @@ SDCategory: Hellfire Citadel, Blood Furnace
 EndScriptData */
 
 #include "precompiled.h"
+#include "def_blood_furnace.h"
 
-#define SAY_AGGRO               -1542008
+enum
+{
+    SAY_AGGRO               = -1542008,
 
-#define SPELL_SLIME_SPRAY       30913
-#define SPELL_POISON_CLOUD      30916
-#define SPELL_POISON_BOLT       30917
+    SPELL_SLIME_SPRAY       = 30913,
+    SPELL_POISON_CLOUD      = 30916,
+    SPELL_POISON_BOLT       = 30917,
 
-#define SPELL_POISON            30914
+    SPELL_POISON            = 30914
+};
 
 struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
 {
-    boss_broggokAI(Creature *c) : ScriptedAI(c) {Reset();}
+    boss_broggokAI(Creature *c) : ScriptedAI(c)
+    {
+        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        Reset();
+    }
+
+    ScriptedInstance* pInstance;
 
     uint32 AcidSpray_Timer;
     uint32 PoisonSpawn_Timer;
@@ -49,6 +59,15 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
     void Aggro(Unit *who)
     {
         DoScriptText(SAY_AGGRO, m_creature);
+
+        if (pInstance)
+            pInstance->SetData(TYPE_BROGGOK_EVENT,IN_PROGRESS);
+    }
+
+    void JustReachedHome()
+    {
+        if (pInstance)
+            pInstance->SetData(TYPE_BROGGOK_EVENT,FAIL);
     }
 
     void JustSummoned(Creature *summoned)
@@ -57,6 +76,12 @@ struct MANGOS_DLL_DECL boss_broggokAI : public ScriptedAI
         summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         summoned->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         summoned->CastSpell(summoned,SPELL_POISON,false,0,0,m_creature->GetGUID());
+    }
+
+    void JustDied(Unit *who)
+    {
+        if (pInstance)
+            pInstance->SetData(TYPE_BROGGOK_EVENT,DONE);
     }
 
     void UpdateAI(const uint32 diff)

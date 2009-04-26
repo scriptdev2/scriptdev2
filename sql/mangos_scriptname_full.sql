@@ -483,6 +483,7 @@ UPDATE creature_template SET ScriptName='boss_broggok' WHERE entry=17380;
 UPDATE creature_template SET ScriptName='boss_kelidan_the_breaker' WHERE entry=17377;
 UPDATE creature_template SET ScriptName='mob_broggok_poisoncloud' WHERE entry=17662;
 UPDATE creature_template SET ScriptName='mob_shadowmoon_channeler' WHERE entry=17653;
+UPDATE instance_template SET script='instance_blood_furnace' WHERE map=542;
 
 /* HELLFIRE RAMPARTS */
 /* Vazruden,Omor the Unscarred,Watchkeeper Gargolmar */
