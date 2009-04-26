@@ -73,8 +73,16 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
     {
         switch(go->GetEntry())
         {
-            case REFECTORY_DOOR: RefectoryDoorGUID = go->GetGUID(); break;
-            case SCREAMING_HALL_DOOR: ScreamingHallDoorGUID = go->GetGUID(); break;
+            case REFECTORY_DOOR:
+                RefectoryDoorGUID = go->GetGUID();
+                if (Encounter[2] == DONE)
+                    DoUseDoorOrButton(RefectoryDoorGUID);
+                break;
+            case SCREAMING_HALL_DOOR:
+                ScreamingHallDoorGUID = go->GetGUID();
+                if (Encounter[3] == DONE)
+                    DoUseDoorOrButton(ScreamingHallDoorGUID);
+                break;
         }
     }
 
@@ -90,12 +98,6 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
                 debug_log("SD2: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
                 break;
         }
-    }
-
-    void HandleGameObject(uint64 guid, uint32 state)
-    {
-        if (GameObject* pGo = instance->GetGameObject(guid))
-            pGo->SetGoState(state);
     }
 
     void SetData(uint32 type, uint32 data)
@@ -123,17 +125,13 @@ struct MANGOS_DLL_DECL instance_shadow_labyrinth : public ScriptedInstance
 
             case DATA_BLACKHEARTTHEINCITEREVENT:
                 if (data == DONE)
-                {
-                    HandleGameObject(RefectoryDoorGUID,0);
-                }
+                    DoUseDoorOrButton(RefectoryDoorGUID);
                 Encounter[2] = data;
                 break;
 
             case DATA_GRANDMASTERVORPILEVENT:
                 if (data == DONE)
-                {
-                    HandleGameObject(ScreamingHallDoorGUID,0);
-                }
+                    DoUseDoorOrButton(ScreamingHallDoorGUID);
                 Encounter[3] = data;
                 break;
 

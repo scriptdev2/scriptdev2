@@ -93,7 +93,7 @@ struct MANGOS_DLL_DECL boss_vexallusAI : public ScriptedAI
             pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
 
             if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_VEXALLUS_DOOR)))
-                pDoor->SetGoState(0);
+                pDoor->SetGoState(GO_STATE_ACTIVE);
         }
     }
 

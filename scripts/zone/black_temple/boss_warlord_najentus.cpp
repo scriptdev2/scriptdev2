@@ -117,9 +117,9 @@ struct MANGOS_DLL_DECL boss_najentusAI : public ScriptedAI
         if (GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_NAJENTUS_GATE)))
         {
             if (close)
-                pGate->SetGoState(1);                       // Closed
+                pGate->SetGoState(GO_STATE_READY);          // Closed
             else
-                pGate->SetGoState(0);                       // Opened
+                pGate->SetGoState(GO_STATE_ACTIVE);         // Opened
         }
     }
 

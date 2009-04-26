@@ -84,7 +84,7 @@ struct MANGOS_DLL_DECL instance_deadmines : public ScriptedInstance
             {
                 if (GameObject* pGo = instance->GetGameObject(ironCladGUID))
                 {
-                    pGo->SetGoState(2);
+                    pGo->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                     IronDoor_Timer = 3000;
                 }
             }

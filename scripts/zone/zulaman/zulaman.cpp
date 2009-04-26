@@ -138,7 +138,7 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
                 DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
 
                 if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_ENTRANCE)))
-                    pEntranceDoor->SetGoState(0);
+                    pEntranceDoor->SetGoState(GO_STATE_ACTIVE);
 
                 pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);
                 break;

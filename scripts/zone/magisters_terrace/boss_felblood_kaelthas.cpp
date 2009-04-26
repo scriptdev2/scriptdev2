@@ -133,7 +133,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
             pInstance->SetData(DATA_KAELTHAS_EVENT, 0);
 
             if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KAEL_DOOR)))
-                pDoor->SetGoState(0);                       // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
+                pDoor->SetGoState(GO_STATE_ACTIVE);         // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
                                                             // Small door opened after event are expected to be closed by default
     }
 
@@ -142,7 +142,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KAEL_DOOR)))
-            pEncounterDoor->SetGoState(0);                  // Open the encounter door
+            pEncounterDoor->SetGoState(GO_STATE_ACTIVE);    // Open the encounter door
     }
 
     void DamageTaken(Unit* done_by, uint32 &damage)
@@ -156,7 +156,7 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
         if (pInstance)
         {
             if (GameObject* pEncounterDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KAEL_DOOR)))
-                pEncounterDoor->SetGoState(1);              //Close the encounter door, open it in JustDied/Reset
+                pEncounterDoor->SetGoState(GO_STATE_READY); //Close the encounter door, open it in JustDied/Reset
         }
     }
 
@@ -347,10 +347,10 @@ struct MANGOS_DLL_DECL boss_felblood_kaelthasAI : public ScriptedAI
                                 if (pInstance)
                                 {
                                     if (GameObject* pKaelLeft = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KAEL_STATUE_LEFT)))
-                                        pKaelLeft->SetGoState(0);
+                                        pKaelLeft->SetGoState(GO_STATE_ACTIVE);
 
                                     if (GameObject* pKaelRight = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KAEL_STATUE_RIGHT)))
-                                        pKaelRight->SetGoState(0);
+                                        pKaelRight->SetGoState(GO_STATE_ACTIVE);
                                 }
                             }
                             else

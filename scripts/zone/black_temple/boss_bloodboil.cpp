@@ -121,7 +121,7 @@ struct MANGOS_DLL_DECL boss_gurtogg_bloodboilAI : public ScriptedAI
     void OpenMotherDoor()
     {
         if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
-            pDoor->SetGoState(0);
+            pDoor->SetGoState(GO_STATE_ACTIVE);
     }
 
     void Aggro(Unit *who)

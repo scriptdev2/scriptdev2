@@ -245,7 +245,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
             if (pInstance)
             {
                 if (GameObject* pForceField = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_FORCEFIELD)))
-                    pForceField->SetGoState(1);
+                    pForceField->SetGoState(GO_STATE_READY);
 
                 pInstance->SetData(DATA_KALECGOS_EVENT, DONE);
             }
@@ -308,7 +308,7 @@ struct MANGOS_DLL_DECL boss_kalecgosAI : public ScriptedAI
                 if (pInstance)
                 {
                     if (GameObject* pForceField = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_FORCEFIELD)))
-                        pForceField->SetGoState(0);
+                        pForceField->SetGoState(GO_STATE_ACTIVE);
 
                     LockedArena = true;
                 }else error_log(ERROR_INST_DATA);

@@ -585,9 +585,9 @@ struct MANGOS_DLL_DECL boss_croneAI : public ScriptedAI
             pInstance->SetData(DATA_OPERA_EVENT, DONE);
 
             if (GameObject* pLDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                pLDoor->SetGoState(0);
+                pLDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pRDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(0);
+                pRDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pSideEntrance = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
                 pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
@@ -784,9 +784,9 @@ struct MANGOS_DLL_DECL boss_bigbadwolfAI : public ScriptedAI
             pInstance->SetData(DATA_OPERA_EVENT, DONE);
 
             if (GameObject* pLDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                pLDoor->SetGoState(0);
+                pLDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pRDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(0);
+                pRDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pSideEntrance = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
                 pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
@@ -1032,9 +1032,9 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
             pInstance->SetData(DATA_OPERA_EVENT, DONE);
 
             if (GameObject* pLDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                pLDoor->SetGoState(0);
+                pLDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pRDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(0);
+                pRDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pSideEntrance = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
                 pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }
@@ -1122,9 +1122,9 @@ struct MANGOS_DLL_DECL boss_romuloAI : public ScriptedAI
             pInstance->SetData(DATA_OPERA_EVENT, DONE);
 
             if (GameObject* pLDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORLEFT)))
-                pLDoor->SetGoState(0);
+                pLDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pRDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GAMEOBJECT_STAGEDOORRIGHT)))
-                pRDoor->SetGoState(0);
+                pRDoor->SetGoState(GO_STATE_ACTIVE);
             if (GameObject* pSideEntrance = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_SIDE_ENTRANCE_DOOR)))
                 pSideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
         }

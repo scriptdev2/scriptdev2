@@ -127,7 +127,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
     void DoGate(uint32 id, uint32 state)
     {
         if (GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(id)))
-            pGo->SetGoState(state);
+            pGo->SetGoState(GOState(state));
 
         debug_log("SD2: npc_grimstone, arena gate update state.");
     }
@@ -252,7 +252,7 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         Event_Timer = 2000;
                         break;
                     case 3:
-                        DoGate(DATA_ARENA1,0);
+                        DoGate(DATA_ARENA1,GO_STATE_ACTIVE);
                         Event_Timer = 3000;
                         break;
                     case 4:
@@ -272,13 +272,13 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         break;
                     case 7:
                         m_creature->SetVisibility(VISIBILITY_ON);
-                        DoGate(DATA_ARENA1,1);
+                        DoGate(DATA_ARENA1,GO_STATE_READY);
                         DoScriptText(-1000000, m_creature);//4
                         CanWalk = true;
                         Event_Timer = 0;
                         break;
                     case 8:
-                        DoGate(DATA_ARENA2,0);
+                        DoGate(DATA_ARENA2,GO_STATE_ACTIVE);
                         Event_Timer = 5000;
                         break;
                     case 9:
@@ -288,9 +288,9 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
                         break;
                     case 10:
                         //if quest, complete
-                        DoGate(DATA_ARENA2,1);
-                        DoGate(DATA_ARENA3,0);
-                        DoGate(DATA_ARENA4,0);
+                        DoGate(DATA_ARENA2,GO_STATE_READY);
+                        DoGate(DATA_ARENA3,GO_STATE_ACTIVE);
+                        DoGate(DATA_ARENA4,GO_STATE_ACTIVE);
                         CanWalk = true;
                         Event_Timer = 0;
                         break;
@@ -548,7 +548,7 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
     void DoGo(uint32 id, uint32 state)
     {
         if (GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(id)))
-            pGo->SetGoState(state);
+            pGo->SetGoState(GOState(state));
     }
 
     void WaypointReached(uint32 i)

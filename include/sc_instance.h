@@ -31,6 +31,6 @@ class MANGOS_DLL_DECL ScriptedInstance : public InstanceData
         ~ScriptedInstance() {}
 
         //change active state of doors or buttons
-        void DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime = 0);
+        void DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime = 0, bool bUseAlternativeState = false);
 };
 #endif

@@ -174,13 +174,13 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
                 m_creature->SetStandState(UNIT_STAND_STATE_STAND);
 
                 if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiGoCageGUID))
-                    pGo->SetGoState(0);
+                    pGo->SetGoState(GO_STATE_ACTIVE);
 
                 DoScriptText(SAY_START, m_creature, pPlayer);
                 break;
             case 1:
                 if (GameObject* pGo = m_creature->GetMap()->GetGameObject(m_uiGoCageGUID))
-                    pGo->SetGoState(1);
+                    pGo->SetGoState(GO_STATE_READY);
                 break;
             case 5:
                 DoScriptText(SAY_PROGRESS1, m_creature, pPlayer);
