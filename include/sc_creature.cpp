@@ -58,7 +58,8 @@ void ScriptedAI::AttackStart(Unit* who)
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        DoStartMovement(who);
+        if (bCombatMovement)
+            DoStartMovement(who);
     }
 }
 

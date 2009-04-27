@@ -356,7 +356,7 @@ UPDATE instance_template SET script='instance_serpent_shrine' WHERE map=548;
 UPDATE creature_template SET ScriptName='boss_hydross_the_unstable' WHERE entry=21216;
 /* Leotheras the Blind event */
 UPDATE creature_template SET ScriptName='boss_leotheras_the_blind' WHERE entry=21215;
-UPDATE creature_template SET ScriptName='boss_leotheras_the_blind_demonform' WHERE entry=21845;
+UPDATE creature_template SET ScriptName='boss_leotheras_the_blind_demonform' WHERE entry=21875;
 /* Fathom-lord Karathress event */
 UPDATE creature_template SET ScriptName='boss_fathomlord_karathress' WHERE entry=21214;
 UPDATE creature_template SET ScriptName='boss_fathomguard_sharkkis' WHERE entry=21966;

@@ -24,215 +24,275 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_serpent_shrine.h"
 
-#define SAY_AGGRO               -1548009
-#define SAY_SWITCH_TO_DEMON     -1548010
-#define SAY_INNER_DEMONS        -1548011
-#define SAY_DEMON_SLAY1         -1548012
-#define SAY_DEMON_SLAY2         -1548013
-#define SAY_DEMON_SLAY3         -1548014
-#define SAY_NIGHTELF_SLAY1      -1548015
-#define SAY_NIGHTELF_SLAY2      -1548016
-#define SAY_NIGHTELF_SLAY3      -1548017
-#define SAY_FINAL_FORM          -1548018
-#define SAY_FREE                -1548019
-#define SAY_DEATH               -1548020
+enum
+{
+    SAY_AGGRO               = -1548009,
+    SAY_SWITCH_TO_DEMON     = -1548010,
+    SAY_INNER_DEMONS        = -1548011,
+    SAY_DEMON_SLAY1         = -1548012,
+    SAY_DEMON_SLAY2         = -1548013,
+    SAY_DEMON_SLAY3         = -1548014,
+    SAY_NIGHTELF_SLAY1      = -1548015,
+    SAY_NIGHTELF_SLAY2      = -1548016,
+    SAY_NIGHTELF_SLAY3      = -1548017,
+    SAY_FINAL_FORM          = -1548018,
+    SAY_FREE                = -1548019,
+    SAY_DEATH               = -1548020,
 
-#define SPELL_WHIRLWIND         40653
-#define SPELL_CHAOS_BLAST       37675
-//#define SPELL_INSIDIOUS_WHISPER 37676                       // useless - dummy effect that can't be implemented
+    SPELL_ENRAGE            = 26662,
 
-#define MODEL_DEMON             14555
-#define MODEL_NIGHTELF          20514
+    SPELL_WHIRLWIND         = 37640,
+    SPELL_CHAOS_BLAST       = 37674,
+    SPELL_INSIDIOUS_WHISPER = 37676,                        //not implemented yet. After cast (spellHit), do the inner demon
+    SPELL_CONS_MADNESS      = 37749,
 
-#define DEMON_FORM              21845
+    SPELL_DEMON_ALIGNMENT   = 37713,                        //inner demon have this aura
+    SPELL_SHADOW_BOLT       = 39309,                        //inner demon spell spam
+
+    FACTION_DEMON_1         = 1829,
+    FACTION_DEMON_2         = 1830,
+    FACTION_DEMON_3         = 1831,
+    FACTION_DEMON_4         = 1832,
+    FACTION_DEMON_5         = 1833,
+
+    MODEL_NIGHTELF          = 20514,
+    MODEL_DEMON             = 20125,
+
+    NPC_INNER_DEMON         = 21857,
+    NPC_SHADOW_LEO          = 21875
+};
 
 //Original Leotheras the Blind AI
 struct MANGOS_DLL_DECL boss_leotheras_the_blindAI : public ScriptedAI
 {
-    boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c)
+    boss_leotheras_the_blindAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
-        Demon = 0;
+        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_uiShadowLeo = 0;
         Reset();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *m_pInstance;                          // the instance
 
-    uint32 Whirlwind_Timer;
-    uint32 ChaosBlast_Timer;
-    uint32 Switch_Timer;
+    // timers
+    uint32 m_uiWhirlwind_Timer;
+    uint32 m_uiInnerDemon_Timer;
+    uint32 m_uiSwitch_Timer;
+    uint32 m_uiEnrage_Timer;
 
-    bool DemonForm;
-    bool IsFinalForm;
+    bool m_bDemonForm;
+    bool m_bIsFinalForm;
 
-    uint64 Demon;
+    uint64 m_uiShadowLeo;
 
     void Reset()
     {
-        Whirlwind_Timer = 20000;
-        ChaosBlast_Timer = 1000;
-        Switch_Timer = 45000;
+        m_uiWhirlwind_Timer  = 18500;
+        m_uiInnerDemon_Timer = 15000;
+        m_uiSwitch_Timer     = 45000;
+        m_uiEnrage_Timer     = MINUTE*10*IN_MILISECONDS;
 
-        DemonForm = false;
-        IsFinalForm = false;
+        m_bDemonForm   = false;
+        m_bIsFinalForm = false;
 
-        m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
+        if (m_creature->GetDisplayId() != MODEL_NIGHTELF)
+            m_creature->SetDisplayId(MODEL_NIGHTELF);
 
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, NOT_STARTED);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, NOT_STARTED);
     }
 
-    void StartEvent()
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_AGGRO, m_creature);
 
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, IN_PROGRESS);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        if (victim->GetTypeId() != TYPEID_PLAYER)
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
-        if (DemonForm)
+        switch(rand()%3)
         {
-            switch(rand()%3)
-            {
-                case 0: DoScriptText(SAY_DEMON_SLAY1, m_creature); break;
-                case 1: DoScriptText(SAY_DEMON_SLAY2, m_creature); break;
-                case 2: DoScriptText(SAY_DEMON_SLAY3, m_creature); break;
-            }
-        }
-        else
-        {
-            switch(rand()%3)
-            {
-                case 0: DoScriptText(SAY_NIGHTELF_SLAY1, m_creature); break;
-                case 1: DoScriptText(SAY_NIGHTELF_SLAY2, m_creature); break;
-                case 2: DoScriptText(SAY_NIGHTELF_SLAY3, m_creature); break;
-            }
+            case 0: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY1 : SAY_NIGHTELF_SLAY1, m_creature); break;
+            case 1: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY2 : SAY_NIGHTELF_SLAY2, m_creature); break;
+            case 2: DoScriptText(m_bDemonForm ? SAY_DEMON_SLAY3 : SAY_NIGHTELF_SLAY3, m_creature); break;
         }
     }
 
-    void JustDied(Unit *victim)
+    void JustSummoned(Creature* pSummoned)
+    {
+        if (m_creature->getVictim() && pSummoned->GetEntry() == NPC_SHADOW_LEO)
+        {
+            m_uiShadowLeo = pSummoned->GetGUID();
+            pSummoned->AI()->AttackStart(m_creature->getVictim());
+        }
+    }
+
+    void JustDied(Unit* pVictim)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
         //despawn copy
-        if (Demon)
+        if (m_uiShadowLeo)
         {
-            Unit *pUnit = NULL;
-            pUnit = Unit::GetUnit((*m_creature), Demon);
-
-            if (pUnit)
+            if (Unit* pUnit = Unit::GetUnit((*m_creature), m_uiShadowLeo))
                 pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, DONE);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, DONE);
     }
 
-    void Aggro(Unit *who)
-    {
-        StartEvent();
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        if (!DemonForm)
+        if (!m_bDemonForm)
         {
             //Whirlwind_Timer
-            if (Whirlwind_Timer < diff)
+            if (m_uiWhirlwind_Timer < uiDiff)
             {
                 DoCast(m_creature, SPELL_WHIRLWIND);
-                Whirlwind_Timer = 25000;
-            }else Whirlwind_Timer -= diff;
+                m_uiWhirlwind_Timer = 30000;
+            }else m_uiWhirlwind_Timer -= uiDiff;
 
             //Switch_Timer
-            if (!IsFinalForm)
+            if (!m_bIsFinalForm)
             {
-                if (Switch_Timer < diff)
+                if (m_uiSwitch_Timer < uiDiff)
                 {
-                    //switch to demon form
-                    m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_DEMON);
                     DoScriptText(SAY_SWITCH_TO_DEMON, m_creature);
-                    DemonForm = true;
-                    Switch_Timer = 60000;
-                }else Switch_Timer -= diff;
-            }
 
-            DoMeleeAttackIfReady();
+                    if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
+                    {
+                        //set false, so MoveChase is not triggered in AttackStart
+                        SetCombatMovement(false);
+
+                        m_creature->GetMotionMaster()->Clear(false);
+                        m_creature->GetMotionMaster()->MoveIdle();
+                        m_creature->StopMoving();
+                    }
+
+                    //switch to demon form
+                    m_creature->SetDisplayId(MODEL_DEMON);
+                    DoResetThreat();
+                    m_bDemonForm = true;
+
+                    m_uiInnerDemon_Timer = 15000;
+                    m_uiSwitch_Timer = 60000;
+                }else m_uiSwitch_Timer -= uiDiff;
+            }
         }
         else
         {
-            //ChaosBlast_Timer
-            if (ChaosBlast_Timer < diff)
+            //inner demon
+            if (m_uiInnerDemon_Timer < uiDiff)
             {
-                DoCast(m_creature->getVictim(), SPELL_CHAOS_BLAST);
-                ChaosBlast_Timer = 1500;
-            }else ChaosBlast_Timer -= diff;
+                DoScriptText(SAY_INNER_DEMONS, m_creature);
+
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                DoCast(m_creature, SPELL_INSIDIOUS_WHISPER);
+
+                m_uiInnerDemon_Timer = 60000;
+            }else m_uiInnerDemon_Timer -= uiDiff;
+
+            //chaos blast spam
+            if (!m_creature->IsNonMeleeSpellCasted(false))
+                m_creature->CastSpell(m_creature->getVictim(), SPELL_CHAOS_BLAST, false);
 
             //Switch_Timer
-            if (Switch_Timer < diff)
+            if (m_uiSwitch_Timer < uiDiff)
             {
-                //switch to nightelf form
-                m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
-                DemonForm = false;
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
 
-                Switch_Timer = 45000;
-            }else Switch_Timer -= diff;
+                //switch to nightelf form
+                m_creature->SetDisplayId(MODEL_NIGHTELF);
+
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                //set true
+                SetCombatMovement(true);
+
+                DoResetThreat();
+                m_bDemonForm = false;
+
+                m_uiWhirlwind_Timer = 18500;
+                m_uiSwitch_Timer = 45000;
+            }else m_uiSwitch_Timer -= uiDiff;
         }
 
-        if (!IsFinalForm && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
+        if (!m_bIsFinalForm && (m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 15)
         {
-            //at this point he divides himself in two parts
-            Creature *Copy = NULL;
-            Copy = DoSpawnCreature(DEMON_FORM, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+            DoScriptText(SAY_FINAL_FORM, m_creature);
 
-            if (Copy)
+            //at this point he divides himself in two parts
+            DoSpawnCreature(NPC_SHADOW_LEO, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+
+            if (m_bDemonForm)
             {
-                Demon = Copy->GetGUID();
-                Copy->AI()->AttackStart(m_creature->getVictim());
+                if (m_creature->IsNonMeleeSpellCasted(false))
+                    m_creature->InterruptNonMeleeSpells(false);
+
+                //switch to nightelf form
+                m_creature->SetDisplayId(MODEL_NIGHTELF);
+
+                if (m_creature->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
+
+                //set true
+                SetCombatMovement(true);
+
+                DoResetThreat();
+                m_bDemonForm = false;
             }
 
-            //set nightelf final form
-            IsFinalForm = true;
-            DemonForm = false;
-
-            DoScriptText(SAY_FINAL_FORM, m_creature);
-            m_creature->SetUInt32Value(UNIT_FIELD_DISPLAYID, MODEL_NIGHTELF);
+            m_bIsFinalForm = true;
         }
+
+        //m_uiEnrage_Timer
+        if (m_uiEnrage_Timer < uiDiff)
+        {
+            if (m_creature->IsNonMeleeSpellCasted(false))
+                m_creature->InterruptNonMeleeSpells(false);
+
+            DoCast(m_creature, SPELL_ENRAGE);
+            m_uiEnrage_Timer = MINUTE*5*IN_MILISECONDS;
+        }else m_uiEnrage_Timer -= uiDiff;
+
+        if (!m_bDemonForm)
+            DoMeleeAttackIfReady();
     }
 };
 
 //Leotheras the Blind Demon Form AI
 struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
 {
-    boss_leotheras_the_blind_demonformAI(Creature *c) : ScriptedAI(c)
+    boss_leotheras_the_blind_demonformAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
+        SetCombatMovement(false);
         Reset();
     }
 
-    uint32 ChaosBlast_Timer;
+    void Reset() { }
 
-    void Reset()
-    {
-        ChaosBlast_Timer = 1000;
-    }
-
-    void StartEvent()
+    void Aggro(Unit* pWho)
     {
         DoScriptText(SAY_FREE, m_creature);
     }
 
-    void KilledUnit(Unit *victim)
+    void KilledUnit(Unit* pVictim)
     {
-        if (victim->GetTypeId() != TYPEID_PLAYER)
+        if (pVictim->GetTypeId() != TYPEID_PLAYER)
             return;
 
         switch(rand()%3)
@@ -243,42 +303,27 @@ struct MANGOS_DLL_DECL boss_leotheras_the_blind_demonformAI : public ScriptedAI
         }
     }
 
-    void JustDied(Unit *victim)
-    {
-        //invisibility (blizzlike, at the end of the fight he doesn't die, he disappears)
-        m_creature->CastSpell(m_creature, 8149, true);
-    }
-
-    void Aggro(Unit *who)
-    {
-        StartEvent();
-    }
-
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
         //Return since we have no target
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
+        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        //ChaosBlast_Timer
-        if (ChaosBlast_Timer < diff)
-        {
-            DoCast(m_creature->getVictim(), SPELL_CHAOS_BLAST);
-            ChaosBlast_Timer = 1500;
-        }else ChaosBlast_Timer -= diff;
+        if (!m_creature->IsNonMeleeSpellCasted(false))
+            m_creature->CastSpell(m_creature->getVictim(), SPELL_CHAOS_BLAST, false);
 
         //Do NOT deal any melee damage to the target.
     }
 };
 
-CreatureAI* GetAI_boss_leotheras_the_blind(Creature *_Creature)
+CreatureAI* GetAI_boss_leotheras_the_blind(Creature* pCreature)
 {
-    return new boss_leotheras_the_blindAI (_Creature);
+    return new boss_leotheras_the_blindAI(pCreature);
 }
 
-CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature *_Creature)
+CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature* pCreature)
 {
-    return new boss_leotheras_the_blind_demonformAI (_Creature);
+    return new boss_leotheras_the_blind_demonformAI(pCreature);
 }
 
 void AddSC_boss_leotheras_the_blind()

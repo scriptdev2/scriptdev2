@@ -1098,8 +1098,8 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1548007,'You are no better than they!',11299,1,0,0,'hydross SAY_CORRUPT_SLAY2'),
 (-1548008,'You are the disease, not I',11300,1,0,0,'hydross SAY_CORRUPT_DEATH'),
 
-(-1548009,'Finally my banishment ends!',11312,1,0,0,'leotheras SAY_AGGRO'),
-(-1548010,'Be gone trifling elf. I\'m in control now.',11304,1,0,0,'leotheras SAY_SWITCH_TO_DEMON'),
+(-1548009,'Finally, my banishment ends!',11312,1,0,0,'leotheras SAY_AGGRO'),
+(-1548010,'Be gone, trifling elf.  I am in control now!',11304,1,0,0,'leotheras SAY_SWITCH_TO_DEMON'),
 (-1548011,'We all have our demons...',11305,1,0,0,'leotheras SAY_INNER_DEMONS'),
 (-1548012,'I have no equal.',11306,1,0,0,'leotheras SAY_DEMON_SLAY1'),
 (-1548013,'Perish, mortal.',11307,1,0,0,'leotheras SAY_DEMON_SLAY2'),
@@ -1107,7 +1107,7 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1548015,'Kill! KILL!',11314,1,0,0,'leotheras SAY_NIGHTELF_SLAY1'),
 (-1548016,'That\'s right! Yes!',11315,1,0,0,'leotheras SAY_NIGHTELF_SLAY2'),
 (-1548017,'Who\'s the master now?',11316,1,0,0,'leotheras SAY_NIGHTELF_SLAY3'),
-(-1548018,'No! NO! What have you done?! I am the master, do you hear me? I... aaghh... Can\'t... contain him...',11313,1,0,0,'leotheras SAY_FINAL_FORM'),
+(-1548018,'No... no! What have you done? I am the master! Do you hear me? I am... aaggh! Can\'t... contain him...',11313,1,0,0,'leotheras SAY_FINAL_FORM'),
 (-1548019,'At last I am liberated. It has been too long since I have tasted true freedom!',11309,1,0,0,'leotheras SAY_FREE'),
 (-1548020,'You cannot kill me! Fools, I\'ll be back! I\'ll... aarghh...',11317,1,0,0,'leotheras SAY_DEATH'),
 
