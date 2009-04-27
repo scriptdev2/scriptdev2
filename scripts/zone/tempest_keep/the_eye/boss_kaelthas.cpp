@@ -1127,16 +1127,11 @@ struct MANGOS_DLL_DECL boss_grand_astromancer_capernianAI : public advisorbase_a
         if (!who || FakeDeath || m_creature->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
             return;
 
-        bool bInCombat = m_creature->isInCombat();
-
         if (m_creature->Attack(who, true))
         {
             m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
-
-            if (!bInCombat)
-                Aggro(who);
 
             DoStartMovement(who, CAPERNIAN_DISTANCE, M_PI/2);
         }
@@ -1393,15 +1388,10 @@ struct MANGOS_DLL_DECL mob_phoenix_egg_tkAI : public ScriptedAI
 
     void AttackStart(Unit* who)
     {
-        bool bInCombat = m_creature->isInCombat();
-
         if (m_creature->Attack(who, false))
         {
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
-
-            if (!bInCombat)
-                Aggro(who);
 
             DoStartNoMovement(who);
         }

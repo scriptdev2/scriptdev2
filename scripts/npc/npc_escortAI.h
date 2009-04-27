@@ -32,7 +32,7 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         // Pure Virtual Functions
         virtual void WaypointReached(uint32) = 0;
 
-        virtual void Aggro(Unit*) = 0;
+        virtual void Aggro(Unit*);
 
         virtual void Reset() = 0;
 
@@ -42,6 +42,8 @@ struct MANGOS_DLL_DECL npc_escortAI : public ScriptedAI
         bool IsVisible(Unit*) const;
 
         void AttackStart(Unit*);
+
+        void EnterCombat(Unit*);
 
         void MoveInLineOfSight(Unit*);
 

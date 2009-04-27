@@ -52,19 +52,26 @@ void ScriptedAI::AttackStart(Unit* who)
     if (!who)
         return;
 
-    bool bInCombat = m_creature->isInCombat();
-
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
 
-        if (!bInCombat)
-            Aggro(who);
-
         DoStartMovement(who);
     }
+}
+
+void ScriptedAI::EnterCombat(Unit* pEnemy)
+{
+    if (!pEnemy)
+        return;
+
+    Aggro(pEnemy);
+}
+
+void ScriptedAI::Aggro(Unit* pEnemy)
+{
 }
 
 void ScriptedAI::UpdateAI(const uint32 diff)
@@ -635,16 +642,11 @@ void Scripted_NoMovementAI::AttackStart(Unit* who)
     if (!who)
         return;
 
-    bool bInCombat = m_creature->isInCombat();
-
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
-
-        if (!bInCombat)
-            Aggro(who);
 
         DoStartNoMovement(who);
     }

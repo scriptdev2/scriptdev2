@@ -167,16 +167,11 @@ struct MANGOS_DLL_DECL boss_grand_warlock_nethekurseAI : public ScriptedAI
         if (IsIntroEvent || !IsMainEvent)
             return;
 
-        bool bInCombat = m_creature->isInCombat();
-
         if (m_creature->Attack(who, true))
         {
             m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
-
-            if (!bInCombat)
-                Aggro(who);
 
             if (Phase)
                 DoStartNoMovement(who);

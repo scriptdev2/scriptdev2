@@ -652,17 +652,12 @@ struct MANGOS_DLL_DECL boss_veklorAI : public boss_twinemperorsAI
         if (!who)
             return;
 
-        bool bInCombat = m_creature->isInCombat();
-
         // VL doesn't melee
         if (m_creature->Attack(who, false))
         {
             m_creature->AddThreat(who, 0.0f);
             m_creature->SetInCombatWith(who);
             who->SetInCombatWith(m_creature);
-
-            if (!bInCombat)
-                Aggro(who);
 
             m_creature->GetMotionMaster()->MoveChase(who, VEKLOR_DIST, 0);
         }

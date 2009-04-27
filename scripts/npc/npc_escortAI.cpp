@@ -31,16 +31,11 @@ void npc_escortAI::AttackStart(Unit *who)
     if (IsBeingEscorted && !Defend)
         return;
 
-    bool bInCombat = m_creature->isInCombat();
-
     if (m_creature->Attack(who, true))
     {
         m_creature->AddThreat(who, 0.0f);
         m_creature->SetInCombatWith(who);
         who->SetInCombatWith(m_creature);
-
-        if (!bInCombat)
-            Aggro(who);
 
         if (bCombatMovement)
         {
@@ -48,6 +43,18 @@ void npc_escortAI::AttackStart(Unit *who)
             m_creature->GetMotionMaster()->MoveChase(who);
         }
     }
+}
+
+void npc_escortAI::EnterCombat(Unit* pEnemy)
+{
+    if (!pEnemy)
+        return;
+
+    Aggro(pEnemy);
+}
+
+void npc_escortAI::Aggro(Unit* pEnemy)
+{
 }
 
 void npc_escortAI::MoveInLineOfSight(Unit *who)
