@@ -61,14 +61,6 @@ struct MANGOS_DLL_DECL boss_loathebAI : public ScriptedAI
         Summon_Timer = 8000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void JustDied(Unit* Killer)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

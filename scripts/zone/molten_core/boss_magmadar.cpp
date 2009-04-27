@@ -48,10 +48,6 @@ struct MANGOS_DLL_DECL boss_magmadarAI : public ScriptedAI
         m_creature->CastSpell(m_creature,SPELL_MAGMASPIT,true);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

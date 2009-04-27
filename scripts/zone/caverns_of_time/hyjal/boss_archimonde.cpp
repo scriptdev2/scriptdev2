@@ -91,8 +91,6 @@ struct mob_ancient_wispAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
     }
 
-    void Aggro(Unit* who) {}
-
     void DamageTaken(Unit* done_by, uint32 &damage) { damage = 0; }
 
     void UpdateAI(const uint32 diff)
@@ -130,7 +128,6 @@ struct MANGOS_DLL_DECL mob_doomfireAI : public ScriptedAI
     void Reset() { }
 
     void MoveInLineOfSight(Unit* who) { }
-    void Aggro(Unit* who) { }
     void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
 };
 
@@ -156,8 +153,6 @@ struct MANGOS_DLL_DECL mob_doomfire_targettingAI : public ScriptedAI
         if (!TargetGUID && who->GetTypeId() == TYPEID_PLAYER)
             TargetGUID = who->GetGUID();
     }
-
-    void Aggro(Unit* who) {}
 
     void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
 

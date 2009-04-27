@@ -616,8 +616,8 @@ struct MANGOS_DLL_DECL npc_tarethaAI : public npc_escortAI
                 break;
         }
     }
+
     void Reset() {}
-    void Aggro(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
     {

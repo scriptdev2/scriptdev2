@@ -283,8 +283,6 @@ struct MANGOS_DLL_DECL mob_ohganAI : public ScriptedAI
         SunderArmor_Timer = 5000;
     }
 
-    void Aggro(Unit *who) {}
-
     void JustDied(Unit* Killer)
     {
         if (pInstance)

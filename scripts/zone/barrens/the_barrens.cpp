@@ -138,8 +138,6 @@ struct MANGOS_DLL_DECL npc_taskmaster_fizzuleAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (IsFriend)
@@ -231,8 +229,6 @@ struct MANGOS_DLL_DECL npc_twiggy_flatheadAI : public ScriptedAI
         for(uint8 i = 0; i < 6; i++)
             AffrayChallenger[i] = 0;
     }
-
-    void Aggro(Unit *who) { }
 
     bool CanStartEvent(Player *player)
     {

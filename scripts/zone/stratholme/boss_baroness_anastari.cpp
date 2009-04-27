@@ -52,10 +52,6 @@ struct MANGOS_DLL_DECL boss_baroness_anastariAI : public ScriptedAI
         //Possess_Timer = 35000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         if (pInstance)

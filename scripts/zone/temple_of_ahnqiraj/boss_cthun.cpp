@@ -123,10 +123,6 @@ struct MANGOS_DLL_DECL flesh_tentacleAI : public Scripted_NoMovementAI
         CheckTimer = 1000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff);
 
     void JustDied(Unit* killer);

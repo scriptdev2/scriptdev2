@@ -46,10 +46,6 @@ struct MANGOS_DLL_DECL boss_angerrelAI : public ScriptedAI
         Strike_Timer = 12000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -102,10 +98,6 @@ struct MANGOS_DLL_DECL boss_doperelAI : public ScriptedAI
         SinisterStrike_Timer = 8000;
         BackStab_Timer = 12000;
         Gouge_Timer = 6000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
@@ -162,10 +154,6 @@ struct MANGOS_DLL_DECL boss_haterelAI : public ScriptedAI
         ManaBurn_Timer = 3000;
         ShadowShield_Timer = 8000;
         Strike_Timer = 12000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
@@ -236,10 +224,6 @@ struct MANGOS_DLL_DECL boss_vilerelAI : public ScriptedAI
         Shield_Timer = 3000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -307,10 +291,6 @@ struct MANGOS_DLL_DECL boss_seethrelAI : public ScriptedAI
         FrostWard_Timer = 25000;
 
         m_creature->CastSpell(m_creature,SPELL_FROSTARMOR,true);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
@@ -383,10 +363,6 @@ struct MANGOS_DLL_DECL boss_gloomrelAI : public ScriptedAI
         MortalStrike_Timer = 10000;
 
         m_creature->setFaction(FACTION_NEUTRAL);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
@@ -491,10 +467,6 @@ struct MANGOS_DLL_DECL boss_doomrelAI : public ScriptedAI
         Voidwalkers = false;
 
         m_creature->setFaction(FACTION_NEUTRAL);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void SummonVoidwalkers(Unit* victim)

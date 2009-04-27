@@ -49,10 +49,6 @@ struct MANGOS_DLL_DECL boss_noxxionAI : public ScriptedAI
         Invisible = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void SummonAdds(Unit* victim)
     {
         Rand = rand()%8;

@@ -122,8 +122,6 @@ struct MANGOS_DLL_DECL npc_grimstoneAI : public npc_escortAI
         CanWalk = false;
     }
 
-    void Aggro(Unit *who) { }
-
     void DoGate(uint32 id, uint32 state)
     {
         if (GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(id)))
@@ -336,10 +334,6 @@ struct MANGOS_DLL_DECL mob_phalanxAI : public ScriptedAI
         MightyBlow_Timer = 15000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -542,8 +536,6 @@ struct MANGOS_DLL_DECL npc_rocknotAI : public npc_escortAI
         BreakKeg_Timer = 0;
         BreakDoor_Timer = 0;
     }
-
-    void Aggro(Unit *who) { }
 
     void DoGo(uint32 id, uint32 state)
     {

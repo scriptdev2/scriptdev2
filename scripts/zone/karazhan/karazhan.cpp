@@ -156,8 +156,6 @@ struct MANGOS_DLL_DECL npc_barnesAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who) {}
-
     void WaypointReached(uint32 i)
     {
         switch(i)

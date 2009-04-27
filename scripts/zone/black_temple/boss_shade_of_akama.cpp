@@ -113,7 +113,6 @@ struct MANGOS_DLL_DECL mob_ashtongue_channelerAI : public ScriptedAI
 
     void Reset() { ShadeGUID = 0; }
     void JustDied(Unit* killer);
-    void Aggro(Unit* who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
     void UpdateAI(const uint32 diff) {}
@@ -135,7 +134,6 @@ struct MANGOS_DLL_DECL mob_ashtongue_sorcererAI : public ScriptedAI
     }
 
     void JustDied(Unit* killer);
-    void Aggro(Unit* who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
     void UpdateAI(const uint32 diff)
@@ -266,8 +264,6 @@ struct MANGOS_DLL_DECL boss_shade_of_akamaAI : public ScriptedAI
         if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
-
-    void Aggro(Unit* who) { }
 
     void AttackStart(Unit* who)
     {
@@ -562,8 +558,6 @@ struct MANGOS_DLL_DECL npc_akamaAI : public ScriptedAI
 
         m_creature->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
     }
-
-    void Aggro(Unit* who) {}
 
     void BeginEvent(Player* pl)
     {

@@ -103,7 +103,6 @@ struct MANGOS_DLL_DECL mob_omrogg_headsAI : public ScriptedAI
     uint32 Death_Timer;
 
     void Reset() {}
-    void Aggro(Unit* who) { }
 
     void DoDeathYell()
     {

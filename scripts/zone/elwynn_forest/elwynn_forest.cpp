@@ -48,14 +48,7 @@ struct MANGOS_DLL_DECL npc_henze_faulkAI : public ScriptedAI
         spellHit = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        return;
-    }
+    void MoveInLineOfSight(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {

@@ -46,10 +46,6 @@ struct MANGOS_DLL_DECL boss_halyconAI : public ScriptedAI
         Summoned = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

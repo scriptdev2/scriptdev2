@@ -387,7 +387,6 @@ struct MANGOS_DLL_DECL mob_lesser_shadow_fissureAI : public ScriptedAI
     void Reset() { }
     void MoveInLineOfSight(Unit *who) { }
     void AttackStart(Unit* who) { }
-    void Aggro(Unit* who) { }
 };
 
 CreatureAI* GetAI_boss_grand_warlock_nethekurse(Creature *_Creature)

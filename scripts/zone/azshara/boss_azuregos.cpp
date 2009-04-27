@@ -60,8 +60,6 @@ struct MANGOS_DLL_DECL boss_azuregosAI : public ScriptedAI
         Enraged = false;
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

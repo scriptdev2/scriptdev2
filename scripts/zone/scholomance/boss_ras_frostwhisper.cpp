@@ -53,10 +53,6 @@ struct MANGOS_DLL_DECL boss_rasfrostAI : public ScriptedAI
         m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

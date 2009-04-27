@@ -106,8 +106,6 @@ struct MANGOS_DLL_DECL npc_calvin_montagueAI : public ScriptedAI
         m_creature->setFaction(FACTION_FRIENDLY);
     }
 
-    void Aggro(Unit* who) { }
-
     void JustDied(Unit* Killer)
     {
         if( Killer->GetTypeId() == TYPEID_PLAYER )

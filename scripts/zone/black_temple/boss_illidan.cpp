@@ -328,7 +328,6 @@ struct MANGOS_DLL_DECL demonfireAI : public ScriptedAI
         DespawnTimer = 45000;
     }
 
-    void Aggro(Unit *who) {}
     void AttackStart(Unit* who) { }
     void MoveInLineOfSight(Unit *who){ }
 
@@ -406,7 +405,6 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
     std::list<WayPoints>::iterator WayPoint;
 
     void BeginEvent(uint64 PlayerGUID);
-    void Aggro(Unit *who) {}
 
     void Reset()
     {
@@ -2022,8 +2020,6 @@ struct MANGOS_DLL_SPEC boss_maievAI : public ScriptedAI
         IllidanGUID = 0;
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!IllidanGUID)
@@ -2085,8 +2081,6 @@ struct MANGOS_DLL_DECL cage_trap_triggerAI : public ScriptedAI
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
-
-    void Aggro(Unit *who){}
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -2193,8 +2187,6 @@ struct MANGOS_DLL_DECL flame_of_azzinothAI : public ScriptedAI
         ChargeTimer = 5000;
     }
 
-    void Aggro(Unit *who) {}
-
     void Charge()
     {
         // Get the Threat List
@@ -2264,8 +2256,6 @@ struct MANGOS_DLL_DECL shadow_demonAI : public ScriptedAI
 
     void Reset() { TargetGUID = 0; }
 
-    void Aggro(Unit *who) {}
-
     void JustDied(Unit *killer)
     {
         if (TargetGUID)
@@ -2310,8 +2300,6 @@ struct MANGOS_DLL_DECL flamecrashAI : public ScriptedAI
         DespawnTimer = 60000;
     }
 
-    void Aggro(Unit *who){ return; }
-
     void AttackStart(Unit *who) { }
 
     void MoveInLineOfSight(Unit *who){ }
@@ -2342,8 +2330,6 @@ struct MANGOS_DLL_SPEC mob_parasitic_shadowfiendAI : public ScriptedAI
     }
 
     void Reset() {}
-
-    void Aggro(Unit* who) {}
 
     void DoMeleeAttackIfReady()
     {
@@ -2376,8 +2362,6 @@ struct MANGOS_DLL_DECL blazeAI : public ScriptedAI
         DespawnTimer = 15000;
     }
 
-    void Aggro(Unit *who){ }
-
     void AttackStart(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who){ }
@@ -2403,8 +2387,8 @@ struct MANGOS_DLL_DECL blade_of_azzinothAI : public ScriptedAI
     blade_of_azzinothAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
     void Reset() {}
+
     // Do-Nothing-But-Stand-There
-    void Aggro(Unit* who) { }
     void AttackStart(Unit* who) { }
     void MoveInLineOfSight(Unit* who) { }
 

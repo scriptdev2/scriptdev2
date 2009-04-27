@@ -48,8 +48,6 @@ struct MANGOS_DLL_DECL mob_shattered_rumblerAI : public ScriptedAI
         Spawn = false;
     }
 
-    void Aggro(Unit* who) {}
-
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
         if(Spellkind->Id == 32001 && !Spawn)
@@ -237,8 +235,6 @@ struct MANGOS_DLL_DECL mob_sunspring_villagerAI : public ScriptedAI
         m_creature->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
         m_creature->SetStandState(UNIT_STAND_STATE_DEAD);
     }
-
-    void Aggro(Unit *who) {}
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
@@ -498,8 +494,6 @@ struct MANGOS_DLL_DECL npc_creditmarker_visit_with_ancestorsAI : public Scripted
     npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) { Reset(); }
 
     void Reset() {}
-
-    void Aggro(Unit* who) {}
 
     void MoveInLineOfSight(Unit *who)
     {

@@ -45,10 +45,6 @@ struct MANGOS_DLL_DECL boss_drakkisathAI : public ScriptedAI
         Thunderclap_Timer = 17000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

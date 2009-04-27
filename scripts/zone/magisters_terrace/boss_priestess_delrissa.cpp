@@ -368,8 +368,6 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
         ResetThreatTimer = 5000 + rand()%15000;             // These guys like to switch targets often, and are not meant to be tanked.
     }
 
-    void Aggro(Unit* who) {}
-
     void JustDied(Unit* killer)
     {
         if (!pInstance)
@@ -545,8 +543,6 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 
     void KilledUnit(Unit* victim);
     void JustDied(Unit* killer);
-
-    void Aggro(Unit* who){}
 
     void UpdateAI(const uint32 diff)
     {
@@ -933,9 +929,6 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
 
     void KilledUnit(Unit* victim);
     void JustDied(Unit* killer);
-
-    void Aggro(Unit* who){}
-
 };*/
 
 struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
@@ -1229,8 +1222,6 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 //    }
 //
 //    void JustDied(Unit *Killer){}
-//
-//    void Aggro(Unit *who){}
 //
 //    void UpdateAI(const uint32 diff)
 //    {

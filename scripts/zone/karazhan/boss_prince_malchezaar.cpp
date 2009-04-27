@@ -104,7 +104,6 @@ struct MANGOS_DLL_DECL netherspite_infernalAI : public ScriptedAI
     InfernalPoint *point;
 
     void Reset() {}
-    void Aggro(Unit *who) {}
     void MoveInLineOfSight(Unit *who) {}
 
     void UpdateAI(const uint32 diff)

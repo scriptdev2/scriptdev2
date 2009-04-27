@@ -44,10 +44,6 @@ struct MANGOS_DLL_DECL boss_vectusAI : public ScriptedAI
         Frenzy_Timer = 0;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

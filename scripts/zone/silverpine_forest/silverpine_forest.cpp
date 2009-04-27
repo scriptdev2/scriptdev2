@@ -42,10 +42,6 @@ struct MANGOS_DLL_DECL npc_astor_hadrenAI : public ScriptedAI
         m_creature->setFaction(68);
     }
 
-    void Aggro(Unit* who)
-    {
-    }
-
     void JustDied(Unit *who)
     {
         m_creature->setFaction(68);

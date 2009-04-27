@@ -42,8 +42,6 @@ struct MANGOS_DLL_DECL boss_gehennasAI : public ScriptedAI
         GehennasCurse_Timer = 12000;
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

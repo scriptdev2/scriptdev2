@@ -73,10 +73,6 @@ struct MANGOS_DLL_DECL boss_darkmaster_gandlingAI : public ScriptedAI
         Teleport_Timer = 16000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit *killer)
     {
         if (pInstance)

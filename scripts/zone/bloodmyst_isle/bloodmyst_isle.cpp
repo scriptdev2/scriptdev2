@@ -43,10 +43,6 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
     {
     }
 
-    void Aggro(Unit* who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         uint32 spawnCreatureID;

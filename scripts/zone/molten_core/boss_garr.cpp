@@ -49,10 +49,6 @@ struct MANGOS_DLL_DECL boss_garrAI : public ScriptedAI
         CheckAdds_Timer = 2000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -85,10 +81,6 @@ struct MANGOS_DLL_DECL mob_fireswornAI : public ScriptedAI
     void Reset()
     {
         Immolate_Timer = 4000;                              //These times are probably wrong
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

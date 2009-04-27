@@ -90,8 +90,6 @@ struct MANGOS_DLL_DECL npc_aged_dying_ancient_kodoAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit* who) { }
-
     void UpdateAI(const uint32 diff)
     {
         //timer should always be == 0 unless we already updated entry of creature. Then not expect this updated to ever be in combat.

@@ -436,7 +436,6 @@ struct MANGOS_DLL_DECL mob_felkael_flamestrikeAI : public ScriptedAI
         DoCast(m_creature, SPELL_FLAMESTRIKE2, true);
     }
 
-    void Aggro(Unit *who) {}
     void MoveInLineOfSight(Unit *who) {}
     void UpdateAI(const uint32 diff)
     {
@@ -472,8 +471,6 @@ struct MANGOS_DLL_DECL mob_felkael_phoenixAI : public ScriptedAI
         Rebirth = false;
         FakeDeath = false;
     }
-
-    void Aggro(Unit* who) {}
 
     void DamageTaken(Unit* pKiller, uint32 &damage)
     {
@@ -572,7 +569,6 @@ struct MANGOS_DLL_DECL mob_felkael_phoenix_eggAI : public ScriptedAI
 
     }
 
-    void Aggro(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
 
     void UpdateAI(const uint32 diff)
@@ -603,10 +599,6 @@ struct MANGOS_DLL_DECL mob_arcane_sphereAI : public ScriptedAI
         m_creature->setFaction(14);
         DoCast(m_creature, SPELL_ARCANE_SPHERE_PASSIVE, true);
     }
-
-
-    void Aggro(Unit* who) {}
-
 
     void UpdateAI(const uint32 diff)
     {

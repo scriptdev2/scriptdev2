@@ -48,10 +48,6 @@ struct MANGOS_DLL_DECL boss_ramstein_the_gorgerAI : public ScriptedAI
         Knockout_Timer = 12000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         for(uint8 i = 0; i < 30; i++)

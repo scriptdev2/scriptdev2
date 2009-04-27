@@ -154,8 +154,6 @@ struct MANGOS_DLL_DECL mob_coilfang_waterelementalAI : public ScriptedAI
         WaterBoltVolley_Timer = 3000+rand()%3000;
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

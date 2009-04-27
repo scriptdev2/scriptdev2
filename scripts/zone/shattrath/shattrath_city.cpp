@@ -112,8 +112,6 @@ struct MANGOS_DLL_DECL npc_dirty_larryAI : public ScriptedAI
         return pCreature;
     }
 
-    void Aggro(Unit* who) {}
-
     void SetRuffies(uint64 guid, bool bAttack, bool bReset)
     {
         Creature* pCreature = (Creature*)Unit::GetUnit(*m_creature, guid);
@@ -411,7 +409,6 @@ struct MANGOS_DLL_DECL npc_khadgars_servantAI : public npc_escortAI
     uint64 pguid;
 
     void Reset() {}
-    void Aggro(Unit* who) {}
 
     void WaypointReached(uint32 i)
     {
@@ -494,8 +491,6 @@ struct MANGOS_DLL_DECL npc_raliq_the_drunkAI : public ScriptedAI
         m_creature->setFaction(FACTION_FRIENDLY_RD);
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -556,8 +551,6 @@ struct MANGOS_DLL_DECL npc_salsalabimAI : public ScriptedAI
         MagneticPull_Timer = 15000;
         m_creature->setFaction(FACTION_FRIENDLY_SA);
     }
-
-    void Aggro(Unit *who) {}
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {

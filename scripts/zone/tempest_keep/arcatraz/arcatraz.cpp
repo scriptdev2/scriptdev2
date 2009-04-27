@@ -110,10 +110,6 @@ struct MANGOS_DLL_DECL npc_millhouse_manastormAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void KilledUnit(Unit *victim)
     {
         switch(rand()%2)
@@ -497,8 +493,6 @@ struct MANGOS_DLL_DECL mob_zerekethvoidzoneAI : public ScriptedAI
 
         DoCast(m_creature,SPELL_VOID_ZONE_DAMAGE);
     }
-
-    void Aggro(Unit* who) { }
 };
 CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature *_Creature)
 {

@@ -230,8 +230,6 @@ struct MANGOS_DLL_DECL mob_batriderAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI (const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )

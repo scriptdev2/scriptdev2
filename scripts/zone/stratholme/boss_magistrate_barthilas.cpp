@@ -69,10 +69,6 @@ struct MANGOS_DLL_DECL boss_magistrate_barthilasAI : public ScriptedAI
         ScriptedAI::MoveInLineOfSight(who);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         m_creature->SetDisplayId(MODEL_HUMAN);

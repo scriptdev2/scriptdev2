@@ -105,8 +105,6 @@ struct MANGOS_DLL_DECL npc_enslaved_soulAI : public ScriptedAI
         ReliquaryGUID = 0;
     }
 
-    void Aggro(Unit* who) {}
-
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (damage >= m_creature->GetHealth())
@@ -194,8 +192,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
         if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
-
-    void Aggro(Unit* who) { }
 
     void AttackStart(Unit* who) { }
 

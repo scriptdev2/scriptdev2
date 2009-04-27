@@ -61,10 +61,6 @@ struct MANGOS_DLL_DECL boss_golemaggAI : public ScriptedAI
         m_creature->CastSpell(m_creature,SPELL_MAGMASPLASH,true);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         if (pInstance)
@@ -132,10 +128,6 @@ struct MANGOS_DLL_DECL mob_core_ragerAI : public ScriptedAI
     {
         Mangle_Timer = 7000;                                //These times are probably wrong
         Check_Timer = 1000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

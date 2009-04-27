@@ -42,10 +42,6 @@ struct MANGOS_DLL_DECL boss_lucifronAI : public ScriptedAI
         ShadowShock_Timer = 6000;                           //6 seconds
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

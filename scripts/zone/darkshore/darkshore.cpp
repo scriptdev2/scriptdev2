@@ -262,8 +262,6 @@ struct MANGOS_DLL_DECL npc_threshwackonatorAI : public ScriptedAI
         uiPlayerGUID = 0;
     }
 
-    void Aggro(Unit* who) { }
-
     void JustDied(Unit* pKiller)
     {
         if (uiPlayerGUID)

@@ -43,10 +43,6 @@ struct MANGOS_DLL_DECL boss_hazzarahAI : public ScriptedAI
         Illusions_Timer = 10000 + rand()%8000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

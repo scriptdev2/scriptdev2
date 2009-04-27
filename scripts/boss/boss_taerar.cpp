@@ -73,10 +73,6 @@ struct MANGOS_DLL_DECL boss_taerarAI : public ScriptedAI
         Shades = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void SummonShades(Unit* victim)
     {
         Rand = rand()%15;
@@ -251,10 +247,6 @@ struct MANGOS_DLL_DECL boss_shadeoftaerarAI : public ScriptedAI
     {
         PoisonCloud_Timer = 8000;
         PosionBreath_Timer = 12000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

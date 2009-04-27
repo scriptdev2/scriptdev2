@@ -133,8 +133,6 @@ struct MANGOS_DLL_DECL npc_cooshcooshAI : public ScriptedAI
         m_creature->setFaction(FACTION_FRIENDLY_CO);
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -277,7 +275,6 @@ struct MANGOS_DLL_DECL npc_kayra_longmaneAI : public npc_escortAI
     }
 
     void Reset() { }
-    void Aggro(Unit* who) { }
 
     void JustDied(Unit* killer)
     {

@@ -267,10 +267,6 @@ struct MANGOS_DLL_DECL mob_zealot_lorkhanAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI (const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
@@ -403,10 +399,6 @@ struct MANGOS_DLL_DECL mob_zealot_zathAI : public ScriptedAI
 
         m_creature->SetStandState(UNIT_STAND_STATE_STAND);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI (const uint32 diff)

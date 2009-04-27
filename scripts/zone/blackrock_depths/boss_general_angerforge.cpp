@@ -54,10 +54,6 @@ struct MANGOS_DLL_DECL boss_general_angerforgeAI : public ScriptedAI
         Medics = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void SummonAdds(Unit* victim)
     {
         Rand1 = rand()%15;

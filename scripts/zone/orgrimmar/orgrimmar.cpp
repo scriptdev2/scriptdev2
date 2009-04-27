@@ -91,8 +91,6 @@ struct MANGOS_DLL_DECL npc_shenthulAI : public ScriptedAI
         playerGUID = 0;
     }
 
-    void Aggro(Unit* who) { }
-
     void ReciveEmote(Player *player, uint32 emote)
     {
         if (emote == TEXTEMOTE_SALUTE && player->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
@@ -174,8 +172,6 @@ struct MANGOS_DLL_DECL npc_thrall_warchiefAI : public ScriptedAI
         ChainLightning_Timer = 2000;
         Shock_Timer = 8000;
     }
-
-    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {

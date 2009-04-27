@@ -192,10 +192,6 @@ struct MANGOS_DLL_DECL mob_nether_wraithAI : public ScriptedAI
         Detonation = false;
     }
 
-    void Aggro(Unit* who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

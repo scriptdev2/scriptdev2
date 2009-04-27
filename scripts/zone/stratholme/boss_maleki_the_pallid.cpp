@@ -52,10 +52,6 @@ struct MANGOS_DLL_DECL boss_maleki_the_pallidAI : public ScriptedAI
         DrainLife_Timer = 31000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         if (pInstance)

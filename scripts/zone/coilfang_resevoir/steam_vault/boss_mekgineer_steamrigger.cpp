@@ -221,8 +221,6 @@ struct MANGOS_DLL_DECL mob_steamrigger_mechanicAI : public ScriptedAI
         return;
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (Repair_Timer < diff)

@@ -215,8 +215,6 @@ struct MANGOS_DLL_DECL mob_titoAI : public ScriptedAI
         YipTimer = 10000;
     }
 
-    void Aggro(Unit* who) {}
-
     void JustDied(Unit* killer)
     {
         if (DorotheeGUID)
@@ -633,11 +631,7 @@ struct MANGOS_DLL_DECL mob_cycloneAI : public ScriptedAI
         MoveTimer = 1000;
     }
 
-    void Aggro(Unit* who) {}
-
-    void MoveInLineOfSight(Unit* who)
-    {
-    }
+    void MoveInLineOfSight(Unit* who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -993,8 +987,6 @@ struct MANGOS_DLL_DECL boss_julianneAI : public ScriptedAI
         SummonedRomulo = false;
         RomuloDead = false;
     }
-
-    void Aggro(Unit* who) {}
 
     void AttackStart(Unit* who)
     {

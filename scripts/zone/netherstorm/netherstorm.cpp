@@ -81,8 +81,6 @@ struct MANGOS_DLL_DECL npc_manaforge_control_consoleAI : public ScriptedAI
         Creature* add = NULL;
     }
 
-    void Aggro(Unit *who) { return; }
-
     /*void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         //we have no way of telling the creature was hit by spell -> got aura applied after 10-12 seconds
@@ -387,8 +385,6 @@ struct MANGOS_DLL_DECL npc_commander_dawnforgeAI : public ScriptedAI
         Phase_Timer = 4000;
         isEvent = false;
     }
-
-    void Aggro(Unit *who) { }
 
     //Select any creature in a grid
     Creature* SelectCreatureInGrid(uint32 entry, float range)

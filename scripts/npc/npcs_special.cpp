@@ -64,8 +64,6 @@ struct MANGOS_DLL_DECL npc_chicken_cluckAI : public ScriptedAI
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         // Reset flags after a certain time has passed so that the next player has to start the 'event' again
@@ -141,7 +139,6 @@ struct MANGOS_DLL_DECL npc_dancing_flamesAI : public ScriptedAI
     npc_dancing_flamesAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset() {}
-    void Aggro(Unit*) {}
 
     void ReceiveEmote( Player *player, uint32 emote )
     {
@@ -254,8 +251,6 @@ struct MANGOS_DLL_DECL npc_doctorAI : public ScriptedAI
     void PatientDied(Location* Point);
     void PatientSaved(Creature* soldier, Player* player, Location* Point);
     void UpdateAI(const uint32 diff);
-
-    void Aggro(Unit* who){}
 };
 
 /*#####
@@ -299,8 +294,6 @@ struct MANGOS_DLL_DECL npc_injured_patientAI : public ScriptedAI
                 break;
         }
     }
-
-    void Aggro(Unit* who){}
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
@@ -590,8 +583,6 @@ struct MANGOS_DLL_DECL npc_garments_of_questsAI : public npc_escortAI
         m_creature->SetHealth(int(m_creature->GetMaxHealth()*0.7));
     }
 
-    void Aggro(Unit *who) {}
-
     void SpellHit(Unit* pCaster, const SpellEntry *Spell)
     {
         if (Spell->Id == SPELL_LESSER_HEAL_R2 || Spell->Id == SPELL_FORTITUDE_R1)
@@ -758,10 +749,6 @@ struct MANGOS_DLL_DECL npc_guardianAI : public ScriptedAI
     void Reset()
     {
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

@@ -129,8 +129,6 @@ struct MANGOS_DLL_DECL npc_mistAI : public ScriptedAI
         EnterEvadeMode();
     }
 
-    void Aggro(Unit* who) { }
-
     void JustDied(Unit* pKiller)
     {
         if (Unit* pUnit = Unit::GetUnit(*m_creature,uiPlayerGUID))

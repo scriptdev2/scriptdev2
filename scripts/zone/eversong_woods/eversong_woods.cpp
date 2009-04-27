@@ -86,8 +86,6 @@ struct MANGOS_DLL_DECL npc_kelerun_bloodmournAI : public ScriptedAI
 
     bool bIsEventInProgress;
 
-    void Aggro(Unit* who) { }
-
     void Reset()
     {
         m_creature->SetUInt32Value(UNIT_NPC_FLAGS, uiNpcFlags);
@@ -293,8 +291,6 @@ struct MANGOS_DLL_DECL npc_prospector_anvilwardAI : public npc_escortAI
                 break;
         }
     }
-
-    void Aggro(Unit* who) { }
 
     void Reset()
     {

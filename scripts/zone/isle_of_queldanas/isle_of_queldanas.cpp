@@ -87,8 +87,6 @@ struct MANGOS_DLL_DECL npc_converted_sentryAI : public ScriptedAI
         return;
     }
 
-    void Aggro(Unit* who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if( !Credit )

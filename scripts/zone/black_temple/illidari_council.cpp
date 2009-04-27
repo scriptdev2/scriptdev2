@@ -144,8 +144,6 @@ struct MANGOS_DLL_DECL mob_blood_elf_council_voice_triggerAI : public ScriptedAI
         }else error_log(ERROR_INST_DATA);
     }
 
-    void Aggro(Unit* who) {}
-
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
 
@@ -251,7 +249,6 @@ struct MANGOS_DLL_DECL mob_illidari_councilAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
 

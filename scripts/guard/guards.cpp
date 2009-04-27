@@ -2493,8 +2493,6 @@ struct MANGOS_DLL_DECL guard_shattrath_aldorAI : public guardAI
         CanTeleport = false;
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if(!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -2688,8 +2686,6 @@ struct MANGOS_DLL_DECL guard_shattrath_scryerAI : public guardAI
         playerGUID = 0;
         CanTeleport = false;
     }
-
-    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {

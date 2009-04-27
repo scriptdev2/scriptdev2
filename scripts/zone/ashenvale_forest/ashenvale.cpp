@@ -76,8 +76,6 @@ struct MANGOS_DLL_DECL npc_ruul_snowhoofAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who) {}
-
     void Reset()
     {
         if (!IsBeingEscorted)
@@ -187,10 +185,6 @@ struct MANGOS_DLL_DECL npc_torekAI : public npc_escortAI
     {
         Rend_Timer = 5000;
         Thunderclap_Timer = 8000;
-    }
-
-    void Aggro(Unit* who)
-    {
     }
 
     void JustSummoned(Creature* summoned)

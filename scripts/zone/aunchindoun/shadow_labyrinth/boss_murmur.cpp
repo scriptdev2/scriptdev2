@@ -78,8 +78,6 @@ struct MANGOS_DLL_DECL boss_murmurAI : public Scripted_NoMovementAI
         }
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

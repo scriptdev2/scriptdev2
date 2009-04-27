@@ -57,10 +57,6 @@ struct MANGOS_DLL_DECL boss_nerubenkanAI : public ScriptedAI
         RaiseUndeadScarab_Timer = 3000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void RaiseUndeadScarab(Unit* victim)
     {
         Rand = rand()%10;

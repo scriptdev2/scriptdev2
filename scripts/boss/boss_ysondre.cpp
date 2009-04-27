@@ -63,10 +63,6 @@ struct MANGOS_DLL_DECL boss_ysondreAI : public ScriptedAI
         SummonDruids3_Timer = 0;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void SummonDruids(Unit* victim)
     {
         Rand = rand()%10;
@@ -198,10 +194,6 @@ struct MANGOS_DLL_DECL mob_dementeddruidsAI : public ScriptedAI
     void Reset()
     {
         MoonFire_Timer = 3000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

@@ -48,10 +48,6 @@ struct MANGOS_DLL_DECL boss_anubshiahAI : public ScriptedAI
         EnvelopingWeb_Timer = 16000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

@@ -190,10 +190,6 @@ struct MANGOS_DLL_DECL mob_ragin_flamesAI : public ScriptedAI
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, true);
     }
 
-    void Aggro(Unit* who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

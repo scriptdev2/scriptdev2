@@ -51,10 +51,6 @@ struct MANGOS_DLL_DECL boss_warmastervooneAI : public ScriptedAI
         ThrowAxe_Timer = 1000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

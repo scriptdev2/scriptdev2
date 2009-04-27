@@ -51,9 +51,6 @@ struct MANGOS_DLL_DECL mob_stolen_soulAI : public ScriptedAI
         Class_Timer = 1000;
     }
 
-    void Aggro(Unit *who)
-    { }
-
     void SetMyClass(uint8 myclass)
     {
         myClass = myclass;
@@ -309,10 +306,6 @@ struct MANGOS_DLL_DECL mob_avatar_of_martyredAI : public ScriptedAI
     void Reset()
     {
         Mortal_Strike_timer = 10000;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

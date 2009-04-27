@@ -62,8 +62,6 @@ struct MANGOS_DLL_DECL mob_unkor_the_ruthlessAI : public ScriptedAI
         m_creature->setFaction(FACTION_HOSTILE);
     }
 
-    void Aggro(Unit *who) {}
-
     void DoNice()
     {
         DoScriptText(SAY_SUBMIT, m_creature);
@@ -149,7 +147,6 @@ struct MANGOS_DLL_DECL mob_infested_root_walkerAI : public ScriptedAI
     mob_infested_root_walkerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset() { }
-    void Aggro(Unit *who) { }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
@@ -174,7 +171,6 @@ struct MANGOS_DLL_DECL mob_rotting_forest_ragerAI : public ScriptedAI
     mob_rotting_forest_ragerAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset() { }
-    void Aggro(Unit *who) { }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
@@ -206,7 +202,6 @@ struct MANGOS_DLL_DECL mob_netherweb_victimAI : public ScriptedAI
     mob_netherweb_victimAI(Creature *c) : ScriptedAI(c) {Reset();}
 
     void Reset() { }
-    void Aggro(Unit *who) { }
     void MoveInLineOfSight(Unit *who) { }
 
     void JustDied(Unit* Killer)
@@ -264,8 +259,6 @@ struct MANGOS_DLL_DECL npc_floonAI : public ScriptedAI
         FrostNova_Timer = 9000;
         m_creature->setFaction(FACTION_FRIENDLY_FL);
     }
-
-    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {

@@ -43,14 +43,7 @@ struct MANGOS_DLL_DECL mob_treantAI  : public ScriptedAI
         m_creature->SetUnitMovementFlags(0);
     }
 
-    void Aggro(Unit *who)
-    {
-        return;
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
+    void MoveInLineOfSight(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {

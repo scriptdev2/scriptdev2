@@ -535,8 +535,6 @@ struct MANGOS_DLL_DECL water_elementalAI : public ScriptedAI
         CastTimer = 2000 + (rand()%3000);
     }
 
-    void Aggro(Unit* who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )

@@ -74,10 +74,6 @@ struct MANGOS_DLL_DECL boss_venoxisAI : public ScriptedAI
         InBerserk= false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, m_creature);

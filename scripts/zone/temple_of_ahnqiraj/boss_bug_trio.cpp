@@ -62,10 +62,6 @@ struct MANGOS_DLL_DECL boss_kriAI : public ScriptedAI
         Death = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void JustDied(Unit* killer)
     {
         if(pInstance)
@@ -158,10 +154,6 @@ struct MANGOS_DLL_DECL boss_vemAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
@@ -245,10 +237,6 @@ struct MANGOS_DLL_DECL boss_yaujAI : public ScriptedAI
             if(Summoned)
                 ((CreatureAI*)Summoned->AI())->AttackStart(target);
         }
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

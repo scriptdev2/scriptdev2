@@ -49,8 +49,6 @@ struct MANGOS_DLL_DECL npc_forest_frogAI : public ScriptedAI
 
     void Reset() { }
 
-    void Aggro(Unit *who) { }
-
     void DoSpawnRandom()
     {
         if( pInstance )
@@ -158,10 +156,6 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
     void SetHoldState(bool bOnHold)
     {
         IsOnHold = bOnHold;
-    }
-
-    void Aggro(Unit* who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

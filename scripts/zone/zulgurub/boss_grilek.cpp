@@ -40,10 +40,6 @@ struct MANGOS_DLL_DECL boss_grilekAI : public ScriptedAI
         GroundTremor_Timer = 8000 + rand()%8000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

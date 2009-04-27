@@ -290,8 +290,6 @@ struct MANGOS_DLL_DECL boss_harbinger_skyriss_illusionAI : public ScriptedAI
     bool HeroicMode;
 
     void Reset() { }
-
-    void Aggro(Unit *who) { }
 };
 
 CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature *_Creature)

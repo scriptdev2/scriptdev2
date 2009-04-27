@@ -44,10 +44,6 @@ struct MANGOS_DLL_DECL boss_shadowvoshAI : public ScriptedAI
         //m_creature->CastSpell(m_creature,SPELL_ICEARMOR,true);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

@@ -119,7 +119,6 @@ struct MANGOS_DLL_DECL mob_scarlet_traineeAI : public npc_escortAI
 
     void Reset() { }
     void WaypointReached(uint32 uiPoint) { }
-    void Aggro(Unit* who) { }
 
     void UpdateAI(const uint32 diff)
     {

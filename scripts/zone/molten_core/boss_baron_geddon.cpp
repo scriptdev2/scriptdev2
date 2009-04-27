@@ -45,10 +45,6 @@ struct MANGOS_DLL_DECL boss_baron_geddonAI : public ScriptedAI
         LivingBomb_Timer = 35000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

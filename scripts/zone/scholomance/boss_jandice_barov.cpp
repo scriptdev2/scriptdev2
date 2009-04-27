@@ -51,10 +51,6 @@ struct MANGOS_DLL_DECL boss_jandicebarovAI : public ScriptedAI
         Invisible = false;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void SummonIllusions(Unit* victim)
     {
         Rand = rand()%10;
@@ -161,10 +157,6 @@ struct MANGOS_DLL_DECL mob_illusionofjandicebarovAI : public ScriptedAI
     {
         Cleave_Timer = 2000 + rand()%6000;
         m_creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)

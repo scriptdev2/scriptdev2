@@ -68,8 +68,6 @@ struct MANGOS_DLL_DECL npc_aeranasAI : public ScriptedAI
         DoScriptText(SAY_SUMMON, m_creature);
     }
 
-    void Aggro(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (Faction_Timer)

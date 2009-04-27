@@ -64,8 +64,6 @@ struct MANGOS_DLL_DECL npc_kyle_the_frenziedAI : public ScriptedAI
             m_creature->UpdateEntry(NPC_KYLE_FRENZIED);
     }
 
-    void Aggro(Unit* who) { }
-
     void SpellHit(Unit* pCaster, SpellEntry const* pSpell)
     {
         if (!m_creature->isInCombat() && !bEvent && pSpell->Id == SPELL_LUNCH)

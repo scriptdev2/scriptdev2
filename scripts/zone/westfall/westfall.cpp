@@ -125,8 +125,6 @@ struct MANGOS_DLL_DECL npc_daphne_stilwellAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who) { }
-
     void JustSummoned(Creature* pSummoned)
     {
         pSummoned->AI()->AttackStart(m_creature);

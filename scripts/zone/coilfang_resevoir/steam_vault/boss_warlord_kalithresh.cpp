@@ -66,8 +66,6 @@ struct MANGOS_DLL_DECL mob_naga_distillerAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who) { }
-
     void StartRageGen(Unit *caster)
     {
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

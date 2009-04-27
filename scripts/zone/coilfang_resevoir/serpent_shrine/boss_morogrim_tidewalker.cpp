@@ -256,8 +256,6 @@ struct MANGOS_DLL_DECL mob_water_globuleAI : public ScriptedAI
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
-    void Aggro(Unit* pWho) {}
-
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!pWho || m_creature->getVictim())

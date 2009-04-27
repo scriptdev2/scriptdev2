@@ -182,10 +182,6 @@ struct MANGOS_DLL_DECL mob_healing_wardAI : public ScriptedAI
         Heal_Timer = 2000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI (const uint32 diff)
     {
         //Heal_Timer
@@ -220,10 +216,6 @@ struct MANGOS_DLL_DECL mob_shade_of_jindoAI : public ScriptedAI
     {
         ShadowShock_Timer = 1000;
         m_creature->CastSpell(m_creature, SPELL_INVISIBLE,true);
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI (const uint32 diff)

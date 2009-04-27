@@ -74,8 +74,6 @@ struct MANGOS_DLL_DECL mob_mature_netherwing_drakeAI : public ScriptedAI
         CastTimer = 5000;
     }
 
-    void Aggro(Unit* who) { }
-
     void SpellHit(Unit* pCaster, SpellEntry const* pSpell)
     {
         if (bCanEat || bIsEating)
@@ -195,8 +193,6 @@ struct MANGOS_DLL_DECL mob_enslaved_netherwing_drakeAI : public ScriptedAI
         m_creature->RemoveUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT + MOVEMENTFLAG_LEVITATING);
         m_creature->SetVisibility(VISIBILITY_ON);
     }
-
-    void Aggro(Unit* who) { }
 
     Creature* SelectCreatureInGrid(uint32 entry, float range)
     {
@@ -339,8 +335,6 @@ struct MANGOS_DLL_DECL mob_dragonmaw_peonAI : public ScriptedAI
         Tapped = false;
         PoisonTimer = 0;
     }
-
-    void Aggro(Unit* who) { }
 
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {

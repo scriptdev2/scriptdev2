@@ -211,10 +211,6 @@ struct MANGOS_DLL_DECL mob_spawn_of_marliAI : public ScriptedAI
         LevelUp_Timer = 3000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI (const uint32 diff)
     {
         //Return since we have no target

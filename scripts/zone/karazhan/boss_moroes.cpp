@@ -382,8 +382,6 @@ struct MANGOS_DLL_DECL boss_moroes_guestAI : public ScriptedAI
             pInstance->SetData(DATA_MOROES_EVENT, NOT_STARTED);
     }
 
-    void Aggro(Unit* who) {}
-
     void AcquireGUID()
     {
         if (!pInstance)

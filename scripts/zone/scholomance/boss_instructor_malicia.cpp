@@ -65,10 +65,6 @@ struct MANGOS_DLL_DECL boss_instructormaliciaAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

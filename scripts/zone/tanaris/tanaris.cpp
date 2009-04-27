@@ -202,7 +202,6 @@ struct MANGOS_DLL_DECL npc_custodian_of_timeAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who) { }
     void Reset() { }
 
     void UpdateAI(const uint32 diff)

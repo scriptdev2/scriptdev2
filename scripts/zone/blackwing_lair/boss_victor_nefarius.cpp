@@ -204,10 +204,6 @@ struct MANGOS_DLL_DECL boss_victor_nefariusAI : public ScriptedAI
         AttackStart(target);
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void MoveInLineOfSight(Unit *who)
     {
         //We simply use this function to find players until we can use Map->GetPlayers()

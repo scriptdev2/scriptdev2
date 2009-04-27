@@ -42,8 +42,6 @@ struct MANGOS_DLL_DECL celebras_the_cursedAI : public ScriptedAI
         CorruptForces_Timer = 30000;
     }
 
-    void Aggro(Unit *who) { }
-
     void JustDied(Unit* Killer)
     {
         m_creature->SummonCreature(13716, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 600000);

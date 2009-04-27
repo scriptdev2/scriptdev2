@@ -225,8 +225,6 @@ struct MANGOS_DLL_DECL npc_ranger_lilathaAI : public npc_escortAI
         }
     }
 
-    void Aggro(Unit* who) {}
-
     void JustDied(Unit* killer)
     {
         if (IsBeingEscorted && PlayerGUID)

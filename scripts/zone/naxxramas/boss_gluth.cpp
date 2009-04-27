@@ -86,10 +86,6 @@ struct MANGOS_DLL_DECL boss_gluthAI : public ScriptedAI
         Summon_Timer = 10000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())

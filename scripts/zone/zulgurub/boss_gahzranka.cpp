@@ -41,10 +41,6 @@ struct MANGOS_DLL_DECL boss_gahzrankaAI : public ScriptedAI
         Slam_Timer = 17000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

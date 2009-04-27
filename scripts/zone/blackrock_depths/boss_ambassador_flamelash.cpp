@@ -42,8 +42,6 @@ struct MANGOS_DLL_DECL boss_ambassador_flamelashAI : public ScriptedAI
         Spirit_Timer = 24000;
     }
 
-    void Aggro(Unit *who) {}
-
     void SummonSpirits(Unit* victim)
     {
         Rand = rand()%10;

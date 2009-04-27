@@ -216,8 +216,6 @@ struct MANGOS_DLL_DECL mob_syth_fireAI : public ScriptedAI
         flamebuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -261,8 +259,6 @@ struct MANGOS_DLL_DECL mob_syth_arcaneAI : public ScriptedAI
         arcaneshock_timer = 2500;
         arcanebuffet_timer = 5000;
     }
-
-    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {
@@ -308,8 +304,6 @@ struct MANGOS_DLL_DECL mob_syth_frostAI : public ScriptedAI
         frostbuffet_timer = 5000;
     }
 
-    void Aggro(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
@@ -353,8 +347,6 @@ struct MANGOS_DLL_DECL mob_syth_shadowAI : public ScriptedAI
         shadowshock_timer = 2500;
         shadowbuffet_timer = 5000;
     }
-
-    void Aggro(Unit *who) { }
 
     void UpdateAI(const uint32 diff)
     {

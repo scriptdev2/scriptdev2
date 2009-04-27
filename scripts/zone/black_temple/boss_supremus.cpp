@@ -60,7 +60,6 @@ struct MANGOS_DLL_DECL molten_flameAI : public ScriptedAI
         CheckTimer = 1000;
     }
 
-    void Aggro(Unit *who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit *who)
     {
@@ -125,7 +124,6 @@ struct MANGOS_DLL_DECL npc_volcanoAI : public ScriptedAI
         GeyserTimer = 0;
     }
 
-    void Aggro(Unit *who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
     void SetSupremusGUID(uint64 guid) { SupremusGUID = guid; }

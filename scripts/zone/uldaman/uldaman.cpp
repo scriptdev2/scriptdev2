@@ -45,10 +45,6 @@ struct MANGOS_DLL_DECL mob_jadespine_basiliskAI : public ScriptedAI
         Cslumber_Timer = 2000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

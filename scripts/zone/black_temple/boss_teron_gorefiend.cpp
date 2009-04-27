@@ -67,7 +67,6 @@ struct MANGOS_DLL_DECL mob_doom_blossomAI : public ScriptedAI
         TeronGUID = 0;
     }
 
-    void Aggro(Unit *who) { }
     void AttackStart(Unit* who) { }
     void MoveInLineOfSight(Unit* who) { }
 
@@ -135,8 +134,6 @@ struct MANGOS_DLL_DECL mob_shadowy_constructAI : public ScriptedAI
         CheckPlayerTimer = 2000;
         CheckTeronTimer = 5000;
     }
-
-    void Aggro(Unit* who) { }
 
     void MoveInLineOfSight(Unit *who)
     {
@@ -252,8 +249,6 @@ struct MANGOS_DLL_DECL boss_teron_gorefiendAI : public ScriptedAI
         if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_PRE_SHAHRAZ_DOOR)))
             pDoor->SetGoState(GO_STATE_ACTIVE);
     }
-
-    void Aggro(Unit *who) {}
 
     void MoveInLineOfSight(Unit *who)
     {

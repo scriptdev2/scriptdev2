@@ -43,8 +43,6 @@ struct MANGOS_DLL_DECL npc_ravenholdtAI : public ScriptedAI
             if( ((Player*)who)->GetQuestStatus(6681) == QUEST_STATUS_INCOMPLETE )
                 ((Player*)who)->KilledMonster(m_creature->GetEntry(),m_creature->GetGUID() );
     }
-
-    void Aggro(Unit* who) { }
 };
 CreatureAI* GetAI_npc_ravenholdt(Creature *_Creature)
 {

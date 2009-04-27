@@ -54,10 +54,6 @@ struct MANGOS_DLL_DECL boss_highlordomokkAI : public ScriptedAI
         Slow_Timer = 24000;
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

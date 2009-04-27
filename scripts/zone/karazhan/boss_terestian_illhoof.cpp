@@ -140,7 +140,6 @@ struct MANGOS_DLL_DECL mob_demon_chainAI : public ScriptedAI
         SacrificeGUID = 0;
     }
 
-    void Aggro(Unit* who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
 
@@ -375,8 +374,6 @@ struct MANGOS_DLL_DECL mob_karazhan_impAI : public ScriptedAI
 
         m_creature->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
     }
-
-    void Aggro(Unit *who) {}
 
     void UpdateAI(const uint32 diff)
     {

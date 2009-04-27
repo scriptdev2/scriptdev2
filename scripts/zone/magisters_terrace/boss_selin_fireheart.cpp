@@ -331,7 +331,6 @@ struct MANGOS_DLL_DECL mob_fel_crystalAI : public ScriptedAI
     mob_fel_crystalAI(Creature *c) : ScriptedAI(c) { Reset(); }
 
     void Reset() {}
-    void Aggro(Unit* who) {}
     void AttackStart(Unit* who) {}
     void MoveInLineOfSight(Unit* who) {}
     void UpdateAI(const uint32 diff) {}

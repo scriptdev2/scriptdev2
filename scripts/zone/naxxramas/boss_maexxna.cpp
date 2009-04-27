@@ -82,17 +82,8 @@ struct MANGOS_DLL_DECL mob_webwrapAI : public ScriptedAI
         }
     }
 
-    void Aggro(Unit *who)
-    {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-    }
+    void MoveInLineOfSight(Unit *who) { }
+    void UpdateAI(const uint32 diff) { }
 };
 
 struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
@@ -114,10 +105,6 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         NecroticPoison_Timer = 30000;                       //30 seconds
         SummonSpiderling_Timer = 30000;                     //30 sec init, 40 sec normal
         Enraged = false;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void DoCastWebWrap()

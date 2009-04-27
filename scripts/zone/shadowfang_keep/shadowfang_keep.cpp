@@ -98,7 +98,6 @@ struct MANGOS_DLL_DECL npc_shadowfang_prisonerAI : public npc_escortAI
     }
 
     void Reset() {}
-    void Aggro(Unit* who) {}
 };
 
 CreatureAI* GetAI_npc_shadowfang_prisoner(Creature* pCreature)

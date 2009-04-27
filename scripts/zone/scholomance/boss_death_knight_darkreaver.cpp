@@ -38,11 +38,8 @@ struct MANGOS_DLL_DECL boss_death_knight_darkreaverAI : public ScriptedAI
             m_creature->CastSpell(m_creature,23261,true);   //Summon Darkreaver's Fallen Charger
         }
     }
-
-    void Aggro(Unit *who)
-    {
-    }
 };
+
 CreatureAI* GetAI_boss_death_knight_darkreaver(Creature *_Creature)
 {
     return new boss_death_knight_darkreaverAI (_Creature);

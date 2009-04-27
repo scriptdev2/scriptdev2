@@ -444,8 +444,6 @@ struct MANGOS_DLL_DECL mob_jandalai_firebombAI : public ScriptedAI
         bomb_timer = 12000;
     }
 
-    void Aggro(Unit* who) {}
-
     void AttackStart(Unit* who) {}
 
     void MoveInLineOfSight(Unit* who) {}
@@ -496,10 +494,6 @@ struct MANGOS_DLL_DECL mob_amanishi_hatcherAI : public ScriptedAI
         hatchlings = 0;
         eggs = 0;
         delete_timer = 10000;
-    }
-
-    void Aggro(Unit* who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
@@ -656,10 +650,6 @@ struct MANGOS_DLL_DECL mob_hatchlingAI : public ScriptedAI
         buffer_timer = 7000;
         delete_timer = 10000;
         start = false;
-    }
-
-    void Aggro(Unit *who)
-    {
     }
 
     void UpdateAI(const uint32 diff)
