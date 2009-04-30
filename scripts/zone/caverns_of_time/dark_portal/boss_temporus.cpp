@@ -51,14 +51,18 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
 
     uint32 Haste_Timer;
     uint32 SpellReflection_Timer;
+    uint32 MortalWound_Timer;
+    uint32 WingBuffet_Timer;
 
     void Reset()
     {
         m_creature->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
         m_creature->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
 
-        Haste_Timer = 20000;
-        SpellReflection_Timer = 40000;
+        Haste_Timer = 15000+rand()%8000;
+        SpellReflection_Timer = 30000;
+        MortalWound_Timer = 8000;
+        WingBuffet_Timer = 25000+rand()%10000;
     }
 
     void Aggro(Unit *who)
@@ -111,13 +115,28 @@ struct MANGOS_DLL_DECL boss_temporusAI : public ScriptedAI
             Haste_Timer = 20000+rand()%5000;
         }else Haste_Timer -= diff;
 
-        //Spell Reflection
-        if (SpellReflection_Timer < diff)
+        //MortalWound_Timer
+        if (MortalWound_Timer < diff)
         {
-            DoCast(m_creature, SPELL_REFLECT);
-            SpellReflection_Timer = 40000+rand()%10000;
-        }else SpellReflection_Timer -= diff;
+            DoCast(m_creature, SPELL_MORTAL_WOUND);
+            MortalWound_Timer = 10000+rand()%10000;
+        }else MortalWound_Timer -= diff;
 
+        //Wing ruffet
+        if (WingBuffet_Timer < diff)
+        {
+            DoCast(m_creature,HeroicMode ? H_SPELL_WING_BUFFET : SPELL_WING_BUFFET);
+            WingBuffet_Timer = 20000+rand()%10000;
+        }else WingBuffet_Timer -= diff;
+
+        if (HeroicMode)
+        {
+            if (SpellReflection_Timer < diff)
+            {
+                DoCast(m_creature,SPELL_REFLECT);
+                SpellReflection_Timer = 25000+rand()%10000;
+            }else SpellReflection_Timer -= diff;
+        }
         DoMeleeAttackIfReady();
     }
 };
