@@ -113,7 +113,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         }
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
     // select the spell and the text based on the advisor which died
@@ -164,8 +164,8 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
 
         DoScriptText(SAY_AGGRO, m_creature);
 
-        m_pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, pWho->GetGUID());
-        m_pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
+        m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pWho->GetGUID());
+        m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* pVictim)
@@ -183,7 +183,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_FATHOMLORDKARATHRESSEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, DONE);
 
         //support for quest 10944
         m_creature->SummonCreature(NPC_SEER_OLUM, afCoords_Olum[0], afCoords_Olum[1], afCoords_Olum[2], afCoords_Olum[3], TEMPSUMMON_TIMED_DESPAWN, 3600000);
@@ -192,9 +192,9 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
     void UpdateAI(const uint32 uiDiff)
     {
         //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
         {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER)))
+            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
             {
                 AttackStart(pTarget);
                 GetAdvisors();
@@ -206,7 +206,7 @@ struct MANGOS_DLL_DECL boss_fathomlord_karathressAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (m_pInstance && !m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
             EnterEvadeMode();
 
         //m_uiCataclysmicBolt_Timer
@@ -279,7 +279,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         m_uiTheBeastWithin_Timer = 30000;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
     void JustDied(Unit* pVictim)
@@ -296,16 +296,16 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, pWho->GetGUID());
-        m_pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
+        m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pWho->GetGUID());
+        m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
         //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
         {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER)))
+            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
                 AttackStart(pTarget);
         }
 
@@ -314,7 +314,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_sharkkisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (m_pInstance && !m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
         {
             EnterEvadeMode();
             return;
@@ -361,7 +361,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         m_uiFrostShock_Timer = 25000;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
     void JustDied(Unit *pVictim)
@@ -378,16 +378,16 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, pWho->GetGUID());
-        m_pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
+        m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pWho->GetGUID());
+        m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
         //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
         {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER)))
+            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
                 AttackStart(pTarget);
         }
 
@@ -396,7 +396,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_tidalvessAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (m_pInstance && !m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
             EnterEvadeMode();
 
         //m_FrostShock_Timer
@@ -433,7 +433,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         m_uiHeal_Timer            = 55000;
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_KARATHRESSEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_KARATHRESS_EVENT, NOT_STARTED);
     }
 
     void JustDied(Unit* pVictim)
@@ -450,16 +450,16 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
         if (!m_pInstance)
             return;
 
-        m_pInstance->SetData64(DATA_KARATHRESSEVENT_STARTER, pWho->GetGUID());
-        m_pInstance->SetData(DATA_KARATHRESSEVENT, IN_PROGRESS);
+        m_pInstance->SetData64(DATA_KARATHRESS_STARTER, pWho->GetGUID());
+        m_pInstance->SetData(TYPE_KARATHRESS_EVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 uiDiff)
     {
         //Only if not incombat check if the event is started
-        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (!m_creature->isInCombat() && m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == IN_PROGRESS)
         {
-            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESSEVENT_STARTER)))
+            if (Unit* pTarget = Unit::GetUnit((*m_creature), m_pInstance->GetData64(DATA_KARATHRESS_STARTER)))
                 AttackStart(pTarget);
         }
 
@@ -468,7 +468,7 @@ struct MANGOS_DLL_DECL boss_fathomguard_caribdisAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (m_pInstance && !m_pInstance->GetData(DATA_KARATHRESSEVENT))
+        if (m_pInstance && m_pInstance->GetData(TYPE_KARATHRESS_EVENT) == NOT_STARTED)
             EnterEvadeMode();
 
         //m_uiWaterBoltVolley_Timer

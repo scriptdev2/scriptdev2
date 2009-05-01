@@ -170,7 +170,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         RemoveAllShieldGenerators();
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_LADYVASHJEVENT, NOT_STARTED);
+            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, NOT_STARTED);
     }
 
     void RemoveAllShieldGenerators()
@@ -198,7 +198,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         }
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_LADYVASHJEVENT, IN_PROGRESS);
+            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, IN_PROGRESS);
     }
 
     void MovementInform(uint32 uiType, uint32 uiPointId)
@@ -266,7 +266,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         DoScriptText(SAY_DEATH, m_creature);
 
         if (m_pInstance)
-            m_pInstance->SetData(DATA_LADYVASHJEVENT, DONE);
+            m_pInstance->SetData(TYPE_LADYVASHJ_EVENT, DONE);
     }
 
     void CastShootOrMultishot()
@@ -466,7 +466,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
             if (m_uiCheck_Timer < uiDiff)
             {
                 //Start m_uiPhase 3
-                if (m_pInstance && m_pInstance->GetData(DATA_CANSTARTPHASE3))
+                if (m_pInstance && m_pInstance->GetData(TYPE_VASHJ_PHASE3_CHECK) == DONE)
                 {
                     DoScriptText(SAY_PHASE3, m_creature);
 
@@ -686,8 +686,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
 
     if(!pInstance)
     {
-        pPlayer->GetSession()->SendNotification("ERROR: Instance script not initialized. Notify your administrator.");
-        error_log("ERROR: Lady Vashj Tainted Core: Instance Script Not Initialized");
+        error_log("SD2: Lady Vashj Tainted Core: Instance Script Not Initialized");
         return true;
     }
 
@@ -701,19 +700,19 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
             switch(sctTargets.getGOTarget()->GetEntry())
             {
                 case 185052:
-                    uiIdentifier = DATA_SHIELDGENERATOR1;
+                    uiIdentifier = TYPE_SHIELDGENERATOR1;
                     uiChannelIdentifier = 0;
                     break;
                 case 185053:
-                    uiIdentifier = DATA_SHIELDGENERATOR2;
+                    uiIdentifier = TYPE_SHIELDGENERATOR2;
                     uiChannelIdentifier = 1;
                     break;
                 case 185051:
-                    uiIdentifier = DATA_SHIELDGENERATOR3;
+                    uiIdentifier = TYPE_SHIELDGENERATOR3;
                     uiChannelIdentifier = 2;
                     break;
                 case 185054:
-                    uiIdentifier = DATA_SHIELDGENERATOR4;
+                    uiIdentifier = TYPE_SHIELDGENERATOR4;
                     uiChannelIdentifier = 3;
                     break;
                 default:
@@ -721,17 +720,14 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* pItem, SpellCastTargets co
                     break;
             }
 
-            if(pInstance->GetData(uiIdentifier))
-            {
-                pPlayer->GetSession()->SendNotification("Already deactivated");
+            if (pInstance->GetData(uiIdentifier) == DONE)
                 return true;
-            }
 
             //get and remove channel
             if(Unit* pChannel = Unit::GetUnit((*pVashj), ((boss_lady_vashjAI*)pVashj->AI())->m_auiShieldGeneratorChannel[uiChannelIdentifier]))
                 pChannel->setDeathState(JUST_DIED);         //calls Unsummon()
 
-            pInstance->SetData(uiIdentifier, 1);
+            pInstance->SetData(uiIdentifier, DONE);
 
             //remove this item
             pPlayer->DestroyItemCount(31088, 1, true);
