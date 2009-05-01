@@ -50,6 +50,8 @@ enum
     PHASE_2                     = 2,
     PHASE_3                     = 3,
 
+    MAX_SHIELD_GEN              = 4,
+
     SPELL_MULTI_SHOT            = 38310,
     SPELL_SHOCK_BLAST           = 38509,
     SPELL_ENTANGLE              = 38316,
@@ -118,16 +120,13 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
     boss_lady_vashjAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
         m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
-
-        for(uint8 i = 0; i < 4; i++)
-            m_auiShieldGeneratorChannel[i] = 0;
-
+        memset(&m_auiShieldGeneratorChannel, 0, sizeof(m_auiShieldGeneratorChannel));
         Reset();
     }
 
     ScriptedInstance *m_pInstance;                          // the instance
 
-    uint64 m_auiShieldGeneratorChannel[4];
+    uint64 m_auiShieldGeneratorChannel[MAX_SHIELD_GEN];
 
     // timers
     uint32 m_uiShockBlast_Timer;
@@ -176,7 +175,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
 
     void RemoveAllShieldGenerators()
     {
-        for(uint8 i = 0; i < 4; i++)
+        for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
         {
             if (Unit* pTemp = Unit::GetUnit(*m_creature,m_auiShieldGeneratorChannel[i]))
             {
@@ -211,7 +210,7 @@ struct MANGOS_DLL_DECL boss_lady_vashjAI : public ScriptedAI
         {
             m_creature->RemoveAllAuras();
 
-            for(uint8 i = 0; i < 4; i++)
+            for(uint8 i = 0; i < MAX_SHIELD_GEN; ++i)
             {
                 if (Creature* pCreature = m_creature->SummonCreature(NPC_SHIELD_GENERATOR, afShieldGeneratorChannelPos[i][0],  afShieldGeneratorChannelPos[i][1],  afShieldGeneratorChannelPos[i][2],  afShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0))
                     m_auiShieldGeneratorChannel[i] = pCreature->GetGUID();
