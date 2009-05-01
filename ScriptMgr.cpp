@@ -513,6 +513,8 @@ extern void AddSC_instance_temple_of_ahnqiraj();
 extern void AddSC_terokkar_forest();
 
 //Thousand Needles
+extern void AddSC_thousand_needles();
+
 //Thunder Bluff
 extern void AddSC_thunder_bluff();
 
@@ -1356,6 +1358,8 @@ void ScriptsInit()
     AddSC_terokkar_forest();
 
     //Thousand Needles
+    AddSC_thousand_needles();
+
     //Thunder Bluff
     AddSC_thunder_bluff();
 

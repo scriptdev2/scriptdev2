@@ -915,7 +915,7 @@ UPDATE creature_template SET ScriptName='npc_floon' WHERE entry=18588;
 UPDATE creature_template SET ScriptName='npc_skyguard_handler_irena' WHERE entry=23413;
 
 /* THOUSAND NEEDLES */
-
+UPDATE creature_template SET ScriptName='npc_plucky_johnson' WHERE entry=6626;
 
 /* THUNDER BLUFF */
 UPDATE creature_template SET ScriptName='npc_cairne_bloodhoof' WHERE entry=3057;
