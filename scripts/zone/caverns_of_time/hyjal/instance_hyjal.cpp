@@ -24,7 +24,12 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_hyjal.h"
 
-#define ENCOUNTERS          5
+enum
+{
+    ENCOUNTERS          = 5,
+
+    GO_ANCIENT_GEM      = 185557
+};
 
 /* Battle of Mount Hyjal encounters:
 0 - Rage Winterchill event
@@ -41,6 +46,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
     uint32 Encounters[ENCOUNTERS];
     std::string str_data;
 
+    std::list<uint64> m_uiAncientGemGUID;
+
     uint64 RageWinterchill;
     uint64 Anetheron;
     uint64 Kazrogal;
@@ -54,6 +61,8 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
 
     void Initialize()
     {
+        m_uiAncientGemGUID.clear();
+
         RageWinterchill = 0;
         Anetheron = 0;
         Kazrogal = 0;
@@ -91,6 +100,12 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
         }
     }
 
+    void OnObjectCreate(GameObject* pGo)
+    {
+        if (pGo->GetEntry() == GO_ANCIENT_GEM)
+            m_uiAncientGemGUID.push_back(pGo->GetGUID());
+    }
+
     uint64 GetData64(uint32 identifier)
     {
         switch(identifier)
@@ -123,6 +138,20 @@ struct MANGOS_DLL_DECL instance_mount_hyjal : public ScriptedInstance
                 if (data) Trash = data;
                 else      Trash--;
                 UpdateWorldState(WORLD_STATE_ENEMYCOUNT, Trash);
+                break;
+
+            case TYPE_RETREAT:
+                if (data == SPECIAL)
+                {
+                    if (!m_uiAncientGemGUID.empty())
+                    {
+                        for(std::list<uint64>::iterator itr = m_uiAncientGemGUID.begin(); itr != m_uiAncientGemGUID.end(); ++itr)
+                        {
+                            //don't know how long it expected
+                            DoRespawnGameObject(*itr,DAY);
+                        }
+                    }
+                }
                 break;
         }
 

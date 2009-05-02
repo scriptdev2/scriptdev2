@@ -313,28 +313,24 @@ void hyjalAI::UpdateWorldState(uint32 id, uint32 state)
 
 void hyjalAI::Retreat()
 {
+    //this will trigger ancient gem respawn
+    if (pInstance)
+        pInstance->SetData(TYPE_RETREAT,SPECIAL);
+
     CellPair pair(MaNGOS::ComputeCellPair(m_creature->GetPositionX(), m_creature->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    // First get all creatures.
+    // Get all creatures.
     std::list<Creature*> creatures;
     AllFriendlyCreaturesInGrid creature_check(m_creature);
     MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid> creature_searcher(m_creature, creatures, creature_check);
     TypeContainerVisitor<MaNGOS::CreatureListSearcher<AllFriendlyCreaturesInGrid>, GridTypeMapContainer> creature_visitor(creature_searcher);
 
-    // Then get all Ancient Gem Veins. NOTE: Grid Search will only be able to find those in the grid.
-    std::list<GameObject*> goList;
-    AllGameObjectsWithEntryInGrid go_check(185557);
-    MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid> go_search(m_creature, goList, go_check);
-    TypeContainerVisitor<MaNGOS::GameObjectListSearcher<AllGameObjectsWithEntryInGrid>, GridTypeMapContainer> go_visit(go_search);
-
     CellLock<GridReadGuard> cell_lock(cell, pair);
     // Get Creatures
     cell_lock->Visit(cell_lock, creature_visitor, *(m_creature->GetMap()));
-    // Get GOs
-    cell_lock->Visit(cell_lock, go_visit, *(m_creature->GetMap()));
 
     CreatureList.clear();
     if (!creatures.empty())
@@ -348,12 +344,6 @@ void hyjalAI::Retreat()
         DoCast(m_creature, SPELL_TELEPORT_VISUAL);
         bRetreat = true;
         RetreatTimer = 1000;
-    }
-
-    if (!goList.empty())
-    {
-        for(std::list<GameObject*>::iterator itr = goList.begin(); itr != goList.end(); ++itr)
-            (*itr)->SetRespawnTime(5000);
     }
 }
 
