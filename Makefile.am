@@ -189,6 +189,7 @@ scripts/zone/hellfire_citadel/blood_furnace/boss_kelidan_the_breaker.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/boss_the_maker.cpp \
 scripts/zone/hellfire_citadel/blood_furnace/def_blood_furnace.h \
 scripts/zone/hellfire_citadel/blood_furnace/instance_blood_furnace.cpp \
+scripts/zone/hellfire_citadel/hellfire_ramparts/boss_nazan_and_vazruden.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_omor_the_unscarred.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/boss_watchkeeper_gargolmar.cpp \
 scripts/zone/hellfire_citadel/hellfire_ramparts/def_hellfire_ramparts.h \

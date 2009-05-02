@@ -1065,6 +1065,9 @@
 					<Filter
 						Name="Hellfire Ramparts">
 						<File
+							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_nazan_and_vazruden.cpp">
+						</File>
+						<File
 							RelativePath="..\scripts\zone\hellfire_citadel\hellfire_ramparts\boss_omor_the_unscarred.cpp">
 						</File>
 						<File
