@@ -43,7 +43,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
     instance_molten_core(Map *map) : ScriptedInstance(map) {Initialize();};
 
     uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
-    uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn;
+    uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn, m_uiFirelordCacheGUID;
     bool IsBossDied[9];
 
     uint32 Encounter[ENCOUNTERS];
@@ -70,6 +70,8 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         RuneKress = 0;
         RuneMohn = 0;
 
+        m_uiFirelordCacheGUID = 0;
+
         IsBossDied[0] = false;
         IsBossDied[1] = false;
         IsBossDied[2] = false;
@@ -80,7 +82,7 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
         IsBossDied[7] = false;
         IsBossDied[8] = false;
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounter[i] = NOT_STARTED;
     }
 
@@ -113,6 +115,9 @@ struct MANGOS_DLL_DECL instance_molten_core : public ScriptedInstance
                 break;
             case 176957:                                    //Gehennas
                 RuneMohn = go->GetGUID();
+                break;
+            case 179703:
+                m_uiFirelordCacheGUID = go->GetGUID();      //when majordomo event == DONE DoRespawnGameObject(m_uiFirelordCacheGUID,);
                 break;
         }
     }

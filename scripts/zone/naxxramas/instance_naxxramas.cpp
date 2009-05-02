@@ -22,3 +22,9 @@ SDCategory: Naxxramas
 EndScriptData */
 
 #include "precompiled.h"
+
+enum
+{
+    GO_CHEST_HORSEMEN_NORM      = 181366,                   //four horsemen event, DoRespawnGameObject() when event == DONE
+    GO_CHEST_HORSEMEN_HERO      = 193426
+};

@@ -24,157 +24,173 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_blackrock_depths.h"
 
-#define ENCOUNTERS              6
+enum
+{
+    ENCOUNTERS              = 6,
 
-#define C_EMPEROR               9019
-#define C_PHALANX               9502
+    NPC_EMPEROR             = 9019,
+    NPC_PHALANX             = 9502,
 
-#define GO_ARENA1               161525
-#define GO_ARENA2               161522
-#define GO_ARENA3               161524
-#define GO_ARENA4               161523
-#define GO_SHADOW_LOCK          161460
-#define GO_SHADOW_MECHANISM     161461
-#define GO_SHADOW_GIANT_DOOR    157923
-#define GO_SHADOW_DUMMY         161516
-#define GO_BAR_KEG_SHOT         170607
-#define GO_BAR_KEG_TRAP         171941
-#define GO_BAR_DOOR             170571
-#define GO_TOMB_ENTER           170576
-#define GO_TOMB_EXIT            170577
-#define GO_LYCEUM               170558
-#define GO_GOLEM_ROOM_N         170573
-#define GO_GOLEM_ROOM_S         170574
-#define GO_THONE_ROOM           170575
+    GO_ARENA1               = 161525,
+    GO_ARENA2               = 161522,
+    GO_ARENA3               = 161524,
+    GO_ARENA4               = 161523,
+    GO_SHADOW_LOCK          = 161460,
+    GO_SHADOW_MECHANISM     = 161461,
+    GO_SHADOW_GIANT_DOOR    = 157923,
+    GO_SHADOW_DUMMY         = 161516,
+    GO_BAR_KEG_SHOT         = 170607,
+    GO_BAR_KEG_TRAP         = 171941,
+    GO_BAR_DOOR             = 170571,
+    GO_TOMB_ENTER           = 170576,
+    GO_TOMB_EXIT            = 170577,
+    GO_LYCEUM               = 170558,
+    GO_GOLEM_ROOM_N         = 170573,
+    GO_GOLEM_ROOM_S         = 170574,
+    GO_THONE_ROOM           = 170575,
+
+    GO_SPECTRAL_CHALICE     = 164869,
+    GO_CHEST_SEVEN          = 169243
+};
 
 struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
 {
     instance_blackrock_depths(Map *map) : ScriptedInstance(map) {Initialize();};
 
-    uint32 Encounter[ENCOUNTERS];
+    uint32 m_uiEncounter[ENCOUNTERS];
     std::string str_data;
 
-    uint64 EmperorGUID;
-    uint64 PhalanxGUID;
+    uint64 m_uiEmperorGUID;
+    uint64 m_uiPhalanxGUID;
 
-    uint64 GoArena1GUID;
-    uint64 GoArena2GUID;
-    uint64 GoArena3GUID;
-    uint64 GoArena4GUID;
-    uint64 GoShadowLockGUID;
-    uint64 GoShadowMechGUID;
-    uint64 GoShadowGiantGUID;
-    uint64 GoShadowDummyGUID;
-    uint64 GoBarKegGUID;
-    uint64 GoBarKegTrapGUID;
-    uint64 GoBarDoorGUID;
-    uint64 GoTombEnterGUID;
-    uint64 GoTombExitGUID;
-    uint64 GoLyceumGUID;
-    uint64 GoGolemNGUID;
-    uint64 GoGolemSGUID;
-    uint64 GoThoneGUID;
+    uint64 m_uiGoArena1GUID;
+    uint64 m_uiGoArena2GUID;
+    uint64 m_uiGoArena3GUID;
+    uint64 m_uiGoArena4GUID;
+    uint64 m_uiGoShadowLockGUID;
+    uint64 m_uiGoShadowMechGUID;
+    uint64 m_uiGoShadowGiantGUID;
+    uint64 m_uiGoShadowDummyGUID;
+    uint64 m_uiGoBarKegGUID;
+    uint64 m_uiGoBarKegTrapGUID;
+    uint64 m_uiGoBarDoorGUID;
+    uint64 m_uiGoTombEnterGUID;
+    uint64 m_uiGoTombExitGUID;
+    uint64 m_uiGoLyceumGUID;
+    uint64 m_uiGoGolemNGUID;
+    uint64 m_uiGoGolemSGUID;
+    uint64 m_uiGoThoneGUID;
 
-    uint32 BarAleCount;
+    uint64 m_uiSpectralChaliceGUID;
+    uint64 m_uiSevensChestGUID;
+
+    uint32 m_uiBarAleCount;
 
     void Initialize()
     {
-        EmperorGUID = 0;
-        PhalanxGUID = 0;
+        m_uiEmperorGUID = 0;
+        m_uiPhalanxGUID = 0;
 
-        GoArena1GUID = 0;
-        GoArena2GUID = 0;
-        GoArena3GUID = 0;
-        GoArena4GUID = 0;
-        GoShadowLockGUID = 0;
-        GoShadowMechGUID = 0;
-        GoShadowGiantGUID = 0;
-        GoShadowDummyGUID = 0;
-        GoBarKegGUID = 0;
-        GoBarKegTrapGUID = 0;
-        GoBarDoorGUID = 0;
-        GoTombEnterGUID = 0;
-        GoTombExitGUID = 0;
-        GoLyceumGUID = 0;
-        GoGolemNGUID = 0;
-        GoGolemSGUID = 0;
-        GoThoneGUID = 0;
+        m_uiGoArena1GUID = 0;
+        m_uiGoArena2GUID = 0;
+        m_uiGoArena3GUID = 0;
+        m_uiGoArena4GUID = 0;
+        m_uiGoShadowLockGUID = 0;
+        m_uiGoShadowMechGUID = 0;
+        m_uiGoShadowGiantGUID = 0;
+        m_uiGoShadowDummyGUID = 0;
+        m_uiGoBarKegGUID = 0;
+        m_uiGoBarKegTrapGUID = 0;
+        m_uiGoBarDoorGUID = 0;
+        m_uiGoTombEnterGUID = 0;
+        m_uiGoTombExitGUID = 0;
+        m_uiGoLyceumGUID = 0;
+        m_uiGoGolemNGUID = 0;
+        m_uiGoGolemSGUID = 0;
+        m_uiGoThoneGUID = 0;
 
-        BarAleCount = 0;
+        m_uiSpectralChaliceGUID = 0;
+        m_uiSevensChestGUID = 0;
 
-        for(uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        m_uiBarAleCount = 0;
+
+        for(uint8 i = 0; i < ENCOUNTERS; ++i)
+            m_uiEncounter[i] = NOT_STARTED;
     }
 
     void OnCreatureCreate(Creature *creature, uint32 creature_entry)
     {
         switch(creature->GetEntry())
         {
-            case C_EMPEROR: EmperorGUID = creature->GetGUID(); break;
-            case C_PHALANX: PhalanxGUID = creature->GetGUID(); break;
+            case NPC_EMPEROR: m_uiEmperorGUID = creature->GetGUID(); break;
+            case NPC_PHALANX: m_uiPhalanxGUID = creature->GetGUID(); break;
         }
     }
 
-    void OnObjectCreate(GameObject* go)
+    void OnObjectCreate(GameObject* pGo)
     {
-        switch(go->GetEntry())
+        switch(pGo->GetEntry())
         {
-            case GO_ARENA1: GoArena1GUID = go->GetGUID(); break;
-            case GO_ARENA2: GoArena2GUID = go->GetGUID(); break;
-            case GO_ARENA3: GoArena3GUID = go->GetGUID(); break;
-            case GO_ARENA4: GoArena4GUID = go->GetGUID(); break;
-            case GO_SHADOW_LOCK: GoShadowLockGUID = go->GetGUID(); break;
-            case GO_SHADOW_MECHANISM: GoShadowMechGUID = go->GetGUID(); break;
-            case GO_SHADOW_GIANT_DOOR: GoShadowGiantGUID = go->GetGUID(); break;
-            case GO_SHADOW_DUMMY: GoShadowDummyGUID = go->GetGUID(); break;
-            case GO_BAR_KEG_SHOT: GoBarKegGUID = go->GetGUID(); break;
-            case GO_BAR_KEG_TRAP: GoBarKegTrapGUID = go->GetGUID(); break;
-            case GO_BAR_DOOR: GoBarDoorGUID = go->GetGUID(); break;
-            case GO_TOMB_ENTER: GoTombEnterGUID = go->GetGUID(); break;
-            case GO_TOMB_EXIT: GoTombExitGUID = go->GetGUID(); break;
-            case GO_LYCEUM: GoLyceumGUID = go->GetGUID(); break;
-            case GO_GOLEM_ROOM_N: GoGolemNGUID = go->GetGUID(); break;
-            case GO_GOLEM_ROOM_S: GoGolemSGUID = go->GetGUID(); break;
-            case GO_THONE_ROOM: GoThoneGUID = go->GetGUID(); break;
+            case GO_ARENA1: m_uiGoArena1GUID = pGo->GetGUID(); break;
+            case GO_ARENA2: m_uiGoArena2GUID = pGo->GetGUID(); break;
+            case GO_ARENA3: m_uiGoArena3GUID = pGo->GetGUID(); break;
+            case GO_ARENA4: m_uiGoArena4GUID = pGo->GetGUID(); break;
+            case GO_SHADOW_LOCK: m_uiGoShadowLockGUID = pGo->GetGUID(); break;
+            case GO_SHADOW_MECHANISM: m_uiGoShadowMechGUID = pGo->GetGUID(); break;
+            case GO_SHADOW_GIANT_DOOR: m_uiGoShadowGiantGUID = pGo->GetGUID(); break;
+            case GO_SHADOW_DUMMY: m_uiGoShadowDummyGUID = pGo->GetGUID(); break;
+            case GO_BAR_KEG_SHOT: m_uiGoBarKegGUID = pGo->GetGUID(); break;
+            case GO_BAR_KEG_TRAP: m_uiGoBarKegTrapGUID = pGo->GetGUID(); break;
+            case GO_BAR_DOOR: m_uiGoBarDoorGUID = pGo->GetGUID(); break;
+            case GO_TOMB_ENTER: m_uiGoTombEnterGUID = pGo->GetGUID(); break;
+            case GO_TOMB_EXIT: m_uiGoTombExitGUID = pGo->GetGUID(); break;
+            case GO_LYCEUM: m_uiGoLyceumGUID = pGo->GetGUID(); break;
+            case GO_GOLEM_ROOM_N: m_uiGoGolemNGUID = pGo->GetGUID(); break;
+            case GO_GOLEM_ROOM_S: m_uiGoGolemSGUID = pGo->GetGUID(); break;
+            case GO_THONE_ROOM: m_uiGoThoneGUID = pGo->GetGUID(); break;
+            case GO_SPECTRAL_CHALICE: m_uiSpectralChaliceGUID = pGo->GetGUID(); break;
+            case GO_CHEST_SEVEN: m_uiSevensChestGUID = pGo->GetGUID(); break;
         }
     }
 
-    void SetData(uint32 type, uint32 data)
+    void SetData(uint32 uiType, uint32 uiData)
     {
-        debug_log("SD2: Instance Blackrock Depths: SetData update (Type: %u Data %u)", type, data);
+        debug_log("SD2: Instance Blackrock Depths: SetData update (Type: %u Data %u)", uiType, uiData);
 
-        switch(type)
+        switch(uiType)
         {
             case TYPE_RING_OF_LAW:
-                Encounter[0] = data;
+                m_uiEncounter[0] = uiData;
                 break;
             case TYPE_VAULT:
-                Encounter[1] = data;
+                m_uiEncounter[1] = uiData;
                 break;
             case TYPE_BAR:
-                if (data == SPECIAL)
-                    ++BarAleCount;
+                if (uiData == SPECIAL)
+                    ++m_uiBarAleCount;
                 else
-                    Encounter[2] = data;
+                    m_uiEncounter[2] = uiData;
                 break;
             case TYPE_TOMB_OF_SEVEN:
-                Encounter[3] = data;
+                if (uiData == DONE)
+                    DoRespawnGameObject(m_uiSevensChestGUID, HOUR*IN_MILISECONDS);
+                m_uiEncounter[3] = uiData;
                 break;
             case TYPE_LYCEUM:
-                Encounter[4] = data;
+                m_uiEncounter[4] = uiData;
                 break;
             case TYPE_IRON_HALL:
-                Encounter[5] = data;
+                m_uiEncounter[5] = uiData;
                 break;
         }
 
-        if (data == DONE)
+        if (uiData == DONE)
         {
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " "
-                << Encounter[3] << " " << Encounter[4] << " " << Encounter[5];
+            saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
+                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5];
 
             str_data = saveStream.str();
 
@@ -183,53 +199,55 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         }
     }
 
-    uint32 GetData(uint32 type)
+    uint32 GetData(uint32 uiType)
     {
-        switch(type)
+        switch(uiType)
         {
             case TYPE_RING_OF_LAW:
-                return Encounter[0];
+                return m_uiEncounter[0];
             case TYPE_VAULT:
-                return Encounter[1];
+                return m_uiEncounter[1];
             case TYPE_BAR:
-                if (Encounter[2] == IN_PROGRESS && BarAleCount == 3)
+                if (m_uiEncounter[2] == IN_PROGRESS && m_uiBarAleCount == 3)
                     return SPECIAL;
                 else
-                    return Encounter[2];
+                    return m_uiEncounter[2];
             case TYPE_TOMB_OF_SEVEN:
-                return Encounter[3];
+                return m_uiEncounter[3];
             case TYPE_LYCEUM:
-                return Encounter[4];
+                return m_uiEncounter[4];
             case TYPE_IRON_HALL:
-                return Encounter[5];
+                return m_uiEncounter[5];
         }
         return 0;
     }
 
-    uint64 GetData64(uint32 data)
+    uint64 GetData64(uint32 uiData)
     {
-        switch(data)
+        switch(uiData)
         {
             case DATA_EMPEROR:
-                return EmperorGUID;
+                return m_uiEmperorGUID;
             case DATA_PHALANX:
-                return PhalanxGUID;
+                return m_uiPhalanxGUID;
 
             case DATA_ARENA1:
-                return GoArena1GUID;
+                return m_uiGoArena1GUID;
             case DATA_ARENA2:
-                return GoArena2GUID;
+                return m_uiGoArena2GUID;
             case DATA_ARENA3:
-                return GoArena3GUID;
+                return m_uiGoArena3GUID;
             case DATA_ARENA4:
-                return GoArena4GUID;
+                return m_uiGoArena4GUID;
 
             case DATA_GO_BAR_KEG:
-                return GoBarKegGUID;
+                return m_uiGoBarKegGUID;
             case DATA_GO_BAR_KEG_TRAP:
-                return GoBarKegTrapGUID;
+                return m_uiGoBarKegTrapGUID;
             case DATA_GO_BAR_DOOR:
-                return GoBarDoorGUID;
+                return m_uiGoBarDoorGUID;
+            case DATA_GO_CHALICE:
+                return m_uiSpectralChaliceGUID;
         }
         return 0;
     }
@@ -250,20 +268,20 @@ struct MANGOS_DLL_DECL instance_blackrock_depths : public ScriptedInstance
         OUT_LOAD_INST_DATA(in);
 
         std::istringstream loadStream(in);
-        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3]
-            >> Encounter[4] >> Encounter[5];
+        loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
+            >> m_uiEncounter[4] >> m_uiEncounter[5];
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounter[i] == IN_PROGRESS)
-                Encounter[i] = NOT_STARTED;
+            if (m_uiEncounter[i] == IN_PROGRESS)
+                m_uiEncounter[i] = NOT_STARTED;
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
 
-InstanceData* GetInstanceData_instance_blackrock_depths(Map* map)
+InstanceData* GetInstanceData_instance_blackrock_depths(Map* pMap)
 {
-    return new instance_blackrock_depths(map);
+    return new instance_blackrock_depths(pMap);
 }
 
 void AddSC_instance_blackrock_depths()
