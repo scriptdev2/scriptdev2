@@ -232,6 +232,7 @@ struct MANGOS_DLL_DECL boss_magtheridonAI : public ScriptedAI
 
         Intro = false;
         Phase3 = false;
+        NeedCheckCube = false;
 
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_8);

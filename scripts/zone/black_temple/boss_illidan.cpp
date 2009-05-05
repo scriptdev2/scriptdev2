@@ -862,6 +862,10 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
             FlameGUID[i] = 0;
             GlaiveGUID[i] = 0;
         }
+
+        AkamaGUID = 0;
+        MaievGUID = 0;
+
         Reset();
     }
 
@@ -916,44 +920,38 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
         Phase = PHASE_NORMAL;
 
         // Check if any flames/glaives are alive/existing. Kill if alive and set GUIDs to 0
-        for(uint8 i = 0; i < 2; i++)
+        for(uint8 i = 0; i < 2; ++i)
         {
-            if (FlameGUID[i])
+            if (Unit* Flame = Unit::GetUnit((*m_creature), FlameGUID[i]))
             {
-                Unit* Flame = Unit::GetUnit((*m_creature), FlameGUID[i]);
-                if (Flame)
+                if (Flame->isAlive())
                     Flame->setDeathState(JUST_DIED);
+
                 FlameGUID[i] = 0;
             }
 
-            if (GlaiveGUID[i])
+            if (Unit* Glaive = Unit::GetUnit((*m_creature), GlaiveGUID[i]))
             {
-                Unit* Glaive = Unit::GetUnit((*m_creature), GlaiveGUID[i]);
-                if (Glaive)
+                if (Glaive->isAlive())
                     Glaive->setDeathState(JUST_DIED);
+
                 GlaiveGUID[i] = 0;
             }
         }
 
-        if (AkamaGUID)
+        if (Creature* Akama = ((Creature*)Unit::GetUnit((*m_creature), AkamaGUID)))
         {
-            Creature* Akama = ((Creature*)Unit::GetUnit((*m_creature), AkamaGUID));
-            if (Akama)
-            {
-                if (!Akama->isAlive())
-                    Akama->Respawn();
+            if (!Akama->isAlive())
+                Akama->Respawn();
 
-                ((npc_akama_illidanAI*)Akama->AI())->Reset();
-                ((npc_akama_illidanAI*)Akama->AI())->EnterEvadeMode();
-                Akama->GetMotionMaster()->MoveTargetedHome();
-            }
+            ((npc_akama_illidanAI*)Akama->AI())->Reset();
+            ((npc_akama_illidanAI*)Akama->AI())->EnterEvadeMode();
+            Akama->GetMotionMaster()->MoveTargetedHome();
         }
 
         InformAkama = false;
         RefaceVictim = false;
         HasSummoned = false;
-        AkamaGUID = 0;
-        MaievGUID = 0;
 
         FaceVictimTimer = 1000;
         BerserkTimer = 1500000;

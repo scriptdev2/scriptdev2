@@ -132,6 +132,9 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
 {
     boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c)
     {
+        SufferingGUID = 0;
+        DesireGUID = 0;
+        AngerGUID = 0;
         pInstance = ((ScriptedInstance*)c->GetInstanceData());
         Reset();
     }
@@ -158,10 +161,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
     {
         DespawnEssences();
 
-        SufferingGUID = 0;
-        DesireGUID = 0;
-        AngerGUID = 0;
-
         SoulDeathCount = 0;
         Phase = 0;
         SummonEssenceTimer = 8000;
@@ -185,6 +184,21 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
             }else OpenMotherDoor();
         }
+    }
+
+    void DespawnEssences()
+    {
+        Unit* Essence = NULL;
+
+        if (SufferingGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
+        else if (DesireGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
+        else if (AngerGUID)
+            Essence = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
+
+        if (Essence && Essence->isAlive())
+            Essence->setDeathState(JUST_DIED);
     }
 
     void OpenMotherDoor()
@@ -256,21 +270,6 @@ struct MANGOS_DLL_DECL boss_reliquary_of_soulsAI : public ScriptedAI
                 m_creature->AddThreat(pUnit, threat);       // This makes it so that the unit has the same amount of threat in Reliquary's threatlist as in the target creature's (One of the Essences).
             }
         }
-    }
-
-    void DespawnEssences()
-    {
-        // Despawn Essences
-        Unit* Essence = NULL;
-        if (SufferingGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), SufferingGUID));
-        else if (DesireGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), DesireGUID));
-        else if (AngerGUID)
-            Essence = ((Creature*)Unit::GetUnit((*m_creature), AngerGUID));
-
-        if (Essence && Essence->isAlive())
-            Essence->setDeathState(JUST_DIED);
     }
 
     void JustDied(Unit* killer)
