@@ -486,8 +486,8 @@ struct MANGOS_DLL_SPEC npc_akama_illidanAI : public ScriptedAI
 
     void AddWaypoint(uint32 id, float x, float y, float z)
     {
-        WayPoints AkamaWP(id, x, y, z);
-        WayPointList.push_back(AkamaWP);
+        WayPoints AWP(id, x, y, z);
+        WayPointList.push_back(AWP);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
@@ -1596,12 +1596,12 @@ struct MANGOS_DLL_SPEC boss_illidan_stormrageAI : public ScriptedAI
 
         /** Signal to summon Maiev **/
         if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 30) && !MaievGUID &&
-            ((Phase != PHASE_DEMON) || (Phase != PHASE_DEMON_SEQUENCE)))
+            (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
             SummonMaiev();
 
         /** Time for the death speech **/
         if ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth() < 1) && (!IsTalking) &&
-            ((Phase != PHASE_DEMON) || (Phase != PHASE_DEMON_SEQUENCE)))
+            (Phase != PHASE_DEMON || Phase != PHASE_DEMON_SEQUENCE))
             InitializeDeath();
 
         /***** Spells for Phase 1, 3 and 5 (Normal Form) ******/

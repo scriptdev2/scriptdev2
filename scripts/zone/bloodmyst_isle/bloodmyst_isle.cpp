@@ -45,7 +45,7 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        uint32 spawnCreatureID;
+        uint32 spawnCreatureID = 0;
 
         switch(rand()%3)
         {
@@ -60,7 +60,7 @@ struct MANGOS_DLL_DECL mob_webbed_creatureAI : public ScriptedAI
                 break;
         }
 
-        if(spawnCreatureID)
+        if (spawnCreatureID)
             DoSpawnCreature(spawnCreatureID,0,0,0,m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
     }
 };
