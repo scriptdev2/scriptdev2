@@ -119,46 +119,43 @@ struct MANGOS_DLL_DECL boss_maexxnaAI : public ScriptedAI
         //begin + 1 , so we don't target the one with the highest threat
         std::list<HostilReference *>::iterator itr = t_list.begin();
         std::advance(itr, 1);
-        for( ; itr!= t_list.end(); ++itr)                   //store the threat list in a different container
+
+        //store the threat list in a different container
+        for( ; itr!= t_list.end(); ++itr)
         {
-            Unit *target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
-                                                            //only on alive players
-            if(target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER )
-                targets.push_back( target);
+            Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid());
+
+            //only on alive players
+            if (target && target->isAlive() && target->GetTypeId() == TYPEID_PLAYER)
+                targets.push_back(target);
         }
 
+        //cut down to size if we have more than 3 targets
         while(targets.size() > 3)
-                                                            //cut down to size if we have more than 3 targets
             targets.erase(targets.begin()+rand()%targets.size());
 
         int i = 0;
-        for(std::vector<Unit *>::iterator itr = targets.begin(); itr!= targets.end(); ++itr, ++i)
+
+        for(std::vector<Unit *>::iterator iter = targets.begin(); iter!= targets.end(); ++iter, ++i)
         {
             // Teleport the 3 targets to a location on the wall and summon a Web Wrap on them
-            Unit *target = *itr;
-            Creature* Wrap = NULL;
-            if(target)
+            switch(i)
             {
-                switch(i)
-                {
-                    case 0:
-                        DoTeleportPlayer(target, LOC_X1, LOC_Y1, LOC_Z1, target->GetOrientation());
-                        Wrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                    case 1:
-                        DoTeleportPlayer(target, LOC_X2, LOC_Y2, LOC_Z2, target->GetOrientation());
-                        Wrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                    case 2:
-                        DoTeleportPlayer(target, LOC_X3, LOC_Y3, LOC_Z3, target->GetOrientation());
-                        Wrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                }
-                if (Wrap)
-                {
-                    Wrap->setFaction(m_creature->getFaction());
-                    ((mob_webwrapAI*)Wrap->AI())->SetVictim(target);
-                }
+                case 0:
+                    DoTeleportPlayer((*iter), LOC_X1, LOC_Y1, LOC_Z1, (*iter)->GetOrientation());
+                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
+                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    break;
+                case 1:
+                    DoTeleportPlayer((*iter), LOC_X2, LOC_Y2, LOC_Z2, (*iter)->GetOrientation());
+                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
+                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    break;
+                case 2:
+                    DoTeleportPlayer((*iter), LOC_X3, LOC_Y3, LOC_Z3, (*iter)->GetOrientation());
+                    if (Creature* pWrap = m_creature->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
+                        ((mob_webwrapAI*)pWrap->AI())->SetVictim((*iter));
+                    break;
             }
         }
     }

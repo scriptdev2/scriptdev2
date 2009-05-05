@@ -225,9 +225,9 @@ struct MANGOS_DLL_DECL boss_kelthuzadAI : public ScriptedAI
 
                 pUnit->CombatStop();
 
-                float Walk_Pos_X;
-                float Walk_Pos_Y;
-                float Walk_Pos_Z;
+                float Walk_Pos_X = 0.0f;
+                float Walk_Pos_Y = 0.0f;
+                float Walk_Pos_Z = 0.0f;
 
                 switch(rand()%6)
                 {

@@ -218,14 +218,12 @@ struct MANGOS_DLL_DECL boss_terestianAI : public ScriptedAI
             Creature* Kilrek = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_KILREK)));
 
             // Respawn Kil'rek on aggro if Kil'rek is dead.
-            if (!Kilrek || !Kilrek->isAlive())
-            {
+            if (Kilrek && !Kilrek->isAlive())
                 Kilrek->Respawn();
-            }
 
             // Put Kil'rek in combat against our target so players don't skip him
-            if (Kilrek && (!Kilrek->SelectHostilTarget() && !Kilrek->getVictim()))
-                Kilrek->AddThreat(who, 1.0f);
+            if (Kilrek && !Kilrek->getVictim())
+                Kilrek->AddThreat(who, 0.0f);
 
             pInstance->SetData(DATA_TERESTIAN_EVENT, IN_PROGRESS);
         } else ERROR_INST_DATA(m_creature);

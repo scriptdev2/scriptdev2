@@ -312,7 +312,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
     {
         Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
 
-        if (!player)
+        if (!player || player->GetTypeId() != TYPEID_PLAYER)
             return;
 
         switch (i)
@@ -338,9 +338,7 @@ struct MANGOS_DLL_DECL npc_wounded_blood_elfAI : public npc_escortAI
             case 27:
                 DoScriptText(SAY_ELF_COMPLETE, m_creature, player);
                 // Award quest credit
-                Unit* player = Unit::GetUnit((*m_creature), PlayerGUID);
-                if (player && player->GetTypeId() == TYPEID_PLAYER)
-                    ((Player*)player)->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH,m_creature);
+                ((Player*)player)->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH,m_creature);
                 break;
         }
     }

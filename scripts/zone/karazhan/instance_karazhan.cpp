@@ -24,7 +24,7 @@ EndScriptData */
 #include "precompiled.h"
 #include "def_karazhan.h"
 
-#define ENCOUNTERS      11
+#define ENCOUNTERS      12
 
 /*
 0  - Attumen + Midnight (optional)
@@ -220,8 +220,9 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
 
             std::ostringstream saveStream;
             saveStream << m_uiEncounter[0] << " " << m_uiEncounter[1] << " " << m_uiEncounter[2] << " "
-                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5] << " " << m_uiEncounter[6] << " "
-                << m_uiEncounter[7] << " " << m_uiEncounter[8] << " " << m_uiEncounter[9] << " " << m_uiEncounter[10];
+                << m_uiEncounter[3] << " " << m_uiEncounter[4] << " " << m_uiEncounter[5] << " "
+                << m_uiEncounter[6] << " " << m_uiEncounter[7] << " " << m_uiEncounter[8] << " "
+                << m_uiEncounter[9] << " " << m_uiEncounter[10] << " " << m_uiEncounter[11];
 
             str_data = saveStream.str();
 
@@ -248,7 +249,7 @@ struct MANGOS_DLL_DECL instance_karazhan : public ScriptedInstance
         std::istringstream loadStream(in);
         loadStream >> m_uiEncounter[0] >> m_uiEncounter[1] >> m_uiEncounter[2] >> m_uiEncounter[3]
             >> m_uiEncounter[4] >> m_uiEncounter[5] >> m_uiEncounter[6] >> m_uiEncounter[7]
-            >> m_uiEncounter[8] >> m_uiEncounter[9] >> m_uiEncounter[10];
+            >> m_uiEncounter[8] >> m_uiEncounter[9] >> m_uiEncounter[10] >> m_uiEncounter[11];
 
         for(uint8 i = 0; i < ENCOUNTERS; ++i)
             if (m_uiEncounter[i] == IN_PROGRESS)            // Do not load an encounter as "In Progress" - reset it instead.
