@@ -47,7 +47,6 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     uint32 LifeDrain_Timer;
     uint32 Blizzard_Timer;
     uint32 Fly_Timer;
-    uint32 Fly2_Timer;
     uint32 Beserk_Timer;
     uint32 phase;
     bool landoff;
@@ -56,6 +55,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
     void Reset()
     {
         FrostAura_Timer = 2000;
+        FrostBreath_Timer = 2500;
         LifeDrain_Timer = 24000;
         Blizzard_Timer = 20000;
         Fly_Timer = 45000;
@@ -105,8 +105,8 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                     phase = 2;
                     m_creature->InterruptNonMeleeSpells(false);
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-                    (*m_creature).GetMotionMaster()->Clear(false);
-                    (*m_creature).GetMotionMaster()->MoveIdle();
+                    m_creature->GetMotionMaster()->Clear(false);
+                    m_creature->GetMotionMaster()->MoveIdle();
                     DoCast(m_creature,11010);
                     m_creature->SetHover(true);
                     DoCast(m_creature,18430);
@@ -124,7 +124,7 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                 if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(target,SPELL_ICEBOLT);
 
-                Icebolt_Count ++;
+                ++Icebolt_Count;
                 Icebolt_Timer = 4000;
             }else Icebolt_Timer -= diff;
 
@@ -147,8 +147,8 @@ struct MANGOS_DLL_DECL boss_sapphironAI : public ScriptedAI
                     phase = 1;
                     m_creature->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                     m_creature->SetHover(false);
-                    (*m_creature).GetMotionMaster()->Clear(false);
-                    (*m_creature).GetMotionMaster()->MoveChase(m_creature->getVictim());
+                    m_creature->GetMotionMaster()->Clear(false);
+                    m_creature->GetMotionMaster()->MoveChase(m_creature->getVictim());
                     Fly_Timer = 67000;
                 }else land_Timer -= diff;
             }

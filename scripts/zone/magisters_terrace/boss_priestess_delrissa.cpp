@@ -444,7 +444,7 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
 struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 {
     //Rogue
-    boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     uint32 Gouge_Timer;
     uint32 Kick_Timer;
@@ -559,7 +559,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
 {
     //Warlock
-    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     bool HasSummonedImp;
 
@@ -653,7 +653,7 @@ void mob_fizzleAI::KilledUnit(Unit* victim)
 struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 {
     //Monk
-    boss_eramas_brightblazeAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_eramas_brightblazeAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     uint32 Knockdown_Timer;
     uint32 Snap_Kick_Timer;
@@ -700,7 +700,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 {
     //Mage
-    boss_yazzaiAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_yazzaiAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     bool HasIceBlocked;
 
@@ -814,7 +814,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
 {
     //Warrior
-    boss_warlord_salarisAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_warlord_salarisAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     uint32 Intercept_Stun_Timer;
     uint32 Disarm_Timer;
@@ -934,7 +934,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
 {
     //Hunter
-    boss_garaxxasAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_garaxxasAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     //uint64 SliverGUID;
     bool HasSummonedSliver;
@@ -1052,7 +1052,7 @@ void mob_sliverAI::KilledUnit(Unit* victim)
 struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 {
     //Shaman
-    boss_apokoAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_apokoAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     uint32 Totem_Timer;
     uint8  Totem_Amount;
@@ -1141,7 +1141,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
 {
     //Engineer
-    boss_zelfanAI(Creature *c) : boss_priestess_guestAI(c) {}
+    boss_zelfanAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
 
     uint32 Goblin_Dragon_Gun_Timer;
     uint32 Rocket_Launch_Timer;
