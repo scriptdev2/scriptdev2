@@ -16,7 +16,7 @@
 
 /* ScriptData
 SDName: Boss_Priestess_Delrissa
-SD%Complete: 45
+SD%Complete: 65
 SDComment: No Heroic support yet. Needs further testing. Several scripts for pets disabled, not seem to require any special script.
 SDCategory: Magister's Terrace
 EndScriptData */
@@ -89,14 +89,14 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 {
     boss_priestess_delrissaAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
+        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         m_bHeroicMode = pCreature->GetMap()->IsHeroic();
         memset(&m_auiLackeyGUID, 0, sizeof(m_auiLackeyGUID));
         LackeyEntryList.clear();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
     bool m_bHeroicMode;
 
     std::vector<uint32> LackeyEntryList;
@@ -126,8 +126,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     //this mean she at some point evaded
     void JustReachedHome()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_DELRISSA_EVENT, FAIL);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_DELRISSA_EVENT, FAIL);
     }
 
     void Aggro(Unit* pWho)
@@ -146,8 +146,8 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             }
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_DELRISSA_EVENT, IN_PROGRESS);
+        if (m_pInstance)
+            m_pInstance->SetData(DATA_DELRISSA_EVENT, IN_PROGRESS);
     }
 
     void InitializeLackeys()
@@ -213,11 +213,11 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        if (!pInstance)
+        if (!m_pInstance)
             return;
 
-        if (pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) == MAX_ACTIVE_LACKEY)
-            pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
+        if (m_pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) == MAX_ACTIVE_LACKEY)
+            m_pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
         else
         {
             if (m_creature->HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE))
@@ -323,7 +323,15 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     }
 };
 
-#define SPELL_HEALING_POTION    15503
+CreatureAI* GetAI_boss_priestess_delrissa(Creature* pCreature)
+{
+    return new boss_priestess_delrissaAI(pCreature);
+}
+
+enum
+{
+    SPELL_HEALING_POTION    = 15503
+};
 
 //all 8 possible lackey use this common
 struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
@@ -461,17 +469,20 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
     }
 };
 
-#define SPELL_KIDNEY_SHOT        27615
-#define SPELL_GOUGE              12540
-#define SPELL_KICK               27613
-#define SPELL_VANISH             44290
-#define SPELL_BACKSTAB           15657
-#define SPELL_EVISCERATE         27611
+enum
+{
+    SPELL_KIDNEY_SHOT       = 27615,
+    SPELL_GOUGE             = 12540,
+    SPELL_KICK              = 27613,
+    SPELL_VANISH            = 44290,
+    SPELL_BACKSTAB          = 15657,
+    SPELL_EVISCERATE        = 27611
+};
 
 struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_commonAI
 {
     //Rogue
-    boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_kagani_nightstrikeAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Gouge_Timer;
     uint32 Kick_Timer;
@@ -550,48 +561,26 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_
     }
 };
 
-#define SPELL_IMMOLATE               44267
-#define SPELL_SHADOW_BOLT            12471
-#define SPELL_SEED_OF_CORRUPTION     44141
-#define SPELL_CURSE_OF_AGONY         14875
-#define SPELL_FEAR                   38595
-#define SPELL_IMP_FIREBALL           44164
-#define SPELL_SUMMON_IMP             44163
-
-//#define CREATURE_IMP                 44163
-//#define CREATURE_FIZZLE              24656
-
-/*struct MANGOS_DLL_DECL mob_fizzleAI : public ScriptedAI
+CreatureAI* GetAI_boss_kagani_nightstrike(Creature* pCreature)
 {
-    mob_fizzleAI(Creature *c) : ScriptedAI(c)
-    {
-        Reset();
-    }
+    return new boss_kagani_nightstrikeAI(pCreature);
+}
 
-    uint64 EllrisGUID;
-    uint32 Firebal_Timer;
-
-    void Reset() { EllrisGUID = 0; }
-
-    void KilledUnit(Unit* victim);
-    void JustDied(Unit* killer);
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!m_creature->SelectHostilTarget() || !m_creature->getVictim() )
-            return;
-
-        //Chain cast
-        if (!m_creature->IsNonMeleeSpellCasted(false))
-            DoCast(m_creature->getVictim(),SPELL_IMP_FIREBALL);
-        else DoMeleeAttackIfReady();
-    }
-};*/
+enum
+{
+    SPELL_IMMOLATE              = 44267,
+    SPELL_SHADOW_BOLT           = 12471,
+    SPELL_SEED_OF_CORRUPTION    = 44141,
+    SPELL_CURSE_OF_AGONY        = 14875,
+    SPELL_FEAR                  = 38595,
+    SPELL_IMP_FIREBALL          = 44164,
+    SPELL_SUMMON_IMP            = 44163
+};
 
 struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_commonAI
 {
     //Warlock
-    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_ellris_duskhallowAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Immolate_Timer;
     uint32 Shadow_Bolt_Timer;
@@ -662,25 +651,21 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
     }
 };
 
-/*void mob_fizzleAI::JustDied(Unit* killer)
+CreatureAI* GetAI_ellris_duskhallow(Creature* pCreature)
 {
-    if(Creature* Ellris = ((Creature*)Unit::GetUnit(*m_creature, EllrisGUID)))
-        ((boss_ellris_duskhallowAI*)Ellris->AI())->ImpGUID = 0;
+    return new boss_ellris_duskhallowAI(pCreature);
 }
 
-void mob_fizzleAI::KilledUnit(Unit* victim)
+enum
 {
-    if(Creature* Ellris = ((Creature*)Unit::GetUnit(*m_creature, EllrisGUID)))
-        ((boss_ellris_duskhallowAI*)Ellris->AI())->KilledUnit(victim);
-}*/
-
-#define SPELL_KNOCKDOWN            11428
-#define SPELL_SNAP_KICK            46182
+    SPELL_KNOCKDOWN     = 11428,
+    SPELL_SNAP_KICK     = 46182
+};
 
 struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_lackey_commonAI
 {
     //Monk
-    boss_eramas_brightblazeAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_eramas_brightblazeAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Knockdown_Timer;
     uint32 Snap_Kick_Timer;
@@ -716,18 +701,26 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_lackey_
     }
 };
 
-#define SPELL_POLYMORPH             13323
-#define SPELL_ICE_BLOCK             27619
-#define SPELL_BLIZZARD              44178
-#define SPELL_ICE_LANCE             46194
-#define SPELL_CONE_OF_COLD          38384
-#define SPELL_FROSTBOLT             15043
-#define SPELL_BLINK                 14514
+CreatureAI* GetAI_eramas_brightblaze(Creature* pCreature)
+{
+    return new boss_eramas_brightblazeAI(pCreature);
+}
+
+enum
+{
+    SPELL_POLYMORPH         = 13323,
+    SPELL_ICE_BLOCK         = 27619,
+    SPELL_BLIZZARD          = 44178,
+    SPELL_ICE_LANCE         = 46194,
+    SPELL_CONE_OF_COLD      = 38384,
+    SPELL_FROSTBOLT         = 15043,
+    SPELL_BLINK             = 14514
+};
 
 struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 {
     //Mage
-    boss_yazzaiAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_yazzaiAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     bool HasIceBlocked;
 
@@ -832,18 +825,26 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
     }
 };
 
-#define SPELL_INTERCEPT_STUN         27577
-#define SPELL_DISARM                 27581
-#define SPELL_PIERCING_HOWL          23600
-#define SPELL_FRIGHTENING_SHOUT      19134
-#define SPELL_HAMSTRING              27584
-#define SPELL_BATTLE_SHOUT           27578
-#define SPELL_MORTAL_STRIKE          44268
+CreatureAI* GetAI_yazzai(Creature* pCreature)
+{
+    return new boss_yazzaiAI(pCreature);
+}
+
+enum
+{
+    SPELL_INTERCEPT_STUN        = 27577,
+    SPELL_DISARM                = 27581,
+    SPELL_PIERCING_HOWL         = 23600,
+    SPELL_FRIGHTENING_SHOUT     = 19134,
+    SPELL_HAMSTRING             = 27584,
+    SPELL_BATTLE_SHOUT          = 27578,
+    SPELL_MORTAL_STRIKE         = 44268
+};
 
 struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_commonAI
 {
     //Warrior
-    boss_warlord_salarisAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_warlord_salarisAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Intercept_Stun_Timer;
     uint32 Disarm_Timer;
@@ -860,7 +861,6 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
         Frightening_Shout_Timer = 18000;
         Hamstring_Timer = 4500;
         Mortal_Strike_Timer = 8000;
-        DoCast(m_creature, SPELL_BATTLE_SHOUT);
 
         boss_priestess_lackey_commonAI::Reset();
     }
@@ -886,7 +886,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
                 if (Unit* target = Unit::GetUnit(*m_creature, (*itr)->getUnitGuid()))
                 {
                     //if in melee range
-                    if (target->IsWithinDistInMap(m_creature, 5))
+                    if (target->IsWithinDistInMap(m_creature, ATTACK_DISTANCE))
                     {
                         InMeleeRange = true;
                         break;
@@ -938,36 +938,29 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_com
     }
 };
 
-#define SPELL_AIMED_SHOT            44271
-#define SPELL_SHOOT                 15620
-#define SPELL_CONCUSSIVE_SHOT       27634
-#define TRIGGER_CONCUSSIVE_SHOT     19410
-#define SPELL_MULTI_SHOT            31942
-#define SPELL_WING_CLIP             44286
-#define SPELL_FREEZING_TRAP         44136
-
-#define NPC_SLIVER                  24552
-
-/*struct MANGOS_DLL_DECL mob_sliverAI : public ScriptedAI
+CreatureAI* GetAI_warlord_salaris(Creature* pCreature)
 {
-    mob_sliverAI(Creature *c) : ScriptedAI(c)
-    {
-        Reset();
-    }
+    return new boss_warlord_salarisAI(pCreature);
+}
 
-    uint64 GaraxxasGUID;
+enum
+{
+    SPELL_AIMED_SHOT            = 44271,
+    SPELL_SHOOT                 = 15620,
+    SPELL_CONCUSSIVE_SHOT       = 27634,
+    SPELL_MULTI_SHOT            = 31942,
+    SPELL_WING_CLIP             = 44286,
+    SPELL_FREEZING_TRAP         = 44136,
 
-    void Reset() { GaraxxasGUID = 0; }
-
-    void KilledUnit(Unit* victim);
-    void JustDied(Unit* killer);
-};*/
+    NPC_SLIVER                  = 24552
+};
 
 struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
 {
     //Hunter
-    boss_garaxxasAI(Creature *c) : boss_priestess_lackey_commonAI(c)
+    boss_garaxxasAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature)
     {
+        SetCombatMovement(false);
         m_uiPetGUID = 0;
         Reset();
     }
@@ -1009,7 +1002,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
 
         boss_priestess_lackey_commonAI::UpdateAI(diff);
 
-        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), 5.0f))
+        if (m_creature->IsWithinDistInMap(m_creature->getVictim(), ATTACK_DISTANCE))
         {
             if (Wing_Clip_Timer < diff)
             {
@@ -1019,8 +1012,18 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
 
             if (Freezing_Trap_Timer < diff)
             {
-                DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
-                Freezing_Trap_Timer = 30000;
+                //attempt find go summoned from spell (casted by m_creature)
+                GameObject* pGo = m_creature->GetGameObject(SPELL_FREEZING_TRAP);
+
+                //if we have a pGo, we need to wait (only one trap at a time)
+                if (pGo)
+                    Freezing_Trap_Timer = 2500;
+                else
+                {
+                    //if pGo does not exist, then we can cast
+                    DoCast(m_creature->getVictim(), SPELL_FREEZING_TRAP);
+                    Freezing_Trap_Timer = 15000;
+                }
             }else Freezing_Trap_Timer -= diff;
 
             DoMeleeAttackIfReady();
@@ -1054,30 +1057,26 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
     }
 };
 
-/*void mob_sliverAI::JustDied(Unit* killer)
+CreatureAI* GetAI_garaxxas(Creature* pCreature)
 {
-    if(Creature* Garaxxas = ((Creature*)Unit::GetUnit(*m_creature, GaraxxasGUID)))
-        ((boss_garaxxasAI*)Garaxxas->AI())->SliverGUID = 0;
+    return new boss_garaxxasAI(pCreature);
 }
 
-void mob_sliverAI::KilledUnit(Unit* victim)
+enum
 {
-    if(Creature* Garaxxas = ((Creature*)Unit::GetUnit(*m_creature, GaraxxasGUID)))
-        ((boss_garaxxasAI*)Garaxxas->AI())->KilledUnit(victim);
-}*/
-
-#define SPELL_WINDFURY_TOTEM         27621
-#define SPELL_WAR_STOMP              46026
-#define SPELL_PURGE                  27626
-#define SPELL_LESSER_HEALING_WAVE    44256
-#define SPELL_FROST_SHOCK            21401
-#define SPELL_FIRE_NOVA_TOTEM        44257
-#define SPELL_EARTHBIND_TOTEM        15786
+    SPELL_WINDFURY_TOTEM        = 27621,
+    SPELL_WAR_STOMP             = 46026,
+    SPELL_PURGE                 = 27626,
+    SPELL_LESSER_HEALING_WAVE   = 44256,
+    SPELL_FROST_SHOCK           = 21401,
+    SPELL_FIRE_NOVA_TOTEM       = 44257,
+    SPELL_EARTHBIND_TOTEM       = 15786
+};
 
 struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 {
     //Shaman
-    boss_apokoAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_apokoAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Totem_Timer;
     uint8  Totem_Amount;
@@ -1156,19 +1155,25 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
     }
 };
 
-#define SPELL_GOBLIN_DRAGON_GUN        44272
-#define SPELL_ROCKET_LAUNCH            44137
-#define SPELL_RECOMBOBULATE            44274
-#define SPELL_HIGH_EXPLOSIVE_SHEEP     44276
-#define SPELL_FEL_IRON_BOMB            46024
-#define SPELL_SHEEP_EXPLOSION          44279
+CreatureAI* GetAI_apoko(Creature* pCreature)
+{
+    return new boss_apokoAI(pCreature);
+}
 
-#define CREATURE_EXPLOSIVE_SHEEP        24715
+enum
+{
+    SPELL_GOBLIN_DRAGON_GUN     = 44272,
+    SPELL_ROCKET_LAUNCH         = 44137,
+    SPELL_RECOMBOBULATE         = 44274,
+    SPELL_HIGH_EXPLOSIVE_SHEEP  = 44276,
+    SPELL_FEL_IRON_BOMB         = 46024,
+    SPELL_SHEEP_EXPLOSION       = 44279
+};
 
 struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 {
     //Engineer
-    boss_zelfanAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
+    boss_zelfanAI(Creature* pCreature) : boss_priestess_lackey_commonAI(pCreature) { Reset(); }
 
     uint32 Goblin_Dragon_Gun_Timer;
     uint32 Rocket_Launch_Timer;
@@ -1238,6 +1243,11 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
     }
 };
 
+CreatureAI* GetAI_zelfan(Creature* pCreature)
+{
+    return new boss_zelfanAI(pCreature);
+}
+
 //struct MANGOS_DLL_DECL mob_high_explosive_sheepAI : public ScriptedAI
 //{
 //    mob_high_explosive_sheepAI(Creature *c) : ScriptedAI(c) {Reset();}
@@ -1261,65 +1271,10 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 //    }
 //};
 
-/*CreatureAI* GetAI_mob_sliver(Creature* pCreature)
-{
-    return new mob_sliverAI(pCreature);
-};*/
-
 //CreatureAI* GetAI_mob_high_explosive_sheep(Creature* pCreature)
 //{
 //    return new mob_high_explosive_sheepAI(pCreature);
 //};
-
-/*CreatureAI* GetAI_mob_fizzle(Creature* pCreature)
-{
-    return new mob_fizzleAI(pCreature);
-};*/
-
-CreatureAI* GetAI_boss_priestess_delrissa(Creature* pCreature)
-{
-    return new boss_priestess_delrissaAI(pCreature);
-}
-
-CreatureAI* GetAI_boss_kagani_nightstrike(Creature* pCreature)
-{
-    return new boss_kagani_nightstrikeAI(pCreature);
-}
-
-CreatureAI* GetAI_ellris_duskhallow(Creature* pCreature)
-{
-    return new boss_ellris_duskhallowAI(pCreature);
-}
-
-CreatureAI* GetAI_eramas_brightblaze(Creature* pCreature)
-{
-    return new boss_eramas_brightblazeAI(pCreature);
-}
-
-CreatureAI* GetAI_yazzai(Creature* pCreature)
-{
-    return new boss_yazzaiAI(pCreature);
-}
-
-CreatureAI* GetAI_warlord_salaris(Creature* pCreature)
-{
-    return new boss_warlord_salarisAI(pCreature);
-}
-
-CreatureAI* GetAI_garaxxas(Creature* pCreature)
-{
-    return new boss_garaxxasAI(pCreature);
-}
-
-CreatureAI* GetAI_apoko(Creature* pCreature)
-{
-    return new boss_apokoAI(pCreature);
-}
-
-CreatureAI* GetAI_zelfan(Creature* pCreature)
-{
-    return new boss_zelfanAI(pCreature);
-}
 
 void AddSC_boss_priestess_delrissa()
 {
@@ -1373,15 +1328,5 @@ void AddSC_boss_priestess_delrissa()
     /*newscript = new Script;
     newscript->Name = "mob_high_explosive_sheep";
     newscript->GetAI = &GetAI_mob_high_explosive_sheep;
-    newscript->RegisterSelf();*/
-
-    /*newscript = new Script;
-    newscript->Name = "mob_fizzle";
-    newscript->GetAI = &GetAI_mob_fizzle;
-    newscript->RegisterSelf();*/
-
-    /*newscript = new Script;
-    newscript->Name = "mob_sliver";
-    newscript->GetAI = &GetAI_mob_sliver;
     newscript->RegisterSelf();*/
 }
