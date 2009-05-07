@@ -121,12 +121,13 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
         DispelTimer = 7500;
 
         InitializeLackeys();
+    }
 
+    //this mean she at some point evaded
+    void JustReachedHome()
+    {
         if (pInstance)
-        {
-            pInstance->SetData(DATA_DELRISSA_EVENT, NOT_STARTED);
-            pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 0);
-        } else error_log(ERROR_INST_DATA);
+            pInstance->SetData(DATA_DELRISSA_EVENT, FAIL);
     }
 
     void Aggro(Unit* pWho)
@@ -144,10 +145,17 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
                 }
             }
         }
+
+        if (pInstance)
+            pInstance->SetData(DATA_DELRISSA_EVENT, IN_PROGRESS);
     }
 
     void InitializeLackeys()
     {
+        //can be called if creature are dead, so avoid
+        if (!m_creature->isAlive())
+            return;
+
         uint8 j = 0;
 
         //it's empty, so first time
@@ -343,6 +351,45 @@ struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
         // We do not know what this system is based upon, but one theory is class (healers=high threat, dps=medium, etc)
         // We reset their threat frequently as an alternative until such a system exist
         m_uiResetThreatTimer = 5000 + rand()%15000;
+
+        // in case she is not alive and Reset was for some reason called, respawn her (most likely party wipe after killing her)
+        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+        {
+            if (!pDelrissa->isAlive())
+                pDelrissa->Respawn();
+        }
+    }
+
+    void EnterCombat(Unit* pWho)
+    {
+        if (!pWho)
+            return;
+
+        if (m_pInstance)
+        {
+            for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
+            {
+                if (Unit* pAdd = Unit::GetUnit(*m_creature, m_auiLackeyGUIDs[i]))
+                {
+                    if (!pAdd->getVictim() && pAdd != m_creature)
+                    {
+                        pWho->SetInCombatWith(pAdd);
+                        pAdd->AddThreat(pWho, 0.0f);
+                    }
+                }
+            }
+
+            if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+            {
+                if (pDelrissa->isAlive() && !pDelrissa->getVictim())
+                {
+                    pWho->SetInCombatWith(pDelrissa);
+                    pDelrissa->AddThreat(pWho, 0.0f);
+                }
+            }
+        }
+
+        Aggro(pWho);
     }
 
     void JustDied(Unit* pKiller)
@@ -546,8 +593,6 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
     //Warlock
     boss_ellris_duskhallowAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
-    bool HasSummonedImp;
-
     uint32 Immolate_Timer;
     uint32 Shadow_Bolt_Timer;
     uint32 Seed_of_Corruption_Timer;
@@ -556,8 +601,6 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
 
     void Reset()
     {
-        HasSummonedImp = false;
-
         Immolate_Timer = 6000;
         Shadow_Bolt_Timer = 3000;
         Seed_of_Corruption_Timer = 2000;
@@ -567,15 +610,13 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_c
         boss_priestess_lackey_commonAI::Reset();
     }
 
+    void Aggro(Unit* pWho)
+    {
+        DoCast(m_creature,SPELL_SUMMON_IMP);
+    }
+
     void UpdateAI(const uint32 diff)
     {
-        if (!HasSummonedImp)
-        {
-            //Imp will not despawn unless it's killed, even if owner dies, this is correct way.
-            DoCast(m_creature,SPELL_SUMMON_IMP);
-            HasSummonedImp = true;
-        }
-
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
