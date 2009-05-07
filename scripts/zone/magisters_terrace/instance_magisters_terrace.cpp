@@ -103,7 +103,11 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         switch(identifier)
         {
             case DATA_SELIN_EVENT:       Encounters[0] = data;  break;
-            case DATA_VEXALLUS_EVENT:    Encounters[1] = data;  break;
+            case DATA_VEXALLUS_EVENT:
+                if (data == DONE)
+                    DoUseDoorOrButton(VexallusDoorGUID);
+                Encounters[1] = data;
+                break;
             case DATA_DELRISSA_EVENT:
                 if (data == DONE)
                     DoUseDoorOrButton(DelrissaDoorGUID);
