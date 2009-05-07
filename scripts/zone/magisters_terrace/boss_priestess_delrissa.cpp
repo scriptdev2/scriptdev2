@@ -102,7 +102,6 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
     std::vector<uint32> LackeyEntryList;
     uint64 m_auiLackeyGUID[MAX_ACTIVE_LACKEY];
 
-    uint8 LackeysKilled;
     uint8 PlayersKilled;
 
     uint32 HealTimer;
@@ -113,7 +112,6 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
     void Reset()
     {
-        LackeysKilled = 0;
         PlayersKilled = 0;
 
         HealTimer   = 15000;
@@ -203,38 +201,20 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
             ++PlayersKilled;
     }
 
-    void KilledLackey()
-    {
-        DoScriptText(LackeyDeath[LackeysKilled].id, m_creature);
-
-        if (LackeysKilled < 3)
-            ++LackeysKilled;
-    }
-
     void JustDied(Unit* killer)
     {
         DoScriptText(SAY_DEATH, m_creature);
 
-        CheckLootable();
-
         if (!pInstance)
-        {
-            error_log(ERROR_INST_DATA);
             return;
-        }
 
-        pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
-
-        if (GameObject* pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_DELRISSA_DOOR)))
-            pDoor->SetGoState(GO_STATE_ACTIVE);
-    }
-
-    void CheckLootable()
-    {
-        if (LackeysKilled > 3)
-            m_creature->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+        if (pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) == MAX_ACTIVE_LACKEY)
+            pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
         else
-            m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+        {
+            if (m_creature->HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE))
+                m_creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+        }
     }
 
     void UpdateAI(const uint32 diff)
@@ -337,88 +317,100 @@ struct MANGOS_DLL_DECL boss_priestess_delrissaAI : public ScriptedAI
 
 #define SPELL_HEALING_POTION    15503
 
-struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
+//all 8 possible lackey use this common
+struct MANGOS_DLL_DECL boss_priestess_lackey_commonAI : public ScriptedAI
 {
-    boss_priestess_guestAI(Creature* c) : ScriptedAI(c)
+    boss_priestess_lackey_commonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = ((ScriptedInstance*)c->GetInstanceData());
+        m_pInstance = ((ScriptedInstance*)pCreature->GetInstanceData());
         memset(&m_auiLackeyGUIDs, 0, sizeof(m_auiLackeyGUIDs));
         Reset();
         AcquireGUIDs();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* m_pInstance;
 
     uint64 m_auiLackeyGUIDs[MAX_ACTIVE_LACKEY];
-    uint32 ResetThreatTimer;
-    bool UsedPotion;
+    uint32 m_uiResetThreatTimer;
+    bool m_bUsedPotion;
 
     void Reset()
     {
-        UsedPotion = false;
-        ResetThreatTimer = 5000 + rand()%15000;             // These guys like to switch targets often, and are not meant to be tanked.
+        m_bUsedPotion = false;
+
+        // These guys does not follow normal threat system rules
+        // For later development, some alternative threat system should be made
+        // We do not know what this system is based upon, but one theory is class (healers=high threat, dps=medium, etc)
+        // We reset their threat frequently as an alternative until such a system exist
+        m_uiResetThreatTimer = 5000 + rand()%15000;
     }
 
-    void JustDied(Unit* killer)
+    void JustDied(Unit* pKiller)
     {
-        if (!pInstance)
-        {
-            error_log(ERROR_INST_DATA);
+        if (!m_pInstance)
             return;
-        }
 
-        if (Creature* Delrissa = (Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_DELRISSA)))
+        Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA));
+        uint32 uiLackeyDeathCount = m_pInstance->GetData(DATA_DELRISSA_DEATH_COUNT);
+
+        if (!pDelrissa)
+            return;
+
+        //should delrissa really yell if dead?
+        DoScriptText(LackeyDeath[uiLackeyDeathCount].id, pDelrissa);
+
+        m_pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, SPECIAL);
+
+        //increase local var, since we now may have four dead
+        ++uiLackeyDeathCount;
+
+        if (uiLackeyDeathCount == MAX_ACTIVE_LACKEY)
         {
-            pInstance->SetData(DATA_DELRISSA_DEATH_COUNT, 1);
+            //time to make her lootable and complete event if she died before lackeys
+            if (!pDelrissa->isAlive())
+            {
+                if (!pDelrissa->HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE))
+                    pDelrissa->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
-            ((boss_priestess_delrissaAI*)Delrissa->AI())->KilledLackey();
-
-            if (!Delrissa->isAlive() && pInstance->GetData(DATA_DELRISSA_DEATH_COUNT) > 3)
-                Delrissa->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+                m_pInstance->SetData(DATA_DELRISSA_EVENT, DONE);
+            }
         }
     }
 
-    void KilledUnit(Unit* victim)
+    void KilledUnit(Unit* pVictim)
     {
-        if (!pInstance)
-        {
-            error_log(ERROR_INST_DATA);
+        if (!m_pInstance)
             return;
-        }
 
-        Creature* Delrissa = ((Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_DELRISSA)));
-        if (Delrissa)
-            Delrissa->AI()->KilledUnit(victim);
+        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
+            pDelrissa->AI()->KilledUnit(pVictim);
     }
 
     void AcquireGUIDs()
     {
-        if (!pInstance)
-        {
-            error_log(ERROR_INST_DATA);
+        if (!m_pInstance)
             return;
-        }
 
-        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, pInstance->GetData64(DATA_DELRISSA)))
+        if (Creature* pDelrissa = (Creature*)Unit::GetUnit(*m_creature, m_pInstance->GetData64(DATA_DELRISSA)))
         {
             for(uint8 i = 0; i < MAX_ACTIVE_LACKEY; ++i)
                 m_auiLackeyGUIDs[i] = ((boss_priestess_delrissaAI*)pDelrissa->AI())->m_auiLackeyGUID[i];
         }
     }
 
-    void UpdateAI(const uint32 diff)
+    void UpdateAI(const uint32 uiDiff)
     {
-        if (((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25) && !UsedPotion)
+        if (!m_bUsedPotion && ((m_creature->GetHealth()*100 / m_creature->GetMaxHealth()) < 25))
         {
-            DoCast(m_creature, SPELL_HEALING_POTION, true);
-            UsedPotion = true;
+            DoCast(m_creature, SPELL_HEALING_POTION);
+            m_bUsedPotion = true;
         }
 
-        if (ResetThreatTimer < diff)
+        if (m_uiResetThreatTimer < uiDiff)
         {
             DoResetThreat();
-            ResetThreatTimer = 5000 + rand()%15000;
-        }else ResetThreatTimer -= diff;
+            m_uiResetThreatTimer = 5000 + rand()%15000;
+        }else m_uiResetThreatTimer -= uiDiff;
     }
 };
 
@@ -429,10 +421,10 @@ struct MANGOS_DLL_DECL boss_priestess_guestAI : public ScriptedAI
 #define SPELL_BACKSTAB           15657
 #define SPELL_EVISCERATE         27611
 
-struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_lackey_commonAI
 {
     //Rogue
-    boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     uint32 Gouge_Timer;
     uint32 Kick_Timer;
@@ -451,7 +443,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
         InVanish = false;
         m_creature->SetVisibility(VISIBILITY_ON);
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -459,7 +451,7 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Vanish_Timer < diff)
         {
@@ -549,10 +541,10 @@ struct MANGOS_DLL_DECL boss_kagani_nightstrikeAI : public boss_priestess_guestAI
     }
 };*/
 
-struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_lackey_commonAI
 {
     //Warlock
-    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_ellris_duskhallowAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     bool HasSummonedImp;
 
@@ -572,12 +564,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
         Curse_of_Agony_Timer = 1000;
         Fear_Timer = 10000;
 
-        boss_priestess_guestAI::Reset();
-    }
-
-    void JustDied(Unit* killer)
-    {
-        boss_priestess_guestAI::JustDied(killer);
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -592,7 +579,7 @@ struct MANGOS_DLL_DECL boss_ellris_duskhallowAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Immolate_Timer < diff)
         {
@@ -649,10 +636,10 @@ void mob_fizzleAI::KilledUnit(Unit* victim)
 #define SPELL_KNOCKDOWN            11428
 #define SPELL_SNAP_KICK            46182
 
-struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_lackey_commonAI
 {
     //Monk
-    boss_eramas_brightblazeAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_eramas_brightblazeAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     uint32 Knockdown_Timer;
     uint32 Snap_Kick_Timer;
@@ -662,7 +649,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
         Knockdown_Timer = 6000;
         Snap_Kick_Timer = 4500;
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -670,7 +657,7 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Knockdown_Timer < diff)
         {
@@ -696,10 +683,10 @@ struct MANGOS_DLL_DECL boss_eramas_brightblazeAI : public boss_priestess_guestAI
 #define SPELL_FROSTBOLT             15043
 #define SPELL_BLINK                 14514
 
-struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_lackey_commonAI
 {
     //Mage
-    boss_yazzaiAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_yazzaiAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     bool HasIceBlocked;
 
@@ -725,7 +712,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
         Frostbolt_Timer = 3000;
         Blink_Timer = 8000;
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -733,7 +720,7 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Polymorph_Timer < diff)
         {
@@ -812,10 +799,10 @@ struct MANGOS_DLL_DECL boss_yazzaiAI : public boss_priestess_guestAI
 #define SPELL_BATTLE_SHOUT           27578
 #define SPELL_MORTAL_STRIKE          44268
 
-struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_lackey_commonAI
 {
     //Warrior
-    boss_warlord_salarisAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_warlord_salarisAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     uint32 Intercept_Stun_Timer;
     uint32 Disarm_Timer;
@@ -834,7 +821,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
         Mortal_Strike_Timer = 8000;
         DoCast(m_creature, SPELL_BATTLE_SHOUT);
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void Aggro(Unit* who)
@@ -847,7 +834,7 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Intercept_Stun_Timer < diff)
         {
@@ -935,10 +922,10 @@ struct MANGOS_DLL_DECL boss_warlord_salarisAI : public boss_priestess_guestAI
     void JustDied(Unit* killer);
 };*/
 
-struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_lackey_commonAI
 {
     //Hunter
-    boss_garaxxasAI(Creature *c) : boss_priestess_guestAI(c)
+    boss_garaxxasAI(Creature *c) : boss_priestess_lackey_commonAI(c)
     {
         m_uiPetGUID = 0;
         Reset();
@@ -966,7 +953,7 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
         if (!pPet)
             m_creature->SummonCreature(NPC_SLIVER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -974,17 +961,12 @@ struct MANGOS_DLL_DECL boss_garaxxasAI : public boss_priestess_guestAI
         m_uiPetGUID = pSummoned->GetGUID();
     }
 
-    void JustDied(Unit* killer)
-    {
-        boss_priestess_guestAI::JustDied(killer);
-    }
-
     void UpdateAI(const uint32 diff)
     {
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (m_creature->IsWithinDistInMap(m_creature->getVictim(), 5.0f))
         {
@@ -1051,10 +1033,10 @@ void mob_sliverAI::KilledUnit(Unit* victim)
 #define SPELL_FIRE_NOVA_TOTEM        44257
 #define SPELL_EARTHBIND_TOTEM        15786
 
-struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_lackey_commonAI
 {
     //Shaman
-    boss_apokoAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_apokoAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     uint32 Totem_Timer;
     uint8  Totem_Amount;
@@ -1072,7 +1054,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
         Healing_Wave_Timer = 5000;
         Frost_Shock_Timer = 7000;
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -1080,7 +1062,7 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Totem_Timer < diff)
         {
@@ -1142,10 +1124,10 @@ struct MANGOS_DLL_DECL boss_apokoAI : public boss_priestess_guestAI
 
 #define CREATURE_EXPLOSIVE_SHEEP        24715
 
-struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
+struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_lackey_commonAI
 {
     //Engineer
-    boss_zelfanAI(Creature *c) : boss_priestess_guestAI(c) { Reset(); }
+    boss_zelfanAI(Creature *c) : boss_priestess_lackey_commonAI(c) { Reset(); }
 
     uint32 Goblin_Dragon_Gun_Timer;
     uint32 Rocket_Launch_Timer;
@@ -1161,7 +1143,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
         High_Explosive_Sheep_Timer = 10000;
         Fel_Iron_Bomb_Timer = 15000;
 
-        boss_priestess_guestAI::Reset();
+        boss_priestess_lackey_commonAI::Reset();
     }
 
     void UpdateAI(const uint32 diff)
@@ -1169,7 +1151,7 @@ struct MANGOS_DLL_DECL boss_zelfanAI : public boss_priestess_guestAI
         if (!m_creature->SelectHostilTarget() || !m_creature->getVictim())
             return;
 
-        boss_priestess_guestAI::UpdateAI(diff);
+        boss_priestess_lackey_commonAI::UpdateAI(diff);
 
         if (Goblin_Dragon_Gun_Timer < diff)
         {

@@ -38,7 +38,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
     instance_magisters_terrace(Map* map) : ScriptedInstance(map) {Initialize();}
 
     uint32 Encounters[NUMBER_OF_ENCOUNTERS];
-    uint32 DelrissaDeathCount;
+    uint32 m_uiDelrissaDeathCount;
 
     std::list<uint64> FelCrystals;
     std::list<uint64>::iterator CrystalItr;
@@ -61,7 +61,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
 
         FelCrystals.clear();
 
-        DelrissaDeathCount = 0;
+        m_uiDelrissaDeathCount = 0;
 
         SelinGUID = 0;
         DelrissaGUID = 0;
@@ -92,7 +92,7 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
             case DATA_VEXALLUS_EVENT:       return Encounters[1];
             case DATA_DELRISSA_EVENT:       return Encounters[2];
             case DATA_KAELTHAS_EVENT:       return Encounters[3];
-            case DATA_DELRISSA_DEATH_COUNT: return DelrissaDeathCount;
+            case DATA_DELRISSA_DEATH_COUNT: return m_uiDelrissaDeathCount;
             case DATA_FEL_CRYSTAL_SIZE:     return FelCrystals.size();
         }
         return 0;
@@ -104,12 +104,21 @@ struct MANGOS_DLL_DECL instance_magisters_terrace : public ScriptedInstance
         {
             case DATA_SELIN_EVENT:       Encounters[0] = data;  break;
             case DATA_VEXALLUS_EVENT:    Encounters[1] = data;  break;
-            case DATA_DELRISSA_EVENT:    Encounters[2] = data;  break;
+            case DATA_DELRISSA_EVENT:
+                if (data == DONE)
+                    DoUseDoorOrButton(DelrissaDoorGUID);
+                if (data == IN_PROGRESS)
+                    m_uiDelrissaDeathCount = 0;
+                Encounters[2] = data;
+                break;
             case DATA_KAELTHAS_EVENT:    Encounters[3] = data;  break;
 
             case DATA_DELRISSA_DEATH_COUNT:
-                if(data)  ++DelrissaDeathCount;
-                else      DelrissaDeathCount = 0;
+                if (data == SPECIAL)
+                    ++m_uiDelrissaDeathCount;
+                else
+                    m_uiDelrissaDeathCount = 0;
+                break;
         }
     }
 
