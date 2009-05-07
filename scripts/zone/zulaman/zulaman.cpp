@@ -104,10 +104,12 @@ enum
 {
     SAY_START               = -1568079,
     SAY_AT_GONG             = -1568080,
-    SAY_OPEN_ENTRANCE       = -1568081
+    SAY_OPEN_ENTRANCE       = -1568081,
+
+    SPELL_BANGING_THE_GONG  = 45225
 };
 
-#define GOSSIP_ITEM_BEGIN   "[PH] Begin"
+#define GOSSIP_ITEM_BEGIN   "Thanks for the concern, but we intend to explore Zul'Aman."
 
 struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
 {
@@ -128,24 +130,25 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
         {
             case 1:
                 DoScriptText(SAY_AT_GONG, m_creature);
+
                 if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_GONG)))
                     pEntranceDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+
+                //Start bang gong for 2min
+                m_creature->CastSpell(m_creature, SPELL_BANGING_THE_GONG, false);
                 IsOnHold = true;
                 break;
             case 3:
                 DoScriptText(SAY_OPEN_ENTRANCE, m_creature);
-
-                if (GameObject* pEntranceDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_GO_ENTRANCE)))
-                    pEntranceDoor->SetGoState(GO_STATE_ACTIVE);
-
+                break;
+           case 4:
                 pInstance->SetData(TYPE_EVENT_RUN,IN_PROGRESS);
+                //TODO: Spawn group of Amani'shi Savage and make them run to entrance
                 break;
         }
     }
 
-    void Reset()
-    {
-    }
+    void Reset() { }
 
     void StartEvent()
     {
@@ -156,6 +159,10 @@ struct MANGOS_DLL_DECL npc_harrison_jones_zaAI : public npc_escortAI
     void SetHoldState(bool bOnHold)
     {
         IsOnHold = bOnHold;
+
+        //Stop banging gong if still
+        if (pInstance && pInstance->GetData(TYPE_EVENT_RUN) == SPECIAL && m_creature->HasAura(SPELL_BANGING_THE_GONG))
+            m_creature->RemoveAurasDueToSpell(SPELL_BANGING_THE_GONG);
     }
 
     void UpdateAI(const uint32 diff)
@@ -192,7 +199,6 @@ CreatureAI* GetAI_npc_harrison_jones_za(Creature* pCreature)
 {
     npc_harrison_jones_zaAI* tempAI = new npc_harrison_jones_zaAI(pCreature);
 
-    //TODO: create proper waypoints
     tempAI->FillPointMovementListForCreature();
 
     return (CreatureAI*)tempAI;

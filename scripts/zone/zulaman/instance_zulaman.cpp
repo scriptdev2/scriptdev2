@@ -145,6 +145,7 @@ struct MANGOS_DLL_DECL instance_zulaman : public ScriptedInstance
                 }
                 if (uiData == IN_PROGRESS)
                 {
+                    DoUseDoorOrButton(m_uiMassiveGateGUID);
                     UpdateInstanceWorldState(WORLD_STATE_COUNTER,m_uiEventMinuteStep);
                     UpdateInstanceWorldState(WORLD_STATE_ID,1);
                     m_uiEncounter[0] = uiData;
