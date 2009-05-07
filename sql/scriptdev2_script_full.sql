@@ -1032,7 +1032,17 @@ INSERT INTO script_texts (entry,content_default,sound,type,language,emote,commen
 (-1543013,'A-Kreesh!',10278,1,0,0,'omor SAY_CURSE'),
 (-1543014,'Die, weakling!',10282,1,0,0,'omor SAY_KILL_1'),
 (-1543015,'It is... not over.',10284,1,0,0,'omor SAY_DIE'),
-(-1543016,'I am victorious!',10283,1,0,0,'omor SAY_WIPE');
+(-1543016,'I am victorious!',10283,1,0,0,'omor SAY_WIPE'),
+
+(-1543017,'You have faced many challenges, pity they were all in vain. Soon your people will kneel to my lord!',10292,1,0,0,'vazruden SAY_INTRO'),
+(-1543018,'Your time is running out!',10294,1,0,0,'vazruden SAY_AGGRO1'),
+(-1543019,'You are nothing, I answer a higher call!',10295,1,0,0,'vazruden SAY_AGGRO2'),
+(-1543020,'The Dark Lord laughs at you!',10296,1,0,0,'vazruden SAY_AGGRO3'),
+(-1543021,'Is there no one left to test me?',10293,1,0,0,'vazruden SAY_TAUNT'),
+(-1543022,'It is over. Finished!',10297,1,0,0,'vazruden SAY_KILL1'),
+(-1543023,'Your days are done!',10298,1,0,0,'vazruden SAY_KILL2'),
+(-1543024,'My lord will be the end you all...',10299,1,0,0,'vazruden SAY_DEATH'),
+(-1543025,'%s descends from the sky.',0,3,0,0,'vazruden EMOTE_DESCEND');
 
 -- -1 544 000 MAGTHERIDON'S LAIR
 INSERT INTO script_texts (entry,content_default,sound,type,language,emote,comment) VALUES
@@ -2696,11 +2706,12 @@ INSERT INTO script_waypoint VALUES
 (22916, 48, 7515.78, -3060.16, 445.727, 0, ''),
 (22916, 49, 7516.46, -3058.11, 445.682, 10000, 'quest credit');
 
-DELETE FROM script_waypoint WHERE entry=24358; -- incomplete, in-progress, needs to be done
+DELETE FROM script_waypoint WHERE entry=24358;
 INSERT INTO script_waypoint VALUES
 (24358, 0, 121.193970, 1645.619385, 42.021, 0, ''),
 (24358, 1, 132.051468, 1642.176025, 42.021, 5000, 'SAY_AT_GONG'),
 (24358, 2, 120.670631, 1636.346802, 42.415, 0, ''),
-(24358, 3, 120.536003, 1611.654663, 43.473, 30000, 'SAY_OPEN_ENTRANCE');
+(24358, 3, 120.536003, 1611.654663, 43.473, 10000, 'SAY_OPEN_ENTRANCE'),
+(24358, 4, 120.536003, 1611.654663, 43.473, 0, '');
 
 -- EOF
