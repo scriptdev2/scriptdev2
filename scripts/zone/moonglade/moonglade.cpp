@@ -36,52 +36,56 @@ EndContentData */
 ## npc_bunthen_plainswind
 ######*/
 
-bool GossipHello_npc_bunthen_plainswind(Player *player, Creature *_Creature)
+enum
 {
-    if(player->getClass() != CLASS_DRUID)
-        player->SEND_GOSSIP_MENU(4916,_Creature->GetGUID());
-    else if(player->GetTeam() != HORDE)
-    {
-        if(player->GetQuestStatus(272) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Endurance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    QUEST_SEA_LION_HORDE        = 30,
+    QUEST_SEA_LION_ALLY         = 272,
+    TAXI_PATH_ID_ALLY           = 315,
+    TAXI_PATH_ID_HORDE          = 316
+};
 
-        player->SEND_GOSSIP_MENU(4917,_Creature->GetGUID());
+#define GOSSIP_ITEM_THUNDER     "I'd like to fly to Thunder Bluff."
+#define GOSSIP_ITEM_AQ_END      "Do you know where I can find Half Pendant of Aquatic Endurance?"
+
+bool GossipHello_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature)
+{
+    if (pPlayer->getClass() != CLASS_DRUID)
+        pPlayer->SEND_GOSSIP_MENU(4916, pCreature->GetGUID());
+    else if (pPlayer->GetTeam() != HORDE)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_ALLY) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_AQ_END, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+
+        pPlayer->SEND_GOSSIP_MENU(4917, pCreature->GetGUID());
     }
-    else if(player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
+    else if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == HORDE)
     {
-        player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Thunder Bluff.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_THUNDER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        if(player->GetQuestStatus(30) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Endurance?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_HORDE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_AQ_END, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-        player->SEND_GOSSIP_MENU(4918,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(4918, pCreature->GetGUID());
     }
     return true;
 }
 
-bool GossipSelect_npc_bunthen_plainswind(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-        {
-            player->CLOSE_GOSSIP_MENU();
-            if (player->getClass() == CLASS_DRUID && player->GetTeam() == HORDE)
-            {
-                std::vector<uint32> nodes;
+            pPlayer->CLOSE_GOSSIP_MENU();
 
-                nodes.resize(2);
-                nodes[0] = 63;                              // Nighthaven, Moonglade
-                nodes[1] = 22;                              // Thunder Bluff, Mulgore
-                player->ActivateTaxiPathTo(nodes);
-            }
+            if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == HORDE)
+                pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_HORDE);
+
             break;
-        }
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->SEND_GOSSIP_MENU(5373,_Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(5373, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            player->SEND_GOSSIP_MENU(5376,_Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(5376, pCreature->GetGUID());
             break;
     }
     return true;
@@ -290,52 +294,48 @@ bool GossipSelect_npc_great_bear_spirit(Player *player, Creature *_Creature, uin
 ## npc_silva_filnaveth
 ######*/
 
-bool GossipHello_npc_silva_filnaveth(Player *player, Creature *_Creature)
+#define GOSSIP_ITEM_RUTHERAN    "I'd like to fly to Rut'theran Village."
+#define GOSSIP_ITEM_AQ_AGI      "Do you know where I can find Half Pendant of Aquatic Agility?"
+
+bool GossipHello_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature)
 {
-    if(player->getClass() != CLASS_DRUID)
-        player->SEND_GOSSIP_MENU(4913,_Creature->GetGUID());
-    else if(player->GetTeam() != ALLIANCE)
+    if (pPlayer->getClass() != CLASS_DRUID)
+        pPlayer->SEND_GOSSIP_MENU(4913, pCreature->GetGUID());
+    else if (pPlayer->GetTeam() != ALLIANCE)
     {
-        if(player->GetQuestStatus(30) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Agility?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_HORDE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_AQ_AGI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-        player->SEND_GOSSIP_MENU(4915,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(4915, pCreature->GetGUID());
     }
-    else if(player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
+    else if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == ALLIANCE)
     {
-        player->ADD_GOSSIP_ITEM( 0, "I'd like to fly to Rut'theran Village.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_RUTHERAN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        if(player->GetQuestStatus(272) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM( 0, "Do you know where I can find Half Pendant of Aquatic Agility?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        if (pPlayer->GetQuestStatus(QUEST_SEA_LION_ALLY) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_AQ_AGI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-        player->SEND_GOSSIP_MENU(4914,_Creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(4914, pCreature->GetGUID());
     }
     return true;
 }
 
-bool GossipSelect_npc_silva_filnaveth(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch(action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-        {
-            player->CLOSE_GOSSIP_MENU();
-            if (player->getClass() == CLASS_DRUID && player->GetTeam() == ALLIANCE)
-            {
-                std::vector<uint32> nodes;
+            pPlayer->CLOSE_GOSSIP_MENU();
 
-                nodes.resize(2);
-                nodes[0] = 62;                              // Nighthaven, Moonglade
-                nodes[1] = 27;                              // Rut'theran Village, Teldrassil
-                player->ActivateTaxiPathTo(nodes);
-            }
+            if (pPlayer->getClass() == CLASS_DRUID && pPlayer->GetTeam() == ALLIANCE)
+                pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID_ALLY);
+
             break;
-        }
         case GOSSIP_ACTION_INFO_DEF + 2:
-            player->SEND_GOSSIP_MENU(5374,_Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(5374, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            player->SEND_GOSSIP_MENU(5375,_Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(5375, pCreature->GetGUID());
             break;
     }
     return true;

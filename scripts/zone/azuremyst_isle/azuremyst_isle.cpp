@@ -488,32 +488,36 @@ bool EffectDummyCreature_npc_nestlewood_owlkin(Unit *pCaster, uint32 spellId, ui
 ## npc_susurrus
 ######*/
 
-bool GossipHello_npc_susurrus(Player *player, Creature *_Creature)
+enum
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    ITEM_WHORL_OF_AIR       = 23843,
+    SPELL_BUFFETING_WINDS   = 32474,
+    TAXI_PATH_ID            = 506
+};
 
-    if (player->HasItemCount(23843,1,true))
-        player->ADD_GOSSIP_ITEM(0, "I am ready.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+#define GOSSIP_ITEM_READY   "I am ready."
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+bool GossipHello_npc_susurrus(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID() );
+
+    if (pPlayer->HasItemCount(ITEM_WHORL_OF_AIR,1,true))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_READY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_susurrus(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_susurrus(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,32474,true);               //apparently correct spell, possible not correct place to cast, or correct caster
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 92;                                      //from susurrus
-        nodes[1] = 91;                                      //end at exodar
-        player->ActivateTaxiPathTo(nodes,11686);            //TaxiPath 506. Using invisible model, possible mangos must allow 0(from dbc) for cases like this.
+        //spellId is correct, however it gives flight a somewhat funny effect
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->CastSpell(pPlayer,SPELL_BUFFETING_WINDS,true);
+        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID, SPELL_BUFFETING_WINDS);
     }
     return true;
 }

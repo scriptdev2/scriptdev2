@@ -757,6 +757,7 @@ UPDATE creature_template SET ScriptName='npc_neltharaku' WHERE entry=21657;
 UPDATE creature_template SET ScriptName='npc_oronok_tornheart' WHERE entry=21183;
 UPDATE creature_template SET ScriptName='mob_mature_netherwing_drake' WHERE entry=21648;
 UPDATE creature_template SET ScriptName='mob_enslaved_netherwing_drake' WHERE entry=21722;
+UPDATE creature_template SET ScriptName='npc_karynaku' WHERE entry=22112;
 
 /* SHATTRATH */
 UPDATE creature_template SET ScriptName='npc_dirty_larry' WHERE entry=19720;

@@ -660,29 +660,31 @@ bool AreaTrigger_at_commander_dawnforge(Player *player, AreaTriggerEntry *at)
 ## npc_protectorate_nether_drake
 ######*/
 
-bool GossipHello_npc_protectorate_nether_drake(Player *player, Creature *_Creature)
+enum
+{
+    QUEST_NETHER_WINGS          = 10438,
+    ITEM_PH_DISRUPTOR           = 29778,
+    TAXI_PATH_ID                = 627                       //(possibly 627+628(152->153->154->155))
+};
+
+#define GOSSIP_ITEM_FLY_ULTRIS  "Fly me to Ultris"
+
+bool GossipHello_npc_protectorate_nether_drake(Player* pPlayer, Creature* pCreature)
 {
     //On Nethery Wings
-    if (player->GetQuestStatus(10438) == QUEST_STATUS_INCOMPLETE && player->HasItemCount(29778,1) )
-        player->ADD_GOSSIP_ITEM(0, "Fly me to Ultris", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (pPlayer->GetQuestStatus(QUEST_NETHER_WINGS) == QUEST_STATUS_INCOMPLETE && pPlayer->HasItemCount(ITEM_PH_DISRUPTOR,1))
+        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_FLY_ULTRIS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
-
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_protectorate_nether_drake(Player *player, Creature *_Creature, uint32 sender, uint32 action )
+bool GossipSelect_npc_protectorate_nether_drake(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 152;                                     //from drake
-        nodes[1] = 153;                                     //end at drake
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 627 (possibly 627+628(152->153->154->155) )
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
     }
     return true;
 }

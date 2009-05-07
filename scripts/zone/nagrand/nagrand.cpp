@@ -254,85 +254,86 @@ CreatureAI* GetAI_mob_sunspring_villager(Creature *_Creature)
 ## npc_altruis_the_sufferer
 ######*/
 
-bool GossipHello_npc_altruis_the_sufferer(Player *player, Creature *_Creature)
+enum
 {
-    if (_Creature->isQuestGiver())
-        player->PrepareQuestMenu( _Creature->GetGUID() );
+    QUEST_SURVEY        = 9991,
+    QUEST_PUPIL         = 10646,
+
+    TAXI_PATH_ID        = 532
+};
+
+bool GossipHello_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature)
+{
+    if (pCreature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
     //gossip before obtaining Survey the Land
-    if ( player->GetQuestStatus(9991) == QUEST_STATUS_NONE )
-        player->ADD_GOSSIP_ITEM( 0, "I see twisted steel and smell sundered earth.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+10);
+    if (pPlayer->GetQuestStatus(QUEST_SURVEY) == QUEST_STATUS_NONE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "I see twisted steel and smell sundered earth.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+10);
 
     //gossip when Survey the Land is incomplete (technically, after the flight)
-    if (player->GetQuestStatus(9991) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "Well...?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+20);
+    if (pPlayer->GetQuestStatus(QUEST_SURVEY) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "Well...?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+20);
 
     //wowwiki.com/Varedis
-    if (player->GetQuestStatus(10646) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM( 0, "[PH] Story about Illidan's Pupil", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+30);
+    if (pPlayer->GetQuestStatus(QUEST_PUPIL) == QUEST_STATUS_INCOMPLETE)
+        pPlayer->ADD_GOSSIP_ITEM(0, "[PH] Story about Illidan's Pupil", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+30);
 
-    player->SEND_GOSSIP_MENU(9419, _Creature->GetGUID());
-
+    pPlayer->SEND_GOSSIP_MENU(9419, pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    switch (action)
+    switch(uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+10:
-            player->ADD_GOSSIP_ITEM( 0, "Legion?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(9420, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Legion?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+            pPlayer->SEND_GOSSIP_MENU(9420, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+11:
-            player->ADD_GOSSIP_ITEM( 0, "And now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            player->SEND_GOSSIP_MENU(9421, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "And now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+            pPlayer->SEND_GOSSIP_MENU(9421, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+12:
-            player->ADD_GOSSIP_ITEM( 0, "How do you see them now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            player->SEND_GOSSIP_MENU(9422, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "How do you see them now?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
+            pPlayer->SEND_GOSSIP_MENU(9422, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+13:
-            player->ADD_GOSSIP_ITEM( 0, "Forge camps?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            player->SEND_GOSSIP_MENU(9423, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Forge camps?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
+            pPlayer->SEND_GOSSIP_MENU(9423, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+14:
-            player->SEND_GOSSIP_MENU(9424, _Creature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9424, pCreature->GetGUID());
             break;
 
         case GOSSIP_ACTION_INFO_DEF+20:
-            player->ADD_GOSSIP_ITEM( 0, "Ok.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
-            player->SEND_GOSSIP_MENU(9427, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "Ok.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
+            pPlayer->SEND_GOSSIP_MENU(9427, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+21:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(9991);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(QUEST_SURVEY);
             break;
 
         case GOSSIP_ACTION_INFO_DEF+30:
-            player->ADD_GOSSIP_ITEM( 0, "[PH] Story done", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 31);
-            player->SEND_GOSSIP_MENU(384, _Creature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(0, "[PH] Story done", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 31);
+            pPlayer->SEND_GOSSIP_MENU(384, pCreature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+31:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(10646);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->AreaExploredOrEventHappens(QUEST_PUPIL);
             break;
     }
     return true;
 }
 
-bool QuestAccept_npc_altruis_the_sufferer(Player *player, Creature *creature, Quest const *quest )
+bool QuestAccept_npc_altruis_the_sufferer(Player* pPlayer, Creature* pCreature, Quest const* pQuest )
 {
-    if ( !player->GetQuestRewardStatus(9991) )              //Survey the Land, q-id 9991
+    if (!pPlayer->GetQuestRewardStatus(QUEST_SURVEY))        //Survey the Land
     {
-        player->CLOSE_GOSSIP_MENU();
-
-        std::vector<uint32> nodes;
-
-        nodes.resize(2);
-        nodes[0] = 113;                                     //from
-        nodes[1] = 114;                                     //end at
-        player->ActivateTaxiPathTo(nodes);                  //TaxiPath 532
+        pPlayer->CLOSE_GOSSIP_MENU();
+        pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
     }
     return true;
 }

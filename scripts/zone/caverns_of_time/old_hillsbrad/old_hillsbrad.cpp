@@ -32,39 +32,40 @@ EndContentData */
 #include "../../../npc/npc_escortAI.h"
 #include "def_old_hillsbrad.h"
 
-#define QUEST_ENTRY_HILLSBRAD   10282
-#define QUEST_ENTRY_DIVERSION   10283
-#define QUEST_ENTRY_ESCAPE      10284
-#define QUEST_ENTRY_RETURN      10285
-#define ITEM_ENTRY_BOMBS        25853
+enum
+{
+    QUEST_ENTRY_HILLSBRAD   = 10282,
+    QUEST_ENTRY_DIVERSION   = 10283,
+    QUEST_ENTRY_ESCAPE      = 10284,
+    QUEST_ENTRY_RETURN      = 10285,
+    ITEM_ENTRY_BOMBS        = 25853,
+
+    TAXI_PATH_ID            = 534
+};
 
 /*######
 ## npc_brazen
 ######*/
 
-bool GossipHello_npc_brazen(Player *player, Creature *_Creature)
+#define GOSSIP_ITEM_READY       "I am ready to go to Durnholde Keep."
+
+bool GossipHello_npc_brazen(Player* pPlayer, Creature* pCreature)
 {
-    player->ADD_GOSSIP_ITEM(0, "I am ready to go to Durnholde Keep.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    player->SEND_GOSSIP_MENU(_Creature->GetNpcTextId(), _Creature->GetGUID());
+    pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_READY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    pPlayer->SEND_GOSSIP_MENU(pCreature->GetNpcTextId(), pCreature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_brazen(Player *player, Creature *_Creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_brazen(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    if (action == GOSSIP_ACTION_INFO_DEF+1)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        if (!player->HasItemCount(ITEM_ENTRY_BOMBS,1))
-            player->SEND_GOSSIP_MENU(9780, _Creature->GetGUID());
+        if (!pPlayer->HasItemCount(ITEM_ENTRY_BOMBS,1))
+            pPlayer->SEND_GOSSIP_MENU(9780, pCreature->GetGUID());
         else
         {
-            player->CLOSE_GOSSIP_MENU();
-
-            std::vector<uint32> nodes;
-
-            nodes.resize(2);
-            nodes[0] = 115;                                 //from brazen
-            nodes[1] = 116;                                 //end outside durnholde
-            player->ActivateTaxiPathTo(nodes);              //TaxiPath 534
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->ActivateTaxiPathTo(TAXI_PATH_ID);
         }
     }
     return true;
